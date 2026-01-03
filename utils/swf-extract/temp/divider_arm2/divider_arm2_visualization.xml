@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<visualizationData type="divider_arm2"><graphics>
+   <visualization size="32" layerCount="2" angle="45">
+      <layers>
+         <layer id="1" z="1000"/>
+      </layers>
+      <directions>
+         <direction id="0"/>
+         <direction id="6"/>
+      </directions>
+   </visualization>
+   <visualization size="64" layerCount="2" angle="45">
+      <layers>
+         <layer id="1" z="1000"/>
+      </layers>
+      <directions>
+         <direction id="0"/>
+         <direction id="6"/>
+      </directions>
+   </visualization>
+   <visualization size="1" layerCount="1" angle="360">
+      <directions>
+         <direction id="0"/>
+      </directions>
+   </visualization>
+</graphics></visualizationData>

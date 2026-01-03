@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<objectData type="divider_arm2">
+   <model>
+      <dimensions x="2" y="1" z="1.0"/>
+      <directions>
+         <direction id="0"/>
+         <direction id="270"/>
+      </directions>
+   </model>
+</objectData>

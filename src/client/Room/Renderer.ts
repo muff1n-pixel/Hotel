@@ -3,8 +3,11 @@ import RoomItemInterface from "./Interfaces/RoomItemInterface";
 import RoomCamera from "./RoomCamera.js";
 import { RoomPointerPosition } from "@/Interfaces/RoomPointerPosition";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError.js";
+import RoomRenderEvent from "../Events/RoomRenderEvent.js";
+import RoomCursor from "./RoomCursor.js";
+import { RoomPosition } from "@/Interfaces/RoomPosition";
 
-export default class RoomRenderer {
+export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
     private readonly camera: RoomCamera;
 
@@ -21,10 +24,13 @@ export default class RoomRenderer {
     };
 
     constructor(private readonly parent: HTMLElement) {
+        super();
+
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
 
         this.camera = new RoomCamera(this);
+        new RoomCursor(this);
 
         this.parent.appendChild(this.element);
 
@@ -85,7 +91,21 @@ export default class RoomRenderer {
 
             context.restore();
         }
+
+        const item = this.getItemAtPosition();
+
+        if(item) {
+            const position = this.getCoordinatePosition(item.position);
+
+            context.save();
+
+            context.fillStyle = "red";
+            context.fillRect(position.left, position.top, 50, 50);
+
+            context.restore();
+        }
         
+        this.dispatchEvent(new RoomRenderEvent());
 
         return canvas;
     }
@@ -113,5 +133,12 @@ export default class RoomRenderer {
         }
 
         return null;
+    }
+
+    public getCoordinatePosition(coordinate: RoomPosition): MousePosition {
+        return {
+            left: Math.floor(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
+            top: Math.floor((coordinate.column * 16) + (coordinate.row * 16) - (coordinate.depth * 32))
+        };
     }
 }
