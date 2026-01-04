@@ -49,8 +49,7 @@ export default class FurnitureRenderer {
                 width: spriteData.width,
                 height: spriteData.height,
 
-                flipHorizontal: assetData.flipHorizontal,
-                flipVertical: assetData.flipVertical
+                flipHorizontal: assetData.flipHorizontal
             });
 
             const layerData = visualization.layers.find((layerData) => layerData.id === layer);

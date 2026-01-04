@@ -90,7 +90,7 @@ export default class RoomRenderer extends EventTarget {
 
         Performance.startPerformanceCheck("Sort room sprites", 5);
 
-        const sprites = this.items.flatMap((item) => item.sprites).sort((a, b) => {
+        const sprites = this.items.filter((item) => !item.disabled).flatMap((item) => item.sprites).sort((a, b) => {
             return this.getSpritePriority(a) - this.getSpritePriority(b);
         });
 
@@ -119,19 +119,6 @@ export default class RoomRenderer extends EventTarget {
 
         Performance.endPerformanceCheck("Draw room sprites");
 
-        const item = this.getItemAtPosition();
-
-        if(item) {
-            const position = this.getCoordinatePosition(item.position);
-
-            context.save();
-
-            context.fillStyle = "red";
-            context.fillRect(position.left, position.top, 50, 50);
-
-            context.restore();
-        }
-        
         Performance.endPerformanceCheck("Render off screen");
         
         this.dispatchEvent(new RoomRenderEvent());

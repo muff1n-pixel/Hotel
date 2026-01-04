@@ -9,6 +9,8 @@ import RoomSprite from "../RoomSprite.js";
 export default class RoomFurnitureSprite extends RoomSprite {
     constructor(public readonly item: RoomItemInterface, private readonly sprite: FurnitureRendererSprite) {
         super(item);
+
+        this.priority = this.sprite.zIndex;
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {

@@ -6,6 +6,7 @@ import { createAssetsData, createIndexData, createLogicData, createVisualization
 import type { FurnitureData } from "../../../src/client/Interfaces/Furniture/FurnitureData.ts"
 
 const assetName = process.argv[2];
+const extractOnly = process.argv[3] === "extract-only";
 
 if(!assetName) {
     throw new Error("Argument is missing for asset name.");
@@ -20,6 +21,10 @@ if(existsSync(path.join("temp", assetName))) {
 
 (async () => {
     const swfCollection = await extractSwf(assetName, `assets/${assetName}/${assetName}.swf`);
+
+    if(extractOnly) {
+        return;
+    }
 
     const assets = createAssetsData(swfCollection);
     const logic = createLogicData(swfCollection);

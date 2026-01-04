@@ -9,7 +9,6 @@ export type AssetSpriteProperties = {
     height: number;
 
     flipHorizontal?: boolean;
-    flipVertical?: boolean;
 
     source?: string;
 };
@@ -64,7 +63,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, flipVertical }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.flipVertical === flipVertical);
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal);
 
         if(existingSprite) {
             return existingSprite;

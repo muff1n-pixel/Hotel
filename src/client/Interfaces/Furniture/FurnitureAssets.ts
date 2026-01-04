@@ -7,7 +7,6 @@ export type FurnitureAsset = {
     y: number;
 
     flipHorizontal?: boolean;
-    flipVertical?: boolean;
 
     source?: string;
 };

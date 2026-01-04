@@ -6,7 +6,7 @@ import FloorRenderer from "@/Room/Structure/FloorRenderer";
 import RoomSprite from "../RoomSprite.js";
 
 export default class RoomFloorSprite extends RoomSprite {
-    priority = 0;
+    priority = -1000;
 
     private readonly image: OffscreenCanvas;
     private readonly offset: MousePosition;
@@ -17,13 +17,13 @@ export default class RoomFloorSprite extends RoomSprite {
         this.image = this.floorRenderer.renderOffScreen();
 
         this.offset = {
-            left: -(floorRenderer.structure.wall.thickness + floorRenderer.rows * 32),
+            left: -(floorRenderer.rows * 32),
             top: -(floorRenderer.depth * 16)
         }
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
-        context.drawImage(this.image, this.offset.left, this.offset.top);
+        context.drawImage(this.image, this.offset.left - this.floorRenderer.structure.wall.thickness, this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -33,7 +33,7 @@ export default class RoomFloorSprite extends RoomSprite {
             throw new ContextNotAvailableError();
         }
 
-        context.setTransform(1, .5, -1, .5, this.offset.left + (this.floorRenderer.rows * 32), this.offset.top);
+        context.setTransform(1, .5, -1, .5, this.offset.left + (this.floorRenderer.rows * 32), 0);
 
         for(let path = this.floorRenderer.tiles.length - 1; path != -1; path--) {
             if(!context.isPointInPath(this.floorRenderer.tiles[path].path, position.left, position.top)) {

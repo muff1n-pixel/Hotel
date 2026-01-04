@@ -5,6 +5,7 @@ import RoomItemSpriteInterface from "../Interfaces/RoomItemSpriteInterface";
 export default class RoomItem implements RoomItemInterface {
     position?: RoomPosition;
     priority: number = 0;
+    disabled: boolean = false;
 
     constructor(public sprites: RoomItemSpriteInterface[] = []) {
 

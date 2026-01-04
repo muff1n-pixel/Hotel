@@ -18,9 +18,52 @@ if(root) {
         floorItem,
         new FloorRenderer({
             grid: [
-                "000",
-                "000",
-                "000"
+                "XXXXXXXXXXXXXXXXXXXXXXXXX",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X22222222222222222222222X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X11111111111111111111111X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "XXXXXXXXXXX000XXXXXXXXXXX",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "X00000000000000000000000X",
+                "XXXXXXXXXXXXXXXXXXXXXXXXX"
             ],
             floor: {
                 thickness: 8
@@ -43,9 +86,9 @@ if(root) {
         const furnitureRenderer = new FurnitureRenderer("bed_armas_two", 64, 2);
 
         const furnitureItem = new RoomFurnitureItem(furnitureRenderer, {
-            row: 0,
-            column: 0,
-            depth: 0
+            row: 1,
+            column: 1,
+            depth: 2
         });
 
         roomRenderer.items.push(furnitureItem);
@@ -55,9 +98,9 @@ if(root) {
         const furnitureRenderer = new FurnitureRenderer("divider_arm2", 64, 0);
         
         const furnitureItem = new RoomFurnitureItem(furnitureRenderer, {
-            row: 2,
-            column: 0,
-            depth: 0
+            row: 3,
+            column: 1,
+            depth: 2
         });
 
         roomRenderer.items.push(furnitureItem);

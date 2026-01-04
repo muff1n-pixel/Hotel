@@ -40,11 +40,13 @@ export async function extractSwf(assetName: string, filePath: string) {
     for (const tag of swf.tags) {
         // binary
         if (tag.header.code === 87) {
-            const symbol = map.find((symbol: any) => symbol.id === tag.data.readUInt16LE());
+            let symbol = map.find((symbol: any) => symbol.id === tag.data.readUInt16LE());
 
-            if (!symbol) {
+            if (!symbol || !symbol.name) {
                 continue;
             }
+
+            console.log(symbol.name);
 
             const fileOutput = path.join(output, `${symbol.name}.xml`);
 
@@ -58,17 +60,17 @@ export async function extractSwf(assetName: string, filePath: string) {
                 case "visualization":
                 case "assets":
                     collection.data[dataType] = fileOutput;
-
-                    fs.writeFileSync(fileOutput, tag.data.slice(6));
                     break;
             }
+
+            fs.writeFileSync(fileOutput, tag.data.slice(6));
         }
 
         // image
         if (tag.header.code === 36) {
             const symbol = map.find((symbol: any) => symbol.id === tag.characterId);
 
-            if (!symbol) {
+            if (!symbol || !symbol.name) {
                 continue;
             }
 
@@ -97,6 +99,7 @@ export async function extractSwf(assetName: string, filePath: string) {
             const imageOutput = path.join(output, "images", `${symbol.name}.png`);
 
             collection.images.push(imageOutput);
+
             await image.write(imageOutput as any);
         }
     }

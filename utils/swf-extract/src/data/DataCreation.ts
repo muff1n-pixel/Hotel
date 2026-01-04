@@ -37,7 +37,6 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
             y: parseFloat(asset["@_y"]) * -1,
 
             flipHorizontal: asset["@_flipH"] === '1',
-            flipVertical: asset["@_flipV"] === '1',
 
             source: asset["@_source"]
         } satisfies FurnitureAsset;
@@ -63,7 +62,7 @@ export function createLogicData(collection: SwfExtractionCollection): FurnitureL
                 y: parseFloat(document["objectData"]["model"]["dimensions"]["@_y"]),
                 z: parseFloat(document["objectData"]["model"]["dimensions"]["@_z"])
             },
-            directions: getValueAsArray(document["objectData"]["model"]["directions"]["direction"]).map((direction: any) => {
+            directions: getValueAsArray(document["objectData"]["model"]["directions"]?.["direction"]).map((direction: any) => {
                 return {
                     id: parseInt(direction["@_id"])
                 } satisfies FurnitureLogic["model"]["directions"][0]
@@ -94,7 +93,7 @@ export function createVisualizationData(collection: SwfExtractionCollection): Fu
                 layers: getValueAsArray(visualization["layers"]?.["layer"]).map((layer: any) => {
                     return {
                         id: parseInt(layer["@_id"]),
-                        zIndex: parseInt(layer["@_id"])
+                        zIndex: parseInt(layer["@_z"])
                     } satisfies FurnitureVisualization["visualizations"][0]["layers"][0]
                 }),
 
