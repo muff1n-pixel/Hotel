@@ -1,0 +1,289 @@
+{
+  "index": {
+    "type": "bed_armas_two",
+    "visualization": "furniture_static",
+    "logic": "furniture_basic"
+  },
+  "visualization": {
+    "type": "bed_armas_two",
+    "visualizations": [
+      {
+        "size": 32,
+        "layerCount": 3,
+        "angle": 45,
+        "layers": [
+          {
+            "id": 0,
+            "zIndex": 0
+          },
+          {
+            "id": 1,
+            "zIndex": 1
+          },
+          {
+            "id": 2,
+            "zIndex": 2
+          }
+        ],
+        "directions": [
+          {
+            "id": 0
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      {
+        "size": 64,
+        "layerCount": 3,
+        "angle": 45,
+        "layers": [
+          {
+            "id": 0,
+            "zIndex": 0
+          },
+          {
+            "id": 1,
+            "zIndex": 1
+          },
+          {
+            "id": 2,
+            "zIndex": 2
+          }
+        ],
+        "directions": [
+          {
+            "id": 0
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      {
+        "size": 1,
+        "layerCount": 1,
+        "angle": 360,
+        "layers": [],
+        "directions": [
+          {
+            "id": 0
+          }
+        ]
+      }
+    ]
+  },
+  "logic": {
+    "type": "bed_armas_two",
+    "model": {
+      "dimensions": {
+        "x": 2,
+        "y": 3,
+        "z": 1.8
+      },
+      "directions": [
+        {
+          "id": 0
+        },
+        {
+          "id": 90
+        }
+      ]
+    }
+  },
+  "assets": [
+    {
+      "name": "bed_armas_two_64_a_0_0",
+      "x": -24,
+      "y": -76,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_64_a_2_0",
+      "x": -24,
+      "y": -76,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_64_a_0_0"
+    },
+    {
+      "name": "bed_armas_two_64_b_0_0",
+      "x": -94,
+      "y": -27,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_64_b_2_0",
+      "x": -94,
+      "y": -27,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_64_b_0_0"
+    },
+    {
+      "name": "bed_armas_two_64_c_0_0",
+      "x": -34,
+      "y": 8,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_64_c_2_0",
+      "x": -34,
+      "y": 8,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_64_c_0_0"
+    },
+    {
+      "name": "bed_armas_two_64_sd_0_0",
+      "x": -94,
+      "y": -12,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_64_sd_2_0",
+      "x": -94,
+      "y": -12,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_64_sd_0_0"
+    },
+    {
+      "name": "bed_armas_two_icon_a",
+      "x": -15,
+      "y": -13,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_32_a_0_0",
+      "x": -11,
+      "y": -37,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_32_a_2_0",
+      "x": -11,
+      "y": -37,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_32_a_0_0"
+    },
+    {
+      "name": "bed_armas_two_32_b_0_0",
+      "x": -45,
+      "y": -13,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_32_b_2_0",
+      "x": -45,
+      "y": -13,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_32_b_0_0"
+    },
+    {
+      "name": "bed_armas_two_32_c_0_0",
+      "x": -16,
+      "y": 4,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_32_c_2_0",
+      "x": -16,
+      "y": 4,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_32_c_0_0"
+    },
+    {
+      "name": "bed_armas_two_32_sd_0_0",
+      "x": -47,
+      "y": -5,
+      "flipHorizontal": false,
+      "flipVertical": false
+    },
+    {
+      "name": "bed_armas_two_32_sd_2_0",
+      "x": -47,
+      "y": -5,
+      "flipHorizontal": true,
+      "flipVertical": false,
+      "source": "bed_armas_two_32_sd_0_0"
+    }
+  ],
+  "sprites": [
+    {
+      "name": "bed_armas_two_64_sd_0_0",
+      "x": 0,
+      "y": 0,
+      "height": 76,
+      "width": 156
+    },
+    {
+      "name": "bed_armas_two_64_b_0_0",
+      "x": 0,
+      "y": 76,
+      "height": 90,
+      "width": 127
+    },
+    {
+      "name": "bed_armas_two_64_a_0_0",
+      "x": 156,
+      "y": 0,
+      "height": 98,
+      "width": 86
+    },
+    {
+      "name": "bed_armas_two_32_sd_0_0",
+      "x": 156,
+      "y": 98,
+      "height": 37,
+      "width": 78
+    },
+    {
+      "name": "bed_armas_two_32_b_0_0",
+      "x": 0,
+      "y": 166,
+      "height": 45,
+      "width": 64
+    },
+    {
+      "name": "bed_armas_two_32_a_0_0",
+      "x": 242,
+      "y": 0,
+      "height": 48,
+      "width": 42
+    },
+    {
+      "name": "bed_armas_two_icon_a",
+      "x": 242,
+      "y": 48,
+      "height": 27,
+      "width": 30
+    },
+    {
+      "name": "bed_armas_two_64_c_0_0",
+      "x": 242,
+      "y": 75,
+      "height": 16,
+      "width": 13
+    },
+    {
+      "name": "bed_armas_two_32_c_0_0",
+      "x": 272,
+      "y": 48,
+      "height": 8,
+      "width": 7
+    }
+  ]
+}

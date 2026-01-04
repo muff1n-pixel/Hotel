@@ -1,11 +1,13 @@
 import { MousePosition } from "@/Interfaces/MousePosition";
 import RoomItemInterface from "./Interfaces/RoomItemInterface";
 import RoomCamera from "./RoomCamera.js";
-import { RoomPointerPosition } from "@/Interfaces/RoomPointerPosition";
+import { RoomPointerPosition } from "../Interfaces/RoomPointerPosition.js";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError.js";
 import RoomRenderEvent from "../Events/RoomRenderEvent.js";
 import RoomCursor from "./RoomCursor.js";
-import { RoomPosition } from "@/Interfaces/RoomPosition";
+import { RoomPosition } from "../Interfaces/RoomPosition";
+import RoomSprite from "./Items/RoomSprite";
+import Performance from "../Utilities/Performance.js";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -44,7 +46,7 @@ export default class RoomRenderer extends EventTarget {
             left: Math.floor(boundingRectangle.width / 2),
             top: Math.floor(boundingRectangle.height / 2)
         };
-
+        
         const image = this.renderOffScreen(boundingRectangle.width, boundingRectangle.height);
 
         // Automatically clears the context
@@ -63,6 +65,8 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private renderOffScreen(width: number, height: number) {
+        Performance.startPerformanceCheck("Render off screen", 10);
+
         const canvas = new OffscreenCanvas(width, height);
 
         const context = canvas.getContext("2d");
@@ -71,26 +75,49 @@ export default class RoomRenderer extends EventTarget {
             throw new ContextNotAvailableError();
         }
 
+        Performance.startPerformanceCheck("Process room items", 5);
+
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].process();
         }
+
+        Performance.endPerformanceCheck("Process room items");
 
         this.renderedOffset = {
             left: this.center.left + this.camera.cameraPosition.left,
             top: this.center.top + this.camera.cameraPosition.top
         };
 
+        Performance.startPerformanceCheck("Sort room sprites", 5);
+
+        const sprites = this.items.flatMap((item) => item.sprites).sort((a, b) => {
+            return this.getSpritePriority(a) - this.getSpritePriority(b);
+        });
+
+        Performance.endPerformanceCheck("Sort room sprites");
+
+        Performance.startPerformanceCheck("Draw room sprites", 5);
+
         context.translate(this.renderedOffset.left, this.renderedOffset.top);
 
-        const sprites = this.items.flatMap((item) => item.sprites).sort((a, b) => a.priority - b.priority);
-
         for(let index = 0; index < sprites.length; index++) {
+            const sprite = sprites[index];
+
             context.save();
 
-            sprites[index].render(context);
+            if(sprite.item.position) {
+                context.translate(
+                    Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64),
+                    Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - (sprite.item.position.depth * 32))
+                );
+            }
+
+            sprite.render(context);
 
             context.restore();
         }
+
+        Performance.endPerformanceCheck("Draw room sprites");
 
         const item = this.getItemAtPosition();
 
@@ -104,6 +131,8 @@ export default class RoomRenderer extends EventTarget {
 
             context.restore();
         }
+        
+        Performance.endPerformanceCheck("Render off screen");
         
         this.dispatchEvent(new RoomRenderEvent());
 
@@ -140,5 +169,15 @@ export default class RoomRenderer extends EventTarget {
             left: Math.floor(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
             top: Math.floor((coordinate.column * 16) + (coordinate.row * 16) - (coordinate.depth * 32))
         };
+    }
+
+    private getSpritePriority(sprite: RoomSprite) {
+        let priority = sprite.priority;
+
+        if(sprite.item.position) {
+            priority += (Math.round(sprite.item.position.row) * 1000) + (Math.round(sprite.item.position.column) * 1000) + (sprite.item.position.depth * 100);
+        }
+
+        return priority;
     }
 }

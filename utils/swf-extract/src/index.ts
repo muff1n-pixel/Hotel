@@ -5,15 +5,21 @@ import path from "path";
 import { createAssetsData, createIndexData, createLogicData, createVisualizationData } from "./data/DataCreation.ts";
 import type { FurnitureData } from "../../../src/client/Interfaces/Furniture/FurnitureData.ts"
 
-if(existsSync(path.join("temp", "divider_arm2"))) {
-    rmSync(path.join("temp", "divider_arm2"), {
+const assetName = process.argv[2];
+
+if(!assetName) {
+    throw new Error("Argument is missing for asset name.");
+}
+
+if(existsSync(path.join("temp", assetName))) {
+    rmSync(path.join("temp", assetName), {
         force: true,
         recursive: true
     });
 }
 
 (async () => {
-    const swfCollection = await extractSwf("divider_arm2", "assets/divider_arm2_1767371605/divider_arm2.swf");
+    const swfCollection = await extractSwf(assetName, `assets/${assetName}/${assetName}.swf`);
 
     const assets = createAssetsData(swfCollection);
     const logic = createLogicData(swfCollection);
@@ -22,7 +28,7 @@ if(existsSync(path.join("temp", "divider_arm2"))) {
 
     //console.log(JSON.stringify(index, undefined, 4));
 
-    const spritesheet = await createSpritesheet("divider_arm2", swfCollection.images);
+    const spritesheet = await createSpritesheet(assetName, swfCollection.images);
 
     //console.log(spritesheet32Collection);
 
@@ -34,7 +40,7 @@ if(existsSync(path.join("temp", "divider_arm2"))) {
         sprites: spritesheet
     };
 
-    const outputPath = path.join("output", "divider_arm2");
+    const outputPath = path.join("..", "..", "assets", "furniture", assetName);
 
     if(existsSync(outputPath)) {
         rmSync(outputPath, {
@@ -47,10 +53,10 @@ if(existsSync(path.join("temp", "divider_arm2"))) {
         recursive: true
     });
 
-    writeFileSync(path.join(outputPath, "divider_arm2.json"), JSON.stringify(data, undefined, 2), {
+    writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
         encoding: "utf-8"
     });
     
-    copyFileSync(path.join("temp", "divider_arm2", "spritesheets", "divider_arm2.png"), path.join(outputPath, "divider_arm2.png"));
+    copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
 })();
 

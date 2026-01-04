@@ -3,14 +3,17 @@ import { MousePosition } from "@/Interfaces/MousePosition";
 import RoomItemInterface from "@/Room/Interfaces/RoomItemInterface.js";
 import RoomItemSpriteInterface from "@/Room/Interfaces/RoomItemSpriteInterface";
 import FloorRenderer from "@/Room/Structure/FloorRenderer";
+import RoomSprite from "../RoomSprite.js";
 
-export default class RoomFloorSprite implements RoomItemSpriteInterface {
-    priority = -Infinity;
+export default class RoomFloorSprite extends RoomSprite {
+    priority = 0;
 
     private readonly image: OffscreenCanvas;
     private readonly offset: MousePosition;
 
     constructor(public readonly item: RoomItemInterface, private readonly floorRenderer: FloorRenderer) {
+        super(item);
+
         this.image = this.floorRenderer.renderOffScreen();
 
         this.offset = {
