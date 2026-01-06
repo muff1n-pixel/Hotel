@@ -1,5 +1,3 @@
-import RoomItemInterface from "@/Room/Interfaces/RoomItemInterface";
-import RoomItemSpriteInterface from "@/Room/Interfaces/RoomItemSpriteInterface";
 import RoomItem from "@/Room/Items/RoomItem";
 import RoomSprite from "@/Room/Items/RoomSprite";
 

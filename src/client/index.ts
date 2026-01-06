@@ -244,8 +244,8 @@ if(root) {
                 return;
             }
 
-            if(event.floorEntity) {
-                figureItem.setPosition(event.floorEntity.position); 
+            if(figureItem.position && event.floorEntity) {
+                figureItem.setPositionPath(figureItem.position, event.floorEntity.position); 
             }
         });
     }

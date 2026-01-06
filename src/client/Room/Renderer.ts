@@ -1,5 +1,4 @@
 import { MousePosition } from "@/Interfaces/MousePosition";
-import RoomItemInterface from "./Interfaces/RoomItemInterface";
 import RoomCamera from "./RoomCamera.js";
 import { RoomPointerPosition } from "../Interfaces/RoomPointerPosition.js";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError.js";
@@ -144,7 +143,7 @@ export default class RoomRenderer extends EventTarget {
         return canvas;
     }
 
-    public getItemAtPosition(filter?: (item: RoomItemInterface) => boolean): RoomPointerPosition | null {
+    public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
         if(this.camera.mousePosition) {
             const offsetMousePosition = {
                 left: this.camera.mousePosition.left - this.renderedOffset.left,

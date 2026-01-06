@@ -16,6 +16,8 @@ export default class RoomFigureItem extends RoomItem {
     }
     
     process(frame: number): void {
+        super.process(frame);
+        
         this.render(frame);
     }
 

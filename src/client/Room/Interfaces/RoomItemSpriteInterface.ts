@@ -1,9 +1,9 @@
 import { MousePosition } from "@/Interfaces/MousePosition";
-import RoomItemInterface from "./RoomItemInterface";
 import { RoomPosition } from "@/Interfaces/RoomPosition";
+import RoomItem from "../Items/RoomItem";
 
 export default interface RoomItemSpriteInterface {
-    item: RoomItemInterface;
+    item: RoomItem;
     priority: number;
 
     render(context: OffscreenCanvasRenderingContext2D): void;
