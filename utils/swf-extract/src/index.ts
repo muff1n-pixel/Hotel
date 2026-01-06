@@ -2,8 +2,9 @@ import { copyFileSync, existsSync, mkdirSync, rmdirSync, rmSync, writeFileSync }
 import { createSpritesheet } from "./spritesheet/SpritesheetCreation.ts";
 import { extractSwf } from "./swf/SwfExtraction.ts";
 import path from "path";
-import { createAssetsData, createIndexData, createLogicData, createRoomVisualizationData, createVisualizationData } from "./data/DataCreation.ts";
+import { createAssetsData, createAssetsDataFromManifest, createIndexData, createLogicData, createRoomVisualizationData, createVisualizationData } from "./data/DataCreation.ts";
 import type { FurnitureData } from "../../../src/client/Interfaces/Furniture/FurnitureData.ts"
+import type { FigureData } from "../../../src/client/Interfaces/Figure/FigureData.ts"
 import type { RoomData } from "../../../src/client/Interfaces/Room/RoomData.ts"
 
 const assetName = process.argv[2];
@@ -21,7 +22,7 @@ if(existsSync(path.join("temp", assetName))) {
 }
 
 (async () => {
-    const swfCollection = await extractSwf(assetName, `assets/${assetName}/${assetName}.swf`);
+    const swfCollection = await extractSwf(assetName, (existsSync(`assets/${assetName}/${assetName}.swf`))?(`assets/${assetName}/${assetName}.swf`):(`assets/${assetName}.swf`));
 
     if(extractOnly) {
         return;
@@ -29,22 +30,22 @@ if(existsSync(path.join("temp", assetName))) {
 
     const spritesheet = await createSpritesheet(assetName, swfCollection.images);
 
-    const outputPath = path.join("..", "..", "assets", (assetName === "HabboRoomContent")?("room"):("furniture"), assetName);
+    if(assetName === "HabboRoomContent") {
+        const outputPath = path.join("..", "..", "assets", "room", assetName);
 
-    if(existsSync(outputPath)) {
-        rmSync(outputPath, {
-            force: true,
+        if(existsSync(outputPath)) {
+            rmSync(outputPath, {
+                force: true,
+                recursive: true
+            });
+        }
+
+        mkdirSync(outputPath, {
             recursive: true
         });
-    }
-
-    mkdirSync(outputPath, {
-        recursive: true
-    });
+        
+        copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
     
-    copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
-    
-    if(assetName === "HabboRoomContent") {
         const assets = createAssetsData(swfCollection);
         const index = createIndexData(swfCollection);
         const visualization = createRoomVisualizationData(swfCollection);
@@ -61,6 +62,53 @@ if(existsSync(path.join("temp", assetName))) {
         });
     }
     else {
+        if(!swfCollection.data.index && !swfCollection.data.visualization && swfCollection.data.manifest) {
+            const outputPath = path.join("..", "..", "assets", "figure", assetName);
+
+            if(existsSync(outputPath)) {
+                rmSync(outputPath, {
+                    force: true,
+                    recursive: true
+                });
+            }
+
+            mkdirSync(outputPath, {
+                recursive: true
+            });
+            
+            copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
+
+            console.log("No visualization data, assuming it's a figure asset...");
+
+            const assets = createAssetsDataFromManifest(swfCollection);
+
+            const data: FigureData = {
+                assets,
+                sprites: spritesheet
+            };
+
+            writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
+                encoding: "utf-8"
+            });
+            
+            return;
+        }
+
+        const outputPath = path.join("..", "..", "assets", "furniture", assetName);
+
+        if(existsSync(outputPath)) {
+            rmSync(outputPath, {
+                force: true,
+                recursive: true
+            });
+        }
+
+        mkdirSync(outputPath, {
+            recursive: true
+        });
+        
+        copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
+
         const assets = createAssetsData(swfCollection);
         const logic = createLogicData(swfCollection);
         const visualization = createVisualizationData(swfCollection);

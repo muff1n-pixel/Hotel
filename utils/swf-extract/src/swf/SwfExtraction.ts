@@ -12,6 +12,7 @@ export type SwfExtractionCollection = {
         assets?: string;
         logic?: string;
         visualization?: string;
+        manifest?: string;
     };
 
     images: string[];
@@ -59,6 +60,7 @@ export async function extractSwf(assetName: string, filePath: string) {
                 case "logic":
                 case "visualization":
                 case "assets":
+                case "manifest":
                     collection.data[dataType] = fileOutput;
                     break;
 

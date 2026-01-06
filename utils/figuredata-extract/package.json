@@ -1,0 +1,24 @@
+{
+  "name": "swf-extract",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@gizeta/swf-reader": "^1.0.0",
+    "@types/node": "^25.0.3",
+    "@types/node-sprite-generator": "^0.10.6",
+    "fast-xml-parser": "^5.3.3",
+    "node-sprite-generator": "^0.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "jimp": "^1.6.0"
+  }
+}

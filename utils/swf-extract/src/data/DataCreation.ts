@@ -1,5 +1,6 @@
 import type { SwfExtractionCollection } from "../swf/SwfExtraction.ts";
 import type { FurnitureAsset, FurnitureAssets } from "../../../../src/client/Interfaces/Furniture/FurnitureAssets.ts"
+import type { FigureAssets } from "../../../../src/client/Interfaces/Figure/FigureAssets.ts"
 import type { FurnitureLogic } from "../../../../src/client/Interfaces/Furniture/FurnitureLogic.ts"
 import type { FurnitureVisualization } from "../../../../src/client/Interfaces/Furniture/FurnitureVisualization.ts"
 import type { RoomVisualization } from "../../../../src/client/Interfaces/Room/RoomVisualization.ts"
@@ -42,6 +43,48 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
             source: asset["@_source"]
         } satisfies FurnitureAsset;
     });
+}
+
+export function createAssetsDataFromManifest(collection: SwfExtractionCollection): FigureAssets {
+    if(!collection.data.manifest) {
+        throw new Error("Manifest data for assets doesn't exist.");
+    }
+
+    const parser = new XMLParser({
+        ignoreAttributes: false
+    });
+
+    const document = parser.parse(readFileSync(collection.data.manifest, { encoding: "utf-8" }), true);
+
+    return document.manifest.library.assets.asset.filter((asset: any) => asset["@_mimeType"] === 'image/png').map((asset: any) => {
+        console.log(asset);
+
+        const offset = getValueAsArray(asset["param"]).find((asset: any) => asset["@_key"] === 'offset')?.["@_value"]?.split(',');
+
+        return {
+            name: asset["@_name"],
+
+            x: parseFloat(offset?.[0] ?? 0) * -1,
+            y: parseFloat(offset?.[1] ?? 0) * -1,
+        };
+    }).concat(
+        getValueAsArray(document.manifest.library.aliases?.alias).map((alias: any) => {
+            const originalAsset = document.manifest.library.assets.asset.find((asset: any) => asset["@_name"] === alias["@_link"]);
+            
+            const offset = getValueAsArray(originalAsset?.["param"]).find((asset: any) => asset["@_key"] === 'offset')?.["@_value"]?.split(',');
+            
+            return {
+                name: alias["@_name"],
+
+                x: parseFloat(offset?.[0] ?? 0) * -1,
+                y: parseFloat(offset?.[1] ?? 0) * -1,
+
+                source: alias["@_link"],
+
+                flipHorizonal: alias["@_fliph"] === '1'
+            };
+        })
+    );
 }
 
 export function createLogicData(collection: SwfExtractionCollection): FurnitureLogic {
