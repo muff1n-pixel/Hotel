@@ -1,7 +1,9 @@
 import DebugRoomFurniture from "./Debug/DebugRoomFurniture.js";
+import RoomClickEvent from "./Events/RoomClickEvent.js";
 import FigureRenderer from "./Figure/FigureRenderer.js";
 import FurnitureRenderer from "./Furniture/FurnitureRenderer.js";
 import { RoomStructure } from "./Interfaces/RoomStructure.js";
+import RoomFigureItem from "./Room/Items/Figure/RoomFigureItem.js";
 import RoomFloorSprite from "./Room/Items/Floor/RoomFloorSprite.js";
 import RoomWallSprite from "./Room/Items/Floor/RoomWallSprite.js";
 import RoomFurnitureItem from "./Room/Items/Furniture/RoomFurnitureItem.js";
@@ -227,6 +229,24 @@ if(root) {
 
         figureRenderer.renderToCanvas().then((canvas) => {
             context?.drawImage(canvas, 0, 0);
+        });
+
+        const figureItem = new RoomFigureItem(figureRenderer, {
+            row: 1,
+            column: 1,
+            depth: 2
+        });
+
+        roomRenderer.items.push(figureItem);
+
+        roomRenderer.cursor.addEventListener("click", (event: Event) => {
+            if(!(event instanceof RoomClickEvent)) {
+                return;
+            }
+
+            if(event.floorEntity) {
+                figureItem.setPosition(event.floorEntity.position); 
+            }
         });
     }
 }

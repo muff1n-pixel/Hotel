@@ -1,12 +1,14 @@
 import FurnitureRenderer from "../Furniture/FurnitureRenderer.js";
 import RoomRenderer from "./Renderer";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem.js";
-import RoomFloorSprite from "./Items/Floor/RoomFloorSprite.js";
+import RoomClickEvent from "../Events/RoomClickEvent.js";
 
-export default class RoomCursor {
+export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
 
     constructor(private readonly roomRenderer: RoomRenderer) {
+        super();
+
         const furnitureRenderer = new FurnitureRenderer("tile_cursor", 64, 0);
         
         this.furnitureItem = new RoomFurnitureItem(furnitureRenderer, {
@@ -21,6 +23,7 @@ export default class RoomCursor {
 
         this.roomRenderer.addEventListener("render", this.render.bind(this));
         this.roomRenderer.addEventListener("frame", this.frame.bind(this));
+        this.roomRenderer.element.addEventListener("click", this.click.bind(this));
     }
 
     private render() {
@@ -42,7 +45,7 @@ export default class RoomCursor {
     }
 
     private frame() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "furniture");
+        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure"].includes(item.type));
 
         if(!entity) {
             this.roomRenderer.element.style.cursor = "default";
@@ -51,5 +54,14 @@ export default class RoomCursor {
         }
 
         this.roomRenderer.element.style.cursor = "pointer";
+    }
+
+    private click() {
+        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
+        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "map");
+
+        if(floorEntity || otherEntity) {
+            this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
+        }
     }
 }

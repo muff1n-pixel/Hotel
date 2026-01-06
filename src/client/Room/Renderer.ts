@@ -9,12 +9,14 @@ import { RoomPosition } from "../Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
 import Performance from "../Utilities/Performance.js";
 import RoomFrameEvent from "../Events/RoomFrameEvent.js";
+import RoomItem from "./Items/RoomItem";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
     private readonly camera: RoomCamera;
+    public readonly cursor: RoomCursor;
 
-    public readonly items: RoomItemInterface[] = [];
+    public readonly items: RoomItem[] = [];
 
     public frame: number = 0;
 
@@ -39,7 +41,7 @@ export default class RoomRenderer extends EventTarget {
         this.element.classList.add("renderer");
 
         this.camera = new RoomCamera(this);
-        new RoomCursor(this);
+        this.cursor = new RoomCursor(this);
 
         this.parent.appendChild(this.element);
 

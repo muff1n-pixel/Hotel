@@ -1,13 +1,13 @@
 import { RoomPosition } from "@/Interfaces/RoomPosition";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
-import RoomItemSpriteInterface from "../Interfaces/RoomItemSpriteInterface";
+import RoomSprite from "./RoomSprite";
 
 export default class RoomItem implements RoomItemInterface {
     position?: RoomPosition;
     priority: number = 0;
     disabled: boolean = false;
 
-    constructor(public type: string, public sprites: RoomItemSpriteInterface[] = []) {
+    constructor(public type: string, public sprites: RoomSprite[] = []) {
 
     }
 

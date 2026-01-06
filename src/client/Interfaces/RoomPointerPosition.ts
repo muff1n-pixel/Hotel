@@ -1,9 +1,11 @@
 import RoomItemInterface from "@/Room/Interfaces/RoomItemInterface";
 import RoomItemSpriteInterface from "@/Room/Interfaces/RoomItemSpriteInterface";
+import RoomItem from "@/Room/Items/RoomItem";
+import RoomSprite from "@/Room/Items/RoomSprite";
 
 export type RoomPointerPosition = {
-    item: RoomItemInterface;
-    sprite: RoomItemSpriteInterface;
+    item: RoomItem;
+    sprite: RoomSprite;
 
     position: {
         row: number;
