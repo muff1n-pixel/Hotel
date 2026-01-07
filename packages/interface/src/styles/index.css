@@ -15,7 +15,7 @@ body {
   display: flex;
 }
 
-#game {
+#client {
   flex: 1;
 
   position: relative;;

@@ -1,11 +1,13 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
-import { App } from './components/App';
+import InterfaceInstance from './components/InterfaceInstance';
 
-const interfaceElement = document.getElementById("interface");
+import "./styles/fonts.css";
+import "./styles/index.css";
+import { InternalEventTargetContext } from './app/InternalEventTargetContext';
 
-if(interfaceElement) {
-  const root = createRoot(interfaceElement);
+(window as any).createInterfaceInstance = function createInterfaceInstance(element: HTMLElement, internalEventTarget: EventTarget) {
+  const root = createRoot(element);
 
   root.render(
     <StrictMode>
@@ -22,7 +24,9 @@ if(interfaceElement) {
 
         color: "white"
       }}>
-        <App/>
+        <InternalEventTargetContext value={internalEventTarget}>
+          <InterfaceInstance/>
+        </InternalEventTargetContext>
       </div>
     </StrictMode>
   );

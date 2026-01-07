@@ -9,6 +9,7 @@ import RoomSprite from "./Items/RoomSprite";
 import Performance from "@/Utilities/Performance.js";
 import RoomFrameEvent from "@/Events/RoomFrameEvent.js";
 import RoomItem from "./Items/RoomItem";
+import ClientInstance from "@/ClientInstance.js";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -33,7 +34,7 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    constructor(private readonly parent: HTMLElement) {
+    constructor(private readonly instance: ClientInstance) {
         super();
 
         this.element = document.createElement("canvas");
@@ -42,7 +43,7 @@ export default class RoomRenderer extends EventTarget {
         this.camera = new RoomCamera(this);
         this.cursor = new RoomCursor(this);
 
-        this.parent.appendChild(this.element);
+        this.instance.element.appendChild(this.element);
 
         window.requestAnimationFrame(this.render.bind(this));
     }
@@ -65,7 +66,7 @@ export default class RoomRenderer extends EventTarget {
             this.dispatchEvent(new RoomFrameEvent());
         }
 
-        const boundingRectangle = this.parent.getBoundingClientRect();
+        const boundingRectangle = this.instance.element.getBoundingClientRect();
 
         this.center = {
             left: Math.floor(boundingRectangle.width / 2),

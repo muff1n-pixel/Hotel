@@ -8,10 +8,20 @@
         <link rel="stylesheet" href="./build/interface/index.css"/>
     </head>
     <body>
-        <div id="game"></div>
+        <div id="client"></div>
         <div id="interface"></div>
 
         <script type="module" src="./build/client/index.js"></script>
-        <script type="text/javascript" src="./build/interface/index.js"></script>
+        <script type="module" src="./build/interface/index.js"></script>
+
+        <script type="module">
+            const clientElement = document.getElementById("client");
+            const interfaceElement = document.getElementById("interface");
+
+            const internalEventTarget = new EventTarget();
+
+            window.createClientInstance(clientElement, internalEventTarget);
+            window.createInterfaceInstance(interfaceElement, internalEventTarget);
+        </script>
     </body>
 </html>
