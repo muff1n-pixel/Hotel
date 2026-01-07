@@ -1,8 +1,5 @@
-import ContextNotAvailableError from "../../../Exceptions/ContextNotAvailableError.js";
+import ContextNotAvailableError from "@/Exceptions/ContextNotAvailableError.js";
 import { MousePosition } from "@/Interfaces/MousePosition";
-import RoomItemInterface from "@/Room/Interfaces/RoomItemInterface.js";
-import RoomItemSpriteInterface from "@/Room/Interfaces/RoomItemSpriteInterface";
-import FloorRenderer from "@/Room/Structure/FloorRenderer";
 import RoomSprite from "../RoomSprite.js";
 import RoomMapItem from "../Map/RoomFurnitureItem.js";
 

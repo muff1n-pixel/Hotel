@@ -1,8 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "build": "sass src/stylesheets/index.scss build/stylesheets/index.css",
-    "watch": "sass --watch src/stylesheets/index.scss build/stylesheets/index.css"
+    "build": "sass src/index.scss ../../build/stylesheets/index.css",
+    "watch": "sass --watch src/index.scss ../../build/stylesheets/index.css"
   },
   "devDependencies": {
     "sass": "^1.97.1"

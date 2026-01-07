@@ -1,11 +1,13 @@
 {
   "type": "module",
   "scripts": {
-    "build": "npx tsc",
-    "watch": "npx tsc -w"
+    "build": "npx tsc && tsc-alias",
+    "watch": "npx concurrently --kill-others \"npx tsc -w\" \"npx tsc-alias -w\""
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
   }
 }

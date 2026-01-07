@@ -1,18 +1,15 @@
-import FigureAssets from "./Assets/FigureAssets.js";
-import DebugRoomFurniture from "./Debug/DebugRoomFurniture.js";
-import RoomClickEvent from "./Events/RoomClickEvent.js";
-import FigureRenderer from "./Figure/FigureRenderer.js";
-import FurnitureRenderer from "./Furniture/FurnitureRenderer.js";
-import { RoomStructure } from "./Interfaces/RoomStructure.js";
-import RoomFigureItem from "./Room/Items/Figure/RoomFigureItem.js";
-import RoomFloorSprite from "./Room/Items/Floor/RoomFloorSprite.js";
-import RoomWallSprite from "./Room/Items/Floor/RoomWallSprite.js";
-import RoomFurnitureItem from "./Room/Items/Furniture/RoomFurnitureItem.js";
-import RoomMapItem from "./Room/Items/Map/RoomFurnitureItem.js";
-import RoomItem from "./Room/Items/RoomItem.js";
-import RoomRenderer from "./Room/Renderer.js";
-import FloorRenderer from "./Room/Structure/FloorRenderer.js";
-import WallRenderer from "./Room/Structure/WallRenderer.js";
+import FigureAssets from "@/Assets/FigureAssets.js";
+import DebugRoomFurniture from "@/Debug/DebugRoomFurniture.js";
+import RoomClickEvent from "@/Events/RoomClickEvent.js";
+import FigureRenderer from "@/Figure/FigureRenderer.js";
+import FurnitureRenderer from "@/Furniture/FurnitureRenderer.js";
+import { RoomStructure } from "@/Interfaces/RoomStructure.js";
+import RoomFigureItem from "@/Room/Items/Figure/RoomFigureItem.js";
+import RoomFurnitureItem from "@/Room/Items/Furniture/RoomFurnitureItem.js";
+import RoomMapItem from "@/Room/Items/Map/RoomFurnitureItem.js";
+import RoomRenderer from "@/Room/Renderer.js";
+import FloorRenderer from "@/Room/Structure/FloorRenderer.js";
+import WallRenderer from "@/Room/Structure/WallRenderer.js";
 
 console.log("Hello world");
 

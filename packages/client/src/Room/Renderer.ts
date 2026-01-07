@@ -1,13 +1,13 @@
 import { MousePosition } from "@/Interfaces/MousePosition";
 import RoomCamera from "./RoomCamera.js";
-import { RoomPointerPosition } from "../Interfaces/RoomPointerPosition.js";
-import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError.js";
-import RoomRenderEvent from "../Events/RoomRenderEvent.js";
+import { RoomPointerPosition } from "@/Interfaces/RoomPointerPosition.js";
+import ContextNotAvailableError from "@/Exceptions/ContextNotAvailableError.js";
+import RoomRenderEvent from "@/Events/RoomRenderEvent.js";
 import RoomCursor from "./RoomCursor.js";
-import { RoomPosition } from "../Interfaces/RoomPosition";
+import { RoomPosition } from "@/Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
-import Performance from "../Utilities/Performance.js";
-import RoomFrameEvent from "../Events/RoomFrameEvent.js";
+import Performance from "@/Utilities/Performance.js";
+import RoomFrameEvent from "@/Events/RoomFrameEvent.js";
 import RoomItem from "./Items/RoomItem";
 
 export default class RoomRenderer extends EventTarget {

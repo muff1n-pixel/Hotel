@@ -1,7 +1,7 @@
-import FurnitureRenderer from "../Furniture/FurnitureRenderer.js";
+import FurnitureRenderer from "@/Furniture/FurnitureRenderer.js";
 import RoomRenderer from "./Renderer";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem.js";
-import RoomClickEvent from "../Events/RoomClickEvent.js";
+import RoomClickEvent from "@/Events/RoomClickEvent.js";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
