@@ -4,6 +4,9 @@ import InterfaceInstance from './components/InterfaceInstance';
 
 import "./styles/fonts.css";
 import "./styles/index.css";
+import "./styles/spritesheet.css";
+import "./styles/spritesheet.png";
+
 import { InternalEventTargetContext, TypedEventTarget } from './app/InternalEventTargetContext';
 import Dialog from './components/Dialogs/Dialog';
 import Toolbar from './components/Toolbar/Toolbar';

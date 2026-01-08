@@ -29,12 +29,7 @@ export default function Toolbar() {
             }}>
                 <div/>
 
-                <div style={{
-                    width: 28,
-                    height: 28,
-
-                    background: "url(/assets/images/toolbar/logo.png)"
-                }}>
+                <div className="sprite_toolbar_logo">
                 </div>
 
                 <ToolbarFigureItem/>

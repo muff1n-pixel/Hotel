@@ -1,16 +1,21 @@
 {
+  "type": "module",
   "scripts": {
     "build": "npx parcel build src/index.tsx --dist-dir ../../build/interface",
-    "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/interface"
+    "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/interface",
+    "spritesheet": "npx ts-node utils/generateSpritesheet.ts"
   },
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@types/node-sprite-generator": "^0.10.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "parcel": "^2.14.0"
+    "node-sprite-generator": "^0.10.2",
+    "parcel": "^2.14.0",
+    "ts-node": "^10.9.2"
   },
   "alias": {
     "@shared/*": "../shared/$1"

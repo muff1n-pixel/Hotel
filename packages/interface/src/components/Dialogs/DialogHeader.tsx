@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { MouseEventHandler } from "react";
-import "./DialogHeader.css"
 
 export type MousePosition = {
     left: number;
@@ -74,7 +73,9 @@ export default function DialogHeader({ title, onDialogMove }: DialogHeaderProps)
                 right: 6,
                 top: 4
             }}>
-                <div className="dialog-close-button"/>
+                <div className="sprite_dialog_close" style={{
+                    cursor: "pointer"
+                }}/>
             </div>
         </div>
     );
