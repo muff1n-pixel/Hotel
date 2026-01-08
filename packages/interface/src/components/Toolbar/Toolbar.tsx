@@ -1,6 +1,12 @@
+import { useContext } from "react";
 import ToolbarFigureItem from "./Items/ToolbarFigureItem";
+import ToolbarItem from "./Items/ToolbarItem";
+import { AppContext } from "../../contexts/AppContext";
+import Dialog from "../Dialog/Dialog";
 
 export default function Toolbar() {
+    const { addUniqueDialog } = useContext(AppContext);
+
     return (
         <div style={{
             position: "absolute",
@@ -29,10 +35,18 @@ export default function Toolbar() {
             }}>
                 <div/>
 
-                <div className="sprite_toolbar_logo">
-                </div>
+                {/*<ToolbarItem>
+                    <div className="sprite_toolbar_logo"/>
+                </ToolbarItem>*/}
 
-                <ToolbarFigureItem/>
+                <ToolbarItem onClick={() => {
+                    addUniqueDialog({
+                        name: "wardrobe",
+                        element: (<Dialog/>)
+                    })
+                }}>
+                    <ToolbarFigureItem/>
+                </ToolbarItem>
             </div>
         </div>
     );

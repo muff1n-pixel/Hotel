@@ -7,8 +7,7 @@ import "./styles/index.css";
 import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 
-import { InternalEventTargetContext, TypedEventTarget } from './app/InternalEventTargetContext';
-import Dialog from './components/Dialogs/Dialog';
+import { AppContext, TypedEventTarget } from './contexts/AppContext';
 import Toolbar from './components/Toolbar/Toolbar';
 
 (window as any).createInterfaceInstance = function createInterfaceInstance(element: HTMLElement, internalEventTarget: TypedEventTarget) {
@@ -29,13 +28,7 @@ import Toolbar from './components/Toolbar/Toolbar';
 
         color: "white"
       }}>
-        <InternalEventTargetContext value={internalEventTarget}>
-          <InterfaceInstance/>
-
-          <Dialog/>
-
-          <Toolbar/>
-        </InternalEventTargetContext>
+        <InterfaceInstance internalEventTarget={internalEventTarget}/>
       </div>
     </StrictMode>
   );

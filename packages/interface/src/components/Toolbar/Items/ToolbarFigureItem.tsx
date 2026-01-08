@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { InternalEventTargetContext } from "../../../app/InternalEventTargetContext";
 import ClientFigureRequest from "@shared/interfaces/requests/ClientFigureRequest";
 import ClientFigureResponse from "@shared/interfaces/responses/ClientFigureResponse";
+import { AppContext } from "../../../contexts/AppContext";
 
 export default function ToolbarFigureItem() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const internalEventTarget = useContext(InternalEventTargetContext);
+    const {internalEventTarget} = useContext(AppContext);
 
     const [figureImage, setFigureImage] = useState<OffscreenCanvas>();
 
@@ -35,9 +35,7 @@ export default function ToolbarFigureItem() {
 
             overflow: "hidden"
         }}>
-
             <canvas ref={canvasRef} width={40} height={44}/>
-
         </div>
     );
 }

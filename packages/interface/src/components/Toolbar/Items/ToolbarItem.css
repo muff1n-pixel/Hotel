@@ -1,0 +1,13 @@
+.toolbar-item {
+    cursor: pointer;
+}
+
+.toolbar-item:hover {
+    transform: translate(-1px, -1px);
+}
+
+.toolbar-item:active {
+    transform: translate(1px, 1px);
+
+    opacity: .7;
+}

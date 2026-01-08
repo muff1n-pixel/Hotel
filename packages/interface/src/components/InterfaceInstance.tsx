@@ -1,8 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import { InternalEventTargetContext } from "../app/InternalEventTargetContext";
+import { Fragment, useCallback, useContext, useEffect, useState } from "react";
+import { AppContext, Dialog, TypedEventTarget } from "../contexts/AppContext";
+import Toolbar from "./Toolbar/Toolbar";
 
-export default function InterfaceInstance() {
-    const internalEventTarget = useContext(InternalEventTargetContext);
+export type InterfaceInstanceProps = {
+    internalEventTarget: TypedEventTarget;
+}
+
+export default function InterfaceInstance({ internalEventTarget }: InterfaceInstanceProps) {
+    const [dialogs, setDialogs] = useState<Dialog[]>([]);
 
     useEffect(() => {
         const listener = (event: Event) => {
@@ -16,7 +21,27 @@ export default function InterfaceInstance() {
         return () => internalEventTarget.removeEventListener("client", listener);
     }, []);
 
+    const addUniqueDialog = useCallback((dialog: Dialog) => {
+        if(dialogs.some((existingDialog) => existingDialog.name === dialog.name)) {
+            return;
+        }
+
+        setDialogs(dialogs.concat([ dialog ]));
+    }, [dialogs, setDialogs]);
+
     return (
-      <h1>Parcel React App</h1>
+        <AppContext value={{
+            dialogs,
+            addUniqueDialog,
+            internalEventTarget
+        }}>
+            {dialogs.map((dialog) => (
+                <Fragment key={dialog.name}>
+                    {dialog.element}
+                </Fragment>
+            ))}
+
+            <Toolbar/>
+        </AppContext>
     );
 }

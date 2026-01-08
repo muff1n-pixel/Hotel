@@ -1,7 +1,0 @@
-import { createContext } from "react";
-
-export type TypedEventTarget = EventTarget & {
-    addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void;
-};
-
-export const InternalEventTargetContext = createContext<TypedEventTarget>(null as any as TypedEventTarget);
