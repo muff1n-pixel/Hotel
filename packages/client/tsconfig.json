@@ -3,10 +3,11 @@
     "target": "es6",
     "lib": ["DOM", "ESNext"],
     "module": "esnext",
-    "rootDir": "./src/",
+    "rootDir": "src/",
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
+      "@shared/*": ["../shared/*"],
       "@/*": ["src/*"]
     },
     "typeRoots": [
@@ -21,5 +22,10 @@
   },
   "include": [
     "src/*"
+  ],
+  "references": [
+    {
+      "path": "../shared/"
+    }
   ]
 }

@@ -5,6 +5,8 @@ import InterfaceInstance from './components/InterfaceInstance';
 import "./styles/fonts.css";
 import "./styles/index.css";
 import { InternalEventTargetContext } from './app/InternalEventTargetContext';
+import Dialog from './components/Dialogs/Dialog';
+import Toolbar from './components/Toolbar/Toolbar';
 
 (window as any).createInterfaceInstance = function createInterfaceInstance(element: HTMLElement, internalEventTarget: EventTarget) {
   const root = createRoot(element);
@@ -26,6 +28,10 @@ import { InternalEventTargetContext } from './app/InternalEventTargetContext';
       }}>
         <InternalEventTargetContext value={internalEventTarget}>
           <InterfaceInstance/>
+
+          <Dialog/>
+
+          <Toolbar/>
         </InternalEventTargetContext>
       </div>
     </StrictMode>

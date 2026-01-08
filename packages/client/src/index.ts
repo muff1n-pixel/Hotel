@@ -10,6 +10,8 @@ import RoomRenderer from "@/Room/Renderer.js";
 import FloorRenderer from "@/Room/Structure/FloorRenderer.js";
 import WallRenderer from "@/Room/Structure/WallRenderer.js";
 import ClientInstance from "./ClientInstance.js";
+import ClientFigureRequest from "@shared/interfaces/requests/ClientFigureRequest.js";
+import ClientFigureResponse from "@shared/interfaces/responses/ClientFigureResponse.js";
 
 (window as any).createClientInstance = async function createClientInstance(element: HTMLElement, internalEventTarget: EventTarget) {
     await FigureAssets.loadAssets();
@@ -208,6 +210,16 @@ import ClientInstance from "./ClientInstance.js";
             if(figureItem.position && event.floorEntity) {
                 figureItem.setPositionPath(figureItem.position, event.floorEntity.position); 
             }
+        });
+
+        internalEventTarget.addEventListener("ClientFigureRequest", (_event) => {
+            // const event = _event as ClientFigureRequest;
+
+            console.log("Received ClientFigureRequest from interface");
+
+            figureRenderer.renderToCanvas(2 * 8).then(({ image }) => {
+                internalEventTarget.dispatchEvent(new ClientFigureResponse("user", image));
+            });
         });
     }
 

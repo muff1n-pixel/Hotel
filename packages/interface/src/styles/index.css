@@ -13,6 +13,13 @@ body {
   background-color: black;
 
   display: flex;
+
+  user-select: none;
+}
+
+b {
+  font-family: "Ubuntu Bold";
+  font-weight: 400;
 }
 
 #client {
