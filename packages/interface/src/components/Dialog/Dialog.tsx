@@ -1,12 +1,22 @@
-import { MouseEventHandler, useCallback, useEffect, useRef, useState } from "react";
+import { MouseEventHandler, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
 import DialogHeader, { MousePosition } from "./DialogHeader";
 
-export default function Dialog() {
+export type DialogProps = PropsWithChildren & {
+    title: string;
+};
+
+export default function Dialog({ title, children }: DialogProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const positionRef = useRef<MousePosition>({
-        left: 0,
-        top: 0
+        left: 200,
+        top: 200
     });
+
+    useEffect(() => {
+        if(elementRef) {
+            elementRef.current!.style.transform = `translate(${positionRef.current.left}px, ${positionRef.current.top}px)`;
+        }
+    }, [elementRef]);
 
     const onDialogMove = useCallback((event: MouseEvent) => {
         const position: MousePosition = {
@@ -49,7 +59,7 @@ export default function Dialog() {
             backgroundColor: "#ECEAE0",
 
             width: 500,
-            height: 400,
+            minHeight: 400,
 
             left: 0,
             top: 0,
@@ -63,7 +73,7 @@ export default function Dialog() {
 
             pointerEvents: "auto"
         }}>
-            <DialogHeader title="Change Your Looks" onDialogMove={onDialogMove}/>
+            <DialogHeader title={title} onDialogMove={onDialogMove}/>
 
             <div style={{
                 height: 1,
@@ -71,16 +81,7 @@ export default function Dialog() {
                 backgroundColor: "black"
             }}/>
 
-            <div style={{
-                flex: 1,
-
-                border: "2px solid white",
-                borderBottomLeftRadius: 6,
-                borderBottomRightRadius: 6,
-                borderTop: "none"
-            }}>
-
-            </div>
+            {children}
         </div>
     );
 }

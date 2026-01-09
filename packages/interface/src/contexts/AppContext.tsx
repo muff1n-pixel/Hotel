@@ -2,6 +2,7 @@ import { createContext, ReactElement } from "react";
 
 export type TypedEventTarget = EventTarget & {
     addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void;
+    removeEventListener<T>(type: string, callback: ((event: T) => void) | null): void;
 };
 
 export type Dialog = {

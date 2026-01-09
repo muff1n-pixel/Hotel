@@ -1,16 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../contexts/AppContext";
 import ClientFigureRequest from "@shared/interfaces/requests/ClientFigureRequest";
 import ClientFigureResponse from "@shared/interfaces/responses/ClientFigureResponse";
-import { AppContext } from "../../../contexts/AppContext";
+import OffscreenCanvasRender from "../OffscreenCanvasRender";
 
-export default function ToolbarFigureItem() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const {internalEventTarget} = useContext(AppContext);
+export default function WardrobeAvatar() {
+    const { internalEventTarget } = useContext(AppContext);
 
     const [figureImage, setFigureImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
-        const requestEvent = new ClientFigureRequest("user", 2);
+        const requestEvent = new ClientFigureRequest("user", 4);
 
         const listener = (event: ClientFigureResponse) => {
             if(event.id !== requestEvent.id) {
@@ -29,23 +29,18 @@ export default function ToolbarFigureItem() {
         };
     }, []);
 
-    useEffect(() => {
-        if(canvasRef.current && figureImage) {
-            const context = canvasRef.current.getContext("2d");
-
-            context?.translate(20, 22);
-            context?.drawImage(figureImage, -128, -96 - 12);
-        }
-    }, [canvasRef, figureImage]);
-
     return (
         <div style={{
-            height: 40,
-            width: 44,
-
+            width: "100%",
+            height: 200,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
             overflow: "hidden"
         }}>
-            <canvas ref={canvasRef} width={40} height={44}/>
+            {(figureImage) && (<OffscreenCanvasRender offscreenCanvas={figureImage} scale={2} style={{
+            }}/>)}
         </div>
     );
 }

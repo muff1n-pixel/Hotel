@@ -27,10 +27,18 @@ export default class AssetFetcher {
             return await this.json.get(url)! as T;
         }
 
-        const result = new Promise<T>(async (resolve) => {
+        const result = new Promise<T>(async (resolve, reject) => {
             const response = await fetch(url, {
                 method: "GET"
             });
+
+            if(!response.ok) {
+                return reject();
+            }
+
+            if(response.status !== 200) {
+                return reject();
+            }
 
             const result = await response.json();
 
@@ -47,11 +55,15 @@ export default class AssetFetcher {
             return await this.images.get(url)!;
         }
 
-        const result = new Promise<HTMLImageElement>(async (resolve) => {
+        const result = new Promise<HTMLImageElement>(async (resolve, reject) => {
             const image = new Image();
 
             image.onload = () => {
                 resolve(image);
+            };
+
+            image.onerror = () => {
+                reject();
             };
 
             image.src = url;

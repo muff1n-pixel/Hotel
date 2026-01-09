@@ -214,10 +214,11 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
         });
 
         internalEventTarget.addEventListener<ClientFigureRequest>("ClientFigureRequest", (event) => {
-            console.log("Received ClientFigureRequest from interface");
+            //console.log("Received ClientFigureRequest from interface");
+            const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hd-180-2.hr-828-31.ea-3196-62.ch-255-1415.lg-3216-110.sh-305-62"), event.direction);
 
-            figureRenderer.renderToCanvas(2 * 8).then(({ image }) => {
-                internalEventTarget.dispatchEvent(new ClientFigureResponse("user", image));
+            figureRenderer.renderToCanvas(0).then(({ image }) => {
+                internalEventTarget.dispatchEvent(new ClientFigureResponse(event.id, "user", image));
             });
         });
     }
@@ -227,7 +228,7 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
     if(generateRandomFigures) {
         for(let row = 1; row < 9; row++) {
             for(let column = 26; column < 49; column++) {
-                const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hr-831-1041.hd-185-1026.ch-805-1134.lg-285-1200.sh-300-1195.ha-0-1041"), row - 1, ["Default", "Move"]);
+                const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hr-831-1041.hd-185-1026.ch-805-1134.lg-285-1200.sh-300-1195.ha-0-1041"), row - 1, ["Default", "Move", "Wave", "GestureSmile"]);
 
                 const figureItem = new RoomFigureItem(figureRenderer, {
                     row,
@@ -239,7 +240,7 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
             }
         }
 
-        for(let row = 11; row < 18; row++) {
+        for(let row = 11; row < 19; row++) {
             for(let column = 26; column < 49; column++) {
                 const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hd-180-2.hr-828-31.ea-3196-62.ch-255-1415.lg-3216-110.sh-305-62"), row - 11, ["Default", "Move"]);
 
@@ -247,6 +248,20 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
                     row,
                     column,
                     depth: 1
+                });
+
+                roomRenderer.items.push(figureItem);
+            }
+        }
+
+        for(let row = 21; row < 29; row++) {
+            for(let column = 26; column < 49; column++) {
+                const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hd-195-1.hr-679-61.ha-1012-110.ch-804-1341.lg-275-110.sh-3089-11"), row - 21, ["Default", "Move", "Respect", "Talk"]);
+
+                const figureItem = new RoomFigureItem(figureRenderer, {
+                    row,
+                    column,
+                    depth: 0
                 });
 
                 roomRenderer.items.push(figureItem);

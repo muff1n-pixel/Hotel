@@ -2,7 +2,7 @@ import { useContext } from "react";
 import ToolbarFigureItem from "./Items/ToolbarFigureItem";
 import ToolbarItem from "./Items/ToolbarItem";
 import { AppContext } from "../../contexts/AppContext";
-import Dialog from "../Dialog/Dialog";
+import WardrobeDialog from "../Wardrobe/WardrobeDialog";
 
 export default function Toolbar() {
     const { addUniqueDialog } = useContext(AppContext);
@@ -42,7 +42,7 @@ export default function Toolbar() {
                 <ToolbarItem onClick={() => {
                     addUniqueDialog({
                         name: "wardrobe",
-                        element: (<Dialog/>)
+                        element: (<WardrobeDialog/>)
                     })
                 }}>
                     <ToolbarFigureItem/>

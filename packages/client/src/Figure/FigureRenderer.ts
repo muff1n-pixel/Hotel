@@ -86,48 +86,51 @@ export default class FigureRenderer {
             return await FigureAssets.figureCollection.get(renderName)!;
         }
 
-        const sprites: Promise<FigureRendererSprite[]> = new Promise(async (resolve) => {
+        const sprites: Promise<FigureRendererSprite[]> = new Promise(async (resolve, reject) => {
             const avatarActionsData = this.getAvatarActionsData(FigureAssets.avataractions, this.actions);
 
-            //if(!this.renderCache) {
-                const renderCache: {
-                    configurationPart: FigureConfiguration[0],
-                    setPartData: FiguredataData["settypes"][0]["sets"][0]["parts"][0],
-                    settypeData: FiguredataData["settypes"][0],
-                    figureData: FigureData,
-                    setPartAssetData: FiguremapData[0]
-                }[] = [];
-                
-                for(let configurationPart of this.configuration) {
-                    const settypeData = this.getSettypeForPartAndSet(configurationPart.type);
+            const renderCache: {
+                configurationPart: FigureConfiguration[0],
+                setPartData: FiguredataData["settypes"][0]["sets"][0]["parts"][0],
+                settypeData: FiguredataData["settypes"][0],
+                figureData: FigureData,
+                setPartAssetData: FiguremapData[0]
+            }[] = [];
 
-                    if(!settypeData) {
+            for(let configurationPart of this.configuration) {
+                const settypeData = this.getSettypeForPartAndSet(configurationPart.type);
+
+                if(!settypeData) {
+                    continue;
+                }
+
+                const setData = this.getSetFromSettype(settypeData, configurationPart.setId);
+
+                if(!setData) {
+                    continue;
+                }
+
+                for(let setPartData of setData.parts) {
+                    if(!setPartData) {
+                        continue;
+                    }
+                    
+                    const setPartAssetData = this.getAssetForSetPart(setPartData.id, setPartData.type);
+
+                    if(!setPartAssetData) {
                         continue;
                     }
 
-                    const setData = this.getSetFromSettype(settypeData, configurationPart.setId);
-
-                    if(!setData) {
-                        continue;
-                    }
-
-                    for(let setPartData of setData.parts) {
-                        if(!setPartData) {
-                            continue;
-                        }
-                        
-                        const setPartAssetData = this.getAssetForSetPart(setPartData.id, setPartData.type);
-
-                        if(!setPartAssetData) {
-                            continue;
-                        }
-
+                    try {
                         const figureData = await FigureAssets.getFigureData(setPartAssetData.id);
 
                         renderCache.push({ figureData, configurationPart, setPartData, settypeData, setPartAssetData })
                     }
+                    catch {
+                        continue;
+                    }
                 }
-            //}
+            }
 
             const spritePromises: PromiseSettledResult<FigureRendererSprite>[] = await Promise.allSettled(
                 renderCache.map(({ figureData, configurationPart, setPartData, settypeData, setPartAssetData }) => {
@@ -140,8 +143,10 @@ export default class FigureRenderer {
 
                         const { actualAssetName, assetData, avatarAction } = asset;
 
-                        if(FigureAssets.assetSprites.has(actualAssetName)) {
-                            const result = FigureAssets.assetSprites.get(actualAssetName);
+                        const assetSpriteName = `${actualAssetName}_${configurationPart.colorIndex}`;
+
+                        if(FigureAssets.assetSprites.has(assetSpriteName)) {
+                            const result = FigureAssets.assetSprites.get(assetSpriteName);
 
                             if(result) {
                                 return resolve(result);
@@ -153,7 +158,7 @@ export default class FigureRenderer {
                         const spriteData = figureData.sprites.find((sprite) => sprite.name === (assetData.source ?? assetData.name));
 
                         if(!spriteData) {
-                            FigureAssets.assetSprites.set(actualAssetName, null);
+                            FigureAssets.assetSprites.set(assetSpriteName, null);
 
                             return reject();
                         }
@@ -161,47 +166,52 @@ export default class FigureRenderer {
                         const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === settypeData.paletteId);
                         const paletteColor = palette?.colors.find((color) => color.id === configurationPart.colorIndex);
 
-                        const sprite = await FigureAssets.getFigureSprite(setPartAssetData.id, {
-                            x: spriteData.x,
-                            y: spriteData.y,
+                        try {
+                            const sprite = await FigureAssets.getFigureSprite(setPartAssetData.id, {
+                                x: spriteData.x,
+                                y: spriteData.y,
 
-                            width: spriteData.width,
-                            height: spriteData.height,
+                                width: spriteData.width,
+                                height: spriteData.height,
 
-                            flipHorizontal: (this.direction > 3 && this.direction < 7)?(!Boolean(assetData.flipHorizontal)):(assetData.flipHorizontal),
+                                flipHorizontal: (this.direction > 3 && this.direction < 7)?(!Boolean(assetData.flipHorizontal)):(assetData.flipHorizontal),
 
-                            color: (setPartData.colorable && configurationPart.colorIndex)?(paletteColor?.color):(undefined),
+                                color: (setPartData.colorable && configurationPart.colorIndex)?(paletteColor?.color):(undefined),
 
-                            ignoreImageData: true
-                        });
+                                ignoreImageData: true
+                            });
 
-                        const priorityDirection = (this.direction > 3 && this.direction < 7)?(6 - this.direction):(this.direction);
+                            const priorityDirection = (this.direction > 3 && this.direction < 7)?(6 - this.direction):(this.direction);
 
-                        const partPriority = figureRenderPriority[this.getFigureRenderPriority(avatarAction.assetPartDefinition)][priorityDirection.toString()].indexOf(setPartData.type);
+                            const partPriority = figureRenderPriority[this.getFigureRenderPriority(avatarAction.assetPartDefinition)][priorityDirection.toString()].indexOf(setPartData.type);
 
-                        if(partPriority === -1) {
-                            return reject();
+                            if(partPriority === -1) {
+                                return reject();
+                            }
+
+                            let x = assetData.x;
+
+                            if((this.direction > 3 && this.direction < 7)) {
+                                x = 64 + (assetData.x * -1) - spriteData.width;
+                            }
+
+                            const result: FigureRendererSprite = {
+                                image: sprite.image,
+                                imageData: sprite.imageData,
+                                
+                                x: x - 32,
+                                y: assetData.y + 32,
+
+                                index: partPriority + setPartData.index,
+                            };
+
+                            FigureAssets.assetSprites.set(assetSpriteName, result);
+
+                            resolve(result);
                         }
-
-                        let x = assetData.x;
-
-                        if((this.direction > 3 && this.direction < 7)) {
-                            x = 64 + (assetData.x * -1) - spriteData.width;
+                        catch {
+                            reject();
                         }
-
-                        const result: FigureRendererSprite = {
-                            image: sprite.image,
-                            imageData: sprite.imageData,
-                            
-                            x: x - 32,
-                            y: assetData.y + 32,
-
-                            index: partPriority + setPartData.index,
-                        };
-
-                        FigureAssets.assetSprites.set(actualAssetName, result);
-
-                        resolve(result);
                     })
                 })
             );
@@ -284,74 +294,80 @@ export default class FigureRenderer {
         return avatarActionsData;
     }
 
-    public async renderToCanvas(frame: number) {
+    public async renderToCanvas(frame: number, cropped: boolean = false) {
         const renderName = `${this.getConfigurationAsString()}_${this.direction}_${this.getSpriteFrameFromSequence(frame)}_${this.actions.join('_')}`;
 
-        if(FigureAssets.figureImage.has(renderName)) {
+        if(!cropped && FigureAssets.figureImage.has(renderName)) {
             return await FigureAssets.figureImage.get(renderName)!;
         }
 
-        const result: Promise<FigureRendererSprite> = new Promise(async (resolve) => {
-            const sprites = await this.render(frame);
+        const result: Promise<FigureRendererSprite> = new Promise(async (resolve, reject) => {
+            try {
+                const sprites = await this.render(frame);
 
-            const canvas = new OffscreenCanvas(256, 256);
+                let minimumX = 128, minimumY = 128, maximumWidth = 128, maximumHeight = 128;
+            
+                if(cropped) {
+                    minimumX = 0;
+                    minimumY = 0;
+                    maximumWidth = 0;
+                    maximumHeight = 0;
 
-            if(!sprites.length) {
-                return {
-                    image: canvas,
-                    imageData: new ImageData(256, 256),
-                    x: -128,
-                    y: -128,
-                    index: 0
-                } satisfies FigureRendererSprite;
-            }
+                    for(let sprite of sprites) {
+                        if(minimumX < Math.abs(sprite.x)) {
+                            minimumX = Math.abs(sprite.x);
+                        }
+                        
+                        if(minimumY < (sprite.y * -1)) {
+                            minimumY = sprite.y * -1;
+                        }
 
-            const context = canvas.getContext("2d");
+                        if(sprite.x + sprite.image.width > maximumWidth) {
+                            maximumWidth = sprite.x + sprite.image.width;
+                        }
 
-            if(!context) {
-                throw new ContextNotAvailableError();
-            }
-
-            sprites.sort((a, b) => a.index - b.index);
-
-            context.translate(128, 128);
-
-            const imageDataArray: number[] = new Array(256 * 256 * 4).fill(0);
-
-            for(let sprite of sprites) {
-                context.drawImage(sprite.image, sprite.x, sprite.y);
-
-                /*for(let x = 0; x < sprite.image.width; x++) {
-                    for(let y = 0; y < sprite.image.height; y++) {
-                        const alpha = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
-
-                        if(alpha > 0) {
-                            for(let index = 0; index < 4; index++) {
-                                imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
-                                imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
-                                imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
-                                imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
-                            }
+                        if(sprite.y + sprite.image.height > maximumHeight) {
+                            maximumHeight = sprite.y + sprite.image.height;
                         }
                     }
-                }*/
+                }
+
+                const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
+
+                if(!sprites.length) {
+                    return reject();
+                }
+
+                const context = canvas.getContext("2d");
+
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
+
+                sprites.sort((a, b) => a.index - b.index);
+
+                for(let sprite of sprites) {
+                    context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
+                }
+
+                resolve({
+                    image: canvas,
+                    imageData: context.getImageData(0, 0, canvas.width, canvas.height),
+
+                    x: -minimumX,
+                    y: -minimumY,
+
+                    index: 0
+                });
             }
-
-            const imageData: ImageDataArray = new Uint8ClampedArray(imageDataArray);
-
-            resolve({
-                image: canvas,
-                //imageData: new ImageData(imageData, 256, 256),
-                imageData: context.getImageData(0, 0, canvas.width, canvas.height),
-
-                x: -128,
-                y: -128,
-
-                index: 0
-            });
+            catch {
+                reject();
+            }
         });
         
-        FigureAssets.figureImage.set(renderName, result);
+        if(!cropped) {
+            FigureAssets.figureImage.set(renderName, result);
+        }
 
         await result;
 

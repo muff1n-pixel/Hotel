@@ -1,14 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import InterfaceInstance from './components/InterfaceInstance';
+import { TypedEventTarget } from './contexts/AppContext';
 
 import "./styles/fonts.css";
 import "./styles/index.css";
 import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
-
-import { AppContext, TypedEventTarget } from './contexts/AppContext';
-import Toolbar from './components/Toolbar/Toolbar';
 
 (window as any).createInterfaceInstance = function createInterfaceInstance(element: HTMLElement, internalEventTarget: TypedEventTarget) {
   const root = createRoot(element);
