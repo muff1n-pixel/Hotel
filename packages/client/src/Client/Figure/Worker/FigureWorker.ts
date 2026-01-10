@@ -3,7 +3,7 @@ import { FigureRenderEvent, FigureRenderResultEvent } from "../Interfaces/Figure
 import { FigureRendererSprite } from "./FigureWorkerRenderer.js";
 
 export default class FigureWorker {
-    private static worker = (() => {
+    private worker = (() => {
         const worker = new Worker("build/client/Workers/Figure/FigureRendererWorker.js", {
             type: "module"
         });
@@ -12,7 +12,7 @@ export default class FigureWorker {
             const id = event.data.id;
 
             if(event.data.type === "canvas") {
-                const request = FigureWorker.canvasRequests.find((request) => request.id === id);
+                const request = this.canvasRequests.find((request) => request.id === id);
 
                 if(!request) {
                     return;
@@ -20,10 +20,10 @@ export default class FigureWorker {
 
                 request.resolve(event.data.sprites);
 
-                FigureWorker.canvasRequests.slice(FigureWorker.canvasRequests.indexOf(request), 1);
+                this.canvasRequests.slice(this.canvasRequests.indexOf(request), 1);
             }
             else if(event.data.type === "sprites") {
-                const request = FigureWorker.spritesRequests.find((request) => request.id === id);
+                const request = this.spritesRequests.find((request) => request.id === id);
 
                 if(!request) {
                     return;
@@ -31,33 +31,37 @@ export default class FigureWorker {
 
                 request.resolve(event.data.sprites);
 
-                FigureWorker.spritesRequests.slice(FigureWorker.spritesRequests.indexOf(request), 1);
+                this.spritesRequests.slice(this.spritesRequests.indexOf(request), 1);
             }
         };
 
         return worker;
     })();
 
-    private static spritesRequests: {
+    private spritesRequests: {
         id: number;
         resolve: (value: FigureRendererSprite[]) => void;
     }[] = [];
 
-    private static canvasRequests: {
+    private canvasRequests: {
         id: number;
         resolve: (value: FigureRendererSprite) => void;
     }[] = [];
 
-    public static renderSpritesInWebWorker(figureRenderer: FigureRenderer, frame: number): Promise<FigureRendererSprite[]> {
+    constructor(private readonly terminateOnComplete: boolean) {
+
+    }
+
+    public renderSpritesInWebWorker(figureRenderer: FigureRenderer, frame: number): Promise<FigureRendererSprite[]> {
         return new Promise<FigureRendererSprite[]>((resolve, reject) => {
             const id = Math.random();
 
-            FigureWorker.spritesRequests.push({
+            this.spritesRequests.push({
                 id,
                 resolve
             });
 
-            FigureWorker.worker.postMessage({
+            this.worker.postMessage({
                 id,
                 frame,
 
@@ -70,16 +74,16 @@ export default class FigureWorker {
         });
     }
 
-    public static renderInWebWorker(figureRenderer: FigureRenderer, frame: number, cropped: boolean): Promise<FigureRendererSprite> {
+    public renderInWebWorker(figureRenderer: FigureRenderer, frame: number, cropped: boolean): Promise<FigureRendererSprite> {
         return new Promise<FigureRendererSprite>((resolve, reject) => {
             const id = Math.random();
 
-            FigureWorker.canvasRequests.push({
+            this.canvasRequests.push({
                 id,
                 resolve
             });
 
-            FigureWorker.worker.postMessage({
+            this.worker.postMessage({
                 id,
                 frame,
                 cropped,
@@ -91,5 +95,13 @@ export default class FigureWorker {
                 actions: figureRenderer.actions,
             } satisfies FigureRenderEvent);
         });
+    }
+
+    public terminate() {
+        if(!this.terminateOnComplete) {
+            return;
+        }
+
+        this.worker.terminate();
     }
 }

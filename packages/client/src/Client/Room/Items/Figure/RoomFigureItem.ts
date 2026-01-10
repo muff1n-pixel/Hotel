@@ -27,7 +27,7 @@ export default class RoomFigureItem extends RoomItem {
                 //this.sprites = [new RoomFigureSprite(this, sprites[0])];
             });*/
             
-            this.figureRenderer.renderToCanvas(frame).then((sprite) => {
+            this.figureRenderer.renderToCanvas(FigureRenderer.figureWorker, frame).then((sprite) => {
                 //this.sprites = sprites.map((sprite) => new RoomFigureSprite(this, sprite));
                 this.sprites = [new RoomFigureSprite(this, sprite)];
             });

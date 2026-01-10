@@ -56,7 +56,7 @@ export default class FigureWorkerRenderer {
     public async render() {
         const currentSpriteFrame = FigureWorkerRenderer.getSpriteFrameFromSequence(this.frame);
 
-        const renderName = `${this.getConfigurationAsString()}_${this.direction}_${currentSpriteFrame}_${this.actions.join('_')}`;
+        //const renderName = `${this.getConfigurationAsString()}_${this.direction}_${currentSpriteFrame}_${this.actions.join('_')}`;
 
         return await new Promise<FigureRendererSprite[]>(async (resolve, reject) => {
             const avatarActionsData = this.getAvatarActionsData(FigureAssets.avataractions, this.actions);
@@ -65,7 +65,6 @@ export default class FigureWorkerRenderer {
                 configurationPart: FigureConfiguration[0],
                 setPartData: FiguredataData["settypes"][0]["sets"][0]["parts"][0],
                 settypeData: FiguredataData["settypes"][0],
-                figureData: FigureData,
                 setPartAssetData: FiguremapData[0]
             }[] = [];
 
@@ -94,9 +93,7 @@ export default class FigureWorkerRenderer {
                     }
 
                     try {
-                        const figureData = await FigureAssets.getFigureData(setPartAssetData.id);
-
-                        renderCache.push({ figureData, configurationPart, setPartData, settypeData, setPartAssetData })
+                        renderCache.push({ configurationPart, setPartData, settypeData, setPartAssetData })
                     }
                     catch {
                         continue;
@@ -105,8 +102,10 @@ export default class FigureWorkerRenderer {
             }
 
             const spritePromises: PromiseSettledResult<FigureRendererSprite>[] = await Promise.allSettled(
-                renderCache.map(({ figureData, configurationPart, setPartData, settypeData, setPartAssetData }) => {
+                renderCache.map(({ configurationPart, setPartData, settypeData, setPartAssetData }) => {
                     return new Promise<FigureRendererSprite>(async (resolve, reject) => {
+                        const figureData = await FigureAssets.getFigureData(setPartAssetData.id);
+
                         const asset = this.getAsset(figureData, avatarActionsData, setPartData, this.direction, currentSpriteFrame);
 
                         if(!asset) {
@@ -274,16 +273,16 @@ export default class FigureWorkerRenderer {
                     maximumHeight = 0;
 
                     for(let sprite of sprites) {
-                        if(minimumX < Math.abs(sprite.x)) {
-                            minimumX = Math.abs(sprite.x);
+                        if(minimumX < sprite.x * -1) {
+                            minimumX = sprite.x * -1;
                         }
                         
                         if(minimumY < Math.abs(sprite.y)) {
                             minimumY = Math.abs(sprite.y);
                         }
 
-                        if(Math.max(sprite.x, 0) + sprite.image.width > maximumWidth) {
-                            maximumWidth = Math.max(sprite.x, 0) + sprite.image.width;
+                        if(sprite.x + sprite.image.width > maximumWidth) {
+                            maximumWidth = sprite.x + sprite.image.width;
                         }
 
                         if(Math.max(sprite.y, 0) + sprite.image.height > maximumHeight) {
@@ -292,7 +291,7 @@ export default class FigureWorkerRenderer {
                     }
                 }
 
-                const canvas = new OffscreenCanvas(maximumWidth, maximumHeight);
+                const canvas = new OffscreenCanvas(minimumX + maximumWidth, maximumHeight);
 
                 if(!sprites.length) {
                     return reject();

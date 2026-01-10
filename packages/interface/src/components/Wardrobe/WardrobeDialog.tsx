@@ -33,6 +33,27 @@ const wardrobeTabs = [
                 spriteName: "sprite_wardrobe_head_face_accesories",
             }
         ]
+    },
+    {
+        spriteName: "sprite_wardrobe_torso_tab",
+        tabs: [
+            {
+                part: "ch" satisfies FigurePartKeyAbbreviation,
+                spriteName: "sprite_wardrobe_top_shirt",
+            },
+            {
+                part: "cp" satisfies FigurePartKeyAbbreviation,
+                spriteName: "sprite_wardrobe_top_prints",
+            },
+            {
+                part: "cc" satisfies FigurePartKeyAbbreviation,
+                spriteName: "sprite_wardrobe_top_jacket",
+            },
+            {
+                part: "ca" satisfies FigurePartKeyAbbreviation,
+                spriteName: "sprite_wardrobe_top_accessories",
+            }
+        ]
     }
 ];
 

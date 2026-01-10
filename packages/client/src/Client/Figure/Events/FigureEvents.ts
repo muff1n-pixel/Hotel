@@ -6,6 +6,7 @@ import FigureRenderer from "../FigureRenderer.js";
 import ClientFigureRequest from "@shared/events/requests/ClientFigureRequest.js";
 import ClientFigureResponse from "@shared/events/responses/ClientFigureResponse.js";
 import FigureConfigurationHelper from "@shared/figure/FigureConfigurationHelper.js";
+import FigureWorker from "../Worker/FigureWorker.js";
 
 export default function registerFigureEvents(internalEventTarget: TypedEventTarget) {
     internalEventTarget.addEventListener<ClientFigureDataRequest>("ClientFigureDataRequest", async (event) => {
@@ -17,9 +18,10 @@ export default function registerFigureEvents(internalEventTarget: TypedEventTarg
 
         const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === settype.paletteId);
 
+        const figureWorker = new FigureWorker(true);
+
         const imagePromises = await Promise.allSettled(
             settype.sets.filter((set) => set.selectable && (set.gender === 'U' || (set.gender === 'M' && event.gender === "male") || (set.gender === 'F' && event.gender === "female"))).map(async (set) => {
-                console.log(event.colorId);
                 const figureRenderer = new FigureRenderer([
                     {
                         type: settype.type,
@@ -29,7 +31,7 @@ export default function registerFigureEvents(internalEventTarget: TypedEventTarg
                 ], 2);
 
                 const image = new Promise<ImageBitmap>((resolve, reject) => {
-                    figureRenderer.renderToCanvas(0, true).then(({ image }) => resolve(image)).catch(reject);
+                    figureRenderer.renderToCanvas(figureWorker, 0, true).then(({ image }) => resolve(image)).catch(reject);
                 });
 
                 return {
@@ -50,6 +52,10 @@ export default function registerFigureEvents(internalEventTarget: TypedEventTarg
         }) ?? [];
 
         internalEventTarget.dispatchEvent(new ClientFigureDataResponse(event.id, items, colors, settype.mandatoryGender[event.gender][0]));
+
+        Promise.allSettled(items.map((item) => item.image)).then(() => {
+            figureWorker.terminate();
+        });
     });
     
     internalEventTarget.addEventListener<ClientFigureRequest>("ClientFigureRequest", (event) => {
@@ -57,7 +63,7 @@ export default function registerFigureEvents(internalEventTarget: TypedEventTarg
 
         const figureRenderer = new FigureRenderer(configuration, event.direction);
 
-        figureRenderer.renderToCanvas(0).then(({ image }) => {
+        figureRenderer.renderToCanvas(FigureRenderer.figureWorker, 0).then(({ image }) => {
             internalEventTarget.dispatchEvent(new ClientFigureResponse(event.id, image));
         });
     });

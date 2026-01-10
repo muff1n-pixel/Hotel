@@ -194,7 +194,7 @@ import FigureConfigurationHelper from "@shared/figure/FigureConfigurationHelper.
 
         const figureRenderer = new FigureRenderer(FigureConfigurationHelper.getConfigurationFromString("hd-180-2.hr-828-31.ea-3196-62.ch-255-1415.lg-3216-110.sh-305-62"), 2);
 
-        figureRenderer.renderToCanvas(2 * 8).then(({ image, imageData }) => {
+        figureRenderer.renderToCanvas(FigureRenderer.figureWorker, 2 * 8).then(({ image, imageData }) => {
             context?.putImageData(imageData, 0, 0);
         });
 

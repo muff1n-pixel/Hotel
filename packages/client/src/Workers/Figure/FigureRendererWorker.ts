@@ -1,5 +1,4 @@
 import FigureAssets from "@/Assets/FigureAssets.js";
-import FigureRenderer from "@/Figure/FigureRenderer.js";
 import FigureWorkerRenderer from "@/Figure/Worker/FigureWorkerRenderer.js";
 import { FigureRenderEvent } from "@/Figure/Interfaces/FigureRenderEvent.js";
 

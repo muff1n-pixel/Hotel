@@ -4,6 +4,8 @@ import FigureAssets from "@/Assets/FigureAssets.js";
 import FigureWorker from "./Worker/FigureWorker.js";
 
 export default class FigureRenderer {
+    public static readonly figureWorker: FigureWorker = new FigureWorker(false);
+
     public static figureItemAbbreviations: Record<FigurePartKey, FigurePartKeyAbbreviation> = {
         hair: "hr",
         leg: "lg",
@@ -22,7 +24,7 @@ export default class FigureRenderer {
 
     }
 
-    public async render(frame: number) {
+    public async render(figureWorker: FigureWorker, frame: number) {
         const currentSpriteFrame = FigureWorkerRenderer.getSpriteFrameFromSequence(frame);
 
         const renderName = `${this.getConfigurationAsString()}_${this.direction}_${currentSpriteFrame}_${this.actions.join('_')}`;
@@ -31,14 +33,14 @@ export default class FigureRenderer {
             return await FigureAssets.figureCollection.get(renderName)!;
         }
 
-        const result = FigureWorker.renderSpritesInWebWorker(this, frame);
+        const result = figureWorker.renderSpritesInWebWorker(this, frame);
 
         FigureAssets.figureCollection.set(renderName, result);
 
         return await result;
     }
 
-    public async renderToCanvas(frame: number, cropped: boolean = false) {
+    public async renderToCanvas(figureWorker: FigureWorker, frame: number, cropped: boolean = false) {
         let renderName = `${this.getConfigurationAsString()}_${this.direction}_${FigureWorkerRenderer.getSpriteFrameFromSequence(frame)}_${this.actions.join('_')}`;
 
         if(cropped) {
@@ -49,7 +51,7 @@ export default class FigureRenderer {
             return await FigureAssets.figureImage.get(renderName)!;
         }
         
-        const result = FigureWorker.renderInWebWorker(this, frame, cropped);
+        const result = figureWorker.renderInWebWorker(this, frame, cropped);
         
         FigureAssets.figureImage.set(renderName, result);
 
