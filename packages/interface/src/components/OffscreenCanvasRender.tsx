@@ -15,7 +15,7 @@ export default function OffscreenCanvasRender({ offscreenCanvas, style, scale = 
                 return;
             }
 
-            const image = await offscreenCanvas;
+            const image = (offscreenCanvas instanceof OffscreenCanvas)?(offscreenCanvas):(await offscreenCanvas);
 
             canvasRef.current.width = image.width * scale;
             canvasRef.current.height = image.height * scale;

@@ -5,10 +5,10 @@
     "module": "esnext",
     "rootDir": "src/",
     "moduleResolution": "node",
-    "baseUrl": "./",
+    "baseUrl": "./src/",
     "paths": {
-      "@shared/*": ["../shared/*"],
-      "@/*": ["src/*"]
+      "@shared/*": ["../../shared/*"],
+      "@/*": ["Client/*"]
     },
     "typeRoots": [
       "@types/node"
@@ -21,7 +21,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/*"
+    "src/Client/*",
+    "src/Workers/*"
   ],
   "references": [
     {

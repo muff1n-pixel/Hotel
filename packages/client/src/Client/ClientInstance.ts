@@ -1,4 +1,4 @@
-import registerFigureEvents from "@/Figure/FigureEvents.js";
+import registerFigureEvents from "@/Figure/Events/FigureEvents.js";
 import { TypedEventTarget } from "./Interfaces/TypedEventTarget.js";
 
 export default class ClientInstance {

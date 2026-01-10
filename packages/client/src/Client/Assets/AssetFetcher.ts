@@ -19,7 +19,7 @@ export type AssetSpriteProperties = {
 
 export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
-    private static images: Map<string, Promise<HTMLImageElement>> = new Map();
+    private static images: Map<string, Promise<ImageBitmap>> = new Map();
     private static sprites: Record<string, (AssetSpriteProperties & { sprite: Promise<{ image: OffscreenCanvas, imageData: ImageData }> })[]> = {};
 
     public static async fetchJson<T>(url: string): Promise<T> {
@@ -55,18 +55,24 @@ export default class AssetFetcher {
             return await this.images.get(url)!;
         }
 
-        const result = new Promise<HTMLImageElement>(async (resolve, reject) => {
-            const image = new Image();
+        const result = new Promise<ImageBitmap>(async (resolve, reject) => {
+            const response = await fetch(url, {
+                method: "GET"
+            });
 
-            image.onload = () => {
-                resolve(image);
-            };
+            if(!response.ok) {
+                return reject();
+            }
 
-            image.onerror = () => {
-                reject();
-            };
+            if(response.status !== 200) {
+                return reject();
+            }
 
-            image.src = url;
+            const blob = await response.blob();
+
+            const image = await createImageBitmap(blob);
+
+            resolve(image);
         });
 
         this.images.set(url, result);

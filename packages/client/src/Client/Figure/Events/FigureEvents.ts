@@ -2,7 +2,7 @@ import FigureAssets from "@/Assets/FigureAssets.js";
 import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
 import ClientFigureDataRequest from "@shared/events/requests/ClientFigureDataRequest.js";
 import ClientFigureDataResponse from "@shared/events/responses/ClientFigureDataResponse.js";
-import FigureRenderer from "./FigureRenderer.js";
+import FigureRenderer from "../FigureRenderer.js";
 
 export default function registerFigureEvents(internalEventTarget: TypedEventTarget) {
     internalEventTarget.addEventListener<ClientFigureDataRequest>("ClientFigureDataRequest", async (event) => {
@@ -22,7 +22,7 @@ export default function registerFigureEvents(internalEventTarget: TypedEventTarg
                 ], 2);
 
                 const image = new Promise<OffscreenCanvas>((resolve, reject) => {
-                    figureRenderer.renderToCanvas(0, true).then(({ image }) => resolve(image)).catch(reject);
+                    figureRenderer.renderToCanvas(0, true).then(({ image }) => resolve(image as any as OffscreenCanvas)).catch(reject);
                 });
 
                 return {

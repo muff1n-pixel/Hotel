@@ -9,10 +9,10 @@ export type InterfaceInstanceProps = {
 
 export default function InterfaceInstance({ internalEventTarget }: InterfaceInstanceProps) {
     const [dialogs, setDialogs] = useState<Dialog[]>([
-        {
+        /*{
             name: "wardrobe",
             element: (<WardrobeDialog/>)
-        }
+        }*/
     ]);
 
     useEffect(() => {

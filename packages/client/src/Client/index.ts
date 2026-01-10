@@ -13,6 +13,8 @@ import ClientInstance from "./ClientInstance.js";
 import ClientFigureRequest from "@shared/events/requests/ClientFigureRequest.js";
 import ClientFigureResponse from "@shared/events/responses/ClientFigureResponse.js";
 import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
+import "@/../Workers/Figure/FigureRendererWorker.js";
+import "@/Figure/Worker/FigureWorkerRenderer.js";
 
 (window as any).createClientInstance = async function createClientInstance(element: HTMLElement, internalEventTarget: TypedEventTarget) {
     await FigureAssets.loadAssets();
@@ -218,7 +220,7 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
             const figureRenderer = new FigureRenderer(FigureRenderer.getConfigurationFromString("hd-180-2.hr-828-31.ea-3196-62.ch-255-1415.lg-3216-110.sh-305-62"), event.direction);
 
             figureRenderer.renderToCanvas(0).then(({ image }) => {
-                internalEventTarget.dispatchEvent(new ClientFigureResponse(event.id, "user", image));
+                internalEventTarget.dispatchEvent(new ClientFigureResponse(event.id, "user", image as any as OffscreenCanvas));
             });
         });
     }
@@ -268,4 +270,19 @@ import type { TypedEventTarget } from "@/Interfaces/TypedEventTarget.js";
             }
         }
     }
+
+    function renderFigureInWebWorker() {
+        const myWorker = new Worker("build/client/Workers/Figure/FigureRendererWorker.js", {
+            type: "module"
+        });
+
+        myWorker.onmessage = (e) => {
+            console.log("Message received from worker", e.data);
+        };
+
+        myWorker.postMessage([1,2]);
+        console.log("Message posted to worker");
+    }
+
+    //renderFigureInWebWorker();
 }

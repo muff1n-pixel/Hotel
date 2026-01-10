@@ -1,5 +1,5 @@
 import FurnitureRenderer from "@/Furniture/FurnitureRenderer.js";
-import RoomRenderer from "./Renderer";
+import RoomRenderer from "./Renderer.js";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem.js";
 import RoomClickEvent from "@/Events/RoomClickEvent.js";
 

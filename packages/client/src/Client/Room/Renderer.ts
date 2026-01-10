@@ -5,10 +5,10 @@ import ContextNotAvailableError from "@/Exceptions/ContextNotAvailableError.js";
 import RoomRenderEvent from "@/Events/RoomRenderEvent.js";
 import RoomCursor from "./RoomCursor.js";
 import { RoomPosition } from "@/Interfaces/RoomPosition";
-import RoomSprite from "./Items/RoomSprite";
+import RoomSprite from "./Items/RoomSprite.js";
 import Performance from "@/Utilities/Performance.js";
 import RoomFrameEvent from "@/Events/RoomFrameEvent.js";
-import RoomItem from "./Items/RoomItem";
+import RoomItem from "./Items/RoomItem.js";
 import ClientInstance from "@/ClientInstance.js";
 
 export default class RoomRenderer extends EventTarget {

@@ -1,14 +1,15 @@
 import { FiguremapData } from "@/Interfaces/Figure/FiguremapData.js";
-import FigureAssets from "../Assets/FigureAssets.js";
-import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError.js";
+import FigureAssets from "../../Assets/FigureAssets.js";
+import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError.js";
 import { FiguredataData } from "@/Interfaces/Figure/FiguredataData.js";
-import { figureRenderPriority } from "./FigureRenderPriority.js";
+import { figureRenderPriority } from "../FigureRenderPriority.js";
 import { AvatarActionsData } from "@/Interfaces/Figure/Avataractions.js";
 import { FigureData } from "@/Interfaces/Figure/FigureData.js";
 import { FigureConfiguration, FigurePartKey, FigurePartKeyAbbreviation } from "@shared/interfaces/figure/FigureConfiguration.js";
+import FigureWorker from "./FigureWorker.js";
 
 export type FigureRendererSprite = {
-    image: OffscreenCanvas;
+    image: ImageBitmap;
     imageData: ImageData;
 
     x: number;
@@ -17,22 +18,8 @@ export type FigureRendererSprite = {
     index: number;
 }
 
-export default class FigureRenderer {
-    public static figureItemAbbreviations: Record<FigurePartKey, FigurePartKeyAbbreviation> = {
-        hair: "hr",
-        leg: "lg",
-        shirt: "ch",
-        body: "hd",
-        shoe: "sh",
-        head: "he",
-        waist: "wa",
-        hat: "ha",
-        chest: "ca",
-        eye: "ea",
-        face: "fa"
-    };
-
-    constructor(private readonly configuration: FigureConfiguration, public direction: number, public readonly actions: string[] =  ["Default"]) {
+export default class FigureWorkerRenderer {
+    constructor(public readonly configuration: FigureConfiguration, public direction: number, public readonly actions: string[], public readonly frame: number) {
 
     }
 
@@ -58,7 +45,7 @@ export default class FigureRenderer {
         return null;
     }
 
-    public getSpriteFrameFromSequence(frame: number) {
+    public static getSpriteFrameFromSequence(frame: number) {
         const frameSequence = 4;
         const frameRepeat = 2;
         const spriteFrame = Math.floor((frame % (frameSequence * frameRepeat)) / frameRepeat);
@@ -66,20 +53,12 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    public async render(frame: number) {
-        //if(this.isRendering) {
-        //    return [];
-        //}
-
-        const currentSpriteFrame = this.getSpriteFrameFromSequence(frame);
+    public async render() {
+        const currentSpriteFrame = FigureWorkerRenderer.getSpriteFrameFromSequence(this.frame);
 
         const renderName = `${this.getConfigurationAsString()}_${this.direction}_${currentSpriteFrame}_${this.actions.join('_')}`;
 
-        if(FigureAssets.figureCollection.has(renderName)) {
-            return await FigureAssets.figureCollection.get(renderName)!;
-        }
-
-        const sprites: Promise<FigureRendererSprite[]> = new Promise(async (resolve, reject) => {
+        return await new Promise<FigureRendererSprite[]>(async (resolve, reject) => {
             const avatarActionsData = this.getAvatarActionsData(FigureAssets.avataractions, this.actions);
 
             const renderCache: {
@@ -189,7 +168,7 @@ export default class FigureRenderer {
                             }
 
                             const result: FigureRendererSprite = {
-                                image: sprite.image,
+                                image: await createImageBitmap(sprite.image),
                                 imageData: sprite.imageData,
                                 
                                 x: x - 32,
@@ -213,12 +192,6 @@ export default class FigureRenderer {
 
             resolve(sprites);
         });
-
-        FigureAssets.figureCollection.set(renderName, sprites);
-
-        const result = await sprites;
-
-        return result;
     }
 
     private getAsset(figureData: FigureData, avatarActions: AvatarActionsData, setPartData: FiguredataData["settypes"][0]["sets"][0]["parts"][0], direction: number, spriteFrame: number) {
@@ -287,16 +260,10 @@ export default class FigureRenderer {
         return avatarActionsData;
     }
 
-    public async renderToCanvas(frame: number, cropped: boolean = false) {
-        const renderName = `${this.getConfigurationAsString()}_${this.direction}_${this.getSpriteFrameFromSequence(frame)}_${this.actions.join('_')}`;
-
-        if(!cropped && FigureAssets.figureImage.has(renderName)) {
-            return await FigureAssets.figureImage.get(renderName)!;
-        }
-
-        const result: Promise<FigureRendererSprite> = new Promise(async (resolve, reject) => {
+    public async renderToCanvas(cropped: boolean = false) {
+        return await new Promise<FigureRendererSprite>(async (resolve, reject) => {
             try {
-                const sprites = await this.render(frame);
+                const sprites = await this.render();
 
                 let minimumX = 128, minimumY = 128, maximumWidth = 256, maximumHeight = 256;
             
@@ -328,10 +295,6 @@ export default class FigureRenderer {
                 const canvas = new OffscreenCanvas(maximumWidth, maximumHeight);
 
                 if(!sprites.length) {
-                    if(renderName.startsWith("hr-831_")) {
-                        console.log("no sprites");
-                    }
-
                     return reject();
                 }
 
@@ -348,7 +311,7 @@ export default class FigureRenderer {
                 }
 
                 resolve({
-                    image: canvas,
+                    image: await createImageBitmap(canvas),
                     imageData: context.getImageData(0, 0, canvas.width, canvas.height),
 
                     x: -minimumX,
@@ -361,32 +324,6 @@ export default class FigureRenderer {
                 reject();
             }
         });
-        
-        if(!cropped) {
-            FigureAssets.figureImage.set(renderName, result);
-        }
-
-        await result;
-
-        return result;
-    }
-
-    public static getConfigurationFromString(figureString: string): FigureConfiguration {
-        const parts = figureString.split('.');
-
-        const configuration: FigureConfiguration = [];
-
-        for(let part of parts) {
-            const sections = part.split('-');
-
-            configuration.push({
-                type: sections[0] as FigurePartKeyAbbreviation,
-                setId: sections[1],
-                colorIndex: (sections[2])?(parseInt(sections[2])):(undefined)
-            });
-        }
-
-        return configuration;
     }
 
     public getConfigurationAsString(): string {
@@ -398,21 +335,5 @@ export default class FigureRenderer {
             default:
                 return "std";
         }
-    }
-
-    public addAction(id: string) {
-        if(this.actions.includes(id)) {
-            return;
-        }
-
-        this.actions.push(id);
-    }
-
-    public removeAction(id: string) {
-        if(!this.actions.includes(id)) {
-            return;
-        }
-
-        this.actions.splice(this.actions.indexOf(id), 1);
     }
 }

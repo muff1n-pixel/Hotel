@@ -4,15 +4,15 @@ import { RoomData } from "@/Interfaces/Room/RoomData.js";
 
 export default class RoomAssets {
     public static async getRoomData(assetName: string) {
-        return await AssetFetcher.fetchJson<RoomData>(`../assets/room/${assetName}/${assetName}.json`);
+        return await AssetFetcher.fetchJson<RoomData>(`/assets/room/${assetName}/${assetName}.json`);
     }
 
     public static async getRoomSpritesheet(assetName: string) {
-        return await AssetFetcher.fetchImage(`../assets/room/${assetName}/${assetName}.png`);
+        return await AssetFetcher.fetchImage(`/assets/room/${assetName}/${assetName}.png`);
     }
 
     public static async getRoomSprite(assetName: string, properties: AssetSpriteProperties): Promise<{ image: OffscreenCanvas, imageData: ImageData }> {
-        return await AssetFetcher.fetchImageSprite(`../assets/room/${assetName}/${assetName}.png`, properties);
+        return await AssetFetcher.fetchImageSprite(`/assets/room/${assetName}/${assetName}.png`, properties);
     }
 
     //public static readonly assetSprites: Map<string, FurnitureRendererSprite | null> = new Map();
