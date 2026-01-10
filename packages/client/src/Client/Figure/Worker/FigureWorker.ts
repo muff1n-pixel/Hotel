@@ -1,4 +1,5 @@
 import FigureRenderer from "../FigureRenderer.js";
+import { FigureRenderEvent, FigureRenderResultEvent } from "../Interfaces/FigureRenderEvent.js";
 import { FigureRendererSprite } from "./FigureWorkerRenderer.js";
 
 export default class FigureWorker {
@@ -7,7 +8,7 @@ export default class FigureWorker {
             type: "module"
         });
         
-        worker.onmessage = (event) => {
+        worker.onmessage = (event: MessageEvent<FigureRenderResultEvent>) => {
             const id = event.data.id;
 
             if(event.data.type === "canvas") {
@@ -65,7 +66,7 @@ export default class FigureWorker {
                 configuration: figureRenderer.configuration,
                 direction: figureRenderer.direction,
                 actions: figureRenderer.actions,
-            });
+            } satisfies FigureRenderEvent);
         });
     }
 
@@ -88,7 +89,7 @@ export default class FigureWorker {
                 configuration: figureRenderer.configuration,
                 direction: figureRenderer.direction,
                 actions: figureRenderer.actions,
-            });
+            } satisfies FigureRenderEvent);
         });
     }
 }

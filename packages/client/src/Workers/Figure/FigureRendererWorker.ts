@@ -1,8 +1,9 @@
 import FigureAssets from "@/Assets/FigureAssets.js";
 import FigureRenderer from "@/Figure/FigureRenderer.js";
 import FigureWorkerRenderer from "@/Figure/Worker/FigureWorkerRenderer.js";
+import { FigureRenderEvent } from "@/Figure/Interfaces/FigureRenderEvent.js";
 
-onmessage = async (event) => {
+onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     await FigureAssets.loadAssets();
 
     const figureRenderer = new FigureWorkerRenderer(event.data.configuration, event.data.direction, event.data.actions, event.data.frame);
