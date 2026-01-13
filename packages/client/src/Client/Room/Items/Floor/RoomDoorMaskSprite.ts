@@ -19,7 +19,7 @@ export default class RoomDoorMaskSprite extends RoomSprite {
 
         this.offset = {
             left: -(this.item.wallRenderer.rows * 32),
-            top: -((this.item.wallRenderer.depth + 3.5) * 32) - 2
+            top: -((this.item.wallRenderer.depth + 3.5) * 32)
         }
     }
 

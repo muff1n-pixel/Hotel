@@ -26,6 +26,7 @@ export default class RoomMapItem extends RoomItem {
         this.wallRenderer.renderOffScreen().then(({ wall, doorMask }) => {
             this.sprites.push(new RoomWallSprite(this, wall));
             this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
+            this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
         });
     }
 }
