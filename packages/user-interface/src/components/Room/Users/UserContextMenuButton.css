@@ -1,0 +1,13 @@
+.button {
+    border-left: 1px solid #262321;
+    border-right: 1px solid #262321;
+
+    background: linear-gradient(to bottom, #2A2725 50%, #262321 50%);
+}
+
+.button:hover {
+    border-left: 1px solid #292623;
+    border-right: 1px solid #292623;
+
+    background: linear-gradient(to bottom, #2C2926 50%, #292623 50%);
+}

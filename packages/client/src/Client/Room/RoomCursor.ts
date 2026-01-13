@@ -3,12 +3,16 @@ import RoomRenderer from "./Renderer.js";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem.js";
 import RoomClickEvent from "@/Events/RoomClickEvent.js";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem.js";
-import HoveringFigure from "@shared/Events/Room/HoveringFigure.js";
 import StoppedHoveringFigure from "@shared/Events/Room/StoppedHoveringFigure.js";
+import FollowingFigure from "@shared/Events/Room/FollowingFigure.js";
+import StartedHoveringFigure from "@shared/Events/Room/StartedHoveringFigure.js";
+import StartedFollowingFigure from "@shared/Events/Room/StartedFollowingFigure.js";
+import StoppedFollowingFigure from "@shared/Events/Room/StoppedFollowingFigure.js";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
     private hoveringFigure?: RoomFigureItem;
+    private followingFigure?: RoomFigureItem;
 
     constructor(private readonly roomRenderer: RoomRenderer) {
         super();
@@ -33,12 +37,19 @@ export default class RoomCursor extends EventTarget {
     private render() {
         const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
 
-        if(this.hoveringFigure && this.roomRenderer.roomInstance) {
+        if(this.followingFigure && this.roomRenderer.roomInstance) {
+            const user = this.roomRenderer.roomInstance.getUserByItem(this.followingFigure);
+
+            const screenPosition = this.roomRenderer.getItemScreenPosition(this.followingFigure);
+
+            this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
+        }
+        else if(this.hoveringFigure && this.roomRenderer.roomInstance) {
             const user = this.roomRenderer.roomInstance.getUserByItem(this.hoveringFigure);
 
             const screenPosition = this.roomRenderer.getItemScreenPosition(this.hoveringFigure);
 
-            this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new HoveringFigure(user.data.name, screenPosition));
+            this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
         }
         
         if(!entity) {
@@ -63,7 +74,6 @@ export default class RoomCursor extends EventTarget {
             this.roomRenderer.element.style.cursor = "default";
 
             if(this.hoveringFigure) {
-                console.log("Stopped hovering figure")
                 this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StoppedHoveringFigure());
     
                 delete this.hoveringFigure;
@@ -76,15 +86,13 @@ export default class RoomCursor extends EventTarget {
 
         if(!this.hoveringFigure && this.roomRenderer.roomInstance) {
             if(entity.item instanceof RoomFigureItem) {
-                console.log("Started hovering figure on frame");
-
                 this.hoveringFigure = entity.item;
 
                 const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
 
                 const screenPosition = this.roomRenderer.getItemScreenPosition(entity.item);
 
-                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new HoveringFigure(user.data.name, screenPosition));
+                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
             }
         }
     }
@@ -95,6 +103,25 @@ export default class RoomCursor extends EventTarget {
 
         if(floorEntity || otherEntity) {
             this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
+        }
+
+        if(this.roomRenderer.roomInstance) {
+            if(otherEntity?.item instanceof RoomFigureItem) {
+                if(this.followingFigure?.id !== otherEntity.item.id) {
+                    this.followingFigure = otherEntity.item;
+
+                    const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
+
+                    const screenPosition = this.roomRenderer.getItemScreenPosition(otherEntity.item);
+
+                    this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
+                }
+            }
+            else if(this.followingFigure && (!floorEntity || otherEntity)) {
+                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StoppedFollowingFigure());
+    
+                delete this.followingFigure;
+            }
         }
     }
 }

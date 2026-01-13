@@ -5,7 +5,7 @@ import { AppContext } from "../../contexts/AppContext";
 import WardrobeDialog from "../Wardrobe/WardrobeDialog";
 
 export default function Toolbar() {
-    const { addUniqueDialog, closeDialog } = useContext(AppContext);
+    const { user, addUniqueDialog, closeDialog } = useContext(AppContext);
 
     return (
         <div style={{

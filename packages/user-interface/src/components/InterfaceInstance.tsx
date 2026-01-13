@@ -66,16 +66,28 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
             rootRef.current = createRoot(dialogContainerRef.current);
         }
 
+        if(!user) {
+            return;
+        }
+
         rootRef.current.render(
-            <>
+            <AppContext value={{
+                addUniqueDialog,
+                closeDialog,
+
+                user,
+
+                internalEventTarget,
+                webSocketClient
+            }}>
                 {dialogs.map((dialog) => (
                     <Fragment key={dialog.id}>
                         {dialog.element}
                     </Fragment>
                 ))}
-            </>
+            </AppContext>
         );
-    }, [dialogContainerRef, rootRef]);
+    }, [dialogContainerRef, rootRef, user]);
 
     const addUniqueDialog = useCallback((id: string, element: ReactElement) => {
         if(dialogs.current.some((dialog) => dialog.id === id)) {
@@ -90,7 +102,7 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
         });
 
         updateDialogs(dialogs.current);
-    }, [dialogs]);
+    }, [dialogs, user]);
 
     const closeDialog = useCallback((id: string) => {
         const index = dialogs.current.findIndex((dialog) => dialog.id === id);
@@ -104,7 +116,11 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
         dialogs.current.splice(index, 1);
 
         updateDialogs(dialogs.current);
-    }, [dialogs]);
+    }, [dialogs, user]);
+
+    if(!user) {
+        return null;
+    }
 
     return (
         <AppContext value={{

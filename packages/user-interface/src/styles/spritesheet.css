@@ -48,3 +48,4 @@
 .sprite_dialog_close:active { background-image: url('./spritesheet.png'); background-position: -231px -92px; width: 19px; height: 20px; }
 .sprite_dialog_close:hover { background-image: url('./spritesheet.png'); background-position: -231px -112px; width: 19px; height: 20px; }
 .sprite_dialog_close { background-image: url('./spritesheet.png'); background-position: -231px -132px; width: 19px; height: 20px; }
+.sprite_context-menu_arrow-down { background-image: url('./spritesheet.png'); background-position: -250px -92px; width: 10px; height: 5px; }

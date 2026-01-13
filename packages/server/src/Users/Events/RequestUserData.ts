@@ -5,6 +5,7 @@ import { UserDataUpdated } from "@shared/WebSocket/Events/User/UserDataUpdated.j
 
 eventHandler.addListener("RequestUserData", async (client: UserClient) => {
     client.send(new OutgoingEvent<UserDataUpdated>("UserDataUpdated", {
+        id: client.user.id,
         name: client.user.name,
         figureConfiguration: client.user.figureConfiguration
     }));

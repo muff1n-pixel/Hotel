@@ -10,6 +10,7 @@ import "./Users/Events/RequestUserData.js";
 
 eventHandler.addListener("ClientPingEvent", (userClient: UserClient) => {
 	userClient.send(new OutgoingEvent<UserDataUpdated>("UserDataUpdated", {
+        id: userClient.user.id,
 		name: userClient.user.name,
 		figureConfiguration: userClient.user.figureConfiguration
 	}));

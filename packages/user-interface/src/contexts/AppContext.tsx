@@ -29,5 +29,5 @@ export const AppContext = createContext<App>({
     closeDialog: () => {},
 
     webSocketClient: null as any as WebSocketClient,
-    internalEventTarget: new EventTarget() as TypedEventTarget
+    internalEventTarget: null as any as TypedEventTarget
 });

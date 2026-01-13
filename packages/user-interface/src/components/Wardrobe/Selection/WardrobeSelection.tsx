@@ -7,7 +7,7 @@ import WardrobeAvatar from "../WardrobeAvatar";
 
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@shared/interfaces/figure/FigureConfiguration";
+import { FigureConfiguration, FigurePartKeyAbbreviation } from "@shared/Interfaces/figure/FigureConfiguration";
 
 export type WardrobeSelectionProps = {
     part: FigurePartKeyAbbreviation;
@@ -29,6 +29,8 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
         }
 
         requestedData.current = true;
+
+        console.log("requesting figure");
 
         const requestEvent = new ClientFigureDataRequest(part, "male", undefined);
 
