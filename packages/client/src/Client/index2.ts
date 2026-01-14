@@ -207,7 +207,7 @@ import { TypedEventTarget } from "@shared/Interfaces/TypedEventTarget.js";
 
         roomRenderer.items.push(figureItem);
 
-        roomRenderer.cursor.addEventListener("click", (event: Event) => {
+        roomRenderer.cursor!.addEventListener("click", (event: Event) => {
             if(!(event instanceof RoomClickEvent)) {
                 return;
             }

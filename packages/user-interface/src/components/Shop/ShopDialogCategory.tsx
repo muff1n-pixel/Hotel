@@ -23,6 +23,7 @@ export default function ShopDialogCategory({ category }: ShopDialogCategoryProps
         const listener = (event: WebSocketEvent<ShopPagesResponse>) => {
             if(event.data.category === category) {
                 setShopPages(event.data.pages);
+                setActiveShopPage(event.data.pages[0]);
             }
         }
 

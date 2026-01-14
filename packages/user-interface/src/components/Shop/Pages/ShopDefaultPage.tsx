@@ -10,6 +10,7 @@ import StartRoomRenderer from "@shared/Events/Room/Renderer/StartRoomRenderer";
 import RoomRendererStarted from "@shared/Events/Room/Renderer/RoomRendererStarted";
 import SetRoomRendererFurniture from "@shared/Events/Room/Renderer/SetRoomRendererFurniture";
 import TerminateRoomRenderer from "@shared/Events/Room/Renderer/TerminateRoomRenderer";
+import DialogButton from "../../Dialog/Button/DialogButton";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
     const { internalEventTarget, webSocketClient } = useContext(AppContext);
@@ -140,9 +141,20 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
             </DialogPanel>
 
             <div style={{
-                height: 52
-            }}>
+                //height: 52,
 
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <div style={{ flex: 1 }}/>
+                
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
+                    <div style={{ flex: 1 }}/>
+                    <DialogButton style={{ flex: 1 }}>Add to inventory</DialogButton>
+                </div>
             </div>
         </div>
     );
