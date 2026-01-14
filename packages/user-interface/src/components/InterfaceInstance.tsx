@@ -1,12 +1,12 @@
-import { Fragment, ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AppContext, Dialog, TypedEventTarget } from "../contexts/AppContext";
 import Toolbar from "./Toolbar/Toolbar";
 import WebSocketClient from "@shared/WebSocket/WebSocketClient";
 import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
 import { UserDataUpdated } from "@shared/WebSocket/Events/User/UserDataUpdated";
 import { EnterRoom } from "@shared/WebSocket/Events/Rooms/EnterRoom";
-import { createRoot, Root } from "react-dom/client";
 import RoomInterface from "./Room/RoomInterface";
+import DialogInstances from "./Dialog/DialogInstances";
 
 export type InterfaceInstanceProps = {
     internalEventTarget: TypedEventTarget;
@@ -14,9 +14,7 @@ export type InterfaceInstanceProps = {
 }
 
 export default function InterfaceInstance({ internalEventTarget, webSocketClient }: InterfaceInstanceProps) {
-    const rootRef = useRef<Root>(null);
-    const dialogContainerRef = useRef<HTMLDivElement>(null);
-    const dialogs = useRef<Dialog[]>([]);
+    const [dialogs, setDialogs] = useState<Dialog[]>([{ id:"shop", type: "shop", data: null }]);
 
     const ready = useRef<boolean>(false);
     const [user, setUser] = useState<UserDataUpdated>();
@@ -57,55 +55,22 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
         }
     }, []);
 
-    const updateDialogs = useCallback((dialogs: Dialog[]) => {
-        if (!dialogContainerRef.current) {
-            return;
-        }
-
-        if (!rootRef.current) {
-            rootRef.current = createRoot(dialogContainerRef.current);
-        }
-
-        if(!user) {
-            return;
-        }
-
-        rootRef.current.render(
-            <AppContext value={{
-                addUniqueDialog,
-                closeDialog,
-
-                user,
-
-                internalEventTarget,
-                webSocketClient
-            }}>
-                {dialogs.map((dialog) => (
-                    <Fragment key={dialog.id}>
-                        {dialog.element}
-                    </Fragment>
-                ))}
-            </AppContext>
-        );
-    }, [dialogContainerRef, rootRef, user]);
-
-    const addUniqueDialog = useCallback((id: string, element: ReactElement) => {
-        if(dialogs.current.some((dialog) => dialog.id === id)) {
-            closeDialog(id);
+    const addUniqueDialog = useCallback((type: string) => {
+        if(dialogs.some((dialog) => dialog.id === type)) {
+            closeDialog(type);
             
             return;
         }
 
-        dialogs.current.push({
-            id,
-            element    
-        });
-
-        updateDialogs(dialogs.current);
+        setDialogs(dialogs.concat({
+            id: type,
+            data: null,
+            type
+        }));
     }, [dialogs, user]);
 
     const closeDialog = useCallback((id: string) => {
-        const index = dialogs.current.findIndex((dialog) => dialog.id === id);
+        const index = dialogs.findIndex((dialog) => dialog.id === id);
 
         if(index === -1) {
             console.warn("Dialog does not exist", id);
@@ -113,9 +78,7 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
             return;
         }
 
-        dialogs.current.splice(index, 1);
-
-        updateDialogs(dialogs.current);
+        setDialogs(dialogs.filter((dialog) => dialog.id !== id));
     }, [dialogs, user]);
 
     if(!user) {
@@ -124,7 +87,7 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
 
     return (
         <AppContext value={{
-            //dialogs: dialogs.current,
+            dialogs,
             addUniqueDialog,
             closeDialog,
 
@@ -135,7 +98,7 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
         }}>
             <RoomInterface/>
 
-            <div ref={dialogContainerRef}/>
+            <DialogInstances dialogs={dialogs}/>
 
             <Toolbar/>
         </AppContext>

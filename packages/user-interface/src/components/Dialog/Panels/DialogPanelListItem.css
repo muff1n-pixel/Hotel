@@ -1,0 +1,30 @@
+.dialog-panel-list-item {
+    font-family: "Ubuntu Bold";
+    
+    border-bottom: 1px solid transparent;
+
+    color: #6D6D6C;
+}
+
+.dialog-panel-list-item.subitem {
+    font-family: "Ubuntu Bold Italic";
+
+    color: #52819A;
+}
+
+.dialog-panel-list-item:hover, .dialog-panel-list-item.active {
+    border-bottom-color: #B4B4AE;
+
+    color: white;
+}
+
+.dialog-panel-list-item-content {
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+}
+
+.dialog-panel-list-item:hover .dialog-panel-list-item-content, .dialog-panel-list-item.active .dialog-panel-list-item-content {
+    background: #63C5E9;
+    border-top-color: #82D1ED;
+    border-bottom-color: #82D1ED;
+}

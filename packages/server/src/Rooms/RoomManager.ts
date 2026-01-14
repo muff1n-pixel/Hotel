@@ -1,5 +1,5 @@
-import { Room } from "../Database/Models/Room.js";
-import { RoomFurniture } from "../Database/Models/RoomFurniture.js";
+import { Room } from "../Database/Models/Rooms/Room.js";
+import { RoomFurniture } from "../Database/Models/Rooms/RoomFurniture.js";
 import RoomInstance from "./RoomInstance.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?

@@ -1,17 +1,21 @@
 import { act, ReactNode, useContext, useState } from "react";
-import DialogContent from "./DialogContent";
-import { AppContext } from "../../contexts/AppContext";
+import DialogContent from "../DialogContent";
+import { AppContext } from "../../../contexts/AppContext";
 
 export type DialogTabsProps = {
     initialActiveIndex?: number;
+    withLargeTabs?: boolean;
+
+    header?: ReactNode;
 
     tabs: {
         icon: ReactNode;
         element: ReactNode;
+        header?: ReactNode;
     }[];
 };
 
-export default function DialogTabs({ initialActiveIndex = 1, tabs }: DialogTabsProps) {
+export default function DialogTabs({ initialActiveIndex = 1, tabs, header, withLargeTabs = false }: DialogTabsProps) {
     const { user } = useContext(AppContext);
 
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
@@ -43,7 +47,7 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs }: DialogTabsP
 
                     alignItems: "center"
                 }}>
-                    <h2>{user?.name}</h2>
+                    {tabs[activeIndex]?.header ?? header}
                 </div>
 
                 <div style={{
@@ -55,8 +59,10 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs }: DialogTabsP
                         <div key={index} style={{
                             display: "flex",
 
+                            flex: (withLargeTabs)?(1):(undefined),
+
                             height: 31,
-                            width: 52,
+                            minWidth: 52,
 
                             border: (activeIndex === index)?("2px solid black"):("1px solid #272E31"),
                             borderBottom: (activeIndex === index)?("none"):("1px solid #272E31"),
@@ -78,6 +84,7 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs }: DialogTabsP
                                 borderTopLeftRadius: 8,
                                 borderTopRightRadius: 8,
 
+                                padding: (withLargeTabs)?("6px 6px"):("0 6px"),
 
                                 display: "flex",
                                 justifyContent: "center",
@@ -85,7 +92,10 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs }: DialogTabsP
 
                                 overflow: "hidden",
 
-                                cursor: "pointer"
+                                cursor: "pointer",
+
+                                color: "black",
+                                fontSize: 13
                             }} onClick={() => setActiveIndex(index)}>
                                 {icon}
                             </div>

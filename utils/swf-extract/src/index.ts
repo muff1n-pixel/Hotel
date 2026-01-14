@@ -3,14 +3,19 @@ import { createSpritesheet } from "./spritesheet/SpritesheetCreation.ts";
 import { extractSwf } from "./swf/SwfExtraction.ts";
 import path from "path";
 import { createAssetsData, createAssetsDataFromManifest, createIndexData, createLogicData, createRoomVisualizationData, createVisualizationData } from "./data/DataCreation.ts";
-import type { FurnitureData } from "../../../packages/client/src/Interfaces/Furniture/FurnitureData.ts"
-import type { FigureData } from "../../../packages/client/src/Interfaces/Figure/FigureData.ts"
-import type { RoomData } from "../../../packages/client/src/Interfaces/Room/RoomData.ts"
+import type { FurnitureData } from "../../../packages/client/src/Client/Interfaces/Furniture/FurnitureData.ts"
+import type { FigureData } from "../../../packages/client/src/Client/Interfaces/Figure/FigureData.ts"
+import type { RoomData } from "../../../packages/client/src/Client/Interfaces/Room/RoomData.ts"
 
 let assetNames = [process.argv[2]];
 
 if(process.argv[2] === "regenerate-figures") {
     assetNames = readdirSync(path.join("..", "..", "assets", "figure"), { withFileTypes: true })
+    .filter((directory) => directory.isDirectory())
+    .map((directory) => directory.name);
+}
+else if(process.argv[2] === "regenerate-furniture") {
+    assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true })
     .filter((directory) => directory.isDirectory())
     .map((directory) => directory.name);
 }
@@ -61,7 +66,7 @@ else if(process.argv[2] === "generate-all") {
             }
 
             const spritesheet = await createSpritesheet(assetName, swfCollection.images);
-
+            
             if(assetName === "HabboRoomContent") {
                 const outputPath = path.join("..", "..", "assets", "room", assetName);
 
@@ -138,7 +143,7 @@ else if(process.argv[2] === "generate-all") {
                 mkdirSync(outputPath, {
                     recursive: true
                 });
-                
+
                 copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
 
                 const assets = createAssetsData(swfCollection);

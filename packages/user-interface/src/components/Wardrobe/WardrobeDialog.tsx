@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Dialog from "../Dialog/Dialog";
-import DialogSubTabs from "../Dialog/DialogSubTabs";
-import DialogTabs from "../Dialog/DialogTabs";
+import DialogSubTabs from "../Dialog/Tabs/DialogSubTabs";
+import DialogTabs from "../Dialog/Tabs/DialogTabs";
 
 import FigureConfigurationHelper from "@shared/figure/FigureConfigurationHelper";
 import WardrobeAvatar from "./WardrobeAvatar";
@@ -93,8 +93,8 @@ export default function WardrobeDialog({ onClose }: WardrobeDialogProps) {
     }, [user?.figureConfiguration]);
     
     return (
-        <Dialog title="Wardrobe" onClose={onClose}>
-            <DialogTabs initialActiveIndex={1} tabs={[
+        <Dialog title="Wardrobe" onClose={onClose} width={500} height={400}>
+            <DialogTabs initialActiveIndex={1} header={(<h2>{user?.name}</h2>)} tabs={[
                 {
                     icon: (<div className="sprite_wardrobe_generic_tab"/>),
                     element: (

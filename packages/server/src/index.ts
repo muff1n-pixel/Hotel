@@ -1,12 +1,13 @@
 import { WebSocketServer } from "ws";
 import { eventHandler } from "./Events/EventHandler.js";
 import UserClient from "./Clients/UserClient.js";
-import { User } from "./Database/Models/User.js";
+import { User } from "./Database/Models/Users/User.js";
 import { UserDataUpdated } from "@shared/WebSocket/Events/User/UserDataUpdated.js";
 import OutgoingEvent from "./Events/Interfaces/OutgoingEvent.js";
 
 import "./Rooms/Events/EnterRoom.js";
 import "./Users/Events/RequestUserData.js";
+import ShopEvents from "./Shop/ShopEvents.js";
 
 eventHandler.addListener("ClientPingEvent", (userClient: UserClient) => {
 	userClient.send(new OutgoingEvent<UserDataUpdated>("UserDataUpdated", {
@@ -15,6 +16,9 @@ eventHandler.addListener("ClientPingEvent", (userClient: UserClient) => {
 		figureConfiguration: userClient.user.figureConfiguration
 	}));
 });
+
+eventHandler.addListener("ShopPagesRequest", ShopEvents.dispatchShopPages);
+eventHandler.addListener("ShopPageFurnitureRequest", ShopEvents.dispatchShopPageFurniture);
 
 const webSocketServer = new WebSocketServer({
     port: 7632

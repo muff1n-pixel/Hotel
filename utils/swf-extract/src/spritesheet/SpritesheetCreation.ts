@@ -1,7 +1,7 @@
 import path from "path";
 import NodeSpriteGenerator from "node-sprite-generator";
 import { mkdirSync, statfsSync, writeFileSync } from "fs";
-import type { FurnitureSprites } from "../../../../packages/client/src/Interfaces/Furniture/FurnitureSprites.ts"
+import type { FurnitureSprites } from "../../../../packages/client/src/Client/Interfaces/Furniture/FurnitureSprites.ts"
 
 export function createSpritesheet(assetName: string, images: string[]): Promise<FurnitureSprites> {
     return new Promise((resolve) => {

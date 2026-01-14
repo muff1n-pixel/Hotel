@@ -9,14 +9,15 @@ export type TypedEventTarget = EventTarget & {
 
 export type Dialog = {
     id: string;
-    element: ReactElement;
+    data: unknown;
+    type: string;
 }
 
 export type App = {
     user?: UserDataUpdated;
 
-    //dialogs: Dialog[];
-    addUniqueDialog: (id: string, element: ReactElement) => void;
+    dialogs: Dialog[];
+    addUniqueDialog: (type: string) => void;
     closeDialog: (id: string) => void;
 
     webSocketClient: WebSocketClient;
@@ -24,7 +25,7 @@ export type App = {
 };
 
 export const AppContext = createContext<App>({
-    //dialogs: [],
+    dialogs: [],
     addUniqueDialog: () => {},
     closeDialog: () => {},
 

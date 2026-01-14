@@ -14,10 +14,12 @@ export default class RoomCamera {
     };
 
     constructor(renderer: RoomRenderer) {
-        renderer.element.addEventListener("mousedown", this.mousedown.bind(this));
-        renderer.element.addEventListener("mousemove", this.mousemove.bind(this));
-        renderer.element.addEventListener("mouseup", this.mouseup.bind(this));
-        renderer.element.addEventListener("mouseleave", this.mouseleave.bind(this));
+        if(renderer.roomInstance) {
+            renderer.element.addEventListener("mousedown", this.mousedown.bind(this));
+            renderer.element.addEventListener("mousemove", this.mousemove.bind(this));
+            renderer.element.addEventListener("mouseup", this.mouseup.bind(this));
+            renderer.element.addEventListener("mouseleave", this.mouseleave.bind(this));
+        }
     }
 
     private mousedown(event: MouseEvent) {

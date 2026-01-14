@@ -191,7 +191,7 @@ export default class WallRenderer {
 
     private renderLeftWalls(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, -.5, 0, 1, this.structure.wall.thickness + this.rows * 32, this.depth * 16);
+        context.setTransform(1, -.5, 0, 1, this.structure.wall.thickness + this.rows * 32, (this.depth * 16) + this.structure.wall.thickness);
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(let index in rectangles) {
@@ -232,7 +232,7 @@ export default class WallRenderer {
 
     private renderRightWalls(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * 32, this.depth * 16);        
+        context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * 32, (this.depth * 16) + this.structure.wall.thickness);        
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(let index in rectangles) {
@@ -272,7 +272,7 @@ export default class WallRenderer {
 
     private renderWallTops(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, -1, .5, this.structure.wall.thickness + this.rows * 32, this.depth * 16);     
+        context.setTransform(1, .5, -1, .5, this.structure.wall.thickness + this.rows * 32, (this.depth * 16) + this.structure.wall.thickness);     
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(let index in rectangles) {
@@ -316,8 +316,12 @@ export default class WallRenderer {
     }
 
     private renderDoorMask(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap, overlappingWalls: number = 0) {
-        if(rectangles.some((rectangle) => rectangle.row === this.structure.door.row && rectangle.column === this.structure.door.column + 1 && rectangle.direction === 2)) {
-            context.setTransform(1, -.5, 0, 1, this.structure.wall.thickness + this.rows * 32, this.depth * 16);
+        if(!this.structure.door) {
+            return;
+        }
+        
+        if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row && rectangle.column === this.structure.door!.column + 1 && rectangle.direction === 2)) {
+            context.setTransform(1, -.5, 0, 1, this.structure.wall.thickness + this.rows * 32, (this.depth * 16) + this.structure.wall.thickness);
 
             const row = this.structure.door.row + overlappingWalls;
             const column = this.structure.door.column;
@@ -329,8 +333,8 @@ export default class WallRenderer {
 
             context.drawImage(image, left, top + (doorDepth * 32) - this.structure.floor.thickness);
         }
-        else if(rectangles.some((rectangle) => rectangle.row === this.structure.door.row + 1 && rectangle.column === this.structure.door.column && rectangle.direction === 4)) {
-            context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * 32, this.depth * 16);        
+        else if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row + 1 && rectangle.column === this.structure.door!.column && rectangle.direction === 4)) {
+            context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * 32, (this.depth * 16) + this.structure.wall.thickness);
 
             const row = this.structure.door.row;
             const column = this.structure.door.column + overlappingWalls;
@@ -354,7 +358,7 @@ export default class WallRenderer {
                     continue;
                 }
 
-                if(this.structure.door.row === row && this.structure.door.column === column) {
+                if(this.structure.door?.row === row && this.structure.door?.column === column) {
                     continue;
                 }
 
@@ -397,7 +401,7 @@ export default class WallRenderer {
                     continue;
                 }
 
-                if(this.structure.door.row === row && this.structure.door.column === column) {
+                if(this.structure.door?.row === row && this.structure.door?.column === column) {
                     continue;
                 }
 
@@ -448,7 +452,7 @@ export default class WallRenderer {
     }
 
     private getTileDepth(row: number, column: number, excludeDoor: boolean = true): string {
-        if(excludeDoor && this.structure.door.row === row && this.structure.door.column === column) {
+        if(excludeDoor && this.structure.door?.row === row && this.structure.door?.column === column) {
             return 'X';
         }
 

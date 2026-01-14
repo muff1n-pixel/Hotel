@@ -22,11 +22,15 @@ export default class RoomMapItem extends RoomItem {
         this.floorRenderer.renderOffScreen().then((image) => {
             this.sprites.push(new RoomFloorSprite(this, image));
         });
+
         
         this.wallRenderer.renderOffScreen().then(({ wall, doorMask }) => {
             this.sprites.push(new RoomWallSprite(this, wall));
-            this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
-            this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
+
+            if(this.wallRenderer.structure.door) {
+                this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
+                this.sprites.push(new RoomDoorMaskSprite(this, doorMask));
+            }
         });
     }
 }

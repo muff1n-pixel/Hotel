@@ -1,6 +1,6 @@
 import { RoomUserData } from "@shared/Interfaces/Room/RoomUserData.js";
 import UserClient from "../Clients/UserClient.js";
-import { Room } from "../Database/Models/Room.js";
+import { Room } from "../Database/Models/Rooms/Room.js";
 import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
 import RoomUserClient from "./Items/RoomUserClient.js";
 import { LoadRoom } from "@shared/WebSocket/Events/Rooms/LoadRoom.js";

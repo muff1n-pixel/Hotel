@@ -155,9 +155,7 @@ export default function UserContextMenu() {
 
                                     <UserContextMenuList>
                                         {(user?.id === focusedFigure.id)?(
-                                            <UserContextMenuButton text="Wardrobe" onClick={() => {
-                                                addUniqueDialog("wardrobe", (<WardrobeDialog onClose={() => closeDialog("wardrobe")}/>))
-                                            }}/>
+                                            <UserContextMenuButton text="Wardrobe" onClick={() => addUniqueDialog("wardrobe")}/>
                                         ):(
                                             <UserContextMenuButton text="123" onClick={() => {
                                                 

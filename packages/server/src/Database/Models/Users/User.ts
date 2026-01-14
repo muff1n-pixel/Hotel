@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../Database.js";
+import { sequelize } from "../../Database.js";
 import { FigureConfiguration } from "@shared/Interfaces/figure/FigureConfiguration.js";
 
 export class User extends Model {

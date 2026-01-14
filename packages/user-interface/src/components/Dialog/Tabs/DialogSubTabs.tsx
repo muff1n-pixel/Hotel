@@ -1,5 +1,5 @@
 import { act, ReactNode, useState } from "react";
-import DialogContent from "./DialogContent";
+import DialogContent from "../DialogContent";
 
 export type DialogSubTabsProps = {
     tabs: {

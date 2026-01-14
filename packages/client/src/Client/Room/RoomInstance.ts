@@ -30,7 +30,7 @@ export default class RoomInstance {
     private readonly furnitures: RoomItem<RoomFurnitureData, RoomFurnitureItem>[] = [];
 
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoom) {
-        this.roomRenderer = new RoomRenderer(clientInstance, this);
+        this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this);
         
         this.roomRenderer.items.push(new RoomMapItem(
             new FloorRenderer(event.structure, event.structure.floor.id, 64),
@@ -54,7 +54,7 @@ export default class RoomInstance {
             user.item.setPositionPath(event.data.from, event.data.to);
         });
 
-        this.roomRenderer.cursor.addEventListener("click", (event: Event) => {
+        this.roomRenderer.cursor?.addEventListener("click", (event: Event) => {
             if(!(event instanceof RoomClickEvent)) {
                 return;
             }

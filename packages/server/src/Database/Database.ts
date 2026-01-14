@@ -5,10 +5,70 @@ export const sequelize = new Sequelize({
     storage: ":memory:",
 });
 
-import "./Models/Room.js";
-import { RoomFurniture } from "./Models/RoomFurniture.js";
-import { Room } from "./Models/Room.js";
+import "./Models/Rooms/Room.js";
+import { RoomFurniture } from "./Models/Rooms/RoomFurniture.js";
+import { Room } from "./Models/Rooms/Room.js";
 import { randomUUID } from "crypto";
+import { ShopPage } from "./Models/Shop/ShopPage.js";
+import { ShopPageFurniture } from "./Models/Shop/ShopPageFurniture.js";
+
+ShopPage.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
+    category: {
+      type: new DataTypes.STRING(32),
+      allowNull: false
+    },
+    type: {
+      type: new DataTypes.STRING(32),
+      allowNull: false,
+      defaultValue: "default"
+    },
+    title: {
+      type: new DataTypes.STRING(32),
+      allowNull: false
+    },
+    icon: {
+      type: new DataTypes.STRING(32),
+      allowNull: true,
+      defaultValue: null
+    }
+  },
+  {
+    tableName: "shop_pages",
+    sequelize
+  }
+);
+
+ShopPage.hasMany(ShopPage, {
+    as: "children",
+    foreignKey: "parentId"
+});
+
+ShopPageFurniture.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
+    type: {
+      type: new DataTypes.STRING(32),
+      allowNull: false
+    }
+  },
+  {
+    tableName: "shop_page_furnitures",
+    sequelize
+  }
+);
+
+ShopPage.hasMany(ShopPageFurniture, {
+    as: "furniture",
+    foreignKey: "shopPageId"
+});
 
 Room.init(
   {
@@ -83,6 +143,51 @@ Room.hasMany(RoomFurniture, {
 
 await sequelize.sync();
 
+const typeCategory = await ShopPage.create<ShopPage>({
+  id: randomUUID(),
+  category: "furniture",
+  title: "By type",
+  icon: "icon_72"
+});
+
+await ShopPageFurniture.bulkCreate<ShopPageFurniture>([
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp*1",
+    shopPageId: typeCategory.id,
+  },
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp*2",
+    shopPageId: typeCategory.id
+  },
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp*3",
+    shopPageId: typeCategory.id
+  },
+  {
+    id: randomUUID(),
+    type: "bed_armas_two",
+    shopPageId: typeCategory.id
+  }
+]);
+
+await ShopPage.bulkCreate<ShopPage>([
+  {
+    id: randomUUID(),
+    category: "furniture",
+    title: "Rugs",
+    parentId: typeCategory.id
+  },
+  {
+    id: randomUUID(),
+    category: "furniture",
+    title: "Dimmers",
+    parentId: typeCategory.id
+  }
+]);
+
 const room = await Room.create<Room>({
   id: "room1",
   name: "My home room",
@@ -137,7 +242,7 @@ const room = await Room.create<Room>({
             "X00000000000000000000000XXXXXXXXXXXXXXXXXXXXXXXXXX",
             "X00000000000000000000000XXXXXXXXXXXXXXXXXXXXXXXXXX",
             "X00000000000000000000000XXXXXXXXXXXXXXXXXXXXXXXXXX",
-            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0"
         ],
         floor: {
             id: "101",

@@ -12,7 +12,7 @@ export default class RoomWallSprite extends RoomSprite {
 
         this.offset = {
             left: -(this.item.wallRenderer.rows * 32),
-            top: -((this.item.wallRenderer.depth + 3.5) * 32)  
+            top: -((this.item.wallRenderer.depth + 3.5) * 32) - item.wallRenderer.structure.wall.thickness
         }
     }
 

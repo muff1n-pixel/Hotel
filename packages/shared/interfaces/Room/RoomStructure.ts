@@ -1,7 +1,7 @@
 export type RoomStructure = {
     grid: string[];
 
-    door: {
+    door?: {
         row: number;
         column: number;
     };

@@ -3,10 +3,12 @@ import DialogHeader, { MousePosition } from "./DialogHeader";
 
 export type DialogProps = PropsWithChildren & {
     title: string;
+    width: number;
+    height: number;
     onClose?: () => void;
 };
 
-export default function Dialog({ title, children, onClose }: DialogProps) {
+export default function Dialog({ title, children, onClose, width, height }: DialogProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const positionRef = useRef<MousePosition>({
         left: 200,
@@ -59,8 +61,8 @@ export default function Dialog({ title, children, onClose }: DialogProps) {
 
             backgroundColor: "#ECEAE0",
 
-            width: 500,
-            minHeight: 400,
+            width,
+            minHeight: height,
 
             left: 0,
             top: 0,

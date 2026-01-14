@@ -27,6 +27,12 @@ export default class FurnitureRenderer {
     private visualization?: FurnitureVisualization["visualizations"][0];
 
     constructor(public readonly type: string, public readonly size: number, public direction: number, public animation: number = 0, public color: number = 0) {
+        if(this.type.includes('*')) {
+            const [type, color] = this.type.split('*');
+
+            this.type = type;
+            this.color = parseInt(color);
+        }
     }
 
     public async render(frame: number = 0) {
@@ -68,7 +74,11 @@ export default class FurnitureRenderer {
                 spriteFrame = animationLayer?.frameSequence[frameSequenceIndex].id;
             }
 
-            const assetName = `${this.type}_${this.size}_${String.fromCharCode(97 + layer)}_${this.direction}_${spriteFrame}`;
+            let assetName = `${this.type}_${this.size}_${String.fromCharCode(97 + layer)}_${this.direction}_${spriteFrame}`;
+
+            if(this.size === 1) {
+                assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
+            }
 
             if(FurnitureAssets.assetSprites.has(`${assetName}_${this.color}`)) {
                 const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${this.color}`);
@@ -169,8 +179,8 @@ export default class FurnitureRenderer {
         const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
         const context = canvas.getContext("2d")!;
 
-        context.fillStyle = "red";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        //context.fillStyle = "red";
+        //context.fillRect(0, 0, canvas.width, canvas.height);
 
         if(!context) {
             throw new ContextNotAvailableError();
@@ -190,7 +200,7 @@ export default class FurnitureRenderer {
             context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
         }
 
-        return canvas;
+        return createImageBitmap(canvas);
     }
 
     private getGlobalCompositeModeFromInk(ink?: string): GlobalCompositeOperation | undefined {

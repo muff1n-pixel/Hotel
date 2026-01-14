@@ -21,7 +21,7 @@ import { TypedEventTarget } from "@shared/Interfaces/TypedEventTarget.js";
 
     const clientInstance = new ClientInstance(element, internalEventTarget, webSocketClient);
 
-    const roomRenderer = new RoomRenderer(clientInstance);
+    const roomRenderer = new RoomRenderer(element, clientInstance);
 
     const roomStructure: RoomStructure = {
         door: {

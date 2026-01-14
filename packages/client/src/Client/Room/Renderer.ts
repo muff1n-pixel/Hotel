@@ -15,9 +15,11 @@ import RoomInstance from "./RoomInstance.js";
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
     private readonly camera: RoomCamera;
-    public readonly cursor: RoomCursor;
+    public readonly cursor?: RoomCursor;
 
     public readonly items: RoomItem[] = [];
+
+    private terminated = false;
 
     public frame: number = 0;
 
@@ -35,21 +37,34 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    constructor(public readonly clientInstance: ClientInstance, public readonly roomInstance?: RoomInstance) {
+    constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance, public readonly roomInstance?: RoomInstance) {
         super();
 
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
 
         this.camera = new RoomCamera(this);
-        this.cursor = new RoomCursor(this);
 
-        this.clientInstance.element.appendChild(this.element);
+        if(roomInstance) {
+            this.cursor = new RoomCursor(this);
+        }
+
+        this.parent.appendChild(this.element);
 
         window.requestAnimationFrame(this.render.bind(this));
     }
 
+    public terminate() {
+        this.terminated = true;
+
+        this.parent.removeChild(this.element);
+    }
+
     private render() {
+        if(this.terminated) {
+            return;
+        }
+
         const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
 
         if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
@@ -71,7 +86,7 @@ export default class RoomRenderer extends EventTarget {
             this.items[index].processPositionPath();
         }
 
-        const boundingRectangle = this.clientInstance.element.getBoundingClientRect();
+        const boundingRectangle = this.parent.getBoundingClientRect();
 
         this.center = {
             left: Math.floor(boundingRectangle.width / 2),

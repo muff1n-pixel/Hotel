@@ -1,6 +1,6 @@
 import type WebSocket from "ws";
 import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
-import { User } from "../Database/Models/User.js";
+import { User } from "../Database/Models/Users/User.js";
 import { EventEmitter } from "node:events";
 
 export default class UserClient extends EventEmitter {

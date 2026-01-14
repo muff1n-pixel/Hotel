@@ -30,8 +30,6 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
 
         requestedData.current = true;
 
-        console.log("requesting figure");
-
         const requestEvent = new ClientFigureDataRequest(part, "male", undefined);
 
         const listener = (event: ClientFigureDataResponse) => {

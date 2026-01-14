@@ -10,6 +10,8 @@ export default function DialogContent({ children }: PropsWithChildren) {
             borderBottomRightRadius: 6,
             borderTop: "none",
 
+            display: "flex",
+
             color: "black",
             fontSize: 13,
             padding: 10

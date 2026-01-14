@@ -12,14 +12,14 @@ export default class RoomDoorMaskSprite extends RoomSprite {
         super(item);
 
         this.priority = RoomRenderer.getPositionPriority({
-            row: item.wallRenderer.structure.door.row + 1,
-            column: item.wallRenderer.structure.door.column + 1,
-            depth: parseInt(item.wallRenderer.structure.grid[item.wallRenderer.structure.door.row][item.wallRenderer.structure.door.column])
+            row: item.wallRenderer.structure.door!.row + 1,
+            column: item.wallRenderer.structure.door!.column + 1,
+            depth: parseInt(item.wallRenderer.structure.grid[item.wallRenderer.structure.door!.row][item.wallRenderer.structure.door!.column])
         });
 
         this.offset = {
             left: -(this.item.wallRenderer.rows * 32),
-            top: -((this.item.wallRenderer.depth + 3.5) * 32)
+            top: -((this.item.wallRenderer.depth + 3.5) * 32) - item.wallRenderer.structure.wall.thickness
         }
     }
 
