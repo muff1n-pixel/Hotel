@@ -26,7 +26,7 @@ export default class FurnitureRenderer {
     private data?: FurnitureData;
     private visualization?: FurnitureVisualization["visualizations"][0];
 
-    constructor(public readonly type: string, public readonly size: number, public direction: number, public animation: number = 0, public color: number = 0) {
+    constructor(public readonly type: string, public readonly size: number, public direction: number | undefined = undefined, public animation: number = 0, public color: number = 0) {
         /*if(this.type.includes('*')) {
             const [type, color] = this.type.split('*');
 
@@ -44,6 +44,12 @@ export default class FurnitureRenderer {
 
         if(!this.visualization) {
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+        }
+
+        if(this.direction === undefined) {
+            const directionPriority = [4, 2];
+
+            this.direction = this.data.visualization.defaultDirection ?? this.visualization?.directions.toSorted((a, b) => directionPriority.indexOf(b.id) - directionPriority.indexOf(a.id))?.[0].id ?? 0;
         }
 
         if(!this.visualization) {

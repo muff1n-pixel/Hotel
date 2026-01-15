@@ -158,6 +158,8 @@ else if(process.argv[2] === "generate-furniture") {
 
                 const furnitureData = createFurnitureData(assetName);
 
+                visualization.defaultDirection = furnitureData.defaultDirection;
+
                 const data: FurnitureData = {
                     index,
                     visualization,

@@ -81,7 +81,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
             return;
         }
 
-        internalEventTarget.dispatchEvent(new SetRoomRendererFurniture(activeFurniture.furniture.type, 64, 2, 0, activeFurniture.furniture.color));
+        internalEventTarget.dispatchEvent(new SetRoomRendererFurniture(activeFurniture.furniture.type, 64, undefined, 0, activeFurniture.furniture.color));
     }, [roomRendererStarted, activeFurniture]);
 
     useEffect(() => {

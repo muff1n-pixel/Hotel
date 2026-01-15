@@ -310,6 +310,7 @@ export function createFurnitureData(assetName: string) {
             color: (color)?(parseInt(color)):(undefined),
 
             placement: (isWallFurniture)?("wall"):("floor"),
+            defaultDirection: (furniType["defaultdir"])?(parseInt(furniType["defaultdir"])):(undefined)
         };
     });
 }

@@ -1,6 +1,8 @@
 export type FurnitureVisualization = {
     type: string;
 
+    defaultDirection?: number;
+
     visualizations: {
         size: 1 | 32 | 64;
         layerCount: number;
