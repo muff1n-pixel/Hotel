@@ -61,7 +61,7 @@ export default function registerRoomUserInterfaceEvents(clientInstance: ClientIn
         }
 
         roomItem = new RoomFurnitureItem(
-            new FurnitureRenderer(event.type, event.size, event.direction, event.animation), {
+            new FurnitureRenderer(event.type, event.size, event.direction, event.animation, event.color), {
                 row: 1,
                 column: 1,
                 depth: 0

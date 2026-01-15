@@ -13,26 +13,26 @@ export default function ShopDialog({ onClose }: ShopDialogProps) {
             <DialogTabs initialActiveIndex={1} withLargeTabs tabs={[
                 {
                     icon: "Frontpage",
-                    header: (<div/>),
                     element: (<div/>),
                 },
                 {
                     icon: "Furniture",
-                    header: (
-                        <h2>Furniture</h2>
-                    ),
+                    header: {
+                        label: "Furniture",
+                        description: "lalalallalalala",
+                        iconImage: "./assets/shop/icons/icon_1.png",
+                        backgroundImage: "./assets/shop/headers/catalog_frontpage_headline_shop_EN.gif"
+                    },
                     element: (
                         <ShopDialogCategory category="furniture"/>
                     ),
                 },
                 {
                     icon: "Clothing",
-                    header: (<div/>),
                     element: (<div/>),
                 },
                 {
                     icon: "Pets",
-                    header: (<div/>),
                     element: (<div/>),
                 }
             ]}>

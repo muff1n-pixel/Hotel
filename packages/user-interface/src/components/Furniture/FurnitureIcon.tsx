@@ -3,18 +3,19 @@ import OffscreenCanvasRender from "../OffscreenCanvasRender";
 import ClientFurnitureRequest from "@shared/Events/Furniture/ClientFurnitureRequest";
 import ClientFurnitureResponse from "@shared/Events/Furniture/ClientFurnitureResponse";
 import { AppContext } from "../../contexts/AppContext";
+import { FurnitureData } from "@shared/Interfaces/Room/RoomFurnitureData";
 
 export type FurnitureIconProps = {
-    type: string;
+    furnitureData: FurnitureData;
 }
 
-export default function FurnitureIcon({ type }: FurnitureIconProps) {
+export default function FurnitureIcon({ furnitureData }: FurnitureIconProps) {
     const { internalEventTarget } = useContext(AppContext);
 
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
-        const requestEvent = new ClientFurnitureRequest(type, 1, 0);
+        const requestEvent = new ClientFurnitureRequest(furnitureData.type, 1, 0, 0, furnitureData.color);
 
         const listener = (event: ClientFurnitureResponse) => {
             if(event.id !== requestEvent.id) {
@@ -31,7 +32,7 @@ export default function FurnitureIcon({ type }: FurnitureIconProps) {
         return () => {
             internalEventTarget.removeEventListener("ClientFurnitureResponse", listener);
         };
-    }, [ type ]);
+    }, [ furnitureData ]);
 
     if(!image) {
         return;

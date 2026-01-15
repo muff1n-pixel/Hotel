@@ -40,6 +40,20 @@ export default class RoomInstance {
         this.users = event.users.map((userData) => this.addUser(userData));
         this.furnitures = event.furnitures.map(this.addFurniture.bind(this));
 
+        this.furnitures.push(this.addFurniture({
+            id: "x",
+            furniture: {
+                type: "roomdimmer"
+            },
+            position: {
+                row: 2.5,
+                column: 1,
+                depth: 4.5
+            },
+            direction: 2,
+            animation: 0
+        }));
+
         clientInstance.webSocketClient.addEventListener<WebSocketEvent<UserEnteredRoom>>("UserEnteredRoom", (event) => {
             this.users.push(this.addUser(event.data));
         });
@@ -107,7 +121,7 @@ export default class RoomInstance {
     }
 
     private addFurniture(furnitureData: RoomFurnitureData): RoomItem<RoomFurnitureData, RoomFurnitureItem> {
-        const furnitureRenderer = new FurnitureRenderer(furnitureData.type, 64, furnitureData.direction, furnitureData.animation, furnitureData.color);
+        const furnitureRenderer = new FurnitureRenderer(furnitureData.furniture.type, 64, furnitureData.direction, furnitureData.animation, furnitureData.furniture.color);
         const item = new RoomFurnitureItem(furnitureRenderer, furnitureData.position);
 
         this.roomRenderer.items.push(item);

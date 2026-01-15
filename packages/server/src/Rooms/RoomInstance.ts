@@ -60,11 +60,10 @@ export default class RoomInstance {
     private getFurnitureData(furniture: RoomFurnitureItem): RoomFurnitureData {
         return {
             id: furniture.roomFurniture.id,
-            type: furniture.roomFurniture.type,
+            furniture: furniture.roomFurniture.furniture,
             position: furniture.roomFurniture.position,
             direction: furniture.roomFurniture.direction,
-            animation: furniture.roomFurniture.animation,
-            color: furniture.roomFurniture.color
+            animation: furniture.roomFurniture.animation
         };
     }
 

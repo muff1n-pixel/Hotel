@@ -1,3 +1,4 @@
+import { Furniture } from "../Database/Models/Furniture/Furniture.js";
 import { Room } from "../Database/Models/Rooms/Room.js";
 import { RoomFurniture } from "../Database/Models/Rooms/RoomFurniture.js";
 import RoomInstance from "./RoomInstance.js";
@@ -21,7 +22,18 @@ export default class RoomManager {
     }
 
     public static async loadRoomInstance(roomId: string) {
-        const room = await Room.findByPk(roomId, { include: { model: RoomFurniture, as: "roomFurnitures" } });
+        const room = await Room.findByPk(roomId, {
+            include: {
+                model: RoomFurniture,
+                as: "roomFurnitures",
+                include: [
+                    {
+                        model: Furniture,
+                        as: "furniture"
+                    }
+                ]
+            }
+        });
 
         if(!room) {
             return null;

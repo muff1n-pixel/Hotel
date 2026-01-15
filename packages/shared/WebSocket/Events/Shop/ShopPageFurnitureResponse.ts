@@ -1,6 +1,8 @@
+import { FurnitureData } from "../../../Interfaces/Room/RoomFurnitureData.js";
+
 export type ShopPageFurnitureData = {
     id: string;
-    type: string;
+    furniture: FurnitureData;
 };
 
 export type ShopPageFurnitureResponse = {

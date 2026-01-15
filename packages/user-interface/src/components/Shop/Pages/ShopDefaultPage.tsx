@@ -78,7 +78,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
             return;
         }
 
-        internalEventTarget.dispatchEvent(new SetRoomRendererFurniture(activeFurniture.type, 64, 2));
+        internalEventTarget.dispatchEvent(new SetRoomRendererFurniture(activeFurniture.furniture.type, 64, 2, 0, activeFurniture.furniture.color));
     }, [roomRendererStarted, activeFurniture]);
 
     useEffect(() => {
@@ -133,7 +133,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                 alignSelf: "center",
                                 justifySelf: "center"
                             }}>
-                                <FurnitureIcon type={furniture.type}/>
+                                <FurnitureIcon furnitureData={furniture.furniture}/>
                             </div>
                         </div>
                     ))}

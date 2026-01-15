@@ -27,12 +27,12 @@ export default class FurnitureRenderer {
     private visualization?: FurnitureVisualization["visualizations"][0];
 
     constructor(public readonly type: string, public readonly size: number, public direction: number, public animation: number = 0, public color: number = 0) {
-        if(this.type.includes('*')) {
+        /*if(this.type.includes('*')) {
             const [type, color] = this.type.split('*');
 
             this.type = type;
             this.color = parseInt(color);
-        }
+        }*/
     }
 
     public async render(frame: number = 0) {

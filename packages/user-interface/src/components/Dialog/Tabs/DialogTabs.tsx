@@ -1,17 +1,25 @@
-import { act, ReactNode, useContext, useState } from "react";
+import { act, Fragment, ReactNode, useContext, useState } from "react";
 import DialogContent from "../DialogContent";
 import { AppContext } from "../../../contexts/AppContext";
+
+export type DialogTabHeaderProps = {
+    iconImage?: string;
+    backgroundImage?: string;
+
+    label?: string;
+    description?: string;
+}
 
 export type DialogTabsProps = {
     initialActiveIndex?: number;
     withLargeTabs?: boolean;
 
-    header?: ReactNode;
+    header?: DialogTabHeaderProps;
 
     tabs: {
         icon: ReactNode;
         element: ReactNode;
-        header?: ReactNode;
+        header?: DialogTabHeaderProps;
     }[];
 };
 
@@ -19,6 +27,8 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs, header, withL
     const { user } = useContext(AppContext);
 
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+
+    const currentHeader = tabs[activeIndex].header ?? header;
 
     return (
         <div style={{
@@ -38,16 +48,83 @@ export default function DialogTabs({ initialActiveIndex = 1, tabs, header, withL
                 padding: "0 11px",
 
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
+
+                position: "relative"
             }}>
+                {(currentHeader) && (
+                    <div style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+
+                        padding: "12px",
+                        boxSizing: "border-box",
+
+                        width: "100%",
+                        height: "100%",
+
+                        display: "flex",
+                        alignItems: "center"
+                    }}>
+                        {(currentHeader.backgroundImage) && (
+                            <img src={currentHeader.backgroundImage} style={{
+                                position: "absolute",
+                                
+                                left: 0,
+                                top: 0,
+
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                imageRendering: "pixelated",
+
+                                opacity: .05
+                            }}/>
+                        )}
+                    </div>
+                )}
+
                 <div style={{
                     flex: 1,
 
                     display: "flex",
 
-                    alignItems: "center"
+                    alignItems: "center",
+
+                    position: "relative",
                 }}>
-                    {tabs[activeIndex]?.header ?? header}
+                    {(currentHeader) && (
+                        <div style={{
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: 10,
+                            alignItems: "center"
+                        }}>
+                            {(currentHeader.iconImage) && (
+                                <img src={currentHeader.iconImage} width={36} height={36} style={{
+                                    objectFit: "contain",
+                                    imageRendering: "pixelated",
+                                    margin: 10
+                                }}/>
+                            )}
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center"
+                            }}>
+                                {(currentHeader.label) && (
+                                    <h2>{currentHeader.label}</h2>
+                                )}
+
+                                {(currentHeader.description) && (
+                                    <p>{currentHeader.description}</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div style={{

@@ -1,6 +1,11 @@
+export type FurnitureData = {
+    type: string;
+    color?: number;
+}
+
 export type RoomFurnitureData = {
     id: string;
-    type: string;
+    furniture: FurnitureData;
     position: {
         row: number;
         column: number;
@@ -8,5 +13,4 @@ export type RoomFurnitureData = {
     };
     direction: number;
     animation: number;
-    color: number;
 };

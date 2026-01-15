@@ -6,6 +6,7 @@ import { ShopPagesRequest } from "@shared/WebSocket/Events/Shop/ShopPagesRequest
 import { ShopPageFurnitureRequest } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureRequest.js";
 import { ShopPageFurniture } from "../Database/Models/Shop/ShopPageFurniture.js";
 import { ShopPageFurnitureResponse } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureResponse.js";
+import { Furniture } from "../Database/Models/Furniture/Furniture.js";
 
 export default class ShopEvents {
     public static async dispatchShopPages(userClient: UserClient, event: ShopPagesRequest) {
@@ -49,7 +50,13 @@ export default class ShopEvents {
         const shopPage = await ShopPage.findByPk(event.pageId, {
             include: {
                 model: ShopPageFurniture,
-                as: "furniture"
+                as: "furniture",
+                include: [
+                    {
+                        model: Furniture,
+                        as: "furniture"
+                    }
+                ]
             }
         });
 
@@ -62,7 +69,7 @@ export default class ShopEvents {
             furniture: shopPage.furniture.map((furniture) => {
                 return {
                     id: furniture.id,
-                    type: furniture.type
+                    furniture: furniture.furniture
                 }
             })
         }));

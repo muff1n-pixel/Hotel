@@ -11,6 +11,42 @@ import { Room } from "./Models/Rooms/Room.js";
 import { randomUUID } from "crypto";
 import { ShopPage } from "./Models/Shop/ShopPage.js";
 import { ShopPageFurniture } from "./Models/Shop/ShopPageFurniture.js";
+import { Furniture } from "./Models/Furniture/Furniture.js";
+
+Furniture.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
+    type: {
+      type: new DataTypes.STRING(32),
+      allowNull: false
+    },
+    placement: {
+      type: new DataTypes.STRING(32),
+      allowNull: false
+    },
+    dimensions: {
+        type: DataTypes.TEXT,
+        get: function () {
+            return JSON.parse(this.getDataValue("dimensions"));
+        },
+        set: function (value) {
+            this.setDataValue("dimensions", JSON.stringify(value));
+        },
+        allowNull: false
+    },
+    color: {
+      type: DataTypes.NUMBER,
+      defaultValue: null
+    }
+  },
+  {
+    tableName: "furnitures",
+    sequelize
+  }
+);
 
 ShopPage.init(
   {
@@ -53,10 +89,6 @@ ShopPageFurniture.init(
     id: {
       type: DataTypes.UUID,
       primaryKey: true
-    },
-    type: {
-      type: new DataTypes.STRING(32),
-      allowNull: false
     }
   },
   {
@@ -64,6 +96,11 @@ ShopPageFurniture.init(
     sequelize
   }
 );
+
+ShopPageFurniture.belongsTo(Furniture, {
+  as: "furniture",
+  foreignKey: "furnitureId"
+});
 
 ShopPage.hasMany(ShopPageFurniture, {
     as: "furniture",
@@ -103,10 +140,6 @@ RoomFurniture.init(
       type: DataTypes.UUID,
       primaryKey: true,
     },
-    type: {
-      type: new DataTypes.STRING(32),
-      allowNull: false,
-    },
     position: {
         type: DataTypes.TEXT,
         get: function () {
@@ -136,12 +169,73 @@ RoomFurniture.init(
   },
 );
 
+RoomFurniture.belongsTo(Furniture, {
+    as: "furniture",
+    foreignKey: "furnitureId"
+});
+
 Room.hasMany(RoomFurniture, {
     as: "roomFurnitures",
     foreignKey: "roomId"
 });
 
 await sequelize.sync();
+
+const furniture = await Furniture.bulkCreate<Furniture>([
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp",
+    color: 1,
+    placement: "floor",
+    dimensions: {
+      row: 1,
+      column: 1,
+      depth: 1
+    }
+  },
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp",
+    color: 2,
+    placement: "floor",
+    dimensions: {
+      row: 1,
+      column: 1,
+      depth: 1
+    }
+  },
+  {
+    id: randomUUID(),
+    type: "nft_rare_dragonlamp",
+    color: 3,
+    placement: "floor",
+    dimensions: {
+      row: 1,
+      column: 1,
+      depth: 1
+    }
+  },
+  {
+    id: randomUUID(),
+    type: "bed_armas_two",
+    placement: "floor",
+    dimensions: {
+      row: 1,
+      column: 1,
+      depth: 1
+    }
+  },
+  {
+    id: randomUUID(),
+    type: "roomdimmer",
+    placement: "wall",
+    dimensions: {
+      row: 1,
+      column: 1,
+      depth: 1
+    }
+  }
+]);
 
 const typeCategory = await ShopPage.create<ShopPage>({
   id: randomUUID(),
@@ -153,22 +247,27 @@ const typeCategory = await ShopPage.create<ShopPage>({
 await ShopPageFurniture.bulkCreate<ShopPageFurniture>([
   {
     id: randomUUID(),
-    type: "nft_rare_dragonlamp*1",
+    furnitureId: furniture[0]?.id,
     shopPageId: typeCategory.id,
   },
   {
     id: randomUUID(),
-    type: "nft_rare_dragonlamp*2",
+    furnitureId: furniture[1]?.id,
     shopPageId: typeCategory.id
   },
   {
     id: randomUUID(),
-    type: "nft_rare_dragonlamp*3",
+    furnitureId: furniture[2]?.id,
     shopPageId: typeCategory.id
   },
   {
     id: randomUUID(),
-    type: "bed_armas_two",
+    furnitureId: furniture[3]?.id,
+    shopPageId: typeCategory.id
+  },
+  {
+    id: randomUUID(),
+    furnitureId: furniture[4]?.id,
     shopPageId: typeCategory.id
   }
 ]);
@@ -255,38 +354,19 @@ const room = await Room.create<Room>({
     }
 });
 
-for(let color = 0; color < 4; color++)
+for(let color = 0; color < 3; color++)
 for(let direction = 0; direction < 2; direction++)
 for(let index = 0; index < 20; index++) {
   await RoomFurniture.create<RoomFurniture>({
       id: randomUUID(),
       roomId: room.id,
-      type: "nft_rare_dragonlamp",
+      furnitureId: furniture[color]?.id,
       position: {
           row: (11 + (color * 2)) + direction,
           column: 1 + index,
           depth: 1
       },
       direction: (direction === 0)?(2):(4),
-      animation: 1,
-      color
-  });
-}
-
-for(let color = 4; color < 8; color++)
-for(let direction = 0; direction < 2; direction++)
-for(let index = 0; index < 20; index++) {
-  await RoomFurniture.create<RoomFurniture>({
-      id: randomUUID(),
-      roomId: room.id,
-      type: "nft_rare_dragonlamp",
-      position: {
-          row: (13 + (color * 2)) + direction,
-          column: 1 + index,
-          depth: 0
-      },
-      direction: (direction === 0)?(2):(4),
-      animation: 1,
-      color
+      animation: 1
   });
 }

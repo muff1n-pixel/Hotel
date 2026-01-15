@@ -17,9 +17,23 @@ body {
   user-select: none;
 }
 
+h2 {
+  margin: 0;
+  
+  font-family: "Ubuntu Medium";
+  font-weight: 400;
+}
+
 b {
   font-family: "Ubuntu Bold";
   font-weight: 400;
+}
+
+p {
+  margin: 0;
+
+  font-family: "Ubuntu";
+  font-size: 13px;
 }
 
 #client {
