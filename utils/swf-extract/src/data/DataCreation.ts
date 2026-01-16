@@ -124,8 +124,11 @@ export function createVisualizationData(collection: SwfExtractionCollection): Fu
 
     const document = parser.parse(readFileSync(collection.data.visualization, { encoding: "utf-8" }), true);
 
+    const furnitureData = createFurnitureData(document["visualizationData"]["@_type"]);
+
     return {
         type: document["visualizationData"]["@_type"],
+        placement: furnitureData[0]?.placement ?? "floor",
         visualizations: document["visualizationData"]["graphics"]["visualization"].map((visualization: any) => {
             return {
                 size: parseInt(visualization["@_size"]) as 1 | 32 | 64,
@@ -277,7 +280,6 @@ export function createRoomVisualizationData(collection: SwfExtractionCollection)
         }
     } satisfies RoomVisualization;
 }
-
 
 export function createFurnitureData(assetName: string) {
     const parser = new XMLParser({

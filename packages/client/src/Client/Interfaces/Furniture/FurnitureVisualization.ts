@@ -2,6 +2,7 @@ export type FurnitureVisualization = {
     type: string;
 
     defaultDirection?: number;
+    placement?: "floor" | "wall";
 
     visualizations: {
         size: 1 | 32 | 64;

@@ -11,6 +11,7 @@ import RoomItem from "../Items/RoomItem.js";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem.js";
 import FurnitureRenderer from "@/Furniture/FurnitureRenderer.js";
 import TerminateRoomRenderer from "@shared/Events/Room/Renderer/TerminateRoomRenderer.js";
+import FurnitureAssets from "@/Assets/FurnitureAssets.js";
 
 export default function registerRoomUserInterfaceEvents(clientInstance: ClientInstance) {
     let roomRenderer: RoomRenderer | undefined = undefined;
@@ -57,7 +58,7 @@ export default function registerRoomUserInterfaceEvents(clientInstance: ClientIn
         clientInstance.internalEventTarget.dispatchEvent(new RoomRendererStarted(event.id));
     });
 
-    clientInstance.internalEventTarget.addEventListener<SetRoomRendererFurniture>("SetRoomRendererFurniture", (event) => {
+    clientInstance.internalEventTarget.addEventListener<SetRoomRendererFurniture>("SetRoomRendererFurniture", async (event) => {
         if(!roomRenderer) {
             return;
         }
@@ -66,13 +67,24 @@ export default function registerRoomUserInterfaceEvents(clientInstance: ClientIn
             roomRenderer.items.splice(roomRenderer.items.indexOf(roomItem), 1);
         }
 
+        const furnitureData = await FurnitureAssets.getFurnitureData(event.type);
+
         const furnitureRenderer = new FurnitureRenderer(event.type, event.size, event.direction, event.animation, event.color);
 
-        roomItem = new RoomFurnitureItem(furnitureRenderer, {
+
+        roomItem = new RoomFurnitureItem(furnitureRenderer, (furnitureData.visualization.placement === "wall") ? (
+            {
+                row: 1,
+                column: 0,
+                depth: 1.5
+            }
+        ):(
+            {
                 row: 1,
                 column: 1,
                 depth: 0
             }
+        )
         );
 
         roomRenderer.items.push(roomItem);
