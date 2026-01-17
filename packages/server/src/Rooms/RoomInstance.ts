@@ -176,8 +176,8 @@ export default class RoomInstance {
                 to: position
             }));
 
-            user.path!.splice(0, 1);
             user.position = position;
+            user.path!.splice(0, 1);
 
             if(user.path!.length) {
                 shouldContinueInterval = true;
