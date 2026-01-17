@@ -1,21 +1,21 @@
-import ClientInstance from "@/ClientInstance";
-import { LoadRoom } from "@shared/WebSocket/Events/Rooms/LoadRoom";
+import ClientInstance from "@Client/ClientInstance";
+import { LoadRoom } from "@Shared/WebSocket/Events/Rooms/LoadRoom";
 import RoomRenderer from "./Renderer";
 import RoomMapItem from "./Items/Map/RoomFurnitureItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";
-import { RoomUserData } from "@shared/Interfaces/Room/RoomUserData";
-import FigureRenderer from "@/Figure/FigureRenderer";
+import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
+import FigureRenderer from "@Client/Figure/FigureRenderer";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
-import { UserEnteredRoom } from "@shared/WebSocket/Events/Rooms/Users/UserEnteredRoom";
-import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
-import { RoomFurnitureData } from "@shared/Interfaces/Room/RoomFurnitureData";
-import FurnitureRenderer from "@/Furniture/FurnitureRenderer";
+import { UserEnteredRoom } from "@Shared/WebSocket/Events/Rooms/Users/UserEnteredRoom";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
+import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import RoomClickEvent from "@/Events/RoomClickEvent";
-import { StartWalking } from "@shared/WebSocket/Events/Rooms/Users/StartWalking";
-import { UserWalkTo } from "@shared/WebSocket/Events/Rooms/Users/UserWalkTo";
-import { UserLeftRoom } from "@shared/WebSocket/Events/Rooms/Users/UserLeftRoom";
+import RoomClickEvent from "@Client/Events/RoomClickEvent";
+import { StartWalking } from "@Shared/WebSocket/Events/Rooms/Users/StartWalking";
+import { UserWalkTo } from "@Shared/WebSocket/Events/Rooms/Users/UserWalkTo";
+import { UserLeftRoom } from "@Shared/WebSocket/Events/Rooms/Users/UserLeftRoom";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;

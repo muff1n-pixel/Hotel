@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ClientFigureResponse from "@shared/events/responses/ClientFigureResponse";
+import ClientFigureResponse from "@Shared/events/responses/ClientFigureResponse";
 import { AppContext } from "../../../contexts/AppContext";
-import ClientFigureRequest from "@shared/events/requests/ClientFigureRequest";
+import ClientFigureRequest from "@Shared/events/requests/ClientFigureRequest";
 
 export default function ToolbarFigureItem() {
     const canvasRef = useRef<HTMLCanvasElement>(null);

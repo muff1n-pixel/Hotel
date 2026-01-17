@@ -1,6 +1,6 @@
-import { FigureConfiguration, FigurePartKey, FigurePartKeyAbbreviation } from "@shared/interfaces/figure/FigureConfiguration";
+import { FigureConfiguration, FigurePartKey, FigurePartKeyAbbreviation } from "@Shared/interfaces/figure/FigureConfiguration";
 import FigureWorkerRenderer from "./Worker/FigureWorkerRenderer";
-import FigureAssets from "@/Assets/FigureAssets";
+import FigureAssets from "@Client/Assets/FigureAssets";
 import FigureWorker from "./Worker/FigureWorker";
 
 export default class FigureRenderer {

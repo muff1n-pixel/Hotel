@@ -2,13 +2,13 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import DialogPanel from "../../Dialog/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import { AppContext } from "../../../contexts/AppContext";
-import { ShopPageFurnitureRequest } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureRequest";
-import { ShopPageFurnitureData, ShopPageFurnitureResponse } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureResponse";
-import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
+import { ShopPageFurnitureRequest } from "@Shared/WebSocket/Events/Shop/ShopPageFurnitureRequest";
+import { ShopPageFurnitureData, ShopPageFurnitureResponse } from "@Shared/WebSocket/Events/Shop/ShopPageFurnitureResponse";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import CreateRoomRendererEvent, { RoomRendererResult } from "@shared/Events/Room/Renderer/CreateRoomRendererEvent";
+import CreateRoomRendererEvent, { RoomRendererResult } from "@Shared/Events/Room/Renderer/CreateRoomRendererEvent";
 import DialogButton from "../../Dialog/Button/DialogButton";
-import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture";
+import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@Shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
     const { internalEventTarget, webSocketClient } = useContext(AppContext);

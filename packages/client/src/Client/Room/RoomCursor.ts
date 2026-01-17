@@ -1,13 +1,13 @@
-import FurnitureRenderer from "@/Furniture/FurnitureRenderer";
+import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
 import RoomRenderer from "./Renderer";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import RoomClickEvent from "@/Events/RoomClickEvent";
+import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
-import StoppedHoveringFigure from "@shared/Events/Room/StoppedHoveringFigure";
-import FollowingFigure from "@shared/Events/Room/FollowingFigure";
-import StartedHoveringFigure from "@shared/Events/Room/StartedHoveringFigure";
-import StartedFollowingFigure from "@shared/Events/Room/StartedFollowingFigure";
-import StoppedFollowingFigure from "@shared/Events/Room/StoppedFollowingFigure";
+import StoppedHoveringFigure from "@Shared/Events/Room/StoppedHoveringFigure";
+import FollowingFigure from "@Shared/Events/Room/FollowingFigure";
+import StartedHoveringFigure from "@Shared/Events/Room/StartedHoveringFigure";
+import StartedFollowingFigure from "@Shared/Events/Room/StartedFollowingFigure";
+import StoppedFollowingFigure from "@Shared/Events/Room/StoppedFollowingFigure";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;

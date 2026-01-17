@@ -1,10 +1,10 @@
-import registerFigureEvents from "@/Figure/Events/FigureEvents";
-import registerFurnitureEvents from "@/Furniture/Events/FurnitureEvents";
-import registerRoomEvents from "@/Room/Events/RoomEvents";
-import registerUserInterfaceRoomRenderer from "@/Room/UserInterface/CreateRoomRenderer";
-import registerRoomInventoryEvents from "@/Room/UserInterface/StartPlacingFurnitureInRoom";
-import { TypedEventTarget } from "@shared/Interfaces/TypedEventTarget";
-import WebSocketClient from "@shared/WebSocket/WebSocketClient";
+import registerFigureEvents from "@Client/Figure/Events/FigureEvents";
+import registerFurnitureEvents from "@Client/Furniture/Events/FurnitureEvents";
+import registerRoomEvents from "@Client/Room/Events/RoomEvents";
+import registerUserInterfaceRoomRenderer from "@Client/Room/UserInterface/CreateRoomRenderer";
+import registerRoomInventoryEvents from "@Client/Room/UserInterface/StartPlacingFurnitureInRoom";
+import { TypedEventTarget } from "@Shared/Interfaces/TypedEventTarget";
+import WebSocketClient from "@Shared/WebSocket/WebSocketClient";
 import RoomInstance from "./Room/RoomInstance";
 
 export default class ClientInstance {

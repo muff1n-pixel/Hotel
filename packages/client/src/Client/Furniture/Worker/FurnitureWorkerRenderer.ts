@@ -1,8 +1,8 @@
 import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError";
 import FurnitureAssets from "../../Assets/FurnitureAssets";
 import { FurnitureData } from "../../Interfaces/Furniture/FurnitureData";
-import { FurnitureIndex } from "@/Interfaces/Furniture/FurnitureIndex";
-import { FurnitureVisualization } from "@/Interfaces/Furniture/FurnitureVisualization";
+import { FurnitureIndex } from "@Client/Interfaces/Furniture/FurnitureIndex";
+import { FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { FurnitureRendererSprite } from "../Interfaces/FurnitureRendererSprite";
 
 export default class FurnitureWorkerRenderer {

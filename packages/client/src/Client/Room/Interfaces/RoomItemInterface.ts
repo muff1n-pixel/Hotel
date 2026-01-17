@@ -1,4 +1,4 @@
-import { RoomPosition } from "@/Interfaces/RoomPosition";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomItemSpriteInterface from "./RoomItemSpriteInterface";
 import RoomSprite from "../Items/RoomSprite";
 

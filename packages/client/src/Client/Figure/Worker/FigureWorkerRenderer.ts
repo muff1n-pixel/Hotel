@@ -1,11 +1,11 @@
-import { FiguremapData } from "@/Interfaces/Figure/FiguremapData";
+import { FiguremapData } from "@Client/Interfaces/Figure/FiguremapData";
 import FigureAssets from "../../Assets/FigureAssets";
 import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError";
-import { FiguredataData } from "@/Interfaces/Figure/FiguredataData";
+import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { figureRenderPriority } from "../FigureRenderPriority";
-import { AvatarActionsData } from "@/Interfaces/Figure/Avataractions";
-import { FigureData } from "@/Interfaces/Figure/FigureData";
-import { FigureConfiguration, FigurePartKey, FigurePartKeyAbbreviation } from "@shared/interfaces/figure/FigureConfiguration";
+import { AvatarActionsData } from "@Client/Interfaces/Figure/Avataractions";
+import { FigureData } from "@Client/Interfaces/Figure/FigureData";
+import { FigureConfiguration, FigurePartKey, FigurePartKeyAbbreviation } from "@Shared/interfaces/figure/FigureConfiguration";
 import FigureWorker from "./FigureWorker";
 
 export type FigureRendererSprite = {

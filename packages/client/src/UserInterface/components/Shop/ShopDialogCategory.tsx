@@ -2,10 +2,10 @@ import DialogPanel from "../Dialog/Panels/DialogPanel";
 import DialogPanelList from "../Dialog/Panels/DialogPanelList";
 import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ShopPageData, ShopPagesResponse } from "@shared/WebSocket/Events/Shop/ShopPagesResponse";
-import { ShopPagesRequest } from "@shared/WebSocket/Events/Shop/ShopPagesRequest";
+import { ShopPageData, ShopPagesResponse } from "@Shared/WebSocket/Events/Shop/ShopPagesResponse";
+import { ShopPagesRequest } from "@Shared/WebSocket/Events/Shop/ShopPagesRequest";
 import { AppContext } from "../../contexts/AppContext";
-import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 

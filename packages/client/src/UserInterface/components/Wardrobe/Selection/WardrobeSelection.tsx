@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
-import ClientFigureDataRequest from "@shared/events/requests/ClientFigureDataRequest";
-import ClientFigureDataResponse from "@shared/events/responses/ClientFigureDataResponse";
+import ClientFigureDataRequest from "@Shared/events/requests/ClientFigureDataRequest";
+import ClientFigureDataResponse from "@Shared/events/responses/ClientFigureDataResponse";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import WardrobeAvatar from "../WardrobeAvatar";
 
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@shared/Interfaces/figure/FigureConfiguration";
+import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/figure/FigureConfiguration";
 
 export type WardrobeSelectionProps = {
     part: FigurePartKeyAbbreviation;

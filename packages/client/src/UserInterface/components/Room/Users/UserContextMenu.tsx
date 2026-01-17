@@ -1,13 +1,13 @@
 import { Fragment, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
-import StartedHoveringFigure from "@shared/Events/Room/StartedHoveringFigure";
-import StoppedHoveringFigure from "@shared/Events/Room/StoppedHoveringFigure";
-import StartedFollowingFigure from "@shared/Events/Room/StartedFollowingFigure";
-import StoppedFollowingFigure from "@shared/Events/Room/StoppedFollowingFigure";
-import FollowingFigure from "@shared/Events/Room/FollowingFigure";
+import StartedHoveringFigure from "@Shared/Events/Room/StartedHoveringFigure";
+import StoppedHoveringFigure from "@Shared/Events/Room/StoppedHoveringFigure";
+import StartedFollowingFigure from "@Shared/Events/Room/StartedFollowingFigure";
+import StoppedFollowingFigure from "@Shared/Events/Room/StoppedFollowingFigure";
+import FollowingFigure from "@Shared/Events/Room/FollowingFigure";
 
 import "./UserContextMenu.css";
-import { RoomUserData } from "@shared/Interfaces/Room/RoomUserData";
+import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
 import UserContextMenuList from "./UserContextMenuList";
 import UserContextMenuButton from "./UserContextMenuButton";
 import UserContextMenuElement from "./UserContextMenuElement";

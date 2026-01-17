@@ -1,12 +1,12 @@
-import FigureAssets from "@/Assets/FigureAssets";
-import ClientFigureDataRequest from "@shared/events/requests/ClientFigureDataRequest";
-import ClientFigureDataResponse from "@shared/events/responses/ClientFigureDataResponse";
+import FigureAssets from "@Client/Assets/FigureAssets";
+import ClientFigureDataRequest from "@Shared/events/requests/ClientFigureDataRequest";
+import ClientFigureDataResponse from "@Shared/events/responses/ClientFigureDataResponse";
 import FigureRenderer from "../FigureRenderer";
-import ClientFigureRequest from "@shared/events/requests/ClientFigureRequest";
-import ClientFigureResponse from "@shared/events/responses/ClientFigureResponse";
-import FigureConfigurationHelper from "@shared/Figure/FigureConfigurationHelper";
+import ClientFigureRequest from "@Shared/events/requests/ClientFigureRequest";
+import ClientFigureResponse from "@Shared/events/responses/ClientFigureResponse";
+import FigureConfigurationHelper from "@Shared/Figure/FigureConfigurationHelper";
 import FigureWorker from "../Worker/FigureWorker";
-import ClientInstance from "@/ClientInstance";
+import ClientInstance from "@Client/ClientInstance";
 
 export default function registerFigureEvents(clientInstance: ClientInstance) {
     clientInstance.internalEventTarget.addEventListener<ClientFigureDataRequest>("ClientFigureDataRequest", async (event) => {

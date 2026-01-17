@@ -3,10 +3,10 @@ import Dialog from "../Dialog/Dialog";
 import DialogSubTabs from "../Dialog/Tabs/DialogSubTabs";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
 
-import FigureConfigurationHelper from "@shared/figure/FigureConfigurationHelper";
+import FigureConfigurationHelper from "@Shared/figure/FigureConfigurationHelper";
 import WardrobeAvatar from "./WardrobeAvatar";
 import WardrobeSelection from "./Selection/WardrobeSelection";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@shared/Interfaces/figure/FigureConfiguration";
+import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/figure/FigureConfiguration";
 import { AppContext } from "../../contexts/AppContext";
 
 const wardrobeTabs = [

@@ -1,4 +1,4 @@
-import { MousePosition } from "@/Interfaces/MousePosition";
+import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomRenderer from "./Renderer";
 
 export default class RoomCamera {

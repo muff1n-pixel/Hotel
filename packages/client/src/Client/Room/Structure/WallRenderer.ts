@@ -1,7 +1,7 @@
-import ContextNotAvailableError from "@/Exceptions/ContextNotAvailableError";
-import RoomAssets from "@/Assets/RoomAssets";
-import { RoomData } from "@/Interfaces/Room/RoomData";
-import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure";
+import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import RoomAssets from "@Client/Assets/RoomAssets";
+import { RoomData } from "@Client/Interfaces/Room/RoomData";
+import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 
 type WallRectangle = {
     row: number;

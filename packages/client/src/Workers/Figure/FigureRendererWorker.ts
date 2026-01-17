@@ -1,6 +1,6 @@
-import FigureAssets from "@/Assets/FigureAssets";
-import FigureWorkerRenderer from "@/Figure/Worker/FigureWorkerRenderer";
-import { FigureRenderEvent } from "@/Figure/Interfaces/FigureRenderEvent";
+import FigureAssets from "@Client/Assets/FigureAssets";
+import FigureWorkerRenderer from "@Client/Figure/Worker/FigureWorkerRenderer";
+import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     await FigureAssets.loadAssets();

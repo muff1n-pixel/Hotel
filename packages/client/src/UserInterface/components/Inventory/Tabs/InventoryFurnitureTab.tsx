@@ -3,10 +3,10 @@ import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomRenderer from "../../Room/Renderer/RoomRenderer";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
-import { UserFurnitureData } from "@shared/Interfaces/User/UserFurnitureData";
-import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
-import { UserFurnitureDataUpdated } from "@shared/WebSocket/Events/User/Inventory/UserFurnitureDataUpdated";
-import StartPlacingFurnitureInRoom, { PlaceFurnitureInRoomProperties } from "@shared/Events/Room/Cursor/StartPlacingFurnitureInRoom";
+import { UserFurnitureData } from "@Shared/Interfaces/User/UserFurnitureData";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { UserFurnitureDataUpdated } from "@Shared/WebSocket/Events/User/Inventory/UserFurnitureDataUpdated";
+import StartPlacingFurnitureInRoom, { PlaceFurnitureInRoomProperties } from "@Shared/Events/Room/Cursor/StartPlacingFurnitureInRoom";
 
 export default function InventoryFurnitureTab() {
     const { webSocketClient, internalEventTarget } = useContext(AppContext);

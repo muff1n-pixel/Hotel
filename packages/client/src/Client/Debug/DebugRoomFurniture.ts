@@ -1,5 +1,5 @@
-import RoomFurnitureItem from "@/Room/Items/Furniture/RoomFurnitureItem";
-import RoomRenderer from "@/Room/Renderer";
+import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
+import RoomRenderer from "@Client/Room/Renderer";
 
 export default class DebugRoomFurniture {
     private readonly element: HTMLDivElement;

@@ -1,9 +1,9 @@
-import FigureAssets from "@/Assets/FigureAssets";
+import FigureAssets from "@Client/Assets/FigureAssets";
 import ClientInstance from "./ClientInstance";
-import "@/../Workers/Figure/FigureRendererWorker";
-import "@/Figure/Worker/FigureWorkerRenderer";
-import WebSocketClient from "@shared/WebSocket/WebSocketClient";
-import { TypedEventTarget } from "@shared/Interfaces/TypedEventTarget";
+import "@Client/../Workers/Figure/FigureRendererWorker";
+import "@Client/Figure/Worker/FigureWorkerRenderer";
+import WebSocketClient from "@Shared/WebSocket/WebSocketClient";
+import { TypedEventTarget } from "@Shared/Interfaces/TypedEventTarget";
 
 export async function createClientInstance(element: HTMLElement, internalEventTarget: TypedEventTarget, webSocketClient: WebSocketClient) {
     await FigureAssets.loadAssets();

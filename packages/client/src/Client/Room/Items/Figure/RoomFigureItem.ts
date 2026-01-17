@@ -1,7 +1,7 @@
-import RoomItemSpriteInterface from "@/Room/Interfaces/RoomItemSpriteInterface";
+import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomItem from "../RoomItem";
-import { RoomPosition } from "@/Interfaces/RoomPosition";
-import FigureRenderer from "@/Figure/FigureRenderer";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
+import FigureRenderer from "@Client/Figure/FigureRenderer";
 import RoomFigureSprite from "./RoomFigureSprite";
 
 export default class RoomFigureItem extends RoomItem {

@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
-import ClientFurnitureRequest from "@shared/Events/Furniture/ClientFurnitureRequest";
-import ClientFurnitureResponse from "@shared/Events/Furniture/ClientFurnitureResponse";
+import ClientFurnitureRequest from "@Shared/Events/Furniture/ClientFurnitureRequest";
+import ClientFurnitureResponse from "@Shared/Events/Furniture/ClientFurnitureResponse";
 import { AppContext } from "../../contexts/AppContext";
-import { FurnitureData } from "@shared/Interfaces/Room/RoomFurnitureData";
+import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 
 export type FurnitureIconProps = {
     furnitureData: FurnitureData;

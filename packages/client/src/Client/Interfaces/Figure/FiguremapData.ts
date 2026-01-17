@@ -1,4 +1,4 @@
-import { FigurePartKeyAbbreviation } from "@shared/interfaces/figure/FigureConfiguration";
+import { FigurePartKeyAbbreviation } from "@Shared/interfaces/figure/FigureConfiguration";
 
 export type FiguremapData = {
     id: string;

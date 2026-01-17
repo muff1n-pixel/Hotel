@@ -1,4 +1,4 @@
-import { FigureConfiguration } from "@shared/interfaces/figure/FigureConfiguration";
+import { FigureConfiguration } from "@Shared/interfaces/figure/FigureConfiguration";
 import { FigureRendererSprite } from "../Worker/FigureWorkerRenderer";
 
 export type FigureRenderEvent = {

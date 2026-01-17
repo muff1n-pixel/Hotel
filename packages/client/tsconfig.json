@@ -26,8 +26,8 @@
     /* Completeness */
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/Client/*"],
-      "@shared/*": ["../shared/*"]
+      "@Client/*": ["./src/Client/*"],
+      "@Shared/*": ["../shared/*"]
     },
   }
 }

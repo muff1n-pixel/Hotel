@@ -1,4 +1,4 @@
-import { ShopPageData } from "@shared/WebSocket/Events/Shop/ShopPagesResponse";
+import { ShopPageData } from "@Shared/WebSocket/Events/Shop/ShopPagesResponse";
 import ShopDefaultPage from "./ShopDefaultPage";
 
 export type ShopPageProps = {

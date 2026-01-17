@@ -1,5 +1,5 @@
-import RoomItem from "@/Room/Items/RoomItem";
-import RoomSprite from "@/Room/Items/RoomSprite";
+import RoomItem from "@Client/Room/Items/RoomItem";
+import RoomSprite from "@Client/Room/Items/RoomSprite";
 
 export type RoomPointerPosition = {
     item: RoomItem;

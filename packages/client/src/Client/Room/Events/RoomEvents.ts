@@ -1,6 +1,6 @@
-import ClientInstance from "@/ClientInstance";
-import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
-import { LoadRoom } from "@shared/WebSocket/Events/Rooms/LoadRoom";
+import ClientInstance from "@Client/ClientInstance";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { LoadRoom } from "@Shared/WebSocket/Events/Rooms/LoadRoom";
 import RoomInstance from "../RoomInstance";
 
 export default function registerRoomEvents(clientInstance: ClientInstance) {

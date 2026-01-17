@@ -1,5 +1,5 @@
-import { MousePosition } from "@/Interfaces/MousePosition";
-import { RoomPosition } from "@/Interfaces/RoomPosition";
+import { MousePosition } from "@Client/Interfaces/MousePosition";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomItemSpriteInterface from "../Interfaces/RoomItemSpriteInterface";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomItem from "./RoomItem";

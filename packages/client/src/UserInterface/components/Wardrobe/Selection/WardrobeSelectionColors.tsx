@@ -1,4 +1,4 @@
-import ClientFigureDataResponse from "@shared/events/responses/ClientFigureDataResponse";
+import ClientFigureDataResponse from "@Shared/events/responses/ClientFigureDataResponse";
 import { PropsWithChildren } from "react";
 
 export type WardrobeSelectionColorsProps = PropsWithChildren & {

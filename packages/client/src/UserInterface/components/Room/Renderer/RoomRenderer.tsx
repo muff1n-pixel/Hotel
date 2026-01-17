@@ -1,6 +1,6 @@
 import { CSSProperties, Ref, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
-import CreateRoomRendererEvent, { RoomRendererProperties, RoomRendererResult } from "@shared/Events/Room/Renderer/CreateRoomRendererEvent";
+import CreateRoomRendererEvent, { RoomRendererProperties, RoomRendererResult } from "@Shared/Events/Room/Renderer/CreateRoomRendererEvent";
 
 export type RoomRendererProps = {
     style?: CSSProperties;

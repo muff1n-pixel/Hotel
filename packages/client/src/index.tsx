@@ -1,4 +1,4 @@
-import WebSocketClient from "@shared/WebSocket/WebSocketClient";
+import WebSocketClient from "@Shared/WebSocket/WebSocketClient";
 import { createInterfaceInstance } from "./UserInterface";
 import { TypedEventTarget } from "./UserInterface/contexts/AppContext";
 import { createClientInstance } from "./Client";

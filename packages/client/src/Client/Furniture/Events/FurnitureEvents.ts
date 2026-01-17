@@ -1,6 +1,6 @@
-import ClientFurnitureRequest from "@shared/events/Furniture/ClientFurnitureRequest";
-import ClientFurnitureResponse from "@shared/events/Furniture/ClientFurnitureResponse";
-import ClientInstance from "@/ClientInstance";
+import ClientFurnitureRequest from "@Shared/events/Furniture/ClientFurnitureRequest";
+import ClientFurnitureResponse from "@Shared/events/Furniture/ClientFurnitureResponse";
+import ClientInstance from "@Client/ClientInstance";
 import FurnitureRenderer from "../FurnitureRenderer";
 
 export default function registerFurnitureEvents(clientInstance: ClientInstance) {

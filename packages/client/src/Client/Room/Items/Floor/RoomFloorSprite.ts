@@ -1,5 +1,5 @@
-import ContextNotAvailableError from "@/Exceptions/ContextNotAvailableError";
-import { MousePosition } from "@/Interfaces/MousePosition";
+import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomMapItem from "../Map/RoomFurnitureItem";
 

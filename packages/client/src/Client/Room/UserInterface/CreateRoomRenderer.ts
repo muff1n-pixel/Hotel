@@ -1,13 +1,13 @@
-import ClientInstance from "@/ClientInstance";
-import CreateRoomRendererEvent from "@shared/Events/Room/Renderer/CreateRoomRendererEvent";
+import ClientInstance from "@Client/ClientInstance";
+import CreateRoomRendererEvent from "@Shared/Events/Room/Renderer/CreateRoomRendererEvent";
 import RoomRenderer from "../Renderer";
-import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure";
+import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomMapItem from "../Items/Map/RoomFurnitureItem";
 import FloorRenderer from "../Structure/FloorRenderer";
 import WallRenderer from "../Structure/WallRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
-import FurnitureRenderer from "@/Furniture/FurnitureRenderer";
-import FurnitureAssets from "@/Assets/FurnitureAssets";
+import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 
 export default function registerUserInterfaceRoomRenderer(clientInstance: ClientInstance) {
     clientInstance.internalEventTarget.addEventListener<CreateRoomRendererEvent>("CreateRoomRendererEvent", (event) => {

@@ -1,20 +1,20 @@
-import FigureAssets from "@/Assets/FigureAssets";
-import RoomClickEvent from "@/Events/RoomClickEvent";
-import FigureRenderer from "@/Figure/FigureRenderer";
-import FurnitureRenderer from "@/Furniture/FurnitureRenderer";
-import RoomFigureItem from "@/Room/Items/Figure/RoomFigureItem";
-import RoomFurnitureItem from "@/Room/Items/Furniture/RoomFurnitureItem";
-import RoomMapItem from "@/Room/Items/Map/RoomFurnitureItem";
-import RoomRenderer from "@/Room/Renderer";
-import FloorRenderer from "@/Room/Structure/FloorRenderer";
-import WallRenderer from "@/Room/Structure/WallRenderer";
+import FigureAssets from "@Client/Assets/FigureAssets";
+import RoomClickEvent from "@Client/Events/RoomClickEvent";
+import FigureRenderer from "@Client/Figure/FigureRenderer";
+import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
+import RoomMapItem from "@Client/Room/Items/Map/RoomFurnitureItem";
+import RoomRenderer from "@Client/Room/Renderer";
+import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
+import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ClientInstance from "./ClientInstance";
-import "@/../Workers/Figure/FigureRendererWorker";
-import "@/Figure/Worker/FigureWorkerRenderer";
-import FigureConfigurationHelper from "@shared/Figure/FigureConfigurationHelper";
-import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure";
-import WebSocketClient from "@shared/WebSocket/WebSocketClient";
-import { TypedEventTarget } from "@shared/Interfaces/TypedEventTarget";
+import "@Client/../Workers/Figure/FigureRendererWorker";
+import "@Client/Figure/Worker/FigureWorkerRenderer";
+import FigureConfigurationHelper from "@Shared/Figure/FigureConfigurationHelper";
+import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
+import WebSocketClient from "@Shared/WebSocket/WebSocketClient";
+import { TypedEventTarget } from "@Shared/Interfaces/TypedEventTarget";
 
 (window as any).createClientInstance = async function createClientInstance(element: HTMLElement, internalEventTarget: TypedEventTarget, webSocketClient: WebSocketClient) {
     await FigureAssets.loadAssets();

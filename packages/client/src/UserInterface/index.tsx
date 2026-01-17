@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import InterfaceInstance from './components/InterfaceInstance';
 import { TypedEventTarget } from './contexts/AppContext';
-import WebSocketClient from "@shared/WebSocket/WebSocketClient";
+import WebSocketClient from "@Shared/WebSocket/WebSocketClient";
 
 import "./styles/fonts.css";
 import "./styles/index.css";
