@@ -3,4 +3,7 @@ import { UserFurnitureData } from "../../../../Interfaces/User/UserFurnitureData
 export type UserFurnitureDataUpdated = {
     allUserFurniture?: UserFurnitureData[];
     updatedUserFurniture?: UserFurnitureData[];
+    deletedUserFurniture?: {
+        id: string;
+    }[];
 };

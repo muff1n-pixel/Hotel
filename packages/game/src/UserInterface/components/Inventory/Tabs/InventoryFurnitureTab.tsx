@@ -1,17 +1,25 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomRenderer from "../../Room/Renderer/RoomRenderer";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { act, Fragment, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
 import { UserFurnitureData } from "@Shared/Interfaces/User/UserFurnitureData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserFurnitureDataUpdated } from "@Shared/WebSocket/Events/User/Inventory/UserFurnitureDataUpdated";
-import { webSocketClient } from "../../../..";
+import { clientInstance, webSocketClient } from "../../../..";
+import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
+import { PlaceFurnitureInRoom } from "@Shared/WebSocket/Events/Rooms/Furniture/PlaceFurnitureInRoom";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
+import InventoryEmptyTab from "./InventoryEmptyTab";
 
 export default function InventoryFurnitureTab() {
+    const { setDialogHidden } = useContext(AppContext);
+
     const [activeFurniture, setActiveFurniture] = useState<UserFurnitureData>();
     const [userFurniture, setUserFurniture] = useState<UserFurnitureData[]>([]);
     const userFurnitureRequested = useRef<boolean>(false);
+
+    const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
 
     useEffect(() => {
         if(userFurnitureRequested.current) {
@@ -27,17 +35,22 @@ export default function InventoryFurnitureTab() {
         const listener = (event: WebSocketEvent<UserFurnitureDataUpdated>) => {
             if(event.data.allUserFurniture) {
                 setUserFurniture(event.data.allUserFurniture);
-
-                if(!activeFurniture && event.data.allUserFurniture.length) {
-                    setActiveFurniture(event.data.allUserFurniture[0]);
-                }
             }
-            else if(event.data.updatedUserFurniture) {
-                setUserFurniture(
-                    userFurniture
+            else {
+                let mutatedUserFurniture = [...userFurniture];
+
+                if(event.data.updatedUserFurniture) {
+                    mutatedUserFurniture = mutatedUserFurniture
                         .filter((userFurniture) => !event.data.updatedUserFurniture?.some((updatedUserFurniture) => updatedUserFurniture.id === userFurniture.id))
                         .concat(...event.data.updatedUserFurniture)
-                );
+                }
+
+                if(event.data.deletedUserFurniture) {
+                    mutatedUserFurniture = mutatedUserFurniture
+                        .filter((userFurniture) => !event.data.deletedUserFurniture?.some((updatedUserFurniture) => updatedUserFurniture.id === userFurniture.id))
+                }
+
+                setUserFurniture(mutatedUserFurniture);
             }
         }
 
@@ -48,12 +61,67 @@ export default function InventoryFurnitureTab() {
         };
     }, [userFurniture]);
 
+    useEffect(() => {
+        if(!activeFurniture && userFurniture.length) {
+            setActiveFurniture(userFurniture[0]);
+        }
+        else if(activeFurniture && !userFurniture.some((userFurniture) => userFurniture.id === activeFurniture.id)) {
+            setActiveFurniture(userFurniture[0] ?? undefined);
+        }
+        else if(activeFurniture) {
+            setActiveFurniture(userFurniture.find((userFurniture) => userFurniture.id === activeFurniture.id));
+        }
+    }, [activeFurniture, userFurniture]);
+
+    useEffect(() => {
+        if(!roomFurniturePlacer) {
+            setDialogHidden("inventory", false);
+            
+            return;
+        }
+
+        if(roomFurniturePlacer.userFurnitureData.id !== activeFurniture?.id) {
+            roomFurniturePlacer.destroy();
+
+            setRoomFurniturePlacer(undefined);
+
+            setDialogHidden("inventory", false);
+
+            return;
+        }
+
+        setDialogHidden("inventory", true);
+
+        roomFurniturePlacer.startPlacing((position) => {
+            webSocketClient.send<PlaceFurnitureInRoom>("PlaceFurnitureInRoom", {
+                userFurnitureId: activeFurniture.id,
+                position
+            });
+        }, () => {
+            roomFurniturePlacer.destroy();
+
+            setDialogHidden("inventory", false);
+
+            setRoomFurniturePlacer(undefined);
+        });
+
+    }, [activeFurniture, roomFurniturePlacer]);
+
     const onPlaceInRoomClick = useCallback(() => {
         if(!activeFurniture) {
             return;
         }
 
-    }, [activeFurniture]);
+        if(!clientInstance.roomInstance?.roomRenderer) {
+            return;
+        }
+
+        setRoomFurniturePlacer(new RoomFurniturePlacer(clientInstance.roomInstance.roomRenderer, activeFurniture));
+    }, [roomFurniturePlacer, activeFurniture]);
+
+    if(!userFurniture.length) {
+        return (<InventoryEmptyTab/>);
+    }
 
     return (
         <div style={{
@@ -133,17 +201,21 @@ export default function InventoryFurnitureTab() {
                 flexDirection: "column",
                 gap: 10
             }}>
-                <RoomRenderer options={{ withoutWalls: true }} furnitureData={activeFurniture?.furnitureData} style={{
-                    height: 130,
-                    width: "100%",
-                }}/>
+                {(activeFurniture) && (
+                    <Fragment>
+                        <RoomRenderer options={{ withoutWalls: true }} furnitureData={activeFurniture?.furnitureData} style={{
+                            height: 130,
+                            width: "100%",
+                        }}/>
 
-                <div style={{ flex: 1 }}>
-                    <b>{activeFurniture?.furnitureData.name}</b>
-                    <p>{activeFurniture?.furnitureData.description}</p>
-                </div>
+                        <div style={{ flex: 1 }}>
+                            <b>{activeFurniture?.furnitureData.name}</b>
+                            <p>{activeFurniture?.furnitureData.description}</p>
+                        </div>
 
-                <DialogButton onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                    </Fragment>
+                )}
             </div>
         </div>
     );

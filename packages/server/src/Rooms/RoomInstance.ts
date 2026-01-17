@@ -11,6 +11,7 @@ import { StartWalking } from "@shared/WebSocket/Events/Rooms/Users/StartWalking.
 import { AStarFinder } from "astar-typescript";
 import { UserWalkTo } from "@shared/WebSocket/Events/Rooms/Users/UserWalkTo.js";
 import { UserLeftRoom } from "@shared/WebSocket/Events/Rooms/Users/UserLeftRoom.js";
+import { PlaceFurnitureInRoom } from "@shared/WebSocket/Events/Rooms/Furniture/PlaceFurnitureInRoom.js";
 
 export default class RoomInstance {
     private readonly users: RoomUserClient[] = [];
@@ -29,6 +30,7 @@ export default class RoomInstance {
         roomUserClient.userClient.addListener("close", this.userLeftRoom.bind(this));
 
         roomUserClient.userClient.addListener<StartWalking>("StartWalking", this.userStartWalking.bind(this));
+        roomUserClient.userClient.addListener<PlaceFurnitureInRoom>("PlaceFurnitureInRoom", this.userPlaceFurniture.bind(this));
 
         const userEnteredRoomEvent = new OutgoingEvent<UserEnteredRoom>("UserEnteredRoom", this.getRoomUserData(roomUserClient));
 
@@ -83,6 +85,18 @@ export default class RoomInstance {
         }));
 
         // TODO: dispose room instance
+    }
+
+    private async userPlaceFurniture(client: UserClient, event: PlaceFurnitureInRoom) {
+        const inventory = client.getInventory();
+
+        const userFurniture = await inventory.getFurnitureById(event.userFurnitureId);
+
+        if(!userFurniture) {
+            throw new Error("User does not have a user furniture by this id.");
+        }
+
+        inventory.setFurnitureQuantity(userFurniture, userFurniture.quantity - 1);
     }
 
     private userStartWalking(client: UserClient, event: StartWalking) {

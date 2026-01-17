@@ -67,6 +67,22 @@ export default function InterfaceInstance({  }: InterfaceInstanceProps) {
         setDialogs(dialogs.filter((dialog) => dialog.id !== id));
     }, [dialogs, user]);
 
+    const setDialogHidden = useCallback((id: string, hidden: boolean) => {
+        const index = dialogs.findIndex((dialog) => dialog.id === id);
+
+        if(index === -1) {
+            console.warn("Dialog does not exist", id);
+
+            return;
+        }
+
+        const mutatedDialogs = [...dialogs];
+
+        mutatedDialogs[index].hidden = hidden;
+
+        setDialogs(mutatedDialogs);
+    }, [dialogs, user]);
+
     if(!user) {
         return null;
     }
@@ -75,6 +91,7 @@ export default function InterfaceInstance({  }: InterfaceInstanceProps) {
         <AppContext value={{
             dialogs,
             addUniqueDialog,
+            setDialogHidden,
             closeDialog,
 
             user

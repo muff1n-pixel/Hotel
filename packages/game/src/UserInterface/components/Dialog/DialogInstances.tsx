@@ -16,13 +16,13 @@ export default function DialogInstances({  }: DialogInstancesProps) {
             {dialogs.map((dialog) => {
                 switch(dialog.type) {
                     case "wardrobe":
-                        return (<WardrobeDialog key={dialog.id} onClose={() => closeDialog(dialog.id)}/>);
+                        return (<WardrobeDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
                         
                     case "shop":
-                        return (<ShopDialog key={dialog.id} onClose={() => closeDialog(dialog.id)}/>);
+                        return (<ShopDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
                         
                     case "inventory":
-                        return (<InventoryDialog key={dialog.id} onClose={() => closeDialog(dialog.id)}/>);
+                        return (<InventoryDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
                 }
             })}
         </Fragment>

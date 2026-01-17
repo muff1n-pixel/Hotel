@@ -74,10 +74,11 @@ const wardrobeTabs = [
 ];
 
 export type WardrobeDialogProps = {
+    hidden?: boolean;
     onClose?: () => void;
 };
 
-export default function WardrobeDialog({ onClose }: WardrobeDialogProps) {
+export default function WardrobeDialog({ hidden, onClose }: WardrobeDialogProps) {
     const { user } = useContext(AppContext);
 
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfiguration>(user?.figureConfiguration ?? []);
@@ -91,7 +92,7 @@ export default function WardrobeDialog({ onClose }: WardrobeDialogProps) {
     }, [user?.figureConfiguration]);
     
     return (
-        <Dialog title="Wardrobe" onClose={onClose} width={500} height={530}>
+        <Dialog title="Wardrobe" hidden={hidden} onClose={onClose} width={500} height={530}>
             <DialogTabs initialActiveIndex={1} header={{ title: user?.name }} tabs={[
                 {
                     icon: (<div className="sprite_wardrobe_generic_tab"/>),

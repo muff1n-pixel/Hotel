@@ -5,10 +5,11 @@ export type DialogProps = PropsWithChildren & {
     title: string;
     width: number;
     height: number;
+    hidden?: boolean;
     onClose?: () => void;
 };
 
-export default function Dialog({ title, children, onClose, width, height }: DialogProps) {
+export default function Dialog({ title, children, hidden, onClose, width, height }: DialogProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const positionRef = useRef<MousePosition>({
         left: 200,
@@ -83,7 +84,8 @@ export default function Dialog({ title, children, onClose, width, height }: Dial
             display: "flex",
             flexDirection: "column",
 
-            pointerEvents: "auto"
+            pointerEvents: (!hidden)?("auto"):("none"),
+            opacity: (!hidden)?(undefined):(0)
         }} onMouseDown={onMouseDown}>
             <DialogHeader title={title} onDialogMove={onDialogMove} onClose={onClose}/>
 

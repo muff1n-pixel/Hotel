@@ -4,14 +4,15 @@ import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
 
 export type ShopDialogProps = {
+    hidden?: boolean;
     onClose?: () => void;
 }
 
-export default function ShopDialog({ onClose }: ShopDialogProps) {
+export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     const [header, setHeader] = useState<DialogTabHeaderProps>();
 
     return (
-        <Dialog title="Shop" onClose={onClose} width={570} height={670}>
+        <Dialog title="Shop" hidden={hidden} onClose={onClose} width={570} height={670}>
             <DialogTabs initialActiveIndex={1} header={header} withLargeTabs tabs={[
                 {
                     icon: "Frontpage",

@@ -13,11 +13,14 @@ import ClientInstance from "@Client/ClientInstance";
 import RoomInstance from "./RoomInstance";
 import RoomFurnitureSprite from "./Items/Furniture/RoomFurnitureSprite";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
+import RoomFurniturePlacer from "./RoomFurniturePlacer";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
-    private readonly camera: RoomCamera;
+    public readonly camera: RoomCamera;
     public readonly cursor?: RoomCursor;
+
+    public furniturePlacer?: RoomFurniturePlacer;
 
     public readonly items: RoomItem[] = [];
 
@@ -163,6 +166,17 @@ export default class RoomRenderer extends EventTarget {
         this.dispatchEvent(new RoomRenderEvent());
 
         return canvas;
+    }
+
+    public getMouseOffsetPosition() {
+        if(!this.camera.mousePosition) {
+            return null;
+        }
+
+        return {
+            left: this.camera.mousePosition.left - this.renderedOffset.left,
+            top: this.camera.mousePosition.top - this.renderedOffset.top
+        };
     }
 
     public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
