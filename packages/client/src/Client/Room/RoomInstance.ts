@@ -16,6 +16,7 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { StartWalking } from "@Shared/WebSocket/Events/Rooms/Users/StartWalking";
 import { UserWalkTo } from "@Shared/WebSocket/Events/Rooms/Users/UserWalkTo";
 import { UserLeftRoom } from "@Shared/WebSocket/Events/Rooms/Users/UserLeftRoom";
+import { webSocketClient } from "../..";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -55,15 +56,15 @@ export default class RoomInstance {
             animation: 0
         }));
 
-        clientInstance.webSocketClient.addEventListener<WebSocketEvent<UserEnteredRoom>>("UserEnteredRoom", (event) => {
+        webSocketClient.addEventListener<WebSocketEvent<UserEnteredRoom>>("UserEnteredRoom", (event) => {
             this.users.push(this.addUser(event.data));
         });
 
-        clientInstance.webSocketClient.addEventListener<WebSocketEvent<UserLeftRoom>>("UserLeftRoom", (event) => {
+        webSocketClient.addEventListener<WebSocketEvent<UserLeftRoom>>("UserLeftRoom", (event) => {
             this.removeUser(event.data);
         });
 
-        clientInstance.webSocketClient.addEventListener<WebSocketEvent<UserWalkTo>>("UserWalkTo", (event) => {
+        webSocketClient.addEventListener<WebSocketEvent<UserWalkTo>>("UserWalkTo", (event) => {
             const user = this.getUserById(event.data.userId);
 
             user.item.setPositionPath(event.data.from, event.data.to);
@@ -79,7 +80,7 @@ export default class RoomInstance {
             }
 
             if(event.floorEntity) {
-                this.clientInstance.webSocketClient.send<StartWalking>("StartWalking", {
+                webSocketClient.send<StartWalking>("StartWalking", {
                     target: event.floorEntity.position
                 });
             }

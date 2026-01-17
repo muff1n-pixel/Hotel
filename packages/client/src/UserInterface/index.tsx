@@ -2,33 +2,38 @@ import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import InterfaceInstance from './components/InterfaceInstance';
 import { TypedEventTarget } from './contexts/AppContext';
-import WebSocketClient from "../WebSocket/WebSocketClient";
 
 import "./styles/fonts.css";
 import "./styles/index.css";
 import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 
-export function createInterfaceInstance(element: HTMLElement, internalEventTarget: TypedEventTarget, webSocketClient: WebSocketClient) {
-  const root = createRoot(element);
+export default class UserInterfaceInstance {
+  constructor(private readonly element: HTMLElement, private readonly internalEventTarget: TypedEventTarget) {
 
-  root.render(
-    <StrictMode>
-      <div style={{
-        position: "fixed",
-        
-        left: 0,
-        top: 0,
+  }
 
-        width: "100%",
-        height: "100%",
+  render() {
+    const root = createRoot(this.element);
 
-        pointerEvents: "none",
+    root.render(
+      <StrictMode>
+        <div style={{
+          position: "fixed",
+          
+          left: 0,
+          top: 0,
 
-        color: "white"
-      }}>
-        <InterfaceInstance internalEventTarget={internalEventTarget} webSocketClient={webSocketClient}/>
-      </div>
-    </StrictMode>
-  );
+          width: "100%",
+          height: "100%",
+
+          pointerEvents: "none",
+
+          color: "white"
+        }}>
+          <InterfaceInstance internalEventTarget={this.internalEventTarget}/>
+        </div>
+      </StrictMode>
+    );
+  }
 }

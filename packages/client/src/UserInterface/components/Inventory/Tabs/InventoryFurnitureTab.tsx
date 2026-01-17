@@ -6,10 +6,9 @@ import { AppContext } from "../../../contexts/AppContext";
 import { UserFurnitureData } from "@Shared/Interfaces/User/UserFurnitureData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserFurnitureDataUpdated } from "@Shared/WebSocket/Events/User/Inventory/UserFurnitureDataUpdated";
+import { webSocketClient } from "../../../..";
 
 export default function InventoryFurnitureTab() {
-    const { webSocketClient, internalEventTarget } = useContext(AppContext);
-
     const [activeFurniture, setActiveFurniture] = useState<UserFurnitureData>();
     const [userFurniture, setUserFurniture] = useState<UserFurnitureData[]>([]);
     const userFurnitureRequested = useRef<boolean>(false);

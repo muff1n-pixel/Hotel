@@ -9,10 +9,9 @@ import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@Shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
+import { webSocketClient } from "../../../..";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
-    const { webSocketClient } = useContext(AppContext);
-
     const roomRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
 

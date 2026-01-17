@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AppContext, Dialog, TypedEventTarget } from "../contexts/AppContext";
 import Toolbar from "./Toolbar/Toolbar";
-import WebSocketClient from "../../WebSocket/WebSocketClient";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserDataUpdated } from "@Shared/WebSocket/Events/User/UserDataUpdated";
 import { EnterRoom } from "@Shared/WebSocket/Events/Rooms/EnterRoom";
 import RoomInterface from "./Room/RoomInterface";
 import DialogInstances from "./Dialog/DialogInstances";
+import { webSocketClient } from "../..";
 
 export type InterfaceInstanceProps = {
     internalEventTarget: TypedEventTarget;
-    webSocketClient: WebSocketClient;
 }
 
-export default function InterfaceInstance({ internalEventTarget, webSocketClient }: InterfaceInstanceProps) {
+export default function InterfaceInstance({ internalEventTarget }: InterfaceInstanceProps) {
     const [dialogs, setDialogs] = useState<Dialog[]>([{ id:"inventory", type: "inventory", data: null }]);
 
     const ready = useRef<boolean>(false);
@@ -93,8 +92,7 @@ export default function InterfaceInstance({ internalEventTarget, webSocketClient
 
             user,
 
-            internalEventTarget,
-            webSocketClient
+            internalEventTarget
         }}>
             <RoomInterface/>
 

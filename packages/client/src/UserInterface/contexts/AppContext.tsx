@@ -20,7 +20,6 @@ export type App = {
     addUniqueDialog: (type: string) => void;
     closeDialog: (id: string) => void;
 
-    webSocketClient: WebSocketClient;
     internalEventTarget: TypedEventTarget;
 };
 
@@ -29,6 +28,5 @@ export const AppContext = createContext<App>({
     addUniqueDialog: () => {},
     closeDialog: () => {},
 
-    webSocketClient: null as any as WebSocketClient,
     internalEventTarget: null as any as TypedEventTarget
 });

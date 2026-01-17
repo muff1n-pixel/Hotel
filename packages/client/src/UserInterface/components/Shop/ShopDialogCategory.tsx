@@ -4,10 +4,10 @@ import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ShopPageData, ShopPagesResponse } from "@Shared/WebSocket/Events/Shop/ShopPagesResponse";
 import { ShopPagesRequest } from "@Shared/WebSocket/Events/Shop/ShopPagesRequest";
-import { AppContext } from "../../contexts/AppContext";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
+import { webSocketClient } from "../../..";
 
 export type ShopDialogCategoryProps = {
     category: "frontpage" | "furniture" | "clothing" | "pets";
@@ -15,8 +15,6 @@ export type ShopDialogCategoryProps = {
 }
 
 export default function ShopDialogCategory({ category, onHeaderChange }: ShopDialogCategoryProps) {
-    const { webSocketClient } = useContext(AppContext);
-    
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
 
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);

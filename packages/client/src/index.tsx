@@ -1,7 +1,8 @@
 import WebSocketClient from "./WebSocket/WebSocketClient";
-import { createInterfaceInstance } from "./UserInterface";
 import { TypedEventTarget } from "./UserInterface/contexts/AppContext";
-import { createClientInstance } from "./Client";
+import ClientInstance from "@Client/ClientInstance";
+import UserInterfaceInstance from "./UserInterface";
+import FigureAssets from "@Client/Assets/FigureAssets";
 
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");
@@ -16,11 +17,15 @@ if(!interfaceElement) {
 
 const internalEventTarget = new EventTarget() as TypedEventTarget;
 
-const webSocketClient = new WebSocketClient({
+export const webSocketClient = new WebSocketClient({
     userId: "user1"
 });
 
+export const clientInstance = new ClientInstance(clientElement, internalEventTarget);
+export const userInterface = new UserInterfaceInstance(interfaceElement, internalEventTarget);
+
 webSocketClient.addEventListener("open", async () => {
-    const clientInstance = await createClientInstance(clientElement, internalEventTarget, webSocketClient);
-    const userInterface = createInterfaceInstance(interfaceElement, internalEventTarget, webSocketClient);
+    await FigureAssets.loadAssets();
+
+    userInterface.render();
 });
