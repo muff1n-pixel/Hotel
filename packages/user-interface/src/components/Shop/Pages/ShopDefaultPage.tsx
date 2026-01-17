@@ -8,6 +8,7 @@ import WebSocketEvent from "@shared/WebSocket/Events/WebSocketEvent";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import CreateRoomRendererEvent, { RoomRendererResult } from "@shared/Events/Room/Renderer/CreateRoomRendererEvent";
 import DialogButton from "../../Dialog/Button/DialogButton";
+import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
     const { internalEventTarget, webSocketClient } = useContext(AppContext);
@@ -85,6 +86,29 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
     const onRoomRendererClick = useCallback(() => {
         roomRendererResult?.progressFurnitureAnimation();
     }, [roomRendererResult]);
+
+    const handlePurchaseFurniture = useCallback(() => {
+        if(!activeFurniture) {
+            return;
+        }
+
+        // TODO: disable dialog
+
+        const listener = (event: WebSocketEvent<PurchaseShopFurnitureResponse>) => {
+            // TODO: handle error
+            if(!event.data.success) {
+
+            }
+        };
+
+        webSocketClient.addEventListener<WebSocketEvent<PurchaseShopFurnitureResponse>>("PurchaseShopFurnitureResponse", listener, {
+            once: true
+        });
+
+        webSocketClient.send<PurchaseShopFurnitureRequest>("PurchaseShopFurnitureRequest", {
+            shopFurnitureId: activeFurniture.id
+        });
+    }, [activeFurniture]);
 
     return (
         <div style={{
@@ -181,7 +205,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture} style={{ flex: 1 }}>Add to inventory</DialogButton>
+                    <DialogButton disabled={!activeFurniture} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Add to inventory</DialogButton>
                 </div>
             </div>
         </div>

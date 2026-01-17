@@ -7,6 +7,7 @@ import { ShopPageFurnitureRequest } from "@shared/WebSocket/Events/Shop/ShopPage
 import { ShopPageFurniture } from "../Database/Models/Shop/ShopPageFurniture.js";
 import { ShopPageFurnitureResponse } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureResponse.js";
 import { Furniture } from "../Database/Models/Furniture/Furniture.js";
+import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture.js";
 
 export default class ShopEvents {
     public static async dispatchShopPages(userClient: UserClient, event: ShopPagesRequest) {
@@ -78,6 +79,32 @@ export default class ShopEvents {
                     furniture: furniture.furniture
                 }
             })
+        }));
+    }
+
+    public static async handlePurchaseShopFurniture(userClient: UserClient, event: PurchaseShopFurnitureRequest) {
+        const shopFurniture = await ShopPageFurniture.findOne({
+            where: {
+                id: event.shopFurnitureId
+            },
+            include: {
+                model: Furniture,
+                as: "furniture"
+            }
+        });
+
+        if(!shopFurniture) {
+            userClient.send(new OutgoingEvent<PurchaseShopFurnitureResponse>("PurchaseShopFurnitureResponse", {
+                success: false
+            }));
+
+            return;
+        }
+
+        await userClient.getInventory().addFurniture(shopFurniture.furniture);
+
+        userClient.send(new OutgoingEvent<PurchaseShopFurnitureResponse>("PurchaseShopFurnitureResponse", {
+            success: true
         }));
     }
 }

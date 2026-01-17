@@ -21,20 +21,33 @@ export default function InventoryFurnitureTab() {
 
         userFurnitureRequested.current = true;
 
-        const listener = (event: WebSocketEvent<UserFurnitureDataUpdated>) => {
-            setUserFurniture(event.data.userFurniture);
+        webSocketClient.send("RequestUserFurnitureData", null);
+    }, []);
 
-            if(event.data.userFurniture.length) {
-                setActiveFurniture(event.data.userFurniture[0]);
+    useEffect(() => {
+        const listener = (event: WebSocketEvent<UserFurnitureDataUpdated>) => {
+            if(event.data.allUserFurniture) {
+                setUserFurniture(event.data.allUserFurniture);
+
+                if(!activeFurniture && event.data.allUserFurniture.length) {
+                    setActiveFurniture(event.data.allUserFurniture[0]);
+                }
+            }
+            else if(event.data.updatedUserFurniture) {
+                setUserFurniture(
+                    userFurniture
+                        .filter((userFurniture) => !event.data.updatedUserFurniture?.some((updatedUserFurniture) => updatedUserFurniture.id === userFurniture.id))
+                        .concat(...event.data.updatedUserFurniture)
+                );
             }
         }
 
-        webSocketClient.addEventListener<WebSocketEvent<UserFurnitureDataUpdated>>("UserFurnitureDataUpdated", listener, {
-            once: true
-        });
+        webSocketClient.addEventListener<WebSocketEvent<UserFurnitureDataUpdated>>("UserFurnitureDataUpdated", listener);
 
-        webSocketClient.send("RequestUserFurnitureData", null);
-    }, []);
+        return () => {
+            webSocketClient.removeEventListener<WebSocketEvent<UserFurnitureDataUpdated>>("UserFurnitureDataUpdated", listener);
+        };
+    }, [userFurniture]);
 
     return (
         <div style={{
@@ -49,12 +62,13 @@ export default function InventoryFurnitureTab() {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
+                alignContent: "start",
                 gap: 4,
 
                 overflowY: "scroll"
             }}>
                 {userFurniture?.map((userFurniture) => (
-                    <div style={{
+                    <div key={userFurniture.id} style={{
                         display: "flex",
 
                         width: 40,

@@ -26,6 +26,7 @@ eventHandler.addListener("ClientPingEvent", (userClient: UserClient) => {
 
 eventHandler.addListener("ShopPagesRequest", ShopEvents.dispatchShopPages);
 eventHandler.addListener("ShopPageFurnitureRequest", ShopEvents.dispatchShopPageFurniture);
+eventHandler.addListener("PurchaseShopFurnitureRequest", ShopEvents.handlePurchaseShopFurniture);
 
 const webSocketServer = new WebSocketServer({
     port: 7632
