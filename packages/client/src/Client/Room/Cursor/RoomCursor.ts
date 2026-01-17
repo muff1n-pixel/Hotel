@@ -8,6 +8,7 @@ import StoppedHoveringFigure from "./Events/StoppedHoveringFigure";
 import StartedHoveringFigure from "./Events/StartedHoveringFigure";
 import StartedFollowingFigure from "./Events/StartedFollowingFigure";
 import StoppedFollowingFigure from "./Events/StoppedFollowingFigure";
+import { clientInstance } from "../../..";
 
 // TODO: rework hovering/following figure to regular hover events? maybe not for performance sake?
 export default class RoomCursor extends EventTarget {
@@ -44,14 +45,14 @@ export default class RoomCursor extends EventTarget {
 
             const screenPosition = this.roomRenderer.getItemScreenPosition(this.followingFigure);
 
-            this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
+            clientInstance.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
         }
         else if(this.hoveringFigure && this.roomRenderer.roomInstance) {
             const user = this.roomRenderer.roomInstance.getUserByItem(this.hoveringFigure);
 
             const screenPosition = this.roomRenderer.getItemScreenPosition(this.hoveringFigure);
 
-            this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
+            clientInstance.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
         }
         
         if(!entity || this.cursorDisabled) {
@@ -76,7 +77,7 @@ export default class RoomCursor extends EventTarget {
             this.roomRenderer.element.style.cursor = "default";
 
             if(this.hoveringFigure) {
-                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StoppedHoveringFigure());
+                clientInstance.dispatchEvent(new StoppedHoveringFigure());
     
                 delete this.hoveringFigure;
             }
@@ -94,7 +95,7 @@ export default class RoomCursor extends EventTarget {
 
                 const screenPosition = this.roomRenderer.getItemScreenPosition(entity.item);
 
-                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
+                clientInstance.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
             }
         }
     }
@@ -116,11 +117,11 @@ export default class RoomCursor extends EventTarget {
 
                     const screenPosition = this.roomRenderer.getItemScreenPosition(otherEntity.item);
 
-                    this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
+                    clientInstance.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
                 }
             }
             else if(this.followingFigure && (!floorEntity || otherEntity)) {
-                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StoppedFollowingFigure());
+                clientInstance.dispatchEvent(new StoppedFollowingFigure());
     
                 delete this.followingFigure;
             }

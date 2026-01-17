@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import InterfaceInstance from './components/InterfaceInstance';
-import { TypedEventTarget } from './contexts/AppContext';
 
 import "./styles/fonts.css";
 import "./styles/index.css";
@@ -9,7 +8,7 @@ import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 
 export default class UserInterfaceInstance {
-  constructor(private readonly element: HTMLElement, private readonly internalEventTarget: TypedEventTarget) {
+  constructor(private readonly element: HTMLElement) {
 
   }
 
@@ -31,7 +30,7 @@ export default class UserInterfaceInstance {
 
           color: "white"
         }}>
-          <InterfaceInstance internalEventTarget={this.internalEventTarget}/>
+          <InterfaceInstance/>
         </div>
       </StrictMode>
     );

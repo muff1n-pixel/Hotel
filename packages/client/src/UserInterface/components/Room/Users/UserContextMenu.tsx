@@ -12,9 +12,10 @@ import StartedFollowingFigure from "@Client/Room/Cursor/Events/StartedFollowingF
 import FollowingFigure from "@Client/Room/Cursor/Events/FollowingFigure";
 import StoppedHoveringFigure from "@Client/Room/Cursor/Events/StoppedHoveringFigure";
 import StoppedFollowingFigure from "@Client/Room/Cursor/Events/StoppedFollowingFigure";
+import { clientInstance } from "../../../..";
 
 export default function UserContextMenu() {
-    const { internalEventTarget, user, addUniqueDialog, closeDialog } = useContext(AppContext);
+    const { user, addUniqueDialog, closeDialog } = useContext(AppContext);
 
     const elementRef = useRef<HTMLDivElement>(null);
 
@@ -40,10 +41,10 @@ export default function UserContextMenu() {
             elementRef.current!.style.top = `${event.position.top}px`;
         };
 
-        internalEventTarget.addEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
+        clientInstance.addEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
   
         return () => {
-            internalEventTarget.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
+            clientInstance.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
         };
     }, [hoveringFigure, focusedFigure, elementRef.current]);
 
@@ -61,10 +62,10 @@ export default function UserContextMenu() {
             elementRef.current!.style.top = `${event.position.top}px`;
         };
 
-        internalEventTarget.addEventListener<StartedFollowingFigure>("StartedFollowingFigure", listener);
+        clientInstance.addEventListener<StartedFollowingFigure>("StartedFollowingFigure", listener);
   
         return () => {
-            internalEventTarget.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
+            clientInstance.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
         };
     }, [focusedFigure, elementRef.current]);
 
@@ -77,10 +78,10 @@ export default function UserContextMenu() {
                 }
             };
 
-            internalEventTarget.addEventListener<FollowingFigure>("FollowingFigure", listener);
+            clientInstance.addEventListener<FollowingFigure>("FollowingFigure", listener);
     
             return () => {
-                internalEventTarget.removeEventListener<FollowingFigure>("FollowingFigure", listener);
+                clientInstance.removeEventListener<FollowingFigure>("FollowingFigure", listener);
             };
         }
     }, [hoveringFigure, focusedFigure]);
@@ -90,10 +91,10 @@ export default function UserContextMenu() {
             setHoveringFigure(undefined);
         };
 
-        internalEventTarget.addEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
+        clientInstance.addEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
   
         return () => {
-            internalEventTarget.removeEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
+            clientInstance.removeEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
         };
     }, []);
 
@@ -102,12 +103,12 @@ export default function UserContextMenu() {
             setFocusedFigure(undefined);
         };
 
-        internalEventTarget.addEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
+        clientInstance.addEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
   
         return () => {
-            internalEventTarget.removeEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
+            clientInstance.removeEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
         };
-    }, []);
+    }, [clientInstance.roomInstance?.roomRenderer.cursor]);
 
     const toggleFolded = useCallback(() => {
         setFolded(!folded);

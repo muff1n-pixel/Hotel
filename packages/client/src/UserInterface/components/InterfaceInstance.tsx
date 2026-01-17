@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AppContext, Dialog, TypedEventTarget } from "../contexts/AppContext";
+import { AppContext, Dialog } from "../contexts/AppContext";
 import Toolbar from "./Toolbar/Toolbar";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserDataUpdated } from "@Shared/WebSocket/Events/User/UserDataUpdated";
@@ -9,26 +9,13 @@ import DialogInstances from "./Dialog/DialogInstances";
 import { webSocketClient } from "../..";
 
 export type InterfaceInstanceProps = {
-    internalEventTarget: TypedEventTarget;
 }
 
-export default function InterfaceInstance({ internalEventTarget }: InterfaceInstanceProps) {
+export default function InterfaceInstance({  }: InterfaceInstanceProps) {
     const [dialogs, setDialogs] = useState<Dialog[]>([{ id:"inventory", type: "inventory", data: null }]);
 
     const ready = useRef<boolean>(false);
     const [user, setUser] = useState<UserDataUpdated>();
-
-    useEffect(() => {
-        const listener = (event: Event) => {
-            //console.log("Received client ping in interface instance.", event);
-        };
-
-        internalEventTarget.addEventListener("client", listener);
-
-        internalEventTarget.dispatchEvent(new Event("interface"));
-
-        return () => internalEventTarget.removeEventListener("client", listener);
-    }, []);
 
     useEffect(() => {
         const listener = (event: WebSocketEvent<UserDataUpdated>) => {
@@ -90,9 +77,7 @@ export default function InterfaceInstance({ internalEventTarget }: InterfaceInst
             addUniqueDialog,
             closeDialog,
 
-            user,
-
-            internalEventTarget
+            user
         }}>
             <RoomInterface/>
 

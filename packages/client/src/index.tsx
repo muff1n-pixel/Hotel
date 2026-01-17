@@ -1,5 +1,4 @@
 import WebSocketClient from "./WebSocket/WebSocketClient";
-import { TypedEventTarget } from "./UserInterface/contexts/AppContext";
 import ClientInstance from "@Client/ClientInstance";
 import UserInterfaceInstance from "./UserInterface";
 import FigureAssets from "@Client/Assets/FigureAssets";
@@ -15,14 +14,12 @@ if(!interfaceElement) {
     throw new Error("User interface root element is not created.");
 }
 
-const internalEventTarget = new EventTarget() as TypedEventTarget;
-
 export const webSocketClient = new WebSocketClient({
     userId: "user1"
 });
 
-export const clientInstance = new ClientInstance(clientElement, internalEventTarget);
-export const userInterface = new UserInterfaceInstance(interfaceElement, internalEventTarget);
+export const clientInstance = new ClientInstance(clientElement);
+export const userInterface = new UserInterfaceInstance(interfaceElement);
 
 webSocketClient.addEventListener("open", async () => {
     await FigureAssets.loadAssets();

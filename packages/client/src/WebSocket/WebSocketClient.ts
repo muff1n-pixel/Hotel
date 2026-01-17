@@ -1,7 +1,6 @@
-import { TypedEventTarget } from "../../../shared/Interfaces/TypedEventTarget.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
 
-export default class WebSocketClient extends EventTarget implements TypedEventTarget {
+export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
     constructor(options: Record<"userId", string>) {
