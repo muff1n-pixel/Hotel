@@ -7,6 +7,8 @@ export default class ClientInstance extends EventTarget {
     constructor(public readonly element: HTMLElement) {
         super();
 
+        element.style.background = "#9ED5EC";
+
         registerRoomEvents(this);
     }
 

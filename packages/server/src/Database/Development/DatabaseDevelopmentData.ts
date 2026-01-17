@@ -123,11 +123,11 @@ export async function initializeDevelopmentData() {
                 "0000000"
             ],
             floor: {
-                id: "101",
+                id: "default",
                 thickness: 8
             },
             wall: {
-                id: "2301",
+                id: "default",
                 thickness: 8
             }
         }

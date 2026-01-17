@@ -3,7 +3,7 @@ import RoomSprite from "../RoomSprite";
 import RoomMapItem from "../Map/RoomFurnitureItem";
 
 export default class RoomWallSprite extends RoomSprite {
-    priority = -2000;
+    priority = -3000;
 
     private readonly offset: MousePosition;
 

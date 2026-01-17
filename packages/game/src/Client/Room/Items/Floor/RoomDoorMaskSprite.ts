@@ -4,7 +4,7 @@ import RoomMapItem from "../Map/RoomFurnitureItem";
 import RoomRenderer from "@Client/Room/Renderer";
 
 export default class RoomDoorMaskSprite extends RoomSprite {
-    priority = -2000;
+    priority = -3000;
 
     private readonly offset: MousePosition;
 
