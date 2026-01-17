@@ -3,7 +3,7 @@ import RoomCamera from "./RoomCamera";
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
-import RoomCursor from "./RoomCursor";
+import RoomCursor from "./Cursor/RoomCursor";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
 import Performance from "@Client/Utilities/Performance";

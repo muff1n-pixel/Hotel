@@ -1,5 +1,4 @@
 import registerRoomEvents from "@Client/Room/Events/RoomEvents";
-import registerRoomInventoryEvents from "@Client/Room/UserInterface/StartPlacingFurnitureInRoom";
 import { TypedEventTarget } from "@Shared/Interfaces/TypedEventTarget";
 import WebSocketClient from "../WebSocket/WebSocketClient";
 import RoomInstance from "./Room/RoomInstance";
@@ -9,6 +8,5 @@ export default class ClientInstance {
 
     constructor(public readonly element: HTMLElement, public readonly internalEventTarget: TypedEventTarget, public readonly webSocketClient: WebSocketClient) {
         registerRoomEvents(this);
-        registerRoomInventoryEvents(this);
     }
 }

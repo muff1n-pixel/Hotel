@@ -6,7 +6,6 @@ import { AppContext } from "../../../contexts/AppContext";
 import { UserFurnitureData } from "@Shared/Interfaces/User/UserFurnitureData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserFurnitureDataUpdated } from "@Shared/WebSocket/Events/User/Inventory/UserFurnitureDataUpdated";
-import StartPlacingFurnitureInRoom, { PlaceFurnitureInRoomProperties } from "@Shared/Events/Room/Cursor/StartPlacingFurnitureInRoom";
 
 export default function InventoryFurnitureTab() {
     const { webSocketClient, internalEventTarget } = useContext(AppContext);
@@ -14,8 +13,6 @@ export default function InventoryFurnitureTab() {
     const [activeFurniture, setActiveFurniture] = useState<UserFurnitureData>();
     const [userFurniture, setUserFurniture] = useState<UserFurnitureData[]>([]);
     const userFurnitureRequested = useRef<boolean>(false);
-
-    const [roomPlacer, setRoomPlacer] = useState<PlaceFurnitureInRoomProperties>();
 
     useEffect(() => {
         if(userFurnitureRequested.current) {
@@ -57,21 +54,7 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        if(roomPlacer) {
-            roomPlacer.terminate();
-        }
-
-        /*internalEventTarget.dispatchEvent(new StartPlacingFurnitureInRoom(activeFurniture.furnitureData, {
-            onPlace: (roomPlacer, position) => {
-                
-            },
-            onCancel: (roomPlacer) => {
-                roomPlacer.terminate();
-            },
-        }, (roomPlacer) => {
-            setRoomPlacer(roomPlacer);
-        }));*/
-    }, [activeFurniture, roomPlacer]);
+    }, [activeFurniture]);
 
     return (
         <div style={{

@@ -1,10 +1,5 @@
 import { Fragment, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../../contexts/AppContext";
-import StartedHoveringFigure from "@Shared/Events/Room/StartedHoveringFigure";
-import StoppedHoveringFigure from "@Shared/Events/Room/StoppedHoveringFigure";
-import StartedFollowingFigure from "@Shared/Events/Room/StartedFollowingFigure";
-import StoppedFollowingFigure from "@Shared/Events/Room/StoppedFollowingFigure";
-import FollowingFigure from "@Shared/Events/Room/FollowingFigure";
 
 import "./UserContextMenu.css";
 import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
@@ -12,6 +7,11 @@ import UserContextMenuList from "./UserContextMenuList";
 import UserContextMenuButton from "./UserContextMenuButton";
 import UserContextMenuElement from "./UserContextMenuElement";
 import WardrobeDialog from "../../Wardrobe/WardrobeDialog";
+import StartedHoveringFigure from "@Client/Room/Cursor/Events/StartedHoveringFigure";
+import StartedFollowingFigure from "@Client/Room/Cursor/Events/StartedFollowingFigure";
+import FollowingFigure from "@Client/Room/Cursor/Events/FollowingFigure";
+import StoppedHoveringFigure from "@Client/Room/Cursor/Events/StoppedHoveringFigure";
+import StoppedFollowingFigure from "@Client/Room/Cursor/Events/StoppedFollowingFigure";
 
 export default function UserContextMenu() {
     const { internalEventTarget, user, addUniqueDialog, closeDialog } = useContext(AppContext);

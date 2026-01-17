@@ -1,14 +1,15 @@
 import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
-import RoomRenderer from "./Renderer";
-import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
+import RoomRenderer from "../Renderer";
+import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import RoomFigureItem from "./Items/Figure/RoomFigureItem";
-import StoppedHoveringFigure from "@Shared/Events/Room/StoppedHoveringFigure";
-import FollowingFigure from "@Shared/Events/Room/FollowingFigure";
-import StartedHoveringFigure from "@Shared/Events/Room/StartedHoveringFigure";
-import StartedFollowingFigure from "@Shared/Events/Room/StartedFollowingFigure";
-import StoppedFollowingFigure from "@Shared/Events/Room/StoppedFollowingFigure";
+import RoomFigureItem from "../Items/Figure/RoomFigureItem";
+import FollowingFigure from "./Events/FollowingFigure";
+import StoppedHoveringFigure from "./Events/StoppedHoveringFigure";
+import StartedHoveringFigure from "./Events/StartedHoveringFigure";
+import StartedFollowingFigure from "./Events/StartedFollowingFigure";
+import StoppedFollowingFigure from "./Events/StoppedFollowingFigure";
 
+// TODO: rework hovering/following figure to regular hover events? maybe not for performance sake?
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
     private hoveringFigure?: RoomFigureItem;
@@ -43,14 +44,14 @@ export default class RoomCursor extends EventTarget {
 
             const screenPosition = this.roomRenderer.getItemScreenPosition(this.followingFigure);
 
-            this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
+            this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
         }
         else if(this.hoveringFigure && this.roomRenderer.roomInstance) {
             const user = this.roomRenderer.roomInstance.getUserByItem(this.hoveringFigure);
 
             const screenPosition = this.roomRenderer.getItemScreenPosition(this.hoveringFigure);
 
-            this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
+            this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
         }
         
         if(!entity || this.cursorDisabled) {
@@ -75,7 +76,7 @@ export default class RoomCursor extends EventTarget {
             this.roomRenderer.element.style.cursor = "default";
 
             if(this.hoveringFigure) {
-                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StoppedHoveringFigure());
+                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StoppedHoveringFigure());
     
                 delete this.hoveringFigure;
             }
@@ -93,7 +94,7 @@ export default class RoomCursor extends EventTarget {
 
                 const screenPosition = this.roomRenderer.getItemScreenPosition(entity.item);
 
-                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
+                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
             }
         }
     }
@@ -115,11 +116,11 @@ export default class RoomCursor extends EventTarget {
 
                     const screenPosition = this.roomRenderer.getItemScreenPosition(otherEntity.item);
 
-                    this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
+                    this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
                 }
             }
             else if(this.followingFigure && (!floorEntity || otherEntity)) {
-                this.roomRenderer.clientInstance.internalEventTarget.dispatchEvent(new StoppedFollowingFigure());
+                this.roomRenderer.clientInstance?.internalEventTarget.dispatchEvent(new StoppedFollowingFigure());
     
                 delete this.followingFigure;
             }
