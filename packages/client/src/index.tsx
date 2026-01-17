@@ -20,7 +20,7 @@ const webSocketClient = new WebSocketClient({
     userId: "user1"
 });
 
-(async () => {
+webSocketClient.addEventListener("open", async () => {
     const clientInstance = await createClientInstance(clientElement, internalEventTarget, webSocketClient);
     const userInterface = createInterfaceInstance(interfaceElement, internalEventTarget, webSocketClient);
-})();
+});

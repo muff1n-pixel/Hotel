@@ -19,9 +19,14 @@ export default class WebSocketClient extends EventTarget implements TypedEventTa
             }
         });
 
-        this.socket.addEventListener("open", () => {
-            //this.send("ClientPingEvent", null);
-        });
+        if(this.socket.readyState === this.socket.OPEN) {
+            this.dispatchEvent(new Event("open"));
+        }
+        else {
+            this.socket.addEventListener("open", () => {
+                this.dispatchEvent(new Event("open"));
+            });
+        }
     }
 
     send<T>(type: string, data: T) {
