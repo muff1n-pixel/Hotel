@@ -11,16 +11,20 @@ type WallRectangle = {
     direction: number;
 };
 
-type FloorTile = {
+type WallTile = {
     row: number;
     column: number;
     depth: number;
+
+    width: number;
+    height: number;
 
     path: Path2D;
 };
 
 export default class WallRenderer {
-    public tiles: FloorTile[] = [];
+    public leftWalls: WallTile[] = [];
+    public rightWalls: WallTile[] = [];
 
     public rows: number;
     public columns: number;
@@ -225,7 +229,24 @@ export default class WallRenderer {
 
             const left = -(row * 32) + (column * 32);
             const top = (column * 32) - (this.depth * 16);
-            
+
+            if(width === 32 && row !== this.structure.door?.row && column !== this.structure.door?.column) {
+                const path = new Path2D();
+                
+                path.rect(left, top, width, height);
+
+                this.leftWalls.push({
+                    path,
+
+                    row,
+                    column,
+                    depth: 0,
+
+                    width,
+                    height
+                });
+            }
+
             context.rect(left, top, width, height);
         }
 
@@ -266,6 +287,23 @@ export default class WallRenderer {
             let left = (column * 32) - (row * 32);
             let top = (row * 32) - (this.depth * 16);
             
+            if(width === 32 && row !== this.structure.door?.row && column !== this.structure.door?.column) {
+                const path = new Path2D();
+                
+                path.rect(left - ((width == 32)?(0):(this.structure.wall.thickness)), top, width, height);
+
+                this.rightWalls.push({
+                    path,
+
+                    row,
+                    column,
+                    depth: 0,
+
+                    width,
+                    height
+                });
+            }
+
             context.rect(left - ((width == 32)?(0):(this.structure.wall.thickness)), top, width, height);
         }
 

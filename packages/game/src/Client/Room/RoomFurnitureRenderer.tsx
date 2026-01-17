@@ -1,11 +1,12 @@
 import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomRenderer from "./Renderer";
-import RoomMapItem from "./Items/Map/RoomFurnitureItem";
+import RoomWallItem from "./Items/Map/RoomWallItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import RoomFloorItem from "./Items/Map/RoomFloorItem";
 
 export type RoomFurnitureRendererOptions = {
     withoutWalls?: boolean;
@@ -46,11 +47,20 @@ export default class RoomFurnitureRenderer {
                 thickness: 8
             }
         };
+
+        if(!options.withoutWalls) {
+            this.roomRenderer.items.push(
+                new RoomWallItem(
+                    new WallRenderer(roomStructure, roomStructure.wall.id, 64)
+                )
+            );
+        }
     
-        this.roomRenderer.items.push(new RoomMapItem(
-            new FloorRenderer(roomStructure, roomStructure.floor.id, 64),
-            (!options.withoutWalls)?(new WallRenderer(roomStructure, roomStructure.wall.id, 64)):(undefined)
-        ));
+        this.roomRenderer.items.push(
+            new RoomFloorItem(
+                new FloorRenderer(roomStructure, roomStructure.floor.id, 64),
+            )
+        );
     }
 
     async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: number = 0) {

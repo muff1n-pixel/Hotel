@@ -71,9 +71,13 @@ export default class RoomFurniturePlacer {
             return;
         }
 
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
+        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === this.userFurnitureData.furnitureData.placement);
 
         if(entity) {
+            if(entity.position.direction !== undefined) {
+                this.furnitureRenderer.direction = entity.position.direction;
+            }
+
             this.furnitureItem.setPosition(entity.position);
             this.furnitureItem.disabled = false;
             this.iconElement.style.display = "none";
@@ -94,7 +98,7 @@ export default class RoomFurniturePlacer {
             return;
         }
 
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
+        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === this.userFurnitureData.furnitureData.placement);
 
         if(!entity) {
             this.onCancel?.();

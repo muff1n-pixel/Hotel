@@ -1,10 +1,10 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
-import RoomMapItem from "../Map/RoomFurnitureItem";
+import RoomMapItem from "../Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/Renderer";
 
 export default class RoomDoorMaskSprite extends RoomSprite {
-    priority = -3000;
+    priority = -2200;
 
     private readonly offset: MousePosition;
 
@@ -12,9 +12,9 @@ export default class RoomDoorMaskSprite extends RoomSprite {
         super(item);
 
         this.priority = RoomRenderer.getPositionPriority({
-            row: item.wallRenderer!.structure.door!.row + 1,
-            column: item.wallRenderer!.structure.door!.column + 1,
-            depth: parseInt(item.wallRenderer!.structure.grid[item.wallRenderer!.structure.door!.row][item.wallRenderer!.structure.door!.column])
+            row: item.wallRenderer!.structure.door!.row,
+            column: item.wallRenderer!.structure.door!.column,
+            depth: parseInt(item.wallRenderer!.structure.grid[item.wallRenderer!.structure.door!.row][item.wallRenderer!.structure.door!.column]) + 0.01
         });
 
         this.offset = {

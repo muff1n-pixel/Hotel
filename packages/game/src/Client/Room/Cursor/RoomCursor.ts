@@ -38,7 +38,7 @@ export default class RoomCursor extends EventTarget {
     }
 
     private render() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
+        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
 
         if(this.followingFigure && this.roomRenderer.roomInstance) {
             const user = this.roomRenderer.roomInstance.getUserByItem(this.followingFigure);
@@ -101,8 +101,8 @@ export default class RoomCursor extends EventTarget {
     }
 
     private click() {
-        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "map");
-        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "map");
+        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
+        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
 
         if(floorEntity || otherEntity) {
             this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));

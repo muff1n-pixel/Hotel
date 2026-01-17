@@ -9,6 +9,7 @@ export type RoomPointerPosition = {
         row: number;
         column: number;
         depth: number;
+        direction?: number;
     };
 }
 

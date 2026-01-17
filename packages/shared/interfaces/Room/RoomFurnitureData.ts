@@ -4,6 +4,8 @@ export type FurnitureData = {
     
     name: string;
     description?: string;
+
+    placement: "floor" | "wall";
 }
 
 export type RoomFurnitureData = {

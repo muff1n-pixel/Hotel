@@ -1,7 +1,6 @@
 import ClientInstance from "@Client/ClientInstance";
 import { LoadRoom } from "@Shared/WebSocket/Events/Rooms/LoadRoom";
 import RoomRenderer from "./Renderer";
-import RoomMapItem from "./Items/Map/RoomFurnitureItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";
 import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
@@ -18,6 +17,8 @@ import { UserWalkTo } from "@Shared/WebSocket/Events/Rooms/Users/UserWalkTo";
 import { UserLeftRoom } from "@Shared/WebSocket/Events/Rooms/Users/UserLeftRoom";
 import { RoomFurnitureUpdated } from "@Shared/WebSocket/Events/Rooms/Furniture/RoomFurnitureUpdated";
 import { webSocketClient } from "../..";
+import RoomFloorItem from "./Items/Map/RoomFloorItem";
+import RoomWallItem from "./Items/Map/RoomWallItem";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -34,8 +35,11 @@ export default class RoomInstance {
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoom) {
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this);
         
-        this.roomRenderer.items.push(new RoomMapItem(
+        this.roomRenderer.items.push(new RoomFloorItem(
             new FloorRenderer(event.structure, event.structure.floor.id, 64),
+        ));
+
+        this.roomRenderer.items.push(new RoomWallItem(
             new WallRenderer(event.structure, event.structure.wall.id, 64)
         ));
 

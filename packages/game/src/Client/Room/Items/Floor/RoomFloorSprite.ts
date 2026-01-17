@@ -1,19 +1,19 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
-import RoomMapItem from "../Map/RoomFurnitureItem";
+import RoomFloorItem from "../Map/RoomFloorItem";
 
 export default class RoomFloorSprite extends RoomSprite {
     priority = -2000;
 
     private readonly offset: MousePosition;
 
-    constructor(public readonly item: RoomMapItem, private readonly image: OffscreenCanvas) {
+    constructor(public readonly item: RoomFloorItem, private readonly image: OffscreenCanvas) {
         super(item);
 
         this.offset = {
             left: -(this.item.floorRenderer.rows * 32),
-            top: -(this.item.floorRenderer.depth * 16) - 16 - (item.wallRenderer?.structure.wall.thickness ?? 0)
+            top: -(this.item.floorRenderer.depth * 16) - 16 - (item.floorRenderer.structure.wall.thickness ?? 0)
         }
     }
 
