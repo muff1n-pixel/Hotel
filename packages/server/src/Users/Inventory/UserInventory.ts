@@ -11,21 +11,36 @@ export default class UserInventory {
     }
 
     public async addFurniture(furniture: Furniture) {
-        const userFurniture = await UserFurniture.create({
-            id: randomUUID(),
-            userId: this.userClient.user.id,
-            furnitureId: furniture.id
-        }, {
-            include: {
-                model: Furniture,
-                as: "furniture"
+        let userFurniture = await UserFurniture.findOne<UserFurniture>({
+            where: {
+                userId: this.userClient.user.id,
+                furnitureId: furniture.id
             }
         });
+
+        if(userFurniture) {
+            userFurniture = await userFurniture.update({
+                quantity: userFurniture.quantity + 1
+            });
+        }
+        else {
+            userFurniture = await UserFurniture.create({
+                id: randomUUID(),
+                userId: this.userClient.user.id,
+                furnitureId: furniture.id
+            }, {
+                include: {
+                    model: Furniture,
+                    as: "furniture"
+                }
+            });
+        }
 
         this.userClient.send(new OutgoingEvent<UserFurnitureDataUpdated>("UserFurnitureDataUpdated", {
             updatedUserFurniture: [
                 {
                     id: userFurniture.id,
+                    quantity: userFurniture.quantity,
                     furnitureData: furniture
                 }
             ]
@@ -47,6 +62,7 @@ export default class UserInventory {
             allUserFurniture: userFurniture.map((userFurniture) => {
                 return {
                     id: userFurniture.id,
+                    quantity: userFurniture.quantity,
                     furnitureData: userFurniture.furniture
                 };
             })

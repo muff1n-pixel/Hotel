@@ -4,6 +4,7 @@ import { User } from "../User.js";
 
 export class UserFurniture extends Model {
     declare id: string;
+    declare quantity: number;
     
     declare furniture: NonAttribute<Furniture>;
 }
@@ -15,6 +16,11 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
             type: DataTypes.UUID,
             primaryKey: true
           },
+          quantity: {
+            type: DataTypes.NUMBER,
+            defaultValue: 1,
+            allowNull: false
+          }
         },
         {
           tableName: "user_furniture",

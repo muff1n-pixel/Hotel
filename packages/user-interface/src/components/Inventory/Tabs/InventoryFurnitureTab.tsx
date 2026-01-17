@@ -79,7 +79,9 @@ export default function InventoryFurnitureTab() {
                         border: "1px solid black",
                         borderRadius: 6,
 
-                        cursor: "pointer"
+                        cursor: "pointer",
+
+                        position: "relative"
                     }} onClick={() => setActiveFurniture(userFurniture)}>
                         <div style={{
                             flex: 1,
@@ -94,6 +96,25 @@ export default function InventoryFurnitureTab() {
                             alignItems: "center"
                         }}>
                             <FurnitureIcon furnitureData={userFurniture.furnitureData}/>
+
+                            {(userFurniture.quantity > 1) && (
+                                <div style={{
+                                    position: "absolute",
+
+                                    right: 2,
+                                    top: 2,
+
+                                    border: "1px solid #2F6982",
+                                    background: "#FFF",
+                                    color: "#306A83",
+
+                                    fontSize: 10,
+
+                                    padding: "0px 2px"
+                                }}>
+                                    {userFurniture.quantity}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
