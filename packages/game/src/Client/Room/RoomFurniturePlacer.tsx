@@ -12,7 +12,7 @@ export default class RoomFurniturePlacer {
 
     private paused: boolean = true;
 
-    private onPlace?: (position: RoomPosition) => void;
+    private onPlace?: (position: RoomPosition, direction: number) => void;
     private onCancel?: () => void;
 
     private readonly renderListener = this.render.bind(this);
@@ -100,13 +100,13 @@ export default class RoomFurniturePlacer {
             this.onCancel?.();
         }
         else {
-            this.onPlace?.(entity.position);
+            this.onPlace?.(entity.position, this.furnitureRenderer.direction!);
         }
 
         this.stopPlacing();
     }
 
-    public startPlacing(onPlace: (position: RoomPosition) => void, onCancel: () => void) {
+    public startPlacing(onPlace: (position: RoomPosition, direction: number) => void, onCancel: () => void) {
         this.onPlace = onPlace;
         this.onCancel = onCancel;
 

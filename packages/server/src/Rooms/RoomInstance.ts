@@ -12,6 +12,12 @@ import { AStarFinder } from "astar-typescript";
 import { UserWalkTo } from "@shared/WebSocket/Events/Rooms/Users/UserWalkTo.js";
 import { UserLeftRoom } from "@shared/WebSocket/Events/Rooms/Users/UserLeftRoom.js";
 import { PlaceFurnitureInRoom } from "@shared/WebSocket/Events/Rooms/Furniture/PlaceFurnitureInRoom.js";
+import { UserFurniture } from "../Database/Models/Users/Furniture/UserFurniture.js";
+import { Furniture } from "../Database/Models/Furniture/Furniture.js";
+import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
+import { RoomFurniture } from "../Database/Models/Rooms/RoomFurniture.js";
+import { randomUUID } from "node:crypto";
+import { RoomFurnitureUpdated } from "@shared/WebSocket/Events/Rooms/Furniture/RoomFurnitureUpdated.js";
 
 export default class RoomInstance {
     private readonly users: RoomUserClient[] = [];
@@ -46,6 +52,32 @@ export default class RoomInstance {
         ]);
 
         this.users.push(roomUserClient);
+    }
+
+    public async addFurniture(furniture: Furniture, position: RoomPosition, direction: number) {
+        const roomFurniture = await RoomFurniture.create({
+            id: randomUUID(),
+            furnitureId: furniture.id,
+            position: position,
+            direction,
+            animation: 0
+        });
+
+        roomFurniture.furniture = furniture;
+
+        this.sendRoomEvent(new OutgoingEvent<RoomFurnitureUpdated>("RoomFurnitureUpdated", {
+            furnitureAdded: [
+                {
+                    id: roomFurniture.id,
+                    furniture: roomFurniture.furniture,
+                    position: roomFurniture.position,
+                    direction: roomFurniture.direction,
+                    animation: roomFurniture.animation
+                }
+            ]
+        }));
+
+        this.furnitures.push(new RoomFurnitureItem(this, roomFurniture));
     }
 
     private getRoomUserData(roomUserClient: RoomUserClient): RoomUserData {
@@ -97,6 +129,8 @@ export default class RoomInstance {
         }
 
         inventory.setFurnitureQuantity(userFurniture, userFurniture.quantity - 1);
+
+        this.addFurniture(userFurniture.furniture, event.position, event.direction);
     }
 
     private userStartWalking(client: UserClient, event: StartWalking) {

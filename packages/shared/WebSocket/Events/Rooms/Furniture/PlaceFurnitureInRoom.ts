@@ -4,4 +4,5 @@ export type PlaceFurnitureInRoom = {
     userFurnitureId: string;
 
     position: RoomPosition;
+    direction: number;
 }

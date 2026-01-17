@@ -16,6 +16,7 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { StartWalking } from "@Shared/WebSocket/Events/Rooms/Users/StartWalking";
 import { UserWalkTo } from "@Shared/WebSocket/Events/Rooms/Users/UserWalkTo";
 import { UserLeftRoom } from "@Shared/WebSocket/Events/Rooms/Users/UserLeftRoom";
+import { RoomFurnitureUpdated } from "@Shared/WebSocket/Events/Rooms/Furniture/RoomFurnitureUpdated";
 import { webSocketClient } from "../..";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
@@ -68,6 +69,12 @@ export default class RoomInstance {
             const user = this.getUserById(event.data.userId);
 
             user.item.setPositionPath(event.data.from, event.data.to);
+        });
+
+        webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureUpdated>>("RoomFurnitureUpdated", (event) => {
+            if(event.data.furnitureAdded?.length) {
+                this.furnitures.push(...event.data.furnitureAdded.map((roomFurnitureData) => this.addFurniture(roomFurnitureData)));
+            }
         });
 
         this.roomRenderer.cursor?.addEventListener("click", (event: Event) => {

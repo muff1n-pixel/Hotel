@@ -92,10 +92,11 @@ export default function InventoryFurnitureTab() {
 
         setDialogHidden("inventory", true);
 
-        roomFurniturePlacer.startPlacing((position) => {
+        roomFurniturePlacer.startPlacing((position, direction) => {
             webSocketClient.send<PlaceFurnitureInRoom>("PlaceFurnitureInRoom", {
                 userFurnitureId: activeFurniture.id,
-                position
+                position,
+                direction
             });
         }, () => {
             roomFurniturePlacer.destroy();
