@@ -105,6 +105,34 @@ export async function initializeDevelopmentData() {
         };
     }));
 
+    await Room.create<Room>({
+        id: "room2",
+        name: "My room",
+        structure: {
+            door: {
+                row: 0,
+                column: 2
+            },
+            grid: [
+                "XX0XXXX",
+                "0000000",
+                "0000000",
+                "0000000",
+                "0000000",
+                "0000000",
+                "0000000"
+            ],
+            floor: {
+                id: "101",
+                thickness: 8
+            },
+            wall: {
+                id: "2301",
+                thickness: 8
+            }
+        }
+    });
+
     const room = await Room.create<Room>({
         id: "room1",
         name: "My home room",

@@ -142,7 +142,7 @@ export default class WallRenderer {
         const doorMask = await this.getDoorMask(data);
         
         const width = (this.rows * 32) + (this.columns * 32) + (this.structure.floor.thickness * 2);
-        const height = (this.rows * 16) + (this.columns * 16) + (this.depth * 16) + this.structure.floor.thickness + 10;
+        const height = (this.rows * 16) + (this.columns * 16) + (this.depth * 16) + this.structure.wall.thickness + this.structure.floor.thickness + 16;
 
         const canvas = new OffscreenCanvas(width, height);
 
@@ -179,6 +179,9 @@ export default class WallRenderer {
         this.renderDoorMask(doorMaskContext, rectangles, doorMask.image, 2);
 
         doorMaskContext.resetTransform();
+
+        doorMaskContext.globalCompositeOperation = "destination-in";
+        doorMaskContext.drawImage(canvas, 0, 0);
 
         doorMaskContext.globalCompositeOperation = "source-atop";
         doorMaskContext.drawImage(canvas, 0, 0);
@@ -351,10 +354,10 @@ export default class WallRenderer {
             const row = this.structure.door.row;
             const column = this.structure.door.column + extraTile;
 
-            const left = (column * 32) - (row * 32);
-            let top = (row * 32) - (this.depth * 16);
-
             const doorDepth = parseInt(this.getTileDepth(this.structure.door.row, this.structure.door.column, false));
+
+            const left = (column * 32) - (row * 32);
+            let top = (row * 32) - (this.depth * 16) + 64;
 
             if(overlappingWalls === 2) {
                 top -= image.height;
