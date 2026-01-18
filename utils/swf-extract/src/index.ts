@@ -1,11 +1,20 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, rmdirSync, rmSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, rmSync, writeFileSync } from "fs";
 import { createSpritesheet } from "./spritesheet/SpritesheetCreation.ts";
 import { extractSwf } from "./swf/SwfExtraction.ts";
 import path from "path";
 import { createAssetsData, createAssetsDataFromManifest, createFurnitureData, createIndexData, createLogicData, createRoomVisualizationData, createVisualizationData } from "./data/DataCreation.ts";
-import type { FurnitureData } from "../../../packages/client/src/Client/Interfaces/Furniture/FurnitureData.ts"
-import type { FigureData } from "../../../packages/client/src/Client/Interfaces/Figure/FigureData.ts"
-import type { RoomData } from "../../../packages/client/src/Client/Interfaces/Room/RoomData.ts"
+import type { FurnitureData } from "../../../packages/game/src/Client/Interfaces/Furniture/FurnitureData.ts"
+import type { FigureData } from "../../../packages/game/src/Client/Interfaces/Figure/FigureData.ts"
+import type { RoomData } from "../../../packages/game/src/Client/Interfaces/Room/RoomData.ts"
+import sqlite3 from "sqlite3";
+
+export const database = new sqlite3.Database(":memory:");
+
+await new Promise<void>((resolve) => {
+    database.serialize(() => {
+        database.exec(readFileSync("./furniture.sql", {encoding: "utf-8"}), () => resolve());
+    })
+});
 
 let assetNames = [process.argv[2]];
 
@@ -153,12 +162,14 @@ else if(process.argv[2] === "generate-furniture") {
 
                 const assets = createAssetsData(swfCollection);
                 const logic = createLogicData(swfCollection);
-                const visualization = createVisualizationData(swfCollection);
+                const visualization = await createVisualizationData(swfCollection);
                 const index = createIndexData(swfCollection);
 
-                const furnitureData = createFurnitureData(assetName);
+                const furnitureData = await createFurnitureData(assetName);
 
-                visualization.defaultDirection = furnitureData.defaultDirection;
+                if(furnitureData?.length) {
+                    visualization.defaultDirection = furnitureData[0].defaultDirection;
+                }
 
                 const data: FurnitureData = {
                     index,

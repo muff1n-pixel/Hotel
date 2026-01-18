@@ -11,7 +11,7 @@ export async function getExistingFurnitureAssets() {
 
         const furnitureServerDatas = getFurnitureServerData(assetName);
 
-        return furnitureServerDatas.map((furnitureServerData: any) => {
+        return furnitureServerDatas.filter((furnitureServerData: any) => furnitureServerData.flags).map((furnitureServerData: any) => {
             return {
                 ...furnitureData,
                 ...furnitureServerData
@@ -52,7 +52,9 @@ function getFurnitureServerData(assetName: string) {
             description: item.description,
 
             color: item.color,
-            placement: item.placement
+            placement: item.placement,
+
+            flags: item.flags
         };
     });
 }

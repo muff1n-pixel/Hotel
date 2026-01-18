@@ -79,7 +79,7 @@ export default class RoomUser {
                 const furniture = this.room.getUpmostFurnitureAtPosition({ row: rowIndex, column: columnIndex });
 
                 if(furniture) {
-                    if(!furniture.roomFurniture.furniture.walkable) {
+                    if(!furniture.roomFurniture.furniture.flags.walkable) {
                         return 1;
                     }
                 }
@@ -130,7 +130,7 @@ export default class RoomUser {
         const furniture = this.room.getUpmostFurnitureAtPosition(nextPosition);
 
         if(furniture) {
-            if(!furniture.roomFurniture.furniture.walkable) {
+            if(!furniture.roomFurniture.furniture.flags.walkable) {
                 this.path = [];
 
                 return [];

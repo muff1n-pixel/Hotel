@@ -1,12 +1,13 @@
 import type { SwfExtractionCollection } from "../swf/SwfExtraction.js";
-import type { FurnitureAsset, FurnitureAssets } from "../../../../packages/client/src/Client/Interfaces/Furniture/FurnitureAssets.ts"
-import type { FigureAssets } from "../../../../packages/client/src/Client/Interfaces/Figure/FigureAssets.ts"
-import type { FurnitureLogic } from "../../../../packages/client/src/Client/Interfaces/Furniture/FurnitureLogic.ts"
-import type { FurnitureVisualization } from "../../../../packages/client/src/Client/Interfaces/Furniture/FurnitureVisualization.ts"
-import type { RoomVisualization } from "../../../../packages/client/src/Client/Interfaces/Room/RoomVisualization.ts"
-import type { FurnitureIndex } from "../../../../packages/client/src/Client/Interfaces/Furniture/FurnitureIndex.ts"
+import type { FurnitureAsset, FurnitureAssets } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureAssets.ts"
+import type { FigureAssets } from "../../../../packages/game/src/Client/Interfaces/Figure/FigureAssets.ts"
+import type { FurnitureLogic } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureLogic.ts"
+import type { FurnitureVisualization } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureVisualization.ts"
+import type { RoomVisualization } from "../../../../packages/game/src/Client/Interfaces/Room/RoomVisualization.ts"
+import type { FurnitureIndex } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureIndex.ts"
 import { XMLParser } from "fast-xml-parser";
 import { readFileSync } from "fs";
+import { database } from "../index.ts";
 
 function getValueAsArray(value: any) {
     if(!value) {
@@ -113,7 +114,7 @@ export function createLogicData(collection: SwfExtractionCollection): FurnitureL
     } satisfies FurnitureLogic;
 }
 
-export function createVisualizationData(collection: SwfExtractionCollection): FurnitureVisualization {
+export async function createVisualizationData(collection: SwfExtractionCollection): Promise<FurnitureVisualization> {
     if(!collection.data.visualization) {
         throw new Error("Visualization data doesn't exist.");
     }
@@ -124,11 +125,11 @@ export function createVisualizationData(collection: SwfExtractionCollection): Fu
 
     const document = parser.parse(readFileSync(collection.data.visualization, { encoding: "utf-8" }), true);
 
-    const furnitureData = createFurnitureData(document["visualizationData"]["@_type"]);
+    const furnitureData = await createFurnitureData(document["visualizationData"]["@_type"]);
 
     return {
         type: document["visualizationData"]["@_type"],
-        placement: furnitureData[0]?.placement ?? "floor",
+        placement: furnitureData?.[0]?.placement ?? "floor",
         visualizations: document["visualizationData"]["graphics"]["visualization"].map((visualization: any) => {
             return {
                 size: parseInt(visualization["@_size"]) as 1 | 32 | 64,
@@ -281,7 +282,7 @@ export function createRoomVisualizationData(collection: SwfExtractionCollection)
     } satisfies RoomVisualization;
 }
 
-export function createFurnitureData(assetName: string) {
+export async function createFurnitureData(assetName: string) {
     const parser = new XMLParser({
         ignoreAttributes: false
     });
@@ -302,10 +303,16 @@ export function createFurnitureData(assetName: string) {
         return null;
     }
 
-    return furniTypes.map((furniType: any) => {
+    return await Promise.all(furniTypes.map(async (furniType: any) => {
         const color = furniType["@_classname"].split('*')[1];
 
         const hasDescription = furniType["description"] && !furniType["description"].endsWith(" desc");
+
+        const result: any = await new Promise((resolve) => {
+            database.get("SELECT * FROM items_base WHERE item_name = '" + furniType["@_classname"] + "' LIMIT 1", (error, row) => {
+                resolve(row);
+            });
+        });
 
         return {
             name: furniType["name"],
@@ -314,7 +321,19 @@ export function createFurnitureData(assetName: string) {
             color: (color)?(parseInt(color)):(undefined),
 
             placement: (isWallFurniture)?("wall"):("floor"),
-            defaultDirection: (furniType["defaultdir"])?(parseInt(furniType["defaultdir"])):(undefined)
+            defaultDirection: (furniType["defaultdir"])?(parseInt(furniType["defaultdir"])):(undefined),
+
+            flags: {
+                stackable: result?.allow_stack === 1,
+                sitable: result?.allow_sit === 1,
+                layable: result?.allow_lay === 1,
+                walkable: result?.allow_walk === 1,
+                giftable: result?.allow_gift === 1,
+                tradable: result?.allow_trade === 1,
+                recyclable: result?.allow_recycle === 1,
+                sellable: result?.allow_marketplace_sell === 1,
+                inventoryStackable: result?.allow_inventory_stack === 1
+            }
         };
-    });
+    }));
 }

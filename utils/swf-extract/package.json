@@ -19,6 +19,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "jimp": "^1.6.0"
+    "jimp": "^1.6.0",
+    "sqlite3": "^5.1.7"
   }
 }

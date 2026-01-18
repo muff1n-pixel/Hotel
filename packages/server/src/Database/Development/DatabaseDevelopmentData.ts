@@ -1,11 +1,9 @@
-import { DataTypes, Sequelize, UUIDV4 } from "sequelize";
-import "../Models/Rooms/Room.js";
-import { initializeRoomFurnitureModel, RoomFurniture } from "../Models/Rooms/RoomFurniture.js";
-import { initializeRoomModel, Room } from "../Models/Rooms/Room.js";
+import { RoomFurniture } from "../Models/Rooms/RoomFurniture.js";
+import { Room } from "../Models/Rooms/Room.js";
 import { randomUUID } from "crypto";
-import { initializeShopPageModel, ShopPage } from "../Models/Shop/ShopPage.js";
-import { initializeShopPageFurnitureModel, ShopPageFurniture } from "../Models/Shop/ShopPageFurniture.js";
-import { Furniture, initializeFurnitureModel } from "../Models/Furniture/Furniture.js";
+import { ShopPage } from "../Models/Shop/ShopPage.js";
+import { ShopPageFurniture } from "../Models/Shop/ShopPageFurniture.js";
+import { Furniture } from "../Models/Furniture/Furniture.js";
 import { getExistingFurnitureAssets } from "./FurnitureDevelopmentData.js";
 import { User } from "../Models/Users/User.js";
 import { UserFurniture } from "../Models/Users/Furniture/UserFurniture.js";
@@ -20,6 +18,8 @@ export async function initializeDevelopmentData() {
 
             name: furniture.name,
             description: furniture.description,
+
+            flags: furniture.flags,
 
             color: furniture.color,
             placement: furniture.placement,
