@@ -2,13 +2,13 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../../Database.js";
 import { FigureConfiguration } from "@shared/Interfaces/figure/FigureConfiguration.js";
 
-export class User extends Model {
+export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare figureConfiguration: FigureConfiguration;
 }
 
-User.init(
+UserModel.init(
   {
     id: {
       type: DataTypes.UUID,

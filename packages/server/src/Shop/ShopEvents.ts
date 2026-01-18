@@ -1,12 +1,12 @@
 import { ShopPagesResponse } from "@shared/WebSocket/Events/Shop/ShopPagesResponse.js";
 import UserClient from "../Clients/UserClient.js";
 import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
-import { ShopPage } from "../Database/Models/Shop/ShopPage.js";
+import { ShopPageModel } from "../Database/Models/Shop/ShopPageModel.js";
 import { ShopPagesRequest } from "@shared/WebSocket/Events/Shop/ShopPagesRequest.js";
 import { ShopPageFurnitureRequest } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureRequest.js";
-import { ShopPageFurniture } from "../Database/Models/Shop/ShopPageFurniture.js";
+import { ShopPageFurnitureModel } from "../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { ShopPageFurnitureResponse } from "@shared/WebSocket/Events/Shop/ShopPageFurnitureResponse.js";
-import { Furniture } from "../Database/Models/Furniture/Furniture.js";
+import { FurnitureModel } from "../Database/Models/Furniture/FurnitureModel.js";
 import { PurchaseShopFurnitureRequest, PurchaseShopFurnitureResponse } from "@shared/WebSocket/Events/Shop/Furniture/PurchaseShopFurniture.js";
 
 export default class ShopEvents {
@@ -15,13 +15,13 @@ export default class ShopEvents {
             return;
         }
 
-        const shopPages: ShopPage[] = await ShopPage.findAll({
+        const shopPages: ShopPageModel[] = await ShopPageModel.findAll({
             where: {
                 category: "furniture",
                 parentId: null
             },
             include: {
-                model: ShopPage,
+                model: ShopPageModel,
                 as: "children"
             }
         });
@@ -54,13 +54,13 @@ export default class ShopEvents {
     }
 
     public static async dispatchShopPageFurniture(userClient: UserClient, event: ShopPageFurnitureRequest) {
-        const shopPage = await ShopPage.findByPk(event.pageId, {
+        const shopPage = await ShopPageModel.findByPk(event.pageId, {
             include: {
-                model: ShopPageFurniture,
+                model: ShopPageFurnitureModel,
                 as: "furniture",
                 include: [
                     {
-                        model: Furniture,
+                        model: FurnitureModel,
                         as: "furniture"
                     }
                 ]
@@ -83,12 +83,12 @@ export default class ShopEvents {
     }
 
     public static async handlePurchaseShopFurniture(userClient: UserClient, event: PurchaseShopFurnitureRequest) {
-        const shopFurniture = await ShopPageFurniture.findOne({
+        const shopFurniture = await ShopPageFurnitureModel.findOne({
             where: {
                 id: event.shopFurnitureId
             },
             include: {
-                model: Furniture,
+                model: FurnitureModel,
                 as: "furniture"
             }
         });

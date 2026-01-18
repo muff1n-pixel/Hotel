@@ -1,17 +1,17 @@
-import { RoomFurniture } from "../Models/Rooms/RoomFurniture.js";
-import { Room } from "../Models/Rooms/Room.js";
+import { RoomFurnitureModel } from "../Models/Rooms/RoomFurnitureModel.js";
+import { RoomModel } from "../Models/Rooms/RoomModel.js";
 import { randomUUID } from "crypto";
-import { ShopPage } from "../Models/Shop/ShopPage.js";
-import { ShopPageFurniture } from "../Models/Shop/ShopPageFurniture.js";
-import { Furniture } from "../Models/Furniture/Furniture.js";
+import { ShopPageModel } from "../Models/Shop/ShopPageModel.js";
+import { ShopPageFurnitureModel } from "../Models/Shop/ShopPageFurnitureModel.js";
+import { FurnitureModel } from "../Models/Furniture/FurnitureModel.js";
 import { getExistingFurnitureAssets } from "./FurnitureDevelopmentData.js";
-import { User } from "../Models/Users/User.js";
-import { UserFurniture } from "../Models/Users/Furniture/UserFurniture.js";
+import { UserModel } from "../Models/Users/UserModel.js";
+import { UserFurnitureModel } from "../Models/Users/Furniture/UserFurnitureModel.js";
 
 export async function initializeDevelopmentData() {
     const existingFurnitureAssets = await getExistingFurnitureAssets();
 
-    await Furniture.bulkCreate<Furniture>(existingFurnitureAssets.flatMap((furnitures) => furnitures).map((furniture) => {
+    await FurnitureModel.bulkCreate(existingFurnitureAssets.flatMap((furnitures) => furnitures).map((furniture) => {
         return {
             id: randomUUID(),
             type: furniture.type,
@@ -27,7 +27,7 @@ export async function initializeDevelopmentData() {
         };
     }));
 
-    const typeCategory = await ShopPage.create<ShopPage>({
+    const typeCategory = await ShopPageModel.create<ShopPageModel>({
         id: randomUUID(),
         category: "furniture",
         title: "By type",
@@ -37,7 +37,7 @@ export async function initializeDevelopmentData() {
         header: "catalog_frontpage_headline_shop_EN.gif"
     });
 
-    const shopPages = await ShopPage.bulkCreate<ShopPage>([
+    const shopPages = await ShopPageModel.bulkCreate<ShopPageModel>([
         {
             id: randomUUID(),
             category: "furniture",
@@ -63,41 +63,41 @@ export async function initializeDevelopmentData() {
         }
     ]);
 
-    await ShopPageFurniture.bulkCreate<ShopPageFurniture>([
+    await ShopPageFurnitureModel.bulkCreate<ShopPageFurnitureModel>([
         {
             id: randomUUID(),
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 1 } }))!.id,
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 1 } }))!.id,
             shopPageId: typeCategory.id,
         },
         {
             id: randomUUID(),
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 2 } }))!.id,
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 2 } }))!.id,
             shopPageId: typeCategory.id
         },
         {
             id: randomUUID(),
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 3 } }))!.id,
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 3 } }))!.id,
             shopPageId: typeCategory.id
         },
         {
             id: randomUUID(),
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 4 } }))!.id,
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 4 } }))!.id,
             shopPageId: typeCategory.id
         },
         {
             id: randomUUID(),
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 5 } }))!.id,
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 5 } }))!.id,
             shopPageId: typeCategory.id
         }
     ]);
 
-    const allFurnitureShopPage = await ShopPage.create({
+    const allFurnitureShopPage = await ShopPageModel.create({
         id: randomUUID(),
         category: "furniture",
         title: "All furniture"
     });
 
-    await ShopPageFurniture.bulkCreate<ShopPageFurniture>((await Furniture.findAll()).map((furniture) => {
+    await ShopPageFurnitureModel.bulkCreate<ShopPageFurnitureModel>((await FurnitureModel.findAll()).map((furniture) => {
         return {
             id: randomUUID(),
             furnitureId: furniture.id,
@@ -105,7 +105,7 @@ export async function initializeDevelopmentData() {
         };
     }));
 
-    await Room.create<Room>({
+    await RoomModel.create<RoomModel>({
         id: "room2",
         name: "My room",
         structure: {
@@ -133,7 +133,7 @@ export async function initializeDevelopmentData() {
         }
     });
 
-    const room = await Room.create<Room>({
+    const room = await RoomModel.create<RoomModel>({
         id: "room1",
         name: "My home room",
         structure: {
@@ -200,12 +200,12 @@ export async function initializeDevelopmentData() {
         }
     });
 
-    const furniture = (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 1 } }));
+    const furniture = (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 1 } }));
 
     for (let color = 0; color < 3; color++)
         for (let direction = 0; direction < 2; direction++)
             for (let index = 0; index < 20; index++) {
-                await RoomFurniture.create<RoomFurniture>({
+                await RoomFurnitureModel.create<RoomFurnitureModel>({
                     id: randomUUID(),
                     roomId: room.id,
                     furnitureId: furniture!.id,
@@ -219,13 +219,13 @@ export async function initializeDevelopmentData() {
                 });
             }
 
-    const user = await User.create({
+    const user = await UserModel.create({
         id: "user1",
         name: "Muff1n-Pixel",
         figureConfiguration: [{ "type": "hd", "setId": "180", "colorIndex": 2 }, { "type": "hr", "setId": "828", "colorIndex": 31 }, { "type": "ea", "setId": "3196", "colorIndex": 62 }, { "type": "ch", "setId": "255", "colorIndex": 1415 }, { "type": "lg", "setId": "3216", "colorIndex": 110 }, { "type": "sh", "setId": "305", "colorIndex": 62 }]
     });
 
-    await UserFurniture.bulkCreate([
+    await UserFurnitureModel.bulkCreate([
         {
             id: randomUUID(),
             userId: user.id,
@@ -234,16 +234,16 @@ export async function initializeDevelopmentData() {
         {
             id: randomUUID(),
             userId: user.id,
-            furnitureId: (await Furniture.findOne({ where: { type: "rare_dragonlamp", color: 2 } }))!.id
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "rare_dragonlamp", color: 2 } }))!.id
         },
         {
             id: randomUUID(),
             userId: user.id,
-            furnitureId: (await Furniture.findOne({ where: { type: "roomdimmer" } }))!.id
+            furnitureId: (await FurnitureModel.findOne({ where: { type: "roomdimmer" } }))!.id
         }
     ]);
 
-    await User.create({
+    await UserModel.create({
         id: "user2",
         name: "Cake",
         figureConfiguration: [{ "type": "hd", "setId": "180", "colorIndex": 2 }, { "type": "hr", "setId": "828", "colorIndex": 31 }, { "type": "ch", "setId": "255", "colorIndex": 1415 }, { "type": "lg", "setId": "3216", "colorIndex": 110 }, { "type": "sh", "setId": "305", "colorIndex": 62 }]

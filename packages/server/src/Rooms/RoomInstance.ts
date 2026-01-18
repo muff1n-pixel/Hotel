@@ -1,12 +1,12 @@
 import UserClient from "../Clients/UserClient.js";
-import { Room } from "../Database/Models/Rooms/Room.js";
+import { RoomModel } from "../Database/Models/Rooms/RoomModel.js";
 import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
 import RoomUser from "./Users/RoomUser.js";
 import RoomFurnitureItem from "./Items/RoomFurnitureItem.js";
 import { UserWalkTo } from "@shared/WebSocket/Events/Rooms/Users/UserWalkTo.js";
-import { Furniture } from "../Database/Models/Furniture/Furniture.js";
+import { FurnitureModel } from "../Database/Models/Furniture/FurnitureModel.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { RoomFurniture } from "../Database/Models/Rooms/RoomFurniture.js";
+import { RoomFurnitureModel } from "../Database/Models/Rooms/RoomFurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { RoomFurnitureUpdated } from "@shared/WebSocket/Events/Rooms/Furniture/RoomFurnitureUpdated.js";
 
@@ -17,7 +17,7 @@ export default class RoomInstance {
     // TODO: is there a better way to handle actions instead of an interval?
     private actionsInterval?: NodeJS.Timeout;
 
-    constructor(public readonly room: Room) {
+    constructor(public readonly room: RoomModel) {
         this.furnitures = room.roomFurnitures.map((roomFurniture) => new RoomFurnitureItem(this, roomFurniture));
     }
 
@@ -25,8 +25,8 @@ export default class RoomInstance {
         this.users.push(new RoomUser(this, userClient));
     }
 
-    public async addFurniture(furniture: Furniture, position: RoomPosition, direction: number) {
-        const createdRoomFurniture = await RoomFurniture.create({
+    public async addFurniture(furniture: FurnitureModel, position: RoomPosition, direction: number) {
+        const createdRoomFurniture = await RoomFurnitureModel.create({
             id: randomUUID(),
             furnitureId: furniture.id,
             position: position,
@@ -34,9 +34,9 @@ export default class RoomInstance {
             animation: 0
         });
 
-        const roomFurniture = await RoomFurniture.findByPk(createdRoomFurniture.id, {
+        const roomFurniture = await RoomFurnitureModel.findByPk(createdRoomFurniture.id, {
             include: {
-                model: Furniture,
+                model: FurnitureModel,
                 as: "furniture"
             }
         });

@@ -1,16 +1,16 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { Furniture } from "../../Furniture/Furniture.js";
-import { User } from "../User.js";
+import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
+import { UserModel } from "../UserModel.js";
 
-export class UserFurniture extends Model {
+export class UserFurnitureModel extends Model {
     declare id: string;
     declare quantity: number;
     
-    declare furniture: NonAttribute<Furniture>;
+    declare furniture: NonAttribute<FurnitureModel>;
 }
 
 export function initializeUserFurnitureModel(sequelize: Sequelize) {
-    UserFurniture.init(
+    UserFurnitureModel.init(
         {
           id: {
             type: DataTypes.UUID,
@@ -28,17 +28,17 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
         }
     );
 
-    UserFurniture.belongsTo(Furniture, {
+    UserFurnitureModel.belongsTo(FurnitureModel, {
         as: "furniture",
         foreignKey: "furnitureId"
     });
 
-    UserFurniture.belongsTo(User, {
+    UserFurnitureModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId"
     });
     
-    User.hasMany(UserFurniture, {
+    UserModel.hasMany(UserFurnitureModel, {
         as: "userFurniture",
         foreignKey: "userFurnitureId"
     });

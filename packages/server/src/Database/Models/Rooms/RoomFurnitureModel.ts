@@ -1,20 +1,20 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { NonAttribute } from "@sequelize/core";
-import { Furniture } from "../Furniture/Furniture.js";
-import { Room } from "./Room.js";
+import { FurnitureModel } from "../Furniture/FurnitureModel.js";
+import { RoomModel } from "./RoomModel.js";
 
-export class RoomFurniture extends Model {
+export class RoomFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPosition;
     declare direction: number;
     declare animation: number;
 
-    declare furniture: NonAttribute<Furniture>;
+    declare furniture: NonAttribute<FurnitureModel>;
 }
 
 export function initializeRoomFurnitureModel(sequelize: Sequelize) {
-    RoomFurniture.init(
+    RoomFurnitureModel.init(
         {
           id: {
             type: DataTypes.UUID,
@@ -49,12 +49,12 @@ export function initializeRoomFurnitureModel(sequelize: Sequelize) {
         },
       );
     
-    RoomFurniture.belongsTo(Furniture, {
+    RoomFurnitureModel.belongsTo(FurnitureModel, {
         as: "furniture",
         foreignKey: "furnitureId"
     });
     
-    Room.hasMany(RoomFurniture, {
+    RoomModel.hasMany(RoomFurnitureModel, {
         as: "roomFurnitures",
         foreignKey: "roomId"
     });

@@ -1,17 +1,17 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
-import { RoomFurniture } from "./RoomFurniture.js";
+import { RoomFurnitureModel } from "./RoomFurnitureModel.js";
 
-export class Room extends Model {
+export class RoomModel extends Model {
     declare id: string;
     declare name: string;
     declare structure: RoomStructure;
     
-    declare roomFurnitures: NonAttribute<RoomFurniture[]>;
+    declare roomFurnitures: NonAttribute<RoomFurnitureModel[]>;
 }
 
 export function initializeRoomModel(sequelize: Sequelize) {
-    Room.init(
+    RoomModel.init(
         {
           id: {
             type: DataTypes.UUID,

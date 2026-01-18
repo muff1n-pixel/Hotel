@@ -5,13 +5,13 @@ export const sequelize = new Sequelize({
     storage: ":memory:",
 });
 
-import "./Models/Rooms/Room.js";
-import { initializeRoomFurnitureModel } from "./Models/Rooms/RoomFurniture.js";
-import { initializeRoomModel } from "./Models/Rooms/Room.js";
-import { initializeShopPageModel } from "./Models/Shop/ShopPage.js";
-import { initializeShopPageFurnitureModel } from "./Models/Shop/ShopPageFurniture.js";
-import { initializeFurnitureModel } from "./Models/Furniture/Furniture.js";
-import { initializeUserFurnitureModel } from "./Models/Users/Furniture/UserFurniture.js";
+import "./Models/Rooms/RoomModel.js";
+import { initializeRoomFurnitureModel } from "./Models/Rooms/RoomFurnitureModel.js";
+import { initializeRoomModel } from "./Models/Rooms/RoomModel.js";
+import { initializeShopPageModel } from "./Models/Shop/ShopPageModel.js";
+import { initializeShopPageFurnitureModel } from "./Models/Shop/ShopPageFurnitureModel.js";
+import { initializeFurnitureModel } from "./Models/Furniture/FurnitureModel.js";
+import { initializeUserFurnitureModel } from "./Models/Users/Furniture/UserFurnitureModel.js";
 
 export async function initializeModels() {
   initializeFurnitureModel(sequelize);

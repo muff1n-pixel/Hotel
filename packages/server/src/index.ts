@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
 import { eventHandler } from "./Events/EventHandler.js";
 import UserClient from "./Clients/UserClient.js";
-import { User } from "./Database/Models/Users/User.js";
+import { UserModel } from "./Database/Models/Users/UserModel.js";
 import { UserDataUpdated } from "@shared/WebSocket/Events/User/UserDataUpdated.js";
 import OutgoingEvent from "./Events/Interfaces/OutgoingEvent.js";
 
@@ -49,7 +49,7 @@ webSocketServer.on("connection", async (webSocket, request) => {
         return webSocket.close();
     }
 
-    const user = await User.findByPk(userId);
+    const user = await UserModel.findByPk(userId);
 
     if(!user) {
 		console.warn("User does not exist.");

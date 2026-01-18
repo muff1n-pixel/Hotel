@@ -13,7 +13,7 @@ export type FurnitureFlags = {
     inventoryStackable: boolean;
 }
 
-export class Furniture extends Model {
+export class FurnitureModel extends Model {
     declare id: string;
     declare type: string;
     declare name: string;
@@ -25,7 +25,7 @@ export class Furniture extends Model {
 }
 
 export function initializeFurnitureModel(sequelize: Sequelize) {
-    Furniture.init(
+    FurnitureModel.init(
         {
           id: {
             type: DataTypes.UUID,

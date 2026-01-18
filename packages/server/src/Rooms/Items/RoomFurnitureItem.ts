@@ -1,9 +1,9 @@
 import RoomInstance from "../RoomInstance";
-import { RoomFurniture } from "../../Database/Models/Rooms/RoomFurniture.js";
+import { RoomFurnitureModel } from "../../Database/Models/Rooms/RoomFurnitureModel.js";
 import { RoomFurnitureData } from "@shared/Interfaces/Room/RoomFurnitureData.js";
 
 export default class RoomFurnitureItem {
-    constructor(private readonly roomInstance: RoomInstance, public readonly roomFurniture: RoomFurniture) {
+    constructor(private readonly roomInstance: RoomInstance, public readonly roomFurniture: RoomFurnitureModel) {
     }
 
     public getFurnitureData(): RoomFurnitureData {

@@ -1,7 +1,7 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { ShopPageFurniture } from "./ShopPageFurniture.js";
+import { ShopPageFurnitureModel } from "./ShopPageFurnitureModel.js";
 
-export class ShopPage extends Model {
+export class ShopPageModel extends Model {
     declare id: string;
     
     declare title: string;
@@ -13,12 +13,12 @@ export class ShopPage extends Model {
     declare icon: string | null;
     declare header: string | null;
     
-    declare children: NonAttribute<ShopPage[]>;
-    declare furniture: NonAttribute<ShopPageFurniture[]>;
+    declare children: NonAttribute<ShopPageModel[]>;
+    declare furniture: NonAttribute<ShopPageFurnitureModel[]>;
 }
 
 export function initializeShopPageModel(sequelize: Sequelize) {
-    ShopPage.init(
+    ShopPageModel.init(
         {
           id: {
             type: DataTypes.UUID,
@@ -59,7 +59,7 @@ export function initializeShopPageModel(sequelize: Sequelize) {
         }
     );
     
-    ShopPage.hasMany(ShopPage, {
+    ShopPageModel.hasMany(ShopPageModel, {
         as: "children",
         foreignKey: "parentId"
     });

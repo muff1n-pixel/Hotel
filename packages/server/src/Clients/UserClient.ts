@@ -1,13 +1,13 @@
 import type WebSocket from "ws";
 import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
-import { User } from "../Database/Models/Users/User.js";
+import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "../Users/Inventory/UserInventory.js";
 
 export default class UserClient extends EventEmitter {
     private inventory?: UserInventory;
 
-    constructor(public readonly webSocket: WebSocket, public readonly user: User) {
+    constructor(public readonly webSocket: WebSocket, public readonly user: UserModel) {
         super();
     }
 

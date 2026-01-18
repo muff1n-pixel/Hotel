@@ -1,16 +1,16 @@
 import { NonAttribute } from "@sequelize/core";
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { Furniture } from "../Furniture/Furniture.js";
-import { ShopPage } from "./ShopPage.js";
+import { FurnitureModel } from "../Furniture/FurnitureModel.js";
+import { ShopPageModel } from "./ShopPageModel.js";
 
-export class ShopPageFurniture extends Model {
+export class ShopPageFurnitureModel extends Model {
     declare id: string;
     
-    declare furniture: NonAttribute<Furniture>;
+    declare furniture: NonAttribute<FurnitureModel>;
 }
 
 export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
-    ShopPageFurniture.init(
+    ShopPageFurnitureModel.init(
         {
           id: {
             type: DataTypes.UUID,
@@ -23,12 +23,12 @@ export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
         }
     );
     
-    ShopPageFurniture.belongsTo(Furniture, {
+    ShopPageFurnitureModel.belongsTo(FurnitureModel, {
         as: "furniture",
         foreignKey: "furnitureId"
     });
     
-    ShopPage.hasMany(ShopPageFurniture, {
+    ShopPageModel.hasMany(ShopPageFurnitureModel, {
         as: "furniture",
         foreignKey: "shopPageId"
     });
