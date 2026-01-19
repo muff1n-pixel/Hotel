@@ -10,7 +10,7 @@ import { webSocketClient } from "../../../../..";
 import { RoomCreatedRequest } from "@Shared/WebSocket/Events/Rooms/Maps/RoomCreatedRequest";
 import { RoomCreatedResponse } from "@Shared/WebSocket/Events/Rooms/Maps/RoomCreatedResponse";
 import { AppContext } from "../../../../contexts/AppContext";
-import { EnterRoom } from "@Shared/WebSocket/Events/Rooms/EnterRoom";
+import { EnterRoomEventData } from "@Shared/Communications/Rooms/Requests/EnterRoomEventData";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -60,7 +60,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
 
             closeDialog("room-creation");
 
-            webSocketClient.send<EnterRoom>("EnterRoom", {
+            webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
                 roomId: event.data.roomId
             });
         };
