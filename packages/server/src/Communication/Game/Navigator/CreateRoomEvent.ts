@@ -1,10 +1,10 @@
 import { CreateRoomEventData } from "@shared/Communications/Requests/Navigator/CreateRoomEventData.js";
-import User from "../../Users/User.js";
-import IncomingEvent from "../Interfaces/IncomingEvent.js";
-import { game } from "../../index.js";
-import { RoomModel } from "../../Database/Models/Rooms/RoomModel.js";
+import User from "../../../Users/User.js";
+import IncomingEvent from "../../Interfaces/IncomingEvent.js";
+import { game } from "../../../index.js";
+import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "node:crypto";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
+import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomCreatedEventData } from "@shared/Communications/Responses/Navigator/RoomCreatedEventData.js";
 
 export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventData> {

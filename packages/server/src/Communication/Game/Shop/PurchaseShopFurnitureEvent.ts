@@ -1,9 +1,9 @@
-import User from "../../Users/User.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import IncomingEvent from "../Interfaces/IncomingEvent.js";
+import User from "../../../Users/User.js";
+import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
+import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { PurchaseShopFurnitureEventData } from "@shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData.js";
-import { ShopPageFurnitureModel } from "../../Database/Models/Shop/ShopPageFurnitureModel.js";
-import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
+import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import { ShopFurniturePurchasedEventData } from "@shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData.js";
 
 export default class PurchaseShopFurnitureEvent implements IncomingEvent<PurchaseShopFurnitureEventData> {

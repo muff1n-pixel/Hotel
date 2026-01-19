@@ -1,6 +1,6 @@
 import { PlaceFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/PlaceFurnitureEventData";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import User from "../../../Users/User.js";
+import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
+import User from "../../../../Users/User.js";
 
 export default class PlaceFurnitureEvent implements IncomingEvent<PlaceFurnitureEventData> {
     async handle(user: User, event: PlaceFurnitureEventData) {

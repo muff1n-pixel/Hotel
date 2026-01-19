@@ -1,7 +1,7 @@
-import User from "../../Users/User.js";
-import { ShopPageModel } from "../../Database/Models/Shop/ShopPageModel.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import IncomingEvent from "../Interfaces/IncomingEvent.js";
+import User from "../../../Users/User.js";
+import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
+import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
+import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { GetShopPagesEventData } from "@shared/Communications/Requests/Shop/GetShopPagesEventData.js";
 import { ShopPagesEventData } from "@shared/Communications/Responses/Shop/ShopPagesEventData.js";
 

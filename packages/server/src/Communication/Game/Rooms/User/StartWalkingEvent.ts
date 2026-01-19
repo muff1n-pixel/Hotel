@@ -1,5 +1,5 @@
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import User from "../../../Users/User.js";
+import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
+import User from "../../../../Users/User.js";
 import { StartWalkingEventData } from "@shared/Communications/Requests/Rooms/User/StartWalkingEventData.js";
 import { AStarFinder } from "astar-typescript";
 
