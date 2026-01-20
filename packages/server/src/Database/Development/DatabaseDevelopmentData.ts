@@ -22,40 +22,40 @@ const defaultShopPages: any = [
             {
                 title: "Jukebox",
                 furnitures: [
-                    { type: "jukebox_big" },
-                    { type: "jukebox", color: 1 }
+                    { type: "jukebox_big", credits: 5 },
+                    { type: "jukebox", color: 1, credits: 1 }
                 ]
             },
             {
                 title: "Accessories",
                 furnitures: [
-                    { type: "post_it" },
-                    { type: "note_tag" },
-                    { type: "drinks" },
-                    { type: "pizza" },
-                    { type: "tv_flat" },
-                    { type: "trading_table" },
-                    { type: "tv_luxus" },
-                    { type: "wood_tv" },
-                    { type: "red_tv" },
-                    { type: "computer_laptop" },
-                    { type: "computer_old" },
-                    { type: "computer_flatscreen" },
-                    { type: "clrack" },
-                    { type: "noticeboard" },
-                    { type: "fireworks_07" },
-                    { type: "fireworks_06" },
-                    { type: "fireworks_05" },
-                    { type: "fireworks_04" },
-                    { type: "fireworks_03" },
-                    { type: "fireworks_02" },
-                    { type: "fireworks_01" },
-                    { type: "stories_oldmusic_mike" },
-                    { type: "stories_oldmusic_neon" },
-                    { type: "stories_oldmusic_guitarcase" },
-                    { type: "party_djtable" },
-                    { type: "studio_guitar" },
-                    { type: "cine_vipsign" }
+                    { type: "post_it", credits: 3 },
+                    { type: "note_tag", duckets: 50 },
+                    { type: "drinks", duckets: 150 },
+                    { type: "pizza", duckets: 150 },
+                    { type: "tv_flat", credits: 1, duckets: 150 },
+                    { type: "trading_table", credits: 10 },
+                    { type: "tv_luxus", credits: 6 },
+                    { type: "wood_tv", credits: 4 },
+                    { type: "red_tv", credits: 3 },
+                    { type: "computer_laptop", credits: 2 },
+                    { type: "computer_old", credits: 3 },
+                    { type: "computer_flatscreen", credits: 3 },
+                    { type: "clrack", credits: 2 },
+                    { type: "noticeboard", credits: 2 },
+                    { type: "fireworks_07", credits: 12 },
+                    { type: "fireworks_06", credits: 7 },
+                    { type: "fireworks_05", credits: 7 },
+                    { type: "fireworks_04", credits: 5 },
+                    { type: "fireworks_03", credits: 5 },
+                    { type: "fireworks_02", credits: 5 },
+                    { type: "fireworks_01", credits: 5 },
+                    { type: "stories_oldmusic_mike", credits: 4 },
+                    { type: "stories_oldmusic_neon", credits: 5 },
+                    { type: "stories_oldmusic_guitarcase", credits: 8 },
+                    { type: "party_djtable", credits: 3 },
+                    { type: "studio_guitar", credits: 7 },
+                    { type: "cine_vipsign", credits: 3 }
                 ]
             }
         ]
@@ -437,10 +437,16 @@ export async function initializeDevelopmentData() {
             });
 
             await ShopPageFurnitureModel.bulkCreate(furnitureData.map((furniture) => {
+                const furnitureShopData = child.furnitures.find((childFurniture: any) => childFurniture.type === furniture.type && childFurniture.color === (furniture.color ?? undefined));
+
                 return {
                     id: randomUUID(),
                     furnitureId: furniture.id,
-                    shopPageId: childPage.id
+                    shopPageId: childPage.id,
+
+                    credits: furnitureShopData.credits,
+                    duckets: furnitureShopData.duckets,
+                    diamonds: furnitureShopData.diamonds
                 };
             }));
         }

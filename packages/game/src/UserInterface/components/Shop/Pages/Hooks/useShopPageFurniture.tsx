@@ -1,8 +1,8 @@
-import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Shop/Responses/ShopPageFurnitureEventData";
+import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
-import { GetShopPageFurnitureEventData } from "@Shared/Communications/Shop/Requests/GetShopPageFurnitureEventData";
+import { GetShopPageFurnitureEventData } from "@Shared/Communications/Requests/Shop/GetShopPageFurnitureEventData";
 
 export default function useShopPageFurniture(pageId: string) {
     const [shopFurnitures, setShopFurnitures] = useState<ShopPageFurnitureData[]>([]);

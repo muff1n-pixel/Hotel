@@ -31,7 +31,10 @@ export default class GetShopPageFurnitureEvent implements IncomingEvent<GetShopP
             furniture: shopPage.furniture.map((furniture) => {
                 return {
                     id: furniture.id,
-                    furniture: furniture.furniture
+                    furniture: furniture.furniture,
+                    credits: furniture.credits,
+                    duckets: furniture.duckets,
+                    diamonds: furniture.diamonds
                 }
             })
         }));

@@ -5,6 +5,10 @@ import { ShopPageModel } from "./ShopPageModel.js";
 
 export class ShopPageFurnitureModel extends Model {
     declare id: string;
+
+    declare credits?: number;
+    declare duckets?: number;
+    declare diamonds?: number;
     
     declare furniture: NonAttribute<FurnitureModel>;
 }
@@ -15,6 +19,21 @@ export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
           id: {
             type: DataTypes.UUID,
             primaryKey: true
+          },
+          credits: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
+            defaultValue: null
+          },
+          duckets: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
+            defaultValue: null
+          },
+          diamonds: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
+            defaultValue: null
           }
         },
         {

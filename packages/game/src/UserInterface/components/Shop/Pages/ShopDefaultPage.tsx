@@ -7,10 +7,10 @@ import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { webSocketClient } from "../../../..";
-import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Shop/Responses/ShopPageFurnitureEventData";
-import { GetShopPageFurnitureEventData } from "@Shared/Communications/Shop/Requests/GetShopPageFurnitureEventData";
-import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Shop/Requests/PurchaseShopFurnitureEventData";
-import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Shop/Responses/ShopFurniturePurchasedEventData";
+import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
+import { GetShopPageFurnitureEventData } from "@Shared/Communications/Requests/Shop/GetShopPageFurnitureEventData";
+import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
+import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
@@ -149,7 +149,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
 
                             borderRadius: 5,
 
-                            border: (activeFurniture?.id === furniture.id)?("2px solid #62C4E8"):(undefined),
+                            border: (activeFurniture?.id === furniture.id)?("2px solid #62C4E8"):("2px solid transparent"),
                             background: (activeFurniture?.id === furniture.id)?("#FFFFFF"):(undefined),
 
                             display: "flex",
@@ -158,10 +158,58 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                             cursor: "pointer"
                         }} onClick={() => setActiveFurniture(furniture)}>
                             <div style={{
+                                flex: 1,
                                 alignSelf: "center",
                                 justifySelf: "center"
                             }}>
-                                <FurnitureIcon furnitureData={furniture.furniture}/>
+                                <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <FurnitureIcon furnitureData={furniture.furniture}/>
+                                </div>
+
+                                {(furniture.credits) && (
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 2,
+                                        alignItems: "flex-end",
+                                        justifyContent: "flex-end",
+                                        padding: 2,
+                                    }}>
+                                        <b>{furniture.credits}</b>
+
+                                        <div className="sprite_shop_credits"/>
+                                    </div>
+                                )}
+
+                                {(furniture.duckets) && (
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 2,
+                                        alignItems: "flex-end",
+                                        justifyContent: "flex-end",
+                                        padding: 2,
+                                    }}>
+                                        <b>{furniture.duckets}</b>
+
+                                        <div className="sprite_shop_duckets"/>
+                                    </div>
+                                )}
+
+                                {(furniture.diamonds) && (
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 2,
+                                        alignItems: "flex-end",
+                                        justifyContent: "flex-end",
+                                        padding: 2,
+                                    }}>
+                                        <b>{furniture.diamonds}</b>
+
+                                        <div className="sprite_shop_diamonds"/>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}

@@ -50,22 +50,6 @@ export default class RoomInstance {
         this.users = event.users.map((userData) => this.addUser(userData));
         event.furnitures.map(this.addFurniture.bind(this));
 
-        this.addFurniture({
-            id: "x",
-            furniture: {
-                name: "Dimmer",
-                type: "roomdimmer",
-                placement: "wall"
-            },
-            position: {
-                row: 2.5,
-                column: 1,
-                depth: 4.5
-            },
-            direction: 2,
-            animation: 0
-        });
-
         this.registerEventListeners();
     }
 

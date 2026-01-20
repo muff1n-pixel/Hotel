@@ -51,7 +51,10 @@
 .sprite_dialog_close:active { background-image: url('./spritesheet.png'); background-position: -359px -136px; width: 19px; height: 20px; }
 .sprite_dialog_close:hover { background-image: url('./spritesheet.png'); background-position: -359px -156px; width: 19px; height: 20px; }
 .sprite_dialog_close { background-image: url('./spritesheet.png'); background-position: -359px -176px; width: 19px; height: 20px; }
-.sprite_dialog_list-unfold { background-image: url('./spritesheet.png'); background-position: -378px -136px; width: 9px; height: 9px; }
-.sprite_navigator_user-count { background-image: url('./spritesheet.png'); background-position: -378px -145px; width: 7px; height: 8px; }
-.sprite_context-menu_arrow-down { background-image: url('./spritesheet.png'); background-position: -378px -156px; width: 10px; height: 5px; }
-.sprite_dialog_list-fold { background-image: url('./spritesheet.png'); background-position: -378px -153px; width: 10px; height: 2px; }
+.sprite_shop_credits { background-image: url('./spritesheet.png'); background-position: -378px -136px; width: 11px; height: 11px; }
+.sprite_shop_diamonds { background-image: url('./spritesheet.png'); background-position: -378px -156px; width: 11px; height: 11px; }
+.sprite_shop_duckets { background-image: url('./spritesheet.png'); background-position: -378px -176px; width: 11px; height: 11px; }
+.sprite_dialog_list-unfold { background-image: url('./spritesheet.png'); background-position: -378px -147px; width: 9px; height: 9px; }
+.sprite_navigator_user-count { background-image: url('./spritesheet.png'); background-position: -378px -167px; width: 7px; height: 8px; }
+.sprite_context-menu_arrow-down { background-image: url('./spritesheet.png'); background-position: -378px -187px; width: 10px; height: 5px; }
+.sprite_dialog_list-fold { background-image: url('./spritesheet.png'); background-position: -378px -192px; width: 10px; height: 2px; }
