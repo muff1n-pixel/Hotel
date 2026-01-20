@@ -177,7 +177,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                     }}>
                                         <b>{furniture.credits}</b>
 
-                                        <div className="sprite_shop_credits"/>
+                                        <div className="sprite_currencies_credits-small"/>
                                     </div>
                                 )}
 
@@ -192,7 +192,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                     }}>
                                         <b>{furniture.duckets}</b>
 
-                                        <div className="sprite_shop_duckets"/>
+                                        <div className="sprite_currencies_duckets-small"/>
                                     </div>
                                 )}
 
@@ -207,7 +207,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                     }}>
                                         <b>{furniture.diamonds}</b>
 
-                                        <div className="sprite_shop_diamonds"/>
+                                        <div className="sprite_currencies_diamonds-small"/>
                                     </div>
                                 )}
                             </div>
