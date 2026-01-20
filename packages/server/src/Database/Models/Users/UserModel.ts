@@ -6,6 +6,7 @@ export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare figureConfiguration: FigureConfiguration;
+    declare homeRoomId?: string;
 }
 
 UserModel.init(
@@ -27,6 +28,11 @@ UserModel.init(
             this.setDataValue("figureConfiguration", JSON.stringify(value));
         },
         allowNull: false
+    },
+    homeRoomId: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      defaultValue: null
     }
   },
   {

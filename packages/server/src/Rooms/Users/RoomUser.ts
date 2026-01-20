@@ -110,5 +110,7 @@ export default class RoomUser {
         }));
 
         delete this.user.room;
+
+        this.user.send(new OutgoingEvent("LeaveRoomEvent", null));
     }
 }

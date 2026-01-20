@@ -15,6 +15,8 @@ import PlaceFurnitureEvent from "./Communication/Game/Rooms/Furniture/PlaceFurni
 import StartWalkingEvent from "./Communication/Game/Rooms/User/StartWalkingEvent.js";
 import CreateRoomEvent from "./Communication/Game/Navigator/CreateRoomEvent.js";
 import GetNavigatorRoomsEvent from "./Communication/Game/Navigator/GetNavigatorRoomsEvent.js";
+import EnterHomeRoomEvent from "./Communication/Game/Rooms/EnterHomeRoomEvent.js";
+import LeaveRoomEvent from "./Communication/Game/Rooms/LeaveRoomEvent.js";
 
 await initializeModels();
 await initializeDevelopmentData();
@@ -27,6 +29,8 @@ eventHandler
     
 eventHandler
     .addIncomingEvent("EnterRoomEvent", new EnterRoomEvent())
+    .addIncomingEvent("EnterHomeRoomEvent", new EnterHomeRoomEvent())
+    .addIncomingEvent("LeaveRoomEvent", new LeaveRoomEvent())
     .addIncomingEvent("PlaceFurnitureEvent", new PlaceFurnitureEvent())
     .addIncomingEvent("StartWalkingEvent", new StartWalkingEvent());
     

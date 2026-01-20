@@ -4,6 +4,7 @@ import ToolbarItem from "./Items/ToolbarItem";
 import { AppContext } from "../../contexts/AppContext";
 import WardrobeDialog from "../Wardrobe/WardrobeDialog";
 import { useRoomInstance } from "../../hooks/useRoomInstance";
+import { webSocketClient } from "../../..";
 
 export default function Toolbar() {
     const room = useRoomInstance();
@@ -37,6 +38,20 @@ export default function Toolbar() {
                 alignItems: "center"
             }}>
                 <div/>
+
+                {(room)?(
+                    <ToolbarItem onClick={() => webSocketClient.send("LeaveRoomEvent", null)}>
+                        <ToolbarItem>
+                            <div className="sprite_toolbar_logo"/>
+                        </ToolbarItem>
+                    </ToolbarItem>
+                ):(
+                    <ToolbarItem onClick={() => webSocketClient.send("EnterHomeRoomEvent", null)}>
+                        <ToolbarItem>
+                            <div className="sprite_toolbar_home"/>
+                        </ToolbarItem>
+                    </ToolbarItem>
+                )}
 
                 <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
                     <ToolbarItem>

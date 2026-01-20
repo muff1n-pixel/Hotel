@@ -71,6 +71,8 @@ export default class RoomInstance {
         this.removeEventListeners();
 
         this.roomRenderer.terminate();
+
+        this.clientInstance.roomInstance = undefined;
     }
 
     private registerEventListeners() {
@@ -78,6 +80,7 @@ export default class RoomInstance {
         webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.addEventListener<WebSocketEvent<UserWalkToEventData>>("UserWalkToEvent", this.userWalkToListener);
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", this.roomFurnitureUpdatedListener);
+        webSocketClient.addEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.addEventListener("click", this.click.bind(this));
     }
 
@@ -86,7 +89,13 @@ export default class RoomInstance {
         webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.removeEventListener<WebSocketEvent<UserWalkToEventData>>("UserWalkToEvent", this.userWalkToListener);
         webSocketClient.removeEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", this.roomFurnitureUpdatedListener);
+        webSocketClient.removeEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.removeEventListener("click", this.click.bind(this));
+    }
+
+    private leaveRoomListener = this.leaveRoom.bind(this);
+    private leaveRoom() {
+        this.terminate();
     }
 
     private userEnteredRoomListener = this.userEnteredRoom.bind(this);
