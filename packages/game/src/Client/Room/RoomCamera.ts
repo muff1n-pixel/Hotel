@@ -23,6 +23,10 @@ export default class RoomCamera {
     }
 
     private mousedown(event: MouseEvent) {
+        if(event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+        }
+
         this.moving = true;
 
         this.lastPosition = {
