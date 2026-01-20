@@ -3,4 +3,7 @@ import { RoomFurnitureData } from "../../../../Interfaces/Room/RoomFurnitureData
 export type RoomFurnitureEventData = {
     furnitureAdded?: RoomFurnitureData[];
     furnitureUpdated?: RoomFurnitureData[];
+    furnitureRemoved?: {
+        id: string;
+    }[];
 };

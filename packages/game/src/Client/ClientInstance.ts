@@ -1,6 +1,6 @@
 import registerRoomEvents from "@Client/Room/Events/RoomEvents";
 import RoomInstance from "./Room/RoomInstance";
-import RoomFurnitureEvent from "@Client/Communications/Room/Furniture/RoomFurnitureUpdatedEvent";
+import RoomFurnitureEvent from "@Client/Communications/Room/Furniture/RoomFurnitureEvent";
 import { webSocketClient } from "..";
 import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";

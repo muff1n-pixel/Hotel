@@ -8,6 +8,11 @@ import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import RoomFurnitureProfile from "./Furniture/RoomFurnitureProfile";
 import RoomUserProfile from "./User/RoomUserProfile";
 import RoomItem from "@Client/Room/Items/RoomItem";
+import { webSocketClient } from "../../../..";
+import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import RoomFurnitureEvent from "@Client/Communications/Room/Furniture/RoomFurnitureEvent";
+import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
+import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 
 export type RoomItemProfileItem = {
     type: "user";
@@ -63,6 +68,39 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
             }
         });
     }, []);
+    
+    useEffect(() => {
+        if(!focusedItem) {
+            return;
+        }
+
+        if(focusedItem.type === "furniture") {
+            const listener = (event: WebSocketEvent<RoomFurnitureEventData>) => {
+                if(event.data.furnitureRemoved?.some((removedFurniture) => removedFurniture.id === focusedItem.data.id)) {
+                    setFocusedItem(undefined);
+                }
+            };
+
+            webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", listener);
+
+            return () => {
+                webSocketClient.removeEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", listener);
+            };
+        }
+        else if(focusedItem.type === "user") {
+            const listener = (event: WebSocketEvent<UserLeftRoomEventData>) => {
+                if(event.data.userId === focusedItem.user.id) {
+                    setFocusedItem(undefined);
+                }
+            };
+
+            webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", listener);
+
+            return () => {
+                webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", listener);
+            };
+        }
+    }, [focusedItem]);
 
     if(!focusedItem) {
         return null;

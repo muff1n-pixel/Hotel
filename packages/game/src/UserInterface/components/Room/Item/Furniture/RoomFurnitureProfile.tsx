@@ -3,6 +3,7 @@ import FurnitureImage from "../../../Furniture/FurnitureImage";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import { clientInstance, webSocketClient } from "../../../../..";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
+import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
 
 import "./RoomFurnitureProfile.css"
 
@@ -58,6 +59,14 @@ export default function RoomFurnitureProfile({ data, item }: RoomFurnitureProfil
                     clientInstance.roomInstance?.moveFurniture(data.id);
                 }}>
                     Move
+                </div>
+
+                <div className="room-furniture-profile-button" onClick={() => {
+                    webSocketClient.send<PickupRoomFurnitureEventData>("PickupRoomFurnitureEvent", {
+                        roomFurnitureId: data.id,
+                    });
+                }}>
+                    Pick up
                 </div>
 
                 {(item.furnitureRenderer.getNextDirection() !== item.furnitureRenderer.direction) && (
