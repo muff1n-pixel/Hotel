@@ -41,9 +41,11 @@ export default function InventoryFurnitureTab() {
                 let mutatedUserFurniture = [...userFurniture];
 
                 if(event.data.updatedUserFurniture) {
-                    mutatedUserFurniture = mutatedUserFurniture
-                        .filter((userFurniture) => !event.data.updatedUserFurniture?.some((updatedUserFurniture) => updatedUserFurniture.id === userFurniture.id))
-                        .concat(...event.data.updatedUserFurniture)
+                    mutatedUserFurniture = 
+                        event.data.updatedUserFurniture.concat(
+                            ...mutatedUserFurniture
+                                .filter((userFurniture) => !event.data.updatedUserFurniture?.some((updatedUserFurniture) => updatedUserFurniture.id === userFurniture.id))
+                        );
                 }
 
                 if(event.data.deletedUserFurniture) {

@@ -105,7 +105,8 @@ export default class UserInventory {
             include: {
                 model: FurnitureModel,
                 as: "furniture"
-            }
+            },
+            order: [['updatedAt','DESC']]
         });
     
         this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
