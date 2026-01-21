@@ -131,7 +131,7 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.roomRenderer, activeFurniture.furnitureData));
+        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance, activeFurniture.furnitureData));
         roomFurniturePlacerId.current = activeFurniture.id;
     }, [roomFurniturePlacer, activeFurniture]);
 

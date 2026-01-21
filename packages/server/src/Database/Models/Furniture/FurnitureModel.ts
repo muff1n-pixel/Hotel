@@ -1,17 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-
-export type FurnitureFlags = {
-    stackable: boolean;
-    sitable: boolean;
-    layable: boolean;
-    walkable: boolean;
-    giftable: boolean;
-    tradable: boolean;
-    recyclable: boolean;
-    sellable: boolean;
-    inventoryStackable: boolean;
-}
+import { FurnitureFlagsData } from "@shared/Interfaces/Furniture/FurnitureFlags";
 
 export class FurnitureModel extends Model {
     declare id: string;
@@ -21,7 +10,7 @@ export class FurnitureModel extends Model {
     declare placement: "floor" | "wall";
     declare dimensions: RoomPosition;
     declare color?: number;
-    declare flags: FurnitureFlags;
+    declare flags: FurnitureFlagsData;
 }
 
 export function initializeFurnitureModel(sequelize: Sequelize) {

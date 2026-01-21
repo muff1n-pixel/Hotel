@@ -21,6 +21,7 @@ import { StartWalkingEventData } from "@Shared/Communications/Requests/Rooms/Use
 import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -169,11 +170,12 @@ export default class RoomInstance {
     public updateFurniture(furnitureData: RoomFurnitureData) {
         const roomFurnitureItem = this.getFurnitureById(furnitureData.id);
 
-        roomFurnitureItem.item.furnitureRenderer.direction = furnitureData.direction;
-        roomFurnitureItem.item.furnitureRenderer.animation = furnitureData.animation;
+        roomFurnitureItem.item.furnitureRenderer.direction = roomFurnitureItem.data.direction = furnitureData.direction;
+        roomFurnitureItem.item.furnitureRenderer.animation = roomFurnitureItem.data.animation = furnitureData.animation;
 
         if(furnitureData.position) {
             roomFurnitureItem.item.setPosition(furnitureData.position);
+            roomFurnitureItem.data.position = furnitureData.position;
         }
     }
 
@@ -207,7 +209,7 @@ export default class RoomInstance {
     public moveFurniture(roomFurnitureId: string) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
-        const roomFurniturePlacer = new RoomFurniturePlacer(this.roomRenderer, furniture.item);
+        const roomFurniturePlacer = new RoomFurniturePlacer(this, furniture.item);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
             roomFurniturePlacer.destroy();
@@ -220,5 +222,43 @@ export default class RoomInstance {
         }, () => {
             roomFurniturePlacer.destroy();
         });
+    }
+    
+    public getFurnitureAtUpmostPosition(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition = { row: 0, column: 0, depth: 0 }, ignoreRoomFurnitureItemId?: number) {
+        function isPositionInFurnitureDimensions(furniture: RoomItem<RoomFurnitureData, RoomFurnitureItem>) {
+            if(furniture.item.id === ignoreRoomFurnitureItemId) {
+                return false;
+            }
+
+            if(furniture.data.position.row >= position.row + dimensions.row) {
+                return false;
+            }
+
+            if(furniture.data.position.column >= position.column + dimensions.column) {
+                return false;
+            }
+
+            const furnitureDimensions = furniture.item.furnitureRenderer.getDimensions();
+
+            if(furniture.data.position.row + furnitureDimensions.row <= position.row) {
+                return false;
+            }
+
+            if(furniture.data.position.column + furnitureDimensions.column <= position.column) {
+                return false;
+            }
+
+            return true;
+        }
+
+        const furniture = this.furnitures
+            .filter((furniture) => isPositionInFurnitureDimensions(furniture))
+            .toSorted((a, b) => b.data.position.depth - a.data.position.depth);
+
+        if(!furniture.length) {
+            return undefined;
+        }
+
+        return furniture[0];
     }
 }

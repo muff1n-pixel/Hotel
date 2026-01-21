@@ -1,3 +1,6 @@
+import { FurnitureFlagsData } from "../Furniture/FurnitureFlags.js";
+import { RoomPosition } from "./RoomPosition.js";
+
 export type FurnitureData = {
     type: string;
     color?: number;
@@ -6,7 +9,10 @@ export type FurnitureData = {
     description?: string;
 
     placement: "floor" | "wall";
-}
+
+    flags: FurnitureFlagsData;
+    dimensions: RoomPosition;
+};
 
 export type RoomFurnitureData = {
     id: string;
