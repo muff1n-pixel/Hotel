@@ -7,3 +7,5 @@ utils/*/node_modules/
 assets/*/
 
 tsconfig.tsbuildinfo
+
+*.sqlite

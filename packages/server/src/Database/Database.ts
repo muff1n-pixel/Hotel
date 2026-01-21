@@ -1,8 +1,16 @@
 import { Sequelize } from "sequelize";
 
+export const useMemoryDatabase = process.argv.some((value) => value === "memory");
+export const resetDatabase = process.argv.some((value) => value === "memory" || value === "reset");
+
+if(resetDatabase && !useMemoryDatabase) {
+  rmSync("database.sqlite");
+}
+
 export const sequelize = new Sequelize({
     dialect: "sqlite",
-    storage: ":memory:",
+    storage: (useMemoryDatabase)?(":memory:"):("database.sqlite"),
+    logging: false
 });
 
 import "./Models/Rooms/RoomModel.js";
@@ -13,6 +21,7 @@ import { initializeShopPageFurnitureModel } from "./Models/Shop/ShopPageFurnitur
 import { initializeFurnitureModel } from "./Models/Furniture/FurnitureModel.js";
 import { initializeUserFurnitureModel } from "./Models/Users/Furniture/UserFurnitureModel.js";
 import { initializeRoomMapModel } from "./Models/Rooms/Maps/RoomMapModel.js";
+import { rmSync } from "fs";
 
 export async function initializeModels() {
   initializeFurnitureModel(sequelize);

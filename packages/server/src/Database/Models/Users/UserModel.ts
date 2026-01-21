@@ -6,6 +6,9 @@ export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare figureConfiguration: FigureConfiguration;
+    declare credits: number;
+    declare diamonds: number;
+    declare duckets: number;
     declare homeRoomId?: string;
 }
 
@@ -18,6 +21,21 @@ UserModel.init(
     name: {
       type: new DataTypes.STRING(32),
       allowNull: false,
+    },
+    credits: {
+      type: new DataTypes.NUMBER,
+      allowNull: false,
+      defaultValue: 5200
+    },
+    diamonds: {
+      type: new DataTypes.NUMBER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    duckets: {
+      type: new DataTypes.NUMBER,
+      allowNull: false,
+      defaultValue: 10000
     },
     figureConfiguration: {
         type: DataTypes.TEXT,

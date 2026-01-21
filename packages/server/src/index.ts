@@ -2,7 +2,7 @@ import { WebSocketServer } from "ws";
 import { eventHandler } from "./Events/EventHandler.js";
 import User from "./Users/User.js";
 import { UserModel } from "./Database/Models/Users/UserModel.js";
-import { initializeModels } from "./Database/Database.js";
+import { initializeModels, resetDatabase, useMemoryDatabase } from "./Database/Database.js";
 import { initializeDevelopmentData } from "./Database/Development/DatabaseDevelopmentData.js";
 import Game from "./Game.js";
 import GetShopPagesEvent from "./Communication/Game/Shop/GetShopPagesEvent.js";
@@ -21,7 +21,10 @@ import UpdateRoomFurnitureEvent from "./Communication/Game/Rooms/Furniture/Updat
 import PickupRoomFurnitureEvent from "./Communication/Game/Rooms/Furniture/PickupRoomFurnitureEvent.js";
 
 await initializeModels();
-await initializeDevelopmentData();
+
+if(useMemoryDatabase || resetDatabase) {
+    await initializeDevelopmentData();
+}
 
 // TODO: clean up event handler types
 eventHandler

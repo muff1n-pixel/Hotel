@@ -59,6 +59,65 @@ const defaultShopPages: any = [
                 ]
             }
         ]
+    },
+    {
+        title: "By design",
+        description: "Lalallala",
+
+        icon: "icon_72.png",
+        header: "catalog_frontpage_headline_shop_EN.gif",
+
+        pages: [
+            {
+                title: "Country",
+                furnitures: [
+                    { type: "country_corner", duckets: 75 },
+                    { type: "country_log", duckets: 150 },
+                    { type: "env_bushes_gate", duckets: 150 },
+                    { type: "country_ditch", credits: 1, duckets: 150 },
+                    { type: "country_gate", credits: 1, duckets: 150 },
+                    { type: "picnic_blanket", credits: 1, duckets: 150 },
+                    { type: "picnic_blanket_blu", credits: 1, duckets: 150 },
+                    { type: "picnic_blanket_yel", credits: 1, duckets: 150 },
+                    { type: "country_wheat", credits: 1, duckets: 225 },
+                    { type: "country_fp", credits: 2, diamonds: 10 },
+                    { type: "country_trctr", credits: 13, diamonds: 20 },
+                    { type: "country_well", credits: 5 },
+                    { type: "country_soil", credits: 3 },
+                    { type: "country_fnc3", credits: 2 },
+                    { type: "country_fnc2", credits: 3 },
+                    { type: "country_fnc1", credits: 3 },
+                    { type: "country_rbw", credits: 5 },
+                    { type: "country_rain", credits: 5 },
+                    { type: "country_grass", credits: 4 },
+                    { type: "country_forestwall", credits: 4 },
+                    { type: "country_wall", credits: 4 },
+                    { type: "country_scarecrow", credits: 3 },
+                    { type: "country_patio", credits: 2 },
+                    { type: "country_lantern", credits: 3 },
+                    { type: "country_stage", credits: 3 },
+                    { type: "env_telep", credits: 6 },
+                    { type: "picnic_chair", credits: 3 },
+                    { type: "picnic_basket", credits: 3 },
+                    { type: "picnic_pillow", credits: 2 },
+                    { type: "picnic_pillow_blu", credits: 2 },
+                    { type: "picnic_pillow_yel", credits: 2 },
+                    { type: "picnic_food1", credits: 1 },
+                    { type: "picnic_food2", credits: 1 },
+                    { type: "picnic_food3", credits: 1 },
+                    { type: "picnic_3brds", credits: 4 },
+                    { type: "picnic_tele", credits: 6 },
+                    { type: "picnic_wfall", credits: 10 },
+                    { type: "env_bushes", credits: 2 },
+                    { type: "env_tree4", credits: 5 },
+                    { type: "env_tree1", credits: 3 },
+                    { type: "env_tree2", credits: 3 },
+                    { type: "env_tree3", credits: 3 },
+                    { type: "plant_maze", credits: 5 },
+                    { type: "plant_mazegate", credits: 6 },
+                ]
+            },
+        ]
     }
 ];
 

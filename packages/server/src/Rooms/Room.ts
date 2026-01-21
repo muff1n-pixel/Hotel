@@ -27,6 +27,7 @@ export default class Room {
     public async addFurniture(furniture: FurnitureModel, position: RoomPosition, direction: number) {
         const createdRoomFurniture = await RoomFurnitureModel.create({
             id: randomUUID(),
+            roomId: this.model.id,
             furnitureId: furniture.id,
             position: position,
             direction,

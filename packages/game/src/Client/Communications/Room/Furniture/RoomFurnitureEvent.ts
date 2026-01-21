@@ -9,10 +9,6 @@ export default class RoomFurnitureEvent implements IncomingEvent<WebSocketEvent<
             throw new Error("Room instance is not created.");
         }
 
-        if(event.data.furnitureAdded?.length) {
-            event.data.furnitureAdded.map((roomFurnitureData) => clientInstance.roomInstance!.addFurniture(roomFurnitureData));
-        }
-
         if(event.data.furnitureUpdated?.length) {
             for(let furniture of event.data.furnitureUpdated) {
                 clientInstance.roomInstance.updateFurniture(furniture);

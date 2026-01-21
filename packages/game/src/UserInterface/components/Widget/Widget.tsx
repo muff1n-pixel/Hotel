@@ -1,4 +1,25 @@
+import { useContext } from "react";
+import { AppContext } from "../../contexts/AppContext";
+
+function getCurrencyAsString(value?: number) {
+    if(!value) {
+        return "0";
+    }
+
+    if(value >= 1000000) {
+        return `${Math.floor((value / 10000)) / 100} m`;
+    }
+
+    if(value >= 1000) {
+        return `${Math.floor((value / 10)) / 100} k`;
+    }
+
+    return value.toString();
+}
+
 export default function Widget() {
+    const { user } = useContext(AppContext);
+
     return (
         <div style={{
             position: "absolute",
@@ -46,10 +67,11 @@ export default function Widget() {
                             display: "flex",
                             flexDirection: "row",
                             gap: 5,
-                            fontSize: 13,
-                            color: "#37C8E9"
+                            fontSize: 12,
+                            color: "#37C8E9",
+                            alignItems: "center"
                         }}>
-                            <b>0</b>
+                            <b>{getCurrencyAsString(user?.diamonds)}</b>
 
                             <div className="sprite_currencies_diamonds"/>
                         </div>
@@ -58,10 +80,11 @@ export default function Widget() {
                             display: "flex",
                             flexDirection: "row",
                             gap: 5,
-                            fontSize: 13,
-                            color: "#CCA822"
+                            fontSize: 12,
+                            color: "#CCA822",
+                            alignItems: "center"
                         }}>
-                            <b>0</b>
+                            <b>{getCurrencyAsString(user?.credits)}</b>
 
                             <div className="sprite_currencies_credits"/>
                         </div>
@@ -70,10 +93,11 @@ export default function Widget() {
                             display: "flex",
                             flexDirection: "row",
                             gap: 5,
-                            fontSize: 13,
-                            color: "#CE82CC"
+                            fontSize: 12,
+                            color: "#CE82CC",
+                            alignItems: "center"
                         }}>
-                            <b>0</b>
+                            <b>{getCurrencyAsString(user?.duckets)}</b>
 
                             <div className="sprite_currencies_duckets"/>
                         </div>
