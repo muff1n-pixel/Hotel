@@ -40,19 +40,18 @@ export default class RoomWallSprite extends RoomSprite {
             }
 
             const matrix = context.getTransform();
-            const inv = matrix.inverse();
+            const invertedMatrix = matrix.inverse();
 
-            const local = new DOMPoint(position.left, position.top)
-                .matrixTransform(inv);
+            const local = new DOMPoint(position.left, position.top).matrixTransform(invertedMatrix);
 
             const width = this.item.wallRenderer.leftWalls[path].width;
             const height = this.item.wallRenderer.leftWalls[path].height;
 
-            const left = local.x % width;
-            const top = (local.y - (this.item.wallRenderer.depth * 32)) % height;
+            const left = local.x - this.item.wallRenderer.leftWalls[path].left;
+            const top = local.y - this.item.wallRenderer.leftWalls[path].top;
 
             return {
-                row: Math.floor(this.item.wallRenderer.leftWalls[path].row) + ((Math.abs(left)) / 32) - 1,
+                row: Math.floor(this.item.wallRenderer.leftWalls[path].row) + ((width - left) / 32),
                 column: Math.floor(this.item.wallRenderer.leftWalls[path].column),
                 depth: this.item.wallRenderer.leftWalls[path].depth + ((height - top) / 32),
                 direction: 2
@@ -67,24 +66,19 @@ export default class RoomWallSprite extends RoomSprite {
             }
 
             const matrix = context.getTransform();
-            const inv = matrix.inverse();
+            const invertedMatrix = matrix.inverse();
 
-            const local = new DOMPoint(position.left, position.top)
-                .matrixTransform(inv);
+            const local = new DOMPoint(position.left, position.top).matrixTransform(invertedMatrix);
 
             const width = this.item.wallRenderer.rightWalls[path].width;
             const height = this.item.wallRenderer.rightWalls[path].height;
 
-            let left = local.x % width;
-            const top = (local.y - ((this.item.wallRenderer.depth * 16) + (this.item.wallRenderer.rightWalls[path].row * 32))) % height;
-
-            if(left < 0) {
-                left += 32;
-            }
+            const left = this.item.wallRenderer.rightWalls[path].left - local.x;
+            const top = local.y - this.item.wallRenderer.rightWalls[path].top;
 
             return {
                 row: Math.floor(this.item.wallRenderer.rightWalls[path].row),
-                column: Math.floor(this.item.wallRenderer.rightWalls[path].column) + (Math.abs(left) / 32),
+                column: Math.floor(this.item.wallRenderer.rightWalls[path].column) + ((width - left) / 32),
                 depth: this.item.wallRenderer.rightWalls[path].depth + ((height - top) / 32),
                 direction: 4
             };

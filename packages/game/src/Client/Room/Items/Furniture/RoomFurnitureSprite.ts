@@ -4,10 +4,23 @@ import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 
 export default class RoomFurnitureSprite extends RoomSprite {
+    private readonly offset: MousePosition = {
+        left: 0,
+        top: 0
+    };
+
     constructor(public readonly item: RoomFurnitureItem, public readonly sprite: FurnitureRendererSprite) {
         super(item);
 
         this.priority = this.sprite.zIndex;
+        
+        /*this.offset = {
+            left: item.furnitureRenderer.getDimensions(true).row * 8,
+            top: item.furnitureRenderer.getDimensions(true).depth * -64
+        };*/
+
+        this.offset.left += this.sprite.x;
+        this.offset.top += this.sprite.y;
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
@@ -19,17 +32,21 @@ export default class RoomFurnitureSprite extends RoomSprite {
             context.globalAlpha = this.sprite.alpha / 255;
         }
 
-        context.drawImage(this.sprite.image, this.sprite.x + 64, this.sprite.y + 16);
+        context.drawImage(this.sprite.image, this.offset.left + 64, this.offset.top + 16);
     }
 
     mouseover(position: MousePosition) {
+        if(!this.item.position) {
+            return null;
+        }
+
         if(this.sprite.ignoreMouse) {
             return null;
         }
         
         const relativePosition: MousePosition = {
-            left: position.left - (this.sprite.x + 64),
-            top: position.top - (this.sprite.y + 16)
+            left: position.left - (this.offset.left + 64),
+            top: position.top - (this.offset.top + 16)
         };
 
         if(relativePosition.left < 0 || relativePosition.top < 0) {
@@ -47,9 +64,9 @@ export default class RoomFurnitureSprite extends RoomSprite {
         }
 
         return {
-            row: this.item.position!.row,
-            column: this.item.position!.column,
-            depth: this.item.position!.depth
+            row: this.item.position.row,
+            column: this.item.position.column,
+            depth: this.item.position.depth
         };
     }
 }

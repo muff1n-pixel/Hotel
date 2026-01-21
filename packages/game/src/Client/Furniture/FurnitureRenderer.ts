@@ -249,7 +249,7 @@ export default class FurnitureRenderer {
         }
     }
 
-    getDimensions() {
+    getDimensions(raw: boolean = false) {
         let result = { row: 0, column: 0, depth: 0 };
 
         if(!this.data) {
@@ -262,7 +262,7 @@ export default class FurnitureRenderer {
             depth: this.data.logic.model.dimensions.z
         };
 
-        if(this.direction === 0 || this.direction === 4) {
+        if(!raw && (this.direction === 0 || this.direction === 4)) {
             result = {
                 row: this.data.logic.model.dimensions.y,
                 column: this.data.logic.model.dimensions.x,

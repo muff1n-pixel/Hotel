@@ -16,8 +16,13 @@ type WallTile = {
     column: number;
     depth: number;
 
+    direction: number;
+
     width: number;
     height: number;
+
+    left: number;
+    top: number;
 
     path: Path2D;
 };
@@ -229,6 +234,8 @@ export default class WallRenderer {
             let row = rectangle.row;
             let column = rectangle.column;
 
+            let depth = 0;
+
             if(rectangle.direction == 4) {
                 column++;
                 
@@ -240,6 +247,8 @@ export default class WallRenderer {
                 height += this.structure.floor.thickness;
             }
             else if(rectangle.direction == 2) {
+                depth = this.parseDepth(this.getTileDepth(row, column + 1, false));
+                
                 row++;
             }
             else {
@@ -259,7 +268,12 @@ export default class WallRenderer {
 
                     row,
                     column,
-                    depth: 0,
+                    depth,
+
+                    direction: rectangle.direction,
+
+                    left,
+                    top,
 
                     width,
                     height
@@ -288,7 +302,6 @@ export default class WallRenderer {
             let height = ((3.5 + (this.depth - rectangle.depth)) * this.fullSize);
 
             if(rectangle.direction == 4) {
-
             }
             else if(rectangle.direction == 2) {
                 row++;
@@ -306,7 +319,10 @@ export default class WallRenderer {
             let left = (column * this.fullSize) - (row * this.fullSize);
             let top = (row * this.fullSize) - (this.depth * this.halfSize);
             
+            
             if(width === this.fullSize && row !== this.structure.door?.row && column !== this.structure.door?.column) {
+                const depth = this.parseDepth(this.getTileDepth(row + 1, column, false));
+                
                 const path = new Path2D();
                 
                 path.rect(left - ((width == this.fullSize)?(0):(this.structure.wall.thickness)), top, width, height);
@@ -316,7 +332,12 @@ export default class WallRenderer {
 
                     row,
                     column,
-                    depth: 0,
+                    depth,
+
+                    direction: rectangle.direction,
+
+                    left,
+                    top,
 
                     width,
                     height

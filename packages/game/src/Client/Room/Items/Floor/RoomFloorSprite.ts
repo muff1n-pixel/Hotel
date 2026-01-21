@@ -14,7 +14,7 @@ export default class RoomFloorSprite extends RoomSprite {
         this.offset = {
             left: -(this.item.floorRenderer.rows * 32),
             top: -(this.item.floorRenderer.depth * 16) - 16 - (item.floorRenderer.structure.wall.thickness ?? 0)
-        }
+        };
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
