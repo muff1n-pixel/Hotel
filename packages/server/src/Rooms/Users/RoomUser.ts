@@ -62,7 +62,7 @@ export default class RoomUser {
 
     public handleActionsInterval() {
         const nextPosition = this.path?.[0];
-
+        
         if(!nextPosition) {
             return [];
         }
@@ -70,7 +70,7 @@ export default class RoomUser {
         const furniture = this.room.getUpmostFurnitureAtPosition(nextPosition);
 
         if(furniture) {
-            if(!furniture.getWalkable()) {
+            if(!furniture.isWalkable()) {
                 this.path = [];
 
                 return [];
