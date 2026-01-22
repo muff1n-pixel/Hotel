@@ -35,8 +35,6 @@ export default class RoomFigureItem extends RoomItem {
     }
 
     public setPosition(position: RoomPosition, index?: number): void {
-        super.setPosition(position, index);
-
         if(Number.isInteger(position.row) && Number.isInteger(position.column)) {
             if(clientInstance.roomInstance?.roomRenderer.items.includes(this)) {
                 const furniture = clientInstance.roomInstance.getFurnitureAtUpmostPosition(position);
@@ -44,9 +42,13 @@ export default class RoomFigureItem extends RoomItem {
                 if(furniture?.data.furniture.flags.sitable) {
                     this.figureRenderer.addAction("Sit");
                     this.figureRenderer.direction = furniture.data.direction;
+
+                    position.depth = position.depth - furniture.data.position.depth + furniture.data.position.depth;
                 }
             }
         }
+
+        super.setPosition(position, index);
     }
 
     public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition): void {

@@ -110,7 +110,7 @@ export default class RoomFurniturePlacer {
                 this.roomFurnitureItem.setPosition({
                     row: entity.position.row,
                     column: entity.position.column,
-                    depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.data.furniture.dimensions.depth + 0.1):(entity.position.depth)
+                    depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.data.furniture.dimensions.depth + 0.01):(entity.position.depth)
                 });
 
                 this.roomFurnitureItem.disabled = false;

@@ -115,37 +115,43 @@ export default class Room {
         }
     }
 
+    public isPositionInFurniture(furniture: RoomFurnitureItem, position: Omit<RoomPosition, "depth">) {
+        if(furniture.model.furniture.placement !== "floor") {
+            return false;
+        }
+
+        if(furniture.model.position.row > position.row) {
+            return false;
+        }
+
+        if(furniture.model.position.column > position.column) {
+            return false;
+        }
+
+        const dimensions = (furniture.model.direction === 0 || furniture.model.direction === 4)?({
+            row: furniture.model.furniture.dimensions.column,
+            column: furniture.model.furniture.dimensions.row,
+            depth: furniture.model.furniture.dimensions.depth,
+        }):({
+            row: furniture.model.furniture.dimensions.row,
+            column: furniture.model.furniture.dimensions.column,
+            depth: furniture.model.furniture.dimensions.depth,
+        });
+
+        if(furniture.model.position.row + dimensions.row <= position.row) {
+            return false;
+        }
+
+        if(furniture.model.position.column + dimensions.column <= position.column) {
+            return false;
+        }
+
+        return true;
+    }
+
     public getUpmostFurnitureAtPosition(position: Omit<RoomPosition, "depth">) {
         const furniture = this.furnitures
-            .filter((furniture) => {
-                if(furniture.model.position.row > position.row) {
-                    return false;
-                }
-
-                if(furniture.model.position.column > position.column) {
-                    return false;
-                }
-
-                const dimensions = (furniture.model.direction === 0 || furniture.model.direction === 4)?({
-                    row: furniture.model.furniture.dimensions.column,
-                    column: furniture.model.furniture.dimensions.row,
-                    depth: furniture.model.furniture.dimensions.depth,
-                }):({
-                    row: furniture.model.furniture.dimensions.row,
-                    column: furniture.model.furniture.dimensions.column,
-                    depth: furniture.model.furniture.dimensions.depth,
-                });
-
-                if(furniture.model.position.row + dimensions.row <= position.row) {
-                    return false;
-                }
-
-                if(furniture.model.position.column + dimensions.column <= position.column) {
-                    return false;
-                }
-
-                return true;
-            })
+            .filter((furniture) => this.isPositionInFurniture(furniture, position))
             .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
 
         if(!furniture.length) {
@@ -162,6 +168,10 @@ export default class Room {
             }
 
             return parseInt(this.model.structure.grid[position.row]![position.column]!)
+        }
+
+        if(furniture.model.furniture.flags.sitable) {
+            return furniture.model.position.depth;
         }
 
         return furniture.model.position.depth + furniture.model.furniture.dimensions.depth;

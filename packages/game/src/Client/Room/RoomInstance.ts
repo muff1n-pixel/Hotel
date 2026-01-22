@@ -230,6 +230,10 @@ export default class RoomInstance {
                 return false;
             }
 
+            if(furniture.item.furnitureRenderer.placement !== "floor") {
+                return false;
+            }
+
             if(furniture.data.position.row >= position.row + dimensions.row) {
                 return false;
             }

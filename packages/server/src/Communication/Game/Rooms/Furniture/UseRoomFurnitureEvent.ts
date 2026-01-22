@@ -14,6 +14,14 @@ export default class UseRoomFurnitureEvent implements IncomingEvent<UseRoomFurni
 
         switch(roomFurniture.model.furniture.category) {
             case "gate":
+                if(user.room.users.some(({ position }) => user.room?.isPositionInFurniture(roomFurniture, position))) {
+                    break;
+                }
+
+                roomFurniture.model.animation = event.animation;
+
+                break;
+
             case "lighting":
                 roomFurniture.model.animation = event.animation;
 
