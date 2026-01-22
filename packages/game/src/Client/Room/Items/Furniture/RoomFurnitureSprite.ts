@@ -19,8 +19,25 @@ export default class RoomFurnitureSprite extends RoomSprite {
             top: item.furnitureRenderer.getDimensions(true).depth * -64
         };*/
 
-        this.offset.left += this.sprite.x;
-        this.offset.top += this.sprite.y;
+        this.offset = {
+            left: this.sprite.x, // + 64,
+            top: this.sprite.y, // + 16
+        };
+
+        if(item.furnitureRenderer.placement === "floor") {
+            this.offset.left += 64;   
+            this.offset.top += 16;
+        }
+        else {
+            if(item.furnitureRenderer.direction === 2) {
+                this.offset.left += 96;
+            }
+            else {
+                this.offset.left += 32;
+            }
+
+            this.offset.top -= 16;
+        }
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
@@ -32,7 +49,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             context.globalAlpha = this.sprite.alpha / 255;
         }
 
-        context.drawImage(this.sprite.image, this.offset.left + 64, this.offset.top + 16);
+        context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -45,8 +62,8 @@ export default class RoomFurnitureSprite extends RoomSprite {
         }
         
         const relativePosition: MousePosition = {
-            left: position.left - (this.offset.left + 64),
-            top: position.top - (this.offset.top + 16)
+            left: position.left - (this.offset.left),
+            top: position.top - (this.offset.top)
         };
 
         if(relativePosition.left < 0 || relativePosition.top < 0) {

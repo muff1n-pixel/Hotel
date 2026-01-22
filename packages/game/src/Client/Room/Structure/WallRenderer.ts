@@ -258,7 +258,7 @@ export default class WallRenderer {
             const left = -(row * this.fullSize) + (column * this.fullSize);
             const top = (column * this.fullSize) - (this.depth * this.halfSize);
 
-            if(width === this.fullSize && row !== this.structure.door?.row && column !== this.structure.door?.column) {
+            if(width === this.fullSize) {
                 const path = new Path2D();
                 
                 path.rect(left, top, width, height);
@@ -320,7 +320,7 @@ export default class WallRenderer {
             let top = (row * this.fullSize) - (this.depth * this.halfSize);
             
             
-            if(width === this.fullSize && row !== this.structure.door?.row && column !== this.structure.door?.column) {
+            if(width === this.fullSize) {
                 const depth = this.parseDepth(this.getTileDepth(row + 1, column, false));
                 
                 const path = new Path2D();

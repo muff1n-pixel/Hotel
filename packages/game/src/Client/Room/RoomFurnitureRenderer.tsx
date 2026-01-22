@@ -17,17 +17,6 @@ export default class RoomFurnitureRenderer {
     private roomItem?: RoomFurnitureItem;
     
     constructor(element: HTMLDivElement, options: RoomFurnitureRendererOptions) {
-        this.roomRenderer = new RoomRenderer(element);
-
-        this.roomRenderer.addEventListener("render", () => {
-            if(this.roomRenderer && this.roomItem) {
-                this.roomRenderer.panToItem(this.roomItem, {
-                    left: 0,
-                    top: (options.withoutWalls)?(-16):(0)
-                });
-            }
-        });
-        
         const roomStructure: RoomStructure = {
             grid: [
                 "0000000",
@@ -47,6 +36,17 @@ export default class RoomFurnitureRenderer {
                 thickness: 8
             }
         };
+
+        this.roomRenderer = new RoomRenderer(element, undefined, undefined, roomStructure);
+
+        this.roomRenderer.addEventListener("render", () => {
+            if(this.roomRenderer && this.roomItem) {
+                this.roomRenderer.panToItem(this.roomItem, {
+                    left: 0,
+                    top: (options.withoutWalls)?(-16):(0)
+                });
+            }
+        });
 
         if(!options.withoutWalls) {
             this.roomRenderer.items.push(

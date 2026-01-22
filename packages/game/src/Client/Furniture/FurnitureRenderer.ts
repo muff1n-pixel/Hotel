@@ -296,6 +296,10 @@ export default class FurnitureRenderer {
             return 0;
         }
 
+        if(this.placement === "wall") {
+            return this.direction;
+        }
+
         const currentIndex = this.visualization.directions.findIndex((direction) => direction.id === this.direction);
 
         if(currentIndex === -1) {

@@ -38,7 +38,7 @@ export default class RoomInstance {
     public furnitures: RoomItem<RoomFurnitureData, RoomFurnitureItem>[] = [];
 
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoomEventData) {
-        this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this);
+        this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
         
         this.roomRenderer.items.push(new RoomFloorItem(
             new FloorRenderer(event.structure, event.structure.floor.id, 64),

@@ -14,6 +14,7 @@ import RoomInstance from "./RoomInstance";
 import RoomFurnitureSprite from "./Items/Furniture/RoomFurnitureSprite";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomFurniturePlacer from "./RoomFurniturePlacer";
+import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -42,7 +43,7 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    constructor(public readonly parent: HTMLElement, public readonly clientInstance?: ClientInstance, public readonly roomInstance?: RoomInstance) {
+    constructor(public readonly parent: HTMLElement, public readonly clientInstance?: ClientInstance, public readonly roomInstance?: RoomInstance, private readonly structure?: RoomStructure) {
         super();
 
         this.element = document.createElement("canvas");
@@ -235,7 +236,13 @@ export default class RoomRenderer extends EventTarget {
         let priority = sprite.priority;
 
         if(sprite.item.position) {
-            priority += RoomRenderer.getPositionPriority(sprite.item.position);
+            if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
+                priority = -2000;
+                priority += (sprite.item.position.depth * 100);
+            }
+            else {
+                priority += RoomRenderer.getPositionPriority(sprite.item.position);
+            }
         }
 
         return priority;

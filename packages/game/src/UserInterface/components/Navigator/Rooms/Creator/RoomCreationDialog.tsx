@@ -59,7 +59,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
 
             mapId: activeRoomMap.id
         });
-    }, [activeRoomMap]);
+    }, [activeRoomMap, name, description]);
 
     return (
         <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={580} height={360}>

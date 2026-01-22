@@ -36,7 +36,26 @@ export default class RoomCursor extends EventTarget {
 
         this.roomRenderer.addEventListener("render", this.render.bind(this));
         this.roomRenderer.addEventListener("frame", this.frame.bind(this));
+        this.roomRenderer.element.addEventListener("mousedown", this.mousedown.bind(this));
         this.roomRenderer.element.addEventListener("click", this.click.bind(this));
+    }
+
+    private mousedown(event: MouseEvent) {
+        if(this.cursorDisabled) {
+            return;
+        }
+
+        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
+        
+        if(this.roomRenderer.roomInstance && otherEntity) {
+            if(otherEntity.item instanceof RoomFurnitureItem) {
+                const roomFurnitureItem = this.roomRenderer.roomInstance?.getFurnitureByItem(otherEntity.item);
+
+                if(event.altKey) {
+                    this.roomRenderer.roomInstance.moveFurniture(roomFurnitureItem.data.id);
+                }
+            }
+        }
     }
 
     private render() {
@@ -130,9 +149,6 @@ export default class RoomCursor extends EventTarget {
                     });
                     
                     return;
-                }
-                else if(event.altKey) {
-                    this.roomRenderer.roomInstance.moveFurniture(roomFurnitureItem.data.id);
                 }
             }
         }

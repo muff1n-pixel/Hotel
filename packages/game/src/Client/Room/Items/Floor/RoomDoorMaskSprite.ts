@@ -4,18 +4,18 @@ import RoomMapItem from "../Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/Renderer";
 
 export default class RoomDoorMaskSprite extends RoomSprite {
-    priority = -2200;
+    priority = -1000;
 
     private readonly offset: MousePosition;
 
     constructor(public readonly item: RoomMapItem, private readonly image: OffscreenCanvas) {
         super(item);
 
-        this.priority = RoomRenderer.getPositionPriority({
+        /*this.priority = RoomRenderer.getPositionPriority({
             row: item.wallRenderer!.structure.door!.row,
             column: item.wallRenderer!.structure.door!.column,
-            depth: parseInt(item.wallRenderer!.structure.grid[item.wallRenderer!.structure.door!.row][item.wallRenderer!.structure.door!.column]) + 0.01
-        });
+            depth: parseInt(item.wallRenderer!.structure.grid[item.wallRenderer!.structure.door!.row][item.wallRenderer!.structure.door!.column])
+        });*/
 
         this.offset = {
             left: -(this.item.wallRenderer!.rows * 32),
