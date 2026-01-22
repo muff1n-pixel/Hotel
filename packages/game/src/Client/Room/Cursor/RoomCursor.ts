@@ -117,14 +117,14 @@ export default class RoomCursor extends EventTarget {
     private frame() {
         const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure"].includes(item.type));
 
+        if(this.hoveringFigure && (!entity || this.roomRenderer.items.indexOf(entity.item) !== this.roomRenderer.items.indexOf(this.hoveringFigure))) {
+            clientInstance.dispatchEvent(new StoppedHoveringFigure());
+
+            delete this.hoveringFigure;
+        }
+
         if(!entity) {
             this.roomRenderer.element.style.cursor = "default";
-
-            if(this.hoveringFigure) {
-                clientInstance.dispatchEvent(new StoppedHoveringFigure());
-    
-                delete this.hoveringFigure;
-            }
 
             return;
         }

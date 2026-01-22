@@ -139,7 +139,7 @@ export default class RoomFurniturePlacer {
         if(!entity || !this.roomFurnitureItem.position) {
             this.onCancel?.();
 
-            if(this.originalPosition) {
+            if(this.temporaryFurniture) {
                this.roomFurnitureItem.position = this.originalPosition;
             }
         }
@@ -182,7 +182,9 @@ export default class RoomFurniturePlacer {
             }
         }
         else {
+            this.roomFurnitureItem.position = this.originalPosition;
             this.roomFurnitureItem.alpha = 1;
+            this.roomFurnitureItem.disabled = false;
         }
     }
 }
