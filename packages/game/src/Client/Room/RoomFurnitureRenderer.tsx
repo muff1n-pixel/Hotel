@@ -41,10 +41,18 @@ export default class RoomFurnitureRenderer {
 
         this.roomRenderer.addEventListener("render", () => {
             if(this.roomRenderer && this.roomItem) {
-                this.roomRenderer.panToItem(this.roomItem, {
-                    left: 0,
-                    top: (options.withoutWalls)?(-16):(0)
-                });
+                if(this.roomItem.furnitureRenderer.placement === "floor") {
+                    this.roomRenderer.panToItem(this.roomItem, {
+                        left: 0,
+                        top: (options.withoutWalls)?(-16):(0)
+                    });
+                }
+                else {
+                    this.roomRenderer.panToItem(this.roomItem, {
+                        left: (Math.max(1, this.roomItem.position!.row) * 16),
+                        top: this.roomItem.position!.depth * 32
+                    });
+                }
             }
         });
 
@@ -72,9 +80,11 @@ export default class RoomFurnitureRenderer {
 
         const furnitureRenderer = new FurnitureRenderer(type, size, direction, animation, color);
 
+        await furnitureRenderer.getData();
+
         this.roomItem = new RoomFurnitureItem(furnitureRenderer, (furnitureData.visualization.placement === "wall") ? (
             {
-                row: 1,
+                row: 1 + Math.max(1, furnitureRenderer.getDimensions(true).row),
                 column: 0,
                 depth: 1.5
             }

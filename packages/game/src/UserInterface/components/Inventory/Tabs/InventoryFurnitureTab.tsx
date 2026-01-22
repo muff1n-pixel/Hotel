@@ -219,7 +219,7 @@ export default function InventoryFurnitureTab() {
             }}>
                 {(activeFurniture) && (
                     <Fragment>
-                        <RoomRenderer options={{ withoutWalls: true }} furnitureData={activeFurniture?.furnitureData} style={{
+                        <RoomRenderer key={activeFurniture.id} options={{ withoutWalls: activeFurniture.furnitureData.placement === "floor" }} furnitureData={activeFurniture?.furnitureData} style={{
                             height: 130,
                             width: "100%",
                         }}/>

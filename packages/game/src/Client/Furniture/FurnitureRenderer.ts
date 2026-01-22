@@ -38,6 +38,14 @@ export default class FurnitureRenderer {
         }*/
     }
 
+    public async getData() {
+        if(!this.data) {
+            this.data = await FurnitureAssets.getFurnitureData(this.type);
+        }
+
+        return this.data;
+    }
+
     public async render(frame: number = 0) {
         this.frame++;
 
