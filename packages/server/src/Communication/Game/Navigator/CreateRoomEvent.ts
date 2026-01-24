@@ -23,11 +23,11 @@ export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventDat
                 door: map.door,
                 grid: map.grid,
                 floor: {
-                    id: "default",
+                    id: "111",
                     thickness: 8
                 },
                 wall: {
-                    id: "default",
+                    id: "201",
                     thickness: 8
                 }
             }
