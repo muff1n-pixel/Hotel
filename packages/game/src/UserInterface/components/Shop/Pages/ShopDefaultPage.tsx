@@ -6,12 +6,14 @@ import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
-import { webSocketClient } from "../../../..";
+import { clientInstance, webSocketClient } from "../../../..";
 import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
 import { GetShopPageFurnitureEventData } from "@Shared/Communications/Requests/Shop/GetShopPageFurnitureEventData";
 import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
 import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
+import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
     const roomRef = useRef<HTMLDivElement>(null);
@@ -20,6 +22,8 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
     
     const [activeFurniture, setActiveFurniture] = useState<ShopPageFurnitureData>();
+
+    const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
 
     const shopFurniture = useShopPageFurniture(page.id);
 
@@ -48,6 +52,12 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
             return;
         }
 
+        if(roomFurniturePlacer) {
+            roomFurniturePlacer.destroy();
+
+            setRoomFurniturePlacer(undefined);
+        }
+
         roomRenderer.setFurniture(activeFurniture.furniture.type, 64, undefined, 0, activeFurniture.furniture.color ?? 0);
     }, [roomRenderer, activeFurniture]);
 
@@ -61,17 +71,43 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
         };
     }, [roomRenderer]);
 
-    const onRoomRendererClick = useCallback(() => {
-        roomRenderer?.progressFurnitureAnimation();
-    }, [roomRenderer]);
+    useEffect(() => {
+        if(!roomFurniturePlacer) {
+            return;
+        }
 
-    const handlePurchaseFurniture = useCallback(() => {
+        roomFurniturePlacer.startPlacing((position, direction) => {
+            handlePurchaseFurniture(position, direction);
+        }, () => {
+            roomFurniturePlacer.destroy();
+
+            setRoomFurniturePlacer(undefined);
+        });
+    }, [roomFurniturePlacer]);
+
+    const onRoomRendererClick = useCallback(() => {
+        if(roomFurniturePlacer) {
+            roomFurniturePlacer.destroy();
+
+            setRoomFurniturePlacer(undefined);
+        }
+
+        roomRenderer?.progressFurnitureAnimation();
+    }, [roomRenderer, roomFurniturePlacer]);
+
+    const handlePurchaseFurniture = useCallback((position?: RoomPosition, direction?: number) => {
         if(!activeFurniture) {
             return;
         }
 
         // TODO: disable dialog
         const listener = (event: WebSocketEvent<ShopFurniturePurchasedEventData>) => {
+            if(roomFurniturePlacer) {
+                roomFurniturePlacer.destroy();
+
+                setRoomFurniturePlacer(undefined);
+            }
+
             // TODO: handle error
             if(!event.data.success) {
 
@@ -83,9 +119,27 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
         });
 
         webSocketClient.send<PurchaseShopFurnitureEventData>("PurchaseShopFurnitureEvent", {
-            shopFurnitureId: activeFurniture.id
+            shopFurnitureId: activeFurniture.id,
+            position,
+            direction
         });
-    }, [activeFurniture]);
+    }, [activeFurniture, roomFurniturePlacer]);
+
+    const onMouseDown = useCallback(() => {
+        if(!clientInstance.roomInstance) {
+            return;
+        }
+
+        if(!activeFurniture) {
+            return;
+        }
+
+        if(roomFurniturePlacer) {
+            roomFurniturePlacer.destroy();
+        }
+
+        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance, activeFurniture.furniture));
+    }, [ activeFurniture, roomFurniturePlacer ]);
 
     return (
         <div style={{
@@ -98,7 +152,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
 
             overflow: "hidden"
         }}>
-            <div onClick={onRoomRendererClick} style={{
+            <div onClick={onRoomRendererClick} onMouseDown={onMouseDown} style={{
                 background: "#000",
 
                 height: 240,
@@ -156,13 +210,13 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                             justifyContent: "center",
 
                             cursor: "pointer"
-                        }} onClick={() => setActiveFurniture(furniture)}>
+                        }} onClick={() => (activeFurniture?.id !== furniture.id) && setActiveFurniture(furniture)}>
                             <div style={{
                                 flex: 1,
                                 alignSelf: "center",
                                 justifySelf: "center"
                             }}>
-                                <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={onMouseDown}>
                                     <FurnitureIcon furnitureData={furniture.furniture}/>
                                 </div>
 

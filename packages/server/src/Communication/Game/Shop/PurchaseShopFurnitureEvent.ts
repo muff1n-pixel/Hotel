@@ -6,6 +6,7 @@ import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFu
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import { ShopFurniturePurchasedEventData } from "@shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData.js";
 import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
+import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 
 export default class PurchaseShopFurnitureEvent implements IncomingEvent<PurchaseShopFurnitureEventData> {
     async handle(user: User, event: PurchaseShopFurnitureEventData) {
@@ -57,9 +58,12 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
 
         await user.model.save();
 
-        await user.getInventory().addFurniture(shopFurniture.furniture);
-
-        console.log("two");
+        if(user.room && event.position && event.direction !== undefined) {
+            RoomFurniture.create(user.room, user, shopFurniture.furniture, event.position, event.direction);
+        }
+        else {
+            await user.getInventory().addFurniture(shopFurniture.furniture);
+        }
 
         user.send([
             new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
