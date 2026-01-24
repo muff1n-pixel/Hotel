@@ -93,6 +93,7 @@ export default class FigureWorker {
                 configuration: figureRenderer.configuration,
                 direction: figureRenderer.direction,
                 actions: figureRenderer.actions,
+                headOnly: figureRenderer.headOnly,
             } satisfies FigureRenderEvent);
         });
     }

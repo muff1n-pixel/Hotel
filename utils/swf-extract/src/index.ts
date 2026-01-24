@@ -7,6 +7,7 @@ import type { FurnitureData } from "../../../packages/game/src/Client/Interfaces
 import type { FigureData } from "../../../packages/game/src/Client/Interfaces/Figure/FigureData.ts"
 import type { RoomData } from "../../../packages/game/src/Client/Interfaces/Room/RoomData.ts"
 import sqlite3 from "sqlite3";
+import extractRoomChatStyles from "./extractions/RoomChatStylesExtractor.ts";
 
 export const database = new sqlite3.Database(":memory:");
 
@@ -18,40 +19,46 @@ await new Promise<void>((resolve) => {
 
 let assetNames = [process.argv[2]];
 
-if(process.argv[2] === "regenerate-figures") {
-    assetNames = readdirSync(path.join("..", "..", "assets", "figure"), { withFileTypes: true })
-    .filter((directory) => directory.isDirectory())
-    .map((directory) => directory.name);
-}
-else if(process.argv[2] === "regenerate-furniture") {
-    assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true })
-    .filter((directory) => directory.isDirectory())
-    .map((directory) => directory.name);
-}
-else if(process.argv[2] === "generate-all") {
-    const existingAssetNames = assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true})
+(async () => {
+    if(process.argv[2] === "roomchatstyles") {
+        await extractRoomChatStyles();
+        
+        return;
+    }
+
+    if(process.argv[2] === "regenerate-figures") {
+        assetNames = readdirSync(path.join("..", "..", "assets", "figure"), { withFileTypes: true })
         .filter((directory) => directory.isDirectory())
-        .map((directory) => directory.name)
-        .concat(
-            ...readdirSync(path.join("..", "..", "assets", "figure"), { withFileTypes: true })
+        .map((directory) => directory.name);
+    }
+    else if(process.argv[2] === "regenerate-furniture") {
+        assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true })
+        .filter((directory) => directory.isDirectory())
+        .map((directory) => directory.name);
+    }
+    else if(process.argv[2] === "generate-all") {
+        const existingAssetNames = assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true})
             .filter((directory) => directory.isDirectory())
             .map((directory) => directory.name)
-        );
+            .concat(
+                ...readdirSync(path.join("..", "..", "assets", "figure"), { withFileTypes: true })
+                .filter((directory) => directory.isDirectory())
+                .map((directory) => directory.name)
+            );
 
-    console.log(existingAssetNames);
+        console.log(existingAssetNames);
 
-    assetNames = readdirSync(path.join("assets"), { withFileTypes: true })
-    .filter((file) => file.isFile())
-    .map((file) => path.basename(file.name, ".swf"))
-    .filter((file) => !existingAssetNames.includes(file));
-}
-else if(process.argv[2] === "generate-furniture") {
-    assetNames = readdirSync(path.join("assets", "furniture"), { withFileTypes: true })
-    .filter((directory) => directory.isFile())
-    .map((directory) => directory.name.split('.')[0]);
-}
+        assetNames = readdirSync(path.join("assets"), { withFileTypes: true })
+        .filter((file) => file.isFile())
+        .map((file) => path.basename(file.name, ".swf"))
+        .filter((file) => !existingAssetNames.includes(file));
+    }
+    else if(process.argv[2] === "generate-furniture") {
+        assetNames = readdirSync(path.join("assets", "furniture"), { withFileTypes: true })
+        .filter((directory) => directory.isFile())
+        .map((directory) => directory.name.split('.')[0]);
+    }
 
-(async () => {
     for(let assetName of assetNames) {
         await new Promise<void>(async (resolve, reject) => {
             const extractOnly = process.argv[3] === "extract-only";

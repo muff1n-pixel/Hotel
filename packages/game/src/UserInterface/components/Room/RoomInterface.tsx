@@ -1,4 +1,5 @@
 import { useRoomInstance } from "../../hooks/useRoomInstance";
+import RoomChat from "./Chat/RoomChat";
 import RoomItemProfile from "./Item/RoomItemProfile";
 import UserContextMenu from "./Users/UserContextMenu";
 
@@ -21,6 +22,8 @@ export default function RoomInterface() {
 
             pointerEvents: "none"
         }}>
+            <RoomChat/>
+
             <UserContextMenu/>
 
             <RoomItemProfile room={room}/>

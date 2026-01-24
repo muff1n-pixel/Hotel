@@ -5,7 +5,7 @@ import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     await FigureAssets.loadAssets();
 
-    const figureRenderer = new FigureWorkerRenderer(event.data.configuration, event.data.direction, event.data.actions, event.data.frame);
+    const figureRenderer = new FigureWorkerRenderer(event.data.configuration, event.data.direction, event.data.actions, event.data.frame, event.data.headOnly);
     
     if(event.data.type === "sprites") {
         const data = await figureRenderer.render();

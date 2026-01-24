@@ -9,6 +9,7 @@ export type FigureRenderEvent = {
     frame: number;
     actions: string[];
     cropped?: boolean;
+    headOnly?: boolean;
 };
 
 export type FigureRenderResultEvent = {

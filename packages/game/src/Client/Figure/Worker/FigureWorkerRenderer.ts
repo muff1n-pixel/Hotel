@@ -19,7 +19,7 @@ export type FigureRendererSprite = {
 }
 
 export default class FigureWorkerRenderer {
-    constructor(public readonly configuration: FigureConfiguration, public direction: number, public readonly actions: string[], public readonly frame: number) {
+    constructor(public readonly configuration: FigureConfiguration, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
 
     }
 
@@ -92,12 +92,13 @@ export default class FigureWorkerRenderer {
                         continue;
                     }
 
-                    try {
-                        renderCache.push({ configurationPart, setPartData, settypeData, setPartAssetData })
+                    if(this.headOnly) {
+                        if(!(["hr", "hd", "he", "ha", "ea", "fa", "ey"].includes(setPartData.type))) {
+                            continue;
+                        }
                     }
-                    catch {
-                        continue;
-                    }
+
+                    renderCache.push({ configurationPart, setPartData, settypeData, setPartAssetData })
                 }
             }
 

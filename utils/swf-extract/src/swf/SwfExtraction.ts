@@ -15,6 +15,8 @@ export type SwfExtractionCollection = {
         manifest?: string;
     };
 
+    extra: string[];
+
     images: string[];
 }
 
@@ -38,6 +40,7 @@ export async function extractSwf(assetName: string, filePath: string) {
 
     const collection: SwfExtractionCollection = {
         data: {},
+        extra: [],
         images: []
     };
 
@@ -67,6 +70,11 @@ export async function extractSwf(assetName: string, filePath: string) {
 
                 case "room_assets":
                     collection.data["assets"] = fileOutput;
+                    break;
+
+                default:
+                    collection.extra.push(fileOutput);
+
                     break;
             }
 

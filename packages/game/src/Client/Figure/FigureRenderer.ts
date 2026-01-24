@@ -20,7 +20,7 @@ export default class FigureRenderer {
         face: "fa"
     };
 
-    constructor(public readonly configuration: FigureConfiguration, public direction: number, public actions: string[] =  ["Default"]) {
+    constructor(public readonly configuration: FigureConfiguration, public direction: number, public actions: string[] =  ["Default"], public headOnly: boolean = false) {
 
     }
 
@@ -42,6 +42,10 @@ export default class FigureRenderer {
 
     public async renderToCanvas(figureWorker: FigureWorker, frame: number, cropped: boolean = false) {
         let renderName = `${this.getConfigurationAsString()}_${this.direction}_${FigureWorkerRenderer.getSpriteFrameFromSequence(frame)}_${this.actions.join('_')}`;
+
+        if(this.headOnly) {
+            renderName += "_headonly";
+        }
 
         if(cropped) {
             renderName += "_cropped";
