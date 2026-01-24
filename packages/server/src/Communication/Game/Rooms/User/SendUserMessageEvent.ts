@@ -13,5 +13,10 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
 
             roomUser.addAction("Sit");
         }
+        else if(event.message === ":wave") {
+            const roomUser = user.room.getRoomUser(user);
+
+            roomUser.addAction("Wave");
+        }
     }
 }

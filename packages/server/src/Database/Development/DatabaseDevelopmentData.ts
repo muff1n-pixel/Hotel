@@ -525,7 +525,7 @@ export async function initializeDevelopmentData() {
             });
 
             await ShopPageFurnitureModel.bulkCreate(furnitureData.map((furniture) => {
-                const furnitureShopData = child.furnitures.find((childFurniture: any) => childFurniture.type === furniture.type && (furniture.color)?(childFurniture.color === furniture.color):(true));
+                const furnitureShopData = child.furnitures.find((childFurniture: any) => childFurniture.type === furniture.type && ((furniture.color)?(childFurniture.color === furniture.color):(true)));
 
 
                 return {

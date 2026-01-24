@@ -127,6 +127,11 @@ export default class RoomUser {
                 actionsAdded: [action],
             })
         );
+
+        // TODO: move this to the client?
+        setTimeout(() => {
+            this.removeAction("Wave");
+        }, 2000);
     }
 
     public removeAction(action: string) {
