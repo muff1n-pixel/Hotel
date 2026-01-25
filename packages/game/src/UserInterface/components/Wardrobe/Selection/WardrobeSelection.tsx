@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import FigureWardrobe, { FigureWardrobeColor, FigureWardrobeItem } from "@Client/Figure/FigureWardrobe";
+import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/interfaces/figure/FigureConfiguration";
 
 export type WardrobeSelectionProps = {
     part: FigurePartKeyAbbreviation;
@@ -28,7 +28,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
 
         requestedData.current = true;
 
-        FigureWardrobe.getWardrobePartTypes(part, undefined, "male").then(async (data) => setFigureDataResponse(data));
+        FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colorIndex ?? undefined, "male").then(async (data) => setFigureDataResponse(data));
     }, []);
 
     const activeConfiguration = figureConfiguration.find((configuration) => configuration.type === part);

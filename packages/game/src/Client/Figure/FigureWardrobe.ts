@@ -1,7 +1,7 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import { FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import FigureWorker from "./Worker/FigureWorker";
 import FigureRenderer from "./FigureRenderer";
+import { FigurePartKeyAbbreviation } from "@Shared/interfaces/figure/FigureConfiguration";
 
 export type FigureWardrobeItem = {
     image: Promise<ImageBitmap>;
