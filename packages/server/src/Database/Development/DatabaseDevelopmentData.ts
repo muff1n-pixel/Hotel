@@ -9,6 +9,7 @@ import { UserModel } from "../Models/Users/UserModel.js";
 import { UserFurnitureModel } from "../Models/Users/Furniture/UserFurnitureModel.js";
 import { RoomMapModel } from "../Models/Rooms/Maps/RoomMapModel.js";
 import { Op } from "sequelize";
+import { RoomChatStyleModel } from "../Models/Rooms/Chat/Styles/RoomChatStyleModel.js";
 
 const defaultShopPages: any = [
     {
@@ -149,6 +150,10 @@ const defaultShopPages: any = [
 ];
 
 export async function initializeDevelopmentData() {
+    await RoomChatStyleModel.bulkCreate(["normal_red", "normal_purple", "console", "parrot", "gothicrose", "normal_dark_yellow", "radio", "notification", "piglet", "zombie_hand", "generic", "normal", "bats", "goat", "fortune_teller", "steampunk_pipe", "storm", "normal_blue", "ambassador", "firingmylazer", "bot_frank_large", "skeleton", "snowstorm_red", "sausagedog", "hearts", "dragon", "bot_guide", "pirate", "skelestock"].map((id) => {
+        return { id };
+    }));
+
     await RoomMapModel.bulkCreate([
         {
             id: 'model_4',

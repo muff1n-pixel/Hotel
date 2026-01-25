@@ -5,11 +5,11 @@ import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 
 export default class UserActionEvent implements IncomingEvent<WebSocketEvent<UserActionEventData>> {
     async handle(event: WebSocketEvent<UserActionEventData>) {
-        if(!clientInstance.roomInstance) {
+        if(!clientInstance.roomInstance.value) {
             throw new Error("Room instance is not created.");
         }
         
-        const roomUser = clientInstance.roomInstance.getUserById(event.data.userId);
+        const roomUser = clientInstance.roomInstance.value.getUserById(event.data.userId);
 
         if(event.data.actionsAdded) {
             for(let action of event.data.actionsAdded) {

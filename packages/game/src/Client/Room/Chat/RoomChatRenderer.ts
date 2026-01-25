@@ -60,15 +60,17 @@ export default class RoomChatRenderer {
         context.font = `12px "Ubuntu"`;
         context.fillText(message, roomChatStyle.text.left + 2 + userText.width, roomChatStyle.text.top + 2);
 
-        const figureRenderer = new FigureRenderer(figureConfiguration, 2, undefined, false);
+        if(roomChatStyle.figure) {
+            const figureRenderer = new FigureRenderer(figureConfiguration, 2, undefined, false);
 
-        const sprite = await figureRenderer.renderToCanvas(FigureRenderer.figureWorker, 0, false);
-        
-        context.drawImage(
-            sprite.image,
-            0, 0, sprite.image.width, 74 * 2,
-            roomChatStyle.figure.left + -65, roomChatStyle.figure.top + -52, sprite.image.width / 2, 74
-        );
+            const sprite = await figureRenderer.renderToCanvas(FigureRenderer.figureWorker, 0, false);
+            
+            context.drawImage(
+                sprite.image,
+                0, 0, sprite.image.width, 74 * 2,
+                roomChatStyle.figure.left + -65, roomChatStyle.figure.top + -52, sprite.image.width / 2, 74
+            );
+        }
 
         return await createImageBitmap(canvas);
     }

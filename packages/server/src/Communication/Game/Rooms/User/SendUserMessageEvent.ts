@@ -23,7 +23,8 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
         else {
             user.room.sendRoomEvent(new OutgoingEvent<UserChatEventData>("UserChatEvent", {
                 userId: user.model.id,
-                message: event.message
+                message: event.message,
+                roomChatStyleId: user.model.roomChatStyleId
             }));
         }
     }

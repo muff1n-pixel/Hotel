@@ -5,10 +5,10 @@ import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 
 export default class RoomStructureEvent implements IncomingEvent<WebSocketEvent<RoomStructureEventData>> {
     async handle(event: WebSocketEvent<RoomStructureEventData>) {
-        if(!clientInstance.roomInstance) {
+        if(!clientInstance.roomInstance.value) {
             throw new Error("Room instance is not created.");
         }
         
-        clientInstance.roomInstance.setStructure(event.data.structure);
+        clientInstance.roomInstance.value.setStructure(event.data.structure);
     }
 }

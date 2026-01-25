@@ -112,7 +112,7 @@ export default function UserContextMenu() {
         return () => {
             clientInstance.removeEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
         };
-    }, [clientInstance.roomInstance?.roomRenderer.cursor]);
+    }, [clientInstance.roomInstance.value?.roomRenderer.cursor]);
 
     const toggleFolded = useCallback(() => {
         setFolded(!folded);

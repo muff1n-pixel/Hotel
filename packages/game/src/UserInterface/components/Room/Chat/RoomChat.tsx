@@ -59,7 +59,7 @@ export default function RoomChat() {
         const userChatEventListener = async (event: WebSocketEvent<UserChatEventData>) => {
             const user = room.getUserById(event.data.userId);
 
-            const image = await RoomChatRenderer.render("storm", user.data.name, user.data.figureConfiguration, event.data.message);
+            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message);
 
             const position = room.roomRenderer.getCoordinatePosition(user.item.position!);
 

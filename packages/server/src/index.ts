@@ -22,6 +22,8 @@ import PickupRoomFurnitureEvent from "./Communication/Game/Rooms/Furniture/Picku
 import UseRoomFurnitureEvent from "./Communication/Game/Rooms/Furniture/UseRoomFurnitureEvent.js";
 import PlaceRoomContentFurnitureEvent from "./Communication/Game/Rooms/Furniture/PlaceRoomContentFurnitureEvent.js";
 import SendUserMessageEvent from "./Communication/Game/Rooms/User/SendUserMessageEvent.js";
+import GetRoomChatStylesEvent from "./Communication/Game/Rooms/Chat/Styles/GetRoomChatStylesEvent.js";
+import SetRoomChatStyleEvent from "./Communication/Game/Users/SetRoomChatStyleEvent.js";
 
 await initializeModels();
 
@@ -45,11 +47,13 @@ eventHandler
     .addIncomingEvent("UpdateRoomFurnitureEvent", new UpdateRoomFurnitureEvent())
     .addIncomingEvent("PickupRoomFurnitureEvent", new PickupRoomFurnitureEvent())
     .addIncomingEvent("StartWalkingEvent", new StartWalkingEvent())
-    .addIncomingEvent("SendUserMessageEvent", new SendUserMessageEvent());
+    .addIncomingEvent("SendUserMessageEvent", new SendUserMessageEvent())
+    .addIncomingEvent("GetRoomChatStylesEvent", new GetRoomChatStylesEvent());
     
 eventHandler
     .addIncomingEvent("GetUserEvent", new GetUserEvent())
-    .addIncomingEvent("GetUserFurnitureEvent", new GetUserFurnitureEvent());
+    .addIncomingEvent("GetUserFurnitureEvent", new GetUserFurnitureEvent())
+    .addIncomingEvent("SetRoomChatStyleEvent", new SetRoomChatStyleEvent());
     
 eventHandler
     .addIncomingEvent("CreateRoomEvent", new CreateRoomEvent())

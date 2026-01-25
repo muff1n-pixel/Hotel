@@ -1,9 +1,11 @@
 import { useCallback, useContext, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { SendUserMessageEventData } from "@Shared/Communications/Requests/Rooms/User/SendUserMessageEventData";
+import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
 
 export default function ToolbarChatbar() {
     const [value, setValue] = useState("");
+    const [roomChatStyles, setRoomChatStyles] = useState(false);
 
     const handleSubmit = useCallback(() => {
         if(!value.length) {
@@ -32,7 +34,9 @@ export default function ToolbarChatbar() {
             <div style={{
                 width: 54,
                 height: "100%",
-                borderRight: "1px solid #666666"
+                borderRight: "1px solid #666666",
+
+                position: "relative"
             }}>
                 <div style={{
                     height: "100%",
@@ -47,12 +51,20 @@ export default function ToolbarChatbar() {
                     justifyContent: "center",
                     alignItems: "center",
                     gap: 6,
-                    paddingTop: 2
-                }}>
+                    paddingTop: 2,
+
+                    cursor: "pointer"
+                }} onClick={() => setRoomChatStyles(!roomChatStyles)}>
                     <div className="sprite_toolbar_chat_styles"/>
 
-                    <div className="sprite_toolbar_chat_pointer"/>
+                    <div className="sprite_toolbar_chat_pointer" style={{
+                        transform: (roomChatStyles)?("rotateZ(-90deg)"):(undefined)
+                    }}/>
                 </div>
+
+                {(roomChatStyles) && (
+                    <ToolbarChatbarStyles onClose={() => setRoomChatStyles(false)}/>
+                )}
             </div>
 
             <input

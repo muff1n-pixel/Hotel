@@ -36,8 +36,8 @@ export default class RoomFigureItem extends RoomItem {
 
     public setPosition(position: RoomPosition, index?: number): void {
         if(Number.isInteger(position.row) && Number.isInteger(position.column)) {
-            if(clientInstance.roomInstance?.roomRenderer.items.includes(this)) {
-                const furniture = clientInstance.roomInstance.getFurnitureAtUpmostPosition(position);
+            if(clientInstance.roomInstance.value?.roomRenderer.items.includes(this)) {
+                const furniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(position);
 
                 if(furniture?.data.furniture.flags.sitable) {
                     this.figureRenderer.addAction("Sit");

@@ -6,13 +6,13 @@ import { LoadRoomEventData } from "@Shared/Communications/Responses/Rooms/LoadRo
 
 export default function registerRoomEvents(clientInstance: ClientInstance) {
     webSocketClient.addEventListener<WebSocketEvent<LoadRoomEventData>>("LoadRoomEvent", (event) => {
-        if(clientInstance.roomInstance) {
-            clientInstance.roomInstance.terminate();
+        if(clientInstance.roomInstance.value) {
+            clientInstance.roomInstance.value.terminate();
 
-            delete clientInstance.roomInstance;
+            clientInstance.roomInstance.value = undefined;
             //throw new Error("TODO: room is already loaded!!");
         }
 
-        clientInstance.roomInstance = new RoomInstance(clientInstance, event.data);
+        clientInstance.roomInstance.value = new RoomInstance(clientInstance, event.data);
     });
 }

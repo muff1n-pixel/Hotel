@@ -8,30 +8,12 @@ import { RoomStructureEventData } from "@Shared/Communications/Responses/Rooms/R
 import RoomStructureEvent from "@Client/Communications/Room/RoomStructureEvent";
 import { UserActionEventData } from "@Shared/Communications/Responses/Rooms/Users/UserActionEventData";
 import UserActionEvent from "@Client/Communications/Room/User/UserActionEvent";
-
-type Listener<T> = (value: T | undefined) => void;
+import ObservableProperty from "@Client/Utilities/ObservableProperty";
+import { RoomChatStyleData, RoomChatStylesEventData } from "@Shared/Communications/Responses/Rooms/Chat/Styles/RoomChatStylesEventData";
 
 export default class ClientInstance extends EventTarget {
-    private _roomInstance?: RoomInstance;
-    private listeners = new Set<Listener<RoomInstance>>();
-
-    get roomInstance() {
-        return this._roomInstance;
-    }
-
-    set roomInstance(value: RoomInstance | undefined) {
-        this._roomInstance = value;
-
-        this.listeners.forEach((listener) => listener(value));
-    }
-
-    subscribe(listener: Listener<RoomInstance>) {
-        this.listeners.add(listener);
-
-        return () => {
-            this.listeners.delete(listener);
-        };
-    }
+    public roomInstance = new ObservableProperty<RoomInstance>();
+    public roomChatStyles = new ObservableProperty<RoomChatStyleData[]>();
 
     constructor(public readonly element: HTMLElement) {
         super();
@@ -43,6 +25,11 @@ export default class ClientInstance extends EventTarget {
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", (event) => new RoomFurnitureEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<RoomStructureEventData>>("RoomStructureEvent", (event) => new RoomStructureEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserActionEventData>>("UserActionEvent", (event) => new UserActionEvent().handle(event));
+
+        
+        webSocketClient.addEventListener<WebSocketEvent<RoomChatStylesEventData>>("RoomChatStylesEvent", (event) => {
+            this.roomChatStyles.value = event.data.roomChatStyles;
+        });
     }
 
     addEventListener<T>(type: string, callback: (event: T) => void | null, options?: AddEventListenerOptions | boolean): void {

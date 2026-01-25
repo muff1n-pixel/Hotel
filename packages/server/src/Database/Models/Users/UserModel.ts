@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 import { sequelize } from "../../Database.js";
 import { FigureConfiguration } from "@shared/Interfaces/figure/FigureConfiguration.js";
 
@@ -10,9 +10,11 @@ export class UserModel extends Model {
     declare diamonds: number;
     declare duckets: number;
     declare homeRoomId?: string;
+    declare roomChatStyleId: string;
 }
 
-UserModel.init(
+export function initializeUserModel(sequelize: Sequelize) {
+  UserModel.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -51,6 +53,11 @@ UserModel.init(
       type: DataTypes.TEXT,
       allowNull: true,
       defaultValue: null
+    },
+    roomChatStyleId: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      defaultValue: "normal"
     }
   },
   {
@@ -58,3 +65,4 @@ UserModel.init(
     sequelize
   },
 );
+}

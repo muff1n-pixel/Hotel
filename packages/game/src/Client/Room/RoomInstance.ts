@@ -81,7 +81,7 @@ export default class RoomInstance {
 
         this.roomRenderer.terminate();
 
-        this.clientInstance.roomInstance = undefined;
+        this.clientInstance.roomInstance.value = undefined;
     }
 
     private registerEventListeners() {
