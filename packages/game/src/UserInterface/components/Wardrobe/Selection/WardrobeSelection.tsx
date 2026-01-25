@@ -28,7 +28,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
 
         requestedData.current = true;
 
-        FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colors ?? undefined, "male").then(async (data) => setFigureDataResponse(data));
+        FigureWardrobe.getWardrobePartTypes(part, undefined, "male").then(async (data) => setFigureDataResponse(data));
     }, []);
 
     const activeConfiguration = figureConfiguration.find((configuration) => configuration.type === part);
