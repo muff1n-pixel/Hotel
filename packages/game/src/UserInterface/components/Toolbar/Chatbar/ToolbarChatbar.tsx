@@ -41,7 +41,17 @@ export default function ToolbarChatbar() {
                     background: "#A1A1A1",
                     borderTopLeftRadius: 8,
                     borderBottomLeftRadius: 8,
+
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 6,
+                    paddingTop: 2
                 }}>
+                    <div className="sprite_toolbar_chat_styles"/>
+
+                    <div className="sprite_toolbar_chat_pointer"/>
                 </div>
             </div>
 
@@ -50,13 +60,15 @@ export default function ToolbarChatbar() {
                 value={value}
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
                 onKeyUp={(event) => event.key === "Enter" && handleSubmit()}
+                placeholder="Click here to chat..."
                 style={{
                     flex: 1,
                     border: "none",
                     borderTopRightRadius: 8,
                     borderBottomRightRadius: 8,
                     fontSize: 16,
-                    background: "transparent"
+                    background: "transparent",
+                    padding: "0 6px"
                 }}/>
         </div>
     );
