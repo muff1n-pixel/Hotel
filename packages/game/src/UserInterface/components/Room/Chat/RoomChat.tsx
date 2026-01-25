@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import RoomChatMessage, { RoomChatMessageProps } from "./RoomChatMessage";
 import { AppContext } from "../../../contexts/AppContext";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
