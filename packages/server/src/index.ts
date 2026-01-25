@@ -1,7 +1,4 @@
-import { WebSocketServer } from "ws";
 import { eventHandler } from "./Events/EventHandler.js";
-import User from "./Users/User.js";
-import { UserModel } from "./Database/Models/Users/UserModel.js";
 import { initializeModels, resetDatabase, useMemoryDatabase } from "./Database/Database.js";
 import { initializeDevelopmentData } from "./Database/Development/DatabaseDevelopmentData.js";
 import Game from "./Game.js";
@@ -64,59 +61,3 @@ eventHandler
 export const game = new Game();
 
 await game.loadModels();
-
-const webSocketServer = new WebSocketServer({
-    port: 7632
-});
-
-webSocketServer.on("connection", async (webSocket, request) => {
-	if(!request.url) {
-		console.warn("No url provided.");
-
-        return webSocket.close();
-	}
-
-	const url = new URL(request.url, "http://localhost");
-
-    const userId = url.searchParams.get("userId");
-
-    if(!userId) {
-		console.warn("No user id provided.");
-
-        return webSocket.close();
-    }
-
-    const model = await UserModel.findByPk(userId);
-
-    if(!model) {
-		console.warn("User does not exist.");
-
-        return webSocket.close();
-    }
-
-    if(game.users.some((user) => user.model.id === model.id)) {
-        console.warn("User is already connected.");
-
-        return webSocket.close();
-    }
-
-    const user = new User(webSocket, model);
-
-    game.users.push(user);
-
-    webSocket.on("error", console.error);
-
-    webSocket.on("message", (rawData) => {
-        eventHandler.decodeAndDispatchMessages(user, rawData);
-    });
-
-    webSocket.on("close", () => {
-        const index = game.users.indexOf(user);
-
-        if(index !== -1) {
-            game.users.splice(index, 1);
-        }
-
-        user.emit("close", user);
-    });
-});
