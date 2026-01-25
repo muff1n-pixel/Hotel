@@ -28,10 +28,11 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
 
         requestedData.current = true;
 
-        FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colorIndex ?? undefined, "male").then(async (data) => setFigureDataResponse(data));
+        FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colors ?? undefined, "male").then(async (data) => setFigureDataResponse(data));
     }, []);
 
     const activeConfiguration = figureConfiguration.find((configuration) => configuration.type === part);
+    const activeFigureData = activeConfiguration && figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId);
 
     return (
         <div style={{
@@ -68,7 +69,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                         {
                                             type: part,
                                             setId,
-                                            colorIndex: (colorable) ? (activeConfiguration?.colorIndex ?? figureDataResponse.colors[0].id) : (undefined)
+                                            colors: (colorable) ? (activeConfiguration?.colors ?? figureDataResponse.colors.map((color) => color.id) ?? []) : ([])
                                         }
                                     ])
                             );
@@ -79,27 +80,32 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                 </div>
             </div>
 
-            <WardrobeSelectionColors
-                disabled={!activeConfiguration || !figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId)?.colorable}
-                colors={figureDataResponse?.colors}
-                activeColor={activeConfiguration?.colorIndex}
-                onColorChange={(color) => {
-                    if(!activeConfiguration) {
-                        return;
-                    }
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 6
+            }}>
+                {Array(Math.max(1, activeFigureData?.colorIndexes ?? 1)).fill(null).map((_, index) => (
+                    <WardrobeSelectionColors
+                        key={index}
+                        disabled={!activeConfiguration || !activeFigureData?.colorable}
+                        colors={figureDataResponse?.colors}
+                        activeColor={activeConfiguration?.colors[index]}
+                        onColorChange={(color) => {
+                            if(!activeConfiguration) {
+                                return;
+                            }
 
-                    onFigureConfigurationChange(
-                        figureConfiguration
-                            .filter((configuration) => configuration.type !== part)
-                            .concat([
-                                {
-                                    type: part,
-                                    setId: activeConfiguration.setId,
-                                    colorIndex: color
-                                }
-                            ])
-                    );
-                }}/>
+                            activeConfiguration.colors[index] = color;
+
+                            onFigureConfigurationChange(
+                                figureConfiguration
+                                    .filter((configuration) => configuration.type !== part)
+                                    .concat([ activeConfiguration ])
+                            );
+                        }}/>
+                ))}
+            </div>
         </div>
     );
 }

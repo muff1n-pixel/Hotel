@@ -681,7 +681,7 @@ export async function initializeDevelopmentData() {
     const user = await UserModel.create({
         id: "user1",
         name: "Muff1n-Pixel",
-        figureConfiguration: [{ "type": "hd", "setId": "180", "colorIndex": 2 }, { "type": "hr", "setId": "828", "colorIndex": 31 }, { "type": "ea", "setId": "3196", "colorIndex": 62 }, { "type": "ch", "setId": "255", "colorIndex": 1415 }, { "type": "lg", "setId": "3216", "colorIndex": 110 }, { "type": "sh", "setId": "305", "colorIndex": 62 }],
+        figureConfiguration: [{ "type": "hd", "setId": "180", "colors": [2] }, { "type": "hr", "setId": "828", "colors": [31] }, { "type": "ea", "setId": "3196", "colors": [62] }, { "type": "ch", "setId": "255", "colors": [1415] }, { "type": "lg", "setId": "3216", "colors": [110] }, { "type": "sh", "setId": "305", "colors": [62] }],
         homeRoomId: "room1"
     });
 
@@ -724,6 +724,6 @@ export async function initializeDevelopmentData() {
     await UserModel.create({
         id: "user2",
         name: "Cake",
-        figureConfiguration: [{ "type": "hd", "setId": "180", "colorIndex": 2 }, { "type": "hr", "setId": "828", "colorIndex": 31 }, { "type": "ch", "setId": "255", "colorIndex": 1415 }, { "type": "lg", "setId": "3216", "colorIndex": 110 }, { "type": "sh", "setId": "305", "colorIndex": 62 }]
+        figureConfiguration: [{ "type": "hd", "setId": "180", "colors": [2] }, { "type": "hr", "setId": "828", "colors": [31] }, { "type": "ch", "setId": "255", "colors": [1415] }, { "type": "lg", "setId": "3216", "colors": [110] }, { "type": "sh", "setId": "305", "colors": [62] }]
     });
 }

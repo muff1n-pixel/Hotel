@@ -7,6 +7,7 @@ export type FigureWardrobeItem = {
     image: Promise<ImageBitmap>;
     setId: string;
     colorable: boolean;
+    colorIndexes: number;
 };
 
 export type FigureWardrobeColor = {
@@ -17,7 +18,7 @@ export type FigureWardrobeColor = {
 export default class FigureWardrobe {
     public static figureWorker = new FigureWorker(true);
 
-    public static async getWardrobePartTypes(part: FigurePartKeyAbbreviation, colorId: number | undefined, gender: "male" | "female") {
+    public static async getWardrobePartTypes(part: FigurePartKeyAbbreviation, colors: number[] | undefined, gender: "male" | "female") {
         const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === part);
 
         if(!settype) {
@@ -32,7 +33,7 @@ export default class FigureWardrobe {
                     {
                         type: settype.type,
                         setId: set.id,
-                        colorIndex: (set.colorable)?(colorId ?? palette?.colors[0].id):(undefined)
+                        colors: (set.colorable)?(colors ?? palette?.colors.map((color) => color.id) ?? []):([])
                     }
                 ], 2);
 
@@ -44,13 +45,14 @@ export default class FigureWardrobe {
                     image,
                     setId: set.id,
                     colorable: set.colorable,
+                    colorIndexes: Math.max(...set.parts.map((part) => part.colorIndex))
                 };
             })
         );
 
         const items = imagePromises.filter((promise) => promise.status === "fulfilled").map((promise) => promise.value);
 
-        const colors = palette?.colors.sort((a, b) => a.index - b.index).map((color) => {
+        const paletteColors = palette?.colors.sort((a, b) => a.index - b.index).map((color) => {
             return {
                 id: color.id,
                 color: color.color
@@ -59,7 +61,7 @@ export default class FigureWardrobe {
 
         return {
             items,
-            colors,
+            colors: paletteColors,
             mandatory: settype.mandatoryGender[gender][0]
         };
     }

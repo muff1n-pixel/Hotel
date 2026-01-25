@@ -61,3 +61,5 @@ eventHandler
 export const game = new Game();
 
 await game.loadModels();
+
+console.log("Server started");

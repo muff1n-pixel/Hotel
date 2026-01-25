@@ -133,7 +133,7 @@ export default class AssetFetcher {
 
             colorContext.drawImage(image, properties.x, properties.y, properties.width, properties.height, 0, 0, properties.destinationWidth ?? properties.width, properties.destinationHeight ?? properties.height);
 
-            const colors = (typeof properties.color === "string")?([properties.color]):(properties.color);
+            const colors = (Array.isArray(properties.color))?(properties.color):([properties.color]);
 
             for(let color of colors) {
                 colorContext.globalCompositeOperation = "multiply";

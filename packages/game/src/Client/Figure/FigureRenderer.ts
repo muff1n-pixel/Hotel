@@ -63,7 +63,7 @@ export default class FigureRenderer {
     }
 
     public getConfigurationAsString(): string {
-        return this.configuration.map((section) => [section.type, section.setId, section.colorIndex].filter(Boolean).join('-')).join('.');
+        return this.configuration.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
     }
 
     public addAction(id: string) {

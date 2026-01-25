@@ -115,7 +115,7 @@ export default class FigureWorkerRenderer {
 
                         const { actualAssetName, assetData, avatarAction } = asset;
 
-                        const assetSpriteName = `${actualAssetName}_${configurationPart.colorIndex}`;
+                        const assetSpriteName = `${actualAssetName}_${configurationPart.colors.join('_')}`;
 
                         if(FigureAssets.assetSprites.has(assetSpriteName)) {
                             const result = FigureAssets.assetSprites.get(assetSpriteName);
@@ -136,7 +136,7 @@ export default class FigureWorkerRenderer {
                         }
 
                         const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === settypeData.paletteId);
-                        const paletteColor = palette?.colors.find((color) => color.id === configurationPart.colorIndex);
+                        const paletteColor = palette?.colors.find((color) => color.id === configurationPart.colors[setPartData.colorIndex - 1]);
 
                         try {
                             const sprite = await FigureAssets.getFigureSprite(setPartAssetData.id, {
@@ -148,7 +148,7 @@ export default class FigureWorkerRenderer {
 
                                 flipHorizontal: (this.direction > 3 && this.direction < 7)?(!Boolean(assetData.flipHorizontal)):(assetData.flipHorizontal),
 
-                                color: (setPartData.colorable && configurationPart.colorIndex && setPartData.type !== "ey")?(paletteColor?.color):(undefined),
+                                color: (setPartData.colorable && configurationPart.colors[setPartData.colorIndex - 1] && setPartData.type !== "ey")?(paletteColor?.color):(undefined),
 
                                 ignoreImageData: true
                             });
@@ -334,7 +334,7 @@ export default class FigureWorkerRenderer {
     }
 
     public getConfigurationAsString(): string {
-        return this.configuration.map((section) => [section.type, section.setId, section.colorIndex].filter(Boolean).join('-')).join('.');
+        return this.configuration.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
     }
 
     private getFigureRenderPriority(action: string) {

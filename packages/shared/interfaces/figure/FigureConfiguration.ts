@@ -4,5 +4,5 @@ export type FigurePartKey = "hair" | "leg" | "shirt" | "body" | "shoe" | "head" 
 export type FigureConfiguration = {
     type: FigurePartKeyAbbreviation;
     setId: string;
-    colorIndex?: number | undefined;
+    colors: number[];
 }[];
