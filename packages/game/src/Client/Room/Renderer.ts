@@ -38,7 +38,7 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    private renderedOffset: MousePosition = {
+    public renderedOffset: MousePosition = {
         left: 0,
         top: 0
     };
