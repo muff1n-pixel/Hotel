@@ -10,6 +10,7 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             return;
         }
 
+        // TODO: implement proper command handling
         if(event.message === ":sit") {
             const roomUser = user.room.getRoomUser(user);
 
@@ -19,6 +20,19 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             const roomUser = user.room.getRoomUser(user);
 
             roomUser.addAction("Wave");
+        }
+        else if(event.message.startsWith(":enable")) {
+            const id = event.message.split(' ')[1];
+
+            if(!id) {
+                throw new Error("Missing enable id parameter.");
+            }
+
+            const roomUser = user.room.getRoomUser(user);
+
+            roomUser.removeAction("AvatarEffect");
+            
+            roomUser.addAction("AvatarEffect." + parseInt(id));
         }
         else {
             user.room.sendRoomEvent(new OutgoingEvent<UserChatEventData>("UserChatEvent", {

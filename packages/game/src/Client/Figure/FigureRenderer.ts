@@ -75,10 +75,14 @@ export default class FigureRenderer {
     }
 
     public removeAction(id: string) {
-        if(!this.actions.includes(id)) {
+        const actionId = id.split('.')[0];
+
+        const actionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
+
+        if(actionIndex === -1) {
             return;
         }
 
-        this.actions.splice(this.actions.indexOf(id), 1);
+        this.actions.splice(actionIndex, 1);
     }
 }

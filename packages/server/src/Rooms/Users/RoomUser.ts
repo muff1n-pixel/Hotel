@@ -135,16 +135,20 @@ export default class RoomUser {
     }
 
     public removeAction(action: string) {
-        if(!this.actions.includes(action)) {
+        const actionId = action.split('.')[0]!;
+
+        const existingActionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
+
+        if(existingActionIndex === -1) {
             return;
         }
 
-        this.actions.splice(this.actions.indexOf(action), 1);
+        this.actions.splice(existingActionIndex, 1);
 
         this.room.outgoingEvents.push(
             new OutgoingEvent<UserActionEventData>("UserActionEvent", {
                 userId: this.user.model.id,
-                actionsRemoved: [action],
+                actionsRemoved: [actionId],
             })
         );
     }
