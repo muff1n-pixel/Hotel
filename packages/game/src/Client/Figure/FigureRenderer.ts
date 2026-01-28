@@ -20,7 +20,7 @@ export default class FigureRenderer {
         face: "fa"
     };
 
-    constructor(public configuration: FigureConfiguration, public direction: number, public actions: string[] = ["Default", "AvatarEffect.102"], public headOnly: boolean = false) {
+    constructor(public configuration: FigureConfiguration, public direction: number, public actions: string[] = ["Default"], public headOnly: boolean = false) {
 
     }
 

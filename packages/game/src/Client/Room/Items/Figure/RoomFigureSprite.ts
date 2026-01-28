@@ -15,10 +15,6 @@ export default class RoomFigureSprite extends RoomSprite {
             left: this.sprite.x + 64,
             top: this.sprite.y - 16
         };
-
-        if(this.item.figureRenderer.actions.includes("Sit")) {
-            this.offset.top += 16;   
-        }
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {

@@ -8,7 +8,7 @@ import type { FigureData } from "../../../../packages/game/src/Client/Interfaces
 import { createAssetsDataFromManifest, getValueAsArray } from "../data/DataCreation.ts";
 
 export default async function extractFigureEffects() {
-    const effectMaps = [1, 2, 3, 4, 5, 102, 175].map((id) => getEffectMap(id.toString()));
+    const effectMaps = getEffectMaps();
 
     for(let effectMap of effectMaps) {
         const assetName = effectMap["@_lib"];
@@ -53,7 +53,7 @@ export default async function extractFigureEffects() {
         });
     }
 
-    const data = effectMaps.map((effectMap) => {
+    const data = effectMaps.map((effectMap: any) => {
         return {
             id: parseInt(effectMap["@_id"]),
             library: effectMap["@_lib"]
@@ -65,14 +65,14 @@ export default async function extractFigureEffects() {
     });
 }
 
-function getEffectMap(id: string) {
+function getEffectMaps() {
     const parser = new XMLParser({
         ignoreAttributes: false
     });
 
     const document = parser.parse(readFileSync("effectmap.xml", { encoding: "utf-8" }), true);
 
-    return document.map.effect.find((effect: any) => effect["@_id"] === id);
+    return document.map.effect.filter((effect: any) => existsSync(path.join("assets", "effects", effect["@_lib"] + ".swf")));
 }
 
 function getAnimationData(filePath: string) {
@@ -93,8 +93,17 @@ function getAnimationData(filePath: string) {
                         id: parseInt(direction["@_id"]),
                         destinationZ: parseInt(direction["@_dz"])
                     }
-                })
+                }),
+                useDirections: (sprite["@_directions"])?(true):(false)
             }
+        }),
+
+        add: getValueAsArray(document.animation.add).map((sprite: any) => {
+            return {
+                id: sprite["@_id"],
+                base: sprite["@_base"],
+                align: sprite["@_align"]
+            };
         }),
 
         frames: getValueAsArray(document.animation.frame).map((frame: any) => {

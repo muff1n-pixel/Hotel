@@ -200,8 +200,6 @@ export default class FigureWorkerRenderer {
             // figure consists of figurePartSets->figure->[...]
         }
 
-        console.log(result);
-
         return result;
     }
 
@@ -294,27 +292,67 @@ export default class FigureWorkerRenderer {
         const animationFrame = effect.data.animation.frames[frame];
 
         const sprites: FigureRendererSprite[] = [];
+
+        function getIndexForAlignment(alignment: string) {
+            switch(alignment) {
+                case "top":
+                    return 1;
+
+                case "bottom":
+                    return -1;
+            }
+
+            return 0;
+        }
+
+        const animationSprites = effect.data.animation.sprites.concat(
+            effect.data.animation.add.map((add) => {
+                const id = add.base ?? add.id;
+
+                return {
+                    id,
+                    member: `std_${id}_1`, // TODO: what's the 1 for?
+                    useDirections: true,
+                    directions: Array(8).fill(null).map((_, index) => {
+                        return {
+                            id: index,
+                            destinationZ: getIndexForAlignment(add.align)
+                        };
+                    })
+                }
+            })
+        );
         
-        for(let sprite of effect.data.animation.sprites) {
+        for(let sprite of animationSprites) {
             if(sprite.id === "avatar") {
                 continue;
             }
 
             const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
 
-            const direction = sprite.directions?.find((direction) => direction.id === this.direction);
+            const direction = sprite.useDirections && sprite.directions?.find((direction) => direction.id === this.direction);
 
-            if(!direction) {
+            if(sprite.useDirections && !direction) {
                 console.warn("Effect has no direction specified for " + this.direction);
 
                 continue;
             }
 
-            const index = direction.destinationZ;
+            const index = (direction)?(direction.destinationZ):(0);
 
-            const assetName = `h_${sprite.member}_${this.direction}_${effectFrame?.frame ?? 0}`;
+            let flipHorizontal = false;
 
-            const assetData = effect.data.assets.find((asset) => asset.name === assetName);
+            let assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+
+            let assetData = effect.data.assets.find((asset) => asset.name === assetName);
+
+            if(!assetData && (this.direction > 3 && this.direction < 7)) {
+                assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+
+                assetData = effect.data.assets.find((asset) => asset.name === assetName);
+
+                flipHorizontal = true;
+            }
 
             if(!assetData) {
                 console.error("Can't find asset for " + assetName);
@@ -334,7 +372,7 @@ export default class FigureWorkerRenderer {
 
             const destinationY = effectFrame?.destinationY ?? 0;
 
-            const result = await this.getEffectSprite(effect.library, assetData, spriteData, index, destinationY, sprite.ink);
+            const result = await this.getEffectSprite(effect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
 
             if(result) {
                 sprites.push(result);
@@ -405,7 +443,7 @@ export default class FigureWorkerRenderer {
         return sprites;
     }
 
-    private async getEffectSprite(library: string, assetData: FurnitureAsset, spriteData: FurnitureSprite, index: number, destinationY: number, ink: number | undefined) {
+    private async getEffectSprite(library: string, assetData: FurnitureAsset, spriteData: FurnitureSprite, index: number, destinationY: number, ink: number | undefined, flipHorizontal: boolean) {
         const sprite = await FigureAssets.getEffectSprite(library, {
             x: spriteData.x,
             y: spriteData.y,
@@ -413,14 +451,22 @@ export default class FigureWorkerRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
+            flipHorizontal,
+
             ignoreImageData: true
         });
+
+        let x = assetData.x;
+
+        if(flipHorizontal) {
+            x = 64 + (assetData.x * -1) - spriteData.width;
+        }
 
         return {
             image: await createImageBitmap(sprite.image),
             imageData: sprite.imageData,
             
-            x: assetData.x - 32,
+            x: x - 32,
             y: destinationY + assetData.y + 32,
 
             index,
@@ -460,6 +506,7 @@ export default class FigureWorkerRenderer {
         }
 
         let x = assetData.x;
+        let y = assetData.y;
 
         if((this.direction > 3 && this.direction < 7)) {
             x = 64 + (assetData.x * -1) - spriteData.width;
@@ -470,7 +517,7 @@ export default class FigureWorkerRenderer {
             imageData: sprite.imageData,
             
             x: x - 32,
-            y: assetData.y + 32,
+            y: y + 32,
 
             index: partPriority + spriteConfiguration.index
         };

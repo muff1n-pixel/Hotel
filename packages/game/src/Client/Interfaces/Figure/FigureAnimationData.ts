@@ -3,10 +3,17 @@ export type FigureAnimationData = {
         id: string;
         member: string;
         ink?: number;
+        useDirections: boolean;
         directions?: {
             id: number;
             destinationZ: number;
         }[];
+    }[];
+
+    add: {
+        id: string;
+        align: string;
+        base?: string;
     }[];
 
     frames: {
