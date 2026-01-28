@@ -35,7 +35,7 @@ export default class FigureAssets {
     }
 
     public static async getFigureData(name: string) {
-        return await AssetFetcher.fetchJson<FigureData>(`/assets/figure/${name}/${name}.json`);
+        return await AssetFetcher.fetchJson<FigureData>(`/assets/figure/clothing/${name}/${name}.json`);
     }
 
     public static async getEffectData(name: string) {
@@ -43,11 +43,11 @@ export default class FigureAssets {
     }
 
     public static async getFigureSpritesheet(name: string) {
-        return await AssetFetcher.fetchImage(`/assets/figure/${name}/${name}.png`);
+        return await AssetFetcher.fetchImage(`/assets/figure/clothing/${name}/${name}.png`);
     }
 
     public static async getFigureSprite(name: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
-        return await AssetFetcher.fetchImageSprite(`/assets/figure/${name}/${name}.png`, properties);
+        return await AssetFetcher.fetchImageSprite(`/assets/figure/clothing/${name}/${name}.png`, properties);
     }
 
     public static async getEffectSprite(name: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {

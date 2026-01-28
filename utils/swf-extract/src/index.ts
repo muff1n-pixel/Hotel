@@ -130,7 +130,7 @@ let assetNames = [process.argv[2]];
                 }
                 else {
                     if(!swfCollection.data.index && !swfCollection.data.visualization && swfCollection.data.manifest) {
-                        const outputPath = path.join("..", "..", "assets", "figure", assetName);
+                        const outputPath = path.join("..", "..", "assets", "figure", "clothing", assetName);
 
                         if(existsSync(outputPath)) {
                             rmSync(outputPath, {
