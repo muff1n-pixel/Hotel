@@ -70,12 +70,11 @@ export default class RoomCursor extends EventTarget {
         if(this.roomRenderer.roomInstance && otherEntity) {
             if(otherEntity.item instanceof RoomFurnitureItem) {
                 const roomFurnitureItem = this.roomRenderer.roomInstance?.getFurnitureByItem(otherEntity.item);
+                
+                const logic = roomFurnitureItem.item.furnitureRenderer.getLogic();
 
-                if((otherEntity.item.furnitureRenderer.getNextAnimation() !== otherEntity.item.furnitureRenderer.animation)) {
-                    webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-                        roomFurnitureId: roomFurnitureItem.data.id,
-                        animation: otherEntity.item.furnitureRenderer.getNextAnimation()
-                    });
+                if(logic.isAvailable()) {
+                    logic.use(roomFurnitureItem);
                 }
             }
         }

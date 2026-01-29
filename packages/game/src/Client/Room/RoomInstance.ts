@@ -29,6 +29,7 @@ type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigure
     item: ItemType;
 };
 
+export type RoomInstanceFurniture = RoomItem<RoomFurnitureData, RoomFurnitureItem>;
 
 export default class RoomInstance {
     public readonly key = Math.random();
@@ -36,7 +37,7 @@ export default class RoomInstance {
     public readonly roomRenderer: RoomRenderer;
 
     private readonly users: RoomItem<RoomUserData, RoomFigureItem>[] = [];
-    public furnitures: RoomItem<RoomFurnitureData, RoomFurnitureItem>[] = [];
+    public furnitures: RoomInstanceFurniture[] = [];
 
     private roomFloorItem?: RoomFloorItem;
     private roomWallItem?: RoomWallItem;

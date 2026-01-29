@@ -5,6 +5,9 @@ import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRo
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
+import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
+import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
+import FurnitureDefaultLogic from "@Client/Furniture/Logic/FurnitureDefaultLogic";
 
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
@@ -47,6 +50,19 @@ export default class Furniture {
         return this.data;
     }
 
+    public getLogic(): FurnitureLogic {
+        if(!this.data) {
+            throw new Error("Furniture data is not available.");
+        }
+
+        switch(this.data.index.logic) {
+            case "furniture_multistate":
+                return new FurnitureMultistateLogic(this, this.data);
+        }
+
+        return new FurnitureDefaultLogic(this);
+    }
+
     public async render(frame: number = 0) {
         this.frame++;
 
@@ -56,11 +72,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        // TODO: construct the renderer in the constructor
-
-        const sprites = await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color, this.frame);
-
-        return sprites;
+        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color, this.frame);
     }
 
     public async renderToCanvas() {
@@ -68,9 +80,17 @@ export default class Furniture {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
         }
 
-        const canvas = await this.renderer.renderToCanvas(this.data, this.direction, this.size, this.animation, this.color, this.frame);
+        return await this.renderer.renderToCanvas(this.data, this.direction, this.size, this.animation, this.color, this.frame);
+    }
 
-        return canvas;
+    public getVisualizationData(data: FurnitureData) {
+        const visualization = data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+
+        if(!visualization) {
+            throw new Error("Furniture does not have visualization data.");
+        }
+
+        return visualization;
     }
 
     getDimensions(raw: boolean = false) {
@@ -96,24 +116,6 @@ export default class Furniture {
 
         return result;
     };
-
-    public getNextAnimation() {
-        if(!this.visualization) {
-            return 0;
-        }
-
-        const currentAnimationIndex = this.visualization.animations.findIndex((animation) => animation.id === this.animation);
-
-        if(currentAnimationIndex === -1) {
-            return this.visualization.animations[0]?.id ?? 0;
-        }
-
-        if(!this.visualization.animations[currentAnimationIndex + 1]) {
-            return 0;
-        }
-
-        return this.visualization.animations[currentAnimationIndex + 1].id;
-    }
 
     public getNextDirection() {
         if(!this.visualization) {

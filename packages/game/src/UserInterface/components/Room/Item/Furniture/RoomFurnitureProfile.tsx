@@ -7,13 +7,16 @@ import { UseRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms
 import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
 
 import "./RoomFurnitureProfile.css"
+import { useState } from "react";
 
 export type RoomFurnitureProfileProps = {
     data: RoomFurnitureData;
     item: RoomFurnitureItem;
 }
 
-export default function RoomFurnitureProfile({ data, item }: RoomFurnitureProfileProps) {    
+export default function RoomFurnitureProfile({ data, item }: RoomFurnitureProfileProps) {
+    const [logic] = useState(item.furnitureRenderer.getLogic());
+
     return (
         <div style={{
             display: "flex",
@@ -57,7 +60,7 @@ export default function RoomFurnitureProfile({ data, item }: RoomFurnitureProfil
                 gap: 10
             }}>
                 <div className="room-furniture-profile-button" onClick={() => {
-                    clientInstance.roomInstance?.moveFurniture(data.id);
+                    clientInstance.roomInstance.value?.moveFurniture(data.id);
                 }}>
                     Move
                 </div>
@@ -98,12 +101,9 @@ export default function RoomFurnitureProfile({ data, item }: RoomFurnitureProfil
                     </div>
                 )}
 
-                {(item.furnitureRenderer.getNextAnimation() !== item.furnitureRenderer.animation) && (
+                {(logic.isAvailable()) && (
                     <div className="room-furniture-profile-button" onClick={() => {
-                        webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-                            roomFurnitureId: data.id,
-                            animation: item.furnitureRenderer.getNextAnimation()
-                        });
+                        logic.use({ data, item });
                     }}>
                         Use
                     </div>
