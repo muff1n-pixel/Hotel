@@ -29,5 +29,8 @@
       "@Client/*": ["./src/Client/*"],
       "@Shared/*": ["../shared/*"]
     },
+  },
+  "parcel-plugin-typescript": {
+    "transpileOnly": false
   }
 }
