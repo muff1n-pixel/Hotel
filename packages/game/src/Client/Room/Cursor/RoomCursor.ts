@@ -1,4 +1,4 @@
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import RoomRenderer from "../Renderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
@@ -23,7 +23,7 @@ export default class RoomCursor extends EventTarget {
     constructor(private readonly roomRenderer: RoomRenderer) {
         super();
 
-        const furnitureRenderer = new FurnitureRenderer("tile_cursor", 64, 0);
+        const furnitureRenderer = new Furniture("tile_cursor", 64, 0);
         
         this.furnitureItem = new RoomFurnitureItem(furnitureRenderer, {
             row: 1,

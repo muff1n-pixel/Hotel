@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
 import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import Figure from "@Client/Figure/Figure";
 

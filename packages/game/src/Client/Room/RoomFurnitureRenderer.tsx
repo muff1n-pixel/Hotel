@@ -5,7 +5,7 @@ import RoomWallItem from "./Items/Map/RoomWallItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import RoomFloorItem from "./Items/Map/RoomFloorItem";
 
 export type RoomFurnitureRendererOptions = {
@@ -96,7 +96,7 @@ export default class RoomFurnitureRenderer {
 
         const furnitureData = await FurnitureAssets.getFurnitureData(type);
 
-        const furnitureRenderer = new FurnitureRenderer(type, size, direction, animation, color);
+        const furnitureRenderer = new Furniture(type, size, direction, animation, color);
 
         await furnitureRenderer.getData();
 

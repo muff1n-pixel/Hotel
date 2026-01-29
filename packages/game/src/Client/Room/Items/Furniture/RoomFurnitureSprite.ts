@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/FurnitureRenderer";
+import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";

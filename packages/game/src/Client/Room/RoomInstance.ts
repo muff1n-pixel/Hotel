@@ -8,7 +8,7 @@ import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import { UserEnteredRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserEnteredRoomEventData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { UserWalkToEventData } from "@Shared/Communications/Responses/Rooms/Users/UserWalkToEventData";
@@ -178,7 +178,7 @@ export default class RoomInstance {
     }
 
     public addFurniture(furnitureData: RoomFurnitureData) {
-        const furnitureRenderer = new FurnitureRenderer(furnitureData.furniture.type, 64, furnitureData.direction, furnitureData.animation, furnitureData.furniture.color);
+        const furnitureRenderer = new Furniture(furnitureData.furniture.type, 64, furnitureData.direction, furnitureData.animation, furnitureData.furniture.color);
         const item = new RoomFurnitureItem(furnitureRenderer, furnitureData.position);
 
         this.roomRenderer.items.push(item);

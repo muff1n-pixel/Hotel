@@ -1,4 +1,4 @@
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import RoomRenderer from "./Renderer";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
@@ -22,7 +22,7 @@ export default class RoomFurniturePlacer {
 
     public static fromFurnitureData(roomInstance: RoomInstance, furnitureData: FurnitureData) {
         const roomFurnitureItem = new RoomFurnitureItem(
-            new FurnitureRenderer(furnitureData.type, 64, undefined, 0, furnitureData.color)
+            new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color)
         );
 
         return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
@@ -69,7 +69,7 @@ export default class RoomFurniturePlacer {
         this.iconElement.style.pointerEvents = "none";
         this.iconElement.style.transform = "translate(-50%, -50%)";
 
-        new FurnitureRenderer(this.roomFurnitureItem.furnitureRenderer.type, 1, 0, 0, this.roomFurnitureItem.furnitureRenderer.color).renderToCanvas().then((image) => {
+        new Furniture(this.roomFurnitureItem.furnitureRenderer.type, 1, 0, 0, this.roomFurnitureItem.furnitureRenderer.color).renderToCanvas().then((image) => {
             this.iconElement.width = image.width;
             this.iconElement.height = image.height;
 

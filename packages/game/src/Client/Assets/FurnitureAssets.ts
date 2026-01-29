@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/FurnitureRenderer";
+import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import AssetFetcher, { AssetSpriteProperties } from "./AssetFetcher";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 

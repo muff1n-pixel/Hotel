@@ -1,6 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";

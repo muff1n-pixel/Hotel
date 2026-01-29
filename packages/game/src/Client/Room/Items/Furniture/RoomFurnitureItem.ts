@@ -1,4 +1,4 @@
-import FurnitureRenderer from "@Client/Furniture/FurnitureRenderer";
+import Furniture from "@Client/Furniture/Furniture";
 import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
@@ -9,7 +9,7 @@ export default class RoomFurnitureItem extends RoomItem {
 
     public readonly id = Math.random();
     
-    constructor(public readonly furnitureRenderer: FurnitureRenderer, position?: RoomPosition) {
+    constructor(public readonly furnitureRenderer: Furniture, position?: RoomPosition) {
         super("furniture");
 
         if(position) {
