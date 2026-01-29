@@ -12,10 +12,12 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import { RoomChatStyleData, RoomChatStylesEventData } from "@Shared/Communications/Responses/Rooms/Chat/Styles/RoomChatStylesEventData";
 import { UserFigureConfigurationEventData } from "@Shared/Communications/Responses/Rooms/Users/UserFigureConfigurationEventData";
 import UserFigureConfigurationEvent from "@Client/Communications/Room/User/UserFigureConfigurationEvent";
+import { Dialog } from "../UserInterface/contexts/AppContext";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
     public roomChatStyles = new ObservableProperty<RoomChatStyleData[]>();
+    public dialogs = new ObservableProperty<Dialog[]>([]);
 
     constructor(public readonly element: HTMLElement) {
         super();

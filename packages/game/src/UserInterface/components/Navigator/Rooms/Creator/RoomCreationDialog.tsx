@@ -12,6 +12,7 @@ import { RoomCreatedEventData } from "@Shared/Communications/Responses/Navigator
 import { AppContext } from "../../../../contexts/AppContext";
 import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import useRoomMaps from "./Hooks/useRoomMaps";
+import { useDialogs } from "../../../../hooks/useDialogs";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -19,7 +20,7 @@ export type RoomCreationDialogProps = {
 }
 
 export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDialogProps) {
-    const { closeDialog } = useContext(AppContext);
+    const { closeDialog } = useDialogs();
 
     const roomMaps = useRoomMaps();
 

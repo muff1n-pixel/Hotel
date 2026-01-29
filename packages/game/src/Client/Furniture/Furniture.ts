@@ -8,6 +8,7 @@ import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRe
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
 import FurnitureDefaultLogic from "@Client/Furniture/Logic/FurnitureDefaultLogic";
+import FurnitureRoomDimmerLogic from "@Client/Furniture/Logic/FurnitureRoomDimmerLogic";
 
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
@@ -58,6 +59,9 @@ export default class Furniture {
         switch(this.data.index.logic) {
             case "furniture_multistate":
                 return new FurnitureMultistateLogic(this, this.data);
+                
+            case "furniture_roomdimmer":
+                return new FurnitureRoomDimmerLogic(this, this.data);
         }
 
         return new FurnitureDefaultLogic(this);

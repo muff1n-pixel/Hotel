@@ -12,9 +12,10 @@ import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { UserFurnitureEventData } from "@Shared/Communications/Responses/Inventory/UserFurnitureEventData";
 import { PlaceFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceFurnitureEventData";
 import { PlaceRoomContentFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceRoomContentFurnitureEventData";
+import { useDialogs } from "../../../hooks/useDialogs";
 
 export default function InventoryFurnitureTab() {
-    const { setDialogHidden } = useContext(AppContext);
+    const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
     const [activeFurniture, setActiveFurniture] = useState<UserFurnitureData>();

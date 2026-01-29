@@ -4,6 +4,10 @@ export default class ObservableProperty<T> {
     private _value?: T;
     private listeners = new Set<Listener<T>>();
 
+    constructor(initialValue?: T) {
+        this.value = initialValue;
+    }
+
     get value(): T | undefined {
         return this._value;
     }

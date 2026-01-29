@@ -9,6 +9,7 @@ import { AppContext } from "../../contexts/AppContext";
 import useNavigatorRooms from "./Hooks/useNavigatorRooms";
 import { webSocketClient } from "../../..";
 import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
+import { useDialogs } from "../../hooks/useDialogs";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -16,7 +17,7 @@ export type NavigatorDialogProps = {
 }
 
 export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProps) {
-    const { addUniqueDialog, closeDialog } = useContext(AppContext);
+    const { addUniqueDialog, closeDialog } = useDialogs();
 
     const rooms = useNavigatorRooms("all");
 

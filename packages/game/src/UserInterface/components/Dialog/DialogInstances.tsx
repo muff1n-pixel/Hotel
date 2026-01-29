@@ -5,13 +5,14 @@ import ShopDialog from "../Shop/ShopDialog";
 import InventoryDialog from "../Inventory/InventoryDialog";
 import NavigatorDialog from "../Navigator/NavigatorDialog";
 import RoomCreationDialog from "../Navigator/Rooms/Creator/RoomCreationDialog";
+import { useDialogs } from "../../hooks/useDialogs";
 
 export type DialogInstancesProps = {
     dialogs: Dialog[];
 }
 
 export default function DialogInstances({  }: DialogInstancesProps) {
-    const { dialogs, closeDialog } = useContext(AppContext);
+    const { dialogs, closeDialog } = useDialogs();
 
     return (
         <Fragment>

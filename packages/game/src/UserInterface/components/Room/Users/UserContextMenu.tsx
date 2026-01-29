@@ -13,9 +13,11 @@ import FollowingFigure from "@Client/Room/Cursor/Events/FollowingFigure";
 import StoppedHoveringFigure from "@Client/Room/Cursor/Events/StoppedHoveringFigure";
 import StoppedFollowingFigure from "@Client/Room/Cursor/Events/StoppedFollowingFigure";
 import { clientInstance } from "../../../..";
+import { useDialogs } from "../../../hooks/useDialogs";
 
 export default function UserContextMenu() {
-    const { user, addUniqueDialog, closeDialog } = useContext(AppContext);
+    const { user } = useContext(AppContext);
+    const { addUniqueDialog } = useDialogs();
 
     const elementRef = useRef<HTMLDivElement>(null);
 

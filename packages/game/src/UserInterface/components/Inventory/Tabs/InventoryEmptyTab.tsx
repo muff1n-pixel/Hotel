@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { AppContext } from "../../../contexts/AppContext";
+import { useDialogs } from "../../../hooks/useDialogs";
 
 export default function InventoryEmptyTab() {
-    const { addUniqueDialog } = useContext(AppContext);
+    const { addUniqueDialog } = useDialogs();
 
     return (
         <div style={{

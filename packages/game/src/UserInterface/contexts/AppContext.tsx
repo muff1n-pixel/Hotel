@@ -10,16 +10,7 @@ export type Dialog = {
 
 export type App = {
     user?: UserEventData;
-
-    dialogs: Dialog[];
-    addUniqueDialog: (type: string) => void;
-    setDialogHidden: (id: string, hidden: boolean) => void;
-    closeDialog: (id: string) => void;
 };
 
 export const AppContext = createContext<App>({
-    dialogs: [],
-    addUniqueDialog: () => {},
-    setDialogHidden: () => {},
-    closeDialog: () => {},
 });

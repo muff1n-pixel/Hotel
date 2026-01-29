@@ -6,11 +6,12 @@ import WardrobeDialog from "../Wardrobe/WardrobeDialog";
 import { useRoomInstance } from "../../hooks/useRoomInstance";
 import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
+import { useDialogs } from "../../hooks/useDialogs";
 
 export default function Toolbar() {
     const room = useRoomInstance();
 
-    const { user, addUniqueDialog, closeDialog } = useContext(AppContext);
+    const { addUniqueDialog } = useDialogs();
 
     return (
         <div style={{
