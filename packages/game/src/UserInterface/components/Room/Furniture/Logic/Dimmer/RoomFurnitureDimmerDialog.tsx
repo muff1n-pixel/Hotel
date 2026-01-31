@@ -9,31 +9,29 @@ import DimmerDialogSlider from "../../../../Dialog/Dimmer/DimmerDialogSlider";
 import DimmerDialogCheckbox from "../../../../Dialog/Dimmer/DimmerDialogCheckbox";
 import DimmerDialogButton from "../../../../Dialog/Dimmer/DimmerDialogButton";
 import { clientInstance, webSocketClient } from "../../../../../..";
-import { SetRoomMoodlightEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetRoomMoodlightEventData";
+import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
+import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
+import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 
 export type RoomFurnitureDimmerData = {
+    furniture: RoomInstanceFurniture;
     type: "furniture_roomdimmer";
 };
 
-export default function RoomFurnitureDimmerDialog({ hidden, onClose }: RoomFurnitureLogicDialogProps) {
+export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();
 
-    if(!clientInstance.roomInstance.value?.roomRenderer.lighting.moodlight) {
-        console.error("Room instance moodlight data is not set!");
-
-        return null;
-    }
-
-    const [enabled, setEnabled] = useState(clientInstance.roomInstance.value.roomRenderer.lighting.moodlight.enabled);
-    const [color, setColor] = useState(clientInstance.roomInstance.value.roomRenderer.lighting.moodlight.color);
-    const [alpha, setAlpha] = useState(clientInstance.roomInstance.value.roomRenderer.lighting.moodlight.alpha);
-    const [backgroundOnly, setBackgroundOnly] = useState(clientInstance.roomInstance.value.roomRenderer.lighting.moodlight.backgroundOnly);
+    const [enabled, setEnabled] = useState((data.furniture.data.data as RoomMoodlightData)?.enabled ?? false);
+    const [color, setColor] = useState((data.furniture.data.data as RoomMoodlightData)?.color ?? "#FF3333");
+    const [alpha, setAlpha] = useState((data.furniture.data.data as RoomMoodlightData)?.alpha ?? 128);
+    const [backgroundOnly, setBackgroundOnly] = useState((data.furniture.data.data as RoomMoodlightData)?.backgroundOnly ?? false);
 
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
 
-        webSocketClient.send<SetRoomMoodlightEventData>("SetRoomMoodlightEvent", {
-            moodlight: {
+        webSocketClient.send<SetFurnitureDataEventData<RoomMoodlightData>>("SetFurnitureDataEvent", {
+            furnitureId: data.furniture.data.id,
+            data: {
                 enabled: !enabled,
                 color,
                 alpha,
@@ -43,8 +41,9 @@ export default function RoomFurnitureDimmerDialog({ hidden, onClose }: RoomFurni
     }, [enabled]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetRoomMoodlightEventData>("SetRoomMoodlightEvent", {
-            moodlight: {
+        webSocketClient.send<SetFurnitureDataEventData<RoomMoodlightData>>("SetFurnitureDataEvent", {
+            furnitureId: data.furniture.data.id,
+            data: {
                 enabled,
                 color,
                 alpha,

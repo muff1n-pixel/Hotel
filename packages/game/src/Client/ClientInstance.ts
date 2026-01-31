@@ -14,7 +14,6 @@ import { UserFigureConfigurationEventData } from "@Shared/Communications/Respons
 import UserFigureConfigurationEvent from "@Client/Communications/Room/User/UserFigureConfigurationEvent";
 import { Dialog } from "../UserInterface/contexts/AppContext";
 import { RoomMoodlightEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomMoodlightEventData";
-import RoomMoodlightEvent from "@Client/Communications/Room/RoomMoodlightEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -30,7 +29,6 @@ export default class ClientInstance extends EventTarget {
 
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", (event) => new RoomFurnitureEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<RoomStructureEventData>>("RoomStructureEvent", (event) => new RoomStructureEvent().handle(event));
-        webSocketClient.addEventListener<WebSocketEvent<RoomMoodlightEventData>>("RoomMoodlightEvent", (event) => new RoomMoodlightEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserActionEventData>>("UserActionEvent", (event) => new UserActionEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserFigureConfigurationEventData>>("UserFigureConfigurationEvent", (event) => new UserFigureConfigurationEvent().handle(event));
 

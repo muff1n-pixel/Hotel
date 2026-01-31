@@ -7,7 +7,6 @@ export class RoomModel extends Model {
     declare id: string;
     declare name: string;
     declare structure: RoomStructure;
-    declare moodlight: RoomMoodlightData;
     declare maxUsers: number;
     
     declare roomFurnitures: NonAttribute<RoomFurnitureModel[]>;
@@ -41,24 +40,6 @@ export function initializeRoomModel(sequelize: Sequelize) {
                   }));
               },
               allowNull: false
-          },
-          moodlight: {
-            type: DataTypes.TEXT,
-            get: function () {
-                return JSON.parse(this.getDataValue("moodlight"));
-            },
-            set: function (value: RoomMoodlightData) {
-                this.setDataValue("moodlight", JSON.stringify(value));
-            },
-            allowNull: false,
-            defaultValue: JSON.stringify({
-              enabled: false,
-
-              color: "#FF66CC",
-              alpha: 128,
-
-              backgroundOnly: false
-            } satisfies RoomMoodlightData)
           }
         },
         {

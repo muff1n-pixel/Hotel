@@ -12,6 +12,7 @@ export type FurnitureData = {
 
     flags: FurnitureFlagsData;
     dimensions: RoomPosition;
+    interactionType: string;
 };
 
 export type RoomFurnitureData = {
@@ -24,4 +25,5 @@ export type RoomFurnitureData = {
     };
     direction: number;
     animation: number;
+    data: unknown;
 };

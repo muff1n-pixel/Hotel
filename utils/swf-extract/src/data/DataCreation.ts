@@ -330,6 +330,7 @@ export async function createFurnitureData(assetName: string) {
             defaultDirection: (furniType["defaultdir"])?(parseInt(furniType["defaultdir"])):(undefined),
 
             category: furniType["category"],
+            interactionType: result.interaction_type ?? "default",
 
             flags: {
                 stackable: result?.allow_stack === 1,

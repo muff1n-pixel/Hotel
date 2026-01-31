@@ -488,7 +488,8 @@ export async function initializeDevelopmentData() {
             placement: furniture.placement,
             dimensions: furniture.dimensions,
 
-            category: furniture.category
+            category: furniture.category,
+            interactionType: furniture.interactionType,
         };
     }));
 

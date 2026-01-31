@@ -195,17 +195,30 @@ export default class RoomInstance {
             data: furnitureData,
             item
         });
+
+        if(furnitureData.furniture.interactionType === "dimmer") {
+            if((furnitureData.data as RoomMoodlightData).enabled) {
+                this.setMoodlight(furnitureData.data as RoomMoodlightData);
+            }
+        }
     }
 
     public updateFurniture(furnitureData: RoomFurnitureData) {
         const roomFurnitureItem = this.getFurnitureById(furnitureData.id);
+        
+        if(furnitureData.furniture.interactionType === "dimmer") {
+            if((furnitureData.data as RoomMoodlightData).enabled || (roomFurnitureItem.data.data as RoomMoodlightData).enabled) {
+                this.setMoodlight(furnitureData.data as RoomMoodlightData);
+            }
+        }
+
+        roomFurnitureItem.data = furnitureData;
 
         roomFurnitureItem.item.furnitureRenderer.direction = roomFurnitureItem.data.direction = furnitureData.direction;
         roomFurnitureItem.item.furnitureRenderer.animation = roomFurnitureItem.data.animation = furnitureData.animation;
 
         if(furnitureData.position) {
             roomFurnitureItem.item.setPosition(furnitureData.position);
-            roomFurnitureItem.data.position = furnitureData.position;
         }
     }
 

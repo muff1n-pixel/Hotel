@@ -134,4 +134,11 @@ export default class Room {
     private getStructure() {
         return {...this.model.structure};
     }
+
+    public getActiveMoodlightFurniture() {
+        const dimmerFurnitures = this.furnitures.filter((furniture) => furniture.model.furniture.interactionType === "dimmer");
+        const activeDimmerFurniture = dimmerFurnitures.find((furniture) => furniture.model.animation === 1);
+
+        return activeDimmerFurniture;
+    }
 }

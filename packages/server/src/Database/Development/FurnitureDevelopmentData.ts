@@ -78,6 +78,7 @@ function getFurnitureServerData(assetName: string) {
                 placement: item.placement,
 
                 category: item.category,
+                interactionType: item.interactionType,
 
                 flags: item.flags
             };
@@ -96,6 +97,7 @@ function getFurnitureServerData(assetName: string) {
                 placement: item.placement,
 
                 category: item.category,
+                interactionType: item.interactionType,
 
                 flags: item.flags
             };
@@ -111,6 +113,7 @@ function getFurnitureServerData(assetName: string) {
             placement: item.placement,
 
             category: item.category,
+            interactionType: item.interactionType,
 
             flags: item.flags
         };

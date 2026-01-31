@@ -10,6 +10,7 @@ export class RoomFurnitureModel extends Model {
     declare position: RoomPosition;
     declare direction: number;
     declare animation: number;
+    declare data: unknown;
 
     declare user: NonAttribute<UserModel>;
     declare furniture: NonAttribute<FurnitureModel>;
@@ -43,6 +44,16 @@ export function initializeRoomFurnitureModel(sequelize: Sequelize) {
           color: {
             type: DataTypes.NUMBER,
             defaultValue: 0,
+          },
+          data: {
+              type: DataTypes.TEXT,
+              get: function () {
+                  return JSON.parse(this.getDataValue("data"));
+              },
+              set: function (value) {
+                  this.setDataValue("data", JSON.stringify(value));
+              },
+              allowNull: true
           },
         },
         {

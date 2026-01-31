@@ -40,10 +40,7 @@ export default class RoomUser {
                 users: this.room.users.map((user) => user.getRoomUserData()),
                 furnitures: this.room.furnitures.map((furniture) => furniture.getFurnitureData())
             }),
-            userEnteredRoomEvent,
-            new OutgoingEvent<RoomMoodlightEventData>("RoomMoodlightEvent", {
-                moodlight: this.room.model.moodlight
-            })
+            userEnteredRoomEvent
         ]);
     }
     

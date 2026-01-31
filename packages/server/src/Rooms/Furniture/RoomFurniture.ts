@@ -62,7 +62,8 @@ export default class RoomFurniture {
                     furniture: roomFurnitureModel.furniture,
                     position: roomFurnitureModel.position,
                     direction: roomFurnitureModel.direction,
-                    animation: roomFurnitureModel.animation
+                    animation: roomFurnitureModel.animation,
+                    data: roomFurnitureModel.data
                 }
             ]
         }));
@@ -80,7 +81,8 @@ export default class RoomFurniture {
             furniture: this.model.furniture,
             position: this.model.position,
             direction: this.model.direction,
-            animation: this.model.animation
+            animation: this.model.animation,
+            data: this.model.data
         };
     }
 
