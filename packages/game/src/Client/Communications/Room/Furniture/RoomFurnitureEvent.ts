@@ -2,6 +2,7 @@ import IncomingEvent from "@Client/Communications/IncomingEvent";
 import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import { clientInstance } from "../../../..";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export default class RoomFurnitureEvent implements IncomingEvent<WebSocketEvent<RoomFurnitureEventData>> {
     async handle(event: WebSocketEvent<RoomFurnitureEventData>) {
@@ -11,12 +12,14 @@ export default class RoomFurnitureEvent implements IncomingEvent<WebSocketEvent<
 
         if(event.data.furnitureUpdated?.length) {
             for(let furniture of event.data.furnitureUpdated) {
-                clientInstance.roomInstance.value.updateFurniture(furniture);
+                const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furniture.id);
+
+                roomFurnitureItem.updateData(furniture);
             }
         }
 
         if(event.data.furnitureAdded?.length) {
-            event.data.furnitureAdded.map((roomFurnitureData) => clientInstance.roomInstance.value!.addFurniture(roomFurnitureData));
+            clientInstance.roomInstance.value.furnitures.push(...event.data.furnitureAdded.map((roomFurnitureData) => new RoomFurniture(clientInstance.roomInstance.value!, roomFurnitureData)));
         }
 
         if(event.data.furnitureRemoved?.length) {

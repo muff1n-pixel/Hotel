@@ -24,6 +24,7 @@ import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Ro
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -38,7 +39,7 @@ export default class RoomInstance {
     public readonly roomRenderer: RoomRenderer;
 
     private readonly users: RoomItem<RoomUserData, RoomFigureItem>[] = [];
-    public furnitures: RoomInstanceFurniture[] = [];
+    public furnitures: RoomFurniture[] = [];
 
     private roomFloorItem?: RoomFloorItem;
     private roomWallItem?: RoomWallItem;
@@ -49,7 +50,7 @@ export default class RoomInstance {
         this.setStructure(event.structure);
 
         this.users = event.users.map((userData) => this.addUser(userData));
-        event.furnitures.map(this.addFurniture.bind(this));
+        this.furnitures = event.furnitures.map((furnitureData) => new RoomFurniture(this, furnitureData));
 
         this.registerEventListeners();
     }
@@ -185,43 +186,6 @@ export default class RoomInstance {
         return user;
     }
 
-    public addFurniture(furnitureData: RoomFurnitureData) {
-        const furnitureRenderer = new Furniture(furnitureData.furniture.type, 64, furnitureData.direction, furnitureData.animation, furnitureData.furniture.color);
-        const item = new RoomFurnitureItem(this.roomRenderer, furnitureRenderer, furnitureData.position);
-
-        this.roomRenderer.items.push(item);
-
-        this.furnitures.push({
-            data: furnitureData,
-            item
-        });
-
-        if(furnitureData.furniture.interactionType === "dimmer") {
-            if((furnitureData.data as RoomMoodlightData)?.enabled) {
-                this.setMoodlight(furnitureData.data as RoomMoodlightData);
-            }
-        }
-    }
-
-    public updateFurniture(furnitureData: RoomFurnitureData) {
-        const roomFurnitureItem = this.getFurnitureById(furnitureData.id);
-        
-        if(furnitureData.furniture.interactionType === "dimmer") {
-            if((furnitureData.data as RoomMoodlightData)?.enabled || (roomFurnitureItem.data.data as RoomMoodlightData)?.enabled) {
-                this.setMoodlight(furnitureData.data as RoomMoodlightData);
-            }
-        }
-
-        roomFurnitureItem.data = furnitureData;
-
-        roomFurnitureItem.item.furnitureRenderer.direction = roomFurnitureItem.data.direction = furnitureData.direction;
-        roomFurnitureItem.item.furnitureRenderer.animation = roomFurnitureItem.data.animation = furnitureData.animation;
-
-        if(furnitureData.position) {
-            roomFurnitureItem.item.setPosition(furnitureData.position);
-        }
-    }
-
     public getFurnitureById(id: string) {
         const furniture = this.furnitures.find((furniture) => furniture.data.id === id);
 
@@ -236,6 +200,7 @@ export default class RoomInstance {
         const furniture = this.furnitures.find((furniture) => furniture.item.id === item.id);
 
         if(!furniture) {
+            console.log(item, this.furnitures);
             throw new Error("Furniture does not exist in room.");
         }
 

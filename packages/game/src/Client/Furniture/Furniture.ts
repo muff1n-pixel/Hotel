@@ -72,6 +72,7 @@ export default class Furniture {
 
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
+            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
         }
 
         this.placement = this.data.visualization.placement;
@@ -123,7 +124,7 @@ export default class Furniture {
 
     public getNextDirection() {
         if(!this.visualization) {
-            return 0;
+            return this.direction;
         }
 
         if(this.placement === "wall") {

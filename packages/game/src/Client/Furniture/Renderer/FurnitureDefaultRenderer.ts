@@ -39,11 +39,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
                 if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
                     frameSequenceIndex = Math.floor((frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
-                    /*console.log({
-                        frame,
-                        frameSequenceLength: animationLayer.frameSequence.length,
-                        frameRepeat: animationLayer.frameRepeat
-                    });*/
                 }
 
                 if(!animationLayer?.frameSequence[frameSequenceIndex]) {
