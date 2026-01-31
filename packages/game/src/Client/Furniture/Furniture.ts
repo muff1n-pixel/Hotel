@@ -75,6 +75,12 @@ export default class Furniture {
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
         }
 
+        if(this.direction === undefined) {
+            const directionPriority = [4, 2];
+
+            this.direction = this.data.visualization.defaultDirection ?? this.visualization?.directions.toSorted((a, b) => directionPriority.indexOf(b.id) - directionPriority.indexOf(a.id))?.[0].id ?? 0;
+        }
+
         this.placement = this.data.visualization.placement;
 
         return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color, this.frame);

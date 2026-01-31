@@ -1,4 +1,5 @@
 import Furniture from "@Client/Furniture/Furniture";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import RoomInstance from "@Client/Room/RoomInstance";
 import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
@@ -36,5 +37,31 @@ export default class RoomFurniture {
         if(data.position) {
             this.item.setPosition(data.position);
         }
+    }
+
+    isPositionInside(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition) {
+        if(this.item.furnitureRenderer.placement !== "floor") {
+            return false;
+        }
+
+        if(this.data.position.row >= position.row + dimensions.row) {
+            return false;
+        }
+
+        if(this.data.position.column >= position.column + dimensions.column) {
+            return false;
+        }
+
+        const furnitureDimensions = this.item.furnitureRenderer.getDimensions();
+
+        if(this.data.position.row + furnitureDimensions.row <= position.row) {
+            return false;
+        }
+
+        if(this.data.position.column + furnitureDimensions.column <= position.column) {
+            return false;
+        }
+
+        return true;
     }
 }

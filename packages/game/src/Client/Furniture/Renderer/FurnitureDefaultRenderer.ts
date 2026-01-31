@@ -15,12 +15,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const visualization = data.visualization.visualizations.find((visualization) => visualization.size == size);
 
-        if(direction === undefined) {
-            const directionPriority = [4, 2];
-
-            direction = data.visualization.defaultDirection ?? visualization?.directions.toSorted((a, b) => directionPriority.indexOf(b.id) - directionPriority.indexOf(a.id))?.[0].id ?? 0;
-        }
-
         if(!visualization) {
             throw new Error("Visualization for " + this.type + " does not exist for size: " + size + ".");
         }

@@ -96,19 +96,11 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        /*if(roomFurniturePlacer.userFurnitureData.id !== activeFurniture?.id) {
-            roomFurniturePlacer.destroy();
-
-            setRoomFurniturePlacer(undefined);
-
-            setDialogHidden("inventory", false);
-
-            return;
-        }*/
-
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
+            console.log({ position, direction });
+            
             webSocketClient.send<PlaceFurnitureEventData>("PlaceFurnitureEvent", {
                 userFurnitureId: activeFurniture.id,
                 position,

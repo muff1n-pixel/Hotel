@@ -233,43 +233,10 @@ export default class RoomInstance {
     }
     
     public getFurnitureAtUpmostPosition(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition = { row: 1, column: 1, depth: 0 }, ignoreRoomFurnitureItemId?: number) {
-        function isPositionInFurnitureDimensions(furniture: RoomItem<RoomFurnitureData, RoomFurnitureItem>) {
-            if(furniture.item.id === ignoreRoomFurnitureItemId) {
-                return false;
-            }
-
-            if(furniture.item.furnitureRenderer.placement !== "floor") {
-                return false;
-            }
-
-            if(furniture.data.position.row >= position.row + dimensions.row) {
-                return false;
-            }
-
-            if(furniture.data.position.column >= position.column + dimensions.column) {
-                return false;
-            }
-
-            const furnitureDimensions = furniture.item.furnitureRenderer.getDimensions();
-
-            if(furniture.data.position.row + furnitureDimensions.row <= position.row) {
-                return false;
-            }
-
-            if(furniture.data.position.column + furnitureDimensions.column <= position.column) {
-                return false;
-            }
-
-            return true;
-        }
-
         const furniture = this.furnitures
-            .filter((furniture) => isPositionInFurnitureDimensions(furniture))
+            .filter((furniture) => furniture.item.id !== ignoreRoomFurnitureItemId)
+            .filter((furniture) => furniture.isPositionInside(position, dimensions))
             .toSorted((a, b) => b.data.position.depth - a.data.position.depth);
-
-        if(!furniture.length) {
-            return undefined;
-        }
 
         return furniture[0];
     }
