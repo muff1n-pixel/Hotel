@@ -40,35 +40,25 @@ export default function Toolbar() {
 
                 {(room)?(
                     <ToolbarItem onClick={() => webSocketClient.send("LeaveRoomEvent", null)}>
-                        <ToolbarItem>
-                            <div className="sprite_toolbar_logo"/>
-                        </ToolbarItem>
+                        <div className="sprite_toolbar_logo"/>
                     </ToolbarItem>
                 ):(
                     <ToolbarItem onClick={() => webSocketClient.send("EnterHomeRoomEvent", null)}>
-                        <ToolbarItem>
-                            <div className="sprite_toolbar_home"/>
-                        </ToolbarItem>
+                        <div className="sprite_toolbar_home"/>
                     </ToolbarItem>
                 )}
 
                 <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
-                    <ToolbarItem>
-                        <div className="sprite_toolbar_navigator"/>
-                    </ToolbarItem>
+                    <div className="sprite_toolbar_navigator"/>
                 </ToolbarItem>
 
                 <ToolbarItem onClick={() => addUniqueDialog("shop")}>
-                    <ToolbarItem>
-                        <div className="sprite_toolbar_shop"/>
-                    </ToolbarItem>
+                    <div className="sprite_toolbar_shop"/>
                 </ToolbarItem>
 
                 {(room) && (
                     <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
-                        <ToolbarItem>
-                            <div className="sprite_toolbar_inventory"/>
-                        </ToolbarItem>
+                        <div className="sprite_toolbar_inventory"/>
                     </ToolbarItem>
                 )}
 
