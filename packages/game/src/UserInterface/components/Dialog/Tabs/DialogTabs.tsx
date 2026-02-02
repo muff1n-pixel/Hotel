@@ -163,7 +163,9 @@ export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs
                                 borderTopLeftRadius: 8,
                                 borderTopRightRadius: 8,
 
-                                padding: (withLargeTabs)?("6px 10px"):("0 10px"),
+                                minWidth: 30,
+
+                                padding: (withLargeTabs)?("6px 10px"):((activeIndex === index)?("0 9px"):("0 10px")),
 
                                 display: "flex",
                                 justifyContent: "center",
