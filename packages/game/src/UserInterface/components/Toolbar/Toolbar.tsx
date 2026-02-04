@@ -4,11 +4,15 @@ import { useRoomInstance } from "../../hooks/useRoomInstance";
 import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
 import { useDialogs } from "../../hooks/useDialogs";
+import ToolbarToggle from "./ToolbarToggle";
+import { useState } from "react";
 
 export default function Toolbar() {
     const room = useRoomInstance();
 
     const { addUniqueDialog } = useDialogs();
+
+    const [minimized, setMinimized] = useState(false);
 
     return (
         <div style={{
@@ -36,21 +40,25 @@ export default function Toolbar() {
                 gap: 14,
                 alignItems: "center"
             }}>
-                <div/>
+                <ToolbarToggle toggled={minimized} onToggle={setMinimized}/>
 
-                {(room)?(
-                    <ToolbarItem onClick={() => webSocketClient.send("LeaveRoomEvent", null)}>
-                        <div className="sprite_toolbar_logo"/>
-                    </ToolbarItem>
-                ):(
-                    <ToolbarItem onClick={() => webSocketClient.send("EnterHomeRoomEvent", null)}>
-                        <div className="sprite_toolbar_home"/>
-                    </ToolbarItem>
+                {(!minimized) && (
+                    (room)?(
+                        <ToolbarItem onClick={() => webSocketClient.send("LeaveRoomEvent", null)}>
+                            <div className="sprite_toolbar_logo"/>
+                        </ToolbarItem>
+                    ):(
+                        <ToolbarItem onClick={() => webSocketClient.send("EnterHomeRoomEvent", null)}>
+                            <div className="sprite_toolbar_home"/>
+                        </ToolbarItem>
+                    )
                 )}
 
-                <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
-                    <div className="sprite_toolbar_navigator"/>
-                </ToolbarItem>
+                {(!minimized) && (
+                    <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
+                        <div className="sprite_toolbar_navigator"/>
+                    </ToolbarItem>
+                )}
 
                 <ToolbarItem onClick={() => addUniqueDialog("shop")}>
                     <div className="sprite_toolbar_shop"/>

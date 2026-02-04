@@ -1,6 +1,7 @@
 import { useRoomInstance } from "../../hooks/useRoomInstance";
 import RoomChat from "./Chat/RoomChat";
 import RoomItemProfile from "./Item/RoomItemProfile";
+import ToolbarRoomInfo from "./Toolbar/ToolbarRoomInfo";
 import UserContextMenu from "./Users/UserContextMenu";
 
 export default function RoomInterface() {
@@ -27,6 +28,8 @@ export default function RoomInterface() {
             <UserContextMenu/>
 
             <RoomItemProfile room={room}/>
+
+            <ToolbarRoomInfo/>
         </div>
     );
 }
