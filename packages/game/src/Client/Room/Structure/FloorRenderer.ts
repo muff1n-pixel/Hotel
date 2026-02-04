@@ -166,9 +166,10 @@ export default class FloorRenderer {
 
         for(const index in rectangles) {
             const rectangle = rectangles[index];
-
-            if(rectangles.find(x => (x.row == rectangle.row + 1 && x.column == rectangle.column && x.depth == rectangle.depth)) != null)
+            
+            if(rectangles.some(x => (Math.floor(x.row) == Math.floor(rectangle.row) + 1 && Math.floor(x.column) == Math.floor(rectangle.column) && x.depth == rectangle.depth))) {
                 continue;
+            }
 
             const left = (rectangle.column * this.fullSize) - (rectangle.row * this.fullSize) - rectangle.height;
             const top = (rectangle.row * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.height;
@@ -187,8 +188,9 @@ export default class FloorRenderer {
         for(const index in rectangles) {
             const rectangle = rectangles[index];
 
-            if(rectangles.find(x => (x.row == rectangle.row && x.column == rectangle.column + 1 && x.depth == rectangle.depth)) != null)
+            if(rectangles.some(x => (Math.floor(x.row) == Math.floor(rectangle.row) && Math.floor(x.column) == Math.floor(rectangle.column) + 1 && x.depth == rectangle.depth))) {
                 continue;
+            }
 
             const row = rectangle.row;
 
