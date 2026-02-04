@@ -43,6 +43,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
             }
 
             closeDialog("room-creation");
+            closeDialog("navigator");
 
             webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
                 roomId: event.data.roomId
