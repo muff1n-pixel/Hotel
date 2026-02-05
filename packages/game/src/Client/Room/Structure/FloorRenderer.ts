@@ -237,7 +237,7 @@ export default class FloorRenderer {
 
             path.rect(left, top, rectangle.width, rectangle.height);
 
-            this.tiles.push({ row: rectangle.row, column: rectangle.column, depth: rectangle.depth, path });
+            this.tiles.push({ row: rectangle.row, column: rectangle.column, depth: Math.round(rectangle.depth), path });
             
             tiles.addPath(path);
         }
