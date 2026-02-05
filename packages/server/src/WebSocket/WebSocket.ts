@@ -62,6 +62,12 @@ export default class WebSocket {
 
                 user.emit("close", user);
             });
+
+            if(user.model.homeRoomId) {
+                const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
+
+                room?.addUserClient(user);
+            }
         });
     }
 }

@@ -26,6 +26,7 @@ import SetRoomMoodlightEvent from "./Communication/Game/Rooms/Furniture/SetFurni
 import SetFurnitureDataEvent from "./Communication/Game/Rooms/Furniture/SetFurnitureDataEvent.js";
 import UpdateRoomStructureEvent from "./Communication/Game/Rooms/UpdateRoomStructureEvent.js";
 import UpdateRoomInformationEvent from "./Communication/Game/Rooms/UpdateRoomInformationEvent.js";
+import SetHomeRoomEvent from "./Communication/Game/Users/SetHomeRoomEvent.js";
 
 await initializeModels();
 
@@ -59,7 +60,8 @@ eventHandler
     .addIncomingEvent("GetUserEvent", new GetUserEvent())
     .addIncomingEvent("GetUserFurnitureEvent", new GetUserFurnitureEvent())
     .addIncomingEvent("SetRoomChatStyleEvent", new SetRoomChatStyleEvent())
-    .addIncomingEvent("SetFigureConfigurationEvent", new SetFigureConfigurationEvent());
+    .addIncomingEvent("SetFigureConfigurationEvent", new SetFigureConfigurationEvent())
+    .addIncomingEvent("SetHomeRoomEvent", new SetHomeRoomEvent());
     
 eventHandler
     .addIncomingEvent("CreateRoomEvent", new CreateRoomEvent())

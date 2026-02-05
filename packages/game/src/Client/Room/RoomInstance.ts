@@ -34,6 +34,8 @@ export type RoomInstanceFurniture = RoomItem<RoomFurnitureData, RoomFurnitureIte
 export default class RoomInstance {
     public readonly key = Math.random();
 
+    public readonly id: string;
+
     public readonly roomRenderer: RoomRenderer;
 
     private readonly users: RoomItem<RoomUserData, RoomFigureItem>[] = [];
@@ -45,6 +47,8 @@ export default class RoomInstance {
     public information: RoomInformationData;
 
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoomEventData) {
+        this.id = event.id;
+        
         this.information = event.information;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);

@@ -36,6 +36,8 @@ export default class RoomUser {
         
         this.user.send([
             new OutgoingEvent<LoadRoomEventData>("LoadRoomEvent", {
+                id: this.room.model.id,
+                
                 information: {
                     name: this.room.model.name,
                     description: this.room.model.description,

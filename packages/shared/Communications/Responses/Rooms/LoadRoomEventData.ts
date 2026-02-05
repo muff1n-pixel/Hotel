@@ -13,6 +13,8 @@ export type RoomInformationData = {
 };
 
 export type LoadRoomEventData = {
+    id: string;
+    
     information: RoomInformationData;
 
     structure: RoomStructure;
