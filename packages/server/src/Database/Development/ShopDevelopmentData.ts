@@ -55,7 +55,12 @@ const defaultShopPages: any = [
                     { type: "cine_vipsign", credits: 3 }
                 ]
             },
-
+            {
+                title: "Dimmers",
+                furnitures: [
+                    { type: "roomdimmer", credits: 12 }
+                ]
+            },
             {
                 title: "Wallpapers",
                 icon: "icon_225.png",
