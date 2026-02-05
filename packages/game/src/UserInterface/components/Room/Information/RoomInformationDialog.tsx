@@ -5,6 +5,7 @@ import DialogContent from "../../Dialog/DialogContent";
 import { AppContext } from "../../../contexts/AppContext";
 import { webSocketClient } from "../../../..";
 import { SetHomeRoomEventData } from "@Shared/Communications/Requests/User/SetHomeRoomEventData";
+import RoomThumbnail from "../Thumbnail/RoomThumbnail";
 
 export type RoomInformationDialogProps = {
     hidden?: boolean;
@@ -60,10 +61,19 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
 
                     <div><b style={{ color: "#7A7A7A" }}>Owner:</b> {room.information.owner.name}</div>
 
-                    <div>
-                        <p>
-                            {room.information.description}
-                        </p>
+                    {(room.information.description) && (
+                        <div>
+                            <p>
+                                {room.information.description}
+                            </p>
+                        </div>
+                    )}
+
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center"
+                    }}>
+                        <RoomThumbnail roomId={room.id}/>
                     </div>
                 </div>
             </DialogContent>
