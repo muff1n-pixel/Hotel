@@ -8,9 +8,13 @@ import { game } from "../../index.js";
 import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
 import RoomFurnitureGateLogic from "./Logic/RoomFurnitureGateLogic.js";
 import RoomFurnitureLightingLogic from "./Logic/RoomFurnitureLightingLogic.js";
+import { NonAttributeBrand } from "@sequelize/core";
 
 export default class RoomFurniture {
     constructor(private readonly room: Room, public readonly model: UserFurnitureModel) {
+        if(model.furniture.category === "teleport") {
+            model.animation = 0;
+        }
     }
 
     public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPosition, direction: number) {
