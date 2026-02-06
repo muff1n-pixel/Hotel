@@ -15,9 +15,14 @@ export default class RoomWallSprite extends RoomSprite {
             left: -(this.item.wallRenderer.rows * 32),
             top: -((this.item.wallRenderer.depth + 3.5) * 32) - item.wallRenderer.structure.wall.thickness
         }
+
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
+        const scale = this.item.roomRenderer.getSizeScale();
+
+        context.scale(scale, scale);
+
         context.drawImage(this.image, this.offset.left - this.item.wallRenderer.structure.wall.thickness, this.offset.top);
     }
 

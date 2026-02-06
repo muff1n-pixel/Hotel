@@ -22,6 +22,10 @@ export default class RoomFigureEffectSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
+        const scale = this.item.roomRenderer.getSizeScale();
+
+        context.scale(scale, scale);
+        
         if(this.sprite.ink) {
             context.globalCompositeOperation = this.sprite.ink;
         }

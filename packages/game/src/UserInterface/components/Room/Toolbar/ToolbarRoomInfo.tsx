@@ -2,8 +2,11 @@ import { useState } from "react";
 import ToolbarToggle from "../../Toolbar/ToolbarToggle";
 import ToolbarRoomInfoButton from "./Button/ToolbarRoomInfoButton";
 import { useDialogs } from "../../../hooks/useDialogs";
+import { useRoomInstance } from "../../../hooks/useRoomInstance";
 
 export default function ToolbarRoomInfo() {
+    const room = useRoomInstance();
+
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
@@ -59,7 +62,12 @@ export default function ToolbarRoomInfo() {
                                 sprite: "sprite_toolbar_room_zoom",
                                 label: "Zoom",
                                 onClick: () => {
-                                    
+                                    if(room?.roomRenderer.size === 64) {
+                                        room.roomRenderer.size = 32;
+                                    }
+                                    else if(room?.roomRenderer.size === 32) {
+                                        room.roomRenderer.size = 64;
+                                    }
                                 }
                             },
                             {

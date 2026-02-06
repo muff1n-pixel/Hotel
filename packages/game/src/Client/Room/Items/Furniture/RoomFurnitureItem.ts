@@ -27,6 +27,10 @@ export default class RoomFurnitureItem extends RoomItem {
     }
 
     render() {
+        if(this.furnitureRenderer.type !== "tile_cursor") {
+            this.furnitureRenderer.size = this.roomRenderer.size;
+        }
+        
         this.furnitureRenderer.render().then((sprites) => {
             this.sprites = sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
         });

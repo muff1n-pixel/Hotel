@@ -18,13 +18,19 @@ export default class RoomFigureSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
+        const scale = this.item.roomRenderer.getSizeScale();
+
+        context.scale(scale, scale);
+
         context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
     }
 
     mouseover(position: MousePosition) {
+        const scale = this.item.roomRenderer.getSizeScale();
+
         const relativePosition: MousePosition = {
-            left: position.left - (this.offset.left),
-            top: position.top - (this.offset.top)
+            left: ((position.left * (1 / scale)) - (this.offset.left)),
+            top: ((position.top * (1 / scale)) - (this.offset.top))
         };
 
         if(relativePosition.left < 0 || relativePosition.top < 0) {

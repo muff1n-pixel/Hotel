@@ -13,19 +13,9 @@ export default class RoomFurnitureSprite extends RoomSprite {
         super(item);
 
         this.priority = this.sprite.zIndex;
-        
-        /*this.offset = {
-            left: item.furnitureRenderer.getDimensions(true).row * 8,
-            top: item.furnitureRenderer.getDimensions(true).depth * -64
-        };*/
-
-        this.offset = {
-            left: this.sprite.x, // + 64,
-            top: this.sprite.y, // + 16
-        };
 
         if(item.furnitureRenderer.placement === "floor") {
-            this.offset.left += 64;   
+            this.offset.left += 64;
             this.offset.top += 16;
         }
         else {
@@ -38,6 +28,14 @@ export default class RoomFurnitureSprite extends RoomSprite {
 
             this.offset.top -= 16;
         }
+
+        if(this.item.furnitureRenderer.type !== "tile_cursor") {
+            this.offset.left *= this.item.roomRenderer.getSizeScale();
+            this.offset.top *= this.item.roomRenderer.getSizeScale();
+        }
+
+        this.offset.left += this.sprite.x;
+        this.offset.top += this.sprite.y;
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
@@ -47,6 +45,15 @@ export default class RoomFurnitureSprite extends RoomSprite {
 
         if(this.sprite.alpha) {
             context.globalAlpha = this.sprite.alpha / 255;
+        }
+
+        if(this.item.furnitureRenderer.type === "tile_cursor") {
+            const scale = this.item.roomRenderer.getSizeScale();
+
+            context.scale(scale, scale);
+            context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
+
+            return;
         }
 
         context.drawImage(this.sprite.image, this.offset.left, this.offset.top);

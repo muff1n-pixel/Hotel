@@ -21,6 +21,10 @@ export default class RoomFloorSprite extends RoomSprite {
         if(!this.image) {
             return;
         }
+        
+        const scale = this.item.roomRenderer.getSizeScale();
+        
+        context.scale(scale, scale);
 
         context.drawImage(this.image, this.offset.left - this.item.floorRenderer.structure.wall.thickness, this.offset.top);
     }
@@ -35,11 +39,15 @@ export default class RoomFloorSprite extends RoomSprite {
         if(!context) {
             throw new ContextNotAvailableError();
         }
+        
+        const scale = this.item.roomRenderer.getSizeScale();
+        context.scale(scale, scale);
+        
 
         context.setTransform(1, .5, -1, .5, this.offset.left + (this.item.floorRenderer.rows * 32), 0);
 
         for(let path = this.item.floorRenderer.tiles.length - 1; path != -1; path--) {
-            if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, position.left, position.top)) {
+            if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, position.left * (1 / scale), position.top * (1 / scale))) {
                 continue;
             }
 

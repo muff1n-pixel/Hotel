@@ -31,6 +31,8 @@ export default class RoomRenderer extends EventTarget {
 
     public frame: number = 0;
 
+    public size: number = 64;
+
     private readonly framesPerSecond: number = 24;
     private readonly millisecondsPerFrame: number = 1000 / this.framesPerSecond;
     private lastFrameTimestamp: number = performance.now();
@@ -67,6 +69,10 @@ export default class RoomRenderer extends EventTarget {
         this.terminated = true;
 
         this.element.remove();
+    }
+
+    public getSizeScale() {
+        return this.size / 64;
     }
 
     private render() {
@@ -188,10 +194,17 @@ export default class RoomRenderer extends EventTarget {
             return null;
         }
 
-        return {
+        const result = {
             left: this.camera.mousePosition.left - this.renderedOffset.left,
             top: this.camera.mousePosition.top - this.renderedOffset.top
         };
+
+        const scale = this.getSizeScale();
+
+        result.left *= scale;
+        result.top *= scale;
+
+        return result;
     }
 
     public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
@@ -207,6 +220,8 @@ export default class RoomRenderer extends EventTarget {
                 filteredItems = filteredItems.filter(filter);
             }
 
+            const scale = this.getSizeScale();
+
             const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.getSpritePriority(b) - this.getSpritePriority(a));
 
             for(let index = 0; index < sprites.length; index++) {
@@ -218,8 +233,8 @@ export default class RoomRenderer extends EventTarget {
                 };
 
                 if(sprite.item.position) {
-                    relativeMousePosition.left = offsetMousePosition.left - Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64);
-                    relativeMousePosition.top = offsetMousePosition.top - Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - (sprite.item.position.depth * 32));
+                    relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
+                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - (sprite.item.position.depth * 32))) * scale;
                 }
 
                 const tile = sprite.mouseover(relativeMousePosition);
@@ -238,10 +253,17 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public getCoordinatePosition(coordinate: RoomPosition): MousePosition {
-        return {
+        const result = {
             left: Math.floor(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
             top: Math.floor((coordinate.column * 16) + (coordinate.row * 16) - (coordinate.depth * 32))
         };
+
+        const scale = this.getSizeScale();
+
+        result.left *= scale;
+        result.top *= scale;
+
+        return result;
     }
 
     private getSpritePriority(sprite: RoomSprite) {

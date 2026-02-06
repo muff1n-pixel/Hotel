@@ -23,6 +23,10 @@ export default class RoomDoorMaskSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
+        const scale = this.item.roomRenderer.getSizeScale();
+        
+        context.scale(scale, scale);
+
         context.drawImage(this.image, this.offset.left - this.item.wallRenderer!.structure.wall.thickness, this.offset.top);
     }
 
