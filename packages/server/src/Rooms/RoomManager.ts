@@ -35,7 +35,13 @@ export default class RoomManager {
                 },
                 {
                     model: RoomRightsModel,
-                    as: "rights"
+                    as: "rights",
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "user"
+                        }
+                    ]
                 },
                 {
                     model: UserFurnitureModel,

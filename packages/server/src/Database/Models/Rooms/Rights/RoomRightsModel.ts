@@ -34,6 +34,6 @@ export function initializeRoomRightsModel(sequelize: Sequelize) {
 
     RoomModel.hasMany(RoomRightsModel, {
         as: "rights",
-        foreignKey: "rightsId"
+        foreignKey: "roomId"
     });
 }
