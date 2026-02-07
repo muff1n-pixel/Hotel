@@ -24,8 +24,10 @@ export const loaderInstance = new LoaderInstance(loaderElement);
 
 loaderInstance.render();
 
+const searchParams = new URLSearchParams(window.location.search);
+
 export const webSocketClient = new WebSocketClient({
-    userId: "user1"
+    userId: searchParams.get("user") ?? "user1"
 });
 
 export const clientInstance = new ClientInstance(clientElement);
