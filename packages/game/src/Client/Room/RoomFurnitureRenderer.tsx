@@ -8,6 +8,7 @@ import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFloorItem from "./Items/Map/RoomFloorItem";
 import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
+import { clientInstance } from "../..";
 
 export type RoomFurnitureRendererOptions = {
     withoutWalls?: boolean;
@@ -35,11 +36,11 @@ export default class RoomFurnitureRenderer {
                 "0000000",
             ],
             floor: {
-                id: "101",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.floor.id ?? "111",
                 thickness: 8
             },
             wall: {
-                id: "2301",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.wall.id ?? "201",
                 thickness: 8,
                 hidden: false
             }
