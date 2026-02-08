@@ -4,7 +4,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import RoomWallItem from "../Map/RoomWallItem";
 
 export default class RoomWallSprite extends RoomSprite {
-    priority = -2100;
+    priority = -3100;
 
     private readonly offset: MousePosition;
 
