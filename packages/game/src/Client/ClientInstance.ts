@@ -21,12 +21,14 @@ import UserPositionEvent from "@Client/Communications/Room/User/UserPositionEven
 import { UserEventData } from "@Shared/Communications/Responses/User/UserEventData";
 import UserEvent from "@Client/Communications/Room/User/UserEvent";
 import RoomUserRightsEvent from "@Client/Communications/Room/User/RoomUserRightsEvent";
+import { RoomHistory } from "../UserInterface/components/Room/Toolbar/ToolbarRoomChat";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
     public roomChatStyles = new ObservableProperty<RoomChatStyleData[]>();
     public dialogs = new ObservableProperty<Dialog[]>([]);
     public user = new ObservableProperty<UserEventData>();
+    public roomHistory = new ObservableProperty<RoomHistory[]>([]);
 
     constructor(public readonly element: HTMLElement) {
         super();

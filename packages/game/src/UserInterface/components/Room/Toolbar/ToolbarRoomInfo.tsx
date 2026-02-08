@@ -3,6 +3,7 @@ import ToolbarToggle from "../../Toolbar/ToolbarToggle";
 import ToolbarRoomInfoButton from "./Button/ToolbarRoomInfoButton";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import ToolbarRoomChat from "./ToolbarRoomChat";
 
 export default function ToolbarRoomInfo() {
     const room = useRoomInstance();
@@ -10,6 +11,8 @@ export default function ToolbarRoomInfo() {
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
+    const [chatMinimized, setChatMinimized] = useState(false);
+
     const [zoomed, setZoomed] = useState(room?.roomRenderer.size === 32);
    
     if(!room) {
@@ -20,10 +23,19 @@ export default function ToolbarRoomInfo() {
         <div style={{
             position: "absolute",
             left: 0,
-            bottom: 58
+            top: 0,
+            bottom: 50,
+
+            paddingBottom: 8,
+
+            display: "flex",
+            flexDirection: "column",
         }}>
+            <ToolbarRoomChat minimized={chatMinimized} onMinimized={setChatMinimized}/>
+
             <div style={{
                 minWidth: 150,
+                width: "max-content",
                 position: "relative"
             }}>
                 <div style={{
@@ -84,7 +96,7 @@ export default function ToolbarRoomInfo() {
                                 sprite: "sprite_toolbar_room_chat",
                                 label: "Chat history",
                                 onClick: () => {
-                                    
+                                    setChatMinimized(!chatMinimized);
                                 }
                             },
                             {
