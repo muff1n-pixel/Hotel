@@ -51,11 +51,11 @@ function start(text?: string) {
         loaderInstance.hide();
     });
 
-    webSocketClient.addEventListener("close", () => {
+    /*webSocketClient.addEventListener("close", () => {
         userInterface.destroy();
         clientInstance.destroy();
         loaderInstance.destroy();
 
         start("Reconnecting...");
-    });
+    });*/
 }
