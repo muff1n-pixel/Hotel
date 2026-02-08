@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
 import InterfaceInstance from './components/InterfaceInstance';
 
@@ -8,14 +8,14 @@ import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 
 export default class UserInterfaceInstance {
-  constructor(private readonly element: HTMLElement) {
+  private root: Root;
 
+  constructor(private readonly element: HTMLElement) {
+    this.root = createRoot(this.element);
   }
 
   render() {
-    const root = createRoot(this.element);
-
-    root.render(
+    this.root.render(
       <StrictMode>
         <div style={{
           position: "fixed",
@@ -34,5 +34,9 @@ export default class UserInterfaceInstance {
         </div>
       </StrictMode>
     );
+  }
+
+  destroy() {
+    this.root.unmount();
   }
 }

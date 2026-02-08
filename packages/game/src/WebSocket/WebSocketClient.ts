@@ -30,10 +30,18 @@ export default class WebSocketClient extends EventTarget {
                 this.dispatchEvent(new Event("open"));
             });
         }
+        
+        this.socket.addEventListener("close", () => {
+            this.dispatchEvent(new Event("close"));
+        });
     }
 
     send<T>(type: string, data: T) {
         this.socket.send(JSON.stringify([[type, data]]));
+    }
+
+    public close() {
+        this.socket.close();
     }
 
     addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void {

@@ -57,4 +57,10 @@ export default class ClientInstance extends EventTarget {
     removeEventListener<T>(type: string, callback: (event: T) => void | null, options?: EventListenerOptions | boolean): void {
         super.removeEventListener(type, callback as EventListener, options);
     }
+
+    destroy() {
+        this.roomInstance.value?.terminate();
+
+        this.element.innerHTML = "";
+    }
 }

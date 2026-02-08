@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
 
 import "../UserInterface/styles/fonts.css";
@@ -6,17 +6,17 @@ import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 
 export default class LoaderInstance {
-  constructor(private readonly element: HTMLElement) {
+  private readonly root: Root;
 
+  constructor(private readonly element: HTMLElement) {
+    this.root = createRoot(this.element);
   }
 
-  render() {
-    const root = createRoot(this.element);
-
+  render(text?: string) {
     const images = Array(30).fill(null).map((_, index) => `./assets/loader/image${index + 1}.png`);
     const randomImage = images[Math.floor(Math.random() * images.length)];
 
-    root.render(
+    this.root.render(
       <StrictMode>
         <div style={{
             position: "fixed",
@@ -59,9 +59,17 @@ export default class LoaderInstance {
 
             </div>
 
-            <h1>Loading...</h1>
+            <h1>{(text)?(text):("Loading...")}</h1>
         </div>
       </StrictMode>
     );
+  }
+
+  public hide() {
+    this.root.unmount();
+  }
+
+  public destroy() {
+    this.root.unmount();
   }
 }
