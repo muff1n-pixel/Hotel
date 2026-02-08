@@ -4,6 +4,7 @@ import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomRenderer from "@Client/Room/Renderer";
+import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFurniturePlaceholderSprite";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -30,7 +31,13 @@ export default class RoomFurnitureItem extends RoomItem {
         if(this.furnitureRenderer.type !== "tile_cursor") {
             this.furnitureRenderer.size = this.roomRenderer.size;
         }
-        
+
+        if(!this.sprites.length) {
+            this.sprites = [
+                new RoomFurniturePlaceholderSprite(this)
+            ];
+        }
+
         this.furnitureRenderer.render().then((sprites) => {
             this.sprites = sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
         });

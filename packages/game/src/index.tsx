@@ -3,6 +3,7 @@ import ClientInstance from "@Client/ClientInstance";
 import UserInterfaceInstance from "./UserInterface";
 import FigureAssets from "@Client/Assets/FigureAssets";
 import LoaderInstance from "./Loader";
+import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");
@@ -43,6 +44,7 @@ function start(text?: string) {
 
     webSocketClient.addEventListener("open", async () => {
         await FigureAssets.loadAssets();
+        await FurnitureAssets.preloadAssets();
 
         userInterface.render();
 

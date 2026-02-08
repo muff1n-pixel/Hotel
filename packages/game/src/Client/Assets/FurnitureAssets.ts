@@ -3,6 +3,17 @@ import AssetFetcher, { AssetSpriteProperties } from "./AssetFetcher";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 
 export default class FurnitureAssets {
+    public static placeholder: { image: ImageBitmap, imageData: ImageData };
+    
+    public static async preloadAssets() {
+        FurnitureAssets.placeholder = await AssetFetcher.fetchImageSprite(`/assets/furniture/placeholder/placeholder64.png`, {
+            x: 0,
+            y: 0,
+            width: 68,
+            height: 67
+        });
+    }
+
     public static async getFurnitureData(furnitureName: string) {
         return await AssetFetcher.fetchJson<FurnitureData>(`/assets/furniture/${furnitureName}/${furnitureName}.json`);
     }
