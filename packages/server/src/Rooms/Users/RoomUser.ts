@@ -99,7 +99,10 @@ export default class RoomUser {
         const user = this.room.getRoomUserAtPosition(nextPosition);
 
         if(user && user.user.model.id !== this.user.model.id) {
-            this.walkTo(this.path[this.path.length - 1]!, this.walkThroughFurniture, this.pathOnFinish, this.pathOnCancel);
+            console.log("User path cancelled, user is obstructing");
+
+            this.path = undefined;
+            this.pathOnCancel?.();
 
             return;
         }
@@ -198,24 +201,36 @@ export default class RoomUser {
                     return 1;
                 }
 
-                if(walkThroughFurniture) {
-                    return 0;
+                if(!walkThroughFurniture) {
+                    const furniture = this.user.room!.getUpmostFurnitureAtPosition({ row: rowIndex, column: columnIndex });
+
+                    if(furniture) {
+                        if(furniture.model.position.row === this.position.row && furniture.model.position.column === this.position.column) {
+                            return 0;
+                        }
+
+                        if(!furniture.isWalkable()) {
+                            return 1;
+                        }
+                    }
                 }
 
                 const user = this.room.getRoomUserAtPosition({ row: rowIndex, column: columnIndex });
 
-                if(user && user.user.model.id !== this.user.model.id) {
-                    return 1;
-                }
-
-                const furniture = this.user.room!.getUpmostFurnitureAtPosition({ row: rowIndex, column: columnIndex });
-
-                if(furniture) {
-                    if(furniture.model.position.row === this.position.row && furniture.model.position.column === this.position.column) {
+                if(user) {
+                    if(rowIndex === this.position.row && columnIndex === this.position.column) {
                         return 0;
                     }
 
-                    return (furniture.isWalkable())?(0):(1);
+                    if(user.user.model.id === this.user.model.id) {
+                        return 0;
+                    }
+                    
+                    if(rowIndex === position.row && columnIndex === position.column) {
+                        return 0;
+                    }
+                    
+                    return 1;
                 }
 
                 return 0;
