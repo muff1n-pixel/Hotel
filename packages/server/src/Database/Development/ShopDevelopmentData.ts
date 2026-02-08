@@ -68,7 +68,12 @@ const defaultShopPages: any = [
             },
             {
                 title: "Dimmers",
+                description: "Check out the Mood Lights. Use these items to dim the light in your rooms. Try out different light settings with different wallpapers to see what you get. Talk about lighting with style!",
+
                 icon: "icon_51.png",
+                header: "dimmers_header.gif",
+                teaser: "dimmers_teaser.gif",
+
                 furnitures: [
                     { type: "dimmer_buttn", credits: 3, duckets: 250 },
                     { type: "dimmer_swtch", credits: 9, diamonds: 10 },
@@ -78,24 +83,30 @@ const defaultShopPages: any = [
                 ]
             },
             {
-                title: "Wallpapers",
-                icon: "icon_225.png",
-                furnitures: getWallIds().map((wallId: number) => {
-                    return {
-                        type: "wallpaper",
-                        color: wallId,
-                        credits: 2
-                    };
-                })
-            },
+                title: "Floor patterns",
+                description: "Use our virtual room preview to test out the design and colour of floor pattern you like before buying.",
 
-            {
-                title: "Floors",
                 icon: "icon_225.png",
+
                 furnitures: getFloorIds().map((floorId: number) => {
                     return {
                         type: "floor",
                         color: floorId,
+                        credits: 2
+                    };
+                })
+            },
+            {
+                title: "Wallpapers",
+                description: "Use our virtual room preview to test out the design and colour of wallpaper you like before buying.",
+
+                icon: "icon_286.png",
+                teaser: "catalog_spaces_wallpaper.gif",
+
+                furnitures: getWallIds().map((wallId: number) => {
+                    return {
+                        type: "wallpaper",
+                        color: wallId,
                         credits: 2
                     };
                 })
@@ -116,7 +127,8 @@ const defaultShopPages: any = [
                 description: "There's nothing better than to pack your picnic basket and find a nice spot outdoors to hang out, play and walk on grass barefoot.",
                 
                 icon: "icon_21.png",
-                header: "catalog_frontpage_headline_shop_EN.gif",
+                header: "country_header.gif",
+                teaser: "country_teaser.gif",
 
                 furnitures: [
                     { type: "country_corner", duckets: 75 },
@@ -168,10 +180,11 @@ const defaultShopPages: any = [
 
             {
                 title: "Gardening",
-                description: null,
+                description: "Plant your crops and watch them grow to beautiful plants!",
                 
                 icon: "icon_157.png",
-                header: "catalog_frontpage_headline_shop_EN.gif",
+                header: "garden_header.gif",
+                teaser: "garden_catalog_teaser.gif",
 
                 furnitures: [
                     { type: "stone_flowerbed", duckets: 150 },
