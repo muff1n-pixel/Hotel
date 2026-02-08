@@ -11,7 +11,7 @@ export default function ToolbarRoomInfo() {
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
-    const [chatMinimized, setChatMinimized] = useState(false);
+    const [chatMinimized, setChatMinimized] = useState(true);
 
     const [zoomed, setZoomed] = useState(room?.roomRenderer.size === 32);
    
