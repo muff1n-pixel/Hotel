@@ -33,6 +33,14 @@ export function initializeRoomMapModel(sequelize: Sequelize) {
                   this.setDataValue("grid", JSON.stringify(value.map((row) => row.toUpperCase())));
               },
               allowNull: false
+          },
+          index: {
+            type: DataTypes.NUMBER,
+            defaultValue: 0
+          },
+          indexable: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
           }
         },
         {

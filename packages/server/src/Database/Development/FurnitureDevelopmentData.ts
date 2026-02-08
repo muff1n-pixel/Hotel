@@ -51,13 +51,13 @@ function getHabboRoomContentData() {
 export function getWallIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
 
-    return habboRoomContentData.visualization.wallData.walls.filter((wall: any) => wall.id !== "default").map((wall: any) => parseInt(wall.id));
+    return habboRoomContentData.visualization.wallData.walls.filter((wall: any) => !isNaN(parseInt(wall.id))).map((wall: any) => parseInt(wall.id));
 }
 
 export function getFloorIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
 
-    return habboRoomContentData.visualization.floorData.floors.filter((floor: any) => floor.id !== "default").map((floor: any) => parseInt(floor.id));
+    return habboRoomContentData.visualization.floorData.floors.filter((floor: any) => !isNaN(parseInt(floor.id))).map((floor: any) => parseInt(floor.id));
 }
 
 function getFurnitureServerData(assetName: string) {

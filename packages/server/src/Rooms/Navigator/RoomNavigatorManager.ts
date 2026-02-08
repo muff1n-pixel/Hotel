@@ -16,7 +16,14 @@ export default class RoomNavigatorManager {
     }
 
     public async loadModels() {
-        this.maps = await RoomMapModel.findAll();
+        this.maps = await RoomMapModel.findAll({
+            where: {
+                indexable: true
+            },
+            order: [
+                ["index", "ASC"]
+            ]
+        });
     }
 
     private async onRoomMapsRequest(user: User) {

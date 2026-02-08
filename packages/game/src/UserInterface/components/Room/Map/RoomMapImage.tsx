@@ -5,13 +5,15 @@ import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 
 export type RoomMapImageProps = {
+    crop?: boolean;
     width: number;
     height: number;
     structure: RoomStructure;
     style: CSSProperties;
+    leftWallColor?: string[];
 }
 
-export default function RoomMapImage({ width, height, style, structure }: RoomMapImageProps) {
+export default function RoomMapImage({ crop = false, width, height, style, structure, leftWallColor }: RoomMapImageProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rendered = useRef(false);
 
@@ -42,7 +44,7 @@ export default function RoomMapImage({ width, height, style, structure }: RoomMa
                 })(),
                 
                 (async () => {
-                    const { wall, doorMask } = await wallRenderer.renderOffScreen();
+                    const { wall, doorMask } = await wallRenderer.renderOffScreen(leftWallColor);
 
                     return [
                         await createImageBitmap(wall),
@@ -51,21 +53,74 @@ export default function RoomMapImage({ width, height, style, structure }: RoomMa
                 })()
             ]);
 
-            const context = canvasRef.current?.getContext("2d");
+            const canvas = new OffscreenCanvas(Math.max(wallImage.width, floorImage.width), Math.max(wallImage.height, floorImage.height));
+
+            const context = canvas.getContext("2d");
 
             if(!context) {
                 throw new ContextNotAvailableError();
             }
 
-            context.translate(width / 2, (wallRenderer.depth + 3.5) * fullSize);
+            context.translate((floorRenderer.rows * fullSize), (wallRenderer.depth + 3.5) * fullSize);
 
             context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.structure.wall.thickness);
             context.drawImage(floorImage, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * halfSize) - halfSize - (floorRenderer.structure.wall.thickness ?? 0));
             context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.structure.wall.thickness);
+
+            const resultContext = canvasRef.current?.getContext("2d");
+
+            if(!resultContext) {
+                throw new ContextNotAvailableError();
+            }
+
+            if(crop) {
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+                const bounds = { top: height, left: width, right: 0, bottom: 0 };
+
+                for (let row = 0; row < imageData.height; row++) {
+                    for (let column = 0; column < imageData.width; column++) {
+                        if (imageData.data[row * width * 4 + column * 4 + 3] !== 0) {
+                            if (row < bounds.top) {
+                                bounds.top = row;
+                            }
+
+                            if (column < bounds.left) {
+                                bounds.left = column;
+                            } 
+
+                            if (column > bounds.right) {
+                                bounds.right = column;
+                            }
+
+                            if (row > bounds.bottom) {
+                                bounds.bottom = row
+                            }
+                        }
+                    }
+                }
+
+                const newWidth = bounds.right - bounds.left
+                const newHeight = bounds.bottom - bounds.top
+
+                resultContext.canvas.width = newWidth;
+                resultContext.canvas.height = newHeight;
+
+                resultContext.drawImage(canvas,
+                    bounds.left, bounds.top, newWidth, newHeight,
+                    0, 0, newWidth, newHeight
+                );
+            }
+            else {
+                resultContext.canvas.width = width;
+                resultContext.canvas.height = height;
+
+                resultContext.drawImage(canvas, 0, 0);
+            }
         })();
     }, [ canvasRef, structure ]);
 
     return (
-        <canvas ref={canvasRef} width={width} height={height} style={style}/>
+        <canvas ref={canvasRef} style={style}/>
     );
 }

@@ -71,7 +71,7 @@ export default class FloorRenderer {
         const visualization = data.visualization.floorData.floors.find((floor) => floor.id === this.floorId)?.visualizations.find((visualization) => visualization.size === 64);
         
         if(!visualization) {
-            throw new Error("Room visualization data does not exist for id and size.");
+            throw new Error("Room visualization data does not exist for id " + this.floorId + " and size " + 64);
         }
 
         const material = data.visualization.floorData.materials.find((material) => material.id === visualization.materialId);

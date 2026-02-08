@@ -127,30 +127,26 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
 
                                     position: "relative",
 
-                                    cursor: "pointer"
+                                    cursor: "pointer",
+
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
                                 }} onClick={() => setActiveRoomMap(roomMap)}>
-                                    <RoomMapImage width={135} height={96} style={{
-                                        position: "absolute",
-
-                                        left: "-100%",
-                                        top: "-100%",
-                                        right: "-100%",
-                                        bottom: "-100%",
-
-                                        margin: "auto"
+                                    <RoomMapImage crop={true} width={135} height={96} style={{
                                     }} structure={{
                                         grid: roomMap.grid,
                                         door: roomMap.door,
                                         floor: {
-                                            id: "101",
+                                            id: "preview",
                                             thickness: 0
                                         },
                                         wall: {
-                                            id: "206",
+                                            id: "preview",
                                             thickness: 0,
                                             hidden: false
                                         }
-                                    }}/>
+                                    }} leftWallColor={["D48612"]}/>
                                 </div>
                             ))}
                         </div>

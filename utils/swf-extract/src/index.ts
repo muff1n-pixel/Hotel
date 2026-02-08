@@ -117,12 +117,46 @@ let assetNames = [process.argv[2]];
                     const index = createIndexData(swfCollection);
                     const visualization = createRoomVisualizationData(swfCollection);
 
+                    visualization.wallData.walls.push({
+                        "id": "preview",
+                        "visualizations": [
+                            {
+                                "size": 32,
+                                "color": "F0C032",
+                                "materialId": "wall_32_1"
+                            },
+                            {
+                                "size": 64,
+                                "color": "F0C032",
+                                "materialId": "wall_64_1"
+                            }
+                        ]
+                    });
+
+                    visualization.floorData.floors.push({
+                        "id": "preview",
+                        "visualizations": [
+                            {
+                                "size": 32,
+                                "color": "A57B51",
+                                "materialId": "floor_32_1"
+                            },
+                            {
+                                "size": 64,
+                                "color": "A57B51",
+                                "materialId": "floor_64_1"
+                            }
+                        ]
+                    });
+
                     const data: RoomData = {
                         index,
                         visualization,
                         assets,
                         sprites: spritesheet
                     };
+
+                    data.visualization.fdsdf;
 
                     writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
                         encoding: "utf-8"

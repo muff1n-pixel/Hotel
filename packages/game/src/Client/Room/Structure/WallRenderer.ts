@@ -100,7 +100,7 @@ export default class WallRenderer {
         return doorMask;
     }
 
-    public async renderOffScreen() {
+    public async renderOffScreen(leftWallColor?: string[]) {
         const data = await RoomAssets.getRoomData("HabboRoomContent");
         const visualization = data.visualization.wallData.walls.find((wall) => wall.id === this.wallId)?.visualizations.find((visualization) => visualization.size === 64);
         
@@ -150,7 +150,7 @@ export default class WallRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
-            color: [visualization.color, "666"],
+            color: leftWallColor ?? [visualization.color, "666"],
             flipHorizontal: assetData.flipHorizontal
         });
 

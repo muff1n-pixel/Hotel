@@ -37,6 +37,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_y',
+            index: 23,
+            indexable: true,
             door: {
                 row: 3,
                 column: 0,
@@ -46,6 +48,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_u',
+            index: 19,
+            indexable: true,
             door: {
                 row: 17,
                 column: 0,
@@ -55,6 +59,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_z',
+            index: 24,
+            indexable: true,
             door: {
                 row: 9,
                 column: 0,
@@ -64,6 +70,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_w',
+            index: 21,
+            indexable: true,
             door: {
                 row: 3,
                 column: 0,
@@ -73,6 +81,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_x',
+            index: 22,
+            indexable: true,
             door: {
                 row: 12,
                 column: 0,
@@ -91,6 +101,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_v',
+            index: 20,
+            indexable: true,
             door: {
                 row: 3,
                 column: 0,
@@ -100,6 +112,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_t',
+            index: 18,
+            indexable: true,
             door: {
                 row: 3,
                 column: 0,
@@ -109,6 +123,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_h',
+            index: 7,
+            indexable: true,
             door: {
                 row: 4,
                 column: 4,
@@ -118,6 +134,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_p',
+            index: 15,
+            indexable: true,
             door: {
                 row: 23,
                 column: 0,
@@ -127,6 +145,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_r',
+            index: 17,
+            indexable: true,
             door: {
                 row: 4,
                 column: 10,
@@ -136,6 +156,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_q',
+            index: 16,
+            indexable: true,
             door: {
                 row: 4,
                 column: 10,
@@ -145,6 +167,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_o',
+            index: 14,
+            indexable: true,
             door: {
                 row: 18,
                 column: 0,
@@ -154,6 +178,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_n',
+            index: 13,
+            indexable: true,
             door: {
                 row: 16,
                 column: 0,
@@ -163,6 +189,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_g',
+            index: 6,
+            indexable: true,
             door: {
                 row: 7,
                 column: 1,
@@ -172,6 +200,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_l',
+            index: 11,
+            indexable: true,
             door: {
                 row: 16,
                 column: 0,
@@ -181,6 +211,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_m',
+            index: 12,
+            indexable: true,
             door: {
                 row: 15,
                 column: 0,
@@ -190,6 +222,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_k',
+            index: 10,
+            indexable: true,
             door: {
                 row: 13,
                 column: 0,
@@ -199,6 +233,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_j',
+            index: 9,
+            indexable: true,
             door: {
                 row: 10,
                 column: 0,
@@ -208,6 +244,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_i',
+            index: 8,
+            indexable: true,
             door: {
                 row: 10,
                 column: 0,
@@ -217,6 +255,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_e',
+            index: 4,
+            indexable: true,
             door: {
                 row: 5,
                 column: 1,
@@ -226,6 +266,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_f',
+            index: 5,
+            indexable: true,
             door: {
                 row: 5,
                 column: 2,
@@ -235,6 +277,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_a',
+            index: 0,
+            indexable: true,
             door: {
                 row: 5,
                 column: 3,
@@ -244,6 +288,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_b',
+            index: 1,
+            indexable: true,
             door: {
                 row: 5,
                 column: 0,
@@ -253,6 +299,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_c',
+            index: 2,
+            indexable: true,
             door: {
                 row: 7,
                 column: 4,
@@ -262,6 +310,8 @@ export async function initializeDevelopmentData() {
         },
         {
             id: 'model_d',
+            index: 3,
+            indexable: true,
             door: {
                 row: 7,
                 column: 4,
