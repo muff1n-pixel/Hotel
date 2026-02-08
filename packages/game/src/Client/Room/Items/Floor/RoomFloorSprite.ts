@@ -4,7 +4,7 @@ import RoomSprite from "../RoomSprite";
 import RoomFloorItem from "../Map/RoomFloorItem";
 
 export default class RoomFloorSprite extends RoomSprite {
-    priority = -2000;
+    priority = -3000;
 
     private readonly offset: MousePosition;
 
