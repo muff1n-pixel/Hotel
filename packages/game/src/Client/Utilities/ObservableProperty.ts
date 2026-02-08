@@ -1,12 +1,14 @@
 export type Listener<T> = (value: T | undefined) => void;
 
-export default class ObservableProperty<T, Value = T & { _state?: number; }> {
+export default class ObservableProperty<T, Value = T> {
     private _value?: Value;
     private listeners = new Set<Listener<Value>>();
 
     constructor(initialValue?: Value) {
         this.value = initialValue;
     }
+
+    public state: number = performance.now();
 
     get value(): Value | undefined {
         return this._value;
@@ -26,6 +28,8 @@ export default class ObservableProperty<T, Value = T & { _state?: number; }> {
     }
 
     update() {
-        this.listeners.forEach(l => l({...this._value, _state: performance.now()} as Value));
+        this.state = performance.now();
+
+        this.listeners.forEach(l => l(this._value));
     }
 };

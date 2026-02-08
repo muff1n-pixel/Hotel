@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { clientInstance } from "../..";
 
 export function useDialogs() {
+  const [_state, setState] = useState(clientInstance.dialogs.state);
   const [dialogs, setDialogs] = useState(clientInstance.dialogs.value ?? []);
 
   useEffect(() => {
     return clientInstance.dialogs.subscribe((dialogs) => {
-        if(dialogs) {
-            setDialogs(dialogs);
-        }
+        setDialogs(dialogs!);
+        setState(clientInstance.dialogs.state);
     });
   }, []);
 
@@ -23,11 +23,13 @@ export function useDialogs() {
         return;
     }
 
-    clientInstance.dialogs.value = dialogs.concat({
+    clientInstance.dialogs.value!.push({
         id: type,
         data: null,
         type
     });
+
+    clientInstance.dialogs.update();
   }, [dialogs]);
   
     const setDialogHidden = useCallback((id: string, hidden: boolean) => {
@@ -43,11 +45,8 @@ export function useDialogs() {
             return;
         }
 
-        const mutatedDialogs = [...dialogs];
-
-        mutatedDialogs[index].hidden = hidden;
-
-        clientInstance.dialogs.value = mutatedDialogs;
+        clientInstance.dialogs.value![index].hidden = hidden;
+        clientInstance.dialogs.update();
     }, [dialogs]);
 
   const closeDialog = useCallback((id: string) => {
@@ -63,7 +62,8 @@ export function useDialogs() {
         return;
     }
 
-    clientInstance.dialogs.value = dialogs.filter((dialog) => dialog.id !== id);
+    clientInstance.dialogs.value!.splice(index, 1);
+    clientInstance.dialogs.update();
   }, [dialogs]);
 
   return {
