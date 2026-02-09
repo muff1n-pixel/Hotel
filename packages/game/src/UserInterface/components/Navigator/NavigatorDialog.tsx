@@ -1,10 +1,11 @@
 import Dialog from "../Dialog/Dialog";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
-import useNavigatorRooms from "./Hooks/useNavigatorRooms";
 import { webSocketClient } from "../../..";
 import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import { useDialogs } from "../../hooks/useDialogs";
+import { useState } from "react";
+import { useNavigator } from "../../hooks/useNavigator";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -14,11 +15,15 @@ export type NavigatorDialogProps = {
 export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProps) {
     const { addUniqueDialog, closeDialog } = useDialogs();
 
-    const rooms = useNavigatorRooms("all");
+    const [tab, setTab] = useState("all");
+
+    const navigator = useNavigator(tab);
 
     return (
         <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={420} height={530}>
-            <DialogTabs initialActiveIndex={1} withoutHeader tabs={[
+            <DialogTabs initialActiveIndex={1} withoutHeader onChange={(index) => {
+                setTab(["public", "all", "events", "mine"][index]);
+            }} tabs={[
                 {
                     icon: "Public",
                     element: (<div style={{ flex: 1 }}/>),
@@ -32,13 +37,15 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                             display: "flex",
                             flexDirection: "column"
                         }}>
-                            <NavigatorRoomList rooms={rooms} onClick={(room) => {
-                                webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                    roomId: room.id
-                                });
+                            {navigator!.map((navigator) => (
+                                <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
+                                        roomId: room.id
+                                    });
 
-                                closeDialog("navigator");
-                            }}/>
+                                    closeDialog("navigator");
+                                }}/>
+                            ))}
                         </div>
                     ),
                 },
@@ -48,7 +55,24 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                 },
                 {
                     icon: "My Rooms",
-                    element: (<div style={{ flex: 1 }}/>),
+                    element: (
+                        <div style={{
+                            flex: 1,
+
+                            display: "flex",
+                            flexDirection: "column"
+                        }}>
+                            {navigator!.map((navigator) => (
+                                <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
+                                        roomId: room.id
+                                    });
+
+                                    closeDialog("navigator");
+                                }}/>
+                            ))}
+                        </div>
+                    ),
                 }
             ]}>
                 <div style={{

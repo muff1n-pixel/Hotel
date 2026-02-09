@@ -24,6 +24,8 @@ import RoomUserRightsEvent from "@Client/Communications/Room/User/RoomUserRights
 import { RoomHistory } from "../UserInterface/components/Room/Toolbar/ToolbarRoomChat";
 import { HotelEventData } from "@Shared/Communications/Responses/Hotel/HotelEventData";
 import HotelEvent from "@Client/Communications/Hotel/HotelEvent";
+import { NavigatorRoomsEventData } from "@Shared/Communications/Responses/Navigator/NavigatorRoomsEventData";
+import NavigatorRoomsEvent from "@Client/Communications/Navigator/NavigatorRoomsEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -32,6 +34,7 @@ export default class ClientInstance extends EventTarget {
     public user = new ObservableProperty<UserEventData>();
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelEventData>();
+    public navigator = new ObservableProperty<NavigatorRoomsEventData>([]);
 
     constructor(public readonly element: HTMLElement) {
         super();
@@ -40,6 +43,7 @@ export default class ClientInstance extends EventTarget {
 
         registerRoomEvents(this);
 
+        webSocketClient.addEventListener<WebSocketEvent<NavigatorRoomsEventData>>("NavigatorRoomsEvent", (event) => new NavigatorRoomsEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<HotelEventData>>("HotelEvent", (event) => new HotelEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserEventData>>("UserEvent", (event) => new UserEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", (event) => new RoomFurnitureEvent().handle(event));

@@ -11,7 +11,7 @@ export type DialogProps = PropsWithChildren & {
     initialPosition?: "corner" | "center";
 };
 
-export default function Dialog({ title, children, hidden, onClose, initialPosition, width, height }: DialogProps) {
+export default function Dialog({ title, children, hidden, onClose, initialPosition = "corner", width, height }: DialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement((initialPosition === "corner")?(
         {
             left: 200,
@@ -19,8 +19,8 @@ export default function Dialog({ title, children, hidden, onClose, initialPositi
         }
     ):(
         {
-            left: ((window.innerWidth - width) / 2),
-            top: ((window.innerHeight - height) / 2)
+            left: Math.round((window.innerWidth - width) / 2),
+            top: Math.round((window.innerHeight - height) / 2)
         }
     ));
 

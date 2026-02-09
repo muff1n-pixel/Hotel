@@ -21,9 +21,11 @@ export type DialogTabsProps = PropsWithChildren & {
         element: ReactNode;
         header?: DialogTabHeaderProps;
     }[];
+
+    onChange?: (index: number) => void;
 };
 
-export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs, header, withLargeTabs = false, children }: DialogTabsProps) {
+export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs, header, withLargeTabs = false, children, onChange }: DialogTabsProps) {
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
     const currentHeader = tabs[activeIndex]?.header ?? header;
@@ -177,7 +179,10 @@ export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs
 
                                 color: "black",
                                 fontSize: 13
-                            }} onClick={() => setActiveIndex(index)}>
+                            }} onClick={() => {
+                                onChange?.(index);
+                                setActiveIndex(index);
+                            }}>
                                 {icon}
                             </div>
                         </div>
