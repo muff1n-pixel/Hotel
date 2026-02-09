@@ -37,16 +37,16 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
               defaultValue: null
           },
           direction: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: null
           },
           animation: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             defaultValue: 0,
           },
           color: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             defaultValue: 0,
           },
           data: {

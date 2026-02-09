@@ -31,17 +31,17 @@ export function initializeUserModel(sequelize: Sequelize) {
       allowNull: false
     },
     credits: {
-      type: new DataTypes.NUMBER,
+      type: new DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 5200
     },
     diamonds: {
-      type: new DataTypes.NUMBER,
+      type: new DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
     },
     duckets: {
-      type: new DataTypes.NUMBER,
+      type: new DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 10000
     },

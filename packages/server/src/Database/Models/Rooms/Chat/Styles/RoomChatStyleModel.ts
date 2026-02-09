@@ -10,7 +10,7 @@ export class RoomChatStyleModel extends Model {
 export function initializeRoomChatStyleModel(sequelize: Sequelize) {
     RoomChatStyleModel.init({
           id: {
-            type: DataTypes.TEXT,
+            type: new DataTypes.STRING(32),
             primaryKey: true,
           }
         },

@@ -9,3 +9,5 @@ assets/*/
 tsconfig.tsbuildinfo
 
 *.sqlite
+
+config.json

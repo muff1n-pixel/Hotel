@@ -35,7 +35,7 @@ export function initializeRoomMapModel(sequelize: Sequelize) {
               allowNull: false
           },
           index: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             defaultValue: 0
           },
           indexable: {

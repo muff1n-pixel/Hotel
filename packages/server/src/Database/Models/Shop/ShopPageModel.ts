@@ -27,7 +27,7 @@ export function initializeShopPageModel(sequelize: Sequelize) {
             primaryKey: true
           },
           index: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
           },
           category: {
             type: new DataTypes.STRING(32),

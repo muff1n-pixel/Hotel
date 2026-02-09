@@ -1,5 +1,5 @@
 import { eventHandler } from "./Events/EventHandler.js";
-import { initializeModels, recreateShop, resetDatabase, useMemoryDatabase } from "./Database/Database.js";
+import { initializeModels, recreateShop, resetDatabase } from "./Database/Database.js";
 import { initializeDevelopmentData } from "./Database/Development/DatabaseDevelopmentData.js";
 import Game from "./Game.js";
 import GetShopPagesEvent from "./Communication/Game/Shop/GetShopPagesEvent.js";
@@ -31,10 +31,11 @@ import { recreateShopPages } from "./Database/Development/ShopDevelopmentData.js
 import UpdateUserRightsEvent from "./Communication/Game/Rooms/User/UpdateUserRightsEvent.js";
 import GetHotelFeedbackEvent from "./Communication/Game/Hotel/GetHotelFeedbackEvent.js";
 import SendFeedbackEvent from "./Communication/Game/Hotel/SendFeedbackEvent.js";
+import { readFileSync } from "node:fs";
 
 await initializeModels();
 
-if(useMemoryDatabase || resetDatabase) {
+if(resetDatabase) {
     await initializeDevelopmentData();
 }
 

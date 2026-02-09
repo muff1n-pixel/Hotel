@@ -24,15 +24,15 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
             primaryKey: true
           },
           type: {
-            type: new DataTypes.STRING(32),
+            type: new DataTypes.STRING(64),
             allowNull: false
           },
           name: {
-            type: new DataTypes.STRING(32),
+            type: new DataTypes.STRING(256),
             allowNull: false
           },
           description: {
-            type: new DataTypes.STRING(128),
+            type: new DataTypes.STRING(256),
             allowNull: true,
             defaultValue: null
           },
@@ -60,7 +60,7 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
               allowNull: false
           },
           color: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             defaultValue: null
           },
           flags: {

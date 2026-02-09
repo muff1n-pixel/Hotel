@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@sequelize/core": "^7.0.0-alpha.47",
+    "@sequelize/mysql": "^7.0.0-alpha.48",
     "astar-typescript": "^1.2.7",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",

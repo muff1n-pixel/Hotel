@@ -4,6 +4,7 @@ import { getFloorIds, getWallIds } from "./FurnitureDevelopmentData.js";
 import { FurnitureModel } from "../Models/Furniture/FurnitureModel.js";
 import { ShopPageFurnitureModel } from "../Models/Shop/ShopPageFurnitureModel.js";
 import { Op } from "@sequelize/core";
+import { sequelize } from "../Database.js";
 
 const defaultShopPages: any = [
     {
@@ -205,10 +206,6 @@ const defaultShopPages: any = [
 ];
 
 export async function recreateShopPages() {
-    await ShopPageModel.destroy({
-        truncate: true
-    });
-
     for(let root of defaultShopPages) {
         const page = await ShopPageModel.create({
             id: randomUUID(),

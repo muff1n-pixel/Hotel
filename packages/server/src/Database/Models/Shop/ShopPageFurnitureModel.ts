@@ -21,17 +21,17 @@ export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
             primaryKey: true
           },
           credits: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: null
           },
           duckets: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: null
           },
           diamonds: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: null
           }

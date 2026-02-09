@@ -29,7 +29,7 @@ export function initializeHotelFeedbackModel(sequelize: Sequelize) {
             allowNull: false
           },
           status: {
-            type: new DataTypes.NUMBER,
+            type: new DataTypes.INTEGER,
             defaultValue: HotelFeedbackStatus.CREATED,
             allowNull: false,
           }
