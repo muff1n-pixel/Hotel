@@ -6,7 +6,7 @@ export default class WebSocketClient extends EventTarget {
     constructor(port: number, options: Record<"userId" | "accessToken", string>) {
         super();
 
-        this.socket = new WebSocket(`${(window.location.protocol === "https")?("wss"):("ws")}://${window.location.hostname}:${port}?${new URLSearchParams(options).toString()}`);
+        this.socket = new WebSocket(`${(window.location.protocol === "https:")?("wss"):("ws")}://${window.location.hostname}:${port}?${new URLSearchParams(options).toString()}`);
 
         this.socket.addEventListener("message", (event) => {
             const events: [string, any, number | undefined][] = JSON.parse(event.data);
