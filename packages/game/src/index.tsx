@@ -36,7 +36,9 @@ function start(text?: string) {
     
     loaderInstance.render(text);
 
-    webSocketClient = new WebSocketClient({
+    webSocketClient = new WebSocketClient(
+        parseInt(clientElement.getAttribute("data-port")!),
+        {
         accessToken: Cookies.get("accessToken") ?? "",
         userId: searchParams.get("user") ?? "user1"
     });

@@ -3,10 +3,10 @@ import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    constructor(options: Record<"userId" | "accessToken", string>) {
+    constructor(port: number, options: Record<"userId" | "accessToken", string>) {
         super();
 
-        this.socket = new WebSocket(`ws://localhost:7632?${new URLSearchParams(options).toString()}`);
+        this.socket = new WebSocket(`ws://localhost:${port}?${new URLSearchParams(options).toString()}`);
 
         this.socket.addEventListener("message", (event) => {
             const events: [string, any, number | undefined][] = JSON.parse(event.data);
