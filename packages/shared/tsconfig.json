@@ -32,6 +32,8 @@
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
 
+    "forceConsistentCasingInFileNames": false,
+
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
