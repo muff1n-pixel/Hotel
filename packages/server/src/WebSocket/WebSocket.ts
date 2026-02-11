@@ -14,7 +14,7 @@ export default class WebSocket {
 
     constructor() {
         this.server = new WebSocketServer({
-            port: 7632
+            port: config.port ?? 7632
         });
 
         this.server.on("connection", async (webSocket, request) => {

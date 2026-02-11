@@ -2,6 +2,8 @@ import { readFileSync } from "fs";
 import { Options, Sequelize } from "sequelize";
 
 export type Config = {
+    port?: number;
+    
     authentication: {
         useAccessTokens: boolean;
     };
