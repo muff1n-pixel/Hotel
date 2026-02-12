@@ -32,6 +32,7 @@ import UpdateUserRightsEvent from "./Communication/Game/Rooms/User/UpdateUserRig
 import GetHotelFeedbackEvent from "./Communication/Game/Hotel/GetHotelFeedbackEvent.js";
 import SendFeedbackEvent from "./Communication/Game/Hotel/SendFeedbackEvent.js";
 import { readFileSync } from "node:fs";
+import PingEvent from "./Communication/Game/Users/PingEvent.js";
 
 await initializeModels();
 
@@ -80,6 +81,8 @@ eventHandler
 eventHandler
     .addIncomingEvent("SendFeedbackEvent", new SendFeedbackEvent())
     .addIncomingEvent("GetHotelFeedbackEvent", new GetHotelFeedbackEvent());
+
+eventHandler.addIncomingEvent("Ping", new PingEvent());
 
 export const game = new Game();
 
