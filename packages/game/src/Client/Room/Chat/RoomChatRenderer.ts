@@ -3,8 +3,13 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import Figure from "@Client/Figure/Figure";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
 
+export type RoomChatRendererOptions = {
+    italic?: boolean;
+    hideUsername?: boolean;
+};
+
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, figureConfiguration: FigureConfiguration, message: string) {
+    public static async render(style: string, user: string, figureConfiguration: FigureConfiguration, message: string, options: RoomChatRendererOptions) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);
@@ -17,10 +22,10 @@ export default class RoomChatRenderer {
             throw new ContextNotAvailableError();
         }
 
-        context.font = `12px "Ubuntu Bold"`;
-        const userText = context.measureText(`${user}: `);
+        context.font = `${(options.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
+        const userText = (options.hideUsername)?({ width: 0 }):(context.measureText(`${user}: `));
 
-        context.font = `12px "Ubuntu"`;
+        context.font = `${(options.italic)?("italic"):("")} 12px "Ubuntu"`;
         const messageText = context.measureText(message);
 
         const textWidth = Math.ceil(userText.width + messageText.width);
@@ -54,11 +59,18 @@ export default class RoomChatRenderer {
 
         context.textBaseline = "top";
 
-        context.font = `12px "Ubuntu Bold"`;
-        context.fillText(`${user}: `, roomChatStyle.text.left + 2, roomChatStyle.text.top + 2);
+        if(!options.hideUsername) {
+            context.font = `${(options.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
+            context.fillText(`${user}: `, roomChatStyle.text.left + 2, roomChatStyle.text.top + 2);
+        }
+        else {
+            context.globalAlpha = 0.75;
+        }
 
-        context.font = `12px "Ubuntu"`;
+        context.font = `${(options.italic)?("italic"):("")} 12px "Ubuntu"`;
         context.fillText(message, roomChatStyle.text.left + 2 + userText.width, roomChatStyle.text.top + 2);
+
+        context.globalAlpha = 1;
 
         if(roomChatStyle.figure) {
             const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);

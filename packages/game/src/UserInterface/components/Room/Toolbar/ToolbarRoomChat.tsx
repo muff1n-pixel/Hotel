@@ -42,7 +42,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
         const userChatEventListener = async (event: WebSocketEvent<UserChatEventData>) => {
             const user = room.getUserById(event.data.userId);
 
-            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message);
+            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message, {});
 
             clientInstance.roomHistory.value!.push({
                 id: Math.random(),

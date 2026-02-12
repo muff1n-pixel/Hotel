@@ -5,6 +5,7 @@ import { webSocketClient } from "../../../..";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { UserChatEventData } from "@Shared/Communications/Responses/Rooms/Users/UserChatEventData";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
+import { useUser } from "../../../hooks/useUser";
 
 type RoomChatMessage = {
     id: number;
@@ -42,6 +43,7 @@ function moveMessagesUp(messages: RoomChatMessage[], bottomMessage: RoomChatMess
 
 export default function RoomChat() {
     const room = useRoomInstance();
+    const user = useUser();
 
     const rootRef = useRef<HTMLDivElement>(null);
 
@@ -53,10 +55,64 @@ export default function RoomChat() {
             return;
         }
 
+        if(!user) {
+            return;
+        }
+
+        if(!messages) {
+            return;
+        }
+
+        if(messages.current.length !== 0) {
+            return;
+        }
+
+        (async () => {
+            const roomUser = room.getUserById(user.id);
+
+            const image = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Welcome to Pixel63, this is a live demo that may contain bugs and glitches.", {
+                hideUsername: true,
+                italic: true
+            });
+
+            const image2 = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Please feel free to report issues in the top left corner, or join our Discord to participate in discussions!", {
+                hideUsername: true,
+                italic: true
+            });
+
+            if(messages.current.length !== 0) {
+                return;
+            }
+
+            const position = room.roomRenderer.getCoordinatePosition(roomUser.data.position!);
+
+            messages.current.push({
+                id: Math.random(),
+                image,
+                left: position.left - (image.width / 2) + 64,
+                index: 1
+            });
+
+            messages.current.push({
+                id: Math.random(),
+                image: image2,
+                left: position.left - (image2.width / 2) + 64,
+                index: 0
+            });
+
+            setLatestMessage(performance.now());
+        })();
+    }, [room, user, messages]);
+
+    useEffect(() => {
+        if(!room) {
+            return;
+        }
+
         const userChatEventListener = async (event: WebSocketEvent<UserChatEventData>) => {
             const user = room.getUserById(event.data.userId);
 
-            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message);
+            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message, {});
 
             const position = room.roomRenderer.getCoordinatePosition(user.item.position!);
 
