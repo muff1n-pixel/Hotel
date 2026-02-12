@@ -8,8 +8,9 @@ import cookieParser from "cookie-parser";
 import { randomUUID } from 'crypto';
 import { initializeUserModel, UserModel } from './Models/UserModel.ts';
 import { initializeUserTokenModel, UserTokenModel } from './Models/UserTokens/UserTokenModel.ts';
+import type { Config } from './Interfaces/Config.ts';
 
-const config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
+const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
 
 const sequelize = new Sequelize(config.database);
 
@@ -48,6 +49,10 @@ app.use(express.static(path.join(config.static, "web")));
 app.use("/game", express.static(path.join(config.static, "game")));
 app.use("/game/assets", express.static(config.assets));
 app.use("/assets", express.static(config.assets));
+
+app.get('/game/config.json', (request, response) => {
+    return response.json(config.public);
+});
 
 app.get('/{*any}', (req, res) => res.sendFile("index.html", {
     root: path.join(config.static, "web")

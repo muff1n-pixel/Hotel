@@ -19,7 +19,15 @@ export let userInterface: UserInterfaceInstance;
 
 start();
 
-function start(text?: string) {
+async function start(text?: string) {
+    const response = await fetch("/game/config.json", {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    const config = await response.json();
+
     if(!clientElement) {
         throw new Error("Client root element is not created.");
     }
@@ -37,13 +45,14 @@ function start(text?: string) {
     loaderInstance.render(text);
 
     webSocketClient = new WebSocketClient(
-        clientElement.getAttribute("data-secure")! === "true",
-        clientElement.getAttribute("data-hostname")!,
-        parseInt(clientElement.getAttribute("data-port")!),
+        config.server.secure,
+        config.server.hostname,
+        config.server.port,
         {
-        accessToken: Cookies.get("accessToken") ?? "",
-        userId: searchParams.get("user") ?? "user1"
-    });
+            accessToken: Cookies.get("accessToken") ?? "",
+            userId: searchParams.get("user") ?? "user1"
+        }
+    );
 
     clientInstance = new ClientInstance(clientElement);
     userInterface = new UserInterfaceInstance(interfaceElement);

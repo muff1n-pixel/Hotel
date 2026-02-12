@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "start": "npx ts-node src/server/index.ts",
     "watch:client": "npx nodemon --watch src/Client --ext tsx,css --exec \"npm run build\"",
