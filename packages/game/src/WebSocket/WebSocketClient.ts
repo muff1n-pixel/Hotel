@@ -35,7 +35,7 @@ export default class WebSocketClient extends EventTarget {
             this.dispatchEvent(new Event("close"));
         });
 
-        setTimeout(() => {
+        setInterval(() => {
             if(this.socket.readyState === this.socket.OPEN) {
                 this.send("Ping", null);
             }
