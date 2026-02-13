@@ -177,8 +177,12 @@ export default class FigureRenderer {
 
             let frame = 0;
 
+            // TODO: use avatar action animation configuration
             if(action.activePartSet === "walk") {
                 frame = currentSpriteFrame;
+            }
+            else if(action.assetPartDefinition === "wav") {
+                frame = Math.floor((this.frame % (2 * 4)) / 4);
             }
 
             result.push({
@@ -412,8 +416,11 @@ export default class FigureRenderer {
         const flipHorizontal = (direction > 3 && direction < 7);
         const flippedDirection = (flipHorizontal)?(6 - direction):(direction);
 
+
         for(const spriteConfiguration of spritesFromConfiguration) {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
+        
+            console.log(actionForSprite);
 
             if(!actionForSprite) {
                 console.warn("Sprite has no action requesting it.");
@@ -434,6 +441,8 @@ export default class FigureRenderer {
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
             if(!asset) {
+                console.warn("Can't find asset for " + assetName);
+
                 assetName = `h_std_${spriteConfiguration.type}_${spriteConfiguration.id}_${flippedDirection}_${actionForSprite.frame}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);

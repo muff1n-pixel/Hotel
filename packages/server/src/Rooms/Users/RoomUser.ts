@@ -163,9 +163,11 @@ export default class RoomUser {
         );
 
         // TODO: move this to the client?
-        setTimeout(() => {
-            this.removeAction("Wave");
-        }, 2000);
+        if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
+            setTimeout(() => {
+                this.removeAction(action);
+            }, 2000);
+        }
     }
 
     public removeAction(action: string) {

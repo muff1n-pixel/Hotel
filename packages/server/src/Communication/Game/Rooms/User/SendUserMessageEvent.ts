@@ -10,15 +10,26 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             return;
         }
 
+        const roomUser = user.room.getRoomUser(user);
+
+        if(event.message.includes(":)")) {
+            roomUser.addAction("GestureSmile");
+        }
+        else if(event.message.includes(":(")) {
+            roomUser.addAction("GestureSad");
+        }
+        else if(event.message.includes(":@")) {
+            roomUser.addAction("GestureAngry");
+        }
+        else if(event.message.toLowerCase().includes(":o")) {
+            roomUser.addAction("GestureSurprised");
+        }
+
         // TODO: implement proper command handling
         if(event.message === ":sit") {
-            const roomUser = user.room.getRoomUser(user);
-
             roomUser.addAction("Sit");
         }
         else if(event.message === ":wave") {
-            const roomUser = user.room.getRoomUser(user);
-
             roomUser.addAction("Wave");
         }
         else if(event.message.startsWith(":enable")) {
