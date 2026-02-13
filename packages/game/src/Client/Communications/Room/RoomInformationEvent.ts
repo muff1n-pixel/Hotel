@@ -1,7 +1,7 @@
 import IncomingEvent from "@Client/Communications/IncomingEvent";
 import { RoomInformationEventData } from "@Shared/Communications/Responses/Rooms/RoomInformationEventData";
 import { clientInstance } from "../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+    import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 
 export default class RoomInformationEvent implements IncomingEvent<WebSocketEvent<RoomInformationEventData>> {
     async handle(event: WebSocketEvent<RoomInformationEventData>) {
@@ -10,5 +10,6 @@ export default class RoomInformationEvent implements IncomingEvent<WebSocketEven
         }
         
         clientInstance.roomInstance.value.information = event.data.information;
+        clientInstance.roomInstance.update();
     }
 }

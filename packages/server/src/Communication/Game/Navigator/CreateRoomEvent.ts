@@ -6,6 +6,7 @@ import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "node:crypto";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomCreatedEventData } from "@shared/Communications/Responses/Navigator/RoomCreatedEventData.js";
+import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 
 export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventData> {
     async handle(user: User, event: CreateRoomEventData): Promise<void> {
@@ -15,11 +16,26 @@ export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventDat
             throw new Error("Room map model by id does not exist.");
         }
 
+        const category = await RoomCategoryModel.findOne(
+            (event.category)?(
+                {
+                    where: {
+                        id: event.category
+                    }
+                }
+            ):({})
+        );
+
+        if(!category) {
+            throw new Error("No category was found.");
+        }
+
         const room = await RoomModel.create({
             id: randomUUID(),
             name: (event.name.length)?(event.name):(`${user.model.name}'s room`),
             
             ownerId: user.model.id,
+            categoryId: category.id,
 
             structure: {
                 door: map.door,

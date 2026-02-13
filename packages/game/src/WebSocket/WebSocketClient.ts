@@ -43,6 +43,8 @@ export default class WebSocketClient extends EventTarget {
     }
 
     send<T>(type: string, data: T) {
+        console.log("Sending " + type);
+        
         this.socket.send(JSON.stringify([[type, data]]));
     }
 

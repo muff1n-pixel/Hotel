@@ -3,6 +3,7 @@ import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { UpdateRoomInformationEventData } from "@shared/Communications/Requests/Rooms/UpdateRoomInformationEventData.js";
+import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 
 export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateRoomInformationEventData> {
     async handle(user: User, event: UpdateRoomInformationEventData) {
@@ -17,6 +18,22 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
         if(event.description !== undefined) {
             user.room.model.description = event.description;
         }
+        
+        if(event.category !== undefined) {
+            const category = await RoomCategoryModel.findOne({
+                where: {
+                    id: event.category
+                }
+            });
+
+            if(category) {
+                user.room.model.set({
+                    categoryId: category.id
+                });
+
+                user.room.model.category = category;
+            }
+        }
 
         if(user.room.model.changed()) {
             await user.room.model.save();
@@ -25,6 +42,7 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
                 information: {
                     name: user.room.model.name,
                     description: user.room.model.description,
+                    category: user.room.model.category.id,
 
                     owner: {
                         id: user.room.model.owner.id,

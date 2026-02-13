@@ -11,13 +11,13 @@ import { initializeShopPageModel } from "./Models/Shop/ShopPageModel.js";
 import { initializeShopPageFurnitureModel } from "./Models/Shop/ShopPageFurnitureModel.js";
 import { initializeFurnitureModel } from "./Models/Furniture/FurnitureModel.js";
 import { initializeRoomMapModel } from "./Models/Rooms/Maps/RoomMapModel.js";
-import { readFileSync, rmSync } from "fs";
 import { initializeRoomChatStyleModel } from "./Models/Rooms/Chat/Styles/RoomChatStyleModel.js";
 import { initializeUserModel } from "./Models/Users/UserModel.js";
 import { initializeRoomRightsModel } from "./Models/Rooms/Rights/RoomRightsModel.js";
 import { initializeHotelFeedbackModel } from "./Models/Hotel/HotelFeedbackModel.js";
 import { config } from "../Config/Config.js";
 import { initializeUserTokenModel } from "./Models/Users/UserTokens/UserTokenModel.js";
+import { initializeRoomCategoryModel } from "./Models/Rooms/Categories/RoomCategoryModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -28,6 +28,7 @@ export async function initializeModels() {
   initializeShopPageFurnitureModel(sequelize);
 
   initializeRoomMapModel(sequelize);
+  initializeRoomCategoryModel(sequelize);
 
   initializeUserModel(sequelize);
   initializeUserTokenModel(sequelize);

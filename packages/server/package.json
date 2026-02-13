@@ -3,8 +3,8 @@
   "scripts": {
     "start": "npx tsc && node build/index.js",
     "build": "npx tsc",
-    "migrate": "npx sequelize-cli db:migrate",
-    "undo": "npx sequelize-cli db:migrate:undo"
+    "migrate": "npm run build && npx sequelize-cli db:migrate",
+    "migrate:rollback": "npx sequelize-cli db:migrate:undo"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",

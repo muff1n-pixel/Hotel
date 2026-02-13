@@ -4,11 +4,15 @@ import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel.js";
 import { RoomMoodlightData } from "@shared/Interfaces/Room/RoomMoodlightData.js";
 import { UserModel } from "../Users/UserModel.js";
 import { RoomRightsModel } from "./Rights/RoomRightsModel.js";
+import { RoomCategoryModel } from "./Categories/RoomCategoryModel.js";
 
 export class RoomModel extends Model {
     declare id: string;
+    
     declare name: string;
     declare description: string;
+    declare category: NonAttribute<RoomCategoryModel>;
+
     declare owner: NonAttribute<UserModel>;
 
     declare structure: RoomStructure;
@@ -63,5 +67,10 @@ export function initializeRoomModel(sequelize: Sequelize) {
     RoomModel.belongsTo(UserModel, {
         as: "owner",
         foreignKey: "ownerId"
+    });
+    
+    RoomModel.belongsTo(RoomCategoryModel, {
+        as: "category",
+        foreignKey: "categoryId"
     });
 }

@@ -7,9 +7,11 @@ import { RoomMapsEventData } from "@shared/Communications/Responses/Navigator/Ro
 import { RoomModel } from "../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "crypto";
 import { RoomCreatedEventData } from "@shared/Communications/Responses/Navigator/RoomCreatedEventData.js";
+import { RoomCategoryModel } from "../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 
 export default class RoomNavigatorManager {
     public maps: RoomMapModel[] = [];
+    public categories: RoomCategoryModel[] = [];
 
     constructor() {
         eventHandler.addListener("RoomMapsRequest", this.onRoomMapsRequest.bind(this));
@@ -22,6 +24,12 @@ export default class RoomNavigatorManager {
             },
             order: [
                 ["index", "ASC"]
+            ]
+        });
+
+        this.categories = await RoomCategoryModel.findAll({
+            order: [
+                ["title", "ASC"]
             ]
         });
     }

@@ -12,6 +12,8 @@ import { RoomCreatedEventData } from "@Shared/Communications/Responses/Navigator
 import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import useRoomMaps from "./Hooks/useRoomMaps";
 import { useDialogs } from "../../../../hooks/useDialogs";
+import { useRoomCategories } from "../../../../hooks/useRoomCategories";
+import Selection from "../../../Form/Selection";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -22,15 +24,23 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     const { closeDialog } = useDialogs();
 
     const roomMaps = useRoomMaps();
+    const roomCategories = useRoomCategories();
 
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [category, setCategory] = useState<string>("");
 
     const [activeRoomMap, setActiveRoomMap] = useState<RoomMapData>();
 
     useEffect(() => {
         setActiveRoomMap(roomMaps[0]);
     }, [roomMaps]);
+    
+    useEffect(() => {
+        if(roomCategories?.length) {
+            setCategory(roomCategories[0].id);
+        }
+    }, [roomCategories]);
 
     const onCreateRoom = useCallback(() => {
         if(!activeRoomMap) {
@@ -57,10 +67,11 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
         webSocketClient.send<CreateRoomEventData>("CreateRoomEvent", {
             name,
             description,
+            category,
 
             mapId: activeRoomMap.id
         });
-    }, [activeRoomMap, name, description]);
+    }, [activeRoomMap, name, description, category]);
 
     return (
         <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={580} height={360}>
@@ -93,6 +104,15 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                             <b>Room description</b>
 
                             <Input placeholder="My room description" value={description} onChange={setDescription}/>
+
+                            <b>Room category</b>
+
+                            <Selection value={category} items={roomCategories?.map((category) => {
+                                return {
+                                    value: category.id,
+                                    label: category.title
+                                };
+                            }) ?? []} onChange={(value) => setCategory(value as string)}/>
                         </div>
 
                         <DialogButton onClick={onCreateRoom}>Create room</DialogButton>

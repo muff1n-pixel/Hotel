@@ -4,6 +4,7 @@ import { UserFurnitureModel } from "../Database/Models/Users/Furniture/UserFurni
 import Room from "./Room.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { RoomRightsModel } from "../Database/Models/Rooms/Rights/RoomRightsModel.js";
+import { RoomCategoryModel } from "../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -29,6 +30,10 @@ export default class RoomManager {
     public async loadRoomInstance(roomId: string) {
         const room = await RoomModel.findByPk(roomId, {
             include: [
+                {
+                    model: RoomCategoryModel,
+                    as: "category"
+                },
                 {
                     model: UserModel,
                     as: "owner"

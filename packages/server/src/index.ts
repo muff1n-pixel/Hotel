@@ -33,6 +33,7 @@ import GetHotelFeedbackEvent from "./Communication/Game/Hotel/GetHotelFeedbackEv
 import SendFeedbackEvent from "./Communication/Game/Hotel/SendFeedbackEvent.js";
 import { readFileSync } from "node:fs";
 import PingEvent from "./Communication/Game/Users/PingEvent.js";
+import GetRoomCategoriesEvent from "./Communication/Game/Navigator/GetRoomCategoriesEvent.js";
 
 await initializeModels();
 
@@ -76,7 +77,8 @@ eventHandler
     
 eventHandler
     .addIncomingEvent("CreateRoomEvent", new CreateRoomEvent())
-    .addIncomingEvent("GetNavigatorRoomsEvent", new GetNavigatorRoomsEvent());
+    .addIncomingEvent("GetNavigatorRoomsEvent", new GetNavigatorRoomsEvent())
+    .addIncomingEvent("GetRoomCategoriesEvent", new GetRoomCategoriesEvent());
     
 eventHandler
     .addIncomingEvent("SendFeedbackEvent", new SendFeedbackEvent())

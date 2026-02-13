@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRoomInstance } from "../../../../hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
 import { UpdateRoomInformationEventData } from "@Shared/Communications/Requests/Rooms/UpdateRoomInformationEventData";
 import Input from "../../../Form/Input";
+import Selection from "../../../Form/Selection";
+import { useRoomCategories } from "../../../../hooks/useRoomCategories";
 
 export default function RoomSettingsBasicTab() {
     const room = useRoomInstance();
+    const roomCategories = useRoomCategories();
 
     if(!room) {
         return;
     }
 
-    const [name, setName] = useState(room?.information.name);
-    const [description, setDescription] = useState(room?.information.description);
+    const [name, setName] = useState(room?.information.name ?? "");
+    const [description, setDescription] = useState(room?.information.description ?? "");
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -38,6 +41,12 @@ export default function RoomSettingsBasicTab() {
         }
     }, [description]);
 
+    const handleCategoryChange = useCallback((categoryId: string) => {
+        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+            category: categoryId
+        });
+    }, []);
+
     return (
         <div style={{
             flex: 1,
@@ -58,6 +67,15 @@ export default function RoomSettingsBasicTab() {
                 <b>Room description</b>
 
                 <Input placeholder="My room description" value={description} onChange={setDescription}/>
+
+                <b>Room category</b>
+
+                <Selection value={room.information.category} items={roomCategories?.map((category) => {
+                    return {
+                        value: category.id,
+                        label: category.title
+                    };
+                }) ?? []} onChange={(value) => handleCategoryChange(value as string)}/>
             </div>
         </div>
     );

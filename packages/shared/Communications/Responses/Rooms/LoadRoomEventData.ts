@@ -5,6 +5,7 @@ import { RoomUserData } from "../../../Interfaces/Room/RoomUserData.js";
 export type RoomInformationData = {
     name: string;
     description: string;
+    category: string;
 
     owner: {
         id: string;

@@ -47,6 +47,8 @@ export default class RoomUser {
                 information: {
                     name: this.room.model.name,
                     description: this.room.model.description,
+                    category: this.room.model.category.id,
+                    
                     owner: {
                         id: this.room.model.owner.id,
                         name: this.room.model.owner.name

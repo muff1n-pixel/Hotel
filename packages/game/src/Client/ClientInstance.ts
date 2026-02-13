@@ -26,6 +26,7 @@ import { HotelEventData } from "@Shared/Communications/Responses/Hotel/HotelEven
 import HotelEvent from "@Client/Communications/Hotel/HotelEvent";
 import { NavigatorRoomsEventData } from "@Shared/Communications/Responses/Navigator/NavigatorRoomsEventData";
 import NavigatorRoomsEvent from "@Client/Communications/Navigator/NavigatorRoomsEvent";
+import { RoomCategoriesEventData } from "@Shared/Communications/Responses/Navigator/RoomCategoriesEventData";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -35,6 +36,8 @@ export default class ClientInstance extends EventTarget {
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelEventData>();
     public navigator = new ObservableProperty<NavigatorRoomsEventData>([]);
+    
+    public roomCategories = new ObservableProperty<RoomCategoriesEventData>([]);
 
     constructor(public readonly element: HTMLElement) {
         super();
@@ -57,6 +60,10 @@ export default class ClientInstance extends EventTarget {
         
         webSocketClient.addEventListener<WebSocketEvent<RoomChatStylesEventData>>("RoomChatStylesEvent", (event) => {
             this.roomChatStyles.value = event.data.roomChatStyles;
+        });
+        
+        webSocketClient.addEventListener<WebSocketEvent<RoomCategoriesEventData>>("RoomCategoriesEvent", (event) => {
+            this.roomCategories.value = event.data;
         });
     }
 
