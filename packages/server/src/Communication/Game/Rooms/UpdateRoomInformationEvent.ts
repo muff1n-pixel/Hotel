@@ -35,6 +35,12 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
             }
         }
 
+        if(event.maxUsers !== undefined) {
+            if(event.maxUsers >= 5 && event.maxUsers <= 50 && event.maxUsers % 5 === 0) {
+                user.room.model.maxUsers = event.maxUsers;
+            }
+        }
+
         if(user.room.model.changed()) {
             await user.room.model.save();
 
@@ -47,7 +53,9 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
                     owner: {
                         id: user.room.model.owner.id,
                         name: user.room.model.owner.name,
-                    }
+                    },
+
+                    maxUsers: user.room.model.maxUsers
                 }
             }));
         }

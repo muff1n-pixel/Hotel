@@ -11,6 +11,8 @@ export type RoomInformationData = {
         id: string;
         name: string;
     };
+
+    maxUsers: number;
 };
 
 export type LoadRoomEventData = {

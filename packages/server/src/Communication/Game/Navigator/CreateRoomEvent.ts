@@ -30,12 +30,17 @@ export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventDat
             throw new Error("No category was found.");
         }
 
+        if(!(event.maxUsers >= 5 && event.maxUsers <= 50 && event.maxUsers % 5 === 0)) {
+            throw new Error("Max users is not an acceptable number.");
+        }
+
         const room = await RoomModel.create({
             id: randomUUID(),
             name: (event.name.length)?(event.name):(`${user.model.name}'s room`),
             
             ownerId: user.model.id,
             categoryId: category.id,
+            maxUsers: event.maxUsers,
 
             structure: {
                 door: map.door,

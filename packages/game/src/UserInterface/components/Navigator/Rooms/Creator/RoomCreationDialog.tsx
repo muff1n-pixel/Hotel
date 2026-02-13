@@ -29,6 +29,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [category, setCategory] = useState<string>("");
+    const [maxUsers, setMaxUsers] = useState<number>(25);
 
     const [activeRoomMap, setActiveRoomMap] = useState<RoomMapData>();
 
@@ -68,10 +69,11 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
             name,
             description,
             category,
+            maxUsers,
 
-            mapId: activeRoomMap.id
+            mapId: activeRoomMap.id,
         });
-    }, [activeRoomMap, name, description, category]);
+    }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
         <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={580} height={360}>
@@ -113,6 +115,15 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                     label: category.title
                                 };
                             }) ?? []} onChange={(value) => setCategory(value as string)}/>
+                            
+                            <b>Maximum amount of visitors</b>
+            
+                            <Selection value={maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
+                                return {
+                                    value: maxUsers,
+                                    label: maxUsers.toString()
+                                };
+                            }) ?? []} onChange={(value) => setMaxUsers(value as number)}/>
                         </div>
 
                         <DialogButton onClick={onCreateRoom}>Create room</DialogButton>

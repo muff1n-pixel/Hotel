@@ -47,6 +47,12 @@ export default function RoomSettingsBasicTab() {
         });
     }, []);
 
+    const handleMaxUsersChange = useCallback((maxUsers: number) => {
+        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+            maxUsers
+        });
+    }, []);
+
     return (
         <div style={{
             flex: 1,
@@ -76,6 +82,15 @@ export default function RoomSettingsBasicTab() {
                         label: category.title
                     };
                 }) ?? []} onChange={(value) => handleCategoryChange(value as string)}/>
+
+                <b>Maximum amount of visitors</b>
+
+                <Selection value={room.information.maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
+                    return {
+                        value: maxUsers,
+                        label: maxUsers.toString()
+                    };
+                }) ?? []} onChange={(value) => handleMaxUsersChange(value as number)}/>
             </div>
         </div>
     );

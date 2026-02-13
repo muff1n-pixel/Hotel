@@ -52,7 +52,9 @@ export default class RoomUser {
                     owner: {
                         id: this.room.model.owner.id,
                         name: this.room.model.owner.name
-                    }
+                    },
+
+                    maxUsers: this.room.model.maxUsers
                 },
                 
                 structure: this.room.model.structure,
