@@ -55,6 +55,18 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                 }}>
                     <FurnitureImage furnitureData={furniture.data.furniture}/>
                 </div>
+
+                {(furniture.data.furniture.description) && (
+                    <div style={{
+                        width: "100%",
+                        height: 1,
+                        background: "#333333"
+                    }}/>
+                )}
+
+                {(furniture.data.furniture.description) && (
+                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.data.furniture.description}</p>
+                )}
             </div>
 
             <div style={{
