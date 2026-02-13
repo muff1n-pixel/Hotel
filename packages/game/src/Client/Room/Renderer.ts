@@ -234,7 +234,7 @@ export default class RoomRenderer extends EventTarget {
 
                 if(sprite.item.position) {
                     relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
-                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - (sprite.item.position.depth * 32))) * scale;
+                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
                 }
 
                 const tile = sprite.mouseover(relativeMousePosition);
@@ -255,7 +255,7 @@ export default class RoomRenderer extends EventTarget {
     public getCoordinatePosition(coordinate: RoomPosition): MousePosition {
         const result = {
             left: Math.floor(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
-            top: Math.floor((coordinate.column * 16) + (coordinate.row * 16) - (coordinate.depth * 32))
+            top: Math.floor((coordinate.column * 16) + (coordinate.row * 16) - ((Math.round(coordinate.depth * 1000) / 1000) * 32))
         };
 
         const scale = this.getSizeScale();
