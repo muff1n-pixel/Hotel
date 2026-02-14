@@ -1,16 +1,27 @@
 import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { GetUserBadgesEventData } from "@shared/Communications/Requests/Rooms/User/GetUserBadgesEventData.js";
+import { GetUserProfileEventData } from "@shared/Communications/Requests/Rooms/User/GetUserProfileEventData.js";
 import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
-import { UserBadgesEventData } from "@shared/Communications/Responses/Rooms/Users/UserBadgesEventData.js";
+import { UserProfileEventData } from "@shared/Communications/Responses/Rooms/Users/UserProfileEventData.js";
+import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 
-export default class GetUserBadgesEvent implements IncomingEvent<GetUserBadgesEventData> {
-    async handle(user: User, event: GetUserBadgesEventData) {
+export default class GetUserProfileEvent implements IncomingEvent<GetUserProfileEventData> {
+    async handle(user: User, event: GetUserProfileEventData) {
+        const targetUser = await UserModel.findOne({
+            where: {
+                id: event.userId
+            }
+        });
+
+        if(!targetUser) {
+            throw new Error("User does not exist.");
+        }
+
         const equippedBadges = await UserBadgeModel.findAll({
             where: {
-                userId: event.userId,
+                userId: targetUser.id,
                 equipped: true
             },
             order: [['updatedAt', 'DESC']],
@@ -22,8 +33,9 @@ export default class GetUserBadgesEvent implements IncomingEvent<GetUserBadgesEv
             ]
         });
 
-        user.send(new OutgoingEvent<UserBadgesEventData>("UserBadgesEvent", {
+        user.send(new OutgoingEvent<UserProfileEventData>("UserProfileEvent", {
             userId: event.userId,
+            motto: targetUser.motto,
             badges: equippedBadges.map((userBadge) => {
                 return {
                     id: userBadge.id,

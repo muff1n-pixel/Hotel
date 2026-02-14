@@ -1,0 +1,15 @@
+.room-user-profile-motto {
+    background: transparent;
+
+    color: white;
+
+    font-family: "Ubuntu";
+    font-size: 11px;
+
+    outline: none;
+    border: none;
+
+    width: 0;
+
+    flex: 1;
+}
