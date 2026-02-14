@@ -1,13 +1,15 @@
 import DialogPanel from "../Dialog/Panels/DialogPanel";
 import DialogPanelList from "../Dialog/Panels/DialogPanelList";
 import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import { webSocketClient } from "../../..";
 import { ShopPageData, ShopPagesEventData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import { GetShopPagesEventData } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
+import { useUser } from "../../hooks/useUser";
+import { useDialogs } from "../../hooks/useDialogs";
 
 export type ShopDialogCategoryProps = {
     category: "frontpage" | "furniture" | "clothing" | "pets";
@@ -15,6 +17,9 @@ export type ShopDialogCategoryProps = {
 }
 
 export default function ShopDialogCategory({ category, onHeaderChange }: ShopDialogCategoryProps) {
+    const user = useUser();
+    const dialogs = useDialogs();
+
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
 
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
@@ -58,6 +63,14 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
         });
     }, [ activeShopPage ]);
 
+    const handleEdit = useCallback((shopPage: ShopPageData) => {
+        if(!user?.developer) {
+            return;
+        }
+
+        dialogs.addUniqueDialog("edit-shop-page", shopPage);
+    }, [user, dialogs]);
+
     return (
         <div style={{
             flex: 1,
@@ -74,7 +87,9 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                                 active={activeShopPage?.id === shopPage.id}
                                 title={shopPage.title}
                                 icon={(shopPage.icon)?(<img src={`./assets/shop/icons/${shopPage.icon}`}/>):(undefined)}
-                                onClick={() => setActiveShopPage(shopPage)}>
+                                onClick={() => setActiveShopPage(shopPage)}
+                                editable={user?.developer}
+                                onEditClick={() => handleEdit(shopPage)}>
                                 {(activeShopPage && (activeShopPage.id === shopPage.id || shopPage.children?.includes(activeShopPage))) && shopPage.children?.map((shopSubPage) => (
                                     <DialogPanelListItem
                                         key={shopSubPage.id}
@@ -82,7 +97,10 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                                         active={activeShopPage?.id === shopSubPage.id}
                                         title={shopSubPage.title}
                                         icon={(shopSubPage.icon)?(<img src={`./assets/shop/icons/${shopSubPage.icon}`}/>):(undefined)}
-                                        onClick={() => setActiveShopPage(shopSubPage)}/>
+                                        onClick={() => setActiveShopPage(shopSubPage)}
+                                        editable={user?.developer}
+                                        onEditClick={() => handleEdit(shopSubPage)}
+                                        />
                                 ))}
                             </DialogPanelListItem>
                         ))}

@@ -2,58 +2,58 @@ import { useCallback, useEffect, useState } from "react";
 import { clientInstance } from "../..";
 
 export function useDialogs() {
-  const [_state, setState] = useState(clientInstance.dialogs.state);
-  const [dialogs, setDialogs] = useState(clientInstance.dialogs.value ?? []);
+    const [_state, setState] = useState(clientInstance.dialogs.state);
+    const [dialogs, setDialogs] = useState(clientInstance.dialogs.value ?? []);
 
-  useEffect(() => {
-    return clientInstance.dialogs.subscribe((dialogs) => {
-        setDialogs(dialogs!);
-        setState(clientInstance.dialogs.state);
-    });
-  }, []);
+    useEffect(() => {
+        return clientInstance.dialogs.subscribe((dialogs) => {
+            setDialogs(dialogs!);
+            setState(clientInstance.dialogs.state);
+        });
+    }, []);
 
-  const addDialog = useCallback((type: string, data: unknown) => {
-    if(!dialogs) {
-      return;
-    }
+    const addDialog = useCallback((type: string, data: unknown) => {
+        if (!dialogs) {
+            return;
+        }
 
-    clientInstance.dialogs.value!.push({
-        id: Math.random().toString(),
-        data,
-        type
-    });
+        clientInstance.dialogs.value!.push({
+            id: Math.random().toString(),
+            data,
+            type
+        });
 
-    clientInstance.dialogs.update();
-  }, [dialogs]);
+        clientInstance.dialogs.update();
+    }, [dialogs]);
 
-  const addUniqueDialog = useCallback((type: string) => {
-    if(!dialogs) {
-      return;
-    }
+    const addUniqueDialog = useCallback((type: string, data: unknown = null) => {
+        if (!dialogs) {
+            return;
+        }
 
-    if(dialogs.some((dialog) => dialog.id === type)) {
-        closeDialog(type);
-        
-        return;
-    }
+        if (dialogs.some((dialog) => dialog.id === type)) {
+            closeDialog(type);
 
-    clientInstance.dialogs.value!.push({
-        id: type,
-        data: null,
-        type
-    });
+            return;
+        }
 
-    clientInstance.dialogs.update();
-  }, [dialogs]);
-  
+        clientInstance.dialogs.value!.push({
+            id: type,
+            data,
+            type
+        });
+
+        clientInstance.dialogs.update();
+    }, [dialogs]);
+
     const setDialogHidden = useCallback((id: string, hidden: boolean) => {
-        if(!dialogs) {
+        if (!dialogs) {
             return;
         }
 
         const index = dialogs.findIndex((dialog) => dialog.id === id);
 
-        if(index === -1) {
+        if (index === -1) {
             console.warn("Dialog does not exist", id);
 
             return;
@@ -63,31 +63,31 @@ export function useDialogs() {
         clientInstance.dialogs.update();
     }, [dialogs]);
 
-  const closeDialog = useCallback((id: string) => {
-    if(!dialogs) {
-      return;
-    }
+    const closeDialog = useCallback((id: string) => {
+        if (!dialogs) {
+            return;
+        }
 
-    const index = dialogs.findIndex((dialog) => dialog.id === id);
+        const index = dialogs.findIndex((dialog) => dialog.id === id);
 
-    if(index === -1) {
-        console.warn("Dialog does not exist", id);
+        if (index === -1) {
+            console.warn("Dialog does not exist", id);
 
-        return;
-    }
+            return;
+        }
 
-    clientInstance.dialogs.value!.splice(index, 1);
-    clientInstance.dialogs.update();
-  }, [dialogs]);
+        clientInstance.dialogs.value!.splice(index, 1);
+        clientInstance.dialogs.update();
+    }, [dialogs]);
 
-  return {
-    dialogs,
+    return {
+        dialogs,
 
-    addDialog,
-    addUniqueDialog,
+        addDialog,
+        addUniqueDialog,
 
-    setDialogHidden,
-    
-    closeDialog
-  };
+        setDialogHidden,
+
+        closeDialog
+    };
 }

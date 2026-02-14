@@ -8,9 +8,11 @@ export type DialogPanelListItemProps = {
     subItem?: boolean;
     onClick: () => void;
     children?: ReactNode;
+    editable?: boolean;
+    onEditClick?: () => void;
 };
 
-export default function DialogPanelListItem({ active, icon, title, onClick, children, subItem }: DialogPanelListItemProps) {
+export default function DialogPanelListItem({ active, icon, title, onClick, children, subItem, editable, onEditClick }: DialogPanelListItemProps) {
     return (
         <Fragment>
             <div className={`dialog-panel-list-item ${(active)?("active"):("")} ${(subItem)?("subitem"):("")}`} onClick={onClick}>
@@ -39,7 +41,13 @@ export default function DialogPanelListItem({ active, icon, title, onClick, chil
                         </div>
                     )}
 
-                    {title}
+                    <div style={{ flex: 1 }}>
+                        {title}
+                    </div>
+
+                    {(editable) && (
+                        <div className="sprite_room_user_motto_pen" onClick={onEditClick}/>
+                    )}
                 </div>
             </div>
 

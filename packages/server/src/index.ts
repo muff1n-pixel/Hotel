@@ -38,6 +38,7 @@ import GetInventoryBadgesEvent from "./Communication/Game/Inventory/GetInventory
 import UpdateUserBadgeEvent from "./Communication/Game/Inventory/UpdateUserBadgeEvent.js";
 import GetUserProfileEvent from "./Communication/Game/Rooms/User/GetUserProfileEvent.js";
 import SetMottoEvent from "./Communication/Game/Users/SetMottoEvent.js";
+import UpdateShopPageEvent from "./Communication/Game/Shop/Development/UpdateShopPageEvent.js";
 
 await initializeModels();
 
@@ -90,6 +91,8 @@ eventHandler
 eventHandler
     .addIncomingEvent("SendFeedbackEvent", new SendFeedbackEvent())
     .addIncomingEvent("GetHotelFeedbackEvent", new GetHotelFeedbackEvent());
+
+eventHandler.addIncomingEvent("UpdateShopPageEvent", new UpdateShopPageEvent());
 
 eventHandler
     .addIncomingEvent("SetMottoEvent", new SetMottoEvent());

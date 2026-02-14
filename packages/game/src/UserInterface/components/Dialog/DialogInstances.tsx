@@ -12,6 +12,8 @@ import ReportIssueDialog from "../Debug/Dialog/ReportIssueDialog";
 import HotelAlertDialog from "../Hotel/Alert/HotelAlertDialog";
 import ViewIssuesDialog from "../Debug/Dialog/ViewIssuesDialog";
 import RoomSettingsThumbnailDialog from "../Room/Settings/Thumbnail/RoomSettingsThumbnailDialog";
+import EditShopPageDialog from "../Shop/Development/EditShopPageDialog";
+import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -55,6 +57,9 @@ export default function DialogInstances() {
 
                     case "view-issues":
                         return (<ViewIssuesDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
+
+                    case "edit-shop-page":
+                        return (<EditShopPageDialog key={dialog.id} data={dialog.data as ShopPageData} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
                 }
             })}
         </Fragment>
