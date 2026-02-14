@@ -12,6 +12,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
     }
 
+    private lastExecution: number = 0;
+
     private preoccupiedUsers: RoomUser[] = [];
     private preoccupiedFurniture: RoomFurniture[] = [];
 
@@ -21,6 +23,14 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     }
 
     async handleActionsInterval(): Promise<void> {
+        const elapsedSinceLastExecution = performance.now() - this.lastExecution;
+
+        if(elapsedSinceLastExecution < 1000) {
+            return;
+        }
+
+        this.lastExecution = performance.now();
+
         const room = this.roomFurniture.room;
 
         const outgoingEvents: OutgoingEvent[] = [];
