@@ -19,4 +19,8 @@ export default class RoomFurnitureGateLogic implements RoomFurnitureLogic {
 
         this.roomFurniture.setAnimation(event.animation);
     }
+
+    async handleActionsInterval(): Promise<void> {
+        
+    }
 }

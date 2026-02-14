@@ -11,6 +11,11 @@ export default class UserPositionEvent implements IncomingEvent<WebSocketEvent<U
         
         const roomUser = clientInstance.roomInstance.value.getUserById(event.data.userId);
 
-        roomUser.item.setPosition(event.data.position);
+        if(event.data.usePath) {
+            roomUser.item.setPositionPath(roomUser.item.position!, event.data.position, 0, false);
+        }
+        else {
+            roomUser.item.setPosition(event.data.position);
+        }
     }
 }

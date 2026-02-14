@@ -56,7 +56,7 @@ export default class RoomFigureItem extends RoomItem {
         super.setPosition(position, index);
     }
 
-    public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition, delay: number = 0): void {
+    public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition, delay: number = 0, useAction: boolean = true): void {
         super.setPositionPath(fromPosition, toPosition, 500 - delay);
 
         const relativePosition: RoomPosition = {
@@ -65,9 +65,11 @@ export default class RoomFigureItem extends RoomItem {
             depth: toPosition.depth - fromPosition.depth
         };
 
-        this.figureRenderer.direction = this.getDirectionFromRelativePosition(relativePosition);
-        this.figureRenderer.addAction("Move");
-        this.figureRenderer.removeAction("Sit");
+        if(useAction) {
+            this.figureRenderer.direction = this.getDirectionFromRelativePosition(relativePosition);
+            this.figureRenderer.addAction("Move");
+            this.figureRenderer.removeAction("Sit");
+        }
     }
 
     public finishPositionPath(): void {

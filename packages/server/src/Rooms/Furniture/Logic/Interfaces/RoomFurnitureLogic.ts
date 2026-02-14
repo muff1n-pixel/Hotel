@@ -3,4 +3,6 @@ import RoomUser from "../../../Users/RoomUser.js";
 
 export default interface RoomFurnitureLogic {
     use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void>;
+    
+    handleActionsInterval(): Promise<void>;
 }

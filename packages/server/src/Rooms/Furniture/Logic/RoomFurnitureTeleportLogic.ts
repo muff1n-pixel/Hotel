@@ -102,4 +102,8 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
 
         await targetFurniture.setAnimation(0);
     }
+
+    async handleActionsInterval(): Promise<void> {
+        
+    }
 }

@@ -73,7 +73,13 @@ export default class Room {
         }
     }
 
-    private handleActionsInterval() {
+    private async handleActionsInterval() {
+
+        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.model.furniture.category === "roller");
+
+        for(let furniture of furnitureWithActions) {
+            await furniture.handleActionsInterval();
+        }
         const usersWithPath = this.users.filter((user) => user.path !== undefined);
 
         // TODO: change so that the clients get the full path immediately, and only use this interval to cancel due to obstructions in the path?
@@ -95,15 +101,22 @@ export default class Room {
     }
 
     public getUpmostFurnitureAtPosition(position: Omit<RoomPosition, "depth">) {
-        const furniture = this.furnitures
-            .filter((furniture) => furniture.isPositionInside(position))
-            .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
+        const furniture =
+            this.getAllFurnitureAtPosition(position)
+                .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
 
         if(!furniture.length) {
             return undefined;
         }
 
         return furniture[0];
+    }
+
+    public getAllFurnitureAtPosition(position: Omit<RoomPosition, "depth">) {
+        const furniture = this.furnitures
+            .filter((furniture) => furniture.isPositionInside(position));
+
+        return furniture;
     }
 
     public getUpmostDepthAtPosition(position: Omit<RoomPosition, "depth">, furniture?: RoomFurniture) {

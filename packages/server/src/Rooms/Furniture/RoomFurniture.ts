@@ -9,9 +9,13 @@ import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
 import RoomFurnitureGateLogic from "./Logic/RoomFurnitureGateLogic.js";
 import RoomFurnitureLightingLogic from "./Logic/RoomFurnitureLightingLogic.js";
 import { NonAttributeBrand } from "@sequelize/core";
+import RoomFurnitureRollerLogic from "./Logic/RoomFurnitureRollerLogic.js";
+import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurniture {
-    constructor(private readonly room: Room, public readonly model: UserFurnitureModel) {
+    public preoccupiedByActionHandler: boolean = false;
+
+    constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }
@@ -144,30 +148,41 @@ export default class RoomFurniture {
         return {...(this.model.data ?? {})} as T;
     }
 
-    public getCategoryLogic() {
-        switch(this.model.furniture.category) {
-            case "teleport":
-                return new RoomFurnitureTeleportLogic(this);
-                
-            case "gate":
-                return new RoomFurnitureGateLogic(this);
-                
-            case "lighting":
-            case "other":
-                return new RoomFurnitureLightingLogic(this);
+    private category: RoomFurnitureLogic | null = null;
 
-            default:
-                console.warn("Unhandled category logic type: " + this.model.furniture.category);
-                break;
+    public getCategoryLogic() {
+        if(!this.category) {
+            switch(this.model.furniture.category) {
+                case "teleport":
+                    this.category = new RoomFurnitureTeleportLogic(this);
+                   break;
+                    
+                case "gate":
+                    this.category = new RoomFurnitureGateLogic(this);
+                   break;
+                    
+                case "lighting":
+                case "other":
+                    this.category = new RoomFurnitureLightingLogic(this);
+                    break;
+
+                case "roller":
+                    this.category = new RoomFurnitureRollerLogic(this);
+                    break;
+
+                default:
+                    console.warn("Unhandled category logic type: " + this.model.furniture.category);
+                    break;
+            }
         }
 
-        return null;
+        return this.category;
     }
 
-    public getOffsetPosition(offset: number) {
+    public getOffsetPosition(offset: number, direction: number = this.model.direction) {
         const position = {...this.model.position};
 
-        switch(this.model.direction) {
+        switch(direction) {
             case 0:
                 position.row -= offset;
                 break;
@@ -200,5 +215,11 @@ export default class RoomFurniture {
                 ]
             }));
         }
+    }
+
+    public async handleActionsInterval() {
+        const logic = this.getCategoryLogic();
+
+        await logic?.handleActionsInterval();
     }
 }

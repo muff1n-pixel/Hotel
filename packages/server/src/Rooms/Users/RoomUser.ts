@@ -14,6 +14,8 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import { UserPositionEventData } from "@shared/Communications/Responses/Rooms/Users/UserPositionEventData.js";
 
 export default class RoomUser {
+    public preoccupiedByActionHandler: boolean = false;
+    
     public position: RoomPosition;
     public direction: number;
     public actions: string[] = [];
