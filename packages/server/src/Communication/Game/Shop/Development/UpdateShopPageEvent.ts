@@ -13,6 +13,8 @@ export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPage
         
         if(event.id !== null) {
             await ShopPageModel.update({
+                parentId: event.parentId ?? null,
+
                 title: event.title,
                 description: event.description ?? null,
 
@@ -32,6 +34,7 @@ export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPage
         else {
             await ShopPageModel.create({
                 id: randomUUID(),
+                parentId: event.parentId ?? null,
 
                 title: event.title,
                 description: event.description ?? null,

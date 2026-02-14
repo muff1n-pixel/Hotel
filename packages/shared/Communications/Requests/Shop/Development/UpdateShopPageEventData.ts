@@ -1,5 +1,6 @@
 export type UpdateShopPageEventData = {
     id: string | null;
+    parentId: string | null;
 
     category: string;
 

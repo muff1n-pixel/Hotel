@@ -9,7 +9,7 @@ import { UpdateShopPageEventData } from "@Shared/Communications/Requests/Shop/De
 import { useDialogs } from "../../../hooks/useDialogs";
 
 export type EditShopPageDialogProps = {
-    data: ShopPageData | null;
+    data: ShopPageData & { parent?: ShopPageData } | null;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -28,6 +28,8 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
         webSocketClient.send<UpdateShopPageEventData>("UpdateShopPageEvent", {
             id: data?.id ?? null,
 
+            parentId: data?.parent?.id ?? null,
+
             category: "furniture",
 
             title,
@@ -44,7 +46,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     }, [dialogs, data, icon, title, description, header, teaser, index]);
 
     return (
-        <Dialog title={(data)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={660} initialPosition="center">
+        <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -53,6 +55,17 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                     flexDirection: "column",
                     gap: 8,
                 }}>
+                    {(data?.parent) && (
+                        <p style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: 4,
+                            alignItems: "center"
+                        }}>
+                            This page {(data?.id)?("is"):("will be")} a child of {(data.parent.icon) && (<img src={`./assets/shop/icons/${data.parent.icon}`}/>)} <b>{data.parent.title}</b>
+                        </p>
+                    )}
+
                     <b>Page icon</b>
 
                     <div style={{
@@ -122,7 +135,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                         justifyContent: "flex-end"
                     }}>
                         <DialogButton onClick={handleUpdate}>
-                            {(data)?("Update page"):("Create page")}
+                            {(data?.id)?("Update page"):("Create page")}
                         </DialogButton>
                     </div>
                 </div>
