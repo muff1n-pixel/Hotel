@@ -9,27 +9,27 @@ export default function useShopPageFurniture(pageId: string) {
     const shopFurnituresRequested = useRef<string>("");
 
     useEffect(() => {
-        if(shopFurnituresRequested.current === pageId) {
-            return;
-        }
-
-        shopFurnituresRequested.current = pageId;
-
         setShopFurnitures([]);
 
         const listener = (event: WebSocketEvent<ShopPageFurnitureEventData>) => {
             if(event.data.pageId === pageId) {
                 setShopFurnitures(event.data.furniture);
             }
+        };
+
+        webSocketClient.addEventListener<WebSocketEvent<ShopPageFurnitureEventData>>("ShopPageFurnitureEvent", listener);
+
+        if(shopFurnituresRequested.current !== pageId) {
+            webSocketClient.send<GetShopPageFurnitureEventData>("GetShopPageFurnitureEvent", {
+                pageId: pageId
+            });
+
+            shopFurnituresRequested.current = pageId;
         }
 
-        webSocketClient.addEventListener<WebSocketEvent<ShopPageFurnitureEventData>>("ShopPageFurnitureEvent", listener, {
-            once: true
-        });
-
-        webSocketClient.send<GetShopPageFurnitureEventData>("GetShopPageFurnitureEvent", {
-            pageId: pageId
-        });
+        return () => {
+            webSocketClient.removeEventListener<WebSocketEvent<ShopPageFurnitureEventData>>("ShopPageFurnitureEvent", listener);
+        };
     }, [pageId]);
 
     return shopFurnitures;

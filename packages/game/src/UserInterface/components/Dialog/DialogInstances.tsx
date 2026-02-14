@@ -14,6 +14,7 @@ import ViewIssuesDialog from "../Debug/Dialog/ViewIssuesDialog";
 import RoomSettingsThumbnailDialog from "../Room/Settings/Thumbnail/RoomSettingsThumbnailDialog";
 import EditShopPageDialog from "../Shop/Development/EditShopPageDialog";
 import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
+import EditShopFurnitureDialog from "../Shop/Development/EditShopFurnitureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -60,6 +61,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-page":
                         return (<EditShopPageDialog key={dialog.id} data={dialog.data as ShopPageData} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
+
+                    case "edit-shop-furniture":
+                        return (<EditShopFurnitureDialog key={dialog.id} data={dialog.data as any} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
                 }
             })}
         </Fragment>

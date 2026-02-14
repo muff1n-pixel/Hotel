@@ -12,8 +12,13 @@ import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Response
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
+import { useUser } from "../../../hooks/useUser";
+import { useDialogs } from "../../../hooks/useDialogs";
 
 export default function ShopDefaultPage({ page }: ShopPageProps) {
+    const user = useUser();
+    const dialogs = useDialogs();
+
     const roomRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
 
@@ -233,7 +238,9 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                             <div style={{
                                 flex: 1,
                                 alignSelf: "center",
-                                justifySelf: "center"
+                                justifySelf: "center",
+
+                                position: "relative"
                             }}>
                                 <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={onMouseDown}>
                                     <FurnitureIcon furnitureData={furniture.furniture}/>
@@ -283,9 +290,37 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                         <div className="sprite_currencies_diamonds-small"/>
                                     </div>
                                 )}
+
+                                {(user?.developer) && (
+                                    <div style={{
+                                        position: "absolute",
+                                        top: -10,
+                                        right: -6,
+                                        cursor: "pointer"
+                                    }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { ...furniture, page: page })}>
+                                        <div className="sprite_room_user_motto_pen"/>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
+
+                    {(user?.developer) && (
+                        <div style={{
+                            width: 53,
+                            height: 62,
+
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            cursor: "pointer"
+                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { page })}>
+                            <div className="sprite_add" style={{
+                                marginTop: -8
+                            }}/>
+                        </div>
+                    )}
                 </div>
             </DialogPanel>
 
