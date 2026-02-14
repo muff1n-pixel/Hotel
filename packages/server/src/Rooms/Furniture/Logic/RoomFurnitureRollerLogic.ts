@@ -32,9 +32,13 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
             }));
         }
 
+        if(room.model.speed === 0) {
+            return;
+        }
+
         const elapsedSinceLastExecution = performance.now() - this.lastExecution;
 
-        if(elapsedSinceLastExecution < 1000) {
+        if(elapsedSinceLastExecution < (1000 / room.model.speed)) {
             return;
         }
 

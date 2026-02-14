@@ -19,6 +19,7 @@ export class RoomModel extends Model {
     
     declare thumbnail: string | null;
     declare maxUsers: number;
+    declare speed: number;
     
     declare rights: NonAttribute<RoomRightsModel[]>;
     declare roomFurnitures: NonAttribute<UserFurnitureModel[]>;
@@ -62,6 +63,11 @@ export function initializeRoomModel(sequelize: Sequelize) {
                   }));
               },
               allowNull: false
+          },
+          speed: {
+            type: DataTypes.FLOAT,
+            defaultValue: 1,
+            allowNull: false,
           }
         },
         {

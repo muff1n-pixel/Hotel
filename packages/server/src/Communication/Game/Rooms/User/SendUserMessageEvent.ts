@@ -48,14 +48,49 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             
             roomUser.addAction("AvatarEffect." + parseInt(id));
         }
-        else {
-            user.room.sendRoomEvent(new OutgoingEvent<UserChatEventData>("UserChatEvent", {
-                userId: user.model.id,
-                message: event.message,
-                roomChatStyleId: user.model.roomChatStyleId
-            }));
+        else if(event.message.startsWith(":speed")) {
+            const roomUser = user.room.getRoomUser(user);
 
-            roomUser.addAction("Talk", Math.max(800, event.message.length * 60));
+            if(!roomUser.hasRights()) {
+                this.sendRoomMessage(user, event);
+                
+                return;
+            }
+
+            const scaleInput = event.message.split(' ')[1];
+
+            if(!scaleInput) {
+                this.sendRoomMessage(user, event);
+
+                return;
+            }
+
+            const scale = Math.max(0, Math.min(2, parseFloat(scaleInput)));
+
+            user.room.model.speed = scale;
+
+            if(user.room.model.changed()) {
+                await user.room.model.save();
+            }
         }
+        else {
+            this.sendRoomMessage(user, event);
+        }
+    }
+
+    private sendRoomMessage(user: User, event: SendUserMessageEventData) {
+        if(!user.room) {
+            return;
+        }
+
+        const roomUser = user.room.getRoomUser(user);
+
+        user.room.sendRoomEvent(new OutgoingEvent<UserChatEventData>("UserChatEvent", {
+            userId: user.model.id,
+            message: event.message,
+            roomChatStyleId: user.model.roomChatStyleId
+        }));
+
+        roomUser.addAction("Talk", Math.max(800, event.message.length * 60));
     }
 }
