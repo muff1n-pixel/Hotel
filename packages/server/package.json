@@ -7,6 +7,7 @@
     "migrate:rollback": "npx sequelize-cli db:migrate:undo"
   },
   "devDependencies": {
+    "@types/ini": "^4.1.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.6",
     "@types/ws": "^8.18.1",
@@ -19,6 +20,7 @@
     "@sequelize/core": "^7.0.0-alpha.47",
     "@sequelize/mysql": "^7.0.0-alpha.48",
     "astar-typescript": "^1.2.7",
+    "ini": "^1.3.8",
     "jsonwebtoken": "^9.0.3",
     "sequelize": "^6.37.7",
     "sharp": "^0.34.5",

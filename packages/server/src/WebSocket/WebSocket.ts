@@ -8,6 +8,8 @@ import { HotelEventData } from "@shared/Communications/Responses/Hotel/HotelEven
 import { config } from "../Config/Config.js";
 import jsonWebToken from "jsonwebtoken";
 import { UserTokenModel } from "../Database/Models/Users/UserTokens/UserTokenModel.js";
+import { UserBadgeModel } from "../Database/Models/Users/Badges/UserBadgeModel.js";
+import { randomUUID } from "node:crypto";
 
 export default class WebSocket {
     private readonly server: WebSocketServer;
@@ -108,6 +110,23 @@ export default class WebSocket {
                 const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
 
                 room?.addUserClient(user);
+            }
+
+            const userBadgesCount = await UserBadgeModel.count({
+                where: {
+                    userId: user.model.id
+                }
+            });
+
+            if(!userBadgesCount) {
+                await UserBadgeModel.bulkCreate(["CCF01", "CCF04", "CCF13", "CCF16", "CCF17", "CCF18", "CCF19", "CCF20", "CCF21", "CCF22", "CCF23", "CCF25"].map((badgeId) => {
+                    return {
+                        id: randomUUID(),
+                        userId: user.model.id,
+                        badgeId,
+                        equipped: false
+                    };
+                }));
             }
 
             for(let user of game.users) {

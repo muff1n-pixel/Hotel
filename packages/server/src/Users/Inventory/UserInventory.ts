@@ -1,10 +1,13 @@
 import { UserFurnitureEventData } from "@shared/Communications/Responses/Inventory/UserFurnitureEventData.js";
+import { InventoryBadgesEventData } from "@shared/Communications/Responses/Inventory/UserBadgesEventData.js";
 import User from "../User.js";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
 import { randomUUID } from "node:crypto";
 import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { UserModel } from "../../Database/Models/Users/UserModel.js";
+import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
+import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -125,6 +128,34 @@ export default class UserInventory {
                     id: userFurniture.id,
                     quantity: userFurnitures.filter((item) => item.furniture.id === userFurniture.furniture.id).length,
                     furniture: userFurniture.furniture,
+                };
+            })
+        }));
+    }
+
+    public async sendBadges() {
+        const userBadges = await UserBadgeModel.findAll({
+            where: {
+                userId: this.user.model.id
+            },
+            include: {
+                model: BadgeModel,
+                as: "badge"
+            },
+            order: [['updatedAt', 'DESC']]
+        });
+    
+        this.user.send(new OutgoingEvent<InventoryBadgesEventData>("InventoryBadgesEvent", {
+            badges: userBadges.map((userBadge) => {
+                return {
+                    id: userBadge.id,
+                    badge: {
+                        id: userBadge.badge.id,
+                        name: userBadge.badge.name,
+                        description: userBadge.badge.description,
+                        image: userBadge.badge.image
+                    },
+                    equipped: userBadge.equipped
                 };
             })
         }));

@@ -18,10 +18,14 @@ import { initializeHotelFeedbackModel } from "./Models/Hotel/HotelFeedbackModel.
 import { config } from "../Config/Config.js";
 import { initializeUserTokenModel } from "./Models/Users/UserTokens/UserTokenModel.js";
 import { initializeRoomCategoryModel } from "./Models/Rooms/Categories/RoomCategoryModel.js";
+import { initializeUserBadgeModel } from "./Models/Users/Badges/UserBadgeModel.js";
+import { initializeBadgeModel } from "./Models/Badges/BadgeModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
 export async function initializeModels() {
+  initializeBadgeModel(sequelize);
+  
   initializeFurnitureModel(sequelize);
 
   initializeShopPageModel(sequelize);
@@ -32,6 +36,7 @@ export async function initializeModels() {
 
   initializeUserModel(sequelize);
   initializeUserTokenModel(sequelize);
+  initializeUserBadgeModel(sequelize);
   
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);

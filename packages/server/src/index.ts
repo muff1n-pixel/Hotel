@@ -34,6 +34,9 @@ import SendFeedbackEvent from "./Communication/Game/Hotel/SendFeedbackEvent.js";
 import { readFileSync } from "node:fs";
 import PingEvent from "./Communication/Game/Users/PingEvent.js";
 import GetRoomCategoriesEvent from "./Communication/Game/Navigator/GetRoomCategoriesEvent.js";
+import GetInventoryBadgesEvent from "./Communication/Game/Inventory/GetInventoryBadgesEvent.js";
+import UpdateUserBadgeEvent from "./Communication/Game/Inventory/UpdateUserBadgeEvent.js";
+import GetUserBadgesEvent from "./Communication/Game/Rooms/User/GetUserBadgesEvent.js";
 
 await initializeModels();
 
@@ -71,6 +74,9 @@ eventHandler
 eventHandler
     .addIncomingEvent("GetUserEvent", new GetUserEvent())
     .addIncomingEvent("GetUserFurnitureEvent", new GetUserFurnitureEvent())
+    .addIncomingEvent("GetUserBadgesEvent", new GetUserBadgesEvent())
+    .addIncomingEvent("GetInventoryBadgesEvent", new GetInventoryBadgesEvent())
+    .addIncomingEvent("UpdateUserBadgeEvent", new UpdateUserBadgeEvent())
     .addIncomingEvent("SetRoomChatStyleEvent", new SetRoomChatStyleEvent())
     .addIncomingEvent("SetFigureConfigurationEvent", new SetFigureConfigurationEvent())
     .addIncomingEvent("SetHomeRoomEvent", new SetHomeRoomEvent());
