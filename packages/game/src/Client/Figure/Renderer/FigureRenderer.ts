@@ -485,7 +485,7 @@ export default class FigureRenderer {
 
             const avatarAnimation = this.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, flippedDirection, this.frame);
 
-            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? "std"}_${spriteConfiguration.type}_${spriteConfiguration.id}_${flippedDirection}_${avatarAnimation?.spriteFrame ?? 0}`;
+            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${spriteConfiguration.type}_${spriteConfiguration.id}_${flippedDirection}_${avatarAnimation?.spriteFrame ?? 0}`;
 
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
@@ -519,11 +519,11 @@ export default class FigureRenderer {
             const result = await this.getFigureSprite(spriteConfiguration, sprite, asset, paletteColor?.color, flippedDirection, flipHorizontal);
 
             if(result) {
-                //const actionForSit = actionsForBodyParts.find((action) => action.assetPartDefinition === "sit");
+                const actionForSit = actionsForBodyParts.find((action) => action.assetPartDefinition === "sit");
 
-                //if(actionForSit?.y) {
-                //    result.y += actionForSit.y;
-                //}
+                if(actionForSit) {
+                    result.y += 16;
+                }
 
                 if(avatarAnimation?.destinationX) {
                     result.x += avatarAnimation.destinationX;
