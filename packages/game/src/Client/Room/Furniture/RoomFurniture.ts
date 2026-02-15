@@ -34,18 +34,18 @@ export default class RoomFurniture {
 
         switch(this.data.furniture.category) {
             case "teleport":
-                return new RoomFurnitureTeleportLogic(this.furniture, this.furniture.data);
+                return new RoomFurnitureTeleportLogic(this.instance, this);
         }
 
         switch(this.furniture.data.index.logic) {
             case "furniture_multistate":
-                return new FurnitureMultistateLogic(this.furniture, this.furniture.data);
+                return new FurnitureMultistateLogic(this.instance, this);
                 
             case "furniture_roomdimmer":
-                return new FurnitureRoomDimmerLogic(this.furniture, this.furniture.data);
+                return new FurnitureRoomDimmerLogic(this.instance, this);
         }
 
-        return new FurnitureDefaultLogic(this.furniture);
+        return new FurnitureDefaultLogic(this.instance, this);
     }
 
     public getDimensionDepth() {

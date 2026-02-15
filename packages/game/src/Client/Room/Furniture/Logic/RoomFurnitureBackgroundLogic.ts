@@ -1,19 +1,15 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
-import { webSocketClient } from "../../..";
 import { UseRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData";
+import { webSocketClient } from "../../../..";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
-export default class FurnitureMultistateLogic implements FurnitureLogic {
+export default class RoomFurnitureBackgroundLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
     }
 
     isAvailable() {
-        if(!this.room.hasRights) {
-            return false;
-        }
-        
-        return (this.roomFurniture.furniture.animation !== this.getNextState());
+        return true;
     }
 
     use(): void {

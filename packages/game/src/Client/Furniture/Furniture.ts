@@ -4,10 +4,6 @@ import { FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVi
 import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRoomContentRenderer";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
-import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
-import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
-import FurnitureDefaultLogic from "@Client/Furniture/Logic/FurnitureDefaultLogic";
-import FurnitureRoomDimmerLogic from "@Client/Furniture/Logic/FurnitureRoomDimmerLogic";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
 
 export type FurnitureRendererSprite = {
@@ -52,22 +48,6 @@ export default class Furniture {
         }
 
         return this.data;
-    }
-
-    public getLogic(): FurnitureLogic {
-        if(!this.data) {
-            throw new Error("Furniture data is not available.");
-        }
-
-        switch(this.data.index.logic) {
-            case "furniture_multistate":
-                return new FurnitureMultistateLogic(this, this.data);
-                
-            case "furniture_roomdimmer":
-                return new FurnitureRoomDimmerLogic(this, this.data);
-        }
-
-        return new FurnitureDefaultLogic(this);
     }
 
     public async render() {

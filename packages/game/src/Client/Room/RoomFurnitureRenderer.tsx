@@ -7,7 +7,6 @@ import WallRenderer from "./Structure/WallRenderer";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFloorItem from "./Items/Map/RoomFloorItem";
-import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
 import { clientInstance } from "../..";
 
 export type RoomFurnitureRendererOptions = {
@@ -126,11 +125,33 @@ export default class RoomFurnitureRenderer {
             return;
         }
 
-        const logic = this.roomItem.furnitureRenderer.getLogic();
 
-        if(logic instanceof FurnitureMultistateLogic) {
-            this.roomItem.furnitureRenderer.animation = logic.getNextState();
+        this.roomItem.furnitureRenderer.animation = this.getNextState();
+    }
+    
+
+    private getNextState() {
+        if(!this.roomItem) {
+            return 0;
         }
+
+        if(!this.roomItem.furnitureRenderer.data) {
+            return this.roomItem.furnitureRenderer.animation;
+        }
+
+        const visualization = this.roomItem?.furnitureRenderer.getVisualizationData(this.roomItem?.furnitureRenderer.data);
+
+        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === this.roomItem?.furnitureRenderer.animation);
+
+        if(currentAnimationIndex === -1) {
+            return visualization.animations[0]?.id ?? 0;
+        }
+
+        if(!visualization.animations[currentAnimationIndex + 1]) {
+            return 0;
+        }
+
+        return visualization.animations[currentAnimationIndex + 1].id;
     }
 
     terminate() {

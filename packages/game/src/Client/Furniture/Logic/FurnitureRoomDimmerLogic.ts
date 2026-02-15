@@ -1,19 +1,22 @@
-import Furniture from "@Client/Furniture/Furniture";
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
-import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
+import RoomInstance from "@Client/Room/RoomInstance";
 import { clientInstance } from "../../..";
 import { RoomFurnitureDimmerData } from "../../../UserInterface/components/Room/Furniture/Logic/Dimmer/RoomFurnitureDimmerDialog";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export default class FurnitureRoomDimmerLogic implements FurnitureLogic {
-    constructor(private readonly furniture: Furniture, private readonly data: FurnitureData) {
+    constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
     }
 
     isAvailable() {
+        if(!this.room.hasRights) {
+            return false;
+        }
+        
         return true;
     }
 
-    use(roomFurniture: RoomInstanceFurniture): void {
+    use(): void {
         this.removeExistingDialog();
 
         clientInstance.dialogs.value = clientInstance.dialogs.value?.concat([
@@ -21,7 +24,7 @@ export default class FurnitureRoomDimmerLogic implements FurnitureLogic {
                 id: Math.random().toString(),
                 type: "room-furniture-logic",
                 data: {
-                    furniture: roomFurniture,
+                    furniture: this.roomFurniture,
                     type: "furniture_roomdimmer"
                 } satisfies RoomFurnitureDimmerData
             }

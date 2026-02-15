@@ -1,19 +1,18 @@
-import Furniture from "@Client/Furniture/Furniture";
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
-import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
+import RoomInstance from "@Client/Room/RoomInstance";
 import { UseRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData";
 import { webSocketClient } from "../../../..";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export default class RoomFurnitureTeleportLogic implements FurnitureLogic {
-    constructor(private readonly furniture: Furniture, private readonly data: FurnitureData) {
+    constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
     }
 
     isAvailable() {
         return true;
     }
 
-    use(roomFurniture: RoomInstanceFurniture): void {
+    use(): void {
         if(!this.isAvailable()) {
             return;
         }
@@ -21,15 +20,19 @@ export default class RoomFurnitureTeleportLogic implements FurnitureLogic {
         const nextState = this.getNextState();
 
         webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-            roomFurnitureId: roomFurniture.data.id,
+            roomFurnitureId: this.roomFurniture.data.id,
             animation: nextState
         });
     }
 
     public getNextState() {
-        const visualization = this.furniture.getVisualizationData(this.data);
+        if(!this.roomFurniture.furniture.data) {
+            return this.roomFurniture.furniture.animation;
+        }
 
-        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === this.furniture.animation);
+        const visualization = this.roomFurniture.furniture.getVisualizationData(this.roomFurniture.furniture.data);
+
+        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === this.roomFurniture.furniture.animation);
 
         if(currentAnimationIndex === -1) {
             return visualization.animations[0]?.id ?? 0;
