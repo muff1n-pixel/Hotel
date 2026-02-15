@@ -16,5 +16,9 @@ export type Config = {
         };
 
         discord: string | null;
+    };
+
+    users: {
+        defaultHomeRoomId: string | null;
     }
 };
