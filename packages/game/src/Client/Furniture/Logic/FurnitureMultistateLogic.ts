@@ -10,10 +10,6 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
     }
 
     isAvailable() {
-        if(this.data.logic.type === "teleport") {
-            return true;
-        }
-
         return (this.furniture.animation !== this.getNextState());
     }
 
