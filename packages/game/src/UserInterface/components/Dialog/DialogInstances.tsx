@@ -15,6 +15,7 @@ import RoomSettingsThumbnailDialog from "../Room/Settings/Thumbnail/RoomSettings
 import EditShopPageDialog from "../Shop/Development/EditShopPageDialog";
 import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import EditShopFurnitureDialog from "../Shop/Development/EditShopFurnitureDialog";
+import RoomFurnitureDialog from "../Room/Furniture/Dialogs/RoomFurnitureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -52,6 +53,9 @@ export default function DialogInstances() {
 
                     case "room-furniture-logic":
                         return (<RoomFurnitureLogicDialog key={dialog.id} data={dialog.data as RoomFurnitureLogicDialogData} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
+                        
+                    case "room-furni":
+                        return (<RoomFurnitureDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);

@@ -1,6 +1,10 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 
-export default function DialogContent({ children }: PropsWithChildren) {
+export type DialogContentProps = PropsWithChildren & {
+    style?: CSSProperties;
+};
+
+export default function DialogContent({ style, children }: DialogContentProps) {
     return (
         <div style={{
             flex: 1,
@@ -17,7 +21,9 @@ export default function DialogContent({ children }: PropsWithChildren) {
             fontSize: 13,
             padding: 10,
 
-            overflow: "hidden"
+            overflow: "hidden",
+
+            ...style
         }}>
             {children}
         </div>

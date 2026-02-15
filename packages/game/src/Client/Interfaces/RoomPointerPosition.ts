@@ -3,9 +3,9 @@ import RoomSprite from "@Client/Room/Items/RoomSprite";
 
 export type RoomPointerPosition = {
     item: RoomItem;
-    sprite: RoomSprite;
+    sprite?: RoomSprite;
 
-    position: {
+    position?: {
         row: number;
         column: number;
         depth: number;

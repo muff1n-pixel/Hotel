@@ -103,13 +103,15 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        this.furnitureItem.setPosition({
-            row: Math.floor(entity.position.row),
-            column: Math.floor(entity.position.column),
-            depth: entity.position.depth
-        });
+        if(entity.position) {
+            this.furnitureItem.setPosition({
+                row: Math.floor(entity.position.row),
+                column: Math.floor(entity.position.column),
+                depth: entity.position.depth
+            });
 
-        this.furnitureItem.disabled = false;
+            this.furnitureItem.disabled = false;
+        }
     }
 
     private frame() {

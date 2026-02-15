@@ -91,34 +91,36 @@ export default class RoomFurniturePlacer {
 
         const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === this.roomFurnitureItem.furnitureRenderer.placement);
 
-        const isPositionInsideStructure = (this.roomFurnitureItem.furnitureRenderer.placement === "wall" || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
-        const isPositionInsideUser = (this.roomFurnitureItem.furnitureRenderer.placement === "floor" && (entity && this.roomInstance.roomRenderer.isPositionInsideUser(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
+        if(entity?.position) {
+            const isPositionInsideStructure = (this.roomFurnitureItem.furnitureRenderer.placement === "wall" || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
+            const isPositionInsideUser = (this.roomFurnitureItem.furnitureRenderer.placement === "floor" && (entity && this.roomInstance.roomRenderer.isPositionInsideUser(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
 
-        if(entity && isPositionInsideStructure && !isPositionInsideUser) {
-            const furnitureAtPosition = (this.roomFurnitureItem.furnitureRenderer.placement === "floor") && this.roomInstance.getFurnitureAtUpmostPosition(
-                {
-                    row: entity.position.row,
-                    column: entity.position.column
-                },
-                this.roomFurnitureItem.furnitureRenderer.getDimensions(),
-                this.roomFurnitureItem.id
-            );
+            if(entity && isPositionInsideStructure && !isPositionInsideUser) {
+                const furnitureAtPosition = (this.roomFurnitureItem.furnitureRenderer.placement === "floor") && this.roomInstance.getFurnitureAtUpmostPosition(
+                    {
+                        row: entity.position.row,
+                        column: entity.position.column
+                    },
+                    this.roomFurnitureItem.furnitureRenderer.getDimensions(),
+                    this.roomFurnitureItem.id
+                );
 
-            if(!furnitureAtPosition || furnitureAtPosition.data.furniture.flags.stackable) {
-                if(entity.position.direction !== undefined) {
-                    this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
+                if(!furnitureAtPosition || furnitureAtPosition.data.furniture.flags.stackable) {
+                    if(entity.position.direction !== undefined) {
+                        this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
+                    }
+
+                    this.roomFurnitureItem.setPosition({
+                        row: entity.position.row,
+                        column: entity.position.column,
+                        depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+                    });
+
+                    this.roomFurnitureItem.disabled = false;
+                    this.iconElement.style.display = "none";
+
+                    return;
                 }
-
-                this.roomFurnitureItem.setPosition({
-                    row: entity.position.row,
-                    column: entity.position.column,
-                    depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
-                });
-
-                this.roomFurnitureItem.disabled = false;
-                this.iconElement.style.display = "none";
-
-                return;
             }
         }
 

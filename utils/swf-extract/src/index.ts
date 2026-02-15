@@ -79,9 +79,8 @@ let assetNames = [process.argv[2]];
 
             console.log("Extracting " + assetName);
 
-            try {
+            //try {
                 if(!assetName) {
-                    reject();
                     throw new Error("Argument is missing for asset name.");
                 }
 
@@ -251,12 +250,12 @@ let assetNames = [process.argv[2]];
                 console.log("Exported " + assetName);
 
                 resolve();
-            }
+            /*}
             catch(error) {
                 console.error(error);
 
                 reject();
-            }
+            }*/
         });
     }
 })();

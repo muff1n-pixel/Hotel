@@ -2,8 +2,11 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { SendUserMessageEventData } from "@Shared/Communications/Requests/Rooms/User/SendUserMessageEventData";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
+import { useDialogs } from "../../../hooks/useDialogs";
 
 export default function ToolbarChatbar() {
+    const dialogs = useDialogs();
+
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
 
@@ -12,12 +15,18 @@ export default function ToolbarChatbar() {
             return;
         }
 
+        setValue("");
+
+        if(value === ":furni") {
+            dialogs.addUniqueDialog("room-furni");
+
+            return;
+        }
+
         webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
             message: value
         });
-
-        setValue("");
-    }, [value]);
+    }, [dialogs, value]);
 
     return (
         <div style={{
