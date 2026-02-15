@@ -1,18 +1,23 @@
 import { CSSProperties, useEffect, useRef } from "react";
 
 export type OffscreenCanvasRenderProps = {
-    offscreenCanvas: ImageBitmap | Promise<ImageBitmap>;
     scale?: number;
     style?: CSSProperties;
+} & ({
+    offscreenCanvas: ImageBitmap | Promise<ImageBitmap>;
     placeholderImage?: ImageBitmap;
-}
+}| {
+    offscreenCanvas?: ImageBitmap | Promise<ImageBitmap>;
+    placeholderImage: ImageBitmap;
+});
+
 
 export default function OffscreenCanvasRender({ offscreenCanvas, placeholderImage, style, scale = 1 }: OffscreenCanvasRenderProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
         (async () => {
-            if(!canvasRef.current || !offscreenCanvas) {
+            if(!canvasRef.current) {
                 return;
             }
 
