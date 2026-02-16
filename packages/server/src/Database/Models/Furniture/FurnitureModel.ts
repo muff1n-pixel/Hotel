@@ -87,7 +87,14 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
         },
         {
           tableName: "furnitures",
-          sequelize
+          sequelize,
+          
+          indexes: [
+            {
+              unique: true,
+              fields: ['type', 'color']
+            }
+          ],
         }
     );
 }

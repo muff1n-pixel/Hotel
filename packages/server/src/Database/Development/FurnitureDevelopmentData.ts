@@ -1,5 +1,33 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { FurnitureModel } from "../Models/Furniture/FurnitureModel.js";
+import { randomUUID } from "node:crypto";
+
+export async function createMissingFurniture() {
+    const existingFurnitureAssets = await getExistingFurnitureAssets();
+
+    await FurnitureModel.bulkCreate(existingFurnitureAssets.flatMap((furnitures) => furnitures).map((furniture) => {
+        return {
+            id: randomUUID(),
+            type: furniture.type,
+
+            name: furniture.name,
+            description: furniture.description,
+
+            flags: furniture.flags,
+
+            color: furniture.color,
+            placement: furniture.placement,
+            dimensions: furniture.dimensions,
+
+            category: furniture.category,
+            interactionType: furniture.interactionType,
+            customParams: furniture.customParams
+        };
+    }), {
+        ignoreDuplicates: true
+    });
+}
 
 export async function getExistingFurnitureAssets(filter: ((assetName: string) => boolean) = ((assetName: string) => true)) {
     const assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true })

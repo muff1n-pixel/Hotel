@@ -41,6 +41,7 @@ import SetMottoEvent from "./Communication/Game/Users/SetMottoEvent.js";
 import UpdateShopPageEvent from "./Communication/Game/Shop/Development/UpdateShopPageEvent.js";
 import UpdateShopFurnitureEvent from "./Communication/Game/Shop/Development/UpdateShopFurnitureEvent.js";
 import ImportRoomFurnitureEvent from "./Communication/Game/Rooms/Furniture/Development/ImportRoomFurnitureEvent.js";
+import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData.js";
 
 await initializeModels();
 
@@ -50,6 +51,10 @@ if(resetDatabase) {
 
 if(recreateShop) {
     await recreateShopPages();
+}
+
+if(process.argv.some((value) => value === "create-furniture")) {
+    await createMissingFurniture();
 }
 
 // TODO: clean up event handler types
