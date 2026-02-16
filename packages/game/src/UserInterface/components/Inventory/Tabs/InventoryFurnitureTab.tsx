@@ -157,7 +157,7 @@ export default function InventoryFurnitureTab() {
 
     return (
         <div style={{
-            flex: 1,
+            flex: "1 1 0",
 
             overflow: "hidden",
 

@@ -67,7 +67,7 @@ export default function InventoryBadgesTab() {
 
     return (
         <div style={{
-            flex: 1,
+            flex: "1 1 0",
 
             display: "flex",
             flexDirection: "column"
