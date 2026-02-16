@@ -27,3 +27,5 @@ tsconfig.tsbuildinfo
 *.sqlite
 
 config.json
+
+*.zip
