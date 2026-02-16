@@ -14,6 +14,8 @@ export default class RoomCamera {
     };
 
     constructor(renderer: RoomRenderer) {
+        this.cameraPosition.top = -(renderer.structure.grid.length + renderer.structure.grid[0]?.length) * 6;
+
         if(renderer.roomInstance) {
             renderer.element.addEventListener("mousedown", this.mousedown.bind(this));
             renderer.element.addEventListener("mousemove", this.mousemove.bind(this));
