@@ -25,7 +25,7 @@ cd packages/shared
 npm run build
 
 cd packages/server
-npm run start -- -- reset
+npm run start -- --reset
 ```
 
 Close the server and then run `npm run migrate`.
