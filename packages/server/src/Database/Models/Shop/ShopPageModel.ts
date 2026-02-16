@@ -43,7 +43,7 @@ export function initializeShopPageModel(sequelize: Sequelize) {
             allowNull: false
           },
           description: {
-            type: new DataTypes.STRING,
+            type: new DataTypes.STRING(512),
             allowNull: true,
             defaultValue: null
           },
