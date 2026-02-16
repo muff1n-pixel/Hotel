@@ -38,8 +38,6 @@ export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs
 
             display: "flex",
             flexDirection: "column",
-
-            overflow: "hidden"
         }}>
             <div style={{
                 height: (withoutHeader)?(40):(119),

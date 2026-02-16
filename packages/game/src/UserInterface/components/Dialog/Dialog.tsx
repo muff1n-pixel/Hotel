@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 import DialogHeader from "./DialogHeader";
 import useDialogMovement from "./Hooks/useDialogMovement";
 
@@ -9,9 +9,10 @@ export type DialogProps = PropsWithChildren & {
     hidden?: boolean;
     onClose?: () => void;
     initialPosition?: "corner" | "center";
+    style?: CSSProperties;
 };
 
-export default function Dialog({ title, children, hidden, onClose, initialPosition = "corner", width, height }: DialogProps) {
+export default function Dialog({ title, children, hidden, onClose, initialPosition = "corner", width, height, style }: DialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement((initialPosition === "corner")?(
         {
             left: 200,
@@ -45,16 +46,16 @@ export default function Dialog({ title, children, hidden, onClose, initialPositi
             flexDirection: "column",
 
             pointerEvents: (!hidden)?("auto"):("none"),
-            opacity: (!hidden)?(undefined):(0)
+            opacity: (!hidden)?(undefined):(0),
+
+            ...style
         }} onMouseDown={onDialogFocus}>
             <DialogHeader title={title} onDialogMove={onMouseDown} onClose={onClose}/>
 
             <div style={{
                 height: 1,
                 width: "100%",
-                backgroundColor: "black",
-
-                overflow: "hidden"
+                backgroundColor: "black"
             }}/>
 
             {children}

@@ -21,8 +21,6 @@ export default function DialogContent({ style, children }: DialogContentProps) {
             fontSize: 13,
             padding: 10,
 
-            overflow: "hidden",
-
             ...style
         }}>
             {children}
