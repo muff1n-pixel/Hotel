@@ -40,6 +40,7 @@ export default class RoomFurniture {
 
         switch(this.furniture.data.index.logic) {
             case "furniture_multistate":
+            case "furniture_multiheight":
                 return new FurnitureMultistateLogic(this.instance, this);
                 
             case "furniture_roomdimmer":
@@ -53,8 +54,8 @@ export default class RoomFurniture {
     }
 
     public getDimensionDepth() {
-        if(this.data.furniture.category === "other" && this.data.furniture.customParams?.[0]) {
-            return this.data.furniture.dimensions.depth + ((this.data.furniture.customParams[0] as number) * this.data.animation);
+        if(this.data.furniture.interactionType === "multiheight" && this.data.furniture.customParams?.[0]) {
+            return ((this.data.furniture.customParams[0] as number) * this.data.animation);
         }
 
         return this.data.furniture.dimensions.depth;
