@@ -162,7 +162,7 @@ export default class RoomInstance {
     }
 
     private addUser(userData: RoomUserData): RoomItem<RoomUserData, RoomFigureItem> {
-        const figureRenderer = new Figure(userData.figureConfiguration, userData.direction);
+        const figureRenderer = new Figure(userData.figureConfiguration, userData.direction, userData.actions);
         const item = new RoomFigureItem(this.roomRenderer, figureRenderer, userData.position);
 
         this.roomRenderer.items.push(item);

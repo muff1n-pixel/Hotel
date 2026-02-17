@@ -68,7 +68,8 @@ export default class RoomUser {
             position: this.position,
             direction: this.direction,
             
-            hasRights: this.hasRights()
+            hasRights: this.hasRights(),
+            actions: this.actions
         };
     }
 
@@ -84,10 +85,7 @@ export default class RoomUser {
         const nextPosition = this.path?.[0];
 
         if(!nextPosition || this.path === undefined) {
-            console.log("User path finished");
-
-            this.path = undefined;
-            this.pathOnFinish?.();
+            this.finishPath();
 
             return;
         }
@@ -275,6 +273,26 @@ export default class RoomUser {
         this.room.requestActionsFrame();
     }
 
+    private finishPath() {
+        const furniture = this.room.getUpmostFurnitureAtPosition(this.position);
+
+        if(furniture && furniture.model.furniture.flags.sitable) {
+            const newPosition = {
+                row: this.position.row,
+                column: this.position.column,
+                depth: furniture.model.position.depth + furniture.model.furniture.dimensions.depth - 0.5
+            };
+
+            this.setPosition(newPosition, furniture.model.direction);
+            this.addAction("Sit");
+        }
+
+        console.log("User path finished");
+
+        this.path = undefined;
+        this.pathOnFinish?.();
+    }
+
     public getOffsetPosition(direction: number, offset: number) {
         const position = {...this.position};
 
@@ -288,15 +306,21 @@ export default class RoomUser {
         return position;
     }
 
-    public setPosition(position: RoomPosition) {
+    public setPosition(position: RoomPosition, direction?: number) {
         this.position = position;
+
+        if(direction !== undefined) {
+            this.direction = direction;
+        }
+
         this.path = undefined;
         this.pathOnCancel?.();
         
         this.room.outgoingEvents.push(
             new OutgoingEvent<UserPositionEventData>("UserPositionEvent", {
                 userId: this.user.model.id,
-                position
+                position,
+                direction
             })
         );
     }

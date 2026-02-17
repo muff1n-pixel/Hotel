@@ -15,5 +15,5 @@ export type RoomUserData = {
 
     hasRights: boolean;
 
-    //actions: string[];
+    actions: string[];
 };

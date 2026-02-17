@@ -5,8 +5,10 @@ import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfigurati
 export default class Figure {
     public static readonly figureWorker: FigureWorkerClient = new FigureWorkerClient(false);
 
-    constructor(public configuration: FigureConfiguration, public direction: number, public actions: string[] = ["Default"], public headOnly: boolean = false) {
+    public actions: string[] = ["Default"]
 
+    constructor(public configuration: FigureConfiguration, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
+        this.actions.push(...actions);
     }
 
     public async renderToCanvas(worker: FigureWorkerClient, frame: number, cropped: boolean = false) {

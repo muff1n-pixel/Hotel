@@ -39,7 +39,7 @@ export default class RoomFigureItem extends RoomItem {
             });
     }
 
-    public setPosition(position: RoomPosition, index?: number): void {
+    /*public setPosition(position: RoomPosition, index?: number): void {
         if(Number.isInteger(position.row) && Number.isInteger(position.column)) {
             if(clientInstance.roomInstance.value?.roomRenderer.items.includes(this)) {
                 const furniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(position);
@@ -54,7 +54,7 @@ export default class RoomFigureItem extends RoomItem {
         }
 
         super.setPosition(position, index);
-    }
+    }*/
 
     public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition, delay: number = 0, useAction: boolean = true): void {
         super.setPositionPath(fromPosition, toPosition, 500 - delay);

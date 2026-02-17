@@ -21,7 +21,6 @@ export default class RoomItem implements RoomItemInterface {
 
     public setPosition(position: RoomPosition | undefined, index: number = 0) {
         //this.data.position = { row, column, depth };
-
         this.position = position;
         this.priority = index;
     }

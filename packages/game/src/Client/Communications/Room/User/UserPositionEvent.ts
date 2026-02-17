@@ -15,7 +15,13 @@ export default class UserPositionEvent implements IncomingEvent<WebSocketEvent<U
             roomUser.item.setPositionPath(roomUser.item.position!, event.data.position, 0, false);
         }
         else {
+            roomUser.item.finishPositionPath();
+
             roomUser.item.setPosition(event.data.position);
+
+            if(event.data.direction !== undefined) {
+                roomUser.item.figureRenderer.direction = event.data.direction;
+            }
         }
     }
 }
