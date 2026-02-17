@@ -41,9 +41,6 @@ export default class RoomInstance {
     private readonly users: RoomItem<RoomUserData, RoomFigureItem>[] = [];
     public furnitures: RoomFurniture[] = [];
 
-    private roomFloorItem?: RoomFloorItem;
-    private roomWallItem?: RoomWallItem;
-
     public information: RoomInformationData;
     public hasRights: boolean;
 
@@ -64,35 +61,9 @@ export default class RoomInstance {
     }
 
     public setStructure(structure: RoomStructure) {
-        this.roomRenderer.structure = structure;
+        this.roomRenderer.setStructure(structure);
 
         this.clientInstance.roomInstance.update();
-
-        if(this.roomFloorItem) {
-            this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomFloorItem), 1);
-            this.roomFloorItem = undefined;
-        }
-
-        this.roomFloorItem = new RoomFloorItem(
-            this.roomRenderer,
-            new FloorRenderer(structure, structure.floor.id, 64),
-        );
-
-        this.roomRenderer.items.push(this.roomFloorItem);
-
-        if(this.roomWallItem) {
-            this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomWallItem), 1);
-            this.roomWallItem = undefined;
-        }
-
-        if(!structure.wall.hidden) {
-            this.roomWallItem = new RoomWallItem(
-                this.roomRenderer,
-                new WallRenderer(structure, structure.wall.id, 64)
-            );
-
-            this.roomRenderer.items.push(this.roomWallItem);
-        }
     }
 
     public setMoodlight(moodlight: RoomMoodlightData) {

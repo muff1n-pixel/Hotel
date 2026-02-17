@@ -15,6 +15,10 @@ import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomFurniturePlacer from "./RoomFurniturePlacer";
 import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomLighting from "@Client/Room/RoomLightning";
+import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
+import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
+import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
+import WallRenderer from "@Client/Room/Structure/WallRenderer";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -271,16 +275,19 @@ export default class RoomRenderer extends EventTarget {
 
         if(sprite.item.position) {
             if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
-                priority = -2000;
-                priority += (sprite.item.position.depth * 100);
+                if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
+                    priority = -2000;
+                    priority += (sprite.item.position.depth * 100);
+                
+                    return priority;
+                }
             }
-            else {
-                priority += RoomRenderer.getPositionPriority(sprite.item.position);
 
-                if(sprite.item instanceof RoomFurnitureItem) {
-                    if(sprite.item.furnitureRenderer.placement === "wall") {
-                        priority -= 1000;
-                    }
+            priority += RoomRenderer.getPositionPriority(sprite.item.position);
+
+            if(sprite.item instanceof RoomFurnitureItem) {
+                if(sprite.item.furnitureRenderer.placement === "wall") {
+                    priority -= 1000;
                 }
             }
         }
@@ -377,5 +384,38 @@ export default class RoomRenderer extends EventTarget {
         );
 
         return canvas;
+    }
+
+    private floorItem?: RoomFloorItem;
+    private wallItem?: RoomWallItem;
+    
+    public setStructure(structure: RoomStructure) {
+        this.structure = structure;
+
+        if(this.floorItem) {
+            this.items.splice(this.items.indexOf(this.floorItem), 1);
+            this.floorItem = undefined;
+        }
+
+        this.floorItem = new RoomFloorItem(
+            this,
+            new FloorRenderer(structure, structure.floor.id, 64),
+        );
+
+        this.items.push(this.floorItem);
+
+        if(this.wallItem) {
+            this.items.splice(this.items.indexOf(this.wallItem), 1);
+            this.wallItem = undefined;
+        }
+
+        if(!structure.wall.hidden) {
+            this.wallItem = new RoomWallItem(
+                this,
+                new WallRenderer(structure, structure.wall.id, 64)
+            );
+
+            this.items.push(this.wallItem);
+        }
     }
 }

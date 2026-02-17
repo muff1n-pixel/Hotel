@@ -31,6 +31,8 @@ export default class WallRenderer {
     public leftWalls: WallTile[] = [];
     public rightWalls: WallTile[] = [];
 
+    public hasDoorWall = false;
+
     public rows: number;
     public columns: number;
     public depth: number;
@@ -430,6 +432,8 @@ export default class WallRenderer {
                 
                 context.drawImage(image, left, top);
             }
+
+            this.hasDoorWall = true;
         }
         else if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row + 1 && rectangle.column === this.structure.door!.column && rectangle.direction === 4)) {
             context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * this.fullSize, (this.depth * this.halfSize) + this.structure.wall.thickness);
@@ -455,6 +459,8 @@ export default class WallRenderer {
 
                 context.drawImage(image, left - image.width, top);
             }
+
+            this.hasDoorWall = true;
         }
     }
 
