@@ -8,16 +8,15 @@ import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import { webSocketClient } from "../../..";
 import { ShopPageData, ShopPagesEventData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import { GetShopPagesEventData } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
-import { useUser } from "../../hooks/useUser";
 import { useDialogs } from "../../hooks/useDialogs";
 
 export type ShopDialogCategoryProps = {
+    editMode?: boolean;
     category: "frontpage" | "furniture" | "clothing" | "pets";
     onHeaderChange: (header: DialogTabHeaderProps) => void;
 }
 
-export default function ShopDialogCategory({ category, onHeaderChange }: ShopDialogCategoryProps) {
-    const user = useUser();
+export default function ShopDialogCategory({ editMode, category, onHeaderChange }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
 
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
@@ -64,12 +63,12 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
     }, [ activeShopPage ]);
 
     const handleEditPage = useCallback((shopPage: ShopPageData & { parent?: ShopPageData }) => {
-        if(!user?.developer) {
+        if(!editMode) {
             return;
         }
 
         dialogs.addUniqueDialog("edit-shop-page", shopPage);
-    }, [user, dialogs]);
+    }, [editMode, dialogs]);
 
     const handleCreatePage = useCallback((parentShopPage?: ShopPageData) => {
         dialogs.addUniqueDialog("edit-shop-page", {
@@ -94,7 +93,7 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                                 title={shopPage.title}
                                 icon={(shopPage.icon)?(<img src={`./assets/shop/icons/${shopPage.icon}`}/>):(undefined)}
                                 onClick={() => setActiveShopPage(shopPage)}
-                                editable={user?.developer}
+                                editable={editMode}
                                 onEditClick={() => handleEditPage(shopPage)}>
                                 {(activeShopPage && (activeShopPage.id === shopPage.id || shopPage.children?.includes(activeShopPage))) && (
                                     <Fragment>
@@ -106,12 +105,12 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                                                 title={shopSubPage.title}
                                                 icon={(shopSubPage.icon)?(<img src={`./assets/shop/icons/${shopSubPage.icon}`}/>):(undefined)}
                                                 onClick={() => setActiveShopPage(shopSubPage)}
-                                                editable={user?.developer}
+                                                editable={editMode}
                                                 onEditClick={() => handleEditPage({ ...shopSubPage, parent: shopPage })}
                                                 />
                                         ))}
 
-                                        {(user?.developer) && (
+                                        {(editMode) && (
                                             <div style={{
                                                 display: "flex",
                                                 justifyContent: "flex-end",
@@ -128,7 +127,7 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                             </DialogPanelListItem>
                         ))}
 
-                        {(user?.developer) && (
+                        {(editMode) && (
                             <div style={{
                                 display: "flex",
                                 justifyContent: "flex-end",
@@ -144,7 +143,7 @@ export default function ShopDialogCategory({ category, onHeaderChange }: ShopDia
                 </DialogPanel>
             </div>
 
-            {(activeShopPage) && (<ShopPage page={activeShopPage}/>)}
+            {(activeShopPage) && (<ShopPage editMode={editMode} page={activeShopPage}/>)}
         </div>
     );
 }

@@ -6,13 +6,20 @@ import UserInventory from "./Inventory/UserInventory.js";
 import Room from "../Rooms/Room.js";
 import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import { debugTimestamps } from "../Database/Database.js";
+import UserPermissions from "./Permissions/UserPermissions.js";
+import { UserPermissionsEventData } from "@shared/Communications/Responses/User/Permissions/UserPermissionsEventData.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
+    private permissions?: UserPermissions;
     public room?: Room;
 
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();
+        
+        this.getPermissions().then((permissions) => {
+            this.send(new OutgoingEvent<UserPermissionsEventData>("UserPermissionsEvent", permissions.getPermissionData()));
+        });
     }
 
     send(events: OutgoingEvent | OutgoingEvent[]) {
@@ -45,6 +52,16 @@ export default class User extends EventEmitter {
         }
 
         return this.inventory;
+    }
+
+    public async getPermissions() {
+        if(!this.permissions) {
+            this.permissions = new UserPermissions(this);
+
+            await this.permissions.loadPermissions();
+        }
+
+        return this.permissions;
     }
 
     public getUserData(): UserEventData {

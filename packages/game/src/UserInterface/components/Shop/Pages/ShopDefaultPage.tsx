@@ -12,11 +12,9 @@ import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Response
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { useUser } from "../../../hooks/useUser";
 import { useDialogs } from "../../../hooks/useDialogs";
 
-export default function ShopDefaultPage({ page }: ShopPageProps) {
-    const user = useUser();
+export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
 
     const roomRef = useRef<HTMLDivElement>(null);
@@ -291,7 +289,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                                     </div>
                                 )}
 
-                                {(user?.developer) && (
+                                {(editMode) && (
                                     <div style={{
                                         position: "absolute",
                                         top: -10,
@@ -305,7 +303,7 @@ export default function ShopDefaultPage({ page }: ShopPageProps) {
                         </div>
                     ))}
 
-                    {(user?.developer) && (
+                    {(editMode) && (
                         <div style={{
                             width: 53,
                             height: 62,

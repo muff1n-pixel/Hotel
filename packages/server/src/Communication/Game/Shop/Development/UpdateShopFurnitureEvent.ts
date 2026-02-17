@@ -10,8 +10,10 @@ export default class UpdateShopFurnitureEvent implements IncomingEvent<UpdateSho
     public readonly name = "UpdateShopFurnitureEvent";
 
     async handle(user: User, event: UpdateShopFurnitureEventData) {
-        if(!user.model.developer) {
-            throw new Error("User is not a developer.");
+        const permissions = await user.getPermissions();
+
+        if(!permissions.hasPermission("shop:edit")) {
+            throw new Error("User is not privileged to edit the shope.");
         }
 
         let furniture = await FurnitureModel.findOne({

@@ -9,8 +9,10 @@ export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPage
     public readonly name = "UpdateShopPageEvent";
 
     async handle(user: User, event: UpdateShopPageEventData) {
-        if(!user.model.developer) {
-            throw new Error("User is not a developer.");
+        const permissions = await user.getPermissions();
+
+        if(!permissions.hasPermission("shop:edit")) {
+            throw new Error("User is not privileged to edit the shope.");
         }
         
         if(event.id !== null) {

@@ -20,6 +20,8 @@ export default class ObservableProperty<T, Value = T> {
     }
 
     subscribe(listener: Listener<Value>) {
+        listener(this._value);
+        
         this.listeners.add(listener);
         
         return () => {

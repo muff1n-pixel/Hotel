@@ -9,9 +9,10 @@ export type DialogHeaderProps = {
     title: string;
     onDialogMove: MouseEventHandler<HTMLDivElement>;
     onClose?: () => void;
+    onEditClick?: (() => void) | false;
 };
 
-export default function DialogHeader({ title, onDialogMove, onClose }: DialogHeaderProps) {
+export default function DialogHeader({ title, onEditClick, onDialogMove, onClose }: DialogHeaderProps) {
     return (
         <div style={{
             backgroundColor: "#367897",
@@ -43,8 +44,18 @@ export default function DialogHeader({ title, onDialogMove, onClose }: DialogHea
             <div style={{
                 position: "absolute",
                 right: 6,
-                top: 4
+                top: 4,
+
+                display: "flex",
+                flexDirection: "row",
+                gap: 5
             }}>
+                {(onEditClick) && (
+                    <div className="sprite_dialog_dialog_edit" onClick={onEditClick} style={{
+                        cursor: "pointer"
+                    }}/>
+                )}
+
                 <div className="sprite_dialog_close" onClick={onClose} style={{
                     cursor: "pointer"
                 }}/>

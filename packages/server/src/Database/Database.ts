@@ -20,6 +20,8 @@ import { initializeUserTokenModel } from "./Models/Users/UserTokens/UserTokenMod
 import { initializeRoomCategoryModel } from "./Models/Rooms/Categories/RoomCategoryModel.js";
 import { initializeUserBadgeModel } from "./Models/Users/Badges/UserBadgeModel.js";
 import { initializeBadgeModel } from "./Models/Badges/BadgeModel.js";
+import { intitializePermissionModel } from "./Models/Permissions/PermissionModel.js";
+import { intitializePermissionRoleModel } from "./Models/Permissions/PermissionRoleModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -45,6 +47,9 @@ export async function initializeModels() {
   initializeRoomChatStyleModel(sequelize);
 
   initializeHotelFeedbackModel(sequelize);
+
+  intitializePermissionModel(sequelize);
+  intitializePermissionRoleModel(sequelize);
 
   await sequelize.sync();
 }

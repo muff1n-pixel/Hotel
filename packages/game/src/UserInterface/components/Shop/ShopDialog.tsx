@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Dialog from "../Dialog/Dialog";
 import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
+import { usePermissionAction } from "../../hooks/usePermissionAction";
 
 export type ShopDialogProps = {
     hidden?: boolean;
@@ -9,10 +10,17 @@ export type ShopDialogProps = {
 }
 
 export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
+    const hasEditShopPermission = usePermissionAction("shop:edit");
+
     const [header, setHeader] = useState<DialogTabHeaderProps>();
+    const [editMode, setEditMode] = useState(false);
+
+    const onEditClick = useCallback(() => {
+        setEditMode(!editMode);
+    }, [editMode]);
 
     return (
-        <Dialog title="Shop" hidden={hidden} onClose={onClose} width={570} height={670}>
+        <Dialog title="Shop" hidden={hidden} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={570} height={670}>
             <DialogTabs initialActiveIndex={1} header={header} withLargeTabs tabs={[
                 {
                     icon: "Frontpage",
@@ -21,7 +29,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 {
                     icon: "Furniture",
                     element: (
-                        <ShopDialogCategory category="furniture" onHeaderChange={setHeader}/>
+                        <ShopDialogCategory category="furniture" onHeaderChange={setHeader} editMode={editMode}/>
                     ),
                 },
                 {

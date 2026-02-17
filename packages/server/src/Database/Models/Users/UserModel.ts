@@ -1,6 +1,7 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { sequelize } from "../../Database.js";
 import { FigureConfiguration } from "@shared/Interfaces/Figure/FigureConfiguration.js";
+import { PermissionRoleModel } from "../Permissions/PermissionRoleModel.js";
 
 export class UserModel extends Model {
     declare id: string;
@@ -14,6 +15,11 @@ export class UserModel extends Model {
     declare motto: string | null;
     declare homeRoomId: string | null;
     declare roomChatStyleId: string;
+    declare roles: NonAttribute<PermissionRoleModel[]>;
+
+    declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;
+    declare addRole: BelongsToManyAddAssociationMixin<PermissionRoleModel, string>;
+    declare setRoles: BelongsToManySetAssociationsMixin<PermissionRoleModel, string>;
 }
 
 export function initializeUserModel(sequelize: Sequelize) {

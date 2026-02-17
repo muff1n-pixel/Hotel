@@ -29,6 +29,9 @@ import NavigatorRoomsEvent from "@Client/Communications/Navigator/NavigatorRooms
 import { RoomCategoriesEventData } from "@Shared/Communications/Responses/Navigator/RoomCategoriesEventData";
 import MoveRoomFurnitureEvent from "@Client/Communications/Room/Furniture/MoveRoomFurnitureEvent";
 import { MoveRoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/MoveRoomFurnitureEventData";
+import { PermissionAction } from "@Shared/Interfaces/Permissions/PermissionMap";
+import { UserPermissionsEventData } from "@Shared/Communications/Responses/User/Permissions/UserPermissionsEventData";
+import UserPermissionsEvent from "@Client/Communications/User/Permissions/UserPermissionsEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -38,6 +41,7 @@ export default class ClientInstance extends EventTarget {
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelEventData>();
     public navigator = new ObservableProperty<NavigatorRoomsEventData>([]);
+    public permissions = new ObservableProperty<PermissionAction[]>([]);
     
     public roomCategories = new ObservableProperty<RoomCategoriesEventData>([]);
 
@@ -51,6 +55,7 @@ export default class ClientInstance extends EventTarget {
         webSocketClient.addEventListener<WebSocketEvent<NavigatorRoomsEventData>>("NavigatorRoomsEvent", (event) => new NavigatorRoomsEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<HotelEventData>>("HotelEvent", (event) => new HotelEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserEventData>>("UserEvent", (event) => new UserEvent().handle(event));
+        webSocketClient.addEventListener<WebSocketEvent<UserPermissionsEventData>>("UserPermissionsEvent", (event) => new UserPermissionsEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", (event) => new RoomFurnitureEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<MoveRoomFurnitureEventData>>("MoveRoomFurnitureEvent", (event) => new MoveRoomFurnitureEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<RoomStructureEventData>>("RoomStructureEvent", (event) => new RoomStructureEvent().handle(event));
