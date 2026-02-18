@@ -1,46 +1,24 @@
 import DialogPanel from "../Dialog/Panels/DialogPanel";
 import DialogPanelList from "../Dialog/Panels/DialogPanelList";
 import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
-import { Fragment, useCallback, useEffect, useState } from "react";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { Fragment, useCallback, useEffect } from "react";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
-import { webSocketClient } from "../../..";
-import { ShopPageData, ShopPagesEventData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
-import { GetShopPagesEventData } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
+import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import { useDialogs } from "../../hooks/useDialogs";
+import { ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
 
 export type ShopDialogCategoryProps = {
-    category: "frontpage" | "furniture" | "clothing" | "pets";
     editMode?: boolean;
     onHeaderChange: (header: DialogTabHeaderProps) => void;
+
+    shopPages: ShopPageData[];
     activeShopPage?: ShopPageData;
-    setActiveShopPage: (page: ShopPageData) => void;
+    setActiveShopPage: (page: { id: string; category: ShopPageCategory; }) => void;
 }
 
-export default function ShopDialogCategory({ category, editMode, onHeaderChange, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
+export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
-
-    const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
-
-    useEffect(() => {
-        const listener = (event: WebSocketEvent<ShopPagesEventData>) => {
-            if(event.data.category === category) {
-                setShopPages(event.data.pages);
-                setActiveShopPage(event.data.pages[0]);
-            }
-        }
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopPagesEventData>>("ShopPagesEventData", listener);
-
-        webSocketClient.send<GetShopPagesEventData>("GetShopPagesEvent", {
-            category
-        });
-
-        return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<ShopPagesEventData>>("ShopPagesEventData", listener);
-        };
-    }, [category]);
 
     useEffect(() => {
         if(activeShopPage?.type === "none") {

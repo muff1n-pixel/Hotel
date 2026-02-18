@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useState } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import DialogContent from "../DialogContent";
 
 export type DialogTabHeaderProps = {
@@ -10,6 +10,7 @@ export type DialogTabHeaderProps = {
 }
 
 export type DialogTabsProps = PropsWithChildren & {
+    index?: number;
     initialActiveIndex?: number;
     withLargeTabs?: boolean;
 
@@ -25,8 +26,14 @@ export type DialogTabsProps = PropsWithChildren & {
     onChange?: (index: number) => void;
 };
 
-export default function DialogTabs({ initialActiveIndex = 0, withoutHeader, tabs, header, withLargeTabs = false, children, onChange }: DialogTabsProps) {
+export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeader, tabs, header, withLargeTabs = false, children, onChange }: DialogTabsProps) {
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+
+    useEffect(() => {
+        if(index !== undefined) {
+            setActiveIndex(index);
+        }
+    }, [index]);
 
     const currentHeader = tabs[activeIndex]?.header ?? header;
 

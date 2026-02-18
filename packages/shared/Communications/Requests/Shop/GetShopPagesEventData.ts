@@ -1,3 +1,5 @@
+export type ShopPageCategory = "frontpage" | "furniture" | "clothing" | "pets";
+
 export type GetShopPagesEventData = {
-    category: "frontpage" | "furniture" | "clothing" | "pets";
+    category: ShopPageCategory;
 };

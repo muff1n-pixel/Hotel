@@ -1,3 +1,5 @@
+import { ShopPageCategory } from "../../Requests/Shop/GetShopPagesEventData.js";
+
 export type ShopPageFeatureData = {
     id: string;
     title: string;
@@ -6,12 +8,13 @@ export type ShopPageFeatureData = {
     
     page: {
         id: string;
-        category: string;
+        category: ShopPageCategory;
     };
 };
 
 export type ShopPageData = {
     id: string;
+    category: ShopPageCategory;
     
     title: string;
     description?: string;

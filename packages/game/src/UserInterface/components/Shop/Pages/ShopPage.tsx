@@ -1,11 +1,12 @@
 import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import ShopDefaultPage from "./ShopDefaultPage";
 import ShopFeaturesPage from "./ShopFeaturesPage";
+import { ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
 
 export type ShopPageProps = {
     editMode?: boolean;
     page: ShopPageData;
-    setActiveShopPage?: (page: ShopPageData) => void;
+    setActiveShopPage?: (page: { id: string; category: ShopPageCategory; }) => void;
 }
 
 export default function ShopPage({ editMode, page, setActiveShopPage }: ShopPageProps) {

@@ -13,8 +13,8 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
         setHorizontalFeatures(page.features?.filter((feature) => feature.type === "horizontal"));
     }, [ page.features ]);
 
-    const handleFeatureClick = useCallback((_feature: ShopPageFeatureData) => {
-        //setActiveShopPage?.(feature.page);
+    const handleFeatureClick = useCallback((feature: ShopPageFeatureData) => {
+        setActiveShopPage?.(feature.page);
     }, [setActiveShopPage]);
 
     return (

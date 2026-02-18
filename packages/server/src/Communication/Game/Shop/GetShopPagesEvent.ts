@@ -52,6 +52,7 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
             pages: shopPages.sort((a, b) => a.index - b.index).map((shopPage) => {
                 return {
                     id: shopPage.id,
+                    category: shopPage.category,
 
                     title: shopPage.title,
                     description: shopPage.description,
@@ -81,6 +82,8 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
                     children: shopPage.children.sort((a, b) => a.index - b.index).map((childShopPage) => {
                         return {
                             id: childShopPage.id,
+                            category: shopPage.category,
+
                             title: childShopPage.title,
                             description: childShopPage.description,
                             
