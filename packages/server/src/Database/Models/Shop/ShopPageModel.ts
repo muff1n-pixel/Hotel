@@ -1,5 +1,6 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { ShopPageFurnitureModel } from "./ShopPageFurnitureModel.js";
+import { ShopPageFeatureModel } from "./ShopPageFeatureModel.js";
 
 export class ShopPageModel extends Model {
     declare id: string;
@@ -17,6 +18,7 @@ export class ShopPageModel extends Model {
     
     declare children: NonAttribute<ShopPageModel[]>;
     declare furniture: NonAttribute<ShopPageFurnitureModel[]>;
+    declare features?: NonAttribute<ShopPageFeatureModel[]>;
 }
 
 export function initializeShopPageModel(sequelize: Sequelize) {

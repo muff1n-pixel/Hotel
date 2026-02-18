@@ -31,11 +31,13 @@ export function initializeUserBadgeModel(sequelize: Sequelize) {
 
     UserBadgeModel.belongsTo(UserModel, {
         as: "user",
-        foreignKey: "userId"
+        foreignKey: "userId",
+        constraints: false
     });
 
     UserBadgeModel.belongsTo(BadgeModel, {
         as: "badge",
-        foreignKey: "badgeId"
+        foreignKey: "badgeId",
+        constraints: false
     });
 }

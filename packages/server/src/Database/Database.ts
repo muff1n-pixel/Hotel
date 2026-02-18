@@ -22,6 +22,7 @@ import { initializeUserBadgeModel } from "./Models/Users/Badges/UserBadgeModel.j
 import { initializeBadgeModel } from "./Models/Badges/BadgeModel.js";
 import { intitializePermissionModel } from "./Models/Permissions/PermissionModel.js";
 import { intitializePermissionRoleModel } from "./Models/Permissions/PermissionRoleModel.js";
+import { initializeShopPageFeatureModel } from "./Models/Shop/ShopPageFeatureModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -32,6 +33,7 @@ export async function initializeModels() {
 
   initializeShopPageModel(sequelize);
   initializeShopPageFurnitureModel(sequelize);
+  initializeShopPageFeatureModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);

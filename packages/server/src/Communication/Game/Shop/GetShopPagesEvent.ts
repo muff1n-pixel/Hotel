@@ -4,30 +4,51 @@ import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { GetShopPagesEventData } from "@shared/Communications/Requests/Shop/GetShopPagesEventData.js";
 import { ShopPagesEventData } from "@shared/Communications/Responses/Shop/ShopPagesEventData.js";
+import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
 
 export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEventData> {
     public readonly name = "GetShopPagesEvent";
     
     async handle(user: User, event: GetShopPagesEventData) {
-        if(event.category !== "furniture") {
-            return;
-        }
+        switch(event.category) {
+            case "furniture":
+                return this.handleFurniture(user, event);
 
+            case "frontpage":
+                return this.handleFurniture(user, event);
+        }
+    }
+
+    async handleFurniture(user: User, event: GetShopPagesEventData) {
         const shopPages: ShopPageModel[] = await ShopPageModel.findAll({
             where: {
-                category: "furniture",
+                category: event.category,
                 parentId: null
             },
-            include: {
-                model: ShopPageModel,
-                as: "children",
-                order: ["index"]
-            },
-            order: []
+            include: [
+                {
+                    model: ShopPageFeatureModel,
+                    as: "features",
+                    order: ["index"],
+
+                    include: [
+                        {
+                            model: ShopPageModel,
+                            as: "featuredPage"
+                        }
+                    ]
+                },
+                {
+                    model: ShopPageModel,
+                    as: "children",
+                    order: ["index"]
+                },
+            ],
+            order: ["index"]
         });
 
         user.send(new OutgoingEvent<ShopPagesEventData>("ShopPagesEventData", {
-            category: "furniture",
+            category: event.category,
             pages: shopPages.sort((a, b) => a.index - b.index).map((shopPage) => {
                 return {
                     id: shopPage.id,
@@ -42,6 +63,20 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
                     type: shopPage.type,
 
                     index: shopPage.index,
+
+                    features: shopPage.features?.map((feature) => {
+                        return {
+                            id: feature.id,
+                            title: feature.title,
+                            image: feature.image,
+                            type: feature.type,
+
+                            page: {
+                                id: feature.featuredPage.id,
+                                category: feature.featuredPage.category
+                            }
+                        };
+                    }),
                     
                     children: shopPage.children.sort((a, b) => a.index - b.index).map((childShopPage) => {
                         return {
@@ -55,7 +90,9 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
                             header: childShopPage.header ?? shopPage.header ?? undefined,
                             teaser: childShopPage.teaser ?? shopPage.teaser ?? undefined,
 
-                            index: childShopPage.index,
+                            features: undefined,
+
+                            index: childShopPage.index
                         };
                     })
                 };

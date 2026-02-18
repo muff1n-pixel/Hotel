@@ -11,15 +11,15 @@ import { GetShopPagesEventData } from "@Shared/Communications/Requests/Shop/GetS
 import { useDialogs } from "../../hooks/useDialogs";
 
 export type ShopDialogCategoryProps = {
-    editMode?: boolean;
     category: "frontpage" | "furniture" | "clothing" | "pets";
+    editMode?: boolean;
     onHeaderChange: (header: DialogTabHeaderProps) => void;
+    activeShopPage?: ShopPageData;
+    setActiveShopPage: (page: ShopPageData) => void;
 }
 
-export default function ShopDialogCategory({ editMode, category, onHeaderChange }: ShopDialogCategoryProps) {
+export default function ShopDialogCategory({ category, editMode, onHeaderChange, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
-
-    const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
 
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
 
@@ -40,7 +40,7 @@ export default function ShopDialogCategory({ editMode, category, onHeaderChange 
         return () => {
             webSocketClient.removeEventListener<WebSocketEvent<ShopPagesEventData>>("ShopPagesEventData", listener);
         };
-    }, []);
+    }, [category]);
 
     useEffect(() => {
         if(activeShopPage?.type === "none") {
@@ -83,67 +83,69 @@ export default function ShopDialogCategory({ editMode, category, onHeaderChange 
             display: "flex",
             gap: 10
         }}>
-            <div style={{ display: "flex", width: 180 }}>
-                <DialogPanel style={{ flex: 1 }}>
-                    <DialogPanelList>
-                        {shopPages.map((shopPage) => (
-                            <DialogPanelListItem
-                                key={shopPage.id}
-                                active={activeShopPage?.id === shopPage.id}
-                                title={shopPage.title}
-                                icon={(shopPage.icon)?(<img src={`./assets/shop/icons/${shopPage.icon}`}/>):(undefined)}
-                                onClick={() => setActiveShopPage(shopPage)}
-                                editable={editMode}
-                                onEditClick={() => handleEditPage(shopPage)}>
-                                {(activeShopPage && (activeShopPage.id === shopPage.id || shopPage.children?.includes(activeShopPage))) && (
-                                    <Fragment>
-                                        {shopPage.children?.map((shopSubPage) => (
-                                            <DialogPanelListItem
-                                                key={shopSubPage.id}
-                                                subItem={true}
-                                                active={activeShopPage?.id === shopSubPage.id}
-                                                title={shopSubPage.title}
-                                                icon={(shopSubPage.icon)?(<img src={`./assets/shop/icons/${shopSubPage.icon}`}/>):(undefined)}
-                                                onClick={() => setActiveShopPage(shopSubPage)}
-                                                editable={editMode}
-                                                onEditClick={() => handleEditPage({ ...shopSubPage, parent: shopPage })}
-                                                />
-                                        ))}
+            {(activeShopPage?.type !== "features") && (
+                <div style={{ display: "flex", width: 180 }}>
+                    <DialogPanel style={{ flex: 1 }}>
+                        <DialogPanelList>
+                            {shopPages.map((shopPage) => (
+                                <DialogPanelListItem
+                                    key={shopPage.id}
+                                    active={activeShopPage?.id === shopPage.id}
+                                    title={shopPage.title}
+                                    icon={(shopPage.icon)?(<img src={`./assets/shop/icons/${shopPage.icon}`}/>):(undefined)}
+                                    onClick={() => setActiveShopPage(shopPage)}
+                                    editable={editMode}
+                                    onEditClick={() => handleEditPage(shopPage)}>
+                                    {(activeShopPage && (activeShopPage.id === shopPage.id || shopPage.children?.includes(activeShopPage))) && (
+                                        <Fragment>
+                                            {shopPage.children?.map((shopSubPage) => (
+                                                <DialogPanelListItem
+                                                    key={shopSubPage.id}
+                                                    subItem={true}
+                                                    active={activeShopPage?.id === shopSubPage.id}
+                                                    title={shopSubPage.title}
+                                                    icon={(shopSubPage.icon)?(<img src={`./assets/shop/icons/${shopSubPage.icon}`}/>):(undefined)}
+                                                    onClick={() => setActiveShopPage(shopSubPage)}
+                                                    editable={editMode}
+                                                    onEditClick={() => handleEditPage({ ...shopSubPage, parent: shopPage })}
+                                                    />
+                                            ))}
 
-                                        {(editMode) && (
-                                            <div style={{
-                                                display: "flex",
-                                                justifyContent: "flex-end",
+                                            {(editMode) && (
+                                                <div style={{
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
 
-                                                padding: 4
-                                            }}>
-                                                <div className="sprite_add" style={{
-                                                    cursor: "pointer"
-                                                }} onClick={() => handleCreatePage(shopPage)}/>
-                                            </div>
-                                        )}
-                                    </Fragment>
-                                )}
-                            </DialogPanelListItem>
-                        ))}
+                                                    padding: 4
+                                                }}>
+                                                    <div className="sprite_add" style={{
+                                                        cursor: "pointer"
+                                                    }} onClick={() => handleCreatePage(shopPage)}/>
+                                                </div>
+                                            )}
+                                        </Fragment>
+                                    )}
+                                </DialogPanelListItem>
+                            ))}
 
-                        {(editMode) && (
-                            <div style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
+                            {(editMode) && (
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
 
-                                padding: 4
-                            }}>
-                                <div className="sprite_add" style={{
-                                    cursor: "pointer"
-                                }} onClick={() => handleCreatePage()}/>
-                            </div>
-                        )}
-                    </DialogPanelList>
-                </DialogPanel>
-            </div>
+                                    padding: 4
+                                }}>
+                                    <div className="sprite_add" style={{
+                                        cursor: "pointer"
+                                    }} onClick={() => handleCreatePage()}/>
+                                </div>
+                            )}
+                        </DialogPanelList>
+                    </DialogPanel>
+                </div>
+            )}
 
-            {(activeShopPage) && (<ShopPage editMode={editMode} page={activeShopPage}/>)}
+            {(activeShopPage) && (<ShopPage editMode={editMode} page={activeShopPage} setActiveShopPage={setActiveShopPage}/>)}
         </div>
     );
 }

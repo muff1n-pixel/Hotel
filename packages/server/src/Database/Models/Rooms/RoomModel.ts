@@ -90,6 +90,7 @@ export function initializeRoomModel(sequelize: Sequelize) {
     
     RoomModel.belongsTo(RoomCategoryModel, {
         as: "category",
-        foreignKey: "categoryId"
+        foreignKey: "categoryId",
+        constraints: false
     });
 }
