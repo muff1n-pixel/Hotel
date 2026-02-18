@@ -3,20 +3,13 @@ import RoomRenderer from "../Renderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "../Items/Figure/RoomFigureItem";
-import FollowingFigure from "./Events/FollowingFigure";
-import StoppedHoveringFigure from "./Events/StoppedHoveringFigure";
-import StartedHoveringFigure from "./Events/StartedHoveringFigure";
-import StartedFollowingFigure from "./Events/StartedFollowingFigure";
-import StoppedFollowingFigure from "./Events/StoppedFollowingFigure";
-import { clientInstance, webSocketClient } from "../../..";
+import { webSocketClient } from "../../..";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
 import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
 
-// TODO: rework hovering/following figure to regular hover events? maybe not for performance sake?
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
-    private hoveringFigure?: RoomFigureItem;
-    private followingFigure?: RoomFigureItem;
+
     public cursorDisabled: boolean = false;
 
     constructor(private readonly roomRenderer: RoomRenderer) {
@@ -81,21 +74,6 @@ export default class RoomCursor extends EventTarget {
 
     private render() {
         const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
-
-        if(this.followingFigure && this.roomRenderer.roomInstance) {
-            const user = this.roomRenderer.roomInstance.getUserByItem(this.followingFigure);
-
-            const screenPosition = this.roomRenderer.getItemScreenPosition(this.followingFigure);
-
-            clientInstance.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
-        }
-        else if(this.hoveringFigure && this.roomRenderer.roomInstance) {
-            const user = this.roomRenderer.roomInstance.getUserByItem(this.hoveringFigure);
-
-            const screenPosition = this.roomRenderer.getItemScreenPosition(this.hoveringFigure);
-
-            clientInstance.dispatchEvent(new FollowingFigure(user.data.id, screenPosition));
-        }
         
         if(!entity || this.cursorDisabled) {
             this.furnitureItem.disabled = true;
@@ -117,10 +95,8 @@ export default class RoomCursor extends EventTarget {
     private frame() {
         const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure"].includes(item.type));
 
-        if(this.hoveringFigure && (!entity || this.roomRenderer.items.indexOf(entity.item) !== this.roomRenderer.items.indexOf(this.hoveringFigure))) {
-            clientInstance.dispatchEvent(new StoppedHoveringFigure());
-
-            delete this.hoveringFigure;
+        if(this.roomRenderer.roomInstance?.hoveredUser.value && (!entity || this.roomRenderer.items.indexOf(entity.item) !== this.roomRenderer.items.indexOf(this.roomRenderer.roomInstance?.hoveredUser.value.item))) {
+            this.roomRenderer.roomInstance.hoveredUser.value = null;
         }
 
         if(!entity) {
@@ -131,15 +107,11 @@ export default class RoomCursor extends EventTarget {
 
         this.roomRenderer.element.style.cursor = "pointer";
 
-        if(!this.hoveringFigure && this.roomRenderer.roomInstance) {
+        if(this.roomRenderer.roomInstance && !this.roomRenderer.roomInstance.hoveredUser.value) {
             if(entity.item instanceof RoomFigureItem) {
-                this.hoveringFigure = entity.item;
-
                 const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
 
-                const screenPosition = this.roomRenderer.getItemScreenPosition(entity.item);
-
-                clientInstance.dispatchEvent(new StartedHoveringFigure(user.data, screenPosition));
+                this.roomRenderer.roomInstance.hoveredUser.value = user;
             }
         }
     }
@@ -195,20 +167,14 @@ export default class RoomCursor extends EventTarget {
 
         if(this.roomRenderer.roomInstance) {
             if(otherEntity?.item instanceof RoomFigureItem) {
-                if(this.followingFigure?.id !== otherEntity.item.id) {
-                    this.followingFigure = otherEntity.item;
-
+                if(this.roomRenderer.roomInstance.focusedUser.value?.item?.id !== otherEntity.item.id) {
                     const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
 
-                    const screenPosition = this.roomRenderer.getItemScreenPosition(otherEntity.item);
-
-                    clientInstance.dispatchEvent(new StartedFollowingFigure(user.data, screenPosition));
+                    this.roomRenderer.roomInstance.focusedUser.value = user;
                 }
             }
-            else if(this.followingFigure && (!floorEntity || otherEntity)) {
-                clientInstance.dispatchEvent(new StoppedFollowingFigure());
-    
-                delete this.followingFigure;
+            else if(this.roomRenderer.roomInstance.focusedUser.value && (!floorEntity || otherEntity)) {
+                this.roomRenderer.roomInstance.focusedUser.value = null;
             }
         }
     }

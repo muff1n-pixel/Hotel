@@ -19,6 +19,7 @@ import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import ObservableProperty from "@Client/Utilities/ObservableProperty";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -27,6 +28,9 @@ type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigure
 
 export type RoomInstanceFurniture = RoomItem<RoomFurnitureData, RoomFurnitureItem>;
 
+
+export type RoomUser = RoomItem<RoomUserData, RoomFigureItem>;
+
 export default class RoomInstance {
     public readonly key = Math.random();
 
@@ -34,11 +38,14 @@ export default class RoomInstance {
 
     public readonly roomRenderer: RoomRenderer;
 
-    private readonly users: RoomItem<RoomUserData, RoomFigureItem>[] = [];
+    private readonly users: RoomUser[] = [];
     public furnitures: RoomFurniture[] = [];
 
     public information: RoomInformationData;
     public hasRights: boolean;
+
+    public focusedUser = new ObservableProperty<RoomUser | null>(null);
+    public hoveredUser = new ObservableProperty<RoomUser | null>(null);
 
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoomEventData) {
         this.id = event.id;
@@ -128,7 +135,7 @@ export default class RoomInstance {
         }
     }
 
-    private addUser(userData: RoomUserData): RoomItem<RoomUserData, RoomFigureItem> {
+    private addUser(userData: RoomUserData): RoomUser {
         const figureRenderer = new Figure(userData.figureConfiguration, userData.direction, userData.actions);
         const item = new RoomFigureItem(this.roomRenderer, figureRenderer, userData.position);
 

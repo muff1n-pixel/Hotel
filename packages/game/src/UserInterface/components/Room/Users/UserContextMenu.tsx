@@ -1,31 +1,28 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
 import "./UserContextMenu.css";
-import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
 import UserContextMenuList from "./UserContextMenuList";
 import UserContextMenuButton from "./UserContextMenuButton";
 import UserContextMenuElement from "./UserContextMenuElement";
-import StartedHoveringFigure from "@Client/Room/Cursor/Events/StartedHoveringFigure";
-import StartedFollowingFigure from "@Client/Room/Cursor/Events/StartedFollowingFigure";
-import FollowingFigure from "@Client/Room/Cursor/Events/FollowingFigure";
-import StoppedHoveringFigure from "@Client/Room/Cursor/Events/StoppedHoveringFigure";
-import StoppedFollowingFigure from "@Client/Room/Cursor/Events/StoppedFollowingFigure";
-import { clientInstance, webSocketClient } from "../../../..";
+import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { UpdateUserRightsEventData } from "@Shared/Communications/Requests/Rooms/User/UpdateUserRightsEventData";
+import { useRoomHoveredUser } from "../../../hooks/useRoomHoveredUser";
+import { useRoomFocusedUser } from "../../../hooks/useRoomFocusedUser";
 
 export default function UserContextMenu() {
     const room = useRoomInstance();
+
+    const focusedUser = useRoomFocusedUser(room);
+    const hoveredUser = useRoomHoveredUser(room);
+
     const user = useUser();
 
     const { addUniqueDialog } = useDialogs();
 
     const elementRef = useRef<HTMLDivElement>(null);
-
-    const [hoveringFigure, setHoveringFigure] = useState<RoomUserData>();
-    const [focusedFigure, setFocusedFigure] = useState<RoomUserData>();
 
     const [folded, setFolded] = useState<boolean>(false);
 
@@ -34,90 +31,67 @@ export default function UserContextMenu() {
             return;
         }
 
-        // do nothing if we're following a user
-        if(focusedFigure) {
+        if(focusedUser) {
             return;
         }
 
-        const listener = (event: StartedHoveringFigure) => {
+        if(!room) {
+            return;
+        }
+
+        if(!hoveredUser) {
+            return;
+        }
+
+        const listener = () => {
             if(!elementRef.current) {
                 return;
             }
 
-            setHoveringFigure(event.userData);
+            const position = room.roomRenderer.getItemScreenPosition(hoveredUser.item);
 
-            elementRef.current.style.left = `${event.position.left}px`;
-            elementRef.current.style.top = `${event.position.top}px`;
+            elementRef.current.style.left = `${position.left}px`;
+            elementRef.current.style.top = `${position.top}px`;
         };
 
-        clientInstance.addEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
+        room.roomRenderer.addEventListener("render", listener);
   
         return () => {
-            clientInstance.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
+            room.roomRenderer.removeEventListener("render", listener);
         };
-    }, [hoveringFigure, focusedFigure, elementRef.current]);
+    }, [hoveredUser, room, focusedUser, elementRef.current]);
 
     useEffect(() => {
         if(!elementRef.current) {
             return;
         }
 
-        const listener = (event: StartedFollowingFigure) => {
-            setHoveringFigure(undefined);
-            setFocusedFigure(event.userData);
-            setFolded(false);
-
-            elementRef.current!.style.left = `${event.position.left}px`;
-            elementRef.current!.style.top = `${event.position.top}px`;
-        };
-
-        clientInstance.addEventListener<StartedFollowingFigure>("StartedFollowingFigure", listener);
-  
-        return () => {
-            clientInstance.removeEventListener<StartedHoveringFigure>("StartedHoveringFigure", listener);
-        };
-    }, [focusedFigure, elementRef.current]);
-
-    useEffect(() => {
-        if(hoveringFigure || focusedFigure) {
-            const listener = (event: FollowingFigure) => {
-                if(event.userId === focusedFigure?.id || event.userId === hoveringFigure?.id) {
-                    elementRef.current!.style.left = `${event.position.left}px`;
-                    elementRef.current!.style.top = `${event.position.top}px`;
-                }
-            };
-
-            clientInstance.addEventListener<FollowingFigure>("FollowingFigure", listener);
-    
-            return () => {
-                clientInstance.removeEventListener<FollowingFigure>("FollowingFigure", listener);
-            };
+        if(!focusedUser) {
+            return;
         }
-    }, [hoveringFigure, focusedFigure]);
 
-    useEffect(() => {
+        if(!room) {
+            return;
+        }
+
         const listener = () => {
-            setHoveringFigure(undefined);
+            if(!elementRef.current) {
+                return;
+            }
+
+            const position = room.roomRenderer.getItemScreenPosition(focusedUser.item);
+
+            elementRef.current.style.left = `${position.left}px`;
+            elementRef.current.style.top = `${position.top}px`;
         };
 
-        clientInstance.addEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
+        room.roomRenderer.addEventListener("render", listener);
   
         return () => {
-            clientInstance.removeEventListener<StoppedHoveringFigure>("StoppedHoveringFigure", listener);
+            room.roomRenderer.removeEventListener("render", listener);
         };
-    }, []);
+    }, [hoveredUser, room, focusedUser, elementRef.current]);
 
-    useEffect(() => {
-        const listener = () => {
-            setFocusedFigure(undefined);
-        };
-
-        clientInstance.addEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
-  
-        return () => {
-            clientInstance.removeEventListener<StoppedFollowingFigure>("StoppedFollowingFigure", listener);
-        };
-    }, [clientInstance.roomInstance.value?.roomRenderer.cursor]);
 
     const toggleFolded = useCallback(() => {
         setFolded(!folded);
@@ -129,7 +103,7 @@ export default function UserContextMenu() {
                 position: "absolute",
                 whiteSpace: "nowrap"
             }}>
-                {(focusedFigure) && (
+                {(focusedUser) && (
                     <div className="arrow" style={{
                         display: "flex",
 
@@ -160,11 +134,11 @@ export default function UserContextMenu() {
                             {(!folded) && (
                                 <Fragment>
                                     <UserContextMenuElement position="top">
-                                        {focusedFigure?.name}
+                                        {focusedUser.data.name}
                                     </UserContextMenuElement>
 
                                     <UserContextMenuList>
-                                        {(user?.id === focusedFigure.id)?(
+                                        {(user?.id === focusedUser.data.id)?(
                                             <UserContextMenuButton text="Wardrobe" onClick={() => {
                                                 addUniqueDialog("wardrobe");
                                                 
@@ -173,10 +147,10 @@ export default function UserContextMenu() {
                                         ):(
                                             <Fragment>
                                                 {(room?.information.owner.id === user?.id) && (
-                                                    <UserContextMenuButton text={(focusedFigure.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {
+                                                    <UserContextMenuButton text={(focusedUser.data.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {
                                                         webSocketClient.send<UpdateUserRightsEventData>("UpdateUserRightsEvent", {
-                                                            userId: focusedFigure.id,
-                                                            hasRights: !focusedFigure.hasRights
+                                                            userId: focusedUser.data.id,
+                                                            hasRights: !focusedUser.data.hasRights
                                                         });
                                                     }}/>
                                                 )}
@@ -204,7 +178,7 @@ export default function UserContextMenu() {
                     </div>
                 )}
 
-                {(!focusedFigure && hoveringFigure) && (
+                {(!focusedUser && hoveredUser) && (
                     <div className="arrow" style={{
                         display: "flex",
 
@@ -231,7 +205,7 @@ export default function UserContextMenu() {
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            {hoveringFigure?.name}
+                            {hoveredUser.data.name}
                         </div>
 
                         <div className="arrow-outline"/>
