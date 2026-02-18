@@ -167,6 +167,10 @@ export default class FigureRenderer {
         const actions = this.getAvatarActions();
 
         for(const action of actions) {
+            if(action.id === "AvatarEffect") {
+                continue;
+            }
+
             const geometry = figureGeometryTypes.find((geometry) => geometry.id === action.geometryType);
             
             if(!geometry) {
