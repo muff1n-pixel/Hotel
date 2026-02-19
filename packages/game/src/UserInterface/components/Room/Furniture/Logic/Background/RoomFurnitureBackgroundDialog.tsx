@@ -40,7 +40,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
     }
 
     return (
-        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} height={380} initialPosition="center">
+        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} height={400} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -51,7 +51,8 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                 }}>
                     {(imageUrl) && (
                         <img src={imageUrl} style={{
-                            maxHeight: 300
+                            maxHeight: 180,
+                            objectFit: "contain"
                         }}/>
                     )}
 
