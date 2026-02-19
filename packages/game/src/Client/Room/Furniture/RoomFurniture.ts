@@ -33,6 +33,11 @@ export default class RoomFurniture {
             throw new Error("Furniture data is not available.");
         }
 
+        switch(this.data.furniture.interactionType) {
+            case "vendingmachine":
+                return new RoomFurnitureTeleportLogic(this.instance, this);
+        }
+
         switch(this.data.furniture.category) {
             case "teleport":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
