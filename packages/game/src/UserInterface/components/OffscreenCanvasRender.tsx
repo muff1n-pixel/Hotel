@@ -1,6 +1,8 @@
-import { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, RefObject, useEffect, useRef } from "react";
 
 export type OffscreenCanvasRenderProps = {
+    ref?: RefObject<HTMLCanvasElement | null>;
+
     scale?: number;
     style?: CSSProperties;
 } & ({
@@ -12,20 +14,22 @@ export type OffscreenCanvasRenderProps = {
 });
 
 
-export default function OffscreenCanvasRender({ offscreenCanvas, placeholderImage, style, scale = 1 }: OffscreenCanvasRenderProps) {
+export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholderImage, style, scale = 1 }: OffscreenCanvasRenderProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
         (async () => {
-            if(!canvasRef.current) {
+            const actualRef = ref ?? canvasRef;
+
+            if(!actualRef.current) {
                 return;
             }
 
-            if(placeholderImage && canvasRef.current.width === 0) {
-                canvasRef.current.width = placeholderImage.width
-                canvasRef.current.height = placeholderImage.height
+            if(placeholderImage && actualRef.current.width === 0) {
+                actualRef.current.width = placeholderImage.width
+                actualRef.current.height = placeholderImage.height
 
-                const context = canvasRef.current.getContext("2d");
+                const context = actualRef.current.getContext("2d");
 
                 if(!context) {
                     return;
@@ -36,14 +40,14 @@ export default function OffscreenCanvasRender({ offscreenCanvas, placeholderImag
 
             const image = (offscreenCanvas instanceof OffscreenCanvas)?(offscreenCanvas):(await offscreenCanvas);
 
-            if(!canvasRef.current || !image) {
+            if(!actualRef.current || !image) {
                 return;
             }
 
-            canvasRef.current.width = image.width * scale;
-            canvasRef.current.height = image.height * scale;
+            actualRef.current.width = image.width * scale;
+            actualRef.current.height = image.height * scale;
 
-            const context = canvasRef.current.getContext("2d");
+            const context = actualRef.current.getContext("2d");
 
             if(!context) {
                 return;
@@ -51,11 +55,11 @@ export default function OffscreenCanvasRender({ offscreenCanvas, placeholderImag
 
             context.imageSmoothingEnabled = false;
 
-            context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvasRef.current.width, canvasRef.current.height);
+            context.drawImage(image, 0, 0, image.width, image.height, 0, 0, actualRef.current.width, actualRef.current.height);
         })();
-    }, [canvasRef, offscreenCanvas, placeholderImage]);
+    }, [ref, canvasRef, offscreenCanvas, placeholderImage]);
 
     return (
-        <canvas ref={canvasRef} style={style} width={0} height={0}/>
+        <canvas ref={ref ?? canvasRef} style={style} width={0} height={0}/>
     );
 }

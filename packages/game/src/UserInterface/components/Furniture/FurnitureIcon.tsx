@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
 import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import Furniture from "@Client/Furniture/Furniture";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 
 export type FurnitureIconProps = {
+    ref?: RefObject<HTMLCanvasElement | null>;
     furnitureData: FurnitureData;
 }
 
-export default function FurnitureIcon({ furnitureData }: FurnitureIconProps) {
+export default function FurnitureIcon({ ref, furnitureData }: FurnitureIconProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -20,6 +21,6 @@ export default function FurnitureIcon({ furnitureData }: FurnitureIconProps) {
     }, [ furnitureData ]);
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32.image}/>
+        <OffscreenCanvasRender ref={ref} offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32.image}/>
     );
 }

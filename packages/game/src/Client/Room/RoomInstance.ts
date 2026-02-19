@@ -198,6 +198,17 @@ export default class RoomInstance {
     public removeFurniture(roomFurnitureId: string) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
+        if(furniture.data.userId === this.clientInstance.user.value?.id) {
+            this.clientInstance.flyingFurnitureIcons.value?.push({
+                id: roomFurnitureId,
+                furniture: furniture.data.furniture,
+                targetElementId: "toolbar-inventory",
+                position: this.roomRenderer.getItemScreenPosition(furniture.item)
+            });
+            
+            this.clientInstance.flyingFurnitureIcons.update();
+        }
+
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(furniture.item), 1);
         this.furnitures.splice(this.furnitures.indexOf(furniture), 1);
     }

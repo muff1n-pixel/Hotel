@@ -70,7 +70,7 @@ export default function Toolbar() {
 
                 {(room) && (
                     <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
-                        <div className="sprite_toolbar_inventory"/>
+                        <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
                     </ToolbarItem>
                 )}
 

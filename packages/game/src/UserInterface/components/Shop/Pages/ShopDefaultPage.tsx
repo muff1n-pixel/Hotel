@@ -19,16 +19,15 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
 
+    const shopFurniture = useShopPageFurniture(page.id);
+
     const roomRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
+    const activeFurnitureRef = useRef<HTMLCanvasElement>(null);
 
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
-    
     const [activeFurniture, setActiveFurniture] = useState<ShopPageFurnitureData>();
-
     const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
-
-    const shopFurniture = useShopPageFurniture(page.id);
 
     useEffect(() => {
         if(!page.teaser) {
@@ -112,10 +111,21 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
 
                 setRoomFurniturePlacer(undefined);
             }
+            else {
+                if(!event.data.success) {
+                    return;
+                }
 
-            // TODO: handle error
-            if(!event.data.success) {
-                return;
+                if(activeFurnitureRef.current) {
+                    clientInstance.flyingFurnitureIcons.value!.push({
+                        id: Math.random().toString(),
+                        furniture: activeFurniture.furniture,
+                        position: activeFurnitureRef.current.getBoundingClientRect(),
+                        targetElementId: "toolbar-inventory"
+                    });
+
+                    clientInstance.flyingFurnitureIcons.update();
+                }
             }
         };
 
@@ -128,7 +138,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             position,
             direction
         });
-    }, [activeFurniture, roomFurniturePlacer]);
+    }, [activeFurniture, activeFurnitureRef, roomFurniturePlacer]);
 
     const onMouseDown = useCallback(() => {
         if(!clientInstance.roomInstance.value) {
@@ -243,7 +253,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                                 position: "relative"
                             }}>
                                 <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={onMouseDown}>
-                                    <FurnitureIcon furnitureData={furniture.furniture}/>
+                                    <FurnitureIcon ref={(activeFurniture?.id === furniture.id)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
                                 </div>
 
                                 {(furniture.credits) && (

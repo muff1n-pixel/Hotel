@@ -32,6 +32,7 @@ import { MoveRoomFurnitureEventData } from "@Shared/Communications/Responses/Roo
 import { PermissionAction } from "@Shared/Interfaces/Permissions/PermissionMap";
 import { UserPermissionsEventData } from "@Shared/Communications/Responses/User/Permissions/UserPermissionsEventData";
 import UserPermissionsEvent from "@Client/Communications/User/Permissions/UserPermissionsEvent";
+import { FlyingFurnitureIconData } from "../UserInterface/components/Inventory/FlyingFurniture/FlyingFurnitureIcon";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -42,6 +43,8 @@ export default class ClientInstance extends EventTarget {
     public hotel = new ObservableProperty<HotelEventData>();
     public navigator = new ObservableProperty<NavigatorRoomsEventData>([]);
     public permissions = new ObservableProperty<PermissionAction[]>([]);
+
+    public flyingFurnitureIcons = new ObservableProperty<FlyingFurnitureIconData[]>([]);
     
     public roomCategories = new ObservableProperty<RoomCategoriesEventData>([]);
 
