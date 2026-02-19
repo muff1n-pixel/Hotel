@@ -5,14 +5,17 @@ export default class EnableCommand implements IncomingCommandHandler {
     public readonly command = "enable";
 
     async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        const id = inputs[0];
-
-        if(!id) {
+        if(!inputs[0]) {
             throw new Error("Missing enable id parameter.");
         }
 
+        const id = parseInt(inputs[0]);
+
         roomUser.removeAction("AvatarEffect");
-        
-        roomUser.addAction("AvatarEffect." + parseInt(id));
+        roomUser.removeAction("CarryItem");
+
+        if(id !== 0) {
+            roomUser.addAction("AvatarEffect." + id);
+        } 
     }
 }

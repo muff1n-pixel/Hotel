@@ -5,14 +5,17 @@ export default class CarryCommand implements IncomingCommandHandler {
     public readonly command = "carry";
 
     async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        const id = inputs[0];
-
-        if(!id) {
+        if(!inputs[0]) {
             throw new Error("Missing carry id parameter.");
         }
 
+        const id = parseInt(inputs[0]);
+
+        roomUser.removeAction("AvatarEffect");
         roomUser.removeAction("CarryItem");
-        
-        roomUser.addAction("CarryItem." + parseInt(id));
+
+        if(id !== 0) {
+            roomUser.addAction("CarryItem." + id);
+        } 
     }
 }
