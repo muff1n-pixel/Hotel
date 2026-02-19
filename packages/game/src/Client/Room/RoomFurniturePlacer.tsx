@@ -139,8 +139,23 @@ export default class RoomFurniturePlacer {
         }
 
         const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === this.roomFurnitureItem.furnitureRenderer.placement);
+        
+        const furnitureAtPosition = (entity?.position && this.roomFurnitureItem.furnitureRenderer.placement === "floor") && this.roomInstance.getFurnitureAtUpmostPosition(
+            {
+                row: entity.position.row,
+                column: entity.position.column
+            },
+            this.roomFurnitureItem.furnitureRenderer.getDimensions(),
+            this.roomFurnitureItem.id
+        );
 
-        if(!entity || !this.roomFurnitureItem.position) {
+        const position = (entity?.position)?({
+            row: entity.position.row,
+            column: entity.position.column,
+            depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+        }):(null);
+
+        if(!entity || !position) {
             if(this.originalPosition) {
                this.roomFurnitureItem.position = this.originalPosition;
             }
@@ -148,7 +163,7 @@ export default class RoomFurniturePlacer {
             this.onCancel?.();
         }
         else {
-            this.onPlace?.(this.roomFurnitureItem.position, this.roomFurnitureItem.furnitureRenderer.direction!);
+            this.onPlace?.(position, this.roomFurnitureItem.furnitureRenderer.direction!);
         }
 
         this.stopPlacing();
