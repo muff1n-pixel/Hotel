@@ -13,9 +13,11 @@ import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { useDialogs } from "../../../hooks/useDialogs";
+import { useUser } from "../../../hooks/useUser";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
+    const user = useUser();
 
     const roomRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
@@ -336,7 +338,11 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Add to inventory</DialogButton>
+                    <DialogButton disabled={!activeFurniture || (
+                        (activeFurniture.credits ?? 0) > user.credits
+                        || (activeFurniture.duckets ?? 0) > user.duckets
+                        || (activeFurniture.diamonds ?? 0) > user.diamonds
+                    )} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
                 </div>
             </div>
         </div>
