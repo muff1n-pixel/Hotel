@@ -10,6 +10,7 @@ export default class RoomFigureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     public readonly id = Math.random();
+    private currentFrame: number = 0;
 
     constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition) {
         super(roomRenderer, "figure");
@@ -24,7 +25,13 @@ export default class RoomFigureItem extends RoomItem {
     }
 
     render(frame: number = 0) {
+        this.currentFrame = frame;
+
         this.figureRenderer.renderToCanvas(Figure.figureWorker, frame).then((result) => {
+            if(frame !== this.currentFrame) {
+                return;
+            }
+            
             this.sprites = [
                 new RoomFigureSprite(this, result.figure),
                 ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
