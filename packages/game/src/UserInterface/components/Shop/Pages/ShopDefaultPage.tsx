@@ -14,10 +14,12 @@ import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
+import { useRoomInstance } from "../../../hooks/useRoomInstance";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const room = useRoomInstance();
 
     const shopFurniture = useShopPageFurniture(page.id);
 
@@ -80,12 +82,18 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
+        dialogs.setDialogHidden("shop", true);
+
         roomFurniturePlacer.startPlacing((position, direction) => {
             handlePurchaseFurniture(position, direction);
+            
+            dialogs.setDialogHidden("shop", false);
         }, () => {
             roomFurniturePlacer.destroy();
 
             setRoomFurniturePlacer(undefined);
+           
+            dialogs.setDialogHidden("shop", false);
         });
     }, [roomFurniturePlacer]);
 
@@ -153,8 +161,22 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             roomFurniturePlacer.destroy();
         }
 
-        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, activeFurniture.furniture));
-    }, [ activeFurniture, roomFurniturePlacer ]);
+        const mousemove = () => {
+            document.body.removeEventListener("mousemove", mousemove);
+
+            if(room) {                
+                setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, activeFurniture.furniture));
+            }
+        };
+
+        document.body.addEventListener("mousemove", mousemove);
+
+        document.body.addEventListener("mouseup", () => {
+            document.body.removeEventListener("mousemove", mousemove);
+        }, {
+            once: true
+        });
+    }, [ dialogs, room, activeFurniture, roomFurniturePlacer ]);
 
     return (
         <div style={{
