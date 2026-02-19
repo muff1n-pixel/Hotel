@@ -25,5 +25,7 @@ export default class RoomFurnitureEvent implements IncomingEvent<WebSocketEvent<
         if(event.data.furnitureRemoved?.length) {
             event.data.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id));
         }
+
+        clientInstance.roomInstance.update();
     }
 }

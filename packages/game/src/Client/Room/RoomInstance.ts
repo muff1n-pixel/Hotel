@@ -211,6 +211,8 @@ export default class RoomInstance {
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(furniture.item), 1);
         this.furnitures.splice(this.furnitures.indexOf(furniture), 1);
+
+        this.clientInstance.roomInstance.update();
     }
 
     public moveFurniture(roomFurnitureId: string) {
