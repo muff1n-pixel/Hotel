@@ -8,14 +8,21 @@ import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFloorItem from "./Items/Map/RoomFloorItem";
 import { clientInstance } from "../..";
+import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import Figure from "@Client/Figure/Figure";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 
 export type RoomFurnitureRendererOptions = {
+    rows?: number;
+    columns?: number;
+
     withoutWalls?: boolean;
 };
 
 export default class RoomFurnitureRenderer {
     private readonly roomRenderer: RoomRenderer;
-    private roomItem?: RoomFurnitureItem;
+    private roomItem?: RoomFurnitureItem | RoomFigureItem;
 
     private wallRenderer: WallRenderer;
     private wallItem: RoomWallItem;
@@ -25,15 +32,7 @@ export default class RoomFurnitureRenderer {
     
     constructor(element: HTMLDivElement, options: RoomFurnitureRendererOptions) {
         const roomStructure: RoomStructure = {
-            grid: [
-                "0000000",
-                "0000000",
-                "0000000",
-                "0000000",
-                "0000000",
-                "0000000",
-                "0000000",
-            ],
+            grid: new Array(options.rows ?? 7).fill(null).map((_) => new Array(options.columns ?? 7).fill(null).map(() => '0').join('')),
             floor: {
                 id: clientInstance.roomInstance.value?.roomRenderer.structure.floor.id ?? "111",
                 thickness: 8
@@ -48,7 +47,7 @@ export default class RoomFurnitureRenderer {
         this.roomRenderer = new RoomRenderer(element, undefined, undefined, roomStructure);
 
         this.roomRenderer.addEventListener("render", () => {
-            if(this.roomRenderer && this.roomItem) {
+            if(this.roomRenderer && this.roomItem && (this.roomItem instanceof RoomFurnitureItem)) {
                 if(this.roomItem.furnitureRenderer.placement === "floor") {
                     this.roomRenderer.panToItem(this.roomItem, {
                         left: 0,
@@ -75,6 +74,24 @@ export default class RoomFurnitureRenderer {
         this.floorItem = new RoomFloorItem(this.roomRenderer, this.floorRenderer);
     
         this.roomRenderer.items.push(this.floorItem);
+    }
+
+    async setFigure(figureConfiguration: FigureConfiguration, actions?: string[], position?: RoomPosition) {
+        if(this.roomItem) {
+            this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomItem), 1);
+        }
+
+        const figureRenderer = new Figure(figureConfiguration, 2, actions);
+        
+        this.roomItem = new RoomFigureItem(this.roomRenderer, figureRenderer, {
+            row: position?.row ?? 1,
+            column: position?.column ?? 1,
+            depth: position?.depth ?? 0
+        });
+        
+        this.roomRenderer.items.push(this.roomItem);
+
+        this.roomRenderer.panToItem(this.roomItem, { left: 0, top: 64 });
     }
 
     async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: number = 0) {
@@ -125,13 +142,18 @@ export default class RoomFurnitureRenderer {
             return;
         }
 
-
-        this.roomItem.furnitureRenderer.animation = this.getNextState();
+        if(this.roomItem instanceof RoomFurnitureItem) {
+            this.roomItem.furnitureRenderer.animation = this.getNextState();
+        }
     }
     
 
     private getNextState() {
         if(!this.roomItem) {
+            return 0;
+        }
+        
+        if(!(this.roomItem instanceof RoomFurnitureItem)) {
             return 0;
         }
 
@@ -141,7 +163,7 @@ export default class RoomFurnitureRenderer {
 
         const visualization = this.roomItem?.furnitureRenderer.getVisualizationData(this.roomItem?.furnitureRenderer.data);
 
-        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === this.roomItem?.furnitureRenderer.animation);
+        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === (this.roomItem as RoomFurnitureItem)?.furnitureRenderer.animation);
 
         if(currentAnimationIndex === -1) {
             return visualization.animations[0]?.id ?? 0;

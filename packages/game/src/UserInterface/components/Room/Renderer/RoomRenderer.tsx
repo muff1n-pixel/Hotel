@@ -1,5 +1,7 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import RoomFurnitureRenderer, { RoomFurnitureRendererOptions } from "@Client/Room/RoomFurnitureRenderer";
+import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 
 export type RoomRendererProps = {
     style?: CSSProperties;
@@ -11,9 +13,14 @@ export type RoomRendererProps = {
         animation?: number;
         color?: number;
     };
+    figureData?: {
+        figureConfiguration: FigureConfiguration;
+        actions?: string[];
+        position?: RoomPosition;
+    };
 };
 
-export default function RoomRenderer({ style, options, furnitureData }: RoomRendererProps) {
+export default function RoomRenderer({ style, options, figureData, furnitureData }: RoomRendererProps) {
     const roomRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
     const [roomFurnitureRenderer, setRoomFurnitureRenderer] = useState<RoomFurnitureRenderer>();
@@ -41,6 +48,14 @@ export default function RoomRenderer({ style, options, furnitureData }: RoomRend
 
         roomFurnitureRenderer.setFurniture(furnitureData.type, furnitureData.size ?? 64, furnitureData.direction, furnitureData.animation ?? 0, furnitureData.color ?? 0);
     }, [roomFurnitureRenderer, furnitureData]);
+
+    useEffect(() => {
+        if(!roomFurnitureRenderer || !figureData) {
+            return;
+        }
+
+        roomFurnitureRenderer.setFigure(figureData.figureConfiguration, figureData.actions, figureData.position);
+    }, [roomFurnitureRenderer, figureData]);
 
     useEffect(() => {
         if(!roomFurnitureRenderer) {

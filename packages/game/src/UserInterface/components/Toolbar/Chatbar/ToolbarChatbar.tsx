@@ -18,11 +18,25 @@ export default function ToolbarChatbar() {
         setValue("");
 
         if(value[0] === ':' || value[0] === '/') {
-            const command = value.split(' ')[0].substring(1);
+            const input = value.split(' ');
+
+            const command = input[0].substring(1);
 
             if(command === "furni") {
                 dialogs.addUniqueDialog("room-furni");
 
+                return;
+            }
+
+            if(command === "enable" && input.length === 1) {
+                dialogs.addUniqueDialog("figure-catalog");
+                
+                return;
+            }
+
+            if(command === "carry" && input.length === 1) {
+                dialogs.addUniqueDialog("figure-catalog");
+                
                 return;
             }
         }
