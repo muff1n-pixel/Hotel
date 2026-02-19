@@ -13,10 +13,12 @@ export default class RoomFurniturePlacer {
 
     private readonly renderListener = this.render.bind(this);
     private readonly clickListener = this.click.bind(this);
+    private readonly scrollListener = this.scroll.bind(this);
 
     private readonly iconElement: HTMLCanvasElement;
 
     private readonly originalPosition?: RoomPosition;
+    private readonly originalDirection?: number;
 
     public static fromFurnitureData(roomInstance: RoomInstance, furnitureData: FurnitureData) {
         const roomFurnitureItem = new RoomFurnitureItem(
@@ -40,6 +42,10 @@ export default class RoomFurniturePlacer {
             };
         }
 
+        if(roomFurnitureItem.furnitureRenderer.direction) {
+            this.originalDirection = roomFurnitureItem.furnitureRenderer.direction;
+        }
+
         //this.furnitureRenderer = new FurnitureRenderer(userFurnitureData.furnitureData.type, 64, undefined, 0, userFurnitureData.furnitureData.color);
 
         /*this.furnitureItem = new RoomFurnitureItem(this.furnitureRenderer, {
@@ -61,6 +67,7 @@ export default class RoomFurniturePlacer {
 
         this.roomInstance.roomRenderer.addEventListener("render", this.renderListener);
         this.roomInstance.roomRenderer.element.addEventListener("click", this.clickListener);
+        document.addEventListener("wheel", this.scrollListener);
 
         this.iconElement = document.createElement("canvas");
         this.iconElement.style.display = "none";
@@ -82,6 +89,24 @@ export default class RoomFurniturePlacer {
         });
         
         this.roomInstance.roomRenderer.parent.appendChild(this.iconElement);
+    }
+
+    private scroll(event: WheelEvent) {
+        if(this.paused) {
+            return;
+        }
+
+        if(this.roomFurnitureItem.furnitureRenderer.placement !== "floor") {
+            return;
+        }
+
+        if(event.deltaY < 0) {
+            const nextDirection = this.roomFurnitureItem.furnitureRenderer.getNextDirection();
+
+            if(this.roomFurnitureItem.furnitureRenderer.direction !== nextDirection) {
+                this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
+            }
+        }
     }
 
     private render() {
@@ -160,6 +185,10 @@ export default class RoomFurniturePlacer {
                this.roomFurnitureItem.position = this.originalPosition;
             }
 
+            if(this.originalDirection) {
+               this.roomFurnitureItem.furnitureRenderer.direction = this.originalDirection;
+            }
+
             this.onCancel?.();
         }
         else {
@@ -196,6 +225,7 @@ export default class RoomFurniturePlacer {
 
         this.roomInstance.roomRenderer.removeEventListener("render", this.renderListener);
         this.roomInstance.roomRenderer.element.removeEventListener("click", this.clickListener);
+        document.removeEventListener("wheel", this.scrollListener);
 
         if(this.temporaryFurniture) {
             const index = this.roomInstance.roomRenderer.items.indexOf(this.roomFurnitureItem);
