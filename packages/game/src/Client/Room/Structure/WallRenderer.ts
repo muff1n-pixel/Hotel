@@ -292,8 +292,6 @@ export default class WallRenderer {
             context.rect(left, top, width, height);
         }
 
-        console.log(this.leftWalls);
-
         context.fill();
         context.closePath();
     }

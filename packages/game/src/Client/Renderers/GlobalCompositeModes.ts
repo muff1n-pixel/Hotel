@@ -28,6 +28,7 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): GlobalCompos
         case "saturation":
         case "lighter":
         case "lighten":
+        case "darken":
         case "screen":
             return ink;
 
