@@ -34,7 +34,7 @@ export default class RoomUser {
             depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
         };
 
-        this.direction = 2;
+        this.direction = room.model.structure.door?.direction ?? 2;
 
         this.addEventListeners();
 
