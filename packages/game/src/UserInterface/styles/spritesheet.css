@@ -95,6 +95,8 @@
 .sprite_currencies_diamonds-small { background-image: url('./spritesheet.png'); background-position: -490px -219px; width: 11px; height: 11px; }
 .sprite_currencies_duckets-small { background-image: url('./spritesheet.png'); background-position: -501px -219px; width: 11px; height: 11px; }
 .sprite_dialog_roomdimmer_close { background-image: url('./spritesheet.png'); background-position: -479px -230px; width: 11px; height: 11px; }
+.sprite_stickies_close { background-image: url('./spritesheet.png'); background-position: -492px -209px; width: 10px; height: 10px; }
+.sprite_stickies_remove { background-image: url('./spritesheet.png'); background-position: -502px -209px; width: 9px; height: 10px; }
 .sprite_dialog_list-unfold { background-image: url('./spritesheet.png'); background-position: -492px -155px; width: 9px; height: 9px; }
 .sprite_toolbar_arrow { background-image: url('./spritesheet.png'); background-position: -542px -361px; width: 8px; height: 8px; }
 .sprite_navigator_user-count { background-image: url('./spritesheet.png'); background-position: -543px -332px; width: 7px; height: 8px; }

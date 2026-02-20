@@ -67,6 +67,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
             position: null,
             direction: null,
             animation: 0,
+            color: null,
             data: null,
             
             roomId: null,

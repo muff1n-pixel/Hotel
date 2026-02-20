@@ -4,8 +4,8 @@ export type AssetSpriteProperties = {
     x: number;
     y: number;
 
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
 
     flipHorizontal?: boolean;
 
@@ -107,7 +107,7 @@ export default class AssetFetcher {
     private static async drawSprite(url: string, properties: AssetSpriteProperties) {
         const image = await this.fetchImage(url);
 
-        const canvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width, properties.destinationHeight ?? properties.height);
+        const canvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
         const context = canvas.getContext("2d");
 
         if(!context) {
@@ -120,17 +120,17 @@ export default class AssetFetcher {
             context.scale(-1, 1);
         }
 
-        context.drawImage(image, properties.x, properties.y, properties.destinationWidth ?? properties.width, properties.destinationHeight ?? properties.height, 0, 0, properties.width, properties.height);
+        context.drawImage(image, properties.x, properties.y, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height, 0, 0, properties.width ?? image.width, properties.height ?? image.height);
 
         if(properties.color) {
-            const colorCanvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width, properties.destinationHeight ?? properties.height);
+            const colorCanvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
             const colorContext = colorCanvas.getContext("2d");
 
             if(!colorContext) {
                 throw new ContextNotAvailableError();
             }
 
-            colorContext.drawImage(image, properties.x, properties.y, properties.width, properties.height, 0, 0, properties.destinationWidth ?? properties.width, properties.destinationHeight ?? properties.height);
+            colorContext.drawImage(image, properties.x, properties.y, properties.width ?? image.width, properties.height ?? image.height, 0, 0, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
 
             const colors = (Array.isArray(properties.color))?(properties.color):([properties.color]);
 

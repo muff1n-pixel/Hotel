@@ -10,6 +10,7 @@ export class UserFurnitureModel extends Model {
     declare position: RoomPosition;
     declare direction: number;
     declare animation: number;
+    declare color: number | null;
     declare data: unknown;
 
     declare room: NonAttribute<RoomModel | null>;

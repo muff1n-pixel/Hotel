@@ -8,7 +8,6 @@ import { game } from "../../index.js";
 import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
 import RoomFurnitureGateLogic from "./Logic/RoomFurnitureGateLogic.js";
 import RoomFurnitureLightingLogic from "./Logic/RoomFurnitureLightingLogic.js";
-import { NonAttributeBrand } from "@sequelize/core";
 import RoomFurnitureRollerLogic from "./Logic/RoomFurnitureRollerLogic.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 import RoomFurnitureVendingMachineLogic from "./Logic/RoomFurnitureVendingMachineLogic.js";
@@ -30,23 +29,16 @@ export default class RoomFurniture {
             roomId: room.model.id
         });
 
-        room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
-            furnitureAdded: [
-                {
-                    id: userFurniture.id,
-                    userId: userFurniture.user.id,
-                    furniture: userFurniture.furniture,
-                    position: userFurniture.position,
-                    direction: userFurniture.direction,
-                    animation: userFurniture.animation,
-                    data: userFurniture.data
-                }
-            ]
-        }));
-
         const roomFurniture = new RoomFurniture(room, userFurniture);
 
         room.furnitures.push(roomFurniture);
+
+        room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            furnitureAdded: [
+                roomFurniture.getFurnitureData()
+            ]
+        }));
+
 
         return roomFurniture;
     }
@@ -59,6 +51,7 @@ export default class RoomFurniture {
             position: this.model.position,
             direction: this.model.direction,
             animation: this.model.animation,
+            color: this.model.color,
             data: this.model.data
         };
     }

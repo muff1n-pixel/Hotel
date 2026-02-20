@@ -57,24 +57,16 @@ export default class ImportRoomFurnitureEvent implements IncomingEvent<ImportRoo
 
             userFurniture.user = user.model;
             userFurniture.furniture = furniture;
-
-            roomEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
-                furnitureAdded: [
-                    {
-                        id: userFurniture.id,
-                        userId: userFurniture.user.id,
-                        furniture: userFurniture.furniture,
-                        position: userFurniture.position,
-                        direction: userFurniture.direction,
-                        animation: userFurniture.animation,
-                        data: userFurniture.data
-                    }
-                ]
-            }));
     
             const roomFurniture = new RoomFurniture(room, userFurniture);
     
             room.furnitures.push(roomFurniture);
+
+            roomEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                furnitureAdded: [
+                    roomFurniture.getFurnitureData()
+                ]
+            }));
         }
 
         room.sendRoomEvent(roomEvents);

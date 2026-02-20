@@ -28,6 +28,10 @@ export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoo
             roomFurniture.model.position = event.position;
         }
 
+        if(event.color !== undefined && roomFurniture.model.furniture.interactionType === "postit") {
+            roomFurniture.model.color = event.color;
+        }
+
         await roomFurniture.model.save();
 
         user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {

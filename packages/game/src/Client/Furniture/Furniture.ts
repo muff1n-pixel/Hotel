@@ -143,4 +143,22 @@ export default class Furniture {
 
         return this.visualization.directions[currentIndex + 1].id;
     }
+
+    public getColors() {
+        if(!this.visualization) {
+            return [];
+        }
+
+        return this.visualization.colors.map((color) => color.layers[0].color);
+    }
+
+    public getColor(colorId: number) {
+        if(!this.visualization) {
+            return null;
+        }
+
+        const colorData = this.visualization.colors?.find((visualizationColor) => visualizationColor.id === colorId);
+
+        return colorData?.layers[0].color ?? null;
+    }
 }

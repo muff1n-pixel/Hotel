@@ -5,4 +5,5 @@ export type UpdateRoomFurnitureEventData = {
 
     direction?: number;
     position?: RoomPosition;
+    color?: number;
 };

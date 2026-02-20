@@ -7,6 +7,7 @@ import { SetFurnitureDataEventData } from "@shared/Communications/Requests/Rooms
 import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
 import { RoomFurnitureBackgroundData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundData.js";
 import { RoomFurnitureBackgroundTonerData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData.js";
+import { RoomFurniturePostitData } from "@shared/Interfaces/Room/Furniture/RoomFurniturePostitData.js";
 
 export default class SetFurnitureDataEvent implements IncomingEvent<SetFurnitureDataEventData<unknown>> {
     public readonly name = "SetFurnitureDataEvent";
@@ -84,6 +85,21 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
                 ]
             }));
         }
+        else if(this.isFurniturePostitType(furniture, event.data)) {
+            await this.handleSingleActiveFurniture(user, furniture);
+
+            furniture.model.data = {
+                text: event.data.text
+            } satisfies RoomFurniturePostitData;
+
+            await furniture.model.save();
+
+            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                furnitureUpdated: [
+                    furniture.getFurnitureData()
+                ]
+            }));
+        }
     }
 
     private furnitureIsDimmer(furniture: RoomFurniture, data: unknown): data is RoomMoodlightData {
@@ -96,6 +112,10 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
     private isFurnitureBackgroundTonerType(furniture: RoomFurniture, data: unknown): data is RoomFurnitureBackgroundTonerData {
         return furniture.model.furniture.interactionType === "background_toner";
+    }
+
+    private isFurniturePostitType(furniture: RoomFurniture, data: unknown): data is RoomFurniturePostitData {
+        return furniture.model.furniture.interactionType === "postit";
     }
 
     private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {

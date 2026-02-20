@@ -30,5 +30,6 @@ export type RoomFurnitureData = {
     };
     direction: number;
     animation: number;
+    color: number | null;
     data: unknown;
 };

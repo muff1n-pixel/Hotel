@@ -13,6 +13,7 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
 import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
+import RoomFurnitureStickieLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStickieLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -24,7 +25,7 @@ export default class RoomFurniture {
 
         this.instance.roomRenderer.items.push(this.item);
 
-        if(this.data.furniture.interactionType === "dimmer") {
+        /*if(this.data.furniture.interactionType === "dimmer") {
             if((this.data.data as RoomMoodlightData)?.enabled) {
                 this.instance.setMoodlight(this.data.data as RoomMoodlightData);
             }
@@ -33,7 +34,9 @@ export default class RoomFurniture {
             if((this.data.data as RoomFurnitureBackgroundTonerData)?.enabled) {
                 this.instance.setBackgroundToner(this.data.data as RoomFurnitureBackgroundTonerData);
             }
-        }
+        }*/
+
+        this.updateData(data);
     }
     
     public getLogic(): RoomFurnitureLogic {
@@ -41,7 +44,12 @@ export default class RoomFurniture {
             throw new Error("Furniture data is not available.");
         }
 
+        console.log(this.data.furniture.interactionType);
+
         switch(this.data.furniture.interactionType) {
+            case "postit":
+                return new RoomFurnitureStickieLogic(this.instance, this);
+
             case "dice":
                 return new RoomFurnitureDiceLogic(this.instance, this);
 
@@ -96,6 +104,7 @@ export default class RoomFurniture {
 
         this.item.furnitureRenderer.direction = this.data.direction = data.direction;
         this.item.furnitureRenderer.animation = this.data.animation = data.animation;
+        this.item.furnitureRenderer.color = this.data.color ?? this.data.furniture.color ?? null;
 
         if(data.position) {
             this.item.setPosition(data.position);
