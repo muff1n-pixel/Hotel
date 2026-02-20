@@ -52,6 +52,8 @@ export default class RoomFloorPlanEditor {
                 column: 0
             }
         };
+
+        this.update(this.data);
     }
 
     private wheel(event: WheelEvent) {

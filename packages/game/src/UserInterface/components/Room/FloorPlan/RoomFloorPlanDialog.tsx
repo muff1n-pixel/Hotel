@@ -72,6 +72,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
         setWallThickness(room.roomRenderer.structure.wall.thickness);
         
         setWallHidden(room.roomRenderer.structure.wall.hidden);
+        setWallHeight(room.roomRenderer.structure.wall.height ?? 0);
     }, [room, floorPlanEditor]);
 
     useEffect(() => {
@@ -105,6 +106,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
 
             floorThickness
         });
+
         floorPlanEditor.setStructure(data.structure);
     }, [floorPlanEditor, data, direction, wallHidden, wallThickness, wallHeight, floorThickness]);
 
