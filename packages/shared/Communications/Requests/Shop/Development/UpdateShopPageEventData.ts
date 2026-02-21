@@ -6,6 +6,7 @@ export type UpdateShopPageEventData = {
 
     title: string;
     description: string;
+    type: string;
 
     icon: string;
     header: string;

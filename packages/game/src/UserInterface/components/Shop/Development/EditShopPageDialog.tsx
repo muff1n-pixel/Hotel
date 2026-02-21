@@ -20,6 +20,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [icon, setIcon] = useState(data?.icon ?? "");
     const [title, setTitle] = useState(data?.title ?? "");
     const [description, setDescription] = useState(data?.description ?? "");
+    const [type, setType] = useState(data?.type ?? "default");
     const [header, setHeader] = useState(data?.header ?? "");
     const [teaser, setTeaser] = useState(data?.teaser ?? "");
     const [index, setIndex] = useState(data?.index ?? 0);
@@ -32,6 +33,8 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
 
             category: "furniture",
 
+            type,
+
             title,
             description,
 
@@ -43,7 +46,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
         });
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, title, description, header, teaser, index]);
+    }, [dialogs, data, icon, type, title, description, header, teaser, index]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
@@ -96,6 +99,10 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                     <b>Page description</b>
     
                     <Input placeholder="Description..." value={description} onChange={setDescription}/>
+
+                    <b>Page type</b>
+    
+                    <Input placeholder="default" value={type} onChange={setType}/>
 
                     <b>Page header</b>
 

@@ -19,7 +19,7 @@ export type ShopPageData = {
     title: string;
     description?: string;
 
-    type: "default" | "features" | "none";
+    type: string;
     
     icon?: string | undefined;
     header?: string | undefined;

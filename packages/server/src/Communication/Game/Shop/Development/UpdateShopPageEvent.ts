@@ -24,6 +24,8 @@ export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPage
 
                 category: event.category,
 
+                type: event.type ?? "default",
+
                 icon: event.icon ?? null,
                 header: event.header ?? null,
                 teaser: event.teaser ?? null,
@@ -44,6 +46,8 @@ export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPage
                 description: event.description ?? null,
 
                 category: event.category,
+
+                type: event.type ?? "default",
 
                 icon: event.icon ?? null,
                 header: event.header ?? null,
