@@ -12,6 +12,8 @@ import RoomFurnitureRollerLogic from "./Logic/RoomFurnitureRollerLogic.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 import RoomFurnitureVendingMachineLogic from "./Logic/RoomFurnitureVendingMachineLogic.js";
 import RoomFurnitureDiceLogic from "./Logic/RoomFurnitureDiceLogic.js";
+import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLogic.js";
+import RoomUser from "../Users/RoomUser.js";
 
 export default class RoomFurniture {
     public preoccupiedByActionHandler: boolean = false;
@@ -145,7 +147,7 @@ export default class RoomFurniture {
 
     private category: RoomFurnitureLogic | null = null;
 
-    public getCategoryLogic() {
+    public getCategoryLogic(): RoomFurnitureLogic | null {
         if(!this.category) {
             switch(this.model.furniture.interactionType) {
                 case "dice":
@@ -153,6 +155,9 @@ export default class RoomFurniture {
 
                 case "teleport":
                     return this.category = new RoomFurnitureTeleportLogic(this);
+
+                case "teleporttile":
+                    return this.category = new RoomFurnitureTeleportTileLogic(this);
 
                 case "gate":
                     return this.category = new RoomFurnitureGateLogic(this);
@@ -226,6 +231,12 @@ export default class RoomFurniture {
                 ]
             }));
         }
+    }
+
+    public async userWalkOn(user: RoomUser) {
+        const logic = this.getCategoryLogic();
+
+        await logic?.walkOn?.(user);
     }
 
     public async handleActionsInterval() {

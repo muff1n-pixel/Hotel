@@ -93,7 +93,7 @@ export default class Room {
 
         // TODO: change so that the clients get the full path immediately, and only use this interval to cancel due to obstructions in the path?
         for(let user of usersWithPath) {
-            user.handleActionsInterval();
+            await user.handleActionsInterval();
         }
 
         if(this.outgoingEvents.length) {

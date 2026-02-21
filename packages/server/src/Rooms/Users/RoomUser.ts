@@ -80,11 +80,15 @@ export default class RoomUser {
         this.user.removeListener("close", this.disconnectListener);
     }
 
-    public handleActionsInterval() {
-        const nextPosition = this.path?.[0];
+    public async handleActionsInterval() {
+        if(this.path === undefined) {
+            return;
+        }
 
-        if(!nextPosition || this.path === undefined) {
-            this.finishPath();
+        const nextPosition = this.path[0];
+
+        if(!nextPosition) {
+            await this.finishPath();
 
             return;
         }
@@ -272,18 +276,30 @@ export default class RoomUser {
         this.room.requestActionsFrame();
     }
 
-    private finishPath() {
+    public async finishPath() {
+        if(this.path === undefined) {
+            return;
+        }
+
         const furniture = this.room.getUpmostFurnitureAtPosition(this.position);
 
-        if(furniture && furniture.model.furniture.flags.sitable) {
-            const newPosition = {
-                row: this.position.row,
-                column: this.position.column,
-                depth: furniture.model.position.depth + furniture.model.furniture.dimensions.depth - 0.5
-            };
+        if(furniture) {
+            if(furniture.model.furniture.flags.sitable) {
+                const newPosition = {
+                    row: this.position.row,
+                    column: this.position.column,
+                    depth: furniture.model.position.depth + furniture.model.furniture.dimensions.depth - 0.5
+                };
 
-            this.setPosition(newPosition, furniture.model.direction);
-            this.addAction("Sit");
+                this.setPosition(newPosition, furniture.model.direction);
+                this.addAction("Sit");
+            }
+
+            const currentFurniture = this.room.getUpmostFurnitureAtPosition(this.position);
+
+            if(currentFurniture) {
+                await currentFurniture.userWalkOn(this);
+            }
         }
 
         console.log("User path finished");

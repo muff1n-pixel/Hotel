@@ -58,6 +58,7 @@ export default class RoomFurniture {
                 return new RoomFurnitureBackgroundTonerLogic(this.instance, this);
 
             case "teleport":
+            case "teleporttile":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
 
             case "gate":

@@ -85,7 +85,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         userFurniture.user = user.model;
         userFurniture.furniture = shopFurniture.furniture;
 
-        if(userFurniture.furniture.category === "teleport") {
+        if(userFurniture.furniture.interactionType === "teleport" || userFurniture.furniture.interactionType === "teleporttile") {
             const secondUserFurniture = await UserFurnitureModel.create({
                 id: randomUUID(),
                 position: null,

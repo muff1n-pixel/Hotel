@@ -5,7 +5,7 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 
-export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
+export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
 
     }
@@ -18,29 +18,11 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         const offsetPosition = this.roomFurniture.getOffsetPosition(1);
 
         if(offsetPosition.row !== roomUser.position.row || offsetPosition.column !== roomUser.position.column) {
-            console.log("User is not in entrance position, starting walk to position");
-
-            await new Promise<void>((resolve, reject) => {
-                roomUser.walkTo(offsetPosition, undefined, resolve, reject);
-            });
+            roomUser.walkTo(offsetPosition, undefined);
         }
+    }
 
-        await this.roomFurniture.setAnimation(1);
-
-        await new Promise<void>((resolve, reject) => {
-            roomUser.walkTo(this.roomFurniture.model.position, true, resolve, reject);
-        });
-
-        await this.roomFurniture.setAnimation(2);
-
-        await new Promise<void>((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 500);
-        });
-
-        await this.roomFurniture.setAnimation(0);
-
+    async walkOn(roomUser: RoomUser): Promise<void> {
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
                 id: this.roomFurniture.model.data
@@ -73,34 +55,18 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             throw new Error("Target room furniture is not loaded.");
         }
 
+        roomUser.path = undefined;
+
         if(roomUser.room.model.id !== targetRoom.model.id) {
             roomUser.disconnect();
             
             roomUser = targetRoom.addUserClient(roomUser.user, targetFurniture.model.position);
         }
 
-        await targetFurniture.setAnimation(2);
-
-        await new Promise<void>((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 500);
-        });
-
         roomUser.setPosition({
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
-        });
-
-        await targetFurniture.setAnimation(1);
-
-        const targetOffsetPosition = targetFurniture.getOffsetPosition(1);
-
-        await new Promise<void>((resolve, reject) => {
-            roomUser.walkTo(targetOffsetPosition, undefined, resolve, reject);
-        });
-
-        await targetFurniture.setAnimation(0);
+        }, (targetFurniture.model.direction + 4) % 8);
     }
 
     async handleActionsInterval(): Promise<void> {
