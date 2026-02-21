@@ -147,38 +147,29 @@ export default class RoomFurniture {
 
     public getCategoryLogic() {
         if(!this.category) {
-            console.log("Interaction type " + this.model.furniture.interactionType);
-
             switch(this.model.furniture.interactionType) {
                 case "dice":
                     return this.category = new RoomFurnitureDiceLogic(this);
 
                 case "teleport":
                     return this.category = new RoomFurnitureTeleportLogic(this);
-            }
 
-            switch(this.model.furniture.category) {
                 case "gate":
-                    this.category = new RoomFurnitureGateLogic(this);
-                   break;
-                    
-                case "chair":
-                case "lighting":
-                case "other":
-                    this.category = new RoomFurnitureLightingLogic(this);
-                    break;
-
-                case "vending_machine":
-                    this.category = new RoomFurnitureVendingMachineLogic(this);
-                    break;
+                    return this.category = new RoomFurnitureGateLogic(this);
+                
+                case "default":
+                case "multiheight":
+                    return this.category = new RoomFurnitureLightingLogic(this);
+                
+                case "vendingmachine":
+                    return this.category = new RoomFurnitureVendingMachineLogic(this);
 
                 case "roller":
-                    this.category = new RoomFurnitureRollerLogic(this);
-                    break;
+                    return this.category = new RoomFurnitureRollerLogic(this);
             }
 
             if(!this.category) {
-                console.warn("Unhandled category logic type: " + this.model.furniture.category);
+                console.warn("Unhandled intercation logic type: " + this.model.furniture.interactionType);
             }
         }
 

@@ -44,8 +44,6 @@ export default class RoomFurniture {
             throw new Error("Furniture data is not available.");
         }
 
-        console.log(this.data.furniture.interactionType);
-
         switch(this.data.furniture.interactionType) {
             case "postit":
                 return new RoomFurnitureStickieLogic(this.instance, this);
@@ -61,18 +59,19 @@ export default class RoomFurniture {
 
             case "teleport":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
-        }
 
-        switch(this.furniture.data.index.logic) {
-            case "furniture_multistate":
-            case "furniture_multiheight":
+            case "gate":
+                return new FurnitureMultistateLogic(this.instance, this);
+
+            case "multiheight":
+            case "default":
                 return new FurnitureMultistateLogic(this.instance, this);
                 
-            case "furniture_roomdimmer":
-                return new FurnitureRoomDimmerLogic(this.instance, this);
-                
-            case "furniture_bg":
+            case "ads_bg":
                 return new RoomFurnitureBackgroundLogic(this.instance, this);
+
+            case "dimmer":
+                return new FurnitureRoomDimmerLogic(this.instance, this);
         }
 
         return new FurnitureDefaultLogic(this.instance, this);
