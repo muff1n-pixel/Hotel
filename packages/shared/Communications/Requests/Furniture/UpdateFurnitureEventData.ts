@@ -10,4 +10,5 @@ export type UpdateFurnitureEventData = {
     interactionType: string;
 
     flags: FurnitureFlagsData;
+    depth: number;
 };

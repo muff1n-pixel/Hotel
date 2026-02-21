@@ -2,7 +2,6 @@ import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { FurnitureTypesEventData } from "@shared/Communications/Responses/Furniture/FurnitureTypesEventData.js";
 import { UpdateFurnitureEventData } from "@shared/Communications/Requests/Furniture/UpdateFurnitureEventData.js";
 import { game } from "../../../index.js";
 import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
@@ -35,6 +34,11 @@ export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitu
             category: event.category,
             
             flags: event.flags,
+
+            dimensions: {
+                ...furniture.dimensions,
+                depth: event.depth
+            }
         });
 
         for(const room of game.roomManager.instances) {

@@ -24,6 +24,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
     const [description, setDescription] = useState(data.description ?? "");
     const [category, setCategory] = useState(data.category);
     const [interactionType, setInteractionType] = useState(data.interactionType);
+    const [depth, setDepth] = useState<number>(data.dimensions.depth);
 
     const [flags, setFlags] = useState(data.flags);
 
@@ -37,12 +38,13 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
             category,
             interactionType,
 
-            flags
+            flags,
+            depth
         });
-    }, [ data, name, description, category, interactionType, flags ]);
+    }, [ data, name, description, category, interactionType, depth, flags ]);
 
     return (
-        <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={340} style={{
+        <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={350} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -97,6 +99,10 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                                 value: interactionType
                             };
                         })} onChange={(interactionType) => setInteractionType(interactionType as string)}/>
+
+                        <b>Depth {(flags.sitable)?(`(sit depth ${(depth - 0.5).toPrecision(3)})`):(null)}</b>
+
+                        <Input type="number" step={0.1} value={depth.toString()} onChange={(value) => setDepth(parseFloat(value))}/>
                     </div>
 
                     <div style={{

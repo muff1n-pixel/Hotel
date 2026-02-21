@@ -8,9 +8,10 @@ export type InputProps = {
     onChange: (value: string) => void;
     min?: number;
     max?: number;
+    step?: number;
 }
 
-export default function Input({ style, type = "text", placeholder, value, onChange, min, max }: InputProps) {
+export default function Input({ style, step, type = "text", placeholder, value, onChange, min, max }: InputProps) {
     return (
         <div style={{
             borderBottom: "1px solid #FFFFFF",
@@ -28,6 +29,7 @@ export default function Input({ style, type = "text", placeholder, value, onChan
             }}>
                 <input
                     type={type}
+                    step={step}
                     placeholder={placeholder}
                     value={value}
                     onChange={(event) => onChange((event.currentTarget as HTMLInputElement).value)}
