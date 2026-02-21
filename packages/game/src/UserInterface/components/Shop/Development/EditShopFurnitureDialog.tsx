@@ -49,7 +49,9 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
         <Dialog title={(data?.id)?("Edit shop furniture"):("Create shop furniture")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
-                    flex: 1,
+                    flex: "1 1 0",
+
+                    overflowY: "scroll",
 
                     display: "flex",
                     flexDirection: "column",

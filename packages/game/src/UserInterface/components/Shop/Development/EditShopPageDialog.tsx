@@ -52,7 +52,9 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
             <DialogContent>
                 <div style={{
-                    flex: 1,
+                    flex: "1 1 0",
+
+                    overflowY: "scroll",
 
                     display: "flex",
                     flexDirection: "column",
