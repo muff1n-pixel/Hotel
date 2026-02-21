@@ -8,7 +8,7 @@ import { config } from "../Config/Config.js";
 import jsonWebToken from "jsonwebtoken";
 import { UserTokenModel } from "../Database/Models/Users/UserTokens/UserTokenModel.js";
 import { UserBadgeModel } from "../Database/Models/Users/Badges/UserBadgeModel.js";
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 
 export default class WebSocket {
     private readonly server: WebSocketServer;
@@ -38,10 +38,13 @@ export default class WebSocket {
                     return webSocket.close();
                 }
 
-                const token = await UserTokenModel.findOne();
+                let token = await UserTokenModel.findOne();
 
-                if(!token) {
-                    throw new Error("There is no JSON Web Token secret key row.");
+                if (!token) {
+                    token = await UserTokenModel.create({
+                        id: randomUUID(),
+                        secretKey: randomBytes(32).toString("hex")
+                    });
                 }
 
                 try {

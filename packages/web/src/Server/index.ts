@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jsonWebToken from "jsonwebtoken";
 import path from 'path';
 import cookieParser from "cookie-parser";
-import { randomUUID } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 import { initializeUserModel, UserModel } from './Models/UserModel.ts';
 import { initializeUserTokenModel, UserTokenModel } from './Models/UserTokens/UserTokenModel.ts';
 import type { Config } from './Interfaces/Config.ts';
@@ -30,10 +30,13 @@ app.use(async (request, response, next) => {
             return response.redirect("/");
         }
 
-        const token = await UserTokenModel.findOne();
+        let token = await UserTokenModel.findOne();
 
         if (!token) {
-            throw new Error("There's no user token.");
+            token = await UserTokenModel.create({
+                id: randomUUID(),
+                secretKey: randomBytes(32).toString("hex")
+            });
         }
 
         if(!jsonWebToken.verify(accessToken, token.secretKey)) {
@@ -107,11 +110,12 @@ app.post('/api/login', async (request, response) => {
         });
     }
 
-    const token = await UserTokenModel.findOne();
+    let token = await UserTokenModel.findOne();
 
     if (!token) {
-        return response.json({
-            error: "Something went wrong."
+        token = await UserTokenModel.create({
+            id: randomUUID(),
+            secretKey: randomBytes(32).toString("hex")
         });
     }
 
@@ -168,11 +172,12 @@ app.post('/api/register', async (request, response) => {
         }
     });
 
-    const token = await UserTokenModel.findOne();
+    let token = await UserTokenModel.findOne();
 
     if (!token) {
-        return response.json({
-            error: "Something went wrong."
+        token = await UserTokenModel.create({
+            id: randomUUID(),
+            secretKey: randomBytes(32).toString("hex")
         });
     }
 
