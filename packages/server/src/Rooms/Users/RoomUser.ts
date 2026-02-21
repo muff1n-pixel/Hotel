@@ -12,6 +12,7 @@ import { AStarFinder } from "astar-typescript";
 import { UserPositionEventData } from "@shared/Communications/Responses/Rooms/Users/UserPositionEventData.js";
 import { UserChatEventData } from "@shared/Communications/Responses/Rooms/Users/UserChatEventData.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
+import { game } from "../../index.js";
 
 export default class RoomUser {
     public preoccupiedByActionHandler: boolean = false;
@@ -150,6 +151,10 @@ export default class RoomUser {
         delete this.user.room;
 
         this.user.send(new OutgoingEvent("LeaveRoomEvent", null));
+
+        if(!this.room.users.length) {
+            game.roomManager.unloadRoom(this.room);
+        }
     }
 
     public addAction(action: string, removeAfterMs?: number) {

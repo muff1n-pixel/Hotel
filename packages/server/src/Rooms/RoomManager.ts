@@ -75,4 +75,14 @@ export default class RoomManager {
 
         return instance;
     }
+
+    public unloadRoom(room: Room) {
+        if(room.users.length) {
+            return;
+        }
+
+        room.cancelActionsFrame();
+
+        this.instances.splice(this.instances.indexOf(room), 1);
+    }
 }

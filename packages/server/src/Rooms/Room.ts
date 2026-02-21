@@ -74,6 +74,16 @@ export default class Room {
         }
     }
 
+    public cancelActionsFrame() {
+        if(this.actionsInterval === undefined) {
+            return;
+        }
+
+        clearInterval(this.actionsInterval);
+
+        delete this.actionsInterval;
+    }
+
     private async handleActionsInterval() {
         for(let furniture of this.furnitures) {
             furniture.preoccupiedByActionHandler = false;
