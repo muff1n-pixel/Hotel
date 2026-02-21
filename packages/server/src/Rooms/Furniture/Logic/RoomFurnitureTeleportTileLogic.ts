@@ -36,23 +36,31 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
         });
 
         if(!targetUserFurniture) {
-            throw new Error("Target user furniture does not exist.");
+            console.warn("Target user furniture does not exist.");
+            
+            return;
         }
 
         if(!targetUserFurniture.room) {
-            throw new Error("Target user furniture is not placed in any room.");
+            console.warn("Target user furniture is not placed in any room.");
+            
+            return;
         }
 
         const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
 
         if(!targetRoom) {
-            throw new Error("Target room does not exist.");
+            console.warn("Target room does not exist.");
+            
+            return;
         }
 
         const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data);
 
         if(!targetFurniture) {
-            throw new Error("Target room furniture is not loaded.");
+            console.warn("Target room furniture is not loaded.");
+            
+            return;
         }
 
         roomUser.path = undefined;

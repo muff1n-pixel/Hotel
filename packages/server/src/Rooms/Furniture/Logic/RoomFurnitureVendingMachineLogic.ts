@@ -10,7 +10,9 @@ export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLo
 
     async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
         if(!this.roomFurniture.model.furniture.customParams?.length) {
-            throw new Error("Furniture does not have any custom params.");
+            console.warn("Furniture does not have any custom params.");
+
+            return;
         }
 
         const offsetPosition = this.roomFurniture.getOffsetPosition(1);
@@ -34,7 +36,9 @@ export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLo
         const carryItem = this.roomFurniture.model.furniture.customParams[Math.floor(Math.random() * this.roomFurniture.model.furniture.customParams.length)];
 
         if(!carryItem) {
-            throw new Error("No carry item was able to be retrieved.");
+            console.warn("No carry item was able to be retrieved.");
+
+            return;
         }
 
         roomUser.removeAction("AvatarEffect");

@@ -10,7 +10,9 @@ export default class RoomFurnitureLightingLogic implements RoomFurnitureLogic {
 
     async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
         if(!roomUser.hasRights()) {
-            throw new Error("User does not have rights.");
+            console.warn("User does not have rights.");
+            
+            return;
         }
 
         if(event.animation === undefined) {

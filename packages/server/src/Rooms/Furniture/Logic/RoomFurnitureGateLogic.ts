@@ -10,7 +10,9 @@ export default class RoomFurnitureGateLogic implements RoomFurnitureLogic {
 
     async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
         if(!roomUser.hasRights()) {
-            throw new Error("User does not have rights.");
+            console.warn("User does not have rights.");
+
+            return;
         }
 
         if(roomUser.room.users.some(({ position }) => this.roomFurniture.isPositionInside(position))) {
