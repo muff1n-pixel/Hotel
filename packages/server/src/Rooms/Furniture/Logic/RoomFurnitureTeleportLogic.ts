@@ -11,18 +11,20 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
     }
 
     async use(roomUser: RoomUser): Promise<void> {
+        console.log("test");
         if(this.roomFurniture.model.animation !== 0) {
+        console.log("t2est");
             return;
         }
 
         const offsetPosition = this.roomFurniture.getOffsetPosition(1);
 
         if(offsetPosition.row !== roomUser.position.row || offsetPosition.column !== roomUser.position.column) {
+            console.log("User is not in entrance position, starting walk to position");
+
             await new Promise<void>((resolve, reject) => {
                 roomUser.walkTo(offsetPosition, undefined, resolve, reject);
             });
-
-            console.log("Finished");
         }
 
         await this.roomFurniture.setAnimation(1);

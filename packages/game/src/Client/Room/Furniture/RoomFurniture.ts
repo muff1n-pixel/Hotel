@@ -58,9 +58,7 @@ export default class RoomFurniture {
 
             case "background_toner":
                 return new RoomFurnitureBackgroundTonerLogic(this.instance, this);
-        }
 
-        switch(this.data.furniture.category) {
             case "teleport":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
         }

@@ -17,11 +17,8 @@ export default class RoomFurnitureTeleportLogic implements FurnitureLogic {
             return;
         }
 
-        const nextState = this.getNextState();
-
         webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-            roomFurnitureId: this.roomFurniture.data.id,
-            animation: nextState
+            roomFurnitureId: this.roomFurniture.data.id
         });
     }
 

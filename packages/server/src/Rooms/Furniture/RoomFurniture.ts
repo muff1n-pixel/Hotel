@@ -147,17 +147,17 @@ export default class RoomFurniture {
 
     public getCategoryLogic() {
         if(!this.category) {
+            console.log("Interaction type " + this.model.furniture.interactionType);
+
             switch(this.model.furniture.interactionType) {
                 case "dice":
-                    this.category = new RoomFurnitureDiceLogic(this);
-                   break;
+                    return this.category = new RoomFurnitureDiceLogic(this);
+
+                case "teleport":
+                    return this.category = new RoomFurnitureTeleportLogic(this);
             }
 
             switch(this.model.furniture.category) {
-                case "teleport":
-                    this.category = new RoomFurnitureTeleportLogic(this);
-                   break;
-                    
                 case "gate":
                     this.category = new RoomFurnitureGateLogic(this);
                    break;
