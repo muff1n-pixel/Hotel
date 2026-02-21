@@ -1,6 +1,5 @@
 {
     "port": 80,
-    
     "assets": "../../assets/",
     "static": "../../build/",
 
@@ -10,14 +9,14 @@
         "username": "USER",
         "password": "PASSWORD",
         "host": "localhost",
-        "port": 3306
+        "port": 80
     },
 
     "public": {
         "server": {
             "secure": false,
             "hostname": "localhost",
-            "port": 8080
+            "port": 80
         },
 
         "discord": null

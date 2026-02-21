@@ -49,7 +49,3 @@
     font-style: italic;
     src: url("./../../../../assets/fonts/Ubuntu/Ubuntu-BoldItalic.ttf") format("truetype");
 }
-
-h1, p {
-    margin: 0;
-}

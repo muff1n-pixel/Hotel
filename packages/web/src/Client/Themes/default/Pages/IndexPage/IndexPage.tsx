@@ -1,10 +1,10 @@
 import "./IndexPage.css";
 import { useEffect, useState } from "react";
-import LoginSection from "@Client/Components/Index/LoginSection";
-import RegistrationSection from "@Client/Components/Index/RegistrationSection";
 import { useCookies } from "react-cookie";
+import LoginSection from "../../Components/Index/LoginSection";
+import RegistrationSection from "../../Components/Index/RegistrationSection";
 
-export default function IndexPage() {
+const IndexPage = () => {
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
     
     const [showRegistration, setShowRegistration] = useState(false);
@@ -34,3 +34,5 @@ export default function IndexPage() {
         </div>
     );
 }
+
+export default IndexPage;

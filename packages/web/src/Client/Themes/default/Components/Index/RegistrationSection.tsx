@@ -1,6 +1,6 @@
-import Button from "@Client/Components/Button";
-import Container from "@Client/Components/Container";
-import Input from "@Client/Components/Input";
+import Button from "../Button";
+import Container from "../Container";
+import Input from "../Input";
 import { useCallback, useState } from "react";
 import { useCookies } from "react-cookie";
 

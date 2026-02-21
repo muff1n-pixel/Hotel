@@ -26,7 +26,7 @@ app.use(async (request, response, next) => {
     if (request.path === "/game/") {
         const accessToken = request.cookies.accessToken;
 
-        if(!accessToken) {
+        if (!accessToken) {
             return response.redirect("/");
         }
 
@@ -39,8 +39,13 @@ app.use(async (request, response, next) => {
             });
         }
 
-        if(!jsonWebToken.verify(accessToken, token.secretKey)) {
-            return response.clearCookie("accessToken").redirect("/login");
+        try {
+            if (!jsonWebToken.verify(accessToken, token.secretKey)) {
+                return response.clearCookie("accessToken").redirect("/");
+            }
+        }
+        catch(e) {
+            return response.clearCookie("accessToken").redirect("/");
         }
     }
 
@@ -58,7 +63,7 @@ app.get('/game/config.json', (request, response) => {
 });
 
 app.get('/discord', (request, response) => {
-    if(config.public.discord) {
+    if (config.public.discord) {
         return response.redirect(config.public.discord);
     }
 
@@ -98,7 +103,7 @@ app.post('/api/login', async (request, response) => {
         });
     }
 
-    if(!user.password) {
+    if (!user.password) {
         return response.json({
             error: "User is not set up for credentials."
         });

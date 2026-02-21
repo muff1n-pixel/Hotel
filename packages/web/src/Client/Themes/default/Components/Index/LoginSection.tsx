@@ -1,6 +1,6 @@
-import Button from "@Client/Components/Button";
-import Container from "@Client/Components/Container";
-import Input from "@Client/Components/Input";
+import Button from "../Button";
+import Container from "../Container";
+import Input from "../Input";
 import { useCallback, useState } from "react";
 import { useCookies } from "react-cookie";
 
@@ -164,7 +164,7 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                             fontFamily: "Ubuntu Bold Italic",
                             textShadow: "2px 2px 2px rgba(0, 0, 0, 0.4)"
                         }}>
-                            Welcome to Pixel63,
+                            Welcome to Pixel63fds,
                         </h1>
 
                         <p style={{
