@@ -4,4 +4,5 @@ export type PurchaseShopFurnitureEventData = {
     shopFurnitureId: string;
     position?: RoomPosition;
     direction?: number;
+    data?: unknown;
 };

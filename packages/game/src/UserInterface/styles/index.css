@@ -79,6 +79,7 @@ input {
   font-size: 12px;
 }
 
-input:active, input:focus {
+input:active, input:focus,
+textarea:active, textarea:focus {
   outline: none;
 }

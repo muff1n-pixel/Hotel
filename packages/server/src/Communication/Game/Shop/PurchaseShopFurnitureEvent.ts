@@ -9,6 +9,7 @@ import { UserEventData } from "@shared/Communications/Responses/User/UserEventDa
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
+import { RoomFurnitureTrophyData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureTrophyData.js";
 
 export default class PurchaseShopFurnitureEvent implements IncomingEvent<PurchaseShopFurnitureEventData> {
     public readonly name = "PurchaseShopFurnitureEvent";
@@ -84,6 +85,16 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
 
         userFurniture.user = user.model;
         userFurniture.furniture = shopFurniture.furniture;
+
+        if(userFurniture.furniture.interactionType === "trophy" && event.data) {
+            userFurniture.data = {
+                engraving: (event.data as RoomFurnitureTrophyData).engraving ?? "",
+                date: new Date().toISOString().split('T')[0]!.toString(),
+                author: user.model.name
+            } satisfies RoomFurnitureTrophyData;
+
+            await userFurniture.save();
+        }
 
         if(userFurniture.furniture.interactionType === "teleport" || userFurniture.furniture.interactionType === "teleporttile") {
             const secondUserFurniture = await UserFurnitureModel.create({

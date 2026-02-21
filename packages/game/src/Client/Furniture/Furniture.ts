@@ -153,11 +153,13 @@ export default class Furniture {
     }
 
     public getColor(colorId: number) {
-        if(!this.visualization) {
+        if(!this.data) {
             return null;
         }
+        
+        const visualization = this.getVisualizationData(this.data);
 
-        const colorData = this.visualization.colors?.find((visualizationColor) => visualizationColor.id === colorId);
+        const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === colorId);
 
         return colorData?.layers[0].color ?? null;
     }
