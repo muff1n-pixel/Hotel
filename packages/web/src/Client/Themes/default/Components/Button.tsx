@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 import "./Button.css";
 
 export type ButtonProps = {
-    size?: "normal" | "large";
-    color?: "blue" | "orange";
+    size?: "normal" | "medium" | "large";
+    color?: "blue" | "orange" | "green";
     children: ReactNode;
     onClick?: () => void;
 }

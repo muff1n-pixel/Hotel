@@ -44,7 +44,7 @@ app.use(async (request, response, next) => {
                 return response.clearCookie("accessToken").redirect("/");
             }
         }
-        catch(e) {
+        catch (e) {
             return response.clearCookie("accessToken").redirect("/");
         }
     }
@@ -73,6 +73,53 @@ app.get('/discord', (request, response) => {
 app.get('/{*any}', (req, res) => res.sendFile("index.html", {
     root: path.join(config.static, "web")
 }));
+
+app.post('/api/loginAuth', async (request, response) => {
+    const accessToken = request.cookies.accessToken;
+
+    if (!accessToken) {
+        return response.redirect("/logout");
+    }
+
+    let token = await UserTokenModel.findOne();
+    if (token === null)
+        return response.json({
+            error: "Invalid token"
+        });
+
+    try {
+        const keyData = jsonWebToken.verify(accessToken, token.secretKey);
+        if (keyData === null || (keyData as any).userId === undefined)
+            return response.json({
+                error: "Invalid token"
+            });
+
+        const user = await UserModel.findOne({
+            where: {
+                id: (keyData as any).userId
+            }
+        });
+
+        if (user === null)
+            return response.json({
+                error: "Invalid token"
+            });
+
+        return response.json({
+            id: user.id,
+            name: user.name,
+            credits: user.credits,
+            diamonds: user.diamonds,
+            duckets: user.duckets,
+            motto: user.motto
+        });
+    }
+    catch (e) {
+        return response.json({
+            error: "Invalid token"
+        });
+    }
+});
 
 app.post('/api/login', async (request, response) => {
     const name = request.body.name;
@@ -131,7 +178,13 @@ app.post('/api/login', async (request, response) => {
     );
 
     return response.json({
-        accessToken
+        id: user.id,
+        name: user.name,
+        credits: user.credits,
+        diamonds: user.diamonds,
+        duckets: user.duckets,
+        motto: user.motto,
+        accessToken: accessToken
     });
 });
 
@@ -193,7 +246,13 @@ app.post('/api/register', async (request, response) => {
     );
 
     return response.json({
-        accessToken
+        id: user.id,
+        name: user.name,
+        credits: user.credits,
+        diamonds: user.diamonds,
+        duckets: user.duckets,
+        motto: user.motto,
+        accessToken: accessToken
     });
 });
 

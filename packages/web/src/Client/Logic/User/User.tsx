@@ -1,14 +1,20 @@
 import { UserInterface } from "./UserInterface";
 
 export default class User implements UserInterface {
-    id: string;
-    username: string;
-    avatar: string;
-    motto: string;
+    declare id: string;
+    declare name: string;
+    declare credits: number;
+    declare diamonds: number;
+    declare duckets: number;
+    declare avatar: string;
+    declare motto: string;
 
     constructor(data: UserInterface) {
         this.id = data.id;
-        this.username = data.username;
+        this.name = data.name;
+        this.credits = data.credits;
+        this.diamonds = data.diamonds;
+        this.duckets = data.duckets;
         this.avatar = data.avatar;
         this.motto = data.motto;
     }

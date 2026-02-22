@@ -1,0 +1,40 @@
+body {
+    background-image: url('./Images/bg.png');
+    background-repeat: repeat;
+}
+
+.resize {
+    width: 80%;
+    max-width: 765px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 450px 1fr;
+    gap: 20px;
+}
+
+.box {
+    padding: 5px;
+    background-color: #FFF;
+    -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid #afafaf;
+
+    .title {
+        background-color: #2767a7;
+        text-align: center;
+        color: #FFF;
+        border-radius: 8px;
+        padding: 7px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .title.red {
+        background-color: #d64242;
+    }
+}

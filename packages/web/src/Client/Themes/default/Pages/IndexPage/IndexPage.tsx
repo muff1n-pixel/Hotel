@@ -1,19 +1,43 @@
 import "./IndexPage.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import LoginSection from "../../Components/Index/LoginSection";
 import RegistrationSection from "../../Components/Index/RegistrationSection";
+import { ThemeContext } from "../../ThemeProvider";
+import { useNavigate } from "react-router";
 
 const IndexPage = () => {
+    const navigate = useNavigate();
+    const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
-    
+
     const [showRegistration, setShowRegistration] = useState(false);
-    
+
     useEffect(() => {
-        if(cookies.accessToken) {
-            window.location.href = "/game/";
+        if (cookies.accessToken) {
+            fetch("/api/loginAuth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name,
+                })
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    if(result.error) {
+                        dispatch({currentUser: null})
+                        removeCookie("accessToken");
+
+                        return;
+                    }
+
+                    dispatch({currentUser: result});
+                    navigate("/me");
+                });
         }
-    }, [cookies.accessToken]);
+    }, [cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
 
     return (
         <div className="index" style={{
@@ -24,12 +48,12 @@ const IndexPage = () => {
             overflow: "hidden"
         }}>
             <div style={{
-                transform: (showRegistration)?("translateY(-100vh)"):("translateY(0vh)"),
+                transform: (showRegistration) ? ("translateY(-100vh)") : ("translateY(0vh)"),
                 transition: "transform 1.5s"
             }}>
-                <LoginSection showRegistration={() => setShowRegistration(true)}/>
+                <LoginSection showRegistration={() => setShowRegistration(true)} />
 
-                <RegistrationSection/>
+                <RegistrationSection />
             </div>
         </div>
     );

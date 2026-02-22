@@ -1,10 +1,12 @@
+import { ThemeContext } from "../../ThemeProvider";
 import Button from "../Button";
 import Container from "../Container";
 import Input from "../Input";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 
 export default function RegistrationSection() {
+    const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
     const [name, setName] = useState("");
@@ -35,12 +37,14 @@ export default function RegistrationSection() {
                     const date = new Date();
                     date.setFullYear(date.getFullYear() + 1);
 
+                    dispatch({currentUser: result})
+
                     setCookie("accessToken", result.accessToken, {
                         expires: date
                     });
                 }
             });
-    }, [name, password, setCookie]);
+    }, [name, password, setCookie, dispatch]);
 
     return (
         <div style={{

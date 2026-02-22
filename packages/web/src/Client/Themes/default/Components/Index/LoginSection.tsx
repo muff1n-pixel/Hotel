@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router";
+import { ThemeContext } from "../../ThemeProvider";
 import Button from "../Button";
 import Container from "../Container";
 import Input from "../Input";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 
 export type LoginSectionProps = {
@@ -9,6 +11,7 @@ export type LoginSectionProps = {
 }
 
 export default function LoginSection({ showRegistration }: LoginSectionProps) {
+    const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
     const [name, setName] = useState("");
@@ -39,12 +42,14 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                     const date = new Date();
                     date.setFullYear(date.getFullYear() + 1);
 
+                    dispatch({currentUser: result})
+
                     setCookie("accessToken", result.accessToken, {
                         expires: date
                     });
                 }
             });
-    }, [name, password]);
+    }, [name, password, dispatch, setCookie]);
 
     return (
         <div style={{

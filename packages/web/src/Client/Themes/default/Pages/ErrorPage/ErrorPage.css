@@ -1,0 +1,17 @@
+.errorPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        pointer-events: none;
+    }
+
+    span {
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: rgba(0, 0, 0, 0.6);
+    }
+}
