@@ -7,9 +7,10 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { UpdateShopPageEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopPageEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
+import Selection from "../../Form/Selection";
 
 export type EditShopPageDialogProps = {
-    data: ShopPageData & { parent?: ShopPageData } | null;
+    data: ShopPageData & { parent?: ShopPageData; shopPages?: ShopPageData[]; } | null;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -24,12 +25,13 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [header, setHeader] = useState(data?.header ?? "");
     const [teaser, setTeaser] = useState(data?.teaser ?? "");
     const [index, setIndex] = useState(data?.index ?? 0);
+    const [parentId, setParentId] = useState(data?.parent?.id ?? null);
 
     const handleUpdate = useCallback(() => {
         webSocketClient.send<UpdateShopPageEventData>("UpdateShopPageEvent", {
             id: data?.id ?? null,
 
-            parentId: data?.parent?.id ?? null,
+            parentId,
 
             category: "furniture",
 
@@ -60,17 +62,6 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    {(data?.parent) && (
-                        <p style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 4,
-                            alignItems: "center"
-                        }}>
-                            This page {(data?.id)?("is"):("will be")} a child of {(data.parent.icon) && (<img src={`./assets/shop/icons/${data.parent.icon}`}/>)} <b>{data.parent.title}</b>
-                        </p>
-                    )}
-
                     <b>Page icon</b>
 
                     <div style={{
@@ -101,6 +92,26 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                     <b>Page description</b>
     
                     <Input placeholder="Description..." value={description} onChange={setDescription}/>
+
+                    <b>Parent page</b>
+
+                    <Selection value={parentId} items={([{value: null, label: "None"}] as any).concat(...(data?.shopPages?.map((shopPage) => {
+                        return {
+                            value: shopPage.id,
+                            label: (
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 5,
+                                    alignItems: "center"
+                                }}>
+                                    {(shopPage.icon) && (<img src={`./assets/shop/icons/${shopPage.icon}`}/>)}
+                                    
+                                    <b>{shopPage.title}</b>
+                                </div>
+                            )
+                        }
+                    }) ?? [])).filter((item: any) => item.value !== data?.id)} onChange={(value: string) => setParentId(value)}/>
 
                     <b>Page type</b>
     

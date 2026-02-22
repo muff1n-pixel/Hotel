@@ -45,8 +45,11 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
             return;
         }
 
-        dialogs.addUniqueDialog("edit-shop-page", shopPage);
-    }, [editMode, dialogs]);
+        dialogs.addUniqueDialog("edit-shop-page", {
+            ...shopPage,
+            shopPages
+        });
+    }, [editMode, shopPages, dialogs]);
 
     const handleCreatePage = useCallback((parentShopPage?: ShopPageData) => {
         dialogs.addUniqueDialog("edit-shop-page", {
