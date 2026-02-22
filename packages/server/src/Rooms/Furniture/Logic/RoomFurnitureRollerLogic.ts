@@ -52,7 +52,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         if(!blockingUser) {
             const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
-            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(this.roomFurniture.model.position).filter((furniture) => furniture.model.position.depth > this.roomFurniture.model.position.depth);
+            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(this.roomFurniture.model.position).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
 
             for(const user of usersInteractingWithRoller) {
                 if(user.preoccupiedByActionHandler) {
