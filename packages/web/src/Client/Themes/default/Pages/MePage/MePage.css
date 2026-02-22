@@ -163,6 +163,7 @@
             height: 187px;
             color: #FFF;
             padding: 10px;
+            transition-duration: 0.5s;
 
             h4 {
                 font-weight: normal;

@@ -7,10 +7,11 @@ export type InputProps = {
     value: string;
     onChange: (value: string) => void;
     style?: CSSProperties;
+    maxlength?: number | undefined;
 }
 
-export default function Input({ type = "text", value, onChange, style }: InputProps) {
+export default function Input({ type = "text", value, maxlength = undefined, onChange, style }: InputProps) {
     return (
-        <input className="input" style={style} type={type} value={value} onChange={(event) => onChange((event.target as HTMLInputElement).value)}/>
+        <input className="input" style={style} type={type} maxLength={maxlength} value={value} onChange={(event) => onChange((event.target as HTMLInputElement).value)}/>
     );
 }

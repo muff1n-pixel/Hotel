@@ -1,0 +1,125 @@
+.settingsPage {
+    .navigation {
+
+        border-radius: 8px;
+        overflow: hidden;
+
+        a {
+            display: flex;
+            padding: 5px;
+            text-decoration: none;
+            color: #000;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.07);
+            transition-duration: 0.5s;
+
+            img {
+                margin-right: 10px;
+                transition-duration: 0.5s;
+            }
+        }
+
+        a:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        a:hover {
+            padding-left: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        a.active {
+            padding-left: 10px;
+            background-color: var(--blue);
+            color: #FFF;
+        }
+    }
+
+    .alert {
+        color: #FFF;
+        padding: 10px;
+        border-radius: 8px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .alert.noMargin {
+        margin: 0;
+    }
+
+    .alert.error {
+        background-color: var(--red);
+    }
+
+    .alert.success {
+        background-color: var(--green);
+    }
+
+    input:disabled {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: calc(100% - 22px);
+    }
+
+    .row {
+        display: flex;
+        align-items: center;
+
+        span {
+            display: flex;
+            align-items: center;
+            width: 60%;
+
+            img {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    input,
+    button,
+    select {
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    button {
+        margin-bottom: 0;
+        transition-duration: 0.5s;
+        opacity: 0.8;
+        color: #FFF;
+        background-color: var(--blue);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+
+        img {
+            margin-right: 10px;
+
+            transition-duration: 0.5s;
+        }
+    }
+
+    button:hover {
+        opacity: 1;
+        cursor: pointer;
+
+        img {
+            transform: rotate(360deg);
+        }
+    }
+}

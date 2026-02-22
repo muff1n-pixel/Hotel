@@ -41,7 +41,6 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                 if(result.accessToken) {
                     const date = new Date();
                     date.setFullYear(date.getFullYear() + 1);
-
                     dispatch({currentUser: result})
 
                     setCookie("accessToken", result.accessToken, {

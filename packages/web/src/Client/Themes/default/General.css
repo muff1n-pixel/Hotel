@@ -3,6 +3,13 @@ body {
     background-repeat: repeat;
 }
 
+:root {
+    --red: #d64242;
+    --blue: #2767a7;
+    --green: #2bb500;
+    --orange: #ff6103;
+}
+
 .resize {
     width: 80%;
     max-width: 765px;
@@ -13,6 +20,11 @@ body {
     display: grid;
     grid-template-columns: 450px 1fr;
     gap: 20px;
+    align-items: start;
+}
+
+.grid.first_small {
+    grid-template-columns: 1.5fr 3fr;
 }
 
 .box {
@@ -24,17 +36,17 @@ body {
     border: 1px solid #afafaf;
 
     .title {
-        background-color: #2767a7;
+        background-color: var(--blue);
         text-align: center;
         color: #FFF;
         border-radius: 8px;
         padding: 7px;
-        font-weight: bold;
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
+        letter-spacing: 2px;
     }
 
     .title.red {
-        background-color: #d64242;
+        background-color: var(--red);
     }
 }

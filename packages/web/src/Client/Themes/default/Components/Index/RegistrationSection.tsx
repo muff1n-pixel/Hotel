@@ -10,7 +10,9 @@ export default function RegistrationSection() {
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
     const [name, setName] = useState("");
+    const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     
     const [error, setError] = useState("");
     
@@ -22,7 +24,9 @@ export default function RegistrationSection() {
             },
             body: JSON.stringify({
                 name,
-                password
+                mail,
+                password,
+                confirmPassword
             })
         })
             .then((response) => response.json())
@@ -44,14 +48,13 @@ export default function RegistrationSection() {
                     });
                 }
             });
-    }, [name, password, setCookie, dispatch]);
+    }, [name, mail, password, confirmPassword, setCookie, dispatch]);
 
     return (
         <div style={{
             height: "100vh",
 
-            boxSizing: "border-box",
-            paddingTop: 64
+            boxSizing: "border-box"
         }}>
             <Container style={{
                 position: "relative"
@@ -134,7 +137,31 @@ export default function RegistrationSection() {
                                     Choose a nick name that you might remember next time you revisit.
                                 </p>
 
-                                <Input style={{ width: "100%" }} value={name} onChange={setName}/>
+                                <Input style={{ width: "100%" }} value={name} onChange={setName} maxlength={32}/>
+                            </div>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 8
+                            }}>
+                                <p style={{
+                                    color: "#9ec6dc",
+                                    fontFamily: "Ubuntu Bold Italic",
+                                    fontSize: 20
+                                }}>
+                                    Email
+                                </p>
+
+                                <p style={{
+                                    fontFamily: "Ubuntu Italic",
+                                    fontSize: 14,
+                                    color: "#5198be"
+                                }}>
+                                    Include your email address, in case you lose your password!
+                                </p>
+
+                                <Input style={{ width: "100%" }} value={mail} onChange={setMail} maxlength={254}/>
                             </div>
 
                             <div style={{
@@ -159,6 +186,30 @@ export default function RegistrationSection() {
                                 </p>
 
                                 <Input style={{ width: "100%" }} type="password" value={password} onChange={setPassword}/>
+                            </div>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 8
+                            }}>
+                                <p style={{
+                                    color: "#9ec6dc",
+                                    fontFamily: "Ubuntu Bold Italic",
+                                    fontSize: 20
+                                }}>
+                                    Confirm your password
+                                </p>
+
+                                <p style={{
+                                    fontFamily: "Ubuntu Italic",
+                                    fontSize: 14,
+                                    color: "#5198be"
+                                }}>
+                                    To make sure you haven't made a mistake!
+                                </p>
+
+                                <Input style={{ width: "100%" }} type="password" value={confirmPassword} onChange={setConfirmPassword}/>
                             </div>
 
                             <div style={{

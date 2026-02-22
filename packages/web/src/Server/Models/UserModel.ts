@@ -4,12 +4,17 @@ export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare password: string;
+    declare mail: string;
     declare figureConfiguration: any;
     declare credits: number;
     declare diamonds: number;
     declare duckets: number;
     declare motto: string;
     declare homeRoomId: string | null;
+    declare createdAt: Date;
+    declare updatedAt: Date | null;
+    declare allow_friends_request: boolean;
+    declare allow_friends_follow: boolean;
     declare roomChatStyleId: string;
 }
 
@@ -26,6 +31,11 @@ export function initializeUserModel(sequelize: Sequelize) {
             },
             password: {
                 type: new DataTypes.STRING(256),
+                allowNull: true,
+                defaultValue: null
+            },
+            mail: {
+                type: new DataTypes.STRING(254),
                 allowNull: true,
                 defaultValue: null
             },
@@ -68,6 +78,26 @@ export function initializeUserModel(sequelize: Sequelize) {
                 type: DataTypes.TEXT,
                 allowNull: false,
                 defaultValue: "normal"
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: new Date()
+            },
+            updatedAt: {
+                type: DataTypes.DATE || null,
+                allowNull: true,
+                defaultValue: null
+            },
+            allow_friends_request: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
+            },
+            allow_friends_follow: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
             }
         },
         {

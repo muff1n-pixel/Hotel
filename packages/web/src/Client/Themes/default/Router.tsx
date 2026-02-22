@@ -6,6 +6,7 @@ import MePage from "./Pages/MePage/MePage";
 import Footer from "./Components/Footer/Footer";
 import './General.css';
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
+import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 
 const Layout = () => (
   <>
@@ -37,6 +38,13 @@ export const routes = [
     element: <Layout />,
     children: [
       { index: true, element: <MePage /> }, 
+    ]
+  },
+  {
+    path: "/settings/:section?",
+    element: <Layout />,
+    children: [
+      { index: true, element: <SettingsPage /> }, 
     ]
   },
   {

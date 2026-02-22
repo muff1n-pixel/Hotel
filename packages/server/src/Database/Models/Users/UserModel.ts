@@ -6,6 +6,7 @@ export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare password: string;
+    declare mail: string;
     declare figureConfiguration: FigureConfiguration;
     declare credits: number;
     declare diamonds: number;
@@ -13,6 +14,10 @@ export class UserModel extends Model {
     declare motto: string | null;
     declare homeRoomId: string | null;
     declare roomChatStyleId: string;
+    declare createdAt: Date;
+    declare updatedAt: Date | null;
+    declare allow_friends_request: boolean;
+    declare allow_friends_follow: boolean;
     declare roles: NonAttribute<PermissionRoleModel[]>;
 
     declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;
@@ -33,6 +38,11 @@ export function initializeUserModel(sequelize: Sequelize) {
     },
     password: {
       type: new DataTypes.STRING(256),
+      allowNull: true,
+      defaultValue: null
+    },
+    mail: {
+      type: new DataTypes.STRING(254),
       allowNull: true,
       defaultValue: null
     },
@@ -75,6 +85,26 @@ export function initializeUserModel(sequelize: Sequelize) {
       type: DataTypes.TEXT,
       allowNull: false,
       defaultValue: "normal"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: new Date()
+    },
+    updatedAt: {
+      type: DataTypes.DATE || null,
+      allowNull: true,
+      defaultValue: null
+    },
+    allow_friends_request: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    allow_friends_follow: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     }
   },
   {
