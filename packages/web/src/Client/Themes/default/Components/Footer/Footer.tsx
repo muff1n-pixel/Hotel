@@ -3,7 +3,7 @@ import './Footer.css'
 const Footer = () => {
     return (
         <footer className='resize'>
-            © 2026 - Pixel63, developed with ♥ by Muff1n.
+            Pixel63, a new Habbo Hotel R63B style web client.
         </footer>
     )
 }
