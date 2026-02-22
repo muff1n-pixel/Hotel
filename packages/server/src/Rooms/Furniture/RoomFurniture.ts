@@ -35,12 +35,13 @@ export default class RoomFurniture {
 
         room.furnitures.push(roomFurniture);
 
+        room.floorplan.updatePosition(position);
+
         room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureAdded: [
                 roomFurniture.getFurnitureData()
             ]
         }));
-
 
         return roomFurniture;
     }
@@ -60,6 +61,8 @@ export default class RoomFurniture {
 
     public async pickup() {
         this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
+
+        this.room.floorplan.updatePosition(this.model.position);
 
         this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureRemoved: [
@@ -219,10 +222,14 @@ export default class RoomFurniture {
         }
     }
 
-    public async setPosition(position: RoomPosition) {
+    public async setPosition(position: RoomPosition, save: boolean = true) {
+        const previousPosition = this.model.position;
+
         this.model.position = position;
 
-        if(this.model.changed()) {
+        this.room.floorplan.updatePosition(position, previousPosition);
+
+        if(save && this.model.changed()) {
             await this.model.save();
 
             this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {

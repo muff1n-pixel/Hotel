@@ -8,10 +8,13 @@ import { RoomStructureEventData } from "@shared/Communications/Responses/Rooms/R
 import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
 import { RoomInformationData } from "@shared/Communications/Responses/Rooms/LoadRoomEventData.js";
 import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
+import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
     public readonly furnitures: RoomFurniture[] = [];
+
+    public readonly floorplan: RoomFloorplan;
 
     public outgoingEvents: OutgoingEvent[] = [];
 
@@ -20,6 +23,8 @@ export default class Room {
 
     constructor(public readonly model: RoomModel) {
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
+
+        this.floorplan = new RoomFloorplan(this);
 
         this.requestActionsFrame();
     }

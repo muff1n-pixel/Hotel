@@ -25,7 +25,7 @@ export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoo
         }
 
         if(event.position !== undefined) {
-            roomFurniture.model.position = event.position;
+            roomFurniture.setPosition(event.position, false);
         }
 
         if(event.color !== undefined && roomFurniture.model.furniture.interactionType === "postit") {

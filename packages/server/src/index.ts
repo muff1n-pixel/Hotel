@@ -4,22 +4,26 @@ import Game from "./Game.js";
 import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData.js";
 import { recreateShopPages } from "./Database/Development/ShopDevelopmentData.js";
 
-await initializeModels();
-
-if(resetDatabase) {
-    await initializeDevelopmentData();
-}
-
-if(recreateShop) {
-    await recreateShopPages();
-}
-
-if(process.argv.some((value) => value === "create-furniture")) {
-    await createMissingFurniture();
-}
-
 export const game = new Game();
 
-await game.loadModels();
+(async () => {
+    await initializeModels();
 
-console.log("Server started");
+    if(resetDatabase) {
+        await initializeDevelopmentData();
+    }
+
+    if(recreateShop) {
+        await recreateShopPages();
+    }
+
+    if(process.argv.some((value) => value === "create-furniture")) {
+        await createMissingFurniture();
+    }
+
+
+    await game.loadModels();
+
+    console.log("Server started");
+
+})();
