@@ -9,7 +9,7 @@ import { randomBytes, randomUUID } from 'crypto';
 import { initializeUserModel, UserModel } from './Models/UserModel.ts';
 import { initializeUserTokenModel, UserTokenModel } from './Models/UserTokens/UserTokenModel.ts';
 import type { Config } from './Interfaces/Config.ts';
-import { UserPreferenceModel } from './Models/Preferences/UserPreferences.ts';
+import { initializeUserPreferencesModel, UserPreferenceModel } from './Models/Preferences/UserPreferences.ts';
 
 const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
 
@@ -17,6 +17,7 @@ const sequelize = new Sequelize(config.database);
 
 initializeUserModel(sequelize);
 initializeUserTokenModel(sequelize);
+initializeUserPreferencesModel(sequelize);
 
 const app = express();
 
@@ -127,8 +128,8 @@ app.post('/api/loginAuth', async (request, response) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allow_friends_request: userPreferences.allowFriendsFollow,
-            allow_friends_follow: userPreferences.allowFriendsRequest
+            allowFriendsFollow: userPreferences.allowFriendsFollow,
+            allowFriendsRequest: userPreferences.allowFriendsRequest
         });
     }
     catch (e) {
@@ -215,8 +216,8 @@ app.post('/api/login', async (request, response) => {
         diamonds: user.diamonds,
         duckets: user.duckets,
         motto: user.motto,
-        allow_friends_request: userPreferences.allowFriendsFollow,
-        allow_friends_follow: userPreferences.allowFriendsRequest
+        allowFriendsFollow: userPreferences.allowFriendsFollow,
+        allowFriendsRequest: userPreferences.allowFriendsRequest
     });
 });
 
@@ -332,7 +333,8 @@ app.post('/api/register', async (request, response) => {
         );
 
         const userPreferences = await UserPreferenceModel.create({
-            id: randomUUID()
+            id: randomUUID(),
+            userId: user.id
         });
 
         return response.json({
@@ -344,8 +346,8 @@ app.post('/api/register', async (request, response) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allow_friends_request: userPreferences.allowFriendsFollow,
-            allow_friends_follow: userPreferences.allowFriendsRequest
+            allowFriendsFollow: userPreferences.allowFriendsFollow,
+            allowFriendsRequest: userPreferences.allowFriendsRequest
         })
     }
     catch (e) {
@@ -647,7 +649,7 @@ app.post('/api/settings/friends', async (request, response) => {
             });
         }
 
-        await user.update({
+        await userPreferences.update({
             allowFriendsRequest,
             allowFriendsFollow
         })
