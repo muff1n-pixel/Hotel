@@ -637,15 +637,16 @@ app.post('/api/settings/friends', async (request, response) => {
             });
         }
 
-        const userPreferences = await UserPreferenceModel.findOne({
+        let userPreferences = await UserPreferenceModel.findOne({
             where: {
                 userId: user.id
             }
         });
 
         if (!userPreferences) {
-            return response.json({
-                error: "An error occured with your preferences."
+            userPreferences = await UserPreferenceModel.create({
+                id: randomUUID(),
+                userId: user.id
             });
         }
 
