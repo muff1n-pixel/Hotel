@@ -276,7 +276,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private getSpritePriority(sprite: RoomSprite) {
-        let priority = sprite.priority;
+        let priority = sprite.item.priority + sprite.priority;
 
         if(sprite.item.position) {
             if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
