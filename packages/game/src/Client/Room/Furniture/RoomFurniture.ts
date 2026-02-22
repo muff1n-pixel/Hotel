@@ -84,7 +84,7 @@ export default class RoomFurniture {
 
     public getDimensionDepth() {
         if(this.data.furniture.interactionType === "multiheight" && this.data.furniture.customParams?.[0]) {
-            return ((this.data.furniture.customParams[0] as number) * this.data.animation);
+            return this.data.furniture.dimensions.depth + ((this.data.furniture.customParams[0] as number) * this.data.animation);
         }
 
         return this.data.furniture.dimensions.depth;
