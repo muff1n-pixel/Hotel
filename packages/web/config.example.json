@@ -16,7 +16,7 @@
         "server": {
             "secure": false,
             "hostname": "localhost",
-            "port": 80
+            "port": 8080
         },
 
         "discord": null
