@@ -148,11 +148,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         let minimumX = 0, minimumY = 0, maximumWidth = 0, maximumHeight = 0;
 
         if(sprites.length === 1) {
-            minimumX = Math.abs(sprites[0].x);
-            minimumY = sprites[0].y * -1;
+            minimumX = 0;
+            minimumY = 0;
 
-            maximumWidth = sprites[0].image.width - minimumX;
-            maximumHeight = sprites[0].image.height - minimumY;
+            maximumWidth = sprites[0].image.width;
+            maximumHeight = sprites[0].image.height;
+
+            sprites[0].x = 0;
+            sprites[0].y = 0;
         }
         else {
             for(const sprite of sprites) {
