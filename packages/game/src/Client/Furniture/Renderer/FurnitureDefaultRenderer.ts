@@ -149,7 +149,11 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     }
     
     public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
-        const sprites = await this.render(data, direction, size, animation, color, frame);
+        const immutableSprites = await this.render(data, direction, size, animation, color, frame);
+
+        const sprites = immutableSprites.map((sprite) => {
+            return {...sprite}
+        });
         
         let minimumX = 0, minimumY = 0, maximumWidth = 0, maximumHeight = 0;
 
