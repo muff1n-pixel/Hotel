@@ -184,7 +184,7 @@ export default class RoomFurniturePlacer {
             );
 
             const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, dimensions)));
-            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(entity.position, dimensions)));
+            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(entity.position, dimensions, this.roomFurnitureItem)));
 
             if(entity && isPositionInsideStructure && !isPositionInsideFigure) {
                 const furnitureAtPosition = (isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
