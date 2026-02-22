@@ -3,7 +3,7 @@ import RoomRenderer from "../Renderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "../Items/Figure/RoomFigureItem";
-import { webSocketClient } from "../../..";
+import { clientInstance, webSocketClient } from "../../..";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
 import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
 
@@ -108,10 +108,25 @@ export default class RoomCursor extends EventTarget {
         this.roomRenderer.element.style.cursor = "pointer";
 
         if(this.roomRenderer.roomInstance && !this.roomRenderer.roomInstance.hoveredUser.value) {
-            if(entity.item instanceof RoomFigureItem && entity.item.type === "figure") {
-                const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
+            if(entity.item instanceof RoomFigureItem) {
+                if(entity.item.type === "figure") {
+                    const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
 
-                this.roomRenderer.roomInstance.hoveredUser.value = user;
+                    this.roomRenderer.roomInstance.hoveredUser.value = {
+                        type: "user",
+                        item: entity.item,
+                        user
+                    };
+                }
+                else if(entity.item.type === "bot") {
+                    const bot = this.roomRenderer.roomInstance.getBotByItem(entity.item);
+
+                    this.roomRenderer.roomInstance.hoveredUser.value = {
+                        type: "bot",
+                        item: entity.item,
+                        bot
+                    };
+                }
             }
         }
     }
@@ -166,11 +181,28 @@ export default class RoomCursor extends EventTarget {
         this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
 
         if(this.roomRenderer.roomInstance) {
-            if(otherEntity?.item instanceof RoomFigureItem && otherEntity.item.type === "figure") {
+            if(otherEntity?.item instanceof RoomFigureItem) {
                 if(this.roomRenderer.roomInstance.focusedUser.value?.item?.id !== otherEntity.item.id) {
-                    const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
+                    if(otherEntity.item.type === "figure") {
+                        const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
 
-                    this.roomRenderer.roomInstance.focusedUser.value = user;
+                        this.roomRenderer.roomInstance.focusedUser.value = {
+                            type: "user",
+                            item: otherEntity.item,
+                            user
+                        };
+                    }
+                    else if(otherEntity.item.type === "bot") {
+                        const bot = this.roomRenderer.roomInstance.getBotByItem(otherEntity.item);
+
+                        if(bot.data.userId === clientInstance.user.value?.id) {
+                            this.roomRenderer.roomInstance.focusedUser.value = {
+                                type: "bot",
+                                item: otherEntity.item,
+                                bot
+                            };
+                        }
+                    }
                 }
             }
             else if(this.roomRenderer.roomInstance.focusedUser.value && (!floorEntity || otherEntity)) {

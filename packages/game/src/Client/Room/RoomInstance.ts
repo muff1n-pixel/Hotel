@@ -32,6 +32,16 @@ export type RoomInstanceFurniture = RoomItem<RoomFurnitureData, RoomFurnitureIte
 
 export type RoomUser = RoomItem<RoomUserData, RoomFigureItem>;
 
+export type HoveredFigure = {
+    type: "user";
+    item: RoomFigureItem;
+    user: RoomUser;
+} | {
+    type: "bot";
+    item: RoomFigureItem;
+    bot: RoomBot
+};
+
 export default class RoomInstance {
     public readonly key = Math.random();
 
@@ -46,8 +56,8 @@ export default class RoomInstance {
     public information: RoomInformationData;
     public hasRights: boolean;
 
-    public focusedUser = new ObservableProperty<RoomUser | null>(null);
-    public hoveredUser = new ObservableProperty<RoomUser | null>(null);
+    public focusedUser = new ObservableProperty<HoveredFigure | null>(null);
+    public hoveredUser = new ObservableProperty<HoveredFigure | null>(null);
 
     constructor(public readonly clientInstance: ClientInstance, event: LoadRoomEventData) {
         this.id = event.id;
@@ -159,6 +169,10 @@ export default class RoomInstance {
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
+
+        if(this.focusedUser.value?.type === "user" && this.focusedUser.value?.user.data.id === event.userId) {
+            this.focusedUser.value = null;
+        }
     }
 
     public getUserById(userId: string) {
@@ -179,6 +193,16 @@ export default class RoomInstance {
         }
 
         return user;
+    }
+
+    public getBotByItem(item: RoomFigureItem) {
+        const bot = this.bots.find((bot) => bot.item.id === item.id);
+
+        if(!bot) {
+            throw new Error("Bot does not exist in room.");
+        }
+
+        return bot;
     }
 
     public getBotById(id: string) {

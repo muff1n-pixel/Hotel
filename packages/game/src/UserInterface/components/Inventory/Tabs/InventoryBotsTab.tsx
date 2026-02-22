@@ -10,7 +10,7 @@ import DialogItem from "../../Dialog/Item/DialogItem";
 import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
 import { UserBotsEventData } from "@Shared/Communications/Responses/Inventory/UserBotsEventData";
 import FigureImage from "../../Figure/FigureImage";
-import { PlaceBotEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceBotEventData";
+import { PlaceBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/PlaceBotEventData";
 import { useUser } from "../../../hooks/useUser";
 
 export default function InventoryBotsTab() {

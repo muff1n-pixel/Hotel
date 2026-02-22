@@ -47,7 +47,8 @@ import GetShopPageBotsEvent from "../Communication/Game/Shop/GetShopPageBotsEven
 import UpdateShopBotEvent from "../Communication/Game/Shop/Development/UpdateShopBotEvent.js";
 import PurchaseShopBotEvent from "../Communication/Game/Shop/PurchaseShopBotEvent.js";
 import GetUserBotsEvent from "../Communication/Game/Inventory/GetUserBotsEvent.js";
-import PlaceBotEvent from "../Communication/Game/Rooms/Furniture/PlaceBotEvent.js";
+import PlaceBotEvent from "../Communication/Game/Rooms/Bots/PlaceBotEvent.js";
+import PickupRoomBotEvent from "../Communication/Game/Rooms/Bots/PickupRoomBotEvent.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -108,6 +109,7 @@ export default class EventHandler extends EventEmitter {
             .addIncomingEvent(new UseRoomFurnitureEvent())
             .addIncomingEvent(new UpdateRoomFurnitureEvent())
             .addIncomingEvent(new PickupRoomFurnitureEvent())
+            .addIncomingEvent(new PickupRoomBotEvent())
             .addIncomingEvent(new StartWalkingEvent())
             .addIncomingEvent(new SendUserMessageEvent())
             .addIncomingEvent(new GetRoomChatStylesEvent())

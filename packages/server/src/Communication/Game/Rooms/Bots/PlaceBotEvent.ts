@@ -1,4 +1,4 @@
-import { PlaceBotEventData } from "@shared/Communications/Requests/Rooms/Furniture/PlaceBotEventData";
+import { PlaceBotEventData } from "@shared/Communications/Requests/Rooms/Bots/PlaceBotEventData.js";
 import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import RoomBot from "../../../../Rooms/Bots/RoomBot.js";

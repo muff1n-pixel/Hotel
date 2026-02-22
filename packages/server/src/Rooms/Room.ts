@@ -56,6 +56,16 @@ export default class Room {
         return furniture;
     }
 
+    public getBot(userBotId: string) {
+        const bot = this.bots.find((bot) => bot.model.id === userBotId);
+
+        if(!bot) {
+            throw new Error("Bot does not exist in room.");
+        }
+
+        return bot;
+    }
+
     public getRoomUserAtPosition(position: Omit<RoomPosition, "depth">) {
         return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
     }

@@ -23,7 +23,13 @@ export default class RoomBotEvent implements IncomingEvent<WebSocketEvent<RoomBo
         }
 
         if(event.data.botRemoved?.length) {
-            event.data.botRemoved.map((botData) => clientInstance.roomInstance.value!.removeBot(botData.id));
+            event.data.botRemoved.forEach((botData) => {
+                clientInstance.roomInstance.value!.removeBot(botData.id);
+
+                if(clientInstance.roomInstance.value?.focusedUser.value?.type === "bot" && clientInstance.roomInstance.value?.focusedUser.value?.bot.data.id === botData.id) {
+                    clientInstance.roomInstance.value.focusedUser.value = null;
+                }
+            });
         }
 
         clientInstance.roomInstance.update();
