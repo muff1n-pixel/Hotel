@@ -8,6 +8,6 @@ export interface UserInterface {
     duckets: number,
     avatar: string;
     motto: string;
-    allow_friends_request: boolean;
-    allow_friends_follow: boolean;
+    allowFriendsRequest: boolean;
+    allowFriendsFollow: boolean;
 }

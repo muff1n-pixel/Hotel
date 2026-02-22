@@ -17,8 +17,8 @@ const SettingsFriendsForm = () => {
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
 
-        const [allow_friends_request, setAllowFriendsRequest] = useState<boolean>(currentUser.allow_friends_request)
-        const [allow_friends_follow, setAllowFriendsFollow] = useState<boolean>(currentUser.allow_friends_follow);
+        const [allowFriendsRequest, setAllowFriendsRequest] = useState<boolean>(currentUser.allowFriendsRequest)
+        const [allowFriendsFollow, setAllowFriendsFollow] = useState<boolean>(currentUser.allowFriendsFollow);
 
         const submitForm = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
@@ -29,8 +29,8 @@ const SettingsFriendsForm = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    allow_friends_request,
-                    allow_friends_follow
+                    allowFriendsRequest,
+                    allowFriendsFollow
                 })
             })
                 .then((response) => response.json())
@@ -46,8 +46,8 @@ const SettingsFriendsForm = () => {
                         Object.getOwnPropertyDescriptors(currentUser)
                     );
 
-                    newUser.allow_friends_request = allow_friends_request;
-                    newUser.allow_friends_follow = allow_friends_follow;
+                    newUser.allow_friends_request = allowFriendsRequest;
+                    newUser.allow_friends_follow = allowFriendsFollow;
 
                     dispatch({ currentUser: newUser });
                     setAlert({
@@ -56,7 +56,7 @@ const SettingsFriendsForm = () => {
                     });
 
                 });
-        }, [allow_friends_request, allow_friends_follow]);
+        }, [allowFriendsRequest, allowFriendsFollow]);
 
         return (
             <div className="box">
@@ -65,14 +65,14 @@ const SettingsFriendsForm = () => {
                 <form onSubmit={submitForm}>
                     <div className="row">
                         <span><img src={addIcon} alt="Add icon" /> Accept friends request</span>
-                        <select value={Number(allow_friends_request)} onChange={(e) => setAllowFriendsRequest(e.target.value === "1") }>
+                        <select value={Number(allowFriendsRequest)} onChange={(e) => setAllowFriendsRequest(e.target.value === "1") }>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
                     </div>
                     <div className="row">
                         <span><img src={friendsFollowIcon} alt="Friends follow icon" /> Allow friends follow</span>
-                        <select value={Number(allow_friends_follow)} onChange={(e) => setAllowFriendsFollow(e.target.value === "1") }>
+                        <select value={Number(allowFriendsFollow)} onChange={(e) => setAllowFriendsFollow(e.target.value === "1") }>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>

@@ -9,6 +9,7 @@ import { randomBytes, randomUUID } from 'crypto';
 import { initializeUserModel, UserModel } from './Models/UserModel.ts';
 import { initializeUserTokenModel, UserTokenModel } from './Models/UserTokens/UserTokenModel.ts';
 import type { Config } from './Interfaces/Config.ts';
+import { UserPreferenceModel } from './Models/Preferences/UserPreferences.ts';
 
 const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
 
@@ -105,6 +106,18 @@ app.post('/api/loginAuth', async (request, response) => {
                 error: "Invalid token"
             });
 
+        const userPreferences = await UserPreferenceModel.findOne({
+            where: {
+                userId: user.id
+            }
+        });
+
+        if (!userPreferences) {
+            return response.json({
+                error: "An error occured with your preferences."
+            });
+        }
+
         return response.json({
             id: user.id,
             accessToken: accessToken,
@@ -114,8 +127,8 @@ app.post('/api/loginAuth', async (request, response) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allow_friends_request: user.allow_friends_request,
-            allow_friends_follow: user.allow_friends_follow
+            allow_friends_request: userPreferences.allowFriendsFollow,
+            allow_friends_follow: userPreferences.allowFriendsRequest
         });
     }
     catch (e) {
@@ -181,6 +194,18 @@ app.post('/api/login', async (request, response) => {
         { expiresIn: "1 Year" }
     );
 
+    const userPreferences = await UserPreferenceModel.findOne({
+        where: {
+            userId: user.id
+        }
+    });
+
+    if (!userPreferences) {
+        return response.json({
+            error: "An error occured with your preferences."
+        });
+    }
+
     return response.json({
         id: user.id,
         accessToken: accessToken,
@@ -190,8 +215,8 @@ app.post('/api/login', async (request, response) => {
         diamonds: user.diamonds,
         duckets: user.duckets,
         motto: user.motto,
-        allow_friends_request: user.allow_friends_request,
-        allow_friends_follow: user.allow_friends_follow
+        allow_friends_request: userPreferences.allowFriendsFollow,
+        allow_friends_follow: userPreferences.allowFriendsRequest
     });
 });
 
@@ -290,6 +315,7 @@ app.post('/api/register', async (request, response) => {
                 parts: [{ "type": "hd", "setId": "180", "colors": [2] }, { "type": "hr", "setId": "828", "colors": [31] }, { "type": "ea", "setId": "3196", "colors": [62] }, { "type": "ch", "setId": "255", "colors": [1415] }, { "type": "lg", "setId": "3216", "colors": [110] }, { "type": "sh", "setId": "305", "colors": [62] }],
             }
         });
+
         let token = await UserTokenModel.findOne();
 
         if (!token) {
@@ -305,6 +331,10 @@ app.post('/api/register', async (request, response) => {
             { expiresIn: "1 Year" }
         );
 
+        const userPreferences = await UserPreferenceModel.create({
+            id: randomUUID()
+        });
+
         return response.json({
             id: user.id,
             accessToken: accessToken,
@@ -314,9 +344,9 @@ app.post('/api/register', async (request, response) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allow_friends_request: user.allow_friends_request,
-            allow_friends_follow: user.allow_friends_follow
-        });
+            allow_friends_request: userPreferences.allowFriendsFollow,
+            allow_friends_follow: userPreferences.allowFriendsRequest
+        })
     }
     catch (e) {
         console.log("Error while register:" + e);
@@ -566,8 +596,8 @@ app.post('/api/settings/mail', async (request, response) => {
 
 app.post('/api/settings/friends', async (request, response) => {
     const accessToken = request.cookies.accessToken,
-        allow_friends_follow = request.body.allow_friends_follow,
-        allow_friends_request = request.body.allow_friends_request;
+        allowFriendsRequest = request.body.allowFriendsRequest,
+        allowFriendsFollow = request.body.allowFriendsFollow;
 
     if (!accessToken) {
         return response.json({
@@ -599,15 +629,27 @@ app.post('/api/settings/friends', async (request, response) => {
                 error: "An error occured"
             });
 
-        if (typeof allow_friends_follow !== "boolean" || typeof allow_friends_request !== "boolean") {
+        if (typeof allowFriendsRequest !== "boolean" || typeof allowFriendsFollow !== "boolean") {
             return response.json({
                 error: "The data sent is invalid."
             });
         }
 
+        const userPreferences = await UserPreferenceModel.findOne({
+            where: {
+                userId: user.id
+            }
+        });
+
+        if (!userPreferences) {
+            return response.json({
+                error: "An error occured with your preferences."
+            });
+        }
+
         await user.update({
-            allow_friends_follow,
-            allow_friends_request
+            allowFriendsRequest,
+            allowFriendsFollow
         })
 
         return response.json({

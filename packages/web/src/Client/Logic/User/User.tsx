@@ -10,8 +10,8 @@ export default class User implements UserInterface {
     declare duckets: number;
     declare avatar: string;
     declare motto: string;
-    declare allow_friends_request: boolean;
-    declare allow_friends_follow: boolean;
+    declare allowFriendsRequest: boolean;
+    declare allowFriendsFollow: boolean;
 
     constructor(data: UserInterface) {
         this.id = data.id;
@@ -23,7 +23,7 @@ export default class User implements UserInterface {
         this.duckets = data.duckets;
         this.avatar = data.avatar;
         this.motto = data.motto;
-        this.allow_friends_follow = data.allow_friends_request;
-        this.allow_friends_follow = data.allow_friends_follow;
+        this.allowFriendsRequest = data.allowFriendsRequest;
+        this.allowFriendsFollow = data.allowFriendsFollow;
     }
 }
