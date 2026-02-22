@@ -6,10 +6,11 @@ import jsonWebToken from "jsonwebtoken";
 import path from 'path';
 import cookieParser from "cookie-parser";
 import { randomBytes, randomUUID } from 'crypto';
-import { initializeUserModel, UserModel } from './Models/UserModel.ts';
-import { initializeUserTokenModel, UserTokenModel } from './Models/UserTokens/UserTokenModel.ts';
+import { initializeUserModel, UserModel } from './Models/Users/UserModel.ts';
+import { initializeUserTokenModel, UserTokenModel } from './Models/Users/UserTokens/UserTokenModel.ts';
 import type { Config } from './Interfaces/Config.ts';
-import { initializeUserPreferencesModel, UserPreferenceModel } from './Models/Preferences/UserPreferences.ts';
+import { initializeUserPreferencesModel, UserPreferenceModel } from './Models/Users/Preferences/UserPreferences.ts';
+import { initializeServerStatsModel, ServerStatsModel } from './Models/Server/ServerStatsModel.ts';
 
 const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
 
@@ -18,6 +19,7 @@ const sequelize = new Sequelize(config.database);
 initializeUserModel(sequelize);
 initializeUserTokenModel(sequelize);
 initializeUserPreferencesModel(sequelize);
+initializeServerStatsModel(sequelize);
 
 const app = express();
 
@@ -357,6 +359,20 @@ app.post('/api/register', async (request, response) => {
             error: "An error occured."
         });
     }
+});
+
+// ONLINES
+app.post('/api/serverStats', async (request, response) => {
+    const serverStats = await ServerStatsModel.findOne();
+
+    if (!serverStats)
+        return response.json({
+            onlines: 0
+        })
+    else
+        return response.json({
+            onlines: serverStats.onlines
+        })
 });
 
 // SETTINGS

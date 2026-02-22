@@ -24,10 +24,12 @@ import { intitializePermissionModel } from "./Models/Permissions/PermissionModel
 import { intitializePermissionRoleModel } from "./Models/Permissions/PermissionRoleModel.js";
 import { initializeShopPageFeatureModel } from "./Models/Shop/ShopPageFeatureModel.js";
 import { initializeUserPreferencesModel } from "./Models/Users/Preferences/UserPreferences.js";
+import { initializeServerStatsModel } from "./Models/Server/ServerStatsModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
 export async function initializeModels() {
+  initializeServerStatsModel(sequelize);
   initializeBadgeModel(sequelize);
   
   initializeFurnitureModel(sequelize);

@@ -106,12 +106,8 @@ export default class WebSocket {
                 }
 
                 user.emit("close", user);
-                
-                for(let user of game.users) {
-                    user.send(new OutgoingEvent<HotelEventData>("HotelEvent", {
-                        users: game.users.length
-                    }));
-                }
+
+                game.stats.updateUsersOnline();
             });
 
             if(user.model.homeRoomId) {
@@ -150,11 +146,7 @@ export default class WebSocket {
                 }));
             }
 
-            for(let user of game.users) {
-                user.send(new OutgoingEvent<HotelEventData>("HotelEvent", {
-                    users: game.users.length
-                }));
-            }
+            game.stats.updateUsersOnline();
         });
     }
 }

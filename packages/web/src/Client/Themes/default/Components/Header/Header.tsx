@@ -2,13 +2,40 @@ import './Header.css'
 import Logo from '../../Images/logo.gif'
 import Button from '../Button';
 import { NavLink, useMatch, useNavigate } from 'react-router';
-import { use, useContext } from 'react';
+import { use, useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
 
 const Header = () => {
     const navigate = useNavigate();
     const settingsMatch = useMatch("/settings/*");
+    const [usersOnlines, setUsersOnlines] = useState<number>(0);
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
+
+    const fetchOnlines = () => {
+        fetch("/api/serverStats", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                setUsersOnlines(result.onlines);
+            });
+    }
+
+
+    useEffect(() => {
+        fetchOnlines();
+        
+        const intervalId = setInterval(() => {
+            fetchOnlines();
+        }, 60000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
 
     return (
         <header>
@@ -33,7 +60,7 @@ const Header = () => {
                     </div>
 
                     <div className='onlines'>
-                        <span>?</span> players online
+                        <span>{usersOnlines}</span> players online
                     </div>
 
                     {currentUser !== null ?
