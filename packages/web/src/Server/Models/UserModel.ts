@@ -8,6 +8,7 @@ export class UserModel extends Model {
     declare credits: number;
     declare diamonds: number;
     declare duckets: number;
+    declare motto: string;
     declare homeRoomId: string | null;
     declare roomChatStyleId: string;
 }
@@ -42,6 +43,11 @@ export function initializeUserModel(sequelize: Sequelize) {
                 type: new DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 10000
+            },
+            motto: {
+                type: new DataTypes.STRING(40),
+                allowNull: false,
+                defaultValue: "I am new to Pixel63!"
             },
             figureConfiguration: {
                 type: DataTypes.TEXT,

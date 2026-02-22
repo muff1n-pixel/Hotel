@@ -1,0 +1,236 @@
+.me_page {
+    .my_user {
+        background-color: #a0a097;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        color: #FFF;
+
+        .hotel_view {
+            height: 145px;
+            background-image: url('../../Images/me/me_bg.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+
+            .enter_button {
+                position: absolute;
+                top: 20px;
+                right: 40px;
+
+                .bg {
+                    width: 79px;
+                    height: 105px;
+                    background-image: url('../../Images/me/orange_thing.png');
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+
+                .button {
+                    position: absolute;
+                    right: -30px;
+                    top: 28px;
+                    width: 140px;
+                    border: 2px solid #FFF;
+
+                    .button-content {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 12px 5px;
+
+                        .arrow {
+                            width: 17px;
+                            height: 9px;
+                            background-image: url('../../Images/me/flashy_arrow.gif');
+                            background-repeat: no-repeat;
+                            background-size: cover;
+                            margin-left: 10px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .my_data {
+            background-color: #7b7b71;
+            padding: 10px;
+
+            .my_avatar {
+                position: relative;
+
+                .avatar {
+                    position: absolute;
+                    z-index: 1;
+                    background-image: url('../../Images//me/info_habbo_plate.png');
+                    background-repeat: no-repeat;
+                    width: 94px;
+                    height: 60px;
+                    top: -30px;
+
+                    img {
+                        position: absolute;
+                        top: -75px;
+                        left: 10px;
+                    }
+                }
+
+                .motto {
+                    margin-left: 100px;
+                    background-color: #FFF;
+                    border-radius: 8px;
+                    padding: 5px 10px;
+                    color: #000;
+                    font-size: 12px;
+
+                    span {
+                        font-weight: bold;
+                    }
+                }
+            }
+
+            .bank {
+                margin-top: 10px;
+                display: flex;
+                font-size: 14px;
+
+                .row {
+                    margin-right: 15px;
+                    display: flex;
+                    align-items: center;
+
+                    span {
+                        font-weight: bold;
+                        margin-right: 5px;
+                    }
+
+                    img {
+                        height: 20px;
+                        margin-right: 10px;
+                    }
+                }
+
+                .row:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .row {
+            padding: 10px 5px;
+            display: flex;
+            align-items: center;
+            color: #000;
+            border-bottom: 1px dotted #7b7b73;
+
+            img {
+                margin-right: 10px;
+                max-height: 40px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            a {
+                color: #FFF;
+            }
+
+            a:hover {
+                font-weight: bold;
+            }
+        }
+
+        .row.small {
+            font-size: 11px;
+        }
+
+        .row:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    .news {
+        -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: #FFF;
+
+        .show_banner {
+            background-image: url('../../Images/me/news/ikuturso_McMurpysTrip_topstory.gif');
+            background-size: cover;
+            height: 187px;
+            color: #FFF;
+            padding: 10px;
+
+            h4 {
+                font-weight: normal;
+                font-size: 14px;
+                margin-bottom: 10px;
+                opacity: 0.9;
+            }
+
+            p {
+                display: block;
+                max-height: 100px;
+                overflow: hidden;
+                position: relative;
+                opacity: 0.7;
+            }
+
+            button {
+                background: transparent;
+                border: none;
+                color: #FFF;
+                text-decoration: underline;
+                padding: 0;
+                margin-top: 20px;
+            }
+        }
+
+        .show_banner:hover {
+            cursor: pointer;
+            filter: brightness(115%);
+        }
+
+        .row {
+            background-color: #ececec;
+            padding: 5px 15px;
+
+            span {
+                font-size: 12px;
+                opacity: 0.7;
+            }
+        }
+
+        .row:nth-child(even) {
+            background-color: transparent;
+        }
+
+        .row:hover {
+            cursor: pointer;
+        }
+
+        .row:hover .title {
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            margin: 0;
+            margin-left: auto;
+            padding: 10px;
+            color: #e7570f;
+            opacity: 0.8;
+            text-decoration: underline;
+            background: none;
+            border: none;
+        }
+
+        button:hover {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    }
+}

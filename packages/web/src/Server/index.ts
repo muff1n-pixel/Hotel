@@ -26,7 +26,7 @@ app.use(async (request, response, next) => {
     if (request.path === "/game/") {
         const accessToken = request.cookies.accessToken;
 
-        if(!accessToken) {
+        if (!accessToken) {
             return response.redirect("/");
         }
 
@@ -39,8 +39,13 @@ app.use(async (request, response, next) => {
             });
         }
 
-        if(!jsonWebToken.verify(accessToken, token.secretKey)) {
-            return response.clearCookie("accessToken").redirect("/login");
+        try {
+            if (!jsonWebToken.verify(accessToken, token.secretKey)) {
+                return response.clearCookie("accessToken").redirect("/");
+            }
+        }
+        catch (e) {
+            return response.clearCookie("accessToken").redirect("/");
         }
     }
 
@@ -58,7 +63,7 @@ app.get('/game/config.json', (request, response) => {
 });
 
 app.get('/discord', (request, response) => {
-    if(config.public.discord) {
+    if (config.public.discord) {
         return response.redirect(config.public.discord);
     }
 
@@ -68,6 +73,53 @@ app.get('/discord', (request, response) => {
 app.get('/{*any}', (req, res) => res.sendFile("index.html", {
     root: path.join(config.static, "web")
 }));
+
+app.post('/api/loginAuth', async (request, response) => {
+    const accessToken = request.cookies.accessToken;
+
+    if (!accessToken) {
+        return response.redirect("/logout");
+    }
+
+    let token = await UserTokenModel.findOne();
+    if (token === null)
+        return response.json({
+            error: "Invalid token"
+        });
+
+    try {
+        const keyData = jsonWebToken.verify(accessToken, token.secretKey);
+        if (keyData === null || (keyData as any).userId === undefined)
+            return response.json({
+                error: "Invalid token"
+            });
+
+        const user = await UserModel.findOne({
+            where: {
+                id: (keyData as any).userId
+            }
+        });
+
+        if (user === null)
+            return response.json({
+                error: "Invalid token"
+            });
+
+        return response.json({
+            id: user.id,
+            name: user.name,
+            credits: user.credits,
+            diamonds: user.diamonds,
+            duckets: user.duckets,
+            motto: user.motto
+        });
+    }
+    catch (e) {
+        return response.json({
+            error: "Invalid token"
+        });
+    }
+});
 
 app.post('/api/login', async (request, response) => {
     const name = request.body.name;
@@ -98,7 +150,7 @@ app.post('/api/login', async (request, response) => {
         });
     }
 
-    if(!user.password) {
+    if (!user.password) {
         return response.json({
             error: "User is not set up for credentials."
         });
@@ -126,7 +178,13 @@ app.post('/api/login', async (request, response) => {
     );
 
     return response.json({
-        accessToken
+        id: user.id,
+        name: user.name,
+        credits: user.credits,
+        diamonds: user.diamonds,
+        duckets: user.duckets,
+        motto: user.motto,
+        accessToken: accessToken
     });
 });
 
@@ -188,7 +246,13 @@ app.post('/api/register', async (request, response) => {
     );
 
     return response.json({
-        accessToken
+        id: user.id,
+        name: user.name,
+        credits: user.credits,
+        diamonds: user.diamonds,
+        duckets: user.duckets,
+        motto: user.motto,
+        accessToken: accessToken
     });
 });
 
