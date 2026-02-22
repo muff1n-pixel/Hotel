@@ -1,6 +1,6 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
@@ -133,7 +133,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return sprites;
     }
     
-    public async renderToCanvas(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
+    public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
         const sprites = await this.render(data, direction, size, animation, color, frame);
         
         let minimumX = 0, minimumY = 0, maximumWidth = 0, maximumHeight = 0;
@@ -189,6 +189,26 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
 
             context.restore();
+        }
+
+        if(options?.spritesWithoutInkModes) {
+            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light", "lighter" ].includes(sprite.ink));
+
+            if(spritesWithoutInkModes.length > 0 && spritesWithoutInkModes.length !== sprites.length) {
+                const maskCanvas = new OffscreenCanvas(canvas.width, canvas.height);
+                const maskContext = maskCanvas.getContext("2d");
+
+                if(!maskContext) {
+                    throw new ContextNotAvailableError();
+                }
+
+                for(const sprite of spritesWithoutInkModes) {
+                    maskContext.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
+                }
+
+                context.globalCompositeOperation = "destination-in";
+                context.drawImage(maskCanvas, 0, 0);
+            }
         }
 
         return await createImageBitmap(canvas);

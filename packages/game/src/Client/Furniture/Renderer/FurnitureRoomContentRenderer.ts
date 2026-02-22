@@ -1,5 +1,5 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 
@@ -8,7 +8,7 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
 
     public frame: number = 0;
 
-    public async renderToCanvas(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number): Promise<ImageBitmap> {
+    public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number): Promise<ImageBitmap> {
         if(FurnitureAssets.assetSprites.has(`${this.type}_${color}`)) {
             const assetSprite = FurnitureAssets.assetSprites.get(`${this.type}_${color}`);
 

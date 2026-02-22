@@ -6,6 +6,10 @@ import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaul
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
 
+export type FurnitureRenderToCanvasOptions = {
+    spritesWithoutInkModes?: boolean;
+};
+
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
     imageData: ImageData;
@@ -74,7 +78,7 @@ export default class Furniture {
         return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
     }
 
-    public async renderToCanvas() {
+    public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
@@ -91,7 +95,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.renderToCanvas(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
     }
 
     public getVisualizationData(data: FurnitureData) {
