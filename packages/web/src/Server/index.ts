@@ -11,6 +11,9 @@ import { initializeUserTokenModel, UserTokenModel } from './Models/Users/UserTok
 import type { Config } from './Interfaces/Config.ts';
 import { initializeUserPreferencesModel, UserPreferenceModel } from './Models/Users/Preferences/UserPreferences.ts';
 import { initializeServerStatsModel, ServerStatsModel } from './Models/Server/ServerStatsModel.ts';
+import { initializeWebArticleModel } from './Models/Web/Article/WebArticleModel.ts';
+import { initializeWebArticleLikeModel } from './Models/Web/Article/Like/WebArticleLikeModel.ts';
+import { initializeWebArticleCommentModel } from './Models/Web/Article/Comment/WebArticleCommentModel.ts';
 
 const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" }));
 
@@ -20,6 +23,9 @@ initializeUserModel(sequelize);
 initializeUserTokenModel(sequelize);
 initializeUserPreferencesModel(sequelize);
 initializeServerStatsModel(sequelize);
+initializeWebArticleModel(sequelize);
+initializeWebArticleLikeModel(sequelize);
+initializeWebArticleCommentModel(sequelize);
 
 const app = express();
 
@@ -610,6 +616,27 @@ app.post('/api/settings/mail', async (request, response) => {
             error: "An error occured"
         });
     }
+});
+
+app.post('/api/randomUsersOnline', async (request, response) => {
+    const usersOnline = await UserModel.findAll({
+        where: {
+            online: true
+        },
+        order: Sequelize.literal('rand()'),
+        limit: 18
+    });
+
+    const usersData: Array<any> = [];
+    usersOnline.forEach(user => {
+        usersData.push({
+            id: user.id,
+            name: user.name,
+            motto: user.motto
+        })
+    });
+
+    return response.json(usersData);
 });
 
 app.post('/api/settings/friends', async (request, response) => {

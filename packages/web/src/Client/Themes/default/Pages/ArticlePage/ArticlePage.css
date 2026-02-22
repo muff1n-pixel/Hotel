@@ -1,0 +1,89 @@
+.articlePage {
+
+    .articleList {
+        .title {
+            background-color: #FFF;
+            padding: 5px;
+            border-radius: 8px 8px 0 0;
+            font-size: 18px;
+            border: 1px solid #afafaf;
+            border-bottom: 0;
+
+            span {
+                background-color: rgba(0, 0, 0, 0.10);
+                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+
+                img {
+                    margin-right: 10px;
+                    height: 40px;
+                }
+            }
+        }
+
+        .row {
+            padding: 5px;
+            background-color: #FFF;
+            color: #FFF;
+            transition-duration: 0.5s;
+            border-left: 1px solid #afafaf;
+            border-right: 1px solid #afafaf;
+            border-bottom: 1px dotted #7b7b73;
+
+            .content {
+                opacity: 0.9;
+                height: 100px;
+                background-position: bottom;
+                background-image: url('../../Images/me/news/ikuturso_McMurpysTrip_topstory.gif');
+                position: relative;
+                border-radius: 4px;
+                overflow: hidden;
+
+                .articleTitle {
+                    font-size: 16px;
+                    padding: 5px;
+                }
+
+                .author {
+                    position: absolute;
+                    bottom: 0;
+                    display: flex;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    padding: 5px;
+                    width: calc(100% - 10px);
+
+                    .date {
+                        opacity: 0.7;
+                        margin-left: auto;
+                    }
+                }
+            }
+        }
+
+        .row:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            filter: brightness(115%);
+
+            .content {
+                opacity: 1;
+            }
+        }
+
+        .row:last-child {
+            border-radius: 0 0 8px 8px;
+            -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+            border-bottom: 0;
+        }
+    }
+
+    .articleContent {
+        img {
+            max-width: 100%;
+        }
+    }
+}

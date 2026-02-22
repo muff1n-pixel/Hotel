@@ -25,13 +25,16 @@ import { intitializePermissionRoleModel } from "./Models/Permissions/PermissionR
 import { initializeShopPageFeatureModel } from "./Models/Shop/ShopPageFeatureModel.js";
 import { initializeUserPreferencesModel } from "./Models/Users/Preferences/UserPreferences.js";
 import { initializeServerStatsModel } from "./Models/Server/ServerStatsModel.js";
+import { initializeWebArticleModel } from "./Models/Web/Article/WebArticleModel.js";
+import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArticleLikeModel.js";
+import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
 export async function initializeModels() {
   initializeServerStatsModel(sequelize);
   initializeBadgeModel(sequelize);
-  
+
   initializeFurnitureModel(sequelize);
 
   initializeShopPageModel(sequelize);
@@ -45,7 +48,11 @@ export async function initializeModels() {
   initializeUserTokenModel(sequelize);
   initializeUserBadgeModel(sequelize);
   initializeUserPreferencesModel(sequelize);
-  
+
+  initializeWebArticleModel(sequelize);
+  initializeWebArticleLikeModel(sequelize);
+  initializeWebArticleCommentModel(sequelize);
+
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
 

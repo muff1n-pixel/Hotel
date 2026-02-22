@@ -91,6 +91,7 @@ export default class WebSocket {
             const user = new User(webSocket, model);
 
             game.users.push(user);
+            user.setOnline(true);
 
             webSocket.on("error", console.error);
 
@@ -100,7 +101,8 @@ export default class WebSocket {
 
             webSocket.on("close", () => {
                 const index = game.users.indexOf(user);
-
+                user.setOnline(false);
+                
                 if(index !== -1) {
                     game.users.splice(index, 1);
                 }

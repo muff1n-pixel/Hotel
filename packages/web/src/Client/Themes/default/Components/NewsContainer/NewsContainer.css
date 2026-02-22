@@ -1,0 +1,84 @@
+    .newsContainer {
+        -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: #FFF;
+
+        .show_banner {
+            background-image: url('../../Images/me/news/ikuturso_McMurpysTrip_topstory.gif');
+            background-size: cover;
+            height: 187px;
+            color: #FFF;
+            padding: 10px;
+            transition-duration: 0.5s;
+
+            h4 {
+                font-weight: normal;
+                font-size: 14px;
+                margin-bottom: 10px;
+                opacity: 0.9;
+            }
+
+            p {
+                display: block;
+                max-height: 100px;
+                overflow: hidden;
+                position: relative;
+                opacity: 0.7;
+            }
+
+            button {
+                background: transparent;
+                border: none;
+                color: #FFF;
+                text-decoration: underline;
+                padding: 0;
+                margin-top: 20px;
+            }
+        }
+
+        .show_banner:hover {
+            cursor: pointer;
+            filter: brightness(115%);
+        }
+
+        .row {
+            background-color: #ececec;
+            padding: 5px 15px;
+
+            span {
+                font-size: 12px;
+                opacity: 0.7;
+            }
+        }
+
+        .row:nth-child(even) {
+            background-color: transparent;
+        }
+
+        .row:hover {
+            cursor: pointer;
+        }
+
+        .row:hover .title {
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            margin: 0;
+            margin-left: auto;
+            padding: 10px;
+            color: #e7570f;
+            opacity: 0.8;
+            text-decoration: underline;
+            background: none;
+            border: none;
+        }
+
+        button:hover {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    }

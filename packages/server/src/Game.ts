@@ -1,4 +1,5 @@
 import CommandHandler from "./Commands/CommandHandler.js";
+import { UserModel } from "./Database/Models/Users/UserModel.js";
 import EventHandler from "./Events/EventHandler.js";
 import RoomNavigatorManager from "./Rooms/Navigator/RoomNavigatorManager.js";
 import RoomManager from "./Rooms/RoomManager.js";
@@ -21,7 +22,7 @@ export default class Game {
         this.stats = new ServerStats();
         this.roomNavigatorManager = new RoomNavigatorManager();
         this.roomManager = new RoomManager();
-        
+
         this.commandHandler = new CommandHandler();
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
@@ -35,5 +36,15 @@ export default class Game {
 
     public getUserById(id: string) {
         return this.users.find((user) => user.model.id === id);
+    }
+
+    public async resetUsersOnline() {
+        await UserModel.update({
+            online: false
+        }, {
+            where: {
+                online: true
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ body {
 :root {
     --red: #d64242;
     --blue: #2767a7;
+    --light-blue: #53a5d6;
     --green: #2bb500;
     --orange: #ff6103;
 }
@@ -25,6 +26,10 @@ body {
 
 .grid.first_small {
     grid-template-columns: 1.5fr 3fr;
+}
+
+.grid.first_medium {
+    grid-template-columns: 1.7fr 3fr;
 }
 
 .box {
@@ -48,5 +53,9 @@ body {
 
     .title.red {
         background-color: var(--red);
+    }
+
+    .title.lightBlue {
+        background-color: var(--light-blue);
     }
 }

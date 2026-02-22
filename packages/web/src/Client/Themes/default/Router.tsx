@@ -7,6 +7,8 @@ import Footer from "./Components/Footer/Footer";
 import './General.css';
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
+import CommunityPage from "./Pages/CommunityPage/CommunityPage";
+import ArticlePage from "./Pages/ArticlePage/ArticlePage";
 
 const Layout = () => (
   <>
@@ -45,6 +47,20 @@ export const routes = [
     element: <Layout />,
     children: [
       { index: true, element: <SettingsPage /> }, 
+    ]
+  },
+  {
+    path: "community",
+    element: <Layout />,
+    children: [
+      { index: true, element: <CommunityPage /> }, 
+    ]
+  },
+  {
+    path: "/article/:articleId?/:articleName?",
+    element: <Layout />,
+    children: [
+      { index: true, element: <ArticlePage /> }, 
     ]
   },
   {

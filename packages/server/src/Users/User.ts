@@ -64,6 +64,12 @@ export default class User extends EventEmitter {
         return this.permissions;
     }
 
+    public async setOnline(value: boolean) {
+        await this.model.update({
+            online: value
+        });
+    }
+
     public getUserData(): UserEventData {
         return {
             id: this.model.id,

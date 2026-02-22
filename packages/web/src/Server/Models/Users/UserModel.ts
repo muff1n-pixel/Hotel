@@ -11,9 +11,8 @@ export class UserModel extends Model {
     declare duckets: number;
     declare motto: string;
     declare homeRoomId: string | null;
-    declare createdAt: Date;
-    declare updatedAt: Date | null;
     declare roomChatStyleId: string;
+    declare online: boolean;
 }
 
 export function initializeUserModel(sequelize: Sequelize) {
@@ -77,15 +76,10 @@ export function initializeUserModel(sequelize: Sequelize) {
                 allowNull: false,
                 defaultValue: "normal"
             },
-            createdAt: {
-                type: DataTypes.DATE,
+            online: {
+                type: DataTypes.BOOLEAN,
                 allowNull: false,
-                defaultValue: new Date()
-            },
-            updatedAt: {
-                type: DataTypes.DATE || null,
-                allowNull: true,
-                defaultValue: null
+                defaultValue: 0
             }
         },
         {
