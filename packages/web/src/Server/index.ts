@@ -229,7 +229,6 @@ app.post('/api/register', async (request, response) => {
         });
     }
 
-    console.log(mail);
     if (mail.length > 254 || !mail.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )) {
@@ -441,7 +440,6 @@ app.post('/api/settings/password', async (request, response) => {
                 error: "An error occured"
             });
 
-        console.log(oldPassword);
         if (!oldPassword) {
             return response.json({
                 error: "Please enter your old password."
