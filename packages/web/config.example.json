@@ -9,7 +9,7 @@
         "username": "USER",
         "password": "PASSWORD",
         "host": "localhost",
-        "port": 80
+        "port": 3306
     },
 
     "public": {
