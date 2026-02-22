@@ -27,17 +27,21 @@ export default class RoomFloorplan {
         return [...this.grid];
     }
 
-    public updatePosition(position: Omit<RoomPosition, "depth">, previousPosition?: Omit<RoomPosition, "depth">) {
-        if(this.grid[position.row]?.[position.column] === undefined) {
-            console.warn("Position does not exist in structure.");
+    public updatePosition(position: Omit<RoomPosition, "depth">, previousPosition?: Omit<RoomPosition, "depth">, dimensions: Omit<RoomPosition, "depth"> = { row: 1, column: 1 }) {
+        for(let row = position.row; row < position.row + dimensions.row; row++) {
+            for(let column = position.column; column < position.column + dimensions.column; column++) {
+                if(this.grid[row]?.[column] === undefined) {
+                    console.warn("Position does not exist in structure.");
 
-            return;
+                    return;
+                }
+
+                this.grid[row]![column] = this.getPositionWeight(position);
+            }
         }
 
-        this.grid[position.row]![position.column] = this.getPositionWeight(position);
-
         if(previousPosition && (previousPosition.row !== position.row || previousPosition.column !== position.column)) {
-            this.updatePosition(previousPosition);
+            this.updatePosition(previousPosition, undefined, dimensions);
         }
     }
 
