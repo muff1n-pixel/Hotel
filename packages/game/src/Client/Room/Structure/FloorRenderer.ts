@@ -148,7 +148,7 @@ export default class FloorRenderer {
 
         this.tiles = [];
 
-        for(let currentDepth = this.depth; currentDepth !== -1; currentDepth--) {
+        for(let currentDepth = 0; currentDepth <= this.depth; currentDepth++) {
             const currentRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
 
             this.renderLeftEdges(context, currentRectangles, leftEdgeImage.image);

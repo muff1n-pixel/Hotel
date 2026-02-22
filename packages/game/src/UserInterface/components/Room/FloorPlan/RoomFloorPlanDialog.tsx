@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
 import DialogItem from "../../Dialog/Item/DialogItem";
-import RoomFloorPlanEditor from "./RoomFloorPlanEditor";
+import RoomFloorPlanEditor, { RoomFloorPlanTool } from "./RoomFloorPlanEditor";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../../..";
@@ -11,8 +11,6 @@ import { UpdateRoomFloorplanEventData } from "@Shared/Communications/Requests/Ro
 import Checkbox from "../../Form/Checkbox";
 import Selection from "../../Form/Selection";
 import Input from "../../Form/Input";
-
-type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile";
 
 export type RoomFloorPlanDialogProps = {
     hidden?: boolean;
@@ -42,7 +40,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
             return;
         }
 
-        setFloorPlanEditor(new RoomFloorPlanEditor(canvasRef.current, setData));
+        setFloorPlanEditor(new RoomFloorPlanEditor(canvasRef.current, setActiveDepth, setData));
     }, [canvasRef])
 
     useEffect(() => {
@@ -182,6 +180,10 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
                                     
                                     <DialogItem width={44} active={tool === "enter_tile"} onClick={() => setTool((tool === "enter_tile")?(null):("enter_tile"))}>
                                         <div className="sprite_room_floorplan_enter_tile"/>
+                                    </DialogItem>
+                                    
+                                    <DialogItem width={44} active={tool === "tile_picker"} onClick={() => setTool((tool === "tile_picker")?(null):("tile_picker"))}>
+                                        <div className="sprite_room_floorplan_tile_picker"/>
                                     </DialogItem>
                                 </div>
                             </div>
