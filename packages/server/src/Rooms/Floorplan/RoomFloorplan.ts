@@ -47,7 +47,7 @@ export default class RoomFloorplan {
 
     private getPositionWeight(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false) {
         if(this.room.model.structure.grid[position.row]?.[position.column] === undefined || this.room.model.structure.grid[position.row]?.[position.column] === 'X') {
-            return 0;
+            return 1;
         }
 
         if(!walkThroughFurniture) {
