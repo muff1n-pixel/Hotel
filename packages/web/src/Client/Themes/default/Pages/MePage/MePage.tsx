@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import './MePage.css';
 import { ThemeContext } from '../../ThemeProvider';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import Button from '../../Components/Button';
 import creditIcon from '../../Images/me/creditIcon.png'
 import ducketsIcon from '../../Images/me/duckets.png';
@@ -12,6 +12,7 @@ import diamondsIcon from '../../Images/me/diamonds.png'
 
 const MePage = () => {
     const navigate = useNavigate();
+
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     useEffect(() => {

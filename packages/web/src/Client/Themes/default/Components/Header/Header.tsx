@@ -1,12 +1,13 @@
 import './Header.css'
 import Logo from '../../Images/logo.gif'
 import Button from '../Button';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink, useMatch, useNavigate } from 'react-router';
 import { use, useContext } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
 
 const Header = () => {
     const navigate = useNavigate();
+    const settingsMatch = useMatch("/settings/*");
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     return (
@@ -21,9 +22,9 @@ const Header = () => {
 
                             <div className='navigation'>
                                 {currentUser !== null ?
-                                <a href="/logout">Logout</a>
-                                : 
-                                <a href="/">Login</a>
+                                    <a href="/logout">Logout</a>
+                                    :
+                                    <a href="/">Login</a>
                                 }
                             </div>
                         </div>
@@ -37,7 +38,7 @@ const Header = () => {
 
                     {currentUser !== null ?
                         <nav>
-                            <NavLink to="/me">{currentUser.name}</NavLink>
+                            <NavLink to="/me" className={({ isActive }) => isActive || settingsMatch ? "active" : ""}>{currentUser.name}</NavLink>
                             <NavLink to="/community">Community</NavLink>
                             <NavLink to="/shop">Shop</NavLink>
                         </nav>

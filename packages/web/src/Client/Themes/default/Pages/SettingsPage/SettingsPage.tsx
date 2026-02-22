@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useParams } from 'react-router';
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router';
 import './SettingsPage.css'
 import { useContext, useEffect, useState } from 'react';
 import passwordIcon from '../../Images/settings/password.gif';
@@ -11,6 +11,7 @@ import SettingsFriendsForm from '../../Components/Settings/FriendsForm';
 
 const SettingsPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { section } = useParams();
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
@@ -30,7 +31,10 @@ const SettingsPage = () => {
 
     useEffect(() => {
         if (!currentUser) {
-            navigate("/");
+            navigate("/", {
+                state: { from: location },
+                replace: true,
+            });
         }
         switch (section) {
             case "password":

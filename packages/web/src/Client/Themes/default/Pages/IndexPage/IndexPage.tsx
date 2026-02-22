@@ -4,10 +4,12 @@ import { useCookies } from "react-cookie";
 import LoginSection from "../../Components/Index/LoginSection";
 import RegistrationSection from "../../Components/Index/RegistrationSection";
 import { ThemeContext } from "../../ThemeProvider";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const IndexPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/me";
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
@@ -26,15 +28,15 @@ const IndexPage = () => {
             })
                 .then((response) => response.json())
                 .then((result) => {
-                    if(result.error) {
-                        dispatch({currentUser: null})
+                    if (result.error) {
+                        dispatch({ currentUser: null })
                         removeCookie("accessToken");
 
                         return;
                     }
 
-                    dispatch({currentUser: result});
-                    navigate("/me");
+                    dispatch({ currentUser: result });
+                    navigate(from, { replace: true });
                 });
         }
     }, [cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
