@@ -58,7 +58,7 @@ const MePage = () => {
                             <img src={discordIcon} alt="Discord Icon" />
                             <div className='description'>
                                 <h2>Join our community!</h2>
-                                <p>Be part of the adventure and join us by clicking <a href="https://discord.com/invite/aMkJf9gRyF" target='_blank'>here</a>!</p>
+                                <p>Be part of the adventure and join us by clicking <a href="/discord" target='_blank'>here</a>!</p>
                             </div>
                         </div>
                         <div className='row small'>
