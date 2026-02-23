@@ -1,5 +1,5 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { UserModel } from "../../Users/UserModel";
+import { UserModel } from "../../Users/UserModel.js";
 
 export class WebArticleModel extends Model {
     declare id: string;
