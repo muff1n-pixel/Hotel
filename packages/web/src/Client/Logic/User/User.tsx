@@ -4,26 +4,32 @@ export default class User implements UserInterface {
     declare id: string;
     declare accessToken: string;
     declare name: string;
-    declare mail: string;
+    declare email: string;
     declare credits: number;
     declare diamonds: number;
     declare duckets: number;
     declare avatar: string;
     declare motto: string;
-    declare allowFriendsRequest: boolean;
-    declare allowFriendsFollow: boolean;
+
+    declare preferences: {
+        allowFriendsRequest: boolean;
+        allowFriendsFollow: boolean;
+    };
 
     constructor(data: UserInterface) {
         this.id = data.id;
         this.accessToken = data.accessToken;
         this.name = data.name;
-        this.mail = data.mail;
+        this.email = data.email;
         this.credits = data.credits;
         this.diamonds = data.diamonds;
         this.duckets = data.duckets;
         this.avatar = data.avatar;
         this.motto = data.motto;
-        this.allowFriendsRequest = data.allowFriendsRequest;
-        this.allowFriendsFollow = data.allowFriendsFollow;
+
+        this.preferences = {
+            allowFriendsFollow: data.preferences.allowFriendsFollow,
+            allowFriendsRequest: data.preferences.allowFriendsRequest,
+        };
     }
 }

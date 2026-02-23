@@ -4,7 +4,7 @@ export class UserModel extends Model {
     declare id: string;
     declare name: string;
     declare password: string;
-    declare mail: string;
+    declare email: string;
     declare figureConfiguration: any;
     declare credits: number;
     declare diamonds: number;
@@ -31,7 +31,7 @@ export function initializeUserModel(sequelize: Sequelize) {
                 allowNull: true,
                 defaultValue: null
             },
-            mail: {
+            email: {
                 type: new DataTypes.STRING(254),
                 allowNull: true,
                 defaultValue: null
@@ -79,7 +79,7 @@ export function initializeUserModel(sequelize: Sequelize) {
             online: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
-                defaultValue: 0
+                defaultValue: false
             }
         },
         {

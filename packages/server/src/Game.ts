@@ -3,12 +3,13 @@ import { UserModel } from "./Database/Models/Users/UserModel.js";
 import EventHandler from "./Events/EventHandler.js";
 import RoomNavigatorManager from "./Rooms/Navigator/RoomNavigatorManager.js";
 import RoomManager from "./Rooms/RoomManager.js";
-import ServerStats from "./Server/ServerStats.js";
 import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
+import HotelInformation from "./Hotel/HotelInformation.js";
 
 export default class Game {
-    public readonly stats;
+    public readonly hotelInformation;
+
     public readonly roomManager;
     public readonly roomNavigatorManager;
 
@@ -19,7 +20,8 @@ export default class Game {
     public readonly users: User[];
 
     constructor() {
-        this.stats = new ServerStats();
+        this.hotelInformation = new HotelInformation();
+
         this.roomNavigatorManager = new RoomNavigatorManager();
         this.roomManager = new RoomManager();
 
@@ -36,15 +38,5 @@ export default class Game {
 
     public getUserById(id: string) {
         return this.users.find((user) => user.model.id === id);
-    }
-
-    public async resetUsersOnline() {
-        await UserModel.update({
-            online: false
-        }, {
-            where: {
-                online: true
-            }
-        });
     }
 }

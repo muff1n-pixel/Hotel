@@ -10,7 +10,6 @@ import { initializeUserModel, UserModel } from './Models/Users/UserModel.ts';
 import { initializeUserTokenModel, UserTokenModel } from './Models/Users/UserTokens/UserTokenModel.ts';
 import type { Config } from './Interfaces/Config.ts';
 import { initializeUserPreferencesModel, UserPreferenceModel } from './Models/Users/Preferences/UserPreferences.ts';
-import { initializeServerStatsModel, ServerStatsModel } from './Models/Server/ServerStatsModel.ts';
 import { initializeWebArticleModel } from './Models/Web/Article/WebArticleModel.ts';
 import { initializeWebArticleLikeModel } from './Models/Web/Article/Like/WebArticleLikeModel.ts';
 import { initializeWebArticleCommentModel } from './Models/Web/Article/Comment/WebArticleCommentModel.ts';
@@ -22,7 +21,6 @@ const sequelize = new Sequelize(config.database);
 initializeUserModel(sequelize);
 initializeUserTokenModel(sequelize);
 initializeUserPreferencesModel(sequelize);
-initializeServerStatsModel(sequelize);
 initializeWebArticleModel(sequelize);
 initializeWebArticleLikeModel(sequelize);
 initializeWebArticleCommentModel(sequelize);
@@ -110,34 +108,35 @@ app.post('/api/loginAuth', async (request, response) => {
             }
         });
 
-        if (user === null)
+        if (user === null) {
             return response.json({
                 error: "Invalid token"
             });
+        }
 
-        const userPreferences = await UserPreferenceModel.findOne({
+        const [userPreferences] = await UserPreferenceModel.findOrCreate({
             where: {
                 userId: user.id
+            },
+            defaults: {
+                id: randomUUID()
             }
         });
-
-        if (!userPreferences) {
-            return response.json({
-                error: "An error occured with your preferences."
-            });
-        }
 
         return response.json({
             id: user.id,
             accessToken: accessToken,
             name: user.name,
-            mail: user.mail,
+            email: user.email,
             credits: user.credits,
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allowFriendsFollow: userPreferences.allowFriendsFollow,
-            allowFriendsRequest: userPreferences.allowFriendsRequest
+
+            preferences: {
+                allowFriendsFollow: userPreferences?.allowFriendsFollow,
+                allowFriendsRequest: userPreferences?.allowFriendsRequest,
+            }
         });
     }
     catch (e) {
@@ -203,35 +202,35 @@ app.post('/api/login', async (request, response) => {
         { expiresIn: "1 Year" }
     );
 
-    const userPreferences = await UserPreferenceModel.findOne({
+    const [userPreferences] = await UserPreferenceModel.findOrCreate({
         where: {
             userId: user.id
+        },
+        defaults: {
+            id: randomUUID()
         }
     });
-
-    if (!userPreferences) {
-        return response.json({
-            error: "An error occured with your preferences."
-        });
-    }
 
     return response.json({
         id: user.id,
         accessToken: accessToken,
         name: user.name,
-        mail: user.mail,
+        email: user.email,
         credits: user.credits,
         diamonds: user.diamonds,
         duckets: user.duckets,
         motto: user.motto,
-        allowFriendsFollow: userPreferences.allowFriendsFollow,
-        allowFriendsRequest: userPreferences.allowFriendsRequest
+        
+        preferences: {
+            allowFriendsFollow: userPreferences.allowFriendsFollow,
+            allowFriendsRequest: userPreferences.allowFriendsRequest
+        }
     });
 });
 
 app.post('/api/register', async (request, response) => {
     const name = request.body.name,
-        mail = request.body.mail;
+        email = request.body.email;
 
     if (!name) {
         return response.json({
@@ -239,7 +238,7 @@ app.post('/api/register', async (request, response) => {
         });
     }
 
-    if (!mail) {
+    if (!email) {
         return response.json({
             error: "No mail provided."
         });
@@ -263,7 +262,7 @@ app.post('/api/register', async (request, response) => {
         });
     }
 
-    if (mail.length > 254 || !mail.match(
+    if (email.length > 254 || !email.match(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )) {
         return response.json({
@@ -300,7 +299,7 @@ app.post('/api/register', async (request, response) => {
 
     const existingMail = await UserModel.count({
         where: {
-            mail
+            email
         }
     });
 
@@ -316,7 +315,7 @@ app.post('/api/register', async (request, response) => {
         const user = await UserModel.create({
             id: randomUUID(),
             name,
-            mail,
+            email,
             password,
             homeRoomId: config.users.defaultHomeRoomId,
             figureConfiguration: {
@@ -349,7 +348,7 @@ app.post('/api/register', async (request, response) => {
             id: user.id,
             accessToken: accessToken,
             name: user.name,
-            mail: user.mail,
+            email: user.email,
             credits: user.credits,
             diamonds: user.diamonds,
             duckets: user.duckets,
@@ -368,23 +367,22 @@ app.post('/api/register', async (request, response) => {
 });
 
 // ONLINES
-app.post('/api/serverStats', async (request, response) => {
-    const serverStats = await ServerStatsModel.findOne();
+app.post('/api/hotel/information', async (request, response) => {
+    const usersOnline = await UserModel.count({
+        where: {
+            online: true
+        }
+    });
 
-    if (!serverStats)
-        return response.json({
-            onlines: 0
-        })
-    else
-        return response.json({
-            onlines: serverStats.onlines
-        })
+    return response.json({
+        usersOnline
+    });
 });
 
 // SETTINGS
 app.post('/api/settings/mail', async (request, response) => {
     const accessToken = request.cookies.accessToken,
-        mail = request.body.mail;
+        email = request.body.email;
 
     if (!accessToken) {
         return response.json({
@@ -416,13 +414,13 @@ app.post('/api/settings/mail', async (request, response) => {
                 error: "An error occured"
             });
 
-        if (!mail) {
+        if (!email) {
             return response.json({
                 error: "No mail provided."
             });
         }
 
-        if (mail.length > 254 || !mail.match(
+        if (email.length > 254 || !email.match(
             /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         )) {
             return response.json({
@@ -432,7 +430,7 @@ app.post('/api/settings/mail', async (request, response) => {
 
         const existingMail = await UserModel.count({
             where: {
-                mail
+                email
             }
         });
 
@@ -443,7 +441,7 @@ app.post('/api/settings/mail', async (request, response) => {
         }
 
         await user.update({
-            mail
+            email
         });
 
         return response.json({
@@ -544,7 +542,7 @@ app.post('/api/settings/password', async (request, response) => {
 // SETTINGS
 app.post('/api/settings/mail', async (request, response) => {
     const accessToken = request.cookies.accessToken,
-        mail = request.body.mail;
+        email = request.body.email;
 
     if (!accessToken) {
         return response.json({
@@ -576,13 +574,13 @@ app.post('/api/settings/mail', async (request, response) => {
                 error: "An error occured"
             });
 
-        if (!mail) {
+        if (!email) {
             return response.json({
                 error: "No mail provided."
             });
         }
 
-        if (mail.length > 254 || !mail.match(
+        if (email.length > 254 || !email.match(
             /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         )) {
             return response.json({
@@ -592,7 +590,7 @@ app.post('/api/settings/mail', async (request, response) => {
 
         const existingMail = await UserModel.count({
             where: {
-                mail
+                email
             }
         });
 
@@ -603,7 +601,7 @@ app.post('/api/settings/mail', async (request, response) => {
         }
 
         await user.update({
-            mail
+            email
         });
 
         return response.json({

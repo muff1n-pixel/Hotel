@@ -15,7 +15,7 @@ const Header = () => {
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
     const fetchOnlines = () => {
-        fetch("/api/serverStats", {
+        fetch("/api/hotel/information", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -23,7 +23,7 @@ const Header = () => {
         })
             .then((response) => response.json())
             .then((result) => {
-                setUsersOnlines(result.onlines);
+                setUsersOnlines(result.usersOnline);
             })
             .catch((e) => {
                 console.log("(Error) Impossible to fetch server stats:", e)

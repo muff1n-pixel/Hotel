@@ -2,12 +2,15 @@ export interface UserInterface {
     id: string;
     accessToken: string;
     name: string;
-    mail: string;
+    email: string;
     credits: number,
     diamonds: number,
     duckets: number,
     avatar: string;
     motto: string;
-    allowFriendsRequest: boolean;
-    allowFriendsFollow: boolean;
+
+    preferences: {
+        allowFriendsRequest: boolean;
+        allowFriendsFollow: boolean;
+    };
 }

@@ -21,9 +21,9 @@ export const game = new Game();
         await createMissingFurniture();
     }
 
-
     await game.loadModels();
 
-    console.log("Server started");
+    await game.hotelInformation.resetUsersOnline();
 
+    console.log("Server started");
 })();

@@ -24,7 +24,6 @@ import { intitializePermissionModel } from "./Models/Permissions/PermissionModel
 import { intitializePermissionRoleModel } from "./Models/Permissions/PermissionRoleModel.js";
 import { initializeShopPageFeatureModel } from "./Models/Shop/ShopPageFeatureModel.js";
 import { initializeUserPreferencesModel } from "./Models/Users/Preferences/UserPreferences.js";
-import { initializeServerStatsModel } from "./Models/Server/ServerStatsModel.js";
 import { initializeWebArticleModel } from "./Models/Web/Article/WebArticleModel.js";
 import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArticleLikeModel.js";
 import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
@@ -34,7 +33,6 @@ import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
 export const sequelize = new Sequelize(config.database);
 
 export async function initializeModels() {
-  initializeServerStatsModel(sequelize);
   initializeBadgeModel(sequelize);
 
   initializeFurnitureModel(sequelize);

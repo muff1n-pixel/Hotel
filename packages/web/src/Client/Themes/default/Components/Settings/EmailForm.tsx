@@ -12,7 +12,7 @@ const SettingsEmailForm = () => {
             </div>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
-        const [mail, setMail] = useState<string | undefined>(undefined);
+        const [email, setEmail] = useState<string | undefined>(undefined);
 
         const submitForm = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
@@ -23,7 +23,7 @@ const SettingsEmailForm = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    mail
+                    email
                 })
             })
                 .then((response) => response.json())
@@ -39,7 +39,7 @@ const SettingsEmailForm = () => {
                         Object.getOwnPropertyDescriptors(currentUser)
                     );
 
-                    newUser.mail = mail;
+                    newUser.email = email;
 
                     dispatch({ currentUser: newUser });
                     setAlert({
@@ -47,17 +47,17 @@ const SettingsEmailForm = () => {
                         message: result.success
                     });
 
-                    setMail("");
+                    setEmail("");
                 });
-        }, [mail, setMail]);
+        }, [email, setEmail]);
 
         return (
             <div className="box">
                 <div className="title">Edit my email</div>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
-                    <input type="text" value={currentUser?.mail} disabled></input>
-                    <input type="text" placeholder="New email" value={mail} onChange={(e) => setMail(e.target.value)}></input>
+                    <input type="text" value={currentUser?.email} disabled></input>
+                    <input type="text" placeholder="New email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
                     <button><img src={mailIcon} alt="Mail Icon" /> Edit my email</button>
                 </form>
             </div>

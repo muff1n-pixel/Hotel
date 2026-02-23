@@ -17,8 +17,8 @@ const SettingsFriendsForm = () => {
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
 
-        const [allowFriendsRequest, setAllowFriendsRequest] = useState<boolean>(currentUser.allowFriendsRequest)
-        const [allowFriendsFollow, setAllowFriendsFollow] = useState<boolean>(currentUser.allowFriendsFollow);
+        const [allowFriendsRequest, setAllowFriendsRequest] = useState(currentUser.preferences.allowFriendsRequest)
+        const [allowFriendsFollow, setAllowFriendsFollow] = useState(currentUser.preferences.allowFriendsFollow);
 
         const submitForm = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
