@@ -1,11 +1,13 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
+import { UserModel } from "../../Users/UserModel";
 
 export class WebArticleModel extends Model {
     declare id: string;
     declare bannerUrl: string;
     declare title: string;
     declare content: string;
-    declare author: string;
+
+    declare author: NonAttribute<UserModel>;
 }
 
 export function initializeWebArticleModel(sequelize: Sequelize) {
@@ -27,14 +29,16 @@ export function initializeWebArticleModel(sequelize: Sequelize) {
                 type: DataTypes.TEXT,
                 allowNull: false,
             },
-            author: {
-                type: DataTypes.UUID,
-                allowNull: false,
-            },
         },
         {
             tableName: 'web_articles',
             sequelize
         },
     );
+    
+    WebArticleModel.belongsTo(UserModel, {
+        as: "author",
+        foreignKey: "authorId",
+        constraints: false
+    });
 }
