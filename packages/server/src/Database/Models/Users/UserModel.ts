@@ -6,7 +6,7 @@ export class UserModel extends Model {
   declare id: string;
   declare name: string;
   declare password: string;
-  declare mail: string;
+  declare email: string;
   declare figureConfiguration: FigureConfiguration;
   declare credits: number;
   declare diamonds: number;
@@ -38,7 +38,7 @@ export function initializeUserModel(sequelize: Sequelize) {
         allowNull: true,
         defaultValue: null
       },
-      mail: {
+      email: {
         type: new DataTypes.STRING(254),
         allowNull: true,
         defaultValue: null
