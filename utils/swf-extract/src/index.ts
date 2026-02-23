@@ -13,14 +13,17 @@ import extractAvatarAnimations from "./extractions/AvatarAnimations.ts";
 import { PromisePool } from "@supercharge/promise-pool";
 
 export const database = new sqlite3.Database(":memory:");
+export const flags = process.argv.slice(2).filter((argument) => argument.startsWith('-'));
 
-await new Promise<void>((resolve) => {
-    database.serialize(() => {
-        database.exec(readFileSync("./furniture.sql", {encoding: "utf-8"}), () => resolve());
-    })
-});
+if(existsSync("./furniture.sql")) {
+    await new Promise<void>((resolve) => {
+        database.serialize(() => {
+            database.exec(readFileSync("./furniture.sql", {encoding: "utf-8"}), () => resolve());
+        })
+    });
+}
 
-let assetNames = process.argv.slice(2);
+let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith('-'));
 
 (async () => {
     if(process.argv[2] === "roomchatstyles") {

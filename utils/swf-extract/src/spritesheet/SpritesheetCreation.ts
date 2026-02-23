@@ -3,6 +3,7 @@ import NodeSpriteGenerator from "node-sprite-generator";
 import { mkdirSync, statfsSync, writeFileSync } from "fs";
 import type { FurnitureSprites } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureSprites.ts"
 import { downscaleIfNeeded } from "./Downscaling.ts";
+import { flags } from "../index.ts";
 
 export function createSpritesheet(assetName: string, images: string[]): Promise<FurnitureSprites> {
     return new Promise(async (resolve, reject) => {
@@ -13,11 +14,13 @@ export function createSpritesheet(assetName: string, images: string[]): Promise<
             recursive: true
         });
 
-        images.push(...(await Promise.all(
-            images.map(async (imgPath) => {
-                return await downscaleIfNeeded(imgPath);
-            })
-        )))
+        if(flags.some((flag) => flag === "--downscale")) {
+            images.push(...(await Promise.all(
+                images.map(async (imgPath) => {
+                    return await downscaleIfNeeded(imgPath);
+                })
+            )));
+        }
 
         // sprite generator is having issues creating the file
         writeFileSync(outputFile, "");

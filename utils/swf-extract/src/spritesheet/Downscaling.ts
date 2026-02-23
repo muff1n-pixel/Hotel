@@ -1,10 +1,10 @@
-import { Jimp, intToRGBA, rgbaToInt } from "jimp";
+import { Jimp, intToRGBA, rgbaToInt, type JimpInstance } from "jimp";
 import { existsSync } from "fs";
 import path from "path";
 
 type RGBA = [number, number, number, number];
 
-type JimpImage = Jimp;
+type JimpImage = Awaited<ReturnType<typeof Jimp.read>> | JimpInstance;
 
 function getRGBA(img: JimpImage, x: number, y: number): RGBA {
     const { r, g, b, a } = intToRGBA(img.getPixelColor(x, y));
@@ -74,12 +74,14 @@ function getOutlineColorFromEdges(img: JimpImage): RGBA | null {
             const p = getRGBA(img, x, y);
             if (p[3] === 0) continue;
 
-            const bordersTransparent = [
+            const borderEdges: [number, number][] = [
                 [x - 1, y],
                 [x + 1, y],
                 [x, y - 1],
                 [x, y + 1],
-            ].some(([nx, ny]) => {
+            ];
+
+            const bordersTransparent = borderEdges.some(([nx, ny]) => {
                 if (nx < 0 || nx >= w || ny < 0 || ny >= h) return true;
                 return getRGBA(img, nx, ny)[3] === 0;
             });
@@ -124,7 +126,7 @@ export async function downscalePixelArt(
     inputPath: string,
     outputPath: string
 ): Promise<void> {
-    let img = await Jimp.read(inputPath);
+    let img: JimpImage = await Jimp.read(inputPath);
 
     img = trimTransparentEdges(img);
     img = padEven(img);
@@ -174,7 +176,7 @@ export async function downscalePixelArt(
         }
     }
 
-    await result.write(outputPath);
+    await result.write(outputPath as `${string}.${string}`);
 }
 
 export async function downscaleIfNeeded(imgPath: string): Promise<string> {
@@ -187,7 +189,6 @@ export async function downscaleIfNeeded(imgPath: string): Promise<string> {
     const dir = path.dirname(imgPath);
     const downscaledBasename = basename.replace("_64", "_32");
     const downscaledPath = path.join(dir, `${downscaledBasename}.png`);
-
 
     if (existsSync(downscaledPath)) {
         return downscaledPath;

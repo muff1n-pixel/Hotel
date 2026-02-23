@@ -7,7 +7,7 @@ import type { RoomVisualization } from "../../../../packages/game/src/Client/Int
 import type { FurnitureIndex } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureIndex.ts"
 import { XMLParser } from "fast-xml-parser";
 import { readFileSync } from "fs";
-import { database } from "../index.ts";
+import { database, flags } from "../index.ts";
 
 export function getValueAsArray(value: any) {
     if (!value) {
@@ -29,12 +29,13 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
 
     let assets: any[] = document.assets.asset;
 
-    const assetNames = assets.map((a: any) => a["@_name"]);
-    const has32 = assetNames.some((name: string) =>
+    const assetNames = assets.map((asset: any) => asset["@_name"]);
+    const has32Assets = assetNames.some((name: string) =>
         name.includes("_32_") || name.endsWith("_32")
     );
 
-    if (!has32) {
+    if (!has32Assets && flags.some((flag) => flag === "--downscale")) {
+        console.log("Adding downscaled 32 sprites.");
 
         const duplicated: any[] = [];
 
@@ -42,11 +43,20 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
             const clone = { ...asset };
 
             let newName = asset["@_name"].replace(/_64_/g, "_32_");
-            if (newName === asset["@_name"]) newName = asset["@_name"] + "_32";
+
+            if (newName === asset["@_name"]) {
+                newName = asset["@_name"] + "_32";
+            }
+
             clone["@_name"] = newName;
 
-            if (clone["@_x"] !== undefined) clone["@_x"] = Math.round(parseFloat(clone["@_x"]) / 2).toString();
-            if (clone["@_y"] !== undefined) clone["@_y"] = Math.round(parseFloat(clone["@_y"]) / 2).toString();
+            if (clone["@_x"] !== undefined) {
+                clone["@_x"] = Math.round(parseFloat(clone["@_x"]) / 2).toString();
+            }
+
+            if (clone["@_y"] !== undefined) {
+                clone["@_y"] = Math.round(parseFloat(clone["@_y"]) / 2).toString();
+            }
 
             if (clone["@_source"]) {
                 clone["@_source"] = clone["@_source"].replace(/_64_/g, "_32_");
@@ -148,36 +158,37 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
 
     const furnitureData = await createFurnitureData(document["visualizationData"]["@_type"]);
 
-    let visBlocks = getValueAsArray(document["visualizationData"]["graphics"]["visualization"]);
+    let visualizationBlocks = getValueAsArray(document["visualizationData"]["graphics"]["visualization"]);
 
-    const isUseful = (vis: any): boolean => {
-        const directions = getValueAsArray(vis["directions"]?.["direction"]);
-        return directions.some((dir: any) =>
-            getValueAsArray(dir["layer"]).length > 0
+    const isVisualizationUseful = (visualization: any): boolean => {
+        const directions = getValueAsArray(visualization["directions"]?.["direction"]);
+
+        return directions.some((direction: any) =>
+            getValueAsArray(direction["layer"]).length > 0
         );
     };
 
-    const size32Index = visBlocks.findIndex((v: any) => parseInt(v["@_size"]) === 32);
-    const size64Block = visBlocks.find((v: any) => parseInt(v["@_size"]) === 64);
+    const size32Index = visualizationBlocks.findIndex((v: any) => parseInt(v["@_size"]) === 32);
+    const size64Block = visualizationBlocks.find((v: any) => parseInt(v["@_size"]) === 64);
 
-    const hasUseful32 = size32Index !== -1 && isUseful(visBlocks[size32Index]);
+    const hasUseful32 = size32Index !== -1 && isVisualizationUseful(visualizationBlocks[size32Index]);
     const has64 = !!size64Block;
 
-    if (!hasUseful32 && has64) {
+    if (!hasUseful32 && has64 && flags.some((flag) => flag === "--downscale")) {
         const vis32 = structuredClone(size64Block);
         vis32["@_size"] = "32";
 
         if (size32Index !== -1) {
-            visBlocks[size32Index] = vis32;
+            visualizationBlocks[size32Index] = vis32;
         } else {
-            visBlocks = [vis32, ...visBlocks];
+            visualizationBlocks = [vis32, ...visualizationBlocks];
         }
     }
 
     return {
         type: document["visualizationData"]["@_type"],
         placement: furnitureData?.[0]?.placement ?? "floor",
-        visualizations: visBlocks.map((visualization: any) => {
+        visualizations: visualizationBlocks.map((visualization: any) => {
             return {
                 size: parseInt(visualization["@_size"]) as 1 | 32 | 64,
                 layerCount: parseInt(visualization["@_layerCount"]),
