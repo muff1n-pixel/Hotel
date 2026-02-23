@@ -10,11 +10,11 @@ import { readFileSync } from "fs";
 import { database } from "../index.ts";
 
 export function getValueAsArray(value: any) {
-    if(!value) {
+    if (!value) {
         return [];
     }
 
-    if(value.length) {
+    if (value.length) {
         return value;
     }
 
@@ -22,32 +22,53 @@ export function getValueAsArray(value: any) {
 }
 
 export function createAssetsData(collection: SwfExtractionCollection): FurnitureAssets {
-    if(!collection.data.assets) {
-        throw new Error("Assets data doesn't exist.");
-    }
+    if (!collection.data.assets) throw new Error("Assets data doesn't exist.");
 
-    const parser = new XMLParser({
-        ignoreAttributes: false
-    });
-
+    const parser = new XMLParser({ ignoreAttributes: false });
     const document = parser.parse(readFileSync(collection.data.assets, { encoding: "utf-8" }), true);
 
-    return document.assets.asset.map((asset: any) => {
-        return {
-            name: asset["@_name"],
+    let assets: any[] = document.assets.asset;
 
-            x: parseFloat(asset["@_x"]) * -1,
-            y: parseFloat(asset["@_y"]) * -1,
+    const assetNames = assets.map((a: any) => a["@_name"]);
+    const has32 = assetNames.some((name: string) =>
+        name.includes("_32_") || name.endsWith("_32")
+    );
 
-            flipHorizontal: asset["@_flipH"] === '1',
+    if (!has32) {
 
-            source: asset["@_source"]
-        } satisfies FurnitureAsset;
-    });
+        const duplicated: any[] = [];
+
+        for (const asset of assets) {
+            const clone = { ...asset };
+
+            let newName = asset["@_name"].replace(/_64_/g, "_32_");
+            if (newName === asset["@_name"]) newName = asset["@_name"] + "_32";
+            clone["@_name"] = newName;
+
+            if (clone["@_x"] !== undefined) clone["@_x"] = Math.round(parseFloat(clone["@_x"]) / 2).toString();
+            if (clone["@_y"] !== undefined) clone["@_y"] = Math.round(parseFloat(clone["@_y"]) / 2).toString();
+
+            if (clone["@_source"]) {
+                clone["@_source"] = clone["@_source"].replace(/_64_/g, "_32_");
+            }
+
+            duplicated.push(clone);
+        }
+
+        assets = [...assets, ...duplicated];
+    }
+
+    return assets.map((asset: any) => ({
+        name: asset["@_name"],
+        x: parseFloat(asset["@_x"]) * -1,
+        y: parseFloat(asset["@_y"]) * -1,
+        flipHorizontal: asset["@_flipH"] === '1',
+        source: asset["@_source"]
+    }));
 }
 
 export function createAssetsDataFromManifest(collection: SwfExtractionCollection): FigureAssets {
-    if(!collection.data.manifest) {
+    if (!collection.data.manifest) {
         throw new Error("Manifest data for assets doesn't exist.");
     }
 
@@ -69,9 +90,9 @@ export function createAssetsDataFromManifest(collection: SwfExtractionCollection
     }).concat(
         getValueAsArray(document.manifest.library.aliases?.alias).map((alias: any) => {
             const originalAsset = document.manifest.library.assets.asset.find((asset: any) => asset["@_name"] === alias["@_link"]);
-            
+
             const offset = getValueAsArray(originalAsset?.["param"]).find((asset: any) => asset["@_key"] === 'offset')?.["@_value"]?.split(',');
-            
+
             return {
                 name: alias["@_name"],
 
@@ -87,7 +108,7 @@ export function createAssetsDataFromManifest(collection: SwfExtractionCollection
 }
 
 export function createLogicData(collection: SwfExtractionCollection): FurnitureLogic {
-    if(!collection.data.logic) {
+    if (!collection.data.logic) {
         throw new Error("Logic data doesn't exist.");
     }
 
@@ -115,7 +136,7 @@ export function createLogicData(collection: SwfExtractionCollection): FurnitureL
 }
 
 export async function createVisualizationData(collection: SwfExtractionCollection): Promise<FurnitureVisualization> {
-    if(!collection.data.visualization) {
+    if (!collection.data.visualization) {
         throw new Error("Visualization data doesn't exist.");
     }
 
@@ -127,10 +148,36 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
 
     const furnitureData = await createFurnitureData(document["visualizationData"]["@_type"]);
 
+    let visBlocks = getValueAsArray(document["visualizationData"]["graphics"]["visualization"]);
+
+    const isUseful = (vis: any): boolean => {
+        const directions = getValueAsArray(vis["directions"]?.["direction"]);
+        return directions.some((dir: any) =>
+            getValueAsArray(dir["layer"]).length > 0
+        );
+    };
+
+    const size32Index = visBlocks.findIndex((v: any) => parseInt(v["@_size"]) === 32);
+    const size64Block = visBlocks.find((v: any) => parseInt(v["@_size"]) === 64);
+
+    const hasUseful32 = size32Index !== -1 && isUseful(visBlocks[size32Index]);
+    const has64 = !!size64Block;
+
+    if (!hasUseful32 && has64) {
+        const vis32 = structuredClone(size64Block);
+        vis32["@_size"] = "32";
+
+        if (size32Index !== -1) {
+            visBlocks[size32Index] = vis32;
+        } else {
+            visBlocks = [vis32, ...visBlocks];
+        }
+    }
+
     return {
         type: document["visualizationData"]["@_type"],
         placement: furnitureData?.[0]?.placement ?? "floor",
-        visualizations: document["visualizationData"]["graphics"]["visualization"].map((visualization: any) => {
+        visualizations: visBlocks.map((visualization: any) => {
             return {
                 size: parseInt(visualization["@_size"]) as 1 | 32 | 64,
                 layerCount: parseInt(visualization["@_layerCount"]),
@@ -153,9 +200,9 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                         layers: getValueAsArray(direction["layer"]).map((layer: any) => {
                             return {
                                 id: parseInt(layer["@_id"]),
-                                x: (layer["@_x"])?(parseInt(layer["@_x"])):(undefined),
-                                y: (layer["@_y"])?(parseInt(layer["@_y"])):(undefined),
-                                zIndex: (layer["@_z"])?(parseInt(layer["@_z"])):(undefined),
+                                x: (layer["@_x"]) ? parseInt(layer["@_x"]) : undefined,
+                                y: (layer["@_y"]) ? parseInt(layer["@_y"]) : undefined,
+                                zIndex: (layer["@_z"]) ? parseInt(layer["@_z"]) : undefined,
                             };
                         })
                     } satisfies FurnitureVisualization["visualizations"][0]["directions"][0]
@@ -197,8 +244,9 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
     } satisfies FurnitureVisualization;
 }
 
+
 export function createIndexData(collection: SwfExtractionCollection): FurnitureIndex {
-    if(!collection.data.index) {
+    if (!collection.data.index) {
         throw new Error("Index data doesn't exist.");
     }
 
@@ -216,7 +264,7 @@ export function createIndexData(collection: SwfExtractionCollection): FurnitureI
 }
 
 export function createRoomVisualizationData(collection: SwfExtractionCollection): RoomVisualization {
-    if(!collection.data.visualization) {
+    if (!collection.data.visualization) {
         console.log(collection.data);
         throw new Error("Room visualization data doesn't exist.");
     }
@@ -300,13 +348,13 @@ export async function createFurnitureData(assetName: string) {
 
     let furniTypes = document["furnidata"]["roomitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
     let isWallFurniture = false;
-    
-    if(!furniTypes.length) {
+
+    if (!furniTypes.length) {
         furniTypes = document["furnidata"]["wallitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
         isWallFurniture = true;
     }
 
-    if(!furniTypes.length) {
+    if (!furniTypes.length) {
         console.error("Failed to find furni type in furnidata for " + assetName);
 
         return null;
@@ -323,9 +371,9 @@ export async function createFurnitureData(assetName: string) {
             });
         });
 
-        let customParams: unknown[] | null = (furniType["customparams"])?(furniType["customparams"].toString().split(',').map((value: string) => parseFloat(value))):(null);
+        let customParams: unknown[] | null = (furniType["customparams"]) ? (furniType["customparams"].toString().split(',').map((value: string) => parseFloat(value))) : (null);
 
-        if(result?.interaction_type === "vendingmachine" && result?.vending_ids) {
+        if (result?.interaction_type === "vendingmachine" && result?.vending_ids) {
             customParams = result.vending_ids.split(',').map((id: string) => parseInt(id));
         }
 
@@ -333,10 +381,10 @@ export async function createFurnitureData(assetName: string) {
             name: furniType["name"],
             description: hasDescription && furniType["description"],
 
-            color: (color)?(parseInt(color)):(undefined),
+            color: (color) ? (parseInt(color)) : (undefined),
 
-            placement: (isWallFurniture)?("wall"):("floor"),
-            defaultDirection: (furniType["defaultdir"])?(parseInt(furniType["defaultdir"])):(undefined),
+            placement: (isWallFurniture) ? ("wall") : ("floor"),
+            defaultDirection: (furniType["defaultdir"]) ? (parseInt(furniType["defaultdir"])) : (undefined),
 
             category: furniType["category"],
             interactionType: result?.interaction_type ?? "default",

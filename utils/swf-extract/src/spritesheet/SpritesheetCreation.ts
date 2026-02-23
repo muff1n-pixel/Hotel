@@ -2,15 +2,22 @@ import path from "path";
 import NodeSpriteGenerator from "node-sprite-generator";
 import { mkdirSync, statfsSync, writeFileSync } from "fs";
 import type { FurnitureSprites } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureSprites.ts"
+import { downscaleIfNeeded } from "./Downscaling.ts";
 
 export function createSpritesheet(assetName: string, images: string[]): Promise<FurnitureSprites> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const outputPath = path.join("temp", assetName, "spritesheets");
         const outputFile = path.join(outputPath, `${assetName}.png`);
 
         mkdirSync(outputPath, {
             recursive: true
         });
+
+        images.push(...(await Promise.all(
+            images.map(async (imgPath) => {
+                return await downscaleIfNeeded(imgPath);
+            })
+        )))
 
         // sprite generator is having issues creating the file
         writeFileSync(outputFile, "");
@@ -23,7 +30,7 @@ export function createSpritesheet(assetName: string, images: string[]): Promise<
             layout: "packed",
             spritePath: outputFile,
             stylesheet: (data) => {
-                for(const image of data.images) {
+                for (const image of data.images) {
                     const filePath = (image as any).path as string;
                     const fileName = path.basename(filePath, ".png");
 
@@ -37,7 +44,7 @@ export function createSpritesheet(assetName: string, images: string[]): Promise<
                 }
 
                 const interval = setInterval(() => {
-                    if(statfsSync(outputFile).bsize > 0) {
+                    if (statfsSync(outputFile).bsize > 0) {
                         clearInterval(interval);
 
                         setTimeout(() => {
@@ -47,7 +54,7 @@ export function createSpritesheet(assetName: string, images: string[]): Promise<
                 }, 100);
             },
         }, function (error) {
-            if(error) {
+            if (error) {
                 reject(error.message);
             }
 
