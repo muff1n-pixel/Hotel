@@ -1,6 +1,5 @@
 export interface UserInterface {
     id: string;
-    accessToken: string;
     name: string;
     email: string;
     credits: number,

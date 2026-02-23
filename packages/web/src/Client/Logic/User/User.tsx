@@ -2,7 +2,6 @@ import { UserInterface } from "./UserInterface";
 
 export default class User implements UserInterface {
     declare id: string;
-    declare accessToken: string;
     declare name: string;
     declare email: string;
     declare credits: number;
@@ -18,7 +17,6 @@ export default class User implements UserInterface {
 
     constructor(data: UserInterface) {
         this.id = data.id;
-        this.accessToken = data.accessToken;
         this.name = data.name;
         this.email = data.email;
         this.credits = data.credits;
