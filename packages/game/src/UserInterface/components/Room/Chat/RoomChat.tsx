@@ -117,18 +117,23 @@ export default function RoomChat() {
             let position: RoomPosition;
 
             if(event.data.type === "user") {
-               const user = room.getUserById(event.data.userId);
+                const user = room.getUserById(event.data.userId);
 
-               name = user.data.name;
-               figureConfiguration = user.data.figureConfiguration;
-               position = user.data.position;
+                name = user.data.name;
+                figureConfiguration = user.data.figureConfiguration;
+
+                if(!user.item.position) {
+                    return;
+                }
+                
+                position = user.item.position;
             }
             else if(event.data.type === "bot") {
-               const bot = room.getBotById(event.data.botId);
+                const bot = room.getBotById(event.data.botId);
 
-               name = bot.data.name;
-               figureConfiguration = bot.data.figureConfiguration;
-               position = bot.data.position;
+                name = bot.data.name;
+                figureConfiguration = bot.data.figureConfiguration;
+                position = bot.data.position;
             }
             else {
                 throw new Error("Unhandled room chat message type.");
