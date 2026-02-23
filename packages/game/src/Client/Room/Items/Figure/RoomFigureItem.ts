@@ -15,10 +15,12 @@ export default class RoomFigureItem extends RoomItem {
 
     public typing: boolean = false;
 
-    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition) {
+    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | null) {
         super(roomRenderer, "figure");
 
-        this.setPosition(position);
+        if(position) {
+            this.setPosition(position);
+        }
 
         this.render();
     }

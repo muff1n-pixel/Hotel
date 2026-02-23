@@ -6,7 +6,7 @@ build/game/*
 !build/web/
 build/web/*
 
-!build/**/index.html
+!build/game/index.html
 
 node_modules/
 

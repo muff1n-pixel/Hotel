@@ -1,3 +1,4 @@
+import { UserBotData } from "../../../Interfaces/Room/RoomBotData.js";
 import { RoomFurnitureData } from "../../../Interfaces/Room/RoomFurnitureData.js";
 import { RoomStructure } from "../../../Interfaces/Room/RoomStructure.js";
 import { RoomType } from "../../../Interfaces/Room/RoomType.js";
@@ -27,6 +28,7 @@ export type LoadRoomEventData = {
     structure: RoomStructure;
     users: RoomUserData[];
     furnitures: RoomFurnitureData[];
+    bots: UserBotData[];
     
     hasRights: boolean;
 };

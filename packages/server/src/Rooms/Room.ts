@@ -8,10 +8,15 @@ import { RoomStructureEventData } from "@shared/Communications/Responses/Rooms/R
 import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
 import { RoomInformationData } from "@shared/Communications/Responses/Rooms/LoadRoomEventData.js";
 import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
+import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
+import RoomBot from "./Bots/RoomBot.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
+    public readonly bots: RoomBot[] = [];
     public readonly furnitures: RoomFurniture[] = [];
+
+    public readonly floorplan: RoomFloorplan;
 
     public outgoingEvents: OutgoingEvent[] = [];
 
@@ -20,6 +25,9 @@ export default class Room {
 
     constructor(public readonly model: RoomModel) {
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
+        this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
+
+        this.floorplan = new RoomFloorplan(this);
 
         this.requestActionsFrame();
     }
@@ -48,8 +56,22 @@ export default class Room {
         return furniture;
     }
 
+    public getBot(userBotId: string) {
+        const bot = this.bots.find((bot) => bot.model.id === userBotId);
+
+        if(!bot) {
+            throw new Error("Bot does not exist in room.");
+        }
+
+        return bot;
+    }
+
     public getRoomUserAtPosition(position: Omit<RoomPosition, "depth">) {
         return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
+    }
+
+    public getBotAtPosition(position: Omit<RoomPosition, "depth">) {
+        return this.bots.find((bot) => bot.model.position.row === position.row && bot.model.position.column === position.column);
     }
 
     public getRoomUser(user: User) {
@@ -182,6 +204,8 @@ export default class Room {
 
     public async setStructure(structure: RoomStructure) {
         await this.model.update({ structure });
+
+        this.floorplan.regenerateStaticGrid();
 
         this.sendRoomEvent(new OutgoingEvent<RoomStructureEventData>("RoomStructureEvent", {
             structure: this.model.structure

@@ -28,6 +28,8 @@ import { initializeServerStatsModel } from "./Models/Server/ServerStatsModel.js"
 import { initializeWebArticleModel } from "./Models/Web/Article/WebArticleModel.js";
 import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArticleLikeModel.js";
 import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
+import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
+import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -40,6 +42,7 @@ export async function initializeModels() {
   initializeShopPageModel(sequelize);
   initializeShopPageFurnitureModel(sequelize);
   initializeShopPageFeatureModel(sequelize);
+  initializeShopPageBotModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);
@@ -56,6 +59,7 @@ export async function initializeModels() {
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
 
+  initializeUserBotModel(sequelize);
   initializeUserFurnitureModel(sequelize);
   initializeRoomChatStyleModel(sequelize);
 

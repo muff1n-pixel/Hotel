@@ -6,6 +6,10 @@ import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaul
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
 
+export type FurnitureRenderToCanvasOptions = {
+    spritesWithoutInkModes?: boolean;
+};
+
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
     imageData: ImageData;
@@ -32,7 +36,20 @@ export default class Furniture {
 
     public readonly renderer: FurnitureRenderer;
 
-    constructor(public readonly type: string, public size: number, public direction: number | undefined = undefined, public animation: number = 0, public color: number | null = null) {
+    public _animation: number = 0;
+
+    public get animation() {
+        return this._animation;
+    }
+
+    public set animation(animation: number) {
+        this._animation = animation;
+        this.frame = 0;
+    }
+
+    constructor(public readonly type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | null = null) {
+        this.animation = animation;
+
         if((this.type === "wallpaper" || this.type === "floor") && color !== 0) {
             this.renderer = new FurnitureRoomContentRenderer(this.type);
         }
@@ -74,7 +91,7 @@ export default class Furniture {
         return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
     }
 
-    public async renderToCanvas() {
+    public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
@@ -91,7 +108,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.renderToCanvas(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
     }
 
     public getVisualizationData(data: FurnitureData) {

@@ -14,6 +14,7 @@ import RoomFurnitureVendingMachineLogic from "./Logic/RoomFurnitureVendingMachin
 import RoomFurnitureDiceLogic from "./Logic/RoomFurnitureDiceLogic.js";
 import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLogic.js";
 import RoomUser from "../Users/RoomUser.js";
+import RoomFurnitureFortunaLogic from "./Logic/RoomFurnitureFortunaLogic.js";
 
 export default class RoomFurniture {
     public preoccupiedByActionHandler: boolean = false;
@@ -35,12 +36,13 @@ export default class RoomFurniture {
 
         room.furnitures.push(roomFurniture);
 
+        room.floorplan.updatePosition(position, undefined, roomFurniture.getDimensions());
+
         room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureAdded: [
                 roomFurniture.getFurnitureData()
             ]
         }));
-
 
         return roomFurniture;
     }
@@ -60,6 +62,8 @@ export default class RoomFurniture {
 
     public async pickup() {
         this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
+
+        this.room.floorplan.updatePosition(this.model.position, undefined, this.getDimensions());
 
         this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureRemoved: [
@@ -107,6 +111,18 @@ export default class RoomFurniture {
         return [];
     }
 
+    public getDimensions() {
+        return (this.model.direction === 0 || this.model.direction === 4)?({
+            row: this.model.furniture.dimensions.column,
+            column: this.model.furniture.dimensions.row,
+            depth: this.model.furniture.dimensions.depth,
+        }):({
+            row: this.model.furniture.dimensions.row,
+            column: this.model.furniture.dimensions.column,
+            depth: this.model.furniture.dimensions.depth,
+        });
+    }
+
     public isPositionInside(position: Omit<RoomPosition, "depth">) {
         if(this.model.furniture.placement !== "floor") {
             return false;
@@ -120,15 +136,7 @@ export default class RoomFurniture {
             return false;
         }
 
-        const dimensions = (this.model.direction === 0 || this.model.direction === 4)?({
-            row: this.model.furniture.dimensions.column,
-            column: this.model.furniture.dimensions.row,
-            depth: this.model.furniture.dimensions.depth,
-        }):({
-            row: this.model.furniture.dimensions.row,
-            column: this.model.furniture.dimensions.column,
-            depth: this.model.furniture.dimensions.depth,
-        });
+        const dimensions = this.getDimensions();
 
         if(this.model.position.row + dimensions.row <= position.row) {
             return false;
@@ -171,6 +179,9 @@ export default class RoomFurniture {
 
                 case "roller":
                     return this.category = new RoomFurnitureRollerLogic(this);
+
+                case "fortuna":
+                    return this.category = new RoomFurnitureFortunaLogic(this);
             }
 
             if(!this.category) {
@@ -219,10 +230,14 @@ export default class RoomFurniture {
         }
     }
 
-    public async setPosition(position: RoomPosition) {
+    public async setPosition(position: RoomPosition, save: boolean = true) {
+        const previousPosition = this.model.position;
+
         this.model.position = position;
 
-        if(this.model.changed()) {
+        this.room.floorplan.updatePosition(position, previousPosition, this.getDimensions());
+
+        if(save && this.model.changed()) {
             await this.model.save();
 
             this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {

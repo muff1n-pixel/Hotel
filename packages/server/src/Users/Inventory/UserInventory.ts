@@ -8,6 +8,8 @@ import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFu
 import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
+import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
+import { UserBotsEventData } from "@shared/Communications/Responses/Inventory/UserBotsEventData.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -26,6 +28,22 @@ export default class UserInventory {
                     model: FurnitureModel,
                     as: "furniture"
                 },
+                {
+                    model: UserModel,
+                    as: "user"
+                }
+            ]
+        });
+    }
+
+    public async getBotById(userBotId: string) {
+        return await UserBotModel.findOne({
+            where: {
+                id: userBotId,
+                userId: this.user.model.id,
+                roomId: null
+            },
+            include: [
                 {
                     model: UserModel,
                     as: "user"
@@ -105,6 +123,22 @@ export default class UserInventory {
         }));
     }
 
+    public async addBot(userBot: UserBotModel) {
+        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
+            updatedUserBots: [
+                userBot,
+            ]
+        }));
+    }
+
+    public async removeBot(userBot: UserBotModel) {
+        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
+            deletedUserBots: [
+                userBot,
+            ]
+        }));
+    }
+
     public async sendFurniture() {
         const userFurnitures = await UserFurnitureModel.findAll({
             where: {
@@ -146,6 +180,20 @@ export default class UserInventory {
     
         this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
             allUserFurniture
+        }));
+    }
+
+    public async sendBots() {
+        const userBots = await UserBotModel.findAll({
+            where: {
+                userId: this.user.model.id,
+                roomId: null
+            },
+            order: [['updatedAt','DESC']]
+        });
+
+        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
+            allUserBots: userBots
         }));
     }
 

@@ -110,8 +110,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     offsetPosition.depth -= this.roomFurniture.model.furniture.dimensions.depth;
                 }
 
-                furniture.model.position = offsetPosition;
-        
+                furniture.setPosition(offsetPosition, false);
+                
                 await furniture.model.save();
         
                 outgoingEvents.push(new OutgoingEvent<MoveRoomFurnitureEventData>("MoveRoomFurnitureEvent", {

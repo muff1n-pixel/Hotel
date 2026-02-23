@@ -3,6 +3,7 @@ import ShopDefaultPage from "./ShopDefaultPage";
 import ShopFeaturesPage from "./ShopFeaturesPage";
 import { ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
 import ShopTrophiesPage from "./ShopTrophiesPage";
+import ShopBotsPage from "./ShopBotsPage";
 
 export type ShopPageProps = {
     editMode?: boolean;
@@ -17,6 +18,9 @@ export default function ShopPage({ editMode, page, setActiveShopPage }: ShopPage
             
         case "trophies":
             return (<ShopTrophiesPage key={page.id} editMode={editMode} page={page}/>);
+            
+        case "bots":
+            return (<ShopBotsPage key={page.id} editMode={editMode} page={page}/>);
 
         case "features":
             return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} setActiveShopPage={setActiveShopPage}/>);

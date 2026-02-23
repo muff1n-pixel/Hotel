@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
 import Figure from "@Client/Figure/Figure";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
@@ -8,13 +8,15 @@ export type FigureImageProps = {
     figureConfiguration: FigureConfiguration;
     direction: number;
     cropped?: boolean;
+    headOnly?: boolean;
+    style?: CSSProperties;
 }
 
-export default function FigureImage({ actions, cropped = true, figureConfiguration, direction }: FigureImageProps) {
+export default function FigureImage({ actions, headOnly, cropped = true, figureConfiguration, direction, style }: FigureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
-        const furnitureRenderer = new Figure(figureConfiguration, direction, actions);
+        const furnitureRenderer = new Figure(figureConfiguration, direction, actions, headOnly);
 
         furnitureRenderer.renderToCanvas(Figure.figureWorker, 0, cropped).then(({ figure }) => {
             setImage(figure.image);
@@ -26,6 +28,6 @@ export default function FigureImage({ actions, cropped = true, figureConfigurati
     }
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style}/>
     );
 }

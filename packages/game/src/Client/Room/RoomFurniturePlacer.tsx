@@ -4,6 +4,10 @@ import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomInstance from "@Client/Room/RoomInstance";
+import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import Figure from "@Client/Figure/Figure";
+import RoomItem from "@Client/Room/Items/RoomItem";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -29,7 +33,19 @@ export default class RoomFurniturePlacer {
         return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
     }
 
-    constructor(private readonly roomInstance: RoomInstance, private readonly roomFurnitureItem: RoomFurnitureItem, private readonly temporaryFurniture: boolean = false) {
+    public static fromFigureConfiguration(roomInstance: RoomInstance, figureConfiguration: FigureConfiguration) {
+        const roomFurnitureItem = new RoomFigureItem(
+            roomInstance.roomRenderer,
+            new Figure(figureConfiguration, 2),
+            null
+        );
+
+        roomFurnitureItem.type = "bot";
+
+        return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
+    }
+
+    constructor(private readonly roomInstance: RoomInstance, private readonly roomFurnitureItem: RoomItem, private readonly temporaryFurniture: boolean = false) {
         if(this.roomInstance.roomRenderer.furniturePlacer) {
             this.roomInstance.roomRenderer.furniturePlacer.destroy();
         }
@@ -42,7 +58,7 @@ export default class RoomFurniturePlacer {
             };
         }
 
-        if(roomFurnitureItem.furnitureRenderer.direction) {
+        if((roomFurnitureItem instanceof RoomFurnitureItem) && roomFurnitureItem.furnitureRenderer.direction) {
             this.originalDirection = roomFurnitureItem.furnitureRenderer.direction;
         }
 
@@ -75,18 +91,35 @@ export default class RoomFurniturePlacer {
         this.iconElement.style.pointerEvents = "none";
         this.iconElement.style.transform = "translate(-50%, -50%)";
 
-        new Furniture(this.roomFurnitureItem.furnitureRenderer.type, 1, 0, 0, this.roomFurnitureItem.furnitureRenderer.color).renderToCanvas().then((image) => {
-            this.iconElement.width = image.width;
-            this.iconElement.height = image.height;
+        if(this.roomFurnitureItem instanceof RoomFurnitureItem) {
+            new Furniture(this.roomFurnitureItem.furnitureRenderer.type, 1, 0, 0, this.roomFurnitureItem.furnitureRenderer.color).renderToCanvas().then((image) => {
+                this.iconElement.width = image.width;
+                this.iconElement.height = image.height;
 
-            const context = this.iconElement.getContext("2d");
+                const context = this.iconElement.getContext("2d");
 
-            if(!context) {
-                throw new ContextNotAvailableError();
-            }
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
 
-            context.drawImage(image, 0, 0);
-        });
+                context.drawImage(image, 0, 0);
+            });
+        }
+        else if(this.roomFurnitureItem instanceof RoomFigureItem) {
+            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(Figure.figureWorker, 0, true).then((result) => {
+                this.iconElement.width = result.figure.image.width;
+                this.iconElement.height = result.figure.image.height;
+
+                const context = this.iconElement.getContext("2d");
+
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
+
+                context.drawImage(result.figure.image, 0, 0);
+            })
+        }
+
         
         this.roomInstance.roomRenderer.parent.appendChild(this.iconElement);
     }
@@ -96,15 +129,26 @@ export default class RoomFurniturePlacer {
             return;
         }
 
-        if(this.roomFurnitureItem.furnitureRenderer.placement !== "floor") {
-            return;
+        if((this.roomFurnitureItem instanceof RoomFurnitureItem)) {
+            if(this.roomFurnitureItem.furnitureRenderer.placement !== "floor") {
+                return;
+            }
+
+            if(event.deltaY < 0) {
+                const nextDirection = this.roomFurnitureItem.furnitureRenderer.getNextDirection();
+
+                if(this.roomFurnitureItem.furnitureRenderer.direction !== nextDirection) {
+                    this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
+                }
+            }
         }
+        else if((this.roomFurnitureItem instanceof RoomFigureItem)) {
+            if(event.deltaY < 0) {
+                const nextDirection = (this.roomFurnitureItem.figureRenderer.direction + 1) % 8;
 
-        if(event.deltaY < 0) {
-            const nextDirection = this.roomFurnitureItem.furnitureRenderer.getNextDirection();
-
-            if(this.roomFurnitureItem.furnitureRenderer.direction !== nextDirection) {
-                this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
+                if(this.roomFurnitureItem.figureRenderer.direction !== nextDirection) {
+                    this.roomFurnitureItem.figureRenderer.direction = nextDirection;
+                }
             }
         }
     }
@@ -114,24 +158,46 @@ export default class RoomFurniturePlacer {
             return;
         }
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === this.roomFurnitureItem.furnitureRenderer.placement);
+        const isFurniture = this.roomFurnitureItem instanceof RoomFurnitureItem;
+
+        const isFloorPlacement = (
+            (isFurniture)?(
+                this.roomFurnitureItem.furnitureRenderer.placement === "floor"
+            ):(
+                true
+            )
+        );
+
+        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === "floor" && isFloorPlacement);
 
         if(entity?.position) {
-            const isPositionInsideStructure = (this.roomFurnitureItem.furnitureRenderer.placement === "wall" || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
-            const isPositionInsideUser = (this.roomFurnitureItem.furnitureRenderer.placement === "floor" && (entity && this.roomInstance.roomRenderer.isPositionInsideUser(entity.position, this.roomFurnitureItem.furnitureRenderer.getDimensions())));
+            const dimensions = (
+                (isFurniture)?(
+                    this.roomFurnitureItem.furnitureRenderer.getDimensions()
+                ):(
+                    {
+                        row: 1,
+                        column: 1,
+                        depth: 1
+                    }
+                )
+            );
 
-            if(entity && isPositionInsideStructure && !isPositionInsideUser) {
-                const furnitureAtPosition = (this.roomFurnitureItem.furnitureRenderer.placement === "floor") && this.roomInstance.getFurnitureAtUpmostPosition(
+            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, dimensions)));
+            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(entity.position, dimensions, this.roomFurnitureItem)));
+
+            if(entity && isPositionInsideStructure && !isPositionInsideFigure) {
+                const furnitureAtPosition = (isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
                     {
                         row: entity.position.row,
                         column: entity.position.column
                     },
-                    this.roomFurnitureItem.furnitureRenderer.getDimensions(),
-                    this.roomFurnitureItem.id
+                    dimensions,
+                    (isFurniture)?(this.roomFurnitureItem.id):(undefined)
                 );
 
                 if(!furnitureAtPosition || furnitureAtPosition.data.furniture.flags.stackable) {
-                    if(entity.position.direction !== undefined) {
+                    if(isFurniture && entity.position.direction !== undefined) {
                         this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
                     }
 
@@ -163,15 +229,37 @@ export default class RoomFurniturePlacer {
             return;
         }
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === this.roomFurnitureItem.furnitureRenderer.placement);
+        const isFurniture = this.roomFurnitureItem instanceof RoomFurnitureItem;
+
+        const isFloorPlacement = (
+            (isFurniture)?(
+                this.roomFurnitureItem.furnitureRenderer.placement === "floor"
+            ):(
+                true
+            )
+        );
+
+        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === "floor" && isFloorPlacement);
         
-        const furnitureAtPosition = (entity?.position && this.roomFurnitureItem.furnitureRenderer.placement === "floor") && this.roomInstance.getFurnitureAtUpmostPosition(
+        const dimensions = (
+            (isFurniture)?(
+                this.roomFurnitureItem.furnitureRenderer.getDimensions()
+            ):(
+                {
+                    row: 1,
+                    column: 1,
+                    depth: 1
+                }
+            )
+        );
+        
+        const furnitureAtPosition = (entity?.position && isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
             {
                 row: entity.position.row,
                 column: entity.position.column
             },
-            this.roomFurnitureItem.furnitureRenderer.getDimensions(),
-            this.roomFurnitureItem.id
+            dimensions,
+            (isFurniture)?(this.roomFurnitureItem.id):(undefined)
         );
 
         const position = (entity?.position)?({
@@ -185,21 +273,26 @@ export default class RoomFurniturePlacer {
                this.roomFurnitureItem.position = this.originalPosition;
             }
 
-            if(this.originalDirection) {
+            if(this.originalDirection && isFurniture) {
                this.roomFurnitureItem.furnitureRenderer.direction = this.originalDirection;
             }
 
             this.onCancel?.();
         }
         else {
-            this.onPlace?.(position, this.roomFurnitureItem.furnitureRenderer.direction!);
+            if(isFurniture) {
+                this.onPlace?.(position, this.roomFurnitureItem.furnitureRenderer.direction!);
+            }
+            else if(this.roomFurnitureItem instanceof RoomFigureItem) {
+                this.onPlace?.(position, this.roomFurnitureItem.figureRenderer.direction!);
+            }
         }
 
         this.stopPlacing();
     }
 
     public startPlacing(onPlace: (position: RoomPosition, direction: number) => void, onCancel: () => void) {
-        if(this.roomFurnitureItem.furnitureRenderer.type === "wallpaper" || this.roomFurnitureItem.furnitureRenderer.type === "floor") {
+        if(this.roomFurnitureItem instanceof RoomFurnitureItem && (this.roomFurnitureItem.furnitureRenderer.type === "wallpaper" || this.roomFurnitureItem.furnitureRenderer.type === "floor")) {
             return;
         }
         

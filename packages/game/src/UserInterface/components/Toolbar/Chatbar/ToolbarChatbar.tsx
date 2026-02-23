@@ -10,24 +10,32 @@ export default function ToolbarChatbar() {
 
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
+    const [typing, setTyping] = useState(false);
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            webSocketClient.send<SetTypingEventData>("SetTypingEvent", {
-                typing: (value.length)?(true):(false)
-            });
-        }, 500);
+        if(value.length && !typing) {
+            setTyping(true);
 
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [value]);
+            return;
+        }
+
+        if(!value.length && typing) {
+            setTyping(false);
+        }
+    }, [value, typing]);
+
+    useEffect(() => {
+        webSocketClient.send<SetTypingEventData>("SetTypingEvent", {
+            typing: (value.length)?(true):(false)
+        });
+    }, [typing]);
 
     const handleSubmit = useCallback(() => {
         if(!value.length) {
             return;
         }
 
+        setTyping(false);
         setValue("");
 
         if(value[0] === ':' || value[0] === '/') {

@@ -1,6 +1,6 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
@@ -30,9 +30,24 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             if(animationLayer?.frameSequence?.length) {
                 let frameSequenceIndex = frame % animationLayer.frameSequence.length;
+                const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
 
                 if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
-                    frameSequenceIndex = Math.floor((frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
+                    const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
+
+                    if(frame >= maxFrames && loopCount !== 0) {
+                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
+                    }
+                    else {
+                        frameSequenceIndex = Math.floor((frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
+                    }
+                }
+                else {
+                    const maxFrames = animationLayer.frameSequence.length * loopCount;
+
+                    if(frame >= maxFrames && loopCount !== 0) {
+                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
+                    }
                 }
 
                 if(!animationLayer?.frameSequence[frameSequenceIndex]) {
@@ -98,16 +113,16 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             let x = assetData.x;
             let y = assetData.y;
 
+            if(assetData.flipHorizontal) {
+                x = (assetData.x * -1) - spriteData.width;
+            }
+
             if(directionLayerData?.x !== undefined) {
                 x += directionLayerData.x;
             }
             
             if(directionLayerData?.y !== undefined) {
                 y += directionLayerData.y;
-            }
-
-            if(assetData.flipHorizontal) {
-                x = (assetData.x * -1) - spriteData.width;
             }
 
             const assetSprite: FurnitureRendererSprite = {
@@ -120,7 +135,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 ink: getGlobalCompositeModeFromInk(layerData?.ink),
                 tag: layerData?.tag,
 
-                zIndex: directionLayerData?.zIndex ?? layerData?.zIndex ?? 0,
+                zIndex: directionLayerData?.zIndex ?? layerData?.zIndex ?? layer,
                 alpha: layerData?.alpha,
                 ignoreMouse: layerData?.ignoreMouse
             };
@@ -133,17 +148,24 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return sprites;
     }
     
-    public async renderToCanvas(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
-        const sprites = await this.render(data, direction, size, animation, color, frame);
+    public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
+        const immutableSprites = await this.render(data, direction, size, animation, color, frame);
+
+        const sprites = immutableSprites.map((sprite) => {
+            return {...sprite}
+        });
         
         let minimumX = 0, minimumY = 0, maximumWidth = 0, maximumHeight = 0;
 
         if(sprites.length === 1) {
-            minimumX = Math.abs(sprites[0].x);
-            minimumY = sprites[0].y * -1;
+            minimumX = 0;
+            minimumY = 0;
 
-            maximumWidth = sprites[0].image.width - minimumX;
-            maximumHeight = sprites[0].image.height - minimumY;
+            maximumWidth = sprites[0].image.width;
+            maximumHeight = sprites[0].image.height;
+
+            sprites[0].x = 0;
+            sprites[0].y = 0;
         }
         else {
             for(const sprite of sprites) {
@@ -189,6 +211,26 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
 
             context.restore();
+        }
+
+        if(options?.spritesWithoutInkModes) {
+            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light", "lighter" ].includes(sprite.ink));
+
+            if(spritesWithoutInkModes.length > 0 && spritesWithoutInkModes.length !== sprites.length) {
+                const maskCanvas = new OffscreenCanvas(canvas.width, canvas.height);
+                const maskContext = maskCanvas.getContext("2d");
+
+                if(!maskContext) {
+                    throw new ContextNotAvailableError();
+                }
+
+                for(const sprite of spritesWithoutInkModes) {
+                    maskContext.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
+                }
+
+                context.globalCompositeOperation = "destination-in";
+                context.drawImage(maskCanvas, 0, 0);
+            }
         }
 
         return await createImageBitmap(canvas);

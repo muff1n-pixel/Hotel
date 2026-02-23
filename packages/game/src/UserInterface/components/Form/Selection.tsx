@@ -1,14 +1,14 @@
-import { Key, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 export type SelectionProps = {
-    value: Key;
+    value: any;
     
     items: {
-        value: Key;
-        label: string;
+        value: any;
+        label: ReactNode;
     }[];
 
-    onChange: (value: Key) => void;
+    onChange: (value: any) => void;
 }
 
 export default function Selection({ value, items, onChange }: SelectionProps) {

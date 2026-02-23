@@ -144,6 +144,28 @@ export default class RoomFloorPlanEditor {
 
             this.updateDepth(depth);
         }
+        else if(this.tool === "enter_tile") {
+            const value = this.data?.structure.grid[coordinate.row][coordinate.column];
+
+            if(value === undefined || value === 'X') {
+                this.updateStructure(coordinate.row, coordinate.column, '0');
+            }
+
+            if(clientInstance.roomInstance.value) {
+                const upmostFurniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(coordinate);
+
+                if(upmostFurniture && !upmostFurniture.data.furniture.flags.walkable) {
+                    return;
+                }
+            }
+
+            this.data.structure.door = {
+                ...coordinate,
+                direction: this.data.structure.door?.direction ?? 2
+            };
+
+            this.update(this.data);
+        }
 
         if(clientInstance.roomInstance.value) {
             const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside(coordinate, { row: 1, column: 1, depth: 1 }));
@@ -174,20 +196,6 @@ export default class RoomFloorPlanEditor {
                     this.updateStructure(coordinate.row, coordinate.column, RoomFloorplanHelper.getDepthCharacter(depth - 1));
                 }
             }
-        }
-        else if(this.tool === "enter_tile") {
-            const value = this.data?.structure.grid[coordinate.row][coordinate.column];
-
-            if(value === undefined || value === 'X') {
-                this.updateStructure(coordinate.row, coordinate.column, '0');
-            }
-
-            this.data.structure.door = {
-                ...coordinate,
-                direction: this.data.structure.door?.direction ?? 2
-            };
-
-            this.update(this.data);
         }
     }
 

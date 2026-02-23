@@ -21,6 +21,7 @@ export default class RoomUser {
     public direction: number;
     public actions: string[] = [];
     public typing: boolean = false;
+    public teleporting: boolean = false;
 
     public path?: Omit<RoomPosition, "depth">[] | undefined;
     public walkThroughFurniture?: boolean | undefined;
@@ -35,6 +36,8 @@ export default class RoomUser {
             column: room.model.structure.door?.column ?? 0,
             depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
         };
+
+        this.user.room.floorplan.updatePosition(this.position);
 
         this.direction = room.model.structure.door?.direction ?? 2;
 
@@ -51,8 +54,10 @@ export default class RoomUser {
                 information: this.room.getInformationData(),
                 
                 structure: this.room.model.structure,
+                
                 users: this.room.users.map((user) => user.getRoomUserData()),
                 furnitures: this.room.furnitures.map((furniture) => furniture.getFurnitureData()),
+                bots: this.room.bots.map((bot) => bot.getBotData()),
 
                 hasRights: this.hasRights()
             }),
@@ -96,6 +101,8 @@ export default class RoomUser {
             return;
         }
 
+        // TODO: use room floor plan
+
         const user = this.room.getRoomUserAtPosition(nextPosition);
 
         if(user && user.user.model.id !== this.user.model.id) {
@@ -136,8 +143,12 @@ export default class RoomUser {
             to: position
         }));
 
+        const previousPosition = this.position;
+
         this.position = position;
         this.path!.splice(0, 1);
+
+        this.room.floorplan.updatePosition(position, previousPosition);
     }
 
     private readonly disconnectListener = this.disconnect.bind(this);
@@ -149,6 +160,8 @@ export default class RoomUser {
         this.room.sendRoomEvent(new OutgoingEvent<UserLeftRoomEventData>("UserLeftRoomEvent", {
             userId: this.user.model.id
         }));
+
+        this.user.room?.floorplan.updatePosition(this.position);
 
         delete this.user.room;
 
@@ -206,55 +219,7 @@ export default class RoomUser {
     }
 
     public walkTo(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {
-        const rows = this.room.model.structure.grid.map((row, rowIndex) => {
-            return row.split('').map((column, columnIndex) => {
-                if(column === 'X') {
-                    return 1;
-                }
-
-                if(!walkThroughFurniture) {
-                    const furniture = this.user.room!.getUpmostFurnitureAtPosition({ row: rowIndex, column: columnIndex });
-
-                    if(furniture) {
-                        if(furniture.model.position.row === this.position.row && furniture.model.position.column === this.position.column) {
-                            return 0;
-                        }
-
-                        if(!furniture.isWalkable()) {
-                            return 1;
-                        }
-                    }
-                }
-
-                const user = this.room.getRoomUserAtPosition({ row: rowIndex, column: columnIndex });
-
-                if(user) {
-                    if(rowIndex === this.position.row && columnIndex === this.position.column) {
-                        return 0;
-                    }
-
-                    if(user.user.model.id === this.user.model.id) {
-                        return 0;
-                    }
-                    
-                    if(rowIndex === position.row && columnIndex === position.column) {
-                        return 0;
-                    }
-                    
-                    return 1;
-                }
-
-                return 0;
-            });
-        });
-
-        const columns = rows[0]!.map((_, colIndex) => rows.map(row => row[colIndex]!));
-
-        const astarFinder = new AStarFinder({
-            grid: {
-                matrix: columns
-            }
-        });
+        const astarFinder = this.room.floorplan.getAstarFinder(this, position, walkThroughFurniture);
 
         const result = astarFinder.findPath({
             x: this.position.row,
@@ -281,6 +246,28 @@ export default class RoomUser {
         console.log("Result: " + JSON.stringify(path));
 
         this.room.requestActionsFrame();
+    }
+
+    public teleportTo(position: Omit<RoomPosition, "depth">) {
+        if(this.room.model.structure.grid[position.row]?.[position.column] === undefined || this.room.model.structure.grid[position.row]?.[position.column] === 'X') {
+            return;
+        }
+
+        const furniture = this.room.getUpmostFurnitureAtPosition(position);
+
+        if(furniture) {
+            if(!furniture.isWalkable()) {
+                return;
+            }
+        }
+
+        const depth = this.room.getUpmostDepthAtPosition(position, furniture);
+
+        this.setPosition({
+            row: position.row,
+            column: position.column,
+            depth
+        }, undefined, true);
     }
 
     public async finishPath() {
@@ -328,8 +315,12 @@ export default class RoomUser {
         return position;
     }
 
-    public setPosition(position: RoomPosition, direction?: number) {
+    public setPosition(position: RoomPosition, direction?: number, usePath?: boolean) {
+        const previousPosition = this.position;
+
         this.position = position;
+
+        this.room.floorplan.updatePosition(position, previousPosition);
 
         if(direction !== undefined) {
             this.direction = direction;
@@ -342,7 +333,8 @@ export default class RoomUser {
             new OutgoingEvent<UserPositionEventData>("UserPositionEvent", {
                 userId: this.user.model.id,
                 position,
-                direction
+                direction,
+                usePath: usePath === true
             })
         );
     }

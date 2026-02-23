@@ -3,7 +3,7 @@ import RoomRenderer from "../Renderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "../Items/Figure/RoomFigureItem";
-import { webSocketClient } from "../../..";
+import { clientInstance, webSocketClient } from "../../..";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
 import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
 
@@ -93,7 +93,7 @@ export default class RoomCursor extends EventTarget {
     }
 
     private frame() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure"].includes(item.type));
+        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure", "bot"].includes(item.type));
 
         if(this.roomRenderer.roomInstance?.hoveredUser.value && (!entity || this.roomRenderer.items.indexOf(entity.item) !== this.roomRenderer.items.indexOf(this.roomRenderer.roomInstance?.hoveredUser.value.item))) {
             this.roomRenderer.roomInstance.hoveredUser.value = null;
@@ -109,9 +109,24 @@ export default class RoomCursor extends EventTarget {
 
         if(this.roomRenderer.roomInstance && !this.roomRenderer.roomInstance.hoveredUser.value) {
             if(entity.item instanceof RoomFigureItem) {
-                const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
+                if(entity.item.type === "figure") {
+                    const user = this.roomRenderer.roomInstance.getUserByItem(entity.item);
 
-                this.roomRenderer.roomInstance.hoveredUser.value = user;
+                    this.roomRenderer.roomInstance.hoveredUser.value = {
+                        type: "user",
+                        item: entity.item,
+                        user
+                    };
+                }
+                else if(entity.item.type === "bot") {
+                    const bot = this.roomRenderer.roomInstance.getBotByItem(entity.item);
+
+                    this.roomRenderer.roomInstance.hoveredUser.value = {
+                        type: "bot",
+                        item: entity.item,
+                        bot
+                    };
+                }
             }
         }
     }
@@ -168,9 +183,26 @@ export default class RoomCursor extends EventTarget {
         if(this.roomRenderer.roomInstance) {
             if(otherEntity?.item instanceof RoomFigureItem) {
                 if(this.roomRenderer.roomInstance.focusedUser.value?.item?.id !== otherEntity.item.id) {
-                    const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
+                    if(otherEntity.item.type === "figure") {
+                        const user = this.roomRenderer.roomInstance.getUserByItem(otherEntity.item);
 
-                    this.roomRenderer.roomInstance.focusedUser.value = user;
+                        this.roomRenderer.roomInstance.focusedUser.value = {
+                            type: "user",
+                            item: otherEntity.item,
+                            user
+                        };
+                    }
+                    else if(otherEntity.item.type === "bot") {
+                        const bot = this.roomRenderer.roomInstance.getBotByItem(otherEntity.item);
+
+                        if(bot.data.userId === clientInstance.user.value?.id) {
+                            this.roomRenderer.roomInstance.focusedUser.value = {
+                                type: "bot",
+                                item: otherEntity.item,
+                                bot
+                            };
+                        }
+                    }
                 }
             }
             else if(this.roomRenderer.roomInstance.focusedUser.value && (!floorEntity || otherEntity)) {

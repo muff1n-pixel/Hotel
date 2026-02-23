@@ -13,7 +13,7 @@ export default function FurnitureImage({ furnitureData }: FurnitureImageProps) {
     useEffect(() => {
         const furnitureRenderer = new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color);
 
-        furnitureRenderer.renderToCanvas().then((image) => {
+        furnitureRenderer.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
             setImage(image);
         });
     }, [ furnitureData ]);

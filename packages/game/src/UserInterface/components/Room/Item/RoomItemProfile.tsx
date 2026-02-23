@@ -11,6 +11,9 @@ import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import RoomBot from "@Client/Room/Bots/RoomBot";
+import RoomBotProfile from "./Bot/RoomBotProfile";
+import { RoomBotEventData } from "@Shared/Communications/Responses/Rooms/Bots/RoomBotEventData";
 
 export type RoomItemProfileItem = {
     type: "user";
@@ -18,6 +21,9 @@ export type RoomItemProfileItem = {
 } | {
     type: "furniture";
     furniture: RoomFurniture;
+} | {
+    type: "bot";
+    bot: RoomBot;
 };
 
 export type RoomItemProfileProps = {
@@ -41,12 +47,22 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
 
             if(event.otherEntity) {
                 if(event.otherEntity.item instanceof RoomFigureItem) {
-                    const user = room.getUserByItem(event.otherEntity.item);
+                    if(event.otherEntity.item.type === "figure") {
+                        const user = room.getUserByItem(event.otherEntity.item);
 
-                    setFocusedItem({
-                        type: "user",
-                        user: user.data
-                    });
+                        setFocusedItem({
+                            type: "user",
+                            user: user.data
+                        });
+                    }
+                    else if(event.otherEntity.item.type === "bot") {
+                        const bot = room.getBotByItem(event.otherEntity.item);
+
+                        setFocusedItem({
+                            type: "bot",
+                            bot: bot
+                        });
+                    }
                 }
                 else if(event.otherEntity.item instanceof RoomFurnitureItem) {
                     const furniture = room.getFurnitureByItem(event.otherEntity.item);
@@ -97,6 +113,19 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
                 webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", listener);
             };
         }
+        else if(focusedItem.type === "bot") {
+            const listener = (event: WebSocketEvent<RoomBotEventData>) => {
+                if(event.data.botRemoved?.some((removedBot) => removedBot.id === focusedItem.bot.data.id)) {
+                    setFocusedItem(undefined);
+                }
+            };
+
+            webSocketClient.addEventListener<WebSocketEvent<RoomBotEventData>>("RoomBotEvent", listener);
+
+            return () => {
+                webSocketClient.removeEventListener<WebSocketEvent<RoomBotEventData>>("RoomBotEvent", listener);
+            };
+        }
     }, [focusedItem]);
 
     if(!focusedItem) {
@@ -112,11 +141,18 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
             right: 0,
             bottom: 50,
         }}>
-            {(focusedItem.type === "furniture")?(
-                <RoomFurnitureProfile furniture={focusedItem.furniture}/>
-            ):(
-                <RoomUserProfile user={focusedItem.user}/>
-            )}
+            {(() => {
+                switch(focusedItem.type) {
+                    case "furniture":
+                        return (<RoomFurnitureProfile furniture={focusedItem.furniture}/>);
+
+                    case "user":
+                        return (<RoomUserProfile user={focusedItem.user}/>);
+
+                    case "bot":
+                        return (<RoomBotProfile bot={focusedItem.bot}/>);
+                }
+            })()}
         </div>
     );
 }

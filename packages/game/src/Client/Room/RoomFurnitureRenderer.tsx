@@ -134,6 +134,8 @@ export default class RoomFurnitureRenderer {
         )
         );
 
+        this.roomItem.priority = 10000000;
+
         this.roomRenderer.items.push(this.roomItem);
     }
 

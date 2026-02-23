@@ -276,7 +276,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private getSpritePriority(sprite: RoomSprite) {
-        let priority = sprite.priority;
+        let priority = sprite.item.priority + sprite.priority;
 
         if(sprite.item.position) {
             if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
@@ -373,10 +373,10 @@ export default class RoomRenderer extends EventTarget {
         return true;
     }
 
-    public isPositionInsideUser(position: RoomPosition, dimensions: RoomPosition) {
+    public isPositionInsideFigure(position: RoomPosition, dimensions: RoomPosition, ignoreItem?: RoomItem) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
-                if(this.items.some((item) => item.type === "figure" && item.position?.row === row && item.position.column === column)) {
+                if(this.items.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
                     return true;
                 }
             }   

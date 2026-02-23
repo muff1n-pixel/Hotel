@@ -12,8 +12,12 @@ export type RoomPermissions =
     | "room:import_furniture"
     | "room:type";
 
+export type CommandPermissions =
+    "command:give";
+
 export type PermissionAction =
     FurniturePermissions
     | ShopPermissions
     | FeedbackPermissions
-    | RoomPermissions;
+    | RoomPermissions
+    | CommandPermissions;

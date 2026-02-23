@@ -15,6 +15,7 @@ import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
 import RoomFurnitureStickieLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStickieLogic";
 import RoomFurnitureTrophyLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTrophyLogic";
+import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitureFortunaLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -51,6 +52,9 @@ export default class RoomFurniture {
 
             case "dice":
                 return new RoomFurnitureDiceLogic(this.instance, this);
+
+            case "fortuna":
+                return new RoomFurnitureFortunaLogic(this.instance, this);
 
             case "vendingmachine":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
