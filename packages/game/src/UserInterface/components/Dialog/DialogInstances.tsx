@@ -20,6 +20,7 @@ import FigureCatalogDialog from "../Catalogs/FigureCatalogDialog";
 import RoomFloorPlanDialog from "../Room/FloorPlan/RoomFloorPlanDialog";
 import EditFurnitureDialog from "../Furniture/Dialogs/EditFurnitureDialog";
 import EditShopBotDialog from "../Shop/Development/EditShopBotDialog";
+import EditShopBotFigureDialog from "../Shop/Development/EditShopBotFigureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -78,6 +79,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-bot":
                         return (<EditShopBotDialog key={dialog.id} data={dialog.data as any} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
+
+                    case "edit-shop-bot-figure":
+                        return (<EditShopBotFigureDialog key={dialog.id} data={dialog.data as any} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);
 
                     case "figure-catalog":
                         return (<FigureCatalogDialog key={dialog.id} hidden={dialog.hidden} onClose={() => closeDialog(dialog.id)}/>);

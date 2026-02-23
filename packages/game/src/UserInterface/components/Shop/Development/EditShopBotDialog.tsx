@@ -26,11 +26,11 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
     const user = useUser();
 
     const [name, setName] = useState(data?.name ?? "");
-    const [motto, setMotto] = useState(data?.name ?? "");
+    const [motto, setMotto] = useState(data?.motto ?? "");
 
     const [type, setType] = useState<BotTypeData>(data?.type ?? "default");
 
-    const [figureConfiguration, _setFigureConfiguration] = useState<FigureConfiguration>(data?.figureConfiguration ?? user.figureConfiguration);
+    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfiguration>(data?.figureConfiguration ?? user.figureConfiguration);
 
     const [credits, setCredits] = useState(data?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
@@ -85,6 +85,11 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
                     }}>
                         <FigureImage figureConfiguration={figureConfiguration} direction={4}/>
                     </div>
+
+                    <DialogButton onClick={() => dialogs.addUniqueDialog("edit-shop-bot-figure", {
+                        ...data,
+                        onChange: (figureConfiguration: FigureConfiguration) => setFigureConfiguration(figureConfiguration)
+                    })}>Change figure</DialogButton>
 
                     <b>Bot type</b>
 
