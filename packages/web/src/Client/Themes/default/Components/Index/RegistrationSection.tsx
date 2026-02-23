@@ -10,7 +10,7 @@ export default function RegistrationSection() {
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
     const [name, setName] = useState("");
-    const [mail, setMail] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     
@@ -24,7 +24,7 @@ export default function RegistrationSection() {
             },
             body: JSON.stringify({
                 name,
-                mail,
+                email,
                 password,
                 confirmPassword
             })
@@ -48,7 +48,7 @@ export default function RegistrationSection() {
                     });
                 }
             });
-    }, [name, mail, password, confirmPassword, setCookie, dispatch]);
+    }, [name, email, password, confirmPassword, setCookie, dispatch]);
 
     return (
         <div style={{
@@ -150,7 +150,7 @@ export default function RegistrationSection() {
                                     fontFamily: "Ubuntu Bold Italic",
                                     fontSize: 20
                                 }}>
-                                    Email
+                                    Email (optional)
                                 </p>
 
                                 <p style={{
@@ -158,10 +158,10 @@ export default function RegistrationSection() {
                                     fontSize: 14,
                                     color: "#5198be"
                                 }}>
-                                    Include your email address, in case you lose your password!
+                                    <b>Optionally,</b> enter your email address, in case you lose your password!
                                 </p>
 
-                                <Input style={{ width: "100%" }} value={mail} onChange={setMail} maxlength={254}/>
+                                <Input style={{ width: "100%" }} value={email} onChange={setEmail} maxlength={254}/>
                             </div>
 
                             <div style={{

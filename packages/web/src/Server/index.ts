@@ -125,7 +125,6 @@ app.post('/api/loginAuth', async (request, response) => {
 
         return response.json({
             id: user.id,
-            accessToken: accessToken,
             name: user.name,
             email: user.email,
             credits: user.credits,
@@ -238,12 +237,6 @@ app.post('/api/register', async (request, response) => {
         });
     }
 
-    if (!email) {
-        return response.json({
-            error: "No mail provided."
-        });
-    }
-
     if (name.length < 3 || name.length > 32) {
         return response.json({
             error: "Please provide a username between 3 and 32 characters."
@@ -259,14 +252,6 @@ app.post('/api/register', async (request, response) => {
     if (!name.match(/[a-zA-Z0-9]/g)) {
         return response.json({
             error: "Your username need include at least one letter or one number."
-        });
-    }
-
-    if (email.length > 254 || !email.match(
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )) {
-        return response.json({
-            error: "Mail provided is invalid."
         });
     }
 
@@ -297,16 +282,26 @@ app.post('/api/register', async (request, response) => {
         });
     }
 
-    const existingMail = await UserModel.count({
-        where: {
-            email
+    if(email?.length) {
+        if (email.length > 254 || !email.match(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )) {
+            return response.json({
+                error: "Mail provided is invalid."
+            });
         }
-    });
 
-    if (existingMail) {
-        return response.json({
-            error: "Mail provided is already in use."
+        const existingMail = await UserModel.count({
+            where: {
+                email
+            }
         });
+
+        if (existingMail) {
+            return response.json({
+                error: "Mail provided is already in use."
+            });
+        }
     }
 
     const password = await bcrypt.hash(plainTextPassword, 10);
@@ -315,7 +310,7 @@ app.post('/api/register', async (request, response) => {
         const user = await UserModel.create({
             id: randomUUID(),
             name,
-            email,
+            email: (email?.length)?(email):(null),
             password,
             homeRoomId: config.users.defaultHomeRoomId,
             figureConfiguration: {
