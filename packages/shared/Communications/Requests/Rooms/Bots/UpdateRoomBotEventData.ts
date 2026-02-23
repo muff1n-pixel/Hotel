@@ -7,5 +7,6 @@ export type UpdateRoomBotEventData = {
     direction?: number;
     position?: RoomPosition;
 
+    motto?: string | null;
     figureConfiguration?: FigureConfiguration;
 };

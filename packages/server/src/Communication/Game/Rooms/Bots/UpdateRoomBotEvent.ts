@@ -30,6 +30,10 @@ export default class UpdateRoomBotEvent implements IncomingEvent<UpdateRoomBotEv
             bot.model.figureConfiguration = event.figureConfiguration;
         }
 
+        if(event.motto !== undefined) {
+            bot.model.motto = event.motto;
+        }
+
         await bot.model.save();
 
         user.room.sendRoomEvent(new OutgoingEvent<RoomBotEventData>("RoomBotEvent", {

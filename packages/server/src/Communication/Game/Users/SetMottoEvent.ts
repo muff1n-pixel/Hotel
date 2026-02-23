@@ -13,5 +13,7 @@ export default class SetMottoEvent implements IncomingEvent<SetMottoEventData> {
         if(user.model.changed()) {
             await user.model.save();
         }
+
+        user.send(new OutgoingEvent<UserEventData>("UserEvent", user.getUserData()));
     }
 }

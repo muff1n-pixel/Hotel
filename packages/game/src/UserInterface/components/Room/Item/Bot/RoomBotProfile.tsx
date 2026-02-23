@@ -2,12 +2,26 @@ import BadgeImage from "../../../Badges/BadgeImage";
 import FigureImage from "../../../Figure/FigureImage";
 import "../User/RoomUserProfile.css";
 import RoomBot from "@Client/Room/Bots/RoomBot";
+import RoomUserProfileMotto from "../User/RoomUserProfileMotto";
+import { useUser } from "../../../../hooks/useUser";
+import { useCallback } from "react";
+import { webSocketClient } from "../../../../..";
+import { UpdateRoomBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;
 }
 
 export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
+    const user = useUser();
+
+    const handleMottoChange = useCallback((motto: string) => {
+        webSocketClient.send<UpdateRoomBotEventData>("UpdateRoomBotEvent", {
+            userBotId: bot.data.id,
+            motto
+        });
+    }, [bot]);
+
     return (
         <div style={{
             background: "rgba(61, 61, 61, .95)",
@@ -97,31 +111,7 @@ export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
                 background: "#333333"
             }}/>
 
-            <div style={{
-                width: "100%",
-
-                background: "rgba(255, 255, 255, .1)",
-                border: "1px solid #000",
-                borderRadius: 6,
-
-                display: "flex",
-                flexDirection: "row",
-                gap: 2,
-
-                padding: "2px 4px",
-                boxSizing: "border-box",
-
-                alignItems: "center"
-            }}>
-                <div style={{
-                    maxWidth: 130,
-                    fontSize: 11,
-                    textWrap: "wrap",
-                    textOverflow: "clip"
-                }}>
-                    {bot.data.motto}
-                </div>
-            </div>
+            <RoomUserProfileMotto canEdit={user.id === bot.data.userId} value={bot.data.motto} onChange={handleMottoChange}/>
         </div>
     );
 }
