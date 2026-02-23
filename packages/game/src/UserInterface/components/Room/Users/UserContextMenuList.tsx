@@ -7,7 +7,7 @@ export type UserContextMenuListProps = {
 export default function UserContextMenuList({ children }: UserContextMenuListProps) {
     const mappedChildren = (Array.isArray(children))?(children):([children]);
     
-    return mappedChildren.map((child, index, array) => (
+    return mappedChildren.filter(Boolean).map((child, index, array) => (
         (index === array.length - 1)?(
             child
         ):(
