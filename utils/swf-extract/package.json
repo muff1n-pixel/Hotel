@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@gizeta/swf-reader": "^1.0.0",
+    "@types/jimp": "^0.2.1",
     "@types/node": "^25.0.3",
     "@types/node-sprite-generator": "^0.10.6",
     "fast-xml-parser": "^5.3.3",
