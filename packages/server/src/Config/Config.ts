@@ -2,6 +2,9 @@ import { readFileSync } from "fs";
 import { Options, Sequelize } from "sequelize";
 
 export type Config = {
+    assetsDownloaderUrl: string;
+    assetsFolder: string;
+
     port?: number;
     
     authentication: {

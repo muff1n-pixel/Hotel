@@ -1,4 +1,6 @@
 {
+    "assetsDownloaderUrl": "https://pixel63.muff1n-pixel.org/game/assets/assets-2026-02-21.zip",
+    "assetsFolder": "../../assets",
     "port": 8080,
     
     "authentication": {

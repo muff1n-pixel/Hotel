@@ -69,21 +69,31 @@ function getFurnitureData(assetName: string) {
 }
 
 function getHabboRoomContentData() {
-    const content = readFileSync(path.join("..", "..", "assets", "room", "HabboRoomContent", `HabboRoomContent.json`), {
-        encoding: "utf-8"
-    });
+    try {
+        const content = readFileSync(path.join("..", "..", "assets", "room", "HabboRoomContent", `HabboRoomContent.json`), {
+            encoding: "utf-8"
+        });
 
-    return JSON.parse(content);
+        return JSON.parse(content);
+    } catch (error) {
+        return null;
+    }
 }
 
 export function getWallIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
+
+    if(habboRoomContentData === null)
+        return [];
 
     return habboRoomContentData.visualization.wallData.walls.filter((wall: any) => !isNaN(parseInt(wall.id))).map((wall: any) => parseInt(wall.id));
 }
 
 export function getFloorIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
+
+    if(habboRoomContentData === null)
+        return [];
 
     return habboRoomContentData.visualization.floorData.floors.filter((floor: any) => !isNaN(parseInt(floor.id))).map((floor: any) => parseInt(floor.id));
 }
@@ -95,7 +105,7 @@ function getFurnitureServerData(assetName: string) {
 
     const data = JSON.parse(content);
 
-    if(assetName === "wallpaper") {
+    if (assetName === "wallpaper") {
         const item = data[0];
 
         return getWallIds().map((wallId) => {
@@ -114,7 +124,7 @@ function getFurnitureServerData(assetName: string) {
         });
     }
 
-    if(assetName === "floor") {
+    if (assetName === "floor") {
         const item = data[0];
 
         return getFloorIds().map((floorId) => {

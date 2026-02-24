@@ -19,13 +19,10 @@ To set up your environment without the web server, change `useAccessTokens` to f
 }
 ```
 
-Now build the server package and start the server with the `--reset` flag to build a new database. The shared package must be built before the server can be built.
+Initializing server
 ```sh
-cd packages/shared
-npm run build
-
 cd packages/server
-npm run start -- --reset
+npm run init
 ```
 
 Close the server and then run `npm run migrate`.
