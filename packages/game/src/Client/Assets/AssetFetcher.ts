@@ -18,6 +18,7 @@ export type AssetSpriteProperties = {
     destinationHeight?: number;
 
     ignoreImageData?: boolean;
+    ignoreExistingImageData?: boolean;
 };
 
 export default class AssetFetcher {
@@ -94,6 +95,56 @@ export default class AssetFetcher {
             return await existingSprite.sprite;
         }
 
+        /*if(properties.flipHorizontal && !properties.ignoreImageData) {
+            const existingNonFlippedSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, ignoreImageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+
+            if(existingNonFlippedSprite && existingNonFlippedSprite.color?.length) {
+                const sprite = await existingNonFlippedSprite.sprite;
+
+                console.log("Existing non-flipped sprite", existingNonFlippedSprite.color, properties.color);
+
+                const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
+
+                for (let y = 0; y < newImageData.height; y++) {
+                    for (let x = 0; x < newImageData.width / 2; x++) {
+                        const left = (y * newImageData.width + x) * 4;
+                        const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
+
+                        for (let i = 0; i < 4; i++) {
+                            const temp = newImageData.data[left + i];
+                            newImageData.data[left + i] = newImageData.data[right + i];
+                            newImageData.data[right + i] = temp;
+                        }
+                    }
+                }
+
+                const canvas = new OffscreenCanvas(newImageData.width, newImageData.height);
+                const context = canvas.getContext("2d");
+
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
+
+                context.translate(canvas.width, 0);
+
+                context.scale(-1, 1);
+
+                context.drawImage(sprite.image, 0, 0);
+
+                const result: AssetSpriteProperties & { sprite: Promise<{ image: ImageBitmap, imageData: ImageData }> } = {
+                    sprite: Promise.resolve({
+                        image: await createImageBitmap(canvas),
+                        imageData: newImageData
+                    }),
+                    ...properties
+                };
+
+                this.sprites[url].push(result);
+
+                return await result.sprite;
+            }
+        }*/
+
         return (async () => {
             properties.id ??= Math.random();
 
@@ -109,71 +160,100 @@ export default class AssetFetcher {
     }
 
     private static async drawSprite(url: string, properties: AssetSpriteProperties) {
-        const image = await this.fetchImage(url);
+        try {
+            const image = await this.fetchImage(url);
 
-        const canvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
-        const context = canvas.getContext("2d");
+            const canvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+            const context = canvas.getContext("2d");
 
-        if(!context) {
-            throw new ContextNotAvailableError();
-        }
-
-        if(properties.flipHorizontal) {
-            context.translate(canvas.width, 0);
-
-            context.scale(-1, 1);
-        }
-
-        context.drawImage(image, properties.x, properties.y, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height, 0, 0, properties.width ?? image.width, properties.height ?? image.height);
-
-        if(properties.color) {
-            const colorCanvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
-            const colorContext = colorCanvas.getContext("2d");
-
-            if(!colorContext) {
+            if(!context) {
                 throw new ContextNotAvailableError();
             }
 
-            colorContext.drawImage(image, properties.x, properties.y, properties.width ?? image.width, properties.height ?? image.height, 0, 0, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+            if(properties.flipHorizontal) {
+                context.translate(canvas.width, 0);
 
-            const colors = (Array.isArray(properties.color))?(properties.color):([properties.color]);
-
-            for(const color of colors) {
-                colorContext.globalCompositeOperation = "multiply";
-                colorContext.fillStyle = '#' + color;
-                colorContext.fillRect(0, 0, canvas.width, canvas.height);
+                context.scale(-1, 1);
             }
 
-            context.globalCompositeOperation = "source-in";
-            context.drawImage(colorCanvas, 0, 0);
-        }
+            context.drawImage(image, properties.x, properties.y, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height, 0, 0, properties.width ?? image.width, properties.height ?? image.height);
 
-        let imageData: ImageData;
+            if(properties.color) {
+                const colorCanvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+                const colorContext = colorCanvas.getContext("2d");
 
-        if(!properties.ignoreImageData) {
-            const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+                if(!colorContext) {
+                    throw new ContextNotAvailableError();
+                }
 
-            if(existingSpriteWithImageData) {
-                imageData = (await existingSpriteWithImageData.sprite).imageData;
+                colorContext.drawImage(image, properties.x, properties.y, properties.width ?? image.width, properties.height ?? image.height, 0, 0, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+
+                const colors = (Array.isArray(properties.color))?(properties.color):([properties.color]);
+
+                for(const color of colors) {
+                    colorContext.globalCompositeOperation = "multiply";
+                    colorContext.fillStyle = '#' + color;
+                    colorContext.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                context.globalCompositeOperation = "source-in";
+                context.drawImage(colorCanvas, 0, 0);
             }
-            else {
-                if(!canvas.width || canvas.height) {
-                    imageData = new ImageData(canvas.width, canvas.height);
+
+            let imageData: ImageData;
+
+            if(!properties.ignoreImageData) {
+                const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+
+                if(existingSpriteWithImageData && !properties.ignoreExistingImageData) {
+                    imageData = (await existingSpriteWithImageData.sprite).imageData;
                 }
                 else {
-                    console.log("Generating new image data");
+                    const existingNonFlippedSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+                    
+                    if(existingNonFlippedSpriteWithImageData) {
+                        console.log("Flip image data");
 
-                    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                        const sprite = await existingNonFlippedSpriteWithImageData.sprite;
+                        const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
+
+                        for (let y = 0; y < newImageData.height; y++) {
+                            for (let x = 0; x < newImageData.width / 2; x++) {
+                                const left = (y * newImageData.width + x) * 4;
+                                const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
+
+                                for (let i = 0; i < 4; i++) {
+                                    const temp = newImageData.data[left + i];
+                                    newImageData.data[left + i] = newImageData.data[right + i];
+                                    newImageData.data[right + i] = temp;
+                                }
+                            }
+                        }
+
+                        imageData = newImageData;
+                    }
+                    else {
+                        console.log("New image data");
+
+                        imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    }
                 }
             }
-        }
-        else {
-            imageData = new ImageData(canvas.width, canvas.height);
-        }
+            else {
+                imageData = new ImageData(canvas.width, canvas.height);
+            }
 
-        return {
-            image: await createImageBitmap(canvas),
-            imageData
-        };
+            return {
+                image: await createImageBitmap(canvas),
+                imageData
+            };
+        }
+        catch(error) {
+            if(error) {
+                console.log(error);
+            }
+
+            throw error;
+        }
     }
 }

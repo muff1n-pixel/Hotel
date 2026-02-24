@@ -122,28 +122,34 @@ export default class FigureRenderer {
         await Promise.allSettled(assets.map(async ({ assetId, partId, partType}) => {
             const figureData = await FigureAssets.getFigureData(assetId);
 
-            if(!figureData) {
-                return null
-            }
+            if(figureData) {
+                await Promise.allSettled(figureData.sprites.filter((sprite) => {
+                    if(!sprite.name.includes(`${partType}_${partId}`)) {
+                        return false;
+                    }
 
-            for(const sprite of figureData.sprites) {
-                if(!sprite.name.includes(`${partType}_${partId}`)) {
-                    continue;
-                }
+                    const action = sprite.name.split('_')[1];
 
-                const asset = figureData.assets.find((asset) => asset.name === sprite.name);
+                    if(!["std", "wlk", "wav", "crr", "sit"].includes(action)) {
+                        return false;
+                    }
 
-                await FigureAssets.getFigureSprite(assetId, {
-                    x: sprite.x,
-                    y: sprite.y,
+                    return true;
+                }).map(async (sprite) => {
 
-                    width: sprite.width,
-                    height: sprite.height,
+                    console.log("Preparing " + sprite.name);
 
-                    flipHorizontal: asset?.flipHorizontal,
+                    await FigureAssets.getFigureSprite(assetId, {
+                        x: sprite.x,
+                        y: sprite.y,
 
-                    ignoreImageData: false
-                });
+                        width: sprite.width,
+                        height: sprite.height,
+
+                        ignoreImageData: false,
+                        ignoreExistingImageData: true
+                    });
+                }));
             }
         }));
 
