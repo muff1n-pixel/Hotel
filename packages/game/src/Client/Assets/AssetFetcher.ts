@@ -208,7 +208,7 @@ export default class AssetFetcher {
                 if(existingSpriteWithImageData && !properties.ignoreExistingImageData) {
                     imageData = (await existingSpriteWithImageData.sprite).imageData;
                 }
-                else {
+                else if(!properties.ignoreExistingImageData) {
                     const existingNonFlippedSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
                     
                     if(existingNonFlippedSpriteWithImageData) {
@@ -237,6 +237,11 @@ export default class AssetFetcher {
 
                         imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                     }
+                }
+                else {
+                    console.log("New image data");
+
+                    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                 }
             }
             else {

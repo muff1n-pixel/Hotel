@@ -39,17 +39,21 @@ export default class RoomFigureItem extends RoomItem {
     }
 
     render(_frame: number = 0) {
+        if(!this.preloaded) {
+            if(!this.preloading) {
+                this.preloading = true;
+
+                this.figureRenderer.preload(Figure.figureWorker).then(() => {
+                    this.preloaded = true;
+                });
+            }
+        }
+        
         this.frame++;
 
         const frame = this.frame;
 
         this.figureRenderer.renderToCanvas(Figure.figureWorker, this.frame).then((result) => {
-            if(!this.preloading) {
-                this.preloading = true;
-
-                this.figureRenderer.preload(Figure.figureWorker);
-            }
-
             if(frame !== this.frame) {
                 return;
             }
