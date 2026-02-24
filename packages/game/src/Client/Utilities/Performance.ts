@@ -12,6 +12,10 @@ export default class Performance {
     }
 
     public static endPerformanceCheck(label: string) {
+        if(!this.performanceChecks[label]) {
+            return;
+        }
+        
         const endTimestamp = performance.now();
 
         const duration = endTimestamp - this.performanceChecks[label].startTimestamp;
