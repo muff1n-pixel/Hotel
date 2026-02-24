@@ -6,14 +6,19 @@ import RoomFigureSprite from "./RoomFigureSprite";
 import RoomFigureEffectSprite from "@Client/Room/Items/Figure/RoomFigureEffectSprite";
 import RoomRenderer from "@Client/Room/Renderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/RoomFigureTypingSprite";
+import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/RoomFigureIdlingSprite";
 
 export default class RoomFigureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
+
+    private typingSprite: RoomFigureTypingSprite | null = null;
+    private idlingSprite: RoomFigureIdlingSprite | null = null;
 
     public readonly id = Math.random();
     private currentFrame: number = 0;
 
     public typing: boolean = false;
+    public idling: boolean = false;
 
     constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | null) {
         super(roomRenderer, "figure");
@@ -43,7 +48,22 @@ export default class RoomFigureItem extends RoomItem {
             ];
 
             if(this.typing) {
-                this.sprites.push(new RoomFigureTypingSprite(this, result.figure));
+                if(!this.typingSprite) {
+                    this.typingSprite = new RoomFigureTypingSprite(this, result.figure);
+                }
+
+                this.sprites.push(this.typingSprite);
+            }
+
+            if(this.idling) {
+                if(!this.idlingSprite) {
+                    this.idlingSprite = new RoomFigureIdlingSprite(this, result.figure);
+                }
+                else {
+                    this.idlingSprite.process();
+                }
+
+                this.sprites.push(this.idlingSprite);
             }
         });
     }

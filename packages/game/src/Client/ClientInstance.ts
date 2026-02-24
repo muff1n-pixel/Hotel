@@ -39,6 +39,8 @@ import { UserTypingEventData } from "@Shared/Communications/Responses/Rooms/User
 import RoomBotEvent from "@Client/Communications/Room/Bots/RoomBotEvent";
 import { RoomBotEventData } from "@Shared/Communications/Responses/Rooms/Bots/RoomBotEventData";
 import { RoomChatEventData } from "@Shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
+import { UserIdlingEventData } from "@Shared/Communications/Responses/Rooms/Users/UserIdlingEventData";
+import UserIdlingEvent from "@Client/Communications/Room/User/UserIdlingEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -79,6 +81,7 @@ export default class ClientInstance extends EventTarget {
 
         webSocketClient.addEventListener<WebSocketEvent<RoomChatEventData>>("RoomChatEvent", (event) => new RoomChatEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserTypingEventData>>("UserTypingEvent", (event) => new UserTypingEvent().handle(event));
+        webSocketClient.addEventListener<WebSocketEvent<UserIdlingEventData>>("UserIdlingEvent", (event) => new UserIdlingEvent().handle(event));
 
         webSocketClient.addEventListener<WebSocketEvent<RoomChatStylesEventData>>("RoomChatStylesEvent", (event) => {
             this.roomChatStyles.value = event.data.roomChatStyles;

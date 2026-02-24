@@ -156,6 +156,13 @@ export default class RoomInstance {
         const figureRenderer = new Figure(userData.figureConfiguration, userData.direction, userData.actions);
         const item = new RoomFigureItem(this.roomRenderer, figureRenderer, userData.position);
 
+        item.idling = userData.idling;
+        item.typing = userData.typing;
+        
+        if(item.idling) {
+            item.figureRenderer.addAction("Sleep");
+        }
+
         this.roomRenderer.items.push(item);
 
         return {

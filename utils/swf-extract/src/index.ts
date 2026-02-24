@@ -80,7 +80,7 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
     console.log(assetNames);
 
     await PromisePool
-        .withConcurrency(20)
+        .withConcurrency(30)
         .for(assetNames)
         .process(async (assetName) => {
             const extractOnly = process.argv[3] === "extract-only";

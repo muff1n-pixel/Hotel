@@ -121,10 +121,8 @@ export default class Room {
             await furniture.handleActionsInterval();
         }
 
-        const usersWithPath = this.users.filter((user) => user.path !== undefined);
-
         // TODO: change so that the clients get the full path immediately, and only use this interval to cancel due to obstructions in the path?
-        for(let user of usersWithPath) {
+        for(const user of this.users) {
             await user.handleActionsInterval();
         }
 

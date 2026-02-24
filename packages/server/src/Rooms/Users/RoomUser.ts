@@ -13,6 +13,7 @@ import { UserPositionEventData } from "@shared/Communications/Responses/Rooms/Us
 import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
 import { game } from "../../index.js";
+import { UserIdlingEventData } from "@shared/Communications/Responses/Rooms/Users/UserIdlingEventData.js";
 
 export default class RoomUser {
     public preoccupiedByActionHandler: boolean = false;
@@ -22,6 +23,28 @@ export default class RoomUser {
     public actions: string[] = [];
     public typing: boolean = false;
     public teleporting: boolean = false;
+    public idling: boolean = false;
+
+    private _lastActivity: number = performance.now();
+
+    private get lastActivity() {
+        return this._lastActivity;
+    }
+
+    private set lastActivity(value: number) {
+        this._lastActivity = value;
+
+        if(this.idling) {
+            this.idling = false;
+
+            this.room.outgoingEvents.push(
+                new OutgoingEvent<UserIdlingEventData>("UserIdlingEvent", {
+                    userId: this.user.model.id,
+                    idling: false
+                })
+            );
+        }
+    }
 
     public path?: Omit<RoomPosition, "depth">[] | undefined;
     public walkThroughFurniture?: boolean | undefined;
@@ -76,7 +99,8 @@ export default class RoomUser {
             
             hasRights: this.hasRights(),
             actions: this.actions,
-            typing: this.typing
+            typing: this.typing,
+            idling: this.idling
         };
     }
 
@@ -89,6 +113,17 @@ export default class RoomUser {
     }
 
     public async handleActionsInterval() {
+        if(!this.idling && (performance.now() - this.lastActivity) > 5_000) {
+            this.idling = true;
+
+            this.room.outgoingEvents.push(
+                new OutgoingEvent<UserIdlingEventData>("UserIdlingEvent", {
+                    userId: this.user.model.id,
+                    idling: true
+                })
+            );
+        }
+
         if(this.path === undefined) {
             return;
         }
@@ -149,6 +184,8 @@ export default class RoomUser {
         this.path!.splice(0, 1);
 
         this.room.floorplan.updatePosition(position, previousPosition);
+
+        this.lastActivity = performance.now();
     }
 
     private readonly disconnectListener = this.disconnect.bind(this);
@@ -337,6 +374,8 @@ export default class RoomUser {
                 usePath: usePath === true
             })
         );
+
+        this.lastActivity = performance.now();
     }
 
     public hasRights() {
@@ -358,5 +397,7 @@ export default class RoomUser {
             message,
             roomChatStyleId: this.user.model.roomChatStyleId
         }));
+
+        this.lastActivity = performance.now();
     }
 }

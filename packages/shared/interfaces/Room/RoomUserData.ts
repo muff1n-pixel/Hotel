@@ -12,6 +12,8 @@ export type RoomUserData = {
     };
 
     typing: boolean;
+    idling: boolean;
+    
     direction: number;
     hasRights: boolean;
     actions: string[];
