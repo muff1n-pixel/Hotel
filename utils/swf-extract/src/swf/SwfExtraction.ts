@@ -104,12 +104,19 @@ export async function extractSwf(assetName: string, filePath: string) {
 
             for (let y = 0; y < tag.bitmapHeight; y++) {
                 for (let x = 0; x < tag.bitmapWidth; x++) {
-                    const a = bitmap.readUInt8(pos++);
-                    const r = bitmap.readUInt8(pos++);
-                    const g = bitmap.readUInt8(pos++);
-                    const b = bitmap.readUInt8(pos++);
+                    const alpha = bitmap.readUInt8(pos++);
 
-                    image.setPixelColor(rgbaToInt(r, g, b, a), x, y);
+                    let r = bitmap.readUInt8(pos++);
+                    let g = bitmap.readUInt8(pos++);
+                    let b = bitmap.readUInt8(pos++);
+
+                    if (alpha !== 0) {
+                        r = Math.min(255, Math.round((r * 255) / alpha));
+                        g = Math.min(255, Math.round((g * 255) / alpha));
+                        b = Math.min(255, Math.round((b * 255) / alpha));
+                    }
+
+                    image.setPixelColor(rgbaToInt(r, g, b, alpha), x, y);
                 }
             }
 
