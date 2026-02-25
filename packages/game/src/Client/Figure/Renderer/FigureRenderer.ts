@@ -61,6 +61,7 @@ type BodyPartAction = {
     
     destinationX?: number;
     destinationY?: number;
+    directionOffset?: number;
     
     frame?: number;
 };
@@ -249,6 +250,7 @@ export default class FigureRenderer {
                         frame: effectBodyPart.frame,
                         destinationX: effectBodyPart.destinationX,
                         destinationY: effectBodyPart.destinationY,
+                        directionOffset: effectBodyPart.directionOffset
                     });
 
                     // now we know handRight is occupied by CarryItem to use `crr`
@@ -599,8 +601,6 @@ export default class FigureRenderer {
     }
 
     private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number): Promise<FigureRendererSprite[]> {
-        const flipHorizontal = (direction > 3 && direction < 7);
-        const flippedDirection = (flipHorizontal)?(6 - direction):(direction);
 
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
@@ -610,6 +610,21 @@ export default class FigureRenderer {
 
                 return null
             }
+            
+            let spriteDirection = direction;
+
+            if(actionForSprite.directionOffset) {
+                spriteDirection += actionForSprite.directionOffset;
+
+                spriteDirection %= 8;
+
+                if(spriteDirection < 0) {
+                    spriteDirection += 7;
+                }
+            }
+
+            const flipHorizontal = (spriteDirection > 3 && spriteDirection < 7);
+            const flippedDirection = (flipHorizontal)?(6 - spriteDirection):(spriteDirection);
 
             const figureData = await FigureAssets.getFigureData(spriteConfiguration.assetId);
 
@@ -625,12 +640,12 @@ export default class FigureRenderer {
                 return null
             }
 
-            const avatarAnimation = this.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, direction, this.frame);
+            const avatarAnimation = this.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, spriteDirection, this.frame);
 
             const frame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
 
             let assetFlipped = false;
-            let assetDirection = direction;
+            let assetDirection = spriteDirection;
             let assetType = spriteConfiguration.type;
 
             let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfiguration.id}_${assetDirection}_${frame}`;

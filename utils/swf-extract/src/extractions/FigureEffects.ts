@@ -136,7 +136,8 @@ function getAnimationData(filePath: string) {
                         action: bodypart["@_action"],
                         frame: parseInt(bodypart["@_frame"]),
                         destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
-                        destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined)
+                        destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
+                        directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
                     };
                 }),
 
@@ -146,7 +147,7 @@ function getAnimationData(filePath: string) {
                         action: fx["@_action"],
                         frame: parseInt(fx["@_frame"]),
                         destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
-                        destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined)
+                        destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
                     };
                 })
             };

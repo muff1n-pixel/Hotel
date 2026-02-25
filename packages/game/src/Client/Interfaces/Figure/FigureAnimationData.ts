@@ -43,6 +43,7 @@ export type FigureAnimationData = {
 
             destinationX?: number;
             destinationY?: number;
+            directionOffset?: number;
         }[];
 
         effects: FigureAnimationFrameEffectData[];
