@@ -32,8 +32,8 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
         return;
     }
     
-    if(process.argv[2] === "figureeffects") {
-        await extractFigureEffects();
+    if(flags.some((flag) => flag === "--effect")) {
+        await extractFigureEffects(assetNames);
         
         return;
     }

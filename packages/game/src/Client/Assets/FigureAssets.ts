@@ -1,5 +1,5 @@
 import { FiguremapData } from "@Client/Interfaces/Figure/FiguremapData";
-import AssetFetcher, { AssetSpriteProperties } from "./AssetFetcher";
+import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult } from "./AssetFetcher";
 import { FigureData } from "@Client/Interfaces/Figure/FigureData";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { AvatarActionsData } from "@Client/Interfaces/Figure/Avataractions";
@@ -13,12 +13,20 @@ export default class FigureAssets {
     public static avatarAnimations: FigureAvatarAnimationData;
     public static effectmap: { id: number; library: string; }[];
 
+    private static loaded = false;
+
     public static async loadAssets() {
+        if(FigureAssets.loaded) {
+            return;
+        }
+
         FigureAssets.figuremap = await FigureAssets.getFiguremapData();
         FigureAssets.figuredata = await FigureAssets.getFiguredataData();
         FigureAssets.avataractions = await FigureAssets.getAvataractionsData();
         FigureAssets.effectmap = await FigureAssets.getEffectMapData();
         FigureAssets.avatarAnimations = await AssetFetcher.fetchJson<FigureAvatarAnimationData>(`/assets/figure/AvatarAnimations.json`);
+
+        FigureAssets.loaded = true;
     }
     
     public static async getEffectMapData() {
@@ -49,11 +57,11 @@ export default class FigureAssets {
         return await AssetFetcher.fetchImage(`/assets/figure/clothing/${name}/${name}.png`);
     }
 
-    public static async getFigureSprite(name: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
+    public static async getFigureSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/figure/clothing/${name}/${name}.png`, properties);
     }
 
-    public static async getEffectSprite(name: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
+    public static async getEffectSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/figure/effects/${name}/${name}.png`, properties);
     }
 

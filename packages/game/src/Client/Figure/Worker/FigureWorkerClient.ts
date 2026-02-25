@@ -1,73 +1,59 @@
 import Figure from "../Figure";
-import { FigureRenderEvent, FigureRenderResultEvent } from "../Interfaces/FigureRenderEvent";
+import { FigureRenderEvent } from "../Interfaces/FigureRenderEvent";
 import { FigureRendererResult } from "../Renderer/FigureRenderer";
 
 export default class FigureWorkerClient {
-    private worker = (() => {
-        const worker = new Worker(new URL("/src/Workers/Figure/FigureWorker.ts", import.meta.url), {
+    private worker = new Worker(new URL("/src/Workers/Figure/FigureWorker.ts", import.meta.url), {
             type: "module"
         });
-        
-        worker.onmessage = (event: MessageEvent<FigureRenderResultEvent>) => {
-            const id = event.data.id;
 
-            const request = this.canvasRequests.find((request) => request.id === id);
+    public preload(figure: Figure) {
+        const channel = new MessageChannel();
 
-            if(!request) {
-                return;
+        this.worker.postMessage({
+            type: "preload",
+
+            configuration: figure.configuration
+        } satisfies FigureRenderEvent, [channel.port1]);
+
+        return new Promise<void>((resolve, reject) => {
+            channel.port2.onmessage = () => {
+                resolve();
+            };
+
+            channel.port2.onmessageerror = () => {
+                reject();
             }
-
-            request.resolve({
-                figure: event.data.figure,
-                effects: event.data.effects
-            });
-
-            this.canvasRequests.splice(this.canvasRequests.indexOf(request), 1);
-        };
-
-        worker.onerror = (event: ErrorEvent) => {
-            console.error(event);
-        }
-
-        return worker;
-    })();
-
-    private canvasRequests: {
-        id: number;
-        resolve: (value: FigureRendererResult) => void;
-    }[] = [];
-
-    constructor(private readonly terminateOnComplete: boolean) {
-
+        });
     }
 
     public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean): Promise<FigureRendererResult> {
-        return new Promise<FigureRendererResult>((resolve) => {
-            const id = Math.random();
+        const channel = new MessageChannel();
 
-            this.canvasRequests.push({
-                id,
-                resolve
-            });
+        this.worker.postMessage({
+            type: "render",
 
-            this.worker.postMessage({
-                id,
-                frame,
-                cropped,
+            frame,
+            cropped,
 
-                configuration: figureRenderer.configuration,
-                direction: figureRenderer.direction,
-                actions: figureRenderer.actions,
-                headOnly: figureRenderer.headOnly,
-            } satisfies FigureRenderEvent);
+            configuration: figureRenderer.configuration,
+            direction: figureRenderer.direction,
+            actions: figureRenderer.actions,
+            headOnly: figureRenderer.headOnly,
+        } satisfies FigureRenderEvent, [channel.port1]);
+
+        return new Promise((resolve, reject) => {
+            channel.port2.onmessage = (event) => {
+                resolve(event.data);
+            };
+
+            channel.port2.onmessageerror = () => {
+                reject();
+            }
         });
     }
 
     public terminate() {
-        if(!this.terminateOnComplete) {
-            return;
-        }
-
         this.worker.terminate();
     }
 }

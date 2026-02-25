@@ -1,9 +1,8 @@
-import FigureAssets from "@Client/Assets/FigureAssets";
 import FigureWorkerClient from "./Worker/FigureWorkerClient";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
 
 export default class Figure {
-    public static readonly figureWorker: FigureWorkerClient = new FigureWorkerClient(false);
+    public static readonly figureWorker: FigureWorkerClient = new FigureWorkerClient();
 
     public actions: string[] = ["Default"]
 
@@ -11,8 +10,12 @@ export default class Figure {
         this.actions.push(...actions);
     }
 
+    public async preload(worker: FigureWorkerClient) {
+        await worker.preload(this);
+    }
+
     public async renderToCanvas(worker: FigureWorkerClient, frame: number, cropped: boolean = false) {
-        let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
+        /*let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
 
         if(this.headOnly) {
             renderName += "_headonly";
@@ -24,11 +27,11 @@ export default class Figure {
 
         if(FigureAssets.figureImage.has(renderName)) {
             return await FigureAssets.figureImage.get(renderName)!;
-        }
+        }*/
         
         const result = worker.renderInWebWorker(this, frame, cropped);
         
-        FigureAssets.figureImage.set(renderName, result);
+        //FigureAssets.figureImage.set(renderName, result);
 
         return await result;
     }

@@ -4,7 +4,7 @@ export const figureRenderPriority: Record<string, Record<string, string[]>> = {
         "1": ["li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
         "2": ["li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
         "3": ["bd","sh","lg","ch","cp","wa","ca","li","lh","ls","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "4": ["rh","rs","bd","sh","lg","ch","cp","wa","ca","lh","ls","li","hd","fc","ey","hr","hrb","fa","ea","ha","he","ri"],
+        "4": ["rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he","lh","li","ls","ri"],
         "5": ["rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
         "6": ["rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
         "7": ["li","lh","ls","ri","rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he"]

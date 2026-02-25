@@ -22,6 +22,7 @@ import EditShopBotDialog from "../Shop/Development/EditShopBotDialog";
 import EditShopBotFigureDialog from "../Shop/Development/EditShopBotFigureDialog";
 import BotWardrobeDialog from "../Bots/BotWardrobeDialog";
 import BotSpeechDialog from "../Bots/BotSpeechDialog";
+import FigureDialog from "../Figure/FigureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -102,6 +103,9 @@ export default function DialogInstances() {
 
                     case "edit-furniture":
                         return (<EditFurnitureDialog {...props}/>);
+
+                    case "figure":
+                        return (<FigureDialog {...props}/>);
                 }
             })}
         </Fragment>

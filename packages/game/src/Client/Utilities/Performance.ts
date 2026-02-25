@@ -12,12 +12,16 @@ export default class Performance {
     }
 
     public static endPerformanceCheck(label: string) {
+        if(!this.performanceChecks[label]) {
+            return;
+        }
+        
         const endTimestamp = performance.now();
 
         const duration = endTimestamp - this.performanceChecks[label].startTimestamp;
 
         if(duration > this.performanceChecks[label].minimumDurationInMilliseconds) {
-            //console.warn(`Performance check "${label}" exceeded ${this.performanceChecks[label].minimumDurationInMilliseconds}ms: ${duration.toFixed(2)}`);
+            console.warn(`Performance check "${label}" exceeded ${this.performanceChecks[label].minimumDurationInMilliseconds}ms: ${duration.toFixed(2)}`);
         }
 
         delete this.performanceChecks[label];

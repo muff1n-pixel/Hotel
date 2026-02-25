@@ -15,10 +15,14 @@ export default class RoomFigureItem extends RoomItem {
     private idlingSprite: RoomFigureIdlingSprite | null = null;
 
     public readonly id = Math.random();
-    private currentFrame: number = 0;
+    private frame: number = 0;
+    private renderedFrame: number = 0;
 
     public typing: boolean = false;
     public idling: boolean = false;
+
+    private preloaded = false;
+    private preloading = false;
 
     constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | null) {
         super(roomRenderer, "figure");
@@ -34,13 +38,27 @@ export default class RoomFigureItem extends RoomItem {
         this.render(frame);
     }
 
-    render(frame: number = 0) {
-        this.currentFrame = frame;
+    render(_frame: number = 0) {
+        /*if(!this.preloaded) {
+            if(!this.preloading) {
+                this.preloading = true;
 
-        this.figureRenderer.renderToCanvas(Figure.figureWorker, frame).then((result) => {
-            if(frame !== this.currentFrame) {
+                this.figureRenderer.preload(Figure.figureWorker).then(() => {
+                    this.preloaded = true;
+                });
+            }
+        }*/
+        
+        this.frame++;
+
+        const frame = this.frame;
+
+        this.figureRenderer.renderToCanvas(Figure.figureWorker, this.frame).then((result) => {
+            if(frame !== this.frame) {
                 return;
             }
+
+            this.renderedFrame = frame;
 
             this.sprites = [
                 new RoomFigureSprite(this, result.figure),

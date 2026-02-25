@@ -19,6 +19,8 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
 
         const roomUser = user.room.getRoomUser(user);
 
+        roomUser.lastActivity = performance.now();
+
         if(event.message.includes(":)")) {
             roomUser.addAction("GestureSmile");
         }

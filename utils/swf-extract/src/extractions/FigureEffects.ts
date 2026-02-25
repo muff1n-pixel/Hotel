@@ -7,13 +7,19 @@ import { createSpritesheet } from "../spritesheet/SpritesheetCreation.ts";
 import type { FigureData } from "../../../../packages/game/src/Client/Interfaces/Figure/FigureData.ts";
 import { createAssetsDataFromManifest, getValueAsArray } from "../data/DataCreation.ts";
 
-export default async function extractFigureEffects() {
+export default async function extractFigureEffects(assetNames: string[]) {
     const effectMaps = getEffectMaps();
 
     for(let effectMap of effectMaps) {
         const assetName = effectMap["@_lib"];
 
+        if(assetNames.length && !assetNames.includes(assetName)) {
+            continue;
+        }
+
         const collection = await extractSwf(assetName, path.join("assets", "effects", assetName + ".swf"));
+
+        console.log(collection);
 
         const animationFile = collection.extra.find((path) => path.endsWith("animation.xml"));
 
@@ -46,7 +52,9 @@ export default async function extractFigureEffects() {
             recursive: true
         });
         
-        copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
+        if(spritesheet.length) {
+            copyFileSync(path.join("temp", assetName, "spritesheets", `${assetName}.png`), path.join(outputPath, `${assetName}.png`));
+        }
         
         writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
             encoding: "utf-8"
@@ -127,7 +135,9 @@ function getAnimationData(filePath: string) {
                         id: bodypart["@_id"],
                         action: bodypart["@_action"],
                         frame: parseInt(bodypart["@_frame"]),
-                        destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined)
+                        destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
+                        destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
+                        directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
                     };
                 }),
 
@@ -136,7 +146,8 @@ function getAnimationData(filePath: string) {
                         id: fx["@_id"],
                         action: fx["@_action"],
                         frame: parseInt(fx["@_frame"]),
-                        destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined)
+                        destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
+                        destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
                     };
                 })
             };

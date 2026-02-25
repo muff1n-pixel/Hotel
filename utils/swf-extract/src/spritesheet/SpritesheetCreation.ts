@@ -7,6 +7,10 @@ import { flags } from "../index.ts";
 
 export function createSpritesheet(assetName: string, images: string[]): Promise<FurnitureSprites> {
     return new Promise(async (resolve, reject) => {
+        if(!images.length) {
+            return resolve([]);
+        };
+
         const outputPath = path.join("temp", assetName, "spritesheets");
         const outputFile = path.join(outputPath, `${assetName}.png`);
 

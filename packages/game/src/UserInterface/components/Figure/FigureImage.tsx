@@ -5,6 +5,7 @@ import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfigurati
 
 export type FigureImageProps = {
     actions?: string[];
+    frame?: number;
     figureConfiguration: FigureConfiguration;
     direction: number;
     cropped?: boolean;
@@ -12,16 +13,16 @@ export type FigureImageProps = {
     style?: CSSProperties;
 }
 
-export default function FigureImage({ actions, headOnly, cropped = true, figureConfiguration, direction, style }: FigureImageProps) {
+export default function FigureImage({ actions, frame = 0, headOnly, cropped = true, figureConfiguration, direction, style }: FigureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
         const furnitureRenderer = new Figure(figureConfiguration, direction, actions, headOnly);
 
-        furnitureRenderer.renderToCanvas(Figure.figureWorker, 0, cropped).then(({ figure }) => {
+        furnitureRenderer.renderToCanvas(Figure.figureWorker, frame, cropped).then(({ figure }) => {
             setImage(figure.image);
         });
-    }, [ figureConfiguration ]);
+    }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);
 
     if(!image) {
         return;

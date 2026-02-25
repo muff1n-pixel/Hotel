@@ -70,6 +70,12 @@ export default function ToolbarChatbar() {
                     break;
                 }
 
+                case "figure": {
+                    dialogs.addUniqueDialog("figure");
+
+                    return;
+                }
+
                 case "floor": {
                     dialogs.addUniqueDialog("room-floorplan");
                     

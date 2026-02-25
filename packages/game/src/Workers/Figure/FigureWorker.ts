@@ -3,20 +3,37 @@ import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
-    try {
-        await FigureAssets.loadAssets();
+    const port = event.ports[0];
 
+    await FigureAssets.loadAssets();
+
+    if(event.data.type === "render") {
         const figureRenderer = new FigureRenderer(event.data.configuration, event.data.direction, event.data.actions, event.data.frame, event.data.headOnly);
         
         const { figure, effects } = await figureRenderer.renderToCanvas(event.data.cropped);
+
+        const transferables: Transferable[] = [];
+
+        transferables.push(figure.image);
+        transferables.push(figure.imageData.buffer);
+
+        for(const effect of effects) {
+            transferables.push(effect.image);
+        }
         
-        postMessage({
-            id: event.data.id,
+        port.postMessage({
             figure,
-            effects
-        });
+            effects,
+            timestamp: Date.now()
+        }, transferables);
     }
-    catch(error) {
-        console.error(error);
+    else if(event.data.type === "preload") {
+        const figureRenderer = new FigureRenderer(event.data.configuration, 0, [], 0);
+        
+        await figureRenderer.heavilyPreloadFigureSprites();
+        
+        port.postMessage(null);
     }
+
+    port.close();
 };

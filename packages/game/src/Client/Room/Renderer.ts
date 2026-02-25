@@ -6,7 +6,6 @@ import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomCursor from "./Cursor/RoomCursor";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
-import Performance from "@Client/Utilities/Performance";
 import RoomFrameEvent from "@Client/Events/RoomFrameEvent";
 import RoomItem from "./Items/RoomItem";
 import ClientInstance from "@Client/ClientInstance";
@@ -90,18 +89,14 @@ export default class RoomRenderer extends EventTarget {
         const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
 
         if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
-            this.frame = (this.frame + 1) % this.framesPerSecond;
+            this.frame = ((this.frame + 1) % this.framesPerSecond);
             this.lastFrameTimestamp = performance.now();
 
             this.currentSize = this.size;
 
-            Performance.startPerformanceCheck("Process room items", 5);
-
             for(let index = 0; index < this.items.length; index++) {
                 this.items[index].process(this.frame);
             }
-
-            Performance.endPerformanceCheck("Process room items");
 
             this.dispatchEvent(new RoomFrameEvent());
         }
@@ -135,8 +130,6 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private renderOffScreen(width: number, height: number) {
-        Performance.startPerformanceCheck("Render off screen", 10);
-
         const canvas = new OffscreenCanvas(width, height);
 
         const context = canvas.getContext("2d");
@@ -153,15 +146,9 @@ export default class RoomRenderer extends EventTarget {
             top: this.center.top + this.camera.cameraPosition.top
         };
 
-        Performance.startPerformanceCheck("Sort room sprites", 5);
-
         const sprites = this.items.filter((item) => !item.disabled).flatMap((item) => item.sprites).sort((a, b) => {
             return this.getSpritePriority(a) - this.getSpritePriority(b);
         });
-
-        Performance.endPerformanceCheck("Sort room sprites");
-
-        Performance.startPerformanceCheck("Draw room sprites", 5);
 
         context.translate(this.renderedOffset.left, this.renderedOffset.top);
 
@@ -189,10 +176,6 @@ export default class RoomRenderer extends EventTarget {
             this.lighting.render(context);
         }
 
-        Performance.endPerformanceCheck("Draw room sprites");
-
-        Performance.endPerformanceCheck("Render off screen");
-        
         this.dispatchEvent(new RoomRenderEvent());
 
         return canvas;

@@ -2,13 +2,16 @@ import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfigurati
 import { FigureRendererSpriteResult } from "../Renderer/FigureRenderer";
 
 export type FigureRenderEvent = {
-    id: number;
+    type: "render";
     configuration: FigureConfiguration;
     direction: number;
     frame: number;
     actions: string[];
     cropped?: boolean;
     headOnly?: boolean;
+} | {
+    type: "preload";
+    configuration: FigureConfiguration;
 };
 
 export type FigureRenderResultEvent = {

@@ -14,7 +14,9 @@ export type WardrobeSelectionProps = {
 };
 
 export default function WardrobeSelection({ part, figureConfiguration, onFigureConfigurationChange }: WardrobeSelectionProps) {
-    const requestedData = useRef(false);
+    const requestedData = useRef<string>(undefined);
+
+    const [activeConfiguration, setActiveConfiguration] = useState(figureConfiguration.parts.find((configuration) => configuration.type === part));
 
     const [figureDataResponse, setFigureDataResponse] = useState<{
         items: FigureWardrobeItem[],
@@ -23,16 +25,19 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
     }>();
 
     useEffect(() => {
-        if(requestedData.current) {
+        setActiveConfiguration(figureConfiguration.parts.find((configuration) => configuration.type === part));
+    }, [part]);
+
+    useEffect(() => {
+        if(requestedData.current === activeConfiguration?.colors.join(',')) {
             return;
         }
 
-        requestedData.current = true;
+        requestedData.current = activeConfiguration?.colors.join(',');
 
-        FigureWardrobe.getWardrobePartTypes(part, undefined, figureConfiguration.gender).then(async (data) => setFigureDataResponse(data));
-    }, []);
+        FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colors, figureConfiguration.gender).then(async (data) => setFigureDataResponse(data));
+    }, [activeConfiguration, figureConfiguration]);
 
-    const activeConfiguration = figureConfiguration.parts.find((configuration) => configuration.type === part);
     const activeFigureData = activeConfiguration && figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId);
 
     return (
@@ -79,7 +84,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     ])
                             });
                         }}>
-                            <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32.image}/>
+                            <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32?.image}/>
                         </WardrobeSelectionItem>
                     ))}
                 </div>

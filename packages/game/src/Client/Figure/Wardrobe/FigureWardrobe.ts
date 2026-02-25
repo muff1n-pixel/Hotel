@@ -16,7 +16,7 @@ export type FigureWardrobeColor = {
 };
 
 export default class FigureWardrobe {
-    public static figureWorker = new FigureWorkerClient(true);
+    public static figureWorker = new FigureWorkerClient();
 
     public static async getWardrobePartTypes(part: FigurePartKeyAbbreviation, colors: number[] | undefined, gender: "male" | "female") {
         const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === part);

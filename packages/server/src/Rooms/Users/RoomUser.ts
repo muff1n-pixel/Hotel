@@ -27,11 +27,11 @@ export default class RoomUser {
 
     private _lastActivity: number = performance.now();
 
-    private get lastActivity() {
+    public get lastActivity() {
         return this._lastActivity;
     }
 
-    private set lastActivity(value: number) {
+    public set lastActivity(value: number) {
         this._lastActivity = value;
 
         if(this.idling) {
