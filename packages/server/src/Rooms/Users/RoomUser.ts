@@ -332,6 +332,7 @@ export default class RoomUser {
 
                 this.setPosition(newPosition, furniture.model.direction);
                 this.addAction("Sit");
+                this.removeAction("Dance");
             }
 
             const currentFurniture = this.room.getUpmostFurnitureAtPosition(this.position);
