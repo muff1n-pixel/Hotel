@@ -145,7 +145,7 @@ export default class RoomInstance {
             return;
         }
 
-        if(event.floorEntity?.position) {
+        if(event.floorEntity?.position && !(event.otherEntity?.item instanceof RoomFigureItem)) {
             webSocketClient.send<StartWalkingEventData>("StartWalkingEvent", {
                 target: event.floorEntity.position
             });
