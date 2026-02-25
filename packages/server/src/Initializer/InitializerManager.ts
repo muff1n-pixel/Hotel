@@ -103,7 +103,7 @@ export default class InitializerManager {
     private async downloadAndExtractAssets(): Promise<any> {
         const instance = this;
 
-        if (config.assetsFolder === null || !fs.existsSync(config.assetsFolder)) {
+        if (config.assets.path === null || !fs.existsSync(config.assets.path)) {
             sendLog("ERROR", "Your assets folder path (config.json) is invalid.");
             this.setSelectOptions();
             return;
@@ -112,10 +112,10 @@ export default class InitializerManager {
         let receivedBytes = 0,
             totalBytes = 0;
 
-        const out = fs.createWriteStream(config.assetsFolder + "/assets.zip");
+        const out = fs.createWriteStream(config.assets.path + "/assets.zip");
         const req = request({
             method: 'GET',
-            uri: config.assetsDownloaderUrl
+            uri: config.assets.externalUrl
         });
 
         sendLog("INFO", "Start downloading...");
@@ -161,7 +161,7 @@ export default class InitializerManager {
 
     private async unzipAssets(): Promise<void> {
         try {
-            const zip = new StreamZip.async({ file: config.assetsFolder + "/assets.zip" });
+            const zip = new StreamZip.async({ file: config.assets.path + "/assets.zip" });
             const entriesCount = await zip.entriesCount;
             const showProgress = (counter: number) => {
                 process.stdout.clearLine(0);
@@ -176,12 +176,12 @@ export default class InitializerManager {
                 showProgress(count);
             });
 
-            await zip.extract(null, config.assetsFolder);
+            await zip.extract(null, config.assets.path);
             showProgress(entriesCount);
             process.stdout.clearLine(0);
             process.stdout.cursorTo(0);
             sendLog("SUCCESS", `${count} assets unzipped successfully.`);
-            fs.unlinkSync(config.assetsFolder + "/assets.zip");
+            fs.unlinkSync(config.assets.path + "/assets.zip");
             this.setSelectOptions();
         } catch (err) {
             sendLog("ERROR", "An error occurred while unzipping the assets: " + (err as Error).message);
