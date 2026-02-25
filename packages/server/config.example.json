@@ -4,6 +4,11 @@
     "authentication": {
         "useAccessTokens": true
     },
+
+    "assets": {
+        "externalUrl": "https://pixel63.muff1n-pixel.org/game/assets/assets-2026-02-21.zip",
+        "path": "../../assets"
+    },
     
     "database": {
         "dialect": "mysql",

@@ -1,7 +1,12 @@
 {
 	"private": true,
-    "scripts": {
-        "start": "npx concurrently --kill-others \"npm run start -w packages/server\" \"npm run start -w packages/web\" \"npm run watch -w packages/shared\" \"npm run watch -w packages/game\""
-    },
-	"workspaces": ["packages/server", "packages/game", "packages/shared", "packages/web"]
+	"scripts": {
+		"start": "npx concurrently --kill-others \"npm run start -w packages/server\" \"npm run start -w packages/web\" \"npm run watch -w packages/shared\" \"npm run watch -w packages/game\""
+	},
+	"workspaces": [
+		"packages/server",
+		"packages/game",
+		"packages/shared",
+		"packages/web"
+	]
 }

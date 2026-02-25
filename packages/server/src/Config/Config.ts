@@ -7,6 +7,11 @@ export type Config = {
     authentication: {
         useAccessTokens: boolean;
     };
+    
+    assets: {
+        externalUrl: string;
+        path: string;
+    };
 
     database: Options;
 };
