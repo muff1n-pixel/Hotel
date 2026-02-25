@@ -1,3 +1,4 @@
+import ImageDataWorkerClient from "@Client/Figure/Worker/ImageDataWorkerClient";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
 
 export type AssetSpriteProperties = {
@@ -21,10 +22,19 @@ export type AssetSpriteProperties = {
     ignoreExistingImageData?: boolean;
 };
 
+export type AssetSpriteResult = {
+    imageData: ImageData | null;
+
+    result: Promise<{
+        image: ImageBitmap;
+        imageData: ImageData | null;
+    }>;
+};
+
 export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
     private static images: Map<string, Promise<ImageBitmap>> = new Map();
-    private static sprites: Record<string, (AssetSpriteProperties & { sprite: Promise<{ image: ImageBitmap, imageData: ImageData }> })[]> = {};
+    private static sprites: Record<string, (AssetSpriteProperties & AssetSpriteResult)[]> = {};
 
     public static async fetchJson<T>(url: string): Promise<T> {
         if(this.json.has(url)) {
@@ -84,7 +94,7 @@ export default class AssetFetcher {
         return result;
     }
 
-    public static async fetchImageSprite(url: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
+    public static async fetchImageSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         if(!this.sprites[url]) {
             this.sprites[url] = [];
         }
@@ -92,7 +102,12 @@ export default class AssetFetcher {
         const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight);
 
         if(existingSprite) {
-            return await existingSprite.sprite;
+            const output = await existingSprite.result;
+
+            return {
+                image: output.image,
+                imageData: existingSprite.imageData
+            };
         }
 
         /*if(properties.flipHorizontal && !properties.ignoreImageData) {
@@ -148,18 +163,26 @@ export default class AssetFetcher {
         return (async () => {
             properties.id ??= Math.random();
 
-            const result: AssetSpriteProperties & { sprite: Promise<{ image: ImageBitmap, imageData: ImageData }> } = {
-                sprite: this.drawSprite(url, properties),
+            const result: AssetSpriteProperties & AssetSpriteResult = {
+                result: this.drawSprite(url, properties),
+                imageData: null,
                 ...properties
             };
 
             this.sprites[url].push(result);
 
-            return await result.sprite;
+            const output = await result.result;
+
+            ImageDataWorkerClient.default.getImageData(output.image).then(async (imageData) => {
+                result.imageData = imageData;
+                output.imageData = imageData;
+            })
+
+            return output;
         })();
     }
 
-    private static async drawSprite(url: string, properties: AssetSpriteProperties) {
+    private static async drawSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         try {
             const image = await this.fetchImage(url);
 
@@ -200,13 +223,13 @@ export default class AssetFetcher {
                 context.drawImage(colorCanvas, 0, 0);
             }
 
-            let imageData: ImageData;
+            const imageData: ImageData | null = null;
 
-            if(!properties.ignoreImageData) {
+            /*if(!properties.ignoreImageData) {
                 const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
 
                 if(existingSpriteWithImageData && !properties.ignoreExistingImageData) {
-                    imageData = (await existingSpriteWithImageData.sprite).imageData;
+                    imageData = (await existingSpriteWithImageData.result).imageData;
                 }
                 else if(!properties.ignoreExistingImageData) {
                     const existingNonFlippedSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
@@ -214,7 +237,7 @@ export default class AssetFetcher {
                     if(existingNonFlippedSpriteWithImageData) {
                         console.log("Flip image data");
 
-                        const sprite = await existingNonFlippedSpriteWithImageData.sprite;
+                        const sprite = await existingNonFlippedSpriteWithImageData.result;
                         const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
 
                         for (let y = 0; y < newImageData.height; y++) {
@@ -246,7 +269,7 @@ export default class AssetFetcher {
             }
             else {
                 imageData = new ImageData(canvas.width, canvas.height);
-            }
+            }*/
 
             return {
                 image: await createImageBitmap(canvas),

@@ -140,7 +140,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 ignoreMouse: layerData?.ignoreMouse
             };
 
-            FurnitureAssets.assetSprites.set(`${assetName}_${color}`, assetSprite);
+            if(imageData) {
+                FurnitureAssets.assetSprites.set(`${assetName}_${color}`, assetSprite);
+            }
 
             sprites.push(assetSprite);
         }

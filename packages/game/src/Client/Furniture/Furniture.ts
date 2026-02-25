@@ -12,7 +12,7 @@ export type FurnitureRenderToCanvasOptions = {
 
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
-    imageData: ImageData;
+    imageData: ImageData | null;
 
     x: number;
     y: number;

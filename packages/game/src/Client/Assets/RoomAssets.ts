@@ -1,4 +1,4 @@
-import AssetFetcher, { AssetSpriteProperties } from "./AssetFetcher";
+import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult } from "./AssetFetcher";
 import { RoomData } from "@Client/Interfaces/Room/RoomData";
 
 export default class RoomAssets {
@@ -10,7 +10,7 @@ export default class RoomAssets {
         return await AssetFetcher.fetchImage(`/assets/room/${assetName}/${assetName}.png`);
     }
 
-    public static async getRoomSprite(assetName: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
+    public static async getRoomSprite(assetName: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/room/${assetName}/${assetName}.png`, properties);
     }
 

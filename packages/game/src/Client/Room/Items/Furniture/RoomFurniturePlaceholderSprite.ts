@@ -28,13 +28,15 @@ export default class RoomFurniturePlaceholderSprite extends RoomSprite {
             return;
         }
 
-        context.drawImage(placeholder.image, this.offset.left, this.offset.top);
+        if(placeholder.image) {
+            context.drawImage(placeholder.image, this.offset.left, this.offset.top);
+        }
     }
 
     mouseover(position: MousePosition) {
         const placeholder = (this.item.roomRenderer.size === 64)?(FurnitureAssets.placeholder):(FurnitureAssets.placeholder32);
 
-        if(!placeholder) {
+        if(!placeholder?.imageData) {
             return null;
         }
 

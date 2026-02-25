@@ -1,24 +1,28 @@
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
-import AssetFetcher, { AssetSpriteProperties } from "./AssetFetcher";
+import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult } from "./AssetFetcher";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 
 export default class FurnitureAssets {
-    public static placeholder: { image: ImageBitmap, imageData: ImageData };
-    public static placeholder32: { image: ImageBitmap, imageData: ImageData };
+    public static placeholder: Awaited<AssetSpriteResult["result"]>;
+    public static placeholder32: Awaited<AssetSpriteResult["result"]>;
     
     public static async preloadAssets() {
-        FurnitureAssets.placeholder = await AssetFetcher.fetchImageSprite(`/assets/furniture/placeholder/placeholder64.png`, {
+        await AssetFetcher.fetchImageSprite(`/assets/furniture/placeholder/placeholder64.png`, {
             x: 0,
             y: 0,
             width: 68,
             height: 67
+        }).then((result) => {
+            FurnitureAssets.placeholder = result;
         });
         
-        FurnitureAssets.placeholder32 = await AssetFetcher.fetchImageSprite(`/assets/furniture/placeholder/placeholder32.png`, {
+        await AssetFetcher.fetchImageSprite(`/assets/furniture/placeholder/placeholder32.png`, {
             x: 0,
             y: 0,
             width: 35,
             height: 34
+        }).then((result) => {
+            FurnitureAssets.placeholder32 = result;
         });
     }
 
@@ -30,7 +34,7 @@ export default class FurnitureAssets {
         return await AssetFetcher.fetchImage(`/assets/furniture/${furnitureName}/${furnitureName}.png`);
     }
 
-    public static async getFurnitureSprite(furnitureName: string, properties: AssetSpriteProperties): Promise<{ image: ImageBitmap, imageData: ImageData }> {
+    public static async getFurnitureSprite(furnitureName: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/furniture/${furnitureName}/${furnitureName}.png`, properties);
     }
 

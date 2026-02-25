@@ -68,6 +68,10 @@ export default class RoomFurnitureSprite extends RoomSprite {
         if(this.sprite.ignoreMouse) {
             return null;
         }
+
+        if(!this.sprite.imageData) {
+            return null;
+        }
         
         const relativePosition: MousePosition = {
             left: position.left - (this.offset.left),

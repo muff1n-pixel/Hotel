@@ -24,7 +24,7 @@ export type FigureRendererSpriteResult = FigureRendererSprite & {
 
 export type FigureRendererSprite = {
     image: ImageBitmap;
-    imageData?: ImageData;
+    imageData?: ImageData | null;
 
     x: number;
     y: number;

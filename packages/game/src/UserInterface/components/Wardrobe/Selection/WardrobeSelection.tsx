@@ -79,7 +79,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     ])
                             });
                         }}>
-                            <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32.image}/>
+                            <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32?.image}/>
                         </WardrobeSelectionItem>
                     ))}
                 </div>
