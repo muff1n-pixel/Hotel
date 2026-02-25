@@ -29,7 +29,6 @@
     "inquirer": "^13.3.0",
     "jsonwebtoken": "^9.0.3",
     "node-stream-zip": "^1.15.0",
-    "request": "^2.88.2",
     "sequelize": "^6.37.7",
     "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",

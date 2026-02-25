@@ -1,6 +1,5 @@
 import Inquirer from 'inquirer';
 import fs from 'fs';
-import request from 'request';
 import { config } from '../Config/Config';
 import { sendLog } from '../Logger/Logger';
 import { IncomingMessage } from "http";
@@ -9,6 +8,7 @@ import { initializeModels } from '../Database/Database';
 import { initializeDevelopmentData } from '../Database/Development/DatabaseDevelopmentData';
 import { startServer } from '..';
 import StreamZip from 'node-stream-zip';
+import { Readable } from 'stream';
 
 export default class InitializerManager {
     progressCount: number;
@@ -113,35 +113,55 @@ export default class InitializerManager {
             totalBytes = 0;
 
         const out = fs.createWriteStream(config.assets.path + "/assets.zip");
-        const req = request({
-            method: 'GET',
-            uri: config.assets.externalUrl
-        });
 
         sendLog("INFO", "Start downloading...");
 
-        req.on('error', function (err: any) {
+        const response = await fetch(config.assets.externalUrl, {
+            method: "GET"
+        });
+
+        if(!response.ok) {
+            sendLog("ERROR", "Response is not ok.");
+            this.setSelectOptions();
+            return;
+        }
+
+        if(!response.body) {
+            sendLog("ERROR", "Response does not have a body.");
+            this.setSelectOptions();
+            return;
+        }
+
+        const contentLength = response.headers.get("Content-Length");
+
+        if(!contentLength) {
+            sendLog("ERROR", "Response did not contain a content length header.");
+            this.setSelectOptions();
+            return;
+        }
+
+        totalBytes = parseInt(contentLength);
+
+        out.on('error', function (err: any) {
             sendLog("ERROR", "An error occurred while downloading the assets: " + err.message);
             instance.resetProgressBar();
             instance.setSelectOptions();
             return;
         });
 
-        req.on('data', function (chunk: Buffer) {
+        const readable = Readable.fromWeb(response.body);
+
+        readable.on('data', (chunk: Buffer) => {
             receivedBytes += chunk.length;
             instance.showDownloadingProgress(receivedBytes, totalBytes);
         });
 
-        req.on('response', function (res: IncomingMessage) {
-            totalBytes = parseInt(res.headers['content-length'] as string);
-        });
-
-        req.on('end', function () {
+        out.on('finish', function () {
             instance.resetProgressBar();
             instance.unzipAssets();
         });
 
-        req.pipe(out);
+        readable.pipe(out);
     }
 
     resetProgressBar(): void {
