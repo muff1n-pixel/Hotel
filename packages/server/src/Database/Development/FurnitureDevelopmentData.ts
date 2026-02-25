@@ -83,8 +83,9 @@ function getHabboRoomContentData() {
 export function getWallIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
 
-    if(habboRoomContentData === null)
+    if(habboRoomContentData === null) {
         return [];
+    }
 
     return habboRoomContentData.visualization.wallData.walls.filter((wall: any) => !isNaN(parseInt(wall.id))).map((wall: any) => parseInt(wall.id));
 }
@@ -92,8 +93,9 @@ export function getWallIds(): number[] {
 export function getFloorIds(): number[] {
     const habboRoomContentData = getHabboRoomContentData();
 
-    if(habboRoomContentData === null)
+    if(habboRoomContentData === null) {
         return [];
+    }
 
     return habboRoomContentData.visualization.floorData.floors.filter((floor: any) => !isNaN(parseInt(floor.id))).map((floor: any) => parseInt(floor.id));
 }
