@@ -113,7 +113,7 @@ export default class RoomUser {
     }
 
     public async handleActionsInterval() {
-        if(!this.idling && (performance.now() - this.lastActivity) > 30_000) {
+        if(!this.idling && (performance.now() - this.lastActivity) > 2 * 60 * 1000) {
             this.idling = true;
 
             this.room.outgoingEvents.push(
