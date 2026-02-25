@@ -7,7 +7,7 @@ import InitializerManager from "./Initializer/InitializerManager";
 
 let game: Game;
 
-const startServer = async () => {
+export async function startServer() {
     game = new Game();
 
     await initializeModels();
@@ -36,4 +36,4 @@ const startServer = async () => {
     startServer();
 })();
 
-export { startServer, game };
+export { game };
