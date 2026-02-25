@@ -45,7 +45,7 @@ export default class RoomFloorplan {
         }
     }
 
-    private getPositionWeight(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false) {
+    private getPositionWeight(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false, finalDestination: boolean = false) {
         if(this.room.model.structure.grid[position.row]?.[position.column] === undefined || this.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return 1;
         }
@@ -54,7 +54,7 @@ export default class RoomFloorplan {
             const upmostFurniture = this.room.getUpmostFurnitureAtPosition(position);
             
             if(upmostFurniture) {
-                if(!upmostFurniture.isWalkable()) {
+                if(!upmostFurniture.isWalkable(finalDestination)) {
                     return 1;
                 }
             }
@@ -87,6 +87,10 @@ export default class RoomFloorplan {
         }
 
         grid[roomUser.position.row]![roomUser.position.column] = 0;
+        
+        if(grid[targetPosition.row] && grid[targetPosition.row]?.[targetPosition.column]) {
+            grid[targetPosition.row]![targetPosition.column] = this.getPositionWeight(targetPosition, walkThroughFurniture, true);
+        }
 
         const usersAtTargetPosition = this.room.users.filter((user) => user.position.row === targetPosition.row && user.position.column === targetPosition.column);
 

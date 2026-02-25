@@ -152,7 +152,7 @@ export default class RoomUser {
         const furniture = this.room.getUpmostFurnitureAtPosition(nextPosition);
 
         if(furniture) {
-            if(!this.walkThroughFurniture && !furniture.isWalkable()) {
+            if(!this.walkThroughFurniture && !furniture.isWalkable(this.path.length === 1)) {
                 console.log("User path cancelled");
 
                 this.path = undefined;
@@ -301,7 +301,7 @@ export default class RoomUser {
         const furniture = this.room.getUpmostFurnitureAtPosition(position);
 
         if(furniture) {
-            if(!furniture.isWalkable()) {
+            if(!furniture.isWalkable(true)) {
                 return;
             }
         }

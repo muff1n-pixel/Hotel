@@ -84,14 +84,16 @@ export default class RoomFurniture {
         }
     }
 
-    public isWalkable() {
+    public isWalkable(finalDestination: boolean) {
         if(this.model.furniture.flags.walkable) {
             return true;
         }
 
-        // it can be walked through or used as final destination
-        if(this.model.furniture.flags.sitable) {
-            return true;
+        if(finalDestination) {
+            // it can be walked through or used as final destination
+            if(this.model.furniture.flags.sitable) {
+                return true;
+            }
         }
 
         // if animation id is 1, the gate is unlocked
