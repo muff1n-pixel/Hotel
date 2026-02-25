@@ -10,6 +10,7 @@ import { RoomInformationData } from "@shared/Communications/Responses/Rooms/Load
 import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
 import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
 import RoomBot from "./Bots/RoomBot.js";
+import RoomActor from "./Actor/RoomActor.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -75,6 +76,18 @@ export default class Room {
         const bot = this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
 
         return user || bot;
+    }
+
+    public getActorsAtPosition(position: Omit<RoomPosition, "depth">): RoomActor[] {
+        const users = this.users.filter((user) => user.position.row === position.row && user.position.column === position.column);
+        const bots = this.bots.filter((bot) => bot.position.row === position.row && bot.position.column === position.column);
+
+        const results: RoomActor[] = [];
+
+        results.push(...users);
+        results.push(...bots);
+
+        return results;
     }
 
     public getBotAtPosition(position: Omit<RoomPosition, "depth">) {
@@ -148,6 +161,19 @@ export default class Room {
 
             delete this.actionsInterval;
         }*/
+    }
+
+    public getSitableFurnitureAtPosition(position: Omit<RoomPosition, "depth">) {
+        const furniture =
+            this.getAllFurnitureAtPosition(position)
+                .filter((furniture) => furniture.model.furniture.flags.sitable)
+                .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
+
+        if(!furniture.length) {
+            return undefined;
+        }
+
+        return furniture[0];
     }
 
     public getUpmostFurnitureAtPosition(position: Omit<RoomPosition, "depth">) {

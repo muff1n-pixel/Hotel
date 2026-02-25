@@ -1,6 +1,7 @@
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition";
 import Room from "../Room";
 import RoomFurniture from "../Furniture/RoomFurniture";
+import RoomActorPath from "./Path/RoomActorPath";
 
 export default interface RoomActor {
     room: Room;
@@ -9,6 +10,8 @@ export default interface RoomActor {
     direction: number;
 
     lastActivity: number;
+
+    path: RoomActorPath;
 
     sendPositionEvent(usePath: boolean): void;
     sendWalkEvent(previousPosition: RoomPosition): void;

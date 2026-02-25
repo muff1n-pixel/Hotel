@@ -167,28 +167,27 @@ export default class RoomActorPath {
             return;
         }
 
-        const furniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
+        const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(this.actor.position);
 
-        if(furniture) {
-            if(furniture.model.furniture.flags.sitable) {
-                const newPosition = {
-                    row: this.actor.position.row,
-                    column: this.actor.position.column,
-                    depth: furniture.model.position.depth + furniture.model.furniture.dimensions.depth - 0.5
-                };
+        if(sitableFurniture) {
+            this.setPosition(sitableFurniture.getSitPosition(), sitableFurniture.model.direction);
 
-                this.setPosition(newPosition, furniture.model.direction);
+            this.actor.addAction("Sit");
+            this.actor.removeAction("Dance");
+        }
+        else {
+            const furniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
 
-                this.actor.addAction("Sit");
-                this.actor.removeAction("Dance");
-            }
+            if(furniture) {
 
-            const currentFurniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
+                const currentFurniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
 
-            if(currentFurniture) {
-                await this.actor.walkOn?.(currentFurniture);
+                if(currentFurniture) {
+                    await this.actor.walkOn?.(currentFurniture);
+                }
             }
         }
+
 
         console.log("User path finished");
 

@@ -234,10 +234,73 @@ export default class RoomFurniture {
 
     public async setPosition(position: RoomPosition, save: boolean = true) {
         const previousPosition = this.model.position;
+        const previousSitPosition = this.getSitPosition();
 
         this.model.position = position;
 
         this.room.floorplan.updatePosition(position, previousPosition, this.getDimensions());
+
+        if(this.model.furniture.flags.sitable) {
+            const actorsAtPreviousPosition = this.room.getActorsAtPosition(previousPosition);
+            const sitableFurnitureAtPreviousPosition = this.room.getSitableFurnitureAtPosition(previousPosition);
+
+            if(sitableFurnitureAtPreviousPosition) {
+                for(const actor of actorsAtPreviousPosition) {
+                    actor.addAction("Sit");
+                    actor.removeAction("Dance");
+                    actor.path.setPosition(sitableFurnitureAtPreviousPosition.getSitPosition(), this.model.direction);
+                }
+            }
+            else {
+                for(const actor of actorsAtPreviousPosition) {
+                    actor.removeAction("Sit");
+                    actor.path.setPosition({
+                        ...previousPosition,
+                        depth: this.room.getUpmostDepthAtPosition(previousPosition)
+                    }, this.model.direction);
+                }
+            }
+
+            const actorsAtPosition = this.room.getActorsAtPosition(position);
+
+            for(const actor of actorsAtPosition) {
+                actor.addAction("Sit");
+                actor.removeAction("Dance");
+                actor.path.setPosition(this.getSitPosition(), this.model.direction);
+            }
+        }
+
+        if(save && this.model.changed()) {
+            await this.model.save();
+
+            this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                furnitureUpdated: [
+                    this.getFurnitureData()
+                ]
+            }));
+        }
+    }
+
+    public getSitPosition() {
+        return {
+            ...this.model.position,
+            depth: this.model.position.depth + this.model.furniture.dimensions.depth - 0.5
+        };
+    }
+
+    public async setDirection(direction: number, save: boolean = true) {
+        this.model.direction = direction;
+
+        this.room.floorplan.updatePosition(this.model.position, undefined, this.getDimensions());
+
+        if(this.model.furniture.flags.sitable) {
+            const actorsAtPosition = this.room.getActorsAtPosition(this.model.position);
+
+            for(const actor of actorsAtPosition) {
+                actor.addAction("Sit");
+                actor.path.setPosition(this.getSitPosition(), this.model.direction);
+            }
+        }
 
         if(save && this.model.changed()) {
             await this.model.save();
