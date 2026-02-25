@@ -23,6 +23,7 @@ import EditShopBotFigureDialog from "../Shop/Development/EditShopBotFigureDialog
 import BotWardrobeDialog from "../Bots/BotWardrobeDialog";
 import BotSpeechDialog from "../Bots/BotSpeechDialog";
 import FigureDialog from "../Figure/FigureDialog";
+import RoomChatCommandsDialog from "../Room/Chat/Commands/RoomChatCommandsDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -73,6 +74,9 @@ export default function DialogInstances() {
 
                     case "room-floorplan":
                         return (<RoomFloorPlanDialog {...props} key={dialog.id}/>);
+
+                    case "room-chat-commands":
+                        return (<RoomChatCommandsDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

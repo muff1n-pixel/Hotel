@@ -44,6 +44,12 @@ export default function ToolbarChatbar() {
             const command = input[0].substring(1);
 
             switch(command) {
+                case "commands": {
+                    dialogs.addUniqueDialog("room-chat-commands");
+                
+                    return;
+                }
+
                 case "furni": {
                     dialogs.addUniqueDialog("room-furni");
 

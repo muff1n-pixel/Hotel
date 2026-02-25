@@ -3,6 +3,7 @@ import { ReactNode, useState } from "react";
 export type DialogTableProps = {
     activeId?: any;
 
+    flex?: number[];
     columns: string[];
     items?: {
         id: any;
@@ -14,7 +15,7 @@ export type DialogTableProps = {
     tools?: ReactNode;
 };
 
-export default function DialogTable({ activeId, columns, items, tools }: DialogTableProps) {
+export default function DialogTable({ activeId, flex, columns, items, tools }: DialogTableProps) {
     const [_activeId, setActiveId] = useState<string | null>(null);
 
     return (
@@ -38,9 +39,9 @@ export default function DialogTable({ activeId, columns, items, tools }: DialogT
                 gap: 5,
                 padding: 4
             }}>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                     <div key={column} style={{
-                        flex: 1
+                        flex: flex?.[index] ?? 1
                     }}>
                         <div style={{
                             color: "#000",
@@ -73,9 +74,9 @@ export default function DialogTable({ activeId, columns, items, tools }: DialogT
                         padding: 4,
                         background: (item.id === (activeId ?? _activeId))?("#B8E2FC"):("transparent")
                     }}>
-                        {item.values.map((value) => (
+                        {item.values.map((value, index) => (
                             <div key={value?.toString()} style={{
-                                flex: 1,
+                                flex: flex?.[index] ?? 1,
                                 cursor: "pointer",
                             }} onClick={() => {
                                 setActiveId(item.id);
