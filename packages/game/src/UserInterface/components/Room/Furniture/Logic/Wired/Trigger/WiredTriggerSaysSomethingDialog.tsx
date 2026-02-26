@@ -1,7 +1,7 @@
 import WiredDialog from "../../../../../Dialog/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
-import WiredTriggerFurniture from "../../../../../Dialog/Wired/WiredTriggerFurniture";
+import WiredFurniture from "../../../../../Dialog/Wired/WiredFurniture";
 import WiredDivider from "../../../../../Dialog/Wired/WiredDivider";
 import WiredSection from "../../../../../Dialog/Wired/WiredSection";
 import WiredInput from "../../../../../Dialog/Wired/WiredInput";
@@ -40,7 +40,7 @@ export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomF
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredTriggerFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.furniture.data}/>
 
             <WiredDivider/>
 

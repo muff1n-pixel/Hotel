@@ -4,7 +4,7 @@ import RoomUser from "../../../../Users/RoomUser";
 import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData";
 import WiredLogic from "../WiredLogic";
 
-export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic {
+export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic<WiredTriggerUserSaysSomethingData> {
     constructor(roomFurniture: RoomFurniture<WiredTriggerUserSaysSomethingData>) {
         super(roomFurniture);
     }
@@ -25,9 +25,9 @@ export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic {
         }
 
         this.lastTriggered = performance.now();
-        this.roomFurniture.setAnimation(101, true);
+        this.roomFurniture.setAnimation(101);
 
-        this.handleTrigger();
+        this.handleTrigger(roomUser);
 
         return {
             blockUserChat: this.roomFurniture.model.data.hideMessage === true

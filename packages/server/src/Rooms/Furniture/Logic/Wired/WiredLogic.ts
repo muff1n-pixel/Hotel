@@ -1,11 +1,11 @@
 import RoomFurnitureLogic, { RoomFurnitureHandleUserChatResult } from "../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../RoomFurniture";
-import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData";
+import RoomUser from "../../../Users/RoomUser";
 
-export default class WiredLogic implements RoomFurnitureLogic {
+export default class WiredLogic<T> implements RoomFurnitureLogic {
     public lastTriggered: number = 0;
 
-    constructor(public readonly roomFurniture: RoomFurniture<WiredTriggerUserSaysSomethingData>) {
+    constructor(public readonly roomFurniture: RoomFurniture<T>) {
 
     }
 
@@ -14,7 +14,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
             const elapsed = performance.now() - this.lastTriggered;
 
             if(elapsed >= 1500) {
-                this.roomFurniture.setAnimation(0, true);
+                this.roomFurniture.setAnimation(0);
             }
         }
     }
@@ -23,7 +23,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
         const furniture = this.roomFurniture.room.furnitures.find((furniture) => 
             furniture.model.position.row === this.roomFurniture.model.position.row
             && furniture.model.position.column === this.roomFurniture.model.position.column
-            && furniture.model.position.depth === this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth
+            && furniture.model.position.depth === this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth + 0.0001
         );
 
         if(!furniture) {
@@ -39,9 +39,9 @@ export default class WiredLogic implements RoomFurnitureLogic {
         return category;
     }
 
-    public async handleTrigger() {
+    public async handleTrigger(roomUser?: RoomUser) {
         const connectedWired = this.getConnectedWired();
 
-        connectedWired?.handleTrigger();
+        connectedWired?.handleTrigger(roomUser);
     }
 }

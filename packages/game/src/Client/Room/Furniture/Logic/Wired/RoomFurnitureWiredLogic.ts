@@ -1,10 +1,10 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { clientInstance } from "../../../../../..";
-import { RoomFurnitureTrophyDialogData } from "../../../../../../UserInterface/components/Room/Furniture/Logic/Trophy/RoomFurnitureTrophyDialog";
+import { clientInstance } from "../../../../..";
+import { RoomFurnitureLogicDialogData } from "../../../../../UserInterface/components/Room/Furniture/Logic/RoomFurnitureLogicDialog";
 
-export default class RoomFurnitureWiredTriggerLogic implements FurnitureLogic {
+export default class RoomFurnitureWiredLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
     }
 
@@ -25,7 +25,7 @@ export default class RoomFurnitureWiredTriggerLogic implements FurnitureLogic {
             data: {
                 furniture: this.roomFurniture,
                 type: this.roomFurniture.data.furniture.interactionType as any
-            } satisfies RoomFurnitureTrophyDialogData
+            } satisfies RoomFurnitureLogicDialogData
         });
     }
 

@@ -15,9 +15,10 @@ import RoomFurnitureDiceLogic from "./Logic/RoomFurnitureDiceLogic.js";
 import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLogic.js";
 import RoomUser from "../Users/RoomUser.js";
 import RoomFurnitureFortunaLogic from "./Logic/RoomFurnitureFortunaLogic.js";
-import RoomActor from "../Actor/RoomActor.js";
 import WiredTriggerUserSaysSomethingLogic from "./Logic/Wired/Trigger/WiredTriggerUserSaysSomethingLogic.js";
 import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData.js";
+import WiredActionShowMessageLogic from "./Logic/Wired/Action/WiredActionShowMessageLogic.js";
+import { WiredActionShowMessageData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -191,10 +192,13 @@ export default class RoomFurniture<T = unknown> {
 
                 case "wf_trg_says_something":
                     return this.category = new WiredTriggerUserSaysSomethingLogic(this as RoomFurniture<WiredTriggerUserSaysSomethingData>);
+
+                case "wf_act_show_message":
+                    return this.category = new WiredActionShowMessageLogic(this as RoomFurniture<WiredActionShowMessageData>);
             }
 
             if(!this.category) {
-                console.warn("Unhandled intercation logic type: " + this.model.furniture.interactionType);
+                //console.warn("Unhandled intercation logic type: " + this.model.furniture.interactionType);
             }
         }
 
@@ -225,18 +229,18 @@ export default class RoomFurniture<T = unknown> {
         return position;
     }
 
-    public async setAnimation(animation: number, save: boolean = true) {
+    public async setAnimation(animation: number) {
         this.model.animation = animation;
 
         if(this.model.changed()) {
             await this.model.save();
-
-            this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
-                furnitureUpdated: [
-                    this.getFurnitureData()
-                ]
-            }));
         }
+
+        this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            furnitureUpdated: [
+                this.getFurnitureData()
+            ]
+        }));
     }
 
     public async setPosition(position: RoomPosition, save: boolean = true) {

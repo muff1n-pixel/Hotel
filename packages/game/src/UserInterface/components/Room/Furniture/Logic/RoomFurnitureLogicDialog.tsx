@@ -3,6 +3,7 @@ import RoomFurnitureDimmerDialog, { RoomFurnitureDimmerData } from "./Dimmer/Roo
 import RoomFurnitureStickiesDialog, { RoomFurnitureStickiesDialogData } from "./Stickies/RoomFurnitureStickiesDialog";
 import RoomFurnitureBackgroundTonerDialog, { RoomFurnitureBackgroundTonerDialogData } from "./Toner/RoomFurnitureBackgroundTonerDialog";
 import RoomFurnitureTrophyDialog, { RoomFurnitureTrophyDialogData } from "./Trophy/RoomFurnitureTrophyDialog";
+import WiredActionShowMessageDialog from "./Wired/Action/WiredActionShowMessageDialog";
 import WiredTriggerSaysSomethingDialog, { WiredTriggerSaysSomethingDialogData } from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
 
 export type RoomFurnitureLogicDialogProps<T = any> = {
@@ -38,6 +39,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_trg_says_something":
             return (<WiredTriggerSaysSomethingDialog {...props}/>);
+
+        case "wf_act_show_message":
+            return (<WiredActionShowMessageDialog {...props}/>);
     }
 
     return null;

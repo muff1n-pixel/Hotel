@@ -1,11 +1,11 @@
 import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import WiredSection from "./WiredSection";
 
-export type WiredTriggerFurnitureProps = {
+export type WiredFurnitureProps = {
     furniture: RoomFurnitureData;
 }
 
-export default function WiredTriggerFurniture({ furniture }: WiredTriggerFurnitureProps) {
+export default function WiredFurniture({ furniture }: WiredFurnitureProps) {
     return (
         <WiredSection>
             <div style={{
@@ -13,7 +13,13 @@ export default function WiredTriggerFurniture({ furniture }: WiredTriggerFurnitu
                 flexDirection: "row",
                 gap: 6
             }}>
-                <div className="sprite_dialog_wired_trigger"/>
+                {(furniture.furniture.type.startsWith("wf_trg")) && (
+                    <div className="sprite_dialog_wired_trigger"/>
+                )}
+                
+                {(furniture.furniture.type.startsWith("wf_act")) && (
+                    <div className="sprite_dialog_wired_action"/>
+                )}
 
                 <div style={{
                     fontFamily: "Ubuntu Bold"
