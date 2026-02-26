@@ -11,11 +11,13 @@ export default class RoomChatEvent implements IncomingEvent<WebSocketEvent<RoomC
             if(roomUser) {
                 roomUser.item.typing = false;
 
-                roomUser.item.figureRenderer.addAction("Talk");
+                if(!event.data.options?.hideUsername) {
+                    roomUser.item.figureRenderer.addAction("Talk");
 
-                setTimeout(() => {
-                    roomUser.item.figureRenderer.removeAction("Talk");
-                }, Math.max(800, event.data.message.length * 60));
+                    setTimeout(() => {
+                        roomUser.item.figureRenderer.removeAction("Talk");
+                    }, Math.max(800, event.data.message.length * 60));
+                }
             }
         }
         else if(event.data.type === "bot") {
