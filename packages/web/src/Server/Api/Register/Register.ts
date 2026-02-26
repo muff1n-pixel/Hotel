@@ -127,13 +127,17 @@ router.post("/", async (req, res) => {
             accessToken: accessToken,
             name: user.name,
             email: user.email,
+            lastLoggin: user.lastLogin,
             credits: user.credits,
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
-            allowFriendsFollow: userPreferences.allowFriendsFollow,
-            allowFriendsRequest: userPreferences.allowFriendsRequest
-        })
+
+            preferences: {
+                allowFriendsFollow: userPreferences.allowFriendsFollow,
+                allowFriendsRequest: userPreferences.allowFriendsRequest
+            }
+        });
     }
     catch (e) {
         console.log("Error while register:" + e);

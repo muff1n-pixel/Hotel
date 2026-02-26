@@ -79,7 +79,8 @@ export default class WebSocket {
             }
 
             await model.update({
-                online: true
+                online: true,
+                lastLogin: new Date()
             });
 
             const existingUser = game.users.find((user) => user.model.id === model.id);

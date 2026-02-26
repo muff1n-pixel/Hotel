@@ -52,14 +52,15 @@ router.post("/", async (req, res) => {
             id: user.id,
             name: user.name,
             email: user.email,
+            lastLogin: user.lastLogin,
             credits: user.credits,
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
 
             preferences: {
-                allowFriendsFollow: userPreferences?.allowFriendsFollow,
-                allowFriendsRequest: userPreferences?.allowFriendsRequest,
+                allowFriendsFollow: userPreferences.allowFriendsFollow,
+                allowFriendsRequest: userPreferences.allowFriendsRequest
             }
         });
     }

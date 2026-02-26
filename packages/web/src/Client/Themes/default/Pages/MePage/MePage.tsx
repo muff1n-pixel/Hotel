@@ -66,7 +66,7 @@ const MePage = () => {
                         <div className='row small'>
                             <img src={clockIcon} alt="Clock Icon" />
                             <div className='description'>
-                                <p>Last signed in: XXX</p>
+                                <p>Last signed in: {currentUser?.lastLogin ? (new Date(currentUser.lastLogin).toLocaleString()).replace(" ", " at ") : "Never"}</p>
                             </div>
                         </div>
                     </div>

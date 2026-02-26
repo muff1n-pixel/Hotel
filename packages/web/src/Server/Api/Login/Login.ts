@@ -9,7 +9,6 @@ import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferen
 const router = Router();
 
 router.post("/", async (req, res) => {
-    console.log(req.body)
     const name = req.body.name;
 
     if (!name) {
@@ -79,11 +78,12 @@ router.post("/", async (req, res) => {
         accessToken: accessToken,
         name: user.name,
         email: user.email,
+        lastLoggin: user.lastLogin,
         credits: user.credits,
         diamonds: user.diamonds,
         duckets: user.duckets,
         motto: user.motto,
-        
+
         preferences: {
             allowFriendsFollow: userPreferences.allowFriendsFollow,
             allowFriendsRequest: userPreferences.allowFriendsRequest
