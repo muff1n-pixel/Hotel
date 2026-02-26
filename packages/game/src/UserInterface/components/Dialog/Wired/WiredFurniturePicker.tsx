@@ -78,7 +78,7 @@ export default function WiredFurniturePicker({ value, onChange }: WiredFurniture
         <WiredSection>
             <b>Pick furnis [{value.length}/5]</b>
 
-            <p>You must pick one or more furnis for this entry. You can select or deselect a furni in your room by clicking / tapping it.</p>
+            <div>You must pick one or more furnis for this entry. You can select or deselect a furni in your room by clicking / tapping it.</div>
         </WiredSection>
     );
 }

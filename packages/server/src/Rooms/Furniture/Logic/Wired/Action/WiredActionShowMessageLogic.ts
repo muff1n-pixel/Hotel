@@ -69,6 +69,6 @@ export default class WiredActionShowMessageLogic extends WiredLogic<WiredActionS
             }
         }
 
-        //return super.handleTrigger(roomUser);
+        return super.handleTrigger(roomUser);
     }
 }

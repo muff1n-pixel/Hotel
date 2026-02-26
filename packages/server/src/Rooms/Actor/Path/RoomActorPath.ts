@@ -127,21 +127,34 @@ export default class RoomActorPath {
             return;
         }
 
+        const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(position);
         const furniture = this.actor.room.getUpmostFurnitureAtPosition(position);
 
-        if(furniture) {
-            if(!furniture.isWalkable(true)) {
-                return;
-            }
+        if(sitableFurniture) {
+            this.actor.addAction("Sit");
+            this.actor.path.setPosition({
+                ...position,
+                depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
+            }, sitableFurniture.model.direction, true);
         }
+        else if(furniture) {
+            const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
-        const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
+            this.setPosition({
+                row: position.row,
+                column: position.column,
+                depth
+            }, undefined, true);
+        }
+        else {
+            const depth = this.actor.room.getUpmostDepthAtPosition(position);
 
-        this.setPosition({
-            row: position.row,
-            column: position.column,
-            depth
-        }, undefined, true);
+            this.setPosition({
+                row: position.row,
+                column: position.column,
+                depth
+            }, undefined, true);
+        }
     }
 
     public setPosition(position: RoomPosition, direction?: number, usePath?: boolean) {
