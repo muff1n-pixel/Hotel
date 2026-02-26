@@ -16,11 +16,13 @@ import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLog
 import RoomUser from "../Users/RoomUser.js";
 import RoomFurnitureFortunaLogic from "./Logic/RoomFurnitureFortunaLogic.js";
 import RoomActor from "../Actor/RoomActor.js";
+import WiredTriggerUserSaysSomethingLogic from "./Logic/Wired/Trigger/WiredTriggerUserSaysSomethingLogic.js";
+import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData.js";
 
-export default class RoomFurniture {
+export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
 
-    constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
+    constructor(public readonly room: Room, public readonly model: UserFurnitureModel<T>) {
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }
@@ -186,6 +188,9 @@ export default class RoomFurniture {
 
                 case "fortuna":
                     return this.category = new RoomFurnitureFortunaLogic(this);
+
+                case "wf_trg_says_something":
+                    return this.category = new WiredTriggerUserSaysSomethingLogic(this as RoomFurniture<WiredTriggerUserSaysSomethingData>);
             }
 
             if(!this.category) {
@@ -292,6 +297,6 @@ export default class RoomFurniture {
     public async handleActionsInterval() {
         const logic = this.getCategoryLogic();
 
-        await logic?.handleActionsInterval();
+        await logic?.handleActionsInterval?.();
     }
 }

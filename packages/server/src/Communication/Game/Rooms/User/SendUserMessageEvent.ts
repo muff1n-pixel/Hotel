@@ -4,6 +4,7 @@ import { SendUserMessageEventData } from "@shared/Communications/Requests/Rooms/
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { game } from "../../../../index.js";
 import { UserTypingEventData } from "@shared/Communications/Responses/Rooms/Users/UserTypingEventData.js";
+import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
 
 export default class SendUserMessageEvent implements IncomingEvent<SendUserMessageEventData> {
     public readonly name = "SendUserMessageEvent";
@@ -54,8 +55,41 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             return;
         }
 
+        let userChatBlocked = false;
+
+        const furnitureWithUserChatLogic = roomUser.room.furnitures.filter(async (furniture) => {
+            return furniture.getCategoryLogic()?.handleUserChat !== undefined;
+        });
+
+        for(const furniture of furnitureWithUserChatLogic) {
+            const result = await furniture.getCategoryLogic()?.handleUserChat?.(roomUser, event.message);
+
+            if(result?.blockUserChat) {
+                userChatBlocked = true;
+            }
+        }
+
         roomUser.typing = false;
 
-        roomUser.sendRoomMessage(event.message);
+        if(!userChatBlocked) {
+            roomUser.sendRoomMessage(event.message);
+        }
+        else {
+            user.send(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
+                type: "user",
+                userId: user.model.id,
+                message: event.message,
+                roomChatStyleId: user.model.roomChatStyleId,
+                options: {
+                    italic: true,
+                    transparent: true
+                }
+            }));
+
+            user.room.sendRoomEvent(new OutgoingEvent<UserTypingEventData>("UserTypingEvent", {
+                userId: user.model.id,
+                typing: roomUser.typing
+            }));
+        }
     }
 }

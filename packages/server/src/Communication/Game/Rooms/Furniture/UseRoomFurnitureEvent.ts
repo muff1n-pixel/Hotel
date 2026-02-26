@@ -16,7 +16,7 @@ export default class UseRoomFurnitureEvent implements IncomingEvent<UseRoomFurni
         const logic = roomFurniture.getCategoryLogic();
 
         if(logic) {
-            await logic.use(roomUser, event);
+            await logic.use?.(roomUser, event);
         }
     }
 }
