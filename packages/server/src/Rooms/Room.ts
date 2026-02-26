@@ -78,16 +78,77 @@ export default class Room {
         return user || bot;
     }
 
-    public getActorsAtPosition(position: Omit<RoomPosition, "depth">): RoomActor[] {
-        const users = this.users.filter((user) => user.position.row === position.row && user.position.column === position.column);
-        const bots = this.bots.filter((bot) => bot.position.row === position.row && bot.position.column === position.column);
+    public getActorsAtPosition(position: Omit<RoomPosition, "depth">, dimensions?: RoomPosition): RoomActor[] {
+        const actors: RoomActor[] = [];
 
-        const results: RoomActor[] = [];
+        for(const actor of this.users) {
+            if(actor.position.row < position.row) {
+                continue;
+            }
 
-        results.push(...users);
-        results.push(...bots);
+            if(actor.position.column < position.column) {
+                continue;
+            }
 
-        return results;
+            if(dimensions) {
+                if(position.row + dimensions.row <= actor.position.row) {
+                    continue;
+                }
+
+                if(position.column + dimensions.column <= actor.position.column) {
+                    continue;
+                }
+            }
+
+            actors.push(actor);
+        }
+
+        for(const actor of this.bots) {
+            if(actor.position.row < position.row) {
+                continue;
+            }
+
+            if(actor.position.column < position.column) {
+                continue;
+            }
+
+            if(dimensions) {
+                if(position.row + dimensions.row <= actor.position.row) {
+                    continue;
+                }
+
+                if(position.column + dimensions.column <= actor.position.column) {
+                    continue;
+                }
+            }
+
+            actors.push(actor);
+        }
+
+        return actors;
+    }
+
+    public refreshActorsSitting(position: RoomPosition, dimensions: RoomPosition) {
+        const actors = this.getActorsAtPosition(position, dimensions);
+
+        for(const actor of actors) {
+            const sitableFurniture = this.getSitableFurnitureAtPosition(actor.position);
+
+            if(sitableFurniture) {
+                actor.addAction("Sit");
+                actor.path.setPosition({
+                    ...actor.position,
+                    depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
+                }, sitableFurniture.model.direction);
+            }
+            else {
+                actor.removeAction("Sit");
+                actor.path.setPosition({
+                    ...actor.position,
+                    depth: this.getUpmostDepthAtPosition(actor.position)
+                });
+            }
+        }
     }
 
     public getBotAtPosition(position: Omit<RoomPosition, "depth">) {

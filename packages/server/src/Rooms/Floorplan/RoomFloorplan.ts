@@ -28,7 +28,7 @@ export default class RoomFloorplan {
         return [...this.grid];
     }
 
-    public updatePosition(position: Omit<RoomPosition, "depth">, previousPosition?: Omit<RoomPosition, "depth">, dimensions: Omit<RoomPosition, "depth"> = { row: 1, column: 1 }) {
+    public updatePosition(position: Omit<RoomPosition, "depth">, dimensions: Omit<RoomPosition, "depth"> = { row: 1, column: 1 }) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.grid[row]?.[column] === undefined) {
@@ -37,12 +37,11 @@ export default class RoomFloorplan {
                     return;
                 }
 
-                this.grid[row]![column] = this.getPositionWeight(position);
+                this.grid[row]![column] = this.getPositionWeight({
+                    row,
+                    column
+                });
             }
-        }
-
-        if(previousPosition && (previousPosition.row !== position.row || previousPosition.column !== position.column)) {
-            this.updatePosition(previousPosition, undefined, dimensions);
         }
     }
 

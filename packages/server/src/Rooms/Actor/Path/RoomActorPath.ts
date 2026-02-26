@@ -82,7 +82,8 @@ export default class RoomActorPath {
 
         this.actor.sendWalkEvent(previousPosition);
 
-        this.actor.room.floorplan.updatePosition(position, previousPosition);
+        this.actor.room.floorplan.updatePosition(previousPosition);
+        this.actor.room.floorplan.updatePosition(position);
 
         this.actor.lastActivity = performance.now();
     }
@@ -148,7 +149,8 @@ export default class RoomActorPath {
 
         this.actor.position = position;
 
-        this.actor.room.floorplan.updatePosition(position, previousPosition);
+        this.actor.room.floorplan.updatePosition(previousPosition);
+        this.actor.room.floorplan.updatePosition(position);
 
         if(direction !== undefined) {
             this.actor.direction = direction;
@@ -170,10 +172,11 @@ export default class RoomActorPath {
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(this.actor.position);
 
         if(sitableFurniture) {
-            this.setPosition(sitableFurniture.getSitPosition(this.actor), sitableFurniture.model.direction);
-
             this.actor.addAction("Sit");
-            this.actor.removeAction("Dance");
+            this.actor.path.setPosition({
+                ...this.actor.position,
+                depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
+            }, sitableFurniture.model.direction);
         }
         else {
             const furniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);

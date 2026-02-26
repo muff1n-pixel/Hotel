@@ -157,7 +157,8 @@ export default class RoomBot implements RoomActor {
 
         this.position = position;
 
-        this.room.floorplan.updatePosition(position, previousPosition);
+        this.room.floorplan.updatePosition(previousPosition);
+        this.room.floorplan.updatePosition(position);
 
         if(save && this.model.changed()) {
             await this.model.save();

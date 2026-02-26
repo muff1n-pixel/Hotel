@@ -37,7 +37,7 @@ export default class RoomFurniture {
 
         room.furnitures.push(roomFurniture);
 
-        room.floorplan.updatePosition(position, undefined, roomFurniture.getDimensions());
+        room.floorplan.updatePosition(position, roomFurniture.getDimensions());
 
         room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureAdded: [
@@ -64,7 +64,7 @@ export default class RoomFurniture {
     public async pickup() {
         this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
 
-        this.room.floorplan.updatePosition(this.model.position, undefined, this.getDimensions());
+        this.room.floorplan.updatePosition(this.model.position, this.getDimensions());
 
         this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
             furnitureRemoved: [
@@ -235,39 +235,16 @@ export default class RoomFurniture {
 
     public async setPosition(position: RoomPosition, save: boolean = true) {
         const previousPosition = this.model.position;
+        const previousDimensions = this.getDimensions();
 
         this.model.position = position;
 
-        this.room.floorplan.updatePosition(position, previousPosition, this.getDimensions());
+        this.room.floorplan.updatePosition(position, this.getDimensions());
+        this.room.floorplan.updatePosition(previousPosition, previousDimensions);
 
         if(this.model.furniture.flags.sitable) {
-            const actorsAtPreviousPosition = this.room.getActorsAtPosition(previousPosition);
-            const sitableFurnitureAtPreviousPosition = this.room.getSitableFurnitureAtPosition(previousPosition);
-
-            if(sitableFurnitureAtPreviousPosition) {
-                for(const actor of actorsAtPreviousPosition) {
-                    actor.addAction("Sit");
-                    actor.removeAction("Dance");
-                    actor.path.setPosition(sitableFurnitureAtPreviousPosition.getSitPosition(actor), this.model.direction);
-                }
-            }
-            else {
-                for(const actor of actorsAtPreviousPosition) {
-                    actor.removeAction("Sit");
-                    actor.path.setPosition({
-                        ...previousPosition,
-                        depth: this.room.getUpmostDepthAtPosition(previousPosition)
-                    }, this.model.direction);
-                }
-            }
-
-            const actorsAtPosition = this.room.getActorsAtPosition(position);
-
-            for(const actor of actorsAtPosition) {
-                actor.addAction("Sit");
-                actor.removeAction("Dance");
-                actor.path.setPosition(this.getSitPosition(actor), this.model.direction);
-            }
+            this.room.refreshActorsSitting(previousPosition, previousDimensions);
+            this.room.refreshActorsSitting(position, this.getDimensions());
         }
 
         if(save && this.model.changed()) {
@@ -281,25 +258,17 @@ export default class RoomFurniture {
         }
     }
 
-    public getSitPosition(actor: RoomActor) {
-        return {
-            ...actor.position,
-            depth: this.model.position.depth + this.model.furniture.dimensions.depth - 0.5
-        };
-    }
-
     public async setDirection(direction: number, save: boolean = true) {
+        const previousDimensions = this.getDimensions();
+
         this.model.direction = direction;
 
-        this.room.floorplan.updatePosition(this.model.position, undefined, this.getDimensions());
+        this.room.floorplan.updatePosition(this.model.position, previousDimensions);
+        this.room.floorplan.updatePosition(this.model.position, this.getDimensions());
 
         if(this.model.furniture.flags.sitable) {
-            const actorsAtPosition = this.room.getActorsAtPosition(this.model.position);
-
-            for(const actor of actorsAtPosition) {
-                actor.addAction("Sit");
-                actor.path.setPosition(this.getSitPosition(actor), this.model.direction);
-            }
+            this.room.refreshActorsSitting(this.model.position, previousDimensions);
+            this.room.refreshActorsSitting(this.model.position, this.getDimensions());
         }
 
         if(save && this.model.changed()) {
