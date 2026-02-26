@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './MePage.css';
 import { ThemeContext } from '../../ThemeProvider';
 import { useLocation, useNavigate } from 'react-router';
@@ -10,15 +10,24 @@ import clockIcon from '../../Images/me/clock.gif'
 import discordIcon from '../../Images/me/discord.png'
 import diamondsIcon from '../../Images/me/diamonds.png'
 import NewsContainer from '../../Components/NewsContainer/NewsContainer';
+import UnknowUserImage from '../../Images/unknow_user.gif';
+import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
 
 const MePage = () => {
     const navigate = useNavigate();
+    const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
 
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     useEffect(() => {
         if (!currentUser) {
             navigate("/");
+        } else {
+            AvatarImager(currentUser.figureConfiguration).then((avatarData: Base64URLString) => {
+                setMyAvatar(avatarData);
+            }).catch((e: any) => {
+                console.log("Failed to load avatar image:", e);
+            });
         }
     }, [currentUser, navigate]);
 
@@ -36,7 +45,7 @@ const MePage = () => {
                         <div className='my_data'>
                             <div className='my_avatar'>
                                 <div className='avatar'>
-                                    <img src='https://www.habbo.com/habbo-imaging/avatarimage?user=uik&direction=2&head_direction=2&action=&gesture=nrm&size=m' alt="Avatar" />
+                                    <div className='avatar_img' style={{ backgroundImage: `url(${myAvatar})` }}></div>
                                 </div>
 
                                 <div className='motto'><span>{currentUser?.name}: </span> {currentUser?.motto}</div>

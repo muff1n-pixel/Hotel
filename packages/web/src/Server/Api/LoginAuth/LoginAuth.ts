@@ -57,6 +57,7 @@ router.post("/", async (req, res) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
+            figureConfiguration: user.figureConfiguration,
 
             preferences: {
                 allowFriendsFollow: userPreferences.allowFriendsFollow,

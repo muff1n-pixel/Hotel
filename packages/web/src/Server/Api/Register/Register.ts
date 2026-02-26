@@ -124,7 +124,6 @@ router.post("/", async (req, res) => {
 
         return res.json({
             id: user.id,
-            accessToken: accessToken,
             name: user.name,
             email: user.email,
             lastLoggin: user.lastLogin,
@@ -132,6 +131,7 @@ router.post("/", async (req, res) => {
             diamonds: user.diamonds,
             duckets: user.duckets,
             motto: user.motto,
+            figureConfiguration: user.figureConfiguration,
 
             preferences: {
                 allowFriendsFollow: userPreferences.allowFriendsFollow,

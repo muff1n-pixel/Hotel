@@ -18,7 +18,8 @@ router.post("/", async (req, res) => {
         usersData.push({
             id: user.id,
             name: user.name,
-            motto: user.motto
+            motto: user.motto,
+            figureConfiguration: user.figureConfiguration
         })
     });
 

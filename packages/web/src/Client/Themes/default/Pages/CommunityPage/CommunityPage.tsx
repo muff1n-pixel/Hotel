@@ -1,12 +1,13 @@
 import './CommunityPage.css';
-import Skeleton from '../../Images/community/habbo_skeleton.gif'
 import NewsContainer from '../../Components/NewsContainer/NewsContainer';
 import { useEffect, useState } from 'react';
+import CommunityUser from '../../Components/Community/CommunityUser';
 
 type UserOnline = {
     id: string;
     name: string;
     motto: string;
+    figureConfiguration: string;
 }
 
 const CommunityPage = () => {
@@ -37,14 +38,7 @@ const CommunityPage = () => {
                         <div className='onlines'>
 
                             {[...Array(18)].map((x, i) =>
-                                <div className='row' style={usersOnline[i] && { backgroundImage: 'url("https://www.habbo.com/habbo-imaging/avatarimage?user=uik&direction=4&head_direction=4&action=&gesture=nrm&size=m")' }}>
-                                    {usersOnline[i] &&
-                                        <div className='info'>
-                                            <div className='username'>{usersOnline[i].name}</div>
-                                            <div className='motto'>{usersOnline[i].motto}</div>
-                                        </div>
-                                    }
-                                </div>
+                                <CommunityUser key={i} name={usersOnline[i]?.name} motto={usersOnline[i]?.motto} figureConfiguration={usersOnline[i]?.figureConfiguration} />
                             )}
                         </div>
                     </div>

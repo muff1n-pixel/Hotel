@@ -10,6 +10,7 @@ export default class User implements UserInterface {
     declare duckets: number;
     declare avatar: string;
     declare motto: string;
+    declare figureConfiguration: string;
 
     declare preferences: {
         allowFriendsRequest: boolean;
@@ -26,6 +27,7 @@ export default class User implements UserInterface {
         this.duckets = data.duckets;
         this.avatar = data.avatar;
         this.motto = data.motto;
+        this.figureConfiguration = data.figureConfiguration;
 
         this.preferences = {
             allowFriendsFollow: data.preferences.allowFriendsFollow,
