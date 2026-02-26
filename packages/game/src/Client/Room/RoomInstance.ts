@@ -8,7 +8,6 @@ import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { UserWalkToEventData } from "@Shared/Communications/Responses/Rooms/Users/UserWalkToEventData";
 import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import { webSocketClient } from "../..";
 import { LoadRoomEventData, RoomInformationData } from "@Shared/Communications/Responses/Rooms/LoadRoomEventData";
@@ -102,7 +101,6 @@ export default class RoomInstance {
     private registerEventListeners() {
         webSocketClient.addEventListener<WebSocketEvent<UserEnteredRoomEventData>>("UserEnteredRoomEvent", this.userEnteredRoomListener);
         webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
-        webSocketClient.addEventListener<WebSocketEvent<UserWalkToEventData>>("UserWalkToEvent", this.userWalkToListener);
         webSocketClient.addEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.addEventListener("click", this.click.bind(this));
     }
@@ -110,7 +108,6 @@ export default class RoomInstance {
     private removeEventListeners() {
         webSocketClient.removeEventListener<WebSocketEvent<UserEnteredRoomEventData>>("UserEnteredRoomEvent", this.userEnteredRoomListener);
         webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
-        webSocketClient.removeEventListener<WebSocketEvent<UserWalkToEventData>>("UserWalkToEvent", this.userWalkToListener);
         webSocketClient.removeEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.removeEventListener("click", this.click.bind(this));
     }
@@ -128,13 +125,6 @@ export default class RoomInstance {
     private userLeftRoomListener = this.userLeftRoom.bind(this);
     private userLeftRoom(event: WebSocketEvent<UserLeftRoomEventData>) {
         this.removeUser(event.data);
-    }
-
-    private userWalkToListener = this.userWalkTo.bind(this);
-    private userWalkTo(event: WebSocketEvent<UserWalkToEventData>) {
-        const user = this.getUserById(event.data.userId);
-
-        user.item.setPositionPath(event.data.from, event.data.to/*, event.delay*/);
     }
 
     private click(event: Event) {

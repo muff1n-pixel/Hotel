@@ -268,7 +268,7 @@ export default class RoomFurniturePlacer {
             depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
         }):(null);
 
-        if(!entity || !position) {
+        if(!entity || !position || this.roomFurnitureItem.disabled) {
             if(this.originalPosition) {
                this.roomFurnitureItem.position = this.originalPosition;
             }
