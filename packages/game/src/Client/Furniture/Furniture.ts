@@ -36,6 +36,8 @@ export default class Furniture {
 
     public readonly renderer: FurnitureRenderer;
 
+    public grayscaled: boolean = false;
+
     public _animation: number = 0;
 
     public get animation() {
@@ -88,7 +90,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame, this.grayscaled);
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {

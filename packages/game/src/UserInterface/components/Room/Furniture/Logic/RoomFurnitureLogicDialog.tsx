@@ -4,6 +4,7 @@ import RoomFurnitureStickiesDialog, { RoomFurnitureStickiesDialogData } from "./
 import RoomFurnitureBackgroundTonerDialog, { RoomFurnitureBackgroundTonerDialogData } from "./Toner/RoomFurnitureBackgroundTonerDialog";
 import RoomFurnitureTrophyDialog, { RoomFurnitureTrophyDialogData } from "./Trophy/RoomFurnitureTrophyDialog";
 import WiredActionShowMessageDialog from "./Wired/Action/WiredActionShowMessageDialog";
+import WiredActionTeleportToFurnitureDialog from "./Wired/Action/WiredActionTeleportToFurnitureDialog";
 import WiredTriggerSaysSomethingDialog, { WiredTriggerSaysSomethingDialogData } from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
 
 export type RoomFurnitureLogicDialogProps<T = any> = {
@@ -42,6 +43,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_show_message":
             return (<WiredActionShowMessageDialog {...props}/>);
+
+        case "wf_act_teleport_to":
+            return (<WiredActionTeleportToFurnitureDialog {...props}/>);
     }
 
     return null;

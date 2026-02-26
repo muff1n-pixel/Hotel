@@ -4,34 +4,34 @@ import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../Dialog/Wired/WiredFurniture";
 import WiredDivider from "../../../../../Dialog/Wired/WiredDivider";
 import WiredSection from "../../../../../Dialog/Wired/WiredSection";
-import WiredInput from "../../../../../Dialog/Wired/WiredInput";
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../../Dialog/Wired/WiredButton";
-import { WiredActionShowMessageData } from "@Shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData";
+import { WiredActionTeleportToFurnitureData } from "@Shared/Interfaces/Room/Furniture/Wired/Action/WiredActionTeleportToFurnitureData";
 import { webSocketClient } from "../../../../../../..";
 import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
 import WiredDelay from "../../../../../Dialog/Wired/WiredDelay";
+import WiredFurniturePicker from "../../../../../Dialog/Wired/WiredFurniturePicker";
 
-export type WiredActionShowMessageDialogData = {
-    furniture: RoomInstanceFurniture<WiredActionShowMessageData>;
-    type: "wf_trg_says_something";
+export type WiredActionTeleportToFurnitureDialogData = {
+    furniture: RoomInstanceFurniture<WiredActionTeleportToFurnitureData>;
+    type: "wf_act_teleport_to";
 };
 
-export default function WiredActionShowMessageDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredActionShowMessageDialogData>) {
-    const [message, setMessage] = useState(data.furniture.data.data?.message ?? "");
+export default function WiredActionTeleportToFurnitureDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredActionTeleportToFurnitureDialogData>) {
+    const [furnitureIds, setFurnitureIds] = useState(data.furniture.data.data?.furnitureIds ?? []);
     const [delayInSeconds, setDelayInSeconds] = useState(data.furniture.data.data?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredActionShowMessageData>>("SetFurnitureDataEvent", {
+        webSocketClient.send<SetFurnitureDataEventData<WiredActionTeleportToFurnitureData>>("SetFurnitureDataEvent", {
             furnitureId: data.furniture.data.id,
             data: {
-                message,
+                furnitureIds,
                 delayInSeconds
             }
         });
 
         onClose();
-    }, [message, delayInSeconds, data, onClose]);
+    }, [furnitureIds, delayInSeconds, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
@@ -39,11 +39,7 @@ export default function WiredActionShowMessageDialog({ data, onClose }: RoomFurn
 
             <WiredDivider/>
 
-            <WiredSection>
-                <b>Message:</b>
-
-                <WiredInput placeholder="Enter message..." value={message} onChange={setMessage}/>
-            </WiredSection>
+            <WiredFurniturePicker value={furnitureIds} onChange={setFurnitureIds}/>
 
             <WiredDivider/>
 

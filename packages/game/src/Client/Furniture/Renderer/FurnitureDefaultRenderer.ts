@@ -10,7 +10,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
     }
 
-    public async render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
+    public async render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number, grayscaled: boolean) {
         const sprites: FurnitureRendererSprite[] = [];
 
         const visualization = data.visualization.visualizations.find((visualization) => visualization.size == size);
@@ -64,8 +64,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
             }
 
-            if(FurnitureAssets.assetSprites.has(`${assetName}_${color}`)) {
-                const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${color}`);
+            if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
+                const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${color}_${grayscaled}`);
 
                 if(assetSprite) {
                     sprites.push(assetSprite);
@@ -79,7 +79,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             if(!assetData) {
                 console.warn("Failed to find asset data for " + assetName);
     
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}`, null);
+                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, null);
 
                 continue;
             }
@@ -88,7 +88,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             
             if(!spriteData) {
                 console.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}`, null);
+                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, null);
 
                 continue;
             }
@@ -103,6 +103,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 height: spriteData.height,
 
                 flipHorizontal: assetData.flipHorizontal,
+
+                grayscaled,
 
                 color: colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color
             });
@@ -141,7 +143,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             };
 
             if(imageData) {
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}`, assetSprite);
+                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, assetSprite);
             }
 
             sprites.push(assetSprite);
@@ -151,7 +153,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     }
     
     public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
-        const immutableSprites = await this.render(data, direction, size, animation, color, frame);
+        const immutableSprites = await this.render(data, direction, size, animation, color, frame, false);
 
         const sprites = immutableSprites.map((sprite) => {
             return {...sprite}

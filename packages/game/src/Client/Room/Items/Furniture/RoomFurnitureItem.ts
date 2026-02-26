@@ -13,7 +13,7 @@ export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     public readonly id = Math.random();
-    
+
     constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPosition, private data?: unknown) {
         super(roomRenderer, "furniture");
 
