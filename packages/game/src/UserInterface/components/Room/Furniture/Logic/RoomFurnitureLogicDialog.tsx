@@ -13,6 +13,7 @@ import WiredTriggerPeriodicallyDialog from "./Wired/Trigger/WiredTriggerPeriodic
 import WiredTriggerPeriodicallyShortDialog from "./Wired/Trigger/WiredTriggerPeriodicallyShortDialog";
 import WiredTriggerPeriodicallyLongDialog from "./Wired/Trigger/WiredTriggerPeriodicallyLongDialog";
 import WiredTriggerUserPerformsActionDialog from "./Wired/Trigger/WiredTriggerUserPerformsActionDialog";
+import WiredTriggerReceiveSignalDialog from "./Wired/Trigger/WiredTriggerReceiveSignalDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
 import WiredDialog from "../../../Dialog/Wired/WiredDialog";
 import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
@@ -85,6 +86,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_trg_user_performs_action":
             return (<WiredTriggerUserPerformsActionDialog {...props}/>);
+
+        case "wf_trg_recv_signal":
+            return (<WiredTriggerReceiveSignalDialog {...props}/>);
     }
 
     if(props.data.type.startsWith("wf_")) {

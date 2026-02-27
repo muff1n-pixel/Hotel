@@ -87,7 +87,7 @@ export default class RoomFurniture {
                 return new FurnitureMultistateLogic(this.instance, this);
         }
 
-        if(this.data.furniture.interactionType.startsWith("wf_")) {
+        if(this.data.furniture.interactionType.startsWith("wf_trg") || this.data.furniture.interactionType.startsWith("wf_act")) {
             return new RoomFurnitureWiredLogic(this.instance, this);
         }
 
