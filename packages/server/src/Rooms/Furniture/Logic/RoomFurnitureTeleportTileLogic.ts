@@ -22,7 +22,7 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
         }
     }
 
-    async walkOn(roomUser: RoomUser): Promise<void> {
+    async handleUserWalksOn(roomUser: RoomUser): Promise<void> {
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
                 id: this.roomFurniture.model.data
@@ -75,9 +75,5 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
         }, (targetFurniture.model.direction + 4) % 8);
-    }
-
-    async handleActionsInterval(): Promise<void> {
-        
     }
 }

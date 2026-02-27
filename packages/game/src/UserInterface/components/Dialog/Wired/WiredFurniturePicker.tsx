@@ -5,11 +5,13 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 
 export type WiredFurniturePickerProps = {
+    maxFurniture: number;
+
     value: string[];
     onChange: (value: string[]) => void;
 };
 
-export default function WiredFurniturePicker({ value, onChange }: WiredFurniturePickerProps) {
+export default function WiredFurniturePicker({ maxFurniture, value, onChange }: WiredFurniturePickerProps) {
     const room = useRoomInstance();
 
     const furnitureIds = useRef<string[]>(value);
@@ -52,7 +54,7 @@ export default function WiredFurniturePicker({ value, onChange }: WiredFurniture
                 onChange(furnitureIds.current);
             }
             else {
-                if(furnitureIds.current.length < 5) {
+                if(furnitureIds.current.length < maxFurniture) {
                     furniture.furniture.grayscaled = true;
                     
                     furnitureIds.current = [...furnitureIds.current, furniture.data.id];
@@ -72,11 +74,11 @@ export default function WiredFurniturePicker({ value, onChange }: WiredFurniture
                 furniture.furniture.grayscaled = false;
             }
         };
-    }, [room, furnitureIds, onChange]);
+    }, [room, furnitureIds, maxFurniture, onChange]);
 
     return (
         <WiredSection>
-            <b>Pick furnis [{value.length}/5]</b>
+            <b>Pick furnis [{value.length}/{maxFurniture}]</b>
 
             <div>You must pick one or more furnis for this entry. You can select or deselect a furni in your room by clicking / tapping it.</div>
         </WiredSection>

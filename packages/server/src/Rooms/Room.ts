@@ -11,6 +11,7 @@ import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
 import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
 import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
+import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -337,5 +338,29 @@ export default class Room {
 
             maxUsers: this.model.maxUsers
         };
+    }
+
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
+        await roomFurniture.handleUserWalksOnFurniture(roomUser);
+
+        for(const furniture of this.furnitures) {
+            const category = furniture.getCategoryLogic();
+
+            if(category instanceof WiredTriggerLogic) {
+                await category.handleUserWalksOnFurniture?.(roomUser, roomFurniture);
+            }
+        }
+    }
+
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
+        await roomFurniture.handleUserWalksOffFurniture(roomUser);
+
+        for(const furniture of this.furnitures) {
+            const category = furniture.getCategoryLogic();
+
+            if(category instanceof WiredTriggerLogic) {
+                await category.handleUserWalksOffFurniture?.(roomUser, roomFurniture);
+            }
+        }
     }
 }

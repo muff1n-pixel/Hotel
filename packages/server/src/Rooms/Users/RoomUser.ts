@@ -228,10 +228,6 @@ export default class RoomUser implements RoomActor {
         );
     }
 
-    public async walkOn(roomFurniture: RoomFurniture): Promise<void> {
-        await roomFurniture.userWalkOn(this);
-    }
-
     public getOffsetPosition(direction: number, offset: number) {
         const position = {...this.position};
 
@@ -266,5 +262,27 @@ export default class RoomUser implements RoomActor {
         }));
 
         this.lastActivity = performance.now();
+    }
+
+    public async handleWalkEvent(previousPosition: RoomPosition, newPosition: RoomPosition) {
+        const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
+
+        if(previousFurniture) {
+            await this.handleWalksOffFurniture?.(previousFurniture);
+        }
+
+        const currentFurniture = this.room.getUpmostFurnitureAtPosition(newPosition);
+
+        if(currentFurniture) {
+            await this.handleWalksOnFurniture?.(currentFurniture);
+        }
+    }
+
+    public async handleWalksOnFurniture(roomFurniture: RoomFurniture): Promise<void> {
+        return this.room.handleUserWalksOnFurniture(this, roomFurniture);
+    }
+
+    public async handleWalksOffFurniture(roomFurniture: RoomFurniture): Promise<void> {
+        return this.room.handleUserWalksOffFurniture(this, roomFurniture);
     }
 }

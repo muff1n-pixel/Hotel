@@ -20,6 +20,7 @@ export default interface RoomActor {
     addAction(actionId: string): void;
     removeAction(actionId: string): void;
 
-    walkOn?(roomFurniture: RoomFurniture): Promise<void>;
+    handleWalkEvent?(previousPosition: RoomPosition, newPosition: RoomPosition): Promise<void>;
+    handleWalksOnFurniture?(roomFurniture: RoomFurniture): Promise<void>;
 }
 

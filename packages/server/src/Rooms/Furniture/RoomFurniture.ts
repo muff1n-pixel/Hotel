@@ -23,6 +23,9 @@ import WiredActionTeleportToLogic from "./Logic/Wired/Action/WiredActionTeleport
 import { WiredActionTeleportToFurnitureData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionTeleportToFurnitureData.js";
 import WiredTriggerUserEntersRoomLogic from "./Logic/Wired/Trigger/WiredTriggerUserEntersRoomLogic.js";
 import { WiredTriggerUserEntersRoomData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserEntersRoomData.js";
+import WiredTriggerLogic from "./Logic/Wired/WiredTriggerLogic.js";
+import WiredTriggerUserWalksOnFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOnFurnitureLogic.js";
+import WiredTriggerUserWalksOffFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOffFurnitureLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -200,6 +203,12 @@ export default class RoomFurniture<T = unknown> {
                 case "wf_trg_enter_room":
                     return this.category = new WiredTriggerUserEntersRoomLogic(this as RoomFurniture<WiredTriggerUserEntersRoomData>);
 
+                case "wf_trg_walks_on_furni":
+                    return this.category = new WiredTriggerUserWalksOnFurnitureLogic(this as RoomFurniture<any>);
+
+                case "wf_trg_walks_off_furni":
+                    return this.category = new WiredTriggerUserWalksOffFurnitureLogic(this as RoomFurniture<any>);
+                    
                 case "wf_act_show_message":
                     return this.category = new WiredActionShowMessageLogic(this as RoomFurniture<WiredActionShowMessageData>);
 
@@ -302,10 +311,18 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
-    public async userWalkOn(user: RoomUser) {
+    /** Call this from the Room instance only. */
+    public async handleUserWalksOnFurniture(roomUser: RoomUser) {
         const logic = this.getCategoryLogic();
 
-        await logic?.walkOn?.(user);
+        await logic?.handleUserWalksOn?.(roomUser);
+    }
+
+    /** Call this from the Room instance only. */
+    public async handleUserWalksOffFurniture(roomUser: RoomUser) {
+        const logic = this.getCategoryLogic();
+
+        await logic?.handleUserWalksOff?.(roomUser);
     }
 
     public async handleActionsInterval() {

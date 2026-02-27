@@ -85,6 +85,8 @@ export default class RoomActorPath {
         this.actor.room.floorplan.updatePosition(previousPosition);
         this.actor.room.floorplan.updatePosition(position);
 
+        this.actor.handleWalkEvent?.(previousPosition, position);
+
         this.actor.lastActivity = performance.now();
     }
     
@@ -135,7 +137,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction, true);
+            }, sitableFurniture.model.direction, true);            
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -158,6 +160,10 @@ export default class RoomActorPath {
     }
 
     public setPosition(position: RoomPosition, direction?: number, usePath?: boolean) {
+        if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
+            return;
+        }
+
         const previousPosition = this.actor.position;
 
         this.actor.position = position;
@@ -175,6 +181,8 @@ export default class RoomActorPath {
         this.actor.lastActivity = performance.now();
 
         this.actor.sendPositionEvent(usePath === true);
+
+        this.actor.handleWalkEvent?.(previousPosition, position);
     }
 
     public async finishPath() {
@@ -190,18 +198,6 @@ export default class RoomActorPath {
                 ...this.actor.position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
             }, sitableFurniture.model.direction);
-        }
-        else {
-            const furniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
-
-            if(furniture) {
-
-                const currentFurniture = this.actor.room.getUpmostFurnitureAtPosition(this.actor.position);
-
-                if(currentFurniture) {
-                    await this.actor.walkOn?.(currentFurniture);
-                }
-            }
         }
 
 
