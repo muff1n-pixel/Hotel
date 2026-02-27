@@ -14,6 +14,8 @@ import WiredTriggerPeriodicallyShortDialog from "./Wired/Trigger/WiredTriggerPer
 import WiredTriggerPeriodicallyLongDialog from "./Wired/Trigger/WiredTriggerPeriodicallyLongDialog";
 import WiredTriggerUserPerformsActionDialog from "./Wired/Trigger/WiredTriggerUserPerformsActionDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
+import WiredDialog from "../../../Dialog/Wired/WiredDialog";
+import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
 
 export type RoomFurnitureLogicDialogProps<T = any> = {
     data: T;
@@ -83,6 +85,14 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_trg_user_performs_action":
             return (<WiredTriggerUserPerformsActionDialog {...props}/>);
+    }
+
+    if(props.data.type.startsWith("wf_")) {
+        return (
+            <WiredDialog onClose={props.onClose}>
+                <WiredFurniture furniture={props.data.furniture.data}/>
+            </WiredDialog>
+        );
     }
 
     return null;
