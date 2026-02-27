@@ -1,7 +1,6 @@
 import Inquirer from 'inquirer';
 import fs from 'fs';
 import { config } from '../Config/Config';
-import { sendLog } from '../Logger/Logger';
 import { IncomingMessage } from "http";
 import cliProgress from 'cli-progress';
 import { initializeModels } from '../Database/Database';
@@ -9,6 +8,7 @@ import { initializeDevelopmentData } from '../Database/Development/DatabaseDevel
 import { startServer } from '..';
 import StreamZip from 'node-stream-zip';
 import { Readable } from 'stream';
+import {sendLog} from "@shared/Logger/Logger";
 
 export default class InitializerManager {
     progressCount: number;
@@ -164,12 +164,12 @@ export default class InitializerManager {
         readable.pipe(out);
     }
 
-    resetProgressBar(): void {
+    private resetProgressBar(): void {
         this.progressCount = 0;
         this.progressBar.stop();
     }
 
-    showDownloadingProgress(received: number, total: number): void {
+    private showDownloadingProgress(received: number, total: number): void {
         if (this.progressCount === 0) {
             this.progressBar.start(total, received);
         } else {

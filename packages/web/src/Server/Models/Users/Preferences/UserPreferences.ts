@@ -7,7 +7,7 @@ export class UserPreferenceModel extends Model {
     declare allowFriendsFollow: boolean;
 }
 
-export function initializeUserPreferencesModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     UserPreferenceModel.init(
         {
             id: {
@@ -30,7 +30,9 @@ export function initializeUserPreferencesModel(sequelize: Sequelize) {
             sequelize
         },
     );
+}
 
+export function associate() {
     UserPreferenceModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId",

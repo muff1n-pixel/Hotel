@@ -1,7 +1,7 @@
 import './Header.css'
 import Logo from '../../Images/logo.gif'
 import Button from '../Button';
-import { NavLink, useLocation, useMatch, useNavigate } from 'react-router';
+import { matchPath, NavLink, useLocation, useNavigate } from 'react-router';
 import { use, useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
 import { useCookies } from 'react-cookie';
@@ -9,7 +9,6 @@ import { useCookies } from 'react-cookie';
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const settingsMatch = useMatch("/settings/*");
     const [usersOnlines, setUsersOnlines] = useState<number>(0);
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
@@ -66,9 +65,11 @@ const Header = () => {
     }, [fetchOnlines, setInterval, clearInterval, cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
 
     const generateSubMenu = () => {
-        switch (location.pathname) {
-            case "/community":
-            case "/article": 
+        switch (location.pathname.split("/")[1]) {
+            case "community":
+            case "article": 
+            case "staff":
+            case "forums":
             {
                 return (
                     <nav className='submenu'>
@@ -127,8 +128,8 @@ const Header = () => {
                     </div>
 
                     <nav>
-                        {currentUser !== null ? <NavLink to="/me" className={({ isActive }) => isActive || settingsMatch ? "active" : ""}>{currentUser.name}</NavLink> : <NavLink to="/">Login</NavLink>}
-                        <NavLink to="/community">Community</NavLink>
+                        {currentUser !== null ? <NavLink to="/me" className={({ isActive }) => isActive || matchPath("/settings/*", location.pathname) ? "active" : ""}>{currentUser.name}</NavLink> : <NavLink to="/">Login</NavLink>}
+                        <NavLink to="/community" className={({ isActive }) => isActive || matchPath("/article/*", location.pathname) ? "active" : ""}>Community</NavLink>
                         {currentUser !== null && <NavLink to="/shop">Shop</NavLink>}
                     </nav>
                 </div>

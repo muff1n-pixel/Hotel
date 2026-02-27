@@ -1,5 +1,4 @@
 import { initializeModels, recreateShop, resetDatabase } from "./Database/Database";
-import { initializeDevelopmentData } from "./Database/Development/DatabaseDevelopmentData";
 import Game from "./Game";
 import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData";
 import { recreateShopPages } from "./Database/Development/ShopDevelopmentData";

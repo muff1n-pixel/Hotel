@@ -5,7 +5,7 @@ export class UserTokenModel extends Model {
     declare secretKey: string;
 }
 
-export function initializeUserTokenModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     UserTokenModel.init(
         {
             id: {

@@ -5,6 +5,7 @@ export class UserModel extends Model {
     declare name: string;
     declare password: string;
     declare email: string;
+    declare lastLogin: Date | null;
     declare figureConfiguration: any;
     declare credits: number;
     declare diamonds: number;
@@ -15,7 +16,7 @@ export class UserModel extends Model {
     declare online: boolean;
 }
 
-export function initializeUserModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     UserModel.init(
         {
             id: {
@@ -33,6 +34,11 @@ export function initializeUserModel(sequelize: Sequelize) {
             },
             email: {
                 type: new DataTypes.STRING(254),
+                allowNull: true,
+                defaultValue: null
+            },
+            lastLogin: {
+                type: DataTypes.DATE || null,
                 allowNull: true,
                 defaultValue: null
             },
