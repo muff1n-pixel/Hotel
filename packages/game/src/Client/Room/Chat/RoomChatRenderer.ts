@@ -3,6 +3,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import Figure from "@Client/Figure/Figure";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import { RoomChatOptionsData } from "../../../../../shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
+import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export default class RoomChatRenderer {
     public static async render(style: string, user: string, figureConfiguration: FigureConfiguration, message: string, options?: RoomChatOptionsData) {
@@ -72,7 +73,7 @@ export default class RoomChatRenderer {
         if(roomChatStyle.figure) {
             const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);
 
-            const { figure } = await figureRenderer.renderToCanvas(Figure.figureWorker, 0, false);
+            const { figure } = await figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false);
             
             context.drawImage(
                 figure.image,

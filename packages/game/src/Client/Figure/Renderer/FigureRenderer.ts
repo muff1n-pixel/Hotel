@@ -15,11 +15,11 @@ import Performance from "@Client/Utilities/Performance";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
-    effects: FigureRendererSpriteResult[];
+    effects: (Omit<FigureRendererSpriteResult, "imageData"> & { imageData?: ImageData | null; })[];
 };
 
-export type FigureRendererSpriteResult = FigureRendererSprite & {
-    imageData: Uint8Array;
+export type FigureRendererSpriteResult = Omit<FigureRendererSprite, "imageData"> & {
+    imageData?: Uint8Array;
 };
 
 export type FigureRendererSprite = {

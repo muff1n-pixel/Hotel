@@ -1,9 +1,8 @@
+import FigureWorkerInterface from "@Client/Figure/Worker/Interfaces/FigureWorkerInterface";
 import FigureWorkerClient from "./Worker/FigureWorkerClient";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
 
 export default class Figure {
-    public static readonly figureWorker: FigureWorkerClient = new FigureWorkerClient();
-
     public actions: string[] = ["Default"]
 
     constructor(public configuration: FigureConfiguration, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
@@ -14,7 +13,7 @@ export default class Figure {
         await worker.preload(this);
     }
 
-    public async renderToCanvas(worker: FigureWorkerClient, frame: number, cropped: boolean = false) {
+    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false) {
         /*let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
 
         if(this.headOnly) {

@@ -7,6 +7,7 @@ import RoomFigureEffectSprite from "@Client/Room/Items/Figure/RoomFigureEffectSp
 import RoomRenderer from "@Client/Room/Renderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/RoomFigureTypingSprite";
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/RoomFigureIdlingSprite";
+import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export default class RoomFigureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -53,7 +54,7 @@ export default class RoomFigureItem extends RoomItem {
 
         const frame = this.frame;
 
-        this.figureRenderer.renderToCanvas(Figure.figureWorker, this.frame).then((result) => {
+        this.figureRenderer.renderToCanvas(defaultFigureWorkerClient, this.frame).then((result) => {
             if(frame !== this.frame) {
                 return;
             }

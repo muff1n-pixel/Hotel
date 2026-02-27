@@ -1,5 +1,5 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import FigureWorkerClient from "../Worker/FigureWorkerClient";
+import { createFigureWorkerClient } from "../Worker/FigureWorkerClient";
 import Figure from "../Figure";
 import { FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 
@@ -16,7 +16,7 @@ export type FigureWardrobeColor = {
 };
 
 export default class FigureWardrobe {
-    public static figureWorker = new FigureWorkerClient();
+    public static figureWorker = createFigureWorkerClient();
 
     public static async getWardrobePartTypes(part: FigurePartKeyAbbreviation, colors: number[] | undefined, gender: "male" | "female") {
         const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === part);

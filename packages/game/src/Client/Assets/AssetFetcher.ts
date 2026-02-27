@@ -1,4 +1,4 @@
-import ImageDataWorkerClient from "@Client/Figure/Worker/ImageDataWorkerClient";
+import { defaultImageDataWorker } from "@Client/Figure/Worker/ImageDataWorkerClient";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
 
 export type AssetSpriteProperties = {
@@ -188,7 +188,7 @@ export default class AssetFetcher {
                 }
             }
             else {
-                ImageDataWorkerClient.default.getImageData(output.image).then((imageData) => {
+                defaultImageDataWorker.getImageData(output.image).then((imageData) => {
                     result.imageData = imageData;
                     output.imageData = imageData;
 

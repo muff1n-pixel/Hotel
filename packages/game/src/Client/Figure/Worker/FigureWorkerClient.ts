@@ -1,11 +1,17 @@
+import FigureWorkerInterface from "@Client/Figure/Worker/Interfaces/FigureWorkerInterface";
 import Figure from "../Figure";
 import { FigureRenderEvent } from "../Interfaces/FigureRenderEvent";
 import { FigureRendererResult } from "../Renderer/FigureRenderer";
+import FigureWorkerMainThread from "@Client/Figure/Worker/FigureWorkerMainThreadClient";
 
-export default class FigureWorkerClient {
-    private worker = new Worker(new URL("/src/Workers/Figure/FigureWorker.ts", import.meta.url), {
+export default class FigureWorkerClient implements FigureWorkerInterface {
+    private readonly worker: Worker;
+
+    constructor() {
+        this.worker = new Worker(new URL("/src/Workers/Figure/FigureWorker.ts", import.meta.url), {
             type: "module"
         });
+    }
 
     public preload(figure: Figure) {
         const channel = new MessageChannel();
@@ -57,3 +63,13 @@ export default class FigureWorkerClient {
         this.worker.terminate();
     }
 }
+
+export function createFigureWorkerClient() {
+    if(typeof (Worker) !== "undefined") {
+        return new FigureWorkerClient();
+    }
+
+    return new FigureWorkerMainThread();
+}
+
+export const defaultFigureWorkerClient = createFigureWorkerClient();

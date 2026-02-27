@@ -8,6 +8,7 @@ import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfigurati
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -106,7 +107,7 @@ export default class RoomFurniturePlacer {
             });
         }
         else if(this.roomFurnitureItem instanceof RoomFigureItem) {
-            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(Figure.figureWorker, 0, true).then((result) => {
+            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(defaultFigureWorkerClient, 0, true).then((result) => {
                 this.iconElement.width = result.figure.image.width;
                 this.iconElement.height = result.figure.image.height;
 

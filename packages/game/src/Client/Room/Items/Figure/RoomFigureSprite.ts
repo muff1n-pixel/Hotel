@@ -26,6 +26,10 @@ export default class RoomFigureSprite extends RoomSprite {
     }
 
     mouseover(position: MousePosition) {
+        if(!this.sprite.imageData) {
+            return null;
+        }
+        
         const scale = this.item.roomRenderer.getSizeScale();
 
         const relativePosition: MousePosition = {

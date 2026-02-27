@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
 import Figure from "@Client/Figure/Figure";
 import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export type FigureImageProps = {
     actions?: string[];
@@ -19,7 +20,7 @@ export default function FigureImage({ actions, frame = 0, headOnly, cropped = tr
     useEffect(() => {
         const furnitureRenderer = new Figure(figureConfiguration, direction, actions, headOnly);
 
-        furnitureRenderer.renderToCanvas(Figure.figureWorker, frame, cropped).then(({ figure }) => {
+        furnitureRenderer.renderToCanvas(defaultFigureWorkerClient, frame, cropped).then(({ figure }) => {
             setImage(figure.image);
         });
     }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);
