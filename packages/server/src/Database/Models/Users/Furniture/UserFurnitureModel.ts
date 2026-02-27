@@ -12,6 +12,7 @@ export class UserFurnitureModel<T = unknown> extends Model {
     declare animation: number;
     declare color: number | null;
     declare data: T | null;
+    declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
@@ -58,7 +59,7 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
                   this.setDataValue("data", JSON.stringify(value));
               },
               allowNull: true
-          },
+          }
         },
         {
           tableName: 'user_furnitures',

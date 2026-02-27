@@ -70,9 +70,17 @@ export default class RoomInstance {
 
         this.setStructure(event.structure);
 
-        this.users = event.users.map((userData) => this.addUser(userData));
-        this.furnitures = event.furnitures.map((furnitureData) => new RoomFurniture(this, furnitureData));
-        this.bots = event.bots.map((botData) => new RoomBot(this, botData));
+        for(const user of event.users) {
+            this.users.push(this.addUser(user));
+        }
+
+        for(const furniture of event.furnitures) {
+            this.furnitures.push(new RoomFurniture(this, furniture));
+        }
+
+        for(const bot of event.bots) {
+            this.bots.push(new RoomBot(this, bot));
+        }
 
         this.registerEventListeners();
     }
@@ -141,7 +149,8 @@ export default class RoomInstance {
                     const roomFurniture = this.getFurnitureByItem(event.otherEntity.item);
 
                     webSocketClient.send<RoomClickEventData>("RoomClickEvent", {
-                        furnitureId: roomFurniture.data.id
+                        furnitureId: roomFurniture.data.id,
+                        position: event.floorEntity?.position
                     });
 
                     this.lastSentClickEvent = performance.now();
@@ -150,7 +159,8 @@ export default class RoomInstance {
                     const roomFurniture = this.getUserByItem(event.otherEntity.item);
 
                     webSocketClient.send<RoomClickEventData>("RoomClickEvent", {
-                        userId: roomFurniture.data.id
+                        userId: roomFurniture.data.id,
+                        position: event.floorEntity?.position
                     });
 
                     this.lastSentClickEvent = performance.now();

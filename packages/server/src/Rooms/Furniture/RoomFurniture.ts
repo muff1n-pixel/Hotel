@@ -30,6 +30,7 @@ import WiredTriggerUserLeavesRoomLogic from "./Logic/Wired/Trigger/WiredTriggerU
 import WiredTriggerUserClickFurniLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
 import WiredTriggerUserClickUserLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
 import WiredTriggerUserClickTileLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
+import RoomInvisibleFurnitureControlLogic from "./Logic/RoomInvisibleFurnitureControlLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -200,6 +201,9 @@ export default class RoomFurniture<T = unknown> {
 
                 case "fortuna":
                     return this.category = new RoomFurnitureFortunaLogic(this);
+                
+                case "conf_invis_control":
+                    return this.category = new RoomInvisibleFurnitureControlLogic(this);
 
                 case "wf_trg_says_something":
                     return this.category = new WiredTriggerUserSaysSomethingLogic(this as RoomFurniture<WiredTriggerUserSaysSomethingData>);

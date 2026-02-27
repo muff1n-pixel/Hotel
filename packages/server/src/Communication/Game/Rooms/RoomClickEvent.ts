@@ -25,19 +25,12 @@ export default class RoomClickEvent implements IncomingEvent<RoomClickEventData>
         else if(event.furnitureId) {
             const roomFurniture = roomUser.room.getRoomFurniture(event.furnitureId);
 
-            // TODO: should furniture block tile clicks?
-            if(roomFurniture.model.furniture.type === "room_invisible_click_tile") {
-                for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickTileLogic)) {
-                    logic.handleUserClicksTile(roomUser, roomFurniture.model.position);
-                }
-            }
-            else {
-                for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickFurniLogic)) {
-                    logic.handleUserClicksFurniture(roomUser, roomFurniture);
-                }
+            for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickFurniLogic)) {
+                logic.handleUserClicksFurniture(roomUser, roomFurniture);
             }
         }
-        else if(event.position) {
+        
+        if(event.position) {
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickTileLogic)) {
                 logic.handleUserClicksTile(roomUser, event.position);
             }

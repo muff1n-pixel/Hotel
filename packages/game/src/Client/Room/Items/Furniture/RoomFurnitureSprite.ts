@@ -61,6 +61,10 @@ export default class RoomFurnitureSprite extends RoomSprite {
     }
 
     mouseover(position: MousePosition) {
+        if(this.item.disabled) {
+            return null;
+        }
+        
         if(!this.item.position) {
             return null;
         }

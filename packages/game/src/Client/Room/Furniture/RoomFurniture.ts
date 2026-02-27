@@ -82,6 +82,9 @@ export default class RoomFurniture {
 
             case "trophy":
                 return new RoomFurnitureTrophyLogic(this.instance, this);
+
+            case "conf_invis_control":
+                return new FurnitureMultistateLogic(this.instance, this);
         }
 
         if(this.data.furniture.interactionType.startsWith("wf_")) {
@@ -108,6 +111,20 @@ export default class RoomFurniture {
         else if(this.data.furniture.interactionType === "background_toner") {
             if((data.data as RoomFurnitureBackgroundTonerData)?.enabled || (this.data.data as RoomFurnitureBackgroundTonerData)?.enabled) {
                 this.instance.setBackgroundToner(data.data as RoomFurnitureBackgroundTonerData);
+            }
+        }
+        else if(this.data.furniture.interactionType === "conf_invis_control") {
+            const invisibleTiles = this.instance.furnitures.filter((furniture) => furniture.data.furniture.type.startsWith("room_invisible_"));
+
+            for(const invisibleFurniture of invisibleTiles) {
+                invisibleFurniture.item.disabled = (data.animation === 1);
+            }
+        }
+        else if(this.data.furniture.type.startsWith("room_invisible_")) {
+            const controllerFurniture = this.instance.furnitures.find((furniture) => furniture.data.furniture.interactionType === "conf_invis_control");
+
+            if(controllerFurniture) {
+                this.item.disabled = (controllerFurniture.data.animation === 1);
             }
         }
 
