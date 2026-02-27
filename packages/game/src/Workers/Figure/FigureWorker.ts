@@ -2,6 +2,8 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 
+import "../../Polyfills/OffscreenCanvas";
+
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     const port = event.ports[0];
 

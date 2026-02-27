@@ -237,6 +237,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
-        return await createImageBitmap(canvas);
+        return canvas.transferToImageBitmap();
     }
 }

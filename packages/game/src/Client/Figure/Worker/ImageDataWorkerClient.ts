@@ -13,7 +13,7 @@ export default class ImageDataWorkerClient implements ImageDataWorkerInterface {
 
     public async getImageData(image: ImageBitmap) {
         const channel = new MessageChannel();
-
+        
         const img = await createImageBitmap(image);
 
         return new Promise<ImageData>((resolve, reject) => {

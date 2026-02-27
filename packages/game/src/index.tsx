@@ -6,6 +6,8 @@ import LoaderInstance from "./Loader";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Cookies from "js-cookie";
 
+import "./Polyfills/OffscreenCanvas";
+
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");
 const loaderElement = document.getElementById("loader");

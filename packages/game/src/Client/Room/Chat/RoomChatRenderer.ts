@@ -82,6 +82,6 @@ export default class RoomChatRenderer {
             );
         }
 
-        return await createImageBitmap(canvas);
+        return canvas.transferToImageBitmap();
     }
 }

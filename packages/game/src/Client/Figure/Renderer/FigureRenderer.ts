@@ -761,7 +761,7 @@ export default class FigureRenderer {
         }
 
         return {
-            image: await createImageBitmap(sprite.image),
+            image: sprite.image,
             
             x: x - 32,
             y: destinationY + assetData.y + 32,
@@ -808,7 +808,7 @@ export default class FigureRenderer {
         }
 
         return {
-            image: await createImageBitmap(sprite.image),
+            image: sprite.image,
             imageData: sprite.imageData,
             
             x: x - 32,
@@ -895,8 +895,6 @@ export default class FigureRenderer {
                 minimumY -= this.avatarEffect.destinationY;
             }
 
-            const image = await createImageBitmap(canvas);
-
             //Performance.startPerformanceCheck("getImageData", 1);
             //const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
             //Performance.endPerformanceCheck("getImageData");
@@ -925,7 +923,7 @@ export default class FigureRenderer {
 
             return {
                 figure: {
-                    image,
+                    image: canvas.transferToImageBitmap(),
                     imageData: imageDataArray,
 
                     x: -minimumX,

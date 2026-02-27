@@ -40,15 +40,15 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
                 (async () => {
                     const floorImage = await floorRenderer.renderOffScreen();
 
-                    return await createImageBitmap(floorImage);
+                    return floorImage;
                 })(),
                 
                 (async () => {
                     const { wall, doorMask } = await wallRenderer.renderOffScreen(leftWallColor);
 
                     return [
-                        await createImageBitmap(wall),
-                        await createImageBitmap(doorMask)
+                        wall,
+                        doorMask
                     ];
                 })()
             ]);

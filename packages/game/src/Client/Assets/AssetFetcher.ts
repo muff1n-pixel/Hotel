@@ -231,10 +231,8 @@ export default class AssetFetcher {
 
         context.putImageData(imageData, 0, 0);
 
-        const image = await createImageBitmap(canvas);
-
         return {
-            image,
+            image: canvas.transferToImageBitmap(),
             imageData
         };
     }
@@ -329,7 +327,7 @@ export default class AssetFetcher {
             }*/
 
             return {
-                image: await createImageBitmap(canvas),
+                image: canvas.transferToImageBitmap(),
                 imageData
             };
         }
