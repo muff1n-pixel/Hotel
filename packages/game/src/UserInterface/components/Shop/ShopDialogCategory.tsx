@@ -40,7 +40,7 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
         });
     }, [ activeShopPage ]);
 
-    const handleEditPage = useCallback((shopPage: ShopPageData & { parent?: ShopPageData }) => {
+    const handleEditPage = useCallback((shopPage: ShopPageData) => {
         if(!editMode) {
             return;
         }
@@ -53,7 +53,7 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
 
     const handleCreatePage = useCallback((parentShopPage?: ShopPageData) => {
         dialogs.addUniqueDialog("edit-shop-page", {
-            parent: parentShopPage
+            parentId: parentShopPage?.id
         });
     }, [dialogs]);
 

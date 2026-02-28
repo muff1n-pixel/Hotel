@@ -4,8 +4,8 @@ import { Fragment } from "react/jsx-runtime";
 
 export type ShopPagesListProps = {
     editMode?: boolean;
-    handleEditPage: (shopPage: ShopPageData & { parent?: ShopPageData }) => void;
-    handleCreatePage: (shopPage?: ShopPageData & { parent?: ShopPageData }) => void;
+    handleEditPage: (shopPage: ShopPageData) => void;
+    handleCreatePage: (shopPage?: ShopPageData) => void;
 
     activeShopPage?: ShopPageData;
     shopPages: ShopPageData[];

@@ -10,7 +10,7 @@ import { useDialogs } from "../../../hooks/useDialogs";
 import Selection from "../../Form/Selection";
 
 export type EditShopPageDialogProps = {
-    data: ShopPageData & { parent?: ShopPageData; shopPages?: ShopPageData[]; } | null;
+    data: ShopPageData & { shopPages?: ShopPageData[]; } | null;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -25,7 +25,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [header, setHeader] = useState(data?.header ?? "");
     const [teaser, setTeaser] = useState(data?.teaser ?? "");
     const [index, setIndex] = useState(data?.index ?? 0);
-    const [parentId, setParentId] = useState(data?.parent?.id ?? null);
+    const [parentId, setParentId] = useState(data?.parentId ?? null);
 
     const handleUpdate = useCallback(() => {
         webSocketClient.send<UpdateShopPageEventData>("UpdateShopPageEvent", {
@@ -48,7 +48,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
         });
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, type, title, description, header, teaser, index]);
+    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
