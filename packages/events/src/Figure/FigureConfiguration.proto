@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message FigureConfigurationData {
+  string gender = 1;
+  repeated FigurePartData parts = 2;
+}
+
+message FigurePartData {
+  string type = 1;
+  string set_id = 2;
+  repeated int32 colors = 3;
+}

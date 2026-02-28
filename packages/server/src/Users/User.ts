@@ -42,6 +42,23 @@ export default class User extends EventEmitter {
         this.webSocket.send(payload);
     };
 
+    sendProto<T>(message: { encode(msg: T): { finish(): Uint8Array }; name: string; }, payload: any) {
+        const encoded = message.encode(payload).finish();
+
+        this.sendEncodedProto(message.name, encoded);
+    }
+
+    sendEncodedProto(eventType: string, encoded: Uint8Array) {
+        const typeBytes = new TextEncoder().encode(eventType + "|");
+
+        const message = new Uint8Array(typeBytes.length + encoded.length);
+
+        message.set(typeBytes, 0);
+        message.set(encoded, typeBytes.length);
+
+        this.webSocket.send(message);
+    }
+
     addListener<T>(eventName: string | symbol, listener: (client: User, event: T) => void): this {
         return super.addListener(eventName, listener);
     }

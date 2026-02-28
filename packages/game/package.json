@@ -8,8 +8,10 @@
     "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.11.0",
     "@types/js-cookie": "^3.0.6",
     "js-cookie": "^3.0.5",
+    "@pixel63/events": "file:../events",
     "react": "^19.1.0",
     "react-color-palette": "^7.3.1",
     "react-dom": "^19.1.0"

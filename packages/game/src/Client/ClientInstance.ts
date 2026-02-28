@@ -14,7 +14,6 @@ import { Dialog } from "../UserInterface/contexts/AppContext";
 import { RoomInformationEventData } from "@Shared/Communications/Responses/Rooms/RoomInformationEventData";
 import RoomInformationEvent from "@Client/Communications/Room/RoomInformationEvent";
 import { RoomUserRightsEventData } from "@Shared/Communications/Responses/Rooms/Users/RoomUserRightsEventData";
-import { UserEventData } from "@Shared/Communications/Responses/User/UserEventData";
 import UserEvent from "@Client/Communications/Room/User/UserEvent";
 import RoomUserRightsEvent from "@Client/Communications/Room/User/RoomUserRightsEvent";
 import { RoomHistory } from "../UserInterface/components/Room/Toolbar/ToolbarRoomChat";
@@ -44,12 +43,13 @@ import ActorPositionEvent from "@Client/Communications/Room/Actors/ActorPosition
 import { ActorWalkToEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorWalkToEventData";
 import ActorWalkToEvent from "@Client/Communications/Room/Actors/ActorWalkToEvent";
 import { LocalSettings } from "../UserInterface/components/Settings/Interfaces/LocalSettings";
+import { IUserData, UserData } from "@pixel63/events";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
     public roomChatStyles = new ObservableProperty<RoomChatStyleData[]>();
     public dialogs = new ObservableProperty<Dialog[]>([]);
-    public user = new ObservableProperty<UserEventData>();
+    public user = new ObservableProperty<IUserData>();
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelEventData>();
     public navigator = new ObservableProperty<NavigatorRoomsEventData>([]);
@@ -78,7 +78,9 @@ export default class ClientInstance extends EventTarget {
 
         webSocketClient.addEventListener<WebSocketEvent<NavigatorRoomsEventData>>("NavigatorRoomsEvent", (event) => new NavigatorRoomsEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<HotelEventData>>("HotelEvent", (event) => new HotelEvent().handle(event));
-        webSocketClient.addEventListener<WebSocketEvent<UserEventData>>("UserEvent", (event) => new UserEvent().handle(event));
+        
+        webSocketClient.addProtobufListener(UserData, new UserEvent());
+
         webSocketClient.addEventListener<WebSocketEvent<UserPermissionsEventData>>("UserPermissionsEvent", (event) => new UserPermissionsEvent().handle(event));
         
         webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", (event) => new RoomFurnitureEvent().handle(event));

@@ -1,10 +1,11 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { UserEventData } from "@Shared/Communications/Responses/User/UserEventData";
 import { clientInstance } from "../../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { UserData } from "@pixel63/events";
+import IncomingProtobuffer from "@Client/Communications/IncomingProtobuffer";
 
-export default class UserEvent implements IncomingEvent<WebSocketEvent<UserEventData>> {
-    async handle(event: WebSocketEvent<UserEventData>) {
-        clientInstance.user.value = event.data;
+export default class UserEvent implements IncomingProtobuffer<UserData> {
+    public readonly name = "UserData";
+    
+    async handle(payload: UserData) {
+        clientInstance.user.value = payload;
     }
 }

@@ -1,0 +1,12 @@
+{
+  "name": "@pixel63/events",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "pbjs -t static-module -w commonjs -o build/index.js src/**/*.proto && pbts -o build/index.d.ts build/index.js"
+  },
+  "devDependencies": {
+    "protobufjs": "^7.5.4",
+    "typescript": "^5.9.3"
+  }
+}
