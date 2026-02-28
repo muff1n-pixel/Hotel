@@ -14,6 +14,7 @@ import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import RoomFurnitureLogic from "./Furniture/Logic/Interfaces/RoomFurnitureLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
+import { MessageType, UnknownMessage } from "@pixel63/events";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -48,6 +49,14 @@ export default class Room {
         this.users.forEach((user) => {
             user.user.send(outgoingEvents);
         });
+    }
+    
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        const encoded = message.encode(payload).finish();
+
+        for(const roomUser of this.users) {
+            roomUser.user.sendEncodedProtobuff(message.$type, encoded);
+        }
     }
 
     public getRoomFurniture(roomFurnitureItemId: string) {

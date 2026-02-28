@@ -36,14 +36,11 @@ import { RoomBotEventData } from "@Shared/Communications/Responses/Rooms/Bots/Ro
 import { RoomChatEventData } from "@Shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
 import { UserIdlingEventData } from "@Shared/Communications/Responses/Rooms/Users/UserIdlingEventData";
 import UserIdlingEvent from "@Client/Communications/Room/User/UserIdlingEvent";
-import { ActorActionEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorActionEventData";
-import ActorActionEvent from "@Client/Communications/Room/Actors/ActorActionEvent";
-import { ActorPositionEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorPositionEventData";
-import ActorPositionEvent from "@Client/Communications/Room/Actors/ActorPositionEvent";
-import { ActorWalkToEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorWalkToEventData";
-import ActorWalkToEvent from "@Client/Communications/Room/Actors/ActorWalkToEvent";
+import RoomActorPositionEvent from "@Client/Communications/Room/Actors/RoomActorPositionEvent";
 import { LocalSettings } from "../UserInterface/components/Settings/Interfaces/LocalSettings";
-import { UserData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorPositionData, RoomActorWalkToData, UserData } from "@pixel63/events";
+import RoomActorWalkToEvent from "@Client/Communications/Room/Actors/RoomActorWalkToEvent";
+import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -76,7 +73,13 @@ export default class ClientInstance extends EventTarget {
 
         registerRoomEvents(this);
 
+        // User events
         webSocketClient.addProtobuffListener(UserData, new UserEvent());
+
+        // Room actor events
+        webSocketClient.addProtobuffListener(RoomActorWalkToData, new RoomActorWalkToEvent());
+        webSocketClient.addProtobuffListener(RoomActorPositionData, new RoomActorPositionEvent());
+        webSocketClient.addProtobuffListener(RoomActorActionData, new RoomActorActionEvent());
 
         webSocketClient.addEventListener<WebSocketEvent<NavigatorRoomsEventData>>("NavigatorRoomsEvent", (event) => new NavigatorRoomsEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<HotelEventData>>("HotelEvent", (event) => new HotelEvent().handle(event));
@@ -95,10 +98,6 @@ export default class ClientInstance extends EventTarget {
 
         webSocketClient.addEventListener<WebSocketEvent<UserTypingEventData>>("UserTypingEvent", (event) => new UserTypingEvent().handle(event));
         webSocketClient.addEventListener<WebSocketEvent<UserIdlingEventData>>("UserIdlingEvent", (event) => new UserIdlingEvent().handle(event));
-        
-        webSocketClient.addEventListener<WebSocketEvent<ActorWalkToEventData>>("ActorWalkToEvent", (event) => new ActorWalkToEvent().handle(event));
-        webSocketClient.addEventListener<WebSocketEvent<ActorActionEventData>>("ActorActionEvent", (event) => new ActorActionEvent().handle(event));
-        webSocketClient.addEventListener<WebSocketEvent<ActorPositionEventData>>("ActorPositionEvent", (event) => new ActorPositionEvent().handle(event));
 
         webSocketClient.addEventListener<WebSocketEvent<RoomChatStylesEventData>>("RoomChatStylesEvent", (event) => {
             this.roomChatStyles.value = event.data.roomChatStyles;

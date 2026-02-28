@@ -14,11 +14,9 @@ import { UserIdlingEventData } from "@shared/Communications/Responses/Rooms/User
 import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { ActorActionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorActionEventData.js";
-import { ActorPositionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorPositionEventData.js";
-import { ActorWalkToEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorWalkToEventData.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
+import { RoomActorActionData, RoomActorPositionData, RoomActorWalkToData } from "@pixel63/events";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -170,14 +168,15 @@ export default class RoomUser implements RoomActor {
 
         this.actions.push(action);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-
-                actionsAdded: [action],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            actionsAdded: [action]
+        }));
 
         for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
             logic.handleUserAction(this, action);
@@ -207,37 +206,41 @@ export default class RoomUser implements RoomActor {
 
         this.actions.splice(existingActionIndex, 1);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-                
-                actionsRemoved: [actionId],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            actionsRemoved: [actionId]
+        }));
     }
 
     public sendWalkEvent(previousPosition: RoomPosition): void {
-        this.room.outgoingEvents.push(new OutgoingEvent<ActorWalkToEventData>("ActorWalkToEvent", {
-            type: "user",
-            userId: this.user.model.id,
-
+        this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
             from: previousPosition,
             to: this.position
         }));
     }
 
     public sendPositionEvent(usePath: boolean) {
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorPositionEventData>("ActorPositionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-
-                position: this.position,
-                direction: this.direction,
-                usePath: usePath === true
-            })
-        );
+        this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            position: this.position,
+            direction: this.direction,
+            usePath
+        }));
     }
 
     public getOffsetPosition(direction: number, offset: number) {

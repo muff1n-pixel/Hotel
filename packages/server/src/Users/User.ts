@@ -4,11 +4,10 @@ import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "./Inventory/UserInventory.js";
 import Room from "../Rooms/Room.js";
-import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import { debugTimestamps } from "../Database/Database.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
 import { UserPermissionsEventData } from "@shared/Communications/Responses/User/Permissions/UserPermissionsEventData.js";
-import { MessageType } from "@pixel63/events";
+import { MessageType, UnknownMessage, UserData } from "@pixel63/events";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -43,7 +42,7 @@ export default class User extends EventEmitter {
         this.webSocket.send(payload);
     };
 
-    sendProtobuff<T extends MessageType>(message: T, payload: T) {
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
         const encoded = message.encode(payload).finish();
 
         this.sendEncodedProtobuff(message.$type, encoded);
@@ -82,15 +81,7 @@ export default class User extends EventEmitter {
         return this.permissions;
     }
 
-    public getUserData(): UserEventData {
-        return {
-            id: this.model.id,
-            name: this.model.name,
-            figureConfiguration: this.model.figureConfiguration,
-            credits: this.model.credits,
-            duckets: this.model.duckets,
-            diamonds: this.model.diamonds,
-            homeRoomId: this.model.homeRoomId
-        };
+    public sendUserData() {
+        this.sendProtobuff(UserData, this.model.toJSON());
     }
 }

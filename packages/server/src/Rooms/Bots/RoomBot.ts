@@ -8,9 +8,7 @@ import { UserBotData } from "@shared/Interfaces/Room/RoomBotData.js";
 import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomBotPositionEventData } from "@shared/Communications/Responses/Rooms/Bots/RoomBotPositionEventData.js";
-import { ActorActionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorActionEventData.js";
-import { ActorWalkToEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorWalkToEventData.js";
+import { RoomActorActionData, RoomActorPositionData, RoomActorWalkToData } from "@pixel63/events";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -82,14 +80,15 @@ export default class RoomBot implements RoomActor {
 
         this.actions.push(action);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "bot",
-                botId: this.model.id,
-
-                actionsAdded: [action],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
+            
+            actionsAdded: [action]
+        }));
     }
 
     public removeAction(action: string) {
@@ -103,35 +102,41 @@ export default class RoomBot implements RoomActor {
 
         this.actions.splice(existingActionIndex, 1);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "bot",
-                botId: this.model.id,
-
-                actionsRemoved: [actionId],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
+            
+            actionsRemoved: [actionId]
+        }));
     }
     
     public sendWalkEvent(previousPosition: RoomPosition): void {
-        this.room.outgoingEvents.push(new OutgoingEvent<ActorWalkToEventData>("ActorWalkToEvent", {
-            type: "bot",
-            botId: this.model.id,
-
+        this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
             from: previousPosition,
             to: this.position
         }));
     }
 
     public sendPositionEvent(usePath: boolean) {
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<RoomBotPositionEventData>("RoomBotPositionEvent", {
-                botId: this.model.id,
-                position: this.position,
-                direction: this.direction,
-                usePath: usePath === true
-            })
-        );
+        this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
+            
+            position: this.position,
+            direction: this.direction,
+            usePath
+        }));
     }
 
     public async pickup() {

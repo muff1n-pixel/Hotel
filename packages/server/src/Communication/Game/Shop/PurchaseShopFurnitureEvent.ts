@@ -5,7 +5,6 @@ import { PurchaseShopFurnitureEventData } from "@shared/Communications/Requests/
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import { ShopFurniturePurchasedEventData } from "@shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData.js";
-import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
@@ -136,8 +135,9 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         user.send([
             new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
                 success: true
-            }),
-            new OutgoingEvent<UserEventData>("UserEvent", user.getUserData())
+            })
         ]);
+
+        user.sendUserData();
     }
 }

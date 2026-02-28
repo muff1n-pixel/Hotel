@@ -5,7 +5,6 @@ import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { MoveRoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/MoveRoomFurnitureEventData.js";
 import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
-import { ActorPositionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorPositionEventData.js";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {

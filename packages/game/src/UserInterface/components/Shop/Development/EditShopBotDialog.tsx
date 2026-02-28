@@ -30,7 +30,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
 
     const [type, setType] = useState<BotTypeData>(data?.type ?? "default");
 
-    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData>(data?.figureConfiguration ?? user.figureConfiguration ?? { gender: "male", parts: [] });
+    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData>(data?.figureConfiguration ?? user.figureConfiguration ?? { $type: "FigureConfigurationData", gender: "male", parts: [] });
 
     const [credits, setCredits] = useState(data?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);

@@ -6,6 +6,6 @@ export default class GetUserEvent implements IncomingEvent {
     public readonly name = "GetUserEvent";
 
     async handle(user: User) {
-        user.sendProtobuff(UserData, user.model.toJSON());
+        user.sendUserData();
     }
 }

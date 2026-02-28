@@ -23,6 +23,7 @@ import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furnit
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import { ActorIdentifierEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorIdentifierEventData";
 import { RoomClickEventData } from "@Shared/Communications/Requests/Rooms/RoomClickEventData";
+import { RoomActorIdentifierData } from "@pixel63/events";
 
 type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -246,13 +247,13 @@ export default class RoomInstance {
         return bot;
     }
 
-    public getActor(data: ActorIdentifierEventData) {
-        switch(data.type) {
-            case "user":
-                return this.getUserById(data.userId);
+    public getActor(data?: RoomActorIdentifierData) {
+        if(data?.bot) {
+            return this.getBotById(data.bot.botId);
+        }
 
-            case "bot":
-                return this.getBotById(data.botId);
+        if(data?.user) {
+            return this.getUserById(data.user.userId);
         }
 
         throw new Error("Unhandled actor type.");

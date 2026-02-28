@@ -1,4 +1,3 @@
-import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
 import RoomUser from "../../Rooms/Users/RoomUser.js";
 import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler.js";
@@ -66,7 +65,7 @@ export default class GiveCommand implements IncomingCommandHandler {
         }
 
         await targetUser.user.model.save();
-        
-        targetUser.user.send(new OutgoingEvent<UserEventData>("UserEvent", targetUser.user.getUserData()));
+
+        targetUser.user.sendUserData();
     }
 }
