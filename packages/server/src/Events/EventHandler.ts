@@ -61,35 +61,45 @@ export default class EventHandler extends EventEmitter {
     }
 
     public decodeAndDispatchMessages(user: User, rawData: RawData) {
-        let buffer: Buffer;
+        try {
+            let buffer: Buffer;
 
-        if (typeof rawData === "string") {
-            buffer = Buffer.from(rawData);
-        } else if (rawData instanceof Buffer) {
-            buffer = rawData;
-        } else if (rawData instanceof ArrayBuffer) {
-            buffer = Buffer.from(rawData);
-        } else if (Array.isArray(rawData)) {
-            buffer = Buffer.concat(rawData);
-        } else {
-            throw new Error("Unsupported RawData type");
+            if (typeof rawData === "string") {
+                buffer = Buffer.from(rawData);
+            } else if (rawData instanceof Buffer) {
+                buffer = rawData;
+            } else if (rawData instanceof ArrayBuffer) {
+                buffer = Buffer.from(rawData);
+            } else if (Array.isArray(rawData)) {
+                buffer = Buffer.concat(rawData);
+            } else {
+                throw new Error("Unsupported RawData type");
+            }
+
+            const sep = buffer.indexOf("|".charCodeAt(0));
+            const type = buffer.subarray(0, sep).toString("utf-8");
+            const payload = buffer.subarray(sep + 1);
+
+            console.log("Received " + type);
+
+            this.emit(type, user, payload);
+
+            // TODO: remove the user event handler?
+            user.emit(type, user, payload);
         }
-
-        const sep = buffer.indexOf("|".charCodeAt(0));
-        const type = buffer.subarray(0, sep).toString("utf-8");
-        const payload = buffer.subarray(sep + 1);
-
-        console.log("Received " + type);
-
-        this.emit(type, user, payload);
-
-        // TODO: remove the user event handler?
-        user.emit(type, user, payload);
+        catch(error) {
+            console.error("Failed to process Protobuff", error);
+        }
     }
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>) {
         super.addListener(message.$type, async (user, event) => {
-            protobuffListener.handle(user, message.decode(event) as T);
+            try {
+                protobuffListener.handle(user, message.decode(event) as T);
+            }
+            catch(error) {
+                console.error("Failed to process event", error);
+            }
         });
 
         return this;

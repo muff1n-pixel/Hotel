@@ -24,20 +24,30 @@ export default class User extends EventEmitter {
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
-        const encoded = message.encode(payload).finish();
+        try {
+            const encoded = message.encode(payload).finish();
 
-        this.sendEncodedProtobuff(message.$type, encoded);
+            this.sendEncodedProtobuff(message.$type, encoded);
+        }
+        catch(error) {
+            console.error("Failed to send Protobuff", error);
+        }
     }
 
     sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
-        const typeBytes = new TextEncoder().encode(eventType + "|");
+        try {
+            const typeBytes = new TextEncoder().encode(eventType + "|");
 
-        const message = new Uint8Array(typeBytes.length + encoded.length);
+            const message = new Uint8Array(typeBytes.length + encoded.length);
 
-        message.set(typeBytes, 0);
-        message.set(encoded, typeBytes.length);
+            message.set(typeBytes, 0);
+            message.set(encoded, typeBytes.length);
 
-        this.webSocket.send(message);
+            this.webSocket.send(message);
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
     }
 
     addListener<T>(eventName: string | symbol, listener: (client: User, event: T) => void): this {

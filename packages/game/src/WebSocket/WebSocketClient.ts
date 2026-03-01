@@ -13,13 +13,18 @@ export default class WebSocketClient extends EventTarget {
         this.socket.binaryType = "arraybuffer";
 
         this.socket.addEventListener("message", (event) => {
-            const data = new Uint8Array(event.data);
+            try {
+                const data = new Uint8Array(event.data);
 
-            const sep = data.indexOf("|".charCodeAt(0));
-            const type = new TextDecoder().decode(data.slice(0, sep));
-            const payload = data.slice(sep + 1);
+                const sep = data.indexOf("|".charCodeAt(0));
+                const type = new TextDecoder().decode(data.slice(0, sep));
+                const payload = data.slice(sep + 1);
 
-            this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
+                this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
+            }
+            catch(error) {
+                console.error("Failed to decode message", error);
+            }
         });
 
         if(this.socket.readyState === this.socket.OPEN) {
@@ -45,20 +50,34 @@ export default class WebSocketClient extends EventTarget {
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
         console.log("Sending " + message.$type, payload);
 
-        const encoded = message.encode(payload).finish();
+        let encoded;
+
+        try {
+            encoded = message.encode(payload).finish();
+        }
+        catch(error) {
+            console.error("Failed to encode Protobuff", error);
+
+            return;
+        }
 
         this.sendEncodedProtobuff(message.$type, encoded);
     }
 
     private sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
-        const typeBytes = new TextEncoder().encode(eventType + "|");
+        try {
+            const typeBytes = new TextEncoder().encode(eventType + "|");
 
-        const message = new Uint8Array(typeBytes.length + encoded.length);
+            const message = new Uint8Array(typeBytes.length + encoded.length);
 
-        message.set(typeBytes, 0);
-        message.set(encoded, typeBytes.length);
+            message.set(typeBytes, 0);
+            message.set(encoded, typeBytes.length);
 
-        this.socket.send(message);
+            this.socket.send(message);
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
     }
 
     public close() {
@@ -67,11 +86,16 @@ export default class WebSocketClient extends EventTarget {
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>, options?: AddEventListenerOptions | boolean) {
         const listener = (event: WebSocketEvent<Uint8Array>) => {
-            const payload = message.decode(event.data) as T;
+            try {
+                const payload = message.decode(event.data) as T;
 
-            console.log("Processing " + message.$type, payload);
+                console.log("Processing " + message.$type, payload);
 
-            protobuffListener.handle(payload);
+                protobuffListener.handle(payload);
+            }
+            catch(error) {
+                console.error("Failed to handle Protobuf", error);
+            }
         };
 
         this.addEventListener(message.$type, listener, options);
