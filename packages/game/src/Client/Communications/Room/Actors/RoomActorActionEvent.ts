@@ -10,13 +10,13 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
 
         const actor = clientInstance.roomInstance.value.getActor(payload.actor);
 
-        if(payload.actionsAdded) {
+        if(payload.actionsAdded.length) {
             for(const action of payload.actionsAdded) {
                 actor.item.figureRenderer.addAction(action);
             }
         }
 
-        if(payload.actionsRemoved) {
+        if(payload.actionsRemoved.length) {
             for(const action of payload.actionsRemoved) {
                 actor.item.figureRenderer.removeAction(action);
             }

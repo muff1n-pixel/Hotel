@@ -19,9 +19,9 @@ onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
         transferables.push(figure.image);
         transferables.push(figure.imageData.buffer);
 
-        for(const effect of effects) {
+        /*for(const effect of effects) {
             transferables.push(effect.image);
-        }
+        }*/
         
         port.postMessage({
             figure,

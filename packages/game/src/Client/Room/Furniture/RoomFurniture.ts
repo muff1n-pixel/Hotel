@@ -127,9 +127,17 @@ export default class RoomFurniture {
 
         this.data = payload;
 
-        this.item.furnitureRenderer.direction = this.data.direction = payload.direction;
-        this.item.furnitureRenderer.animation = this.data.animation = payload.animation;
-        this.item.furnitureRenderer.color = this.data.color ?? this.data.furniture?.color ?? undefined;
+        if(payload.direction !== undefined) {
+            this.item.furnitureRenderer.direction = this.data.direction = payload.direction;
+        }
+
+        if(payload.animation !== undefined) {
+            this.item.furnitureRenderer.animation = this.data.animation = payload.animation;
+        }
+
+        if(payload.color !== undefined) {
+            this.item.furnitureRenderer.color = payload.color ?? this.data.furniture?.color ?? undefined;
+        }
 
         if(payload.position) {
             this.item.setPosition(payload.position);

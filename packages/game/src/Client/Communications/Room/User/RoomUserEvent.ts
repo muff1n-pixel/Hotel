@@ -42,7 +42,7 @@ export default class RoomUserEvent implements ProtobuffListener<RoomUserData> {
             roomUser.data.motto = payload.motto;
         }
 
-        if(payload.actions !== undefined) {
+        if(payload.actions.length) {
             roomUser.item.figureRenderer.setActions(payload.actions);
         }
 

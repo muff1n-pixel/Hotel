@@ -38,7 +38,7 @@ export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
         await new Promise<void>((resolve) => {
             setTimeout(() => {
                 resolve();
-            }, 500);
+            }, 1000);
         });
 
         // Check if the dice has been closed while it was rolling

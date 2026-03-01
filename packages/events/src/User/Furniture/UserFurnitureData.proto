@@ -14,7 +14,7 @@ message UserFurnitureData {
     RoomPositionData position = 4;
     uint32 direction = 5;
 
-    uint32 animation = 6;
+    int32 animation = 6;
     optional uint32 color = 7;
 
     UserFurnitureCustomData data = 8;
