@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Room/Furniture/Export/RoomFurnitureExportData.proto";
+
+message RoomFurnitureImportData {
+    repeated RoomFurnitureExportData furniture = 1;
+}

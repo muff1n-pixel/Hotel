@@ -1,4 +1,4 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
+import { ShopPageData } from "@pixel63/events";
 import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
 import { Fragment } from "react/jsx-runtime";
 
@@ -9,7 +9,7 @@ export type ShopPagesListProps = {
 
     activeShopPage?: ShopPageData;
     shopPages: ShopPageData[];
-    parentId: string | null;
+    parentId?: string;
     onPageChange: (shopPage: ShopPageData) => void;
 
     tabs: number;

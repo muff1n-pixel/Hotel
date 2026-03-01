@@ -6,36 +6,38 @@ import WiredDivider from "../../../../Dialog/Wired/WiredDivider";
 import WiredSection from "../../../../Dialog/Wired/WiredSection";
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../Dialog/Wired/WiredButton";
-import { WiredFurnitureSelectionData } from "@Shared/Interfaces/Room/Furniture/Wired/WiredFurnitureSelectionData";
 import { webSocketClient } from "../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
 import WiredFurniturePicker from "../../../../Dialog/Wired/WiredFurniturePicker";
 import WiredFurnitureSource from "../../../../Dialog/Wired/WiredFurnitureSource";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredFurnitureSelectionDialog = {
-    furniture: RoomInstanceFurniture<WiredFurnitureSelectionData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_says_something";
 };
 
-export default function WiredFurnitureSelectionDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredFurnitureSelectionDialog>) {
-    const [furnitureIds, setFurnitureIds] = useState(data.furniture.data.data?.furnitureIds ?? []);
-    const [furnitureSource, setFurnitureSource] = useState(data.furniture.data.data?.furnitureSource ?? "list");
+export default function WiredFurnitureSelectionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredFurnitureSelection?.furnitureIds ?? []);
+    const [furnitureSource, setFurnitureSource] = useState(data.data.data?.wiredFurnitureSelection?.furnitureSource ?? "list");
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredFurnitureSelectionData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+
             data: {
-                furnitureIds,
-                furnitureSource
+                wiredFurnitureSelection: {
+                    furnitureIds,
+                    furnitureSource
+                }
             }
-        });
+        }));
 
         onClose();
     }, [furnitureIds, furnitureSource, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

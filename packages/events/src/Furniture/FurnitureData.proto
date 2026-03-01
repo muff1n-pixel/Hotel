@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "Furniture/FurnitureFlagsData.proto";
+import "Room/RoomPositionData.proto";
+
+message FurnitureData {
+    string id = 1;
+
+    string type = 2;
+    optional uint32 color = 3;
+
+    string name = 4;
+    optional string description = 5;
+
+    string placement = 6;
+    string category = 7;
+    FurnitureFlagsData flags = 8;
+    RoomPositionData dimensions = 9;
+    string interaction_type = 10;
+    repeated string custom_params = 11;
+}

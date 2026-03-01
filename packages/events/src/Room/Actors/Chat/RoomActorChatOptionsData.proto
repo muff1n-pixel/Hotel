@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message RoomActorChatOptionsData {
+    optional bool italic = 1;
+    optional bool transparent = 2;
+    optional bool hide_username = 3;
+}

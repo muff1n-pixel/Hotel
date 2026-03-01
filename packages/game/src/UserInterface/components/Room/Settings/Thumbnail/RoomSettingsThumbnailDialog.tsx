@@ -5,8 +5,8 @@ import DialogContent from "../../../Dialog/DialogContent";
 import RoomCameraRenderer from "../../Camera/RoomCameraRenderer";
 import { useRoomInstance } from "../../../../hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import { UpdateRoomInformationEventData } from "@Shared/Communications/Requests/Rooms/UpdateRoomInformationEventData";
 import { useDialogs } from "../../../../hooks/useDialogs";
+import { UpdateRoomInformationData } from "@pixel63/events";
 
 export type RoomSettingsThumbnailDialogProps = {
     hidden?: boolean;
@@ -30,9 +30,9 @@ export default function RoomSettingsThumbnailDialog({ hidden, onClose }: RoomSet
             throw new Error("Could not create a data url from the canvas.");
         }
 
-        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             thumbnail: dataUrl
-        });
+        }));
 
         dialogs.closeDialog("room-settings-thumbnail");
     }, [room, dialogs, canvasRef]);

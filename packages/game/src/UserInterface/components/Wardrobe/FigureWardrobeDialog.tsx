@@ -76,7 +76,7 @@ const wardrobeTabs = [
 export type FigureWardrobeDialogProps = {
     title: string;
     header: string;
-    initialFigureConfiguration: FigureConfigurationData;
+    initialFigureConfiguration?: FigureConfigurationData;
 
     hidden?: boolean;
     onClose?: () => void;
@@ -85,11 +85,15 @@ export type FigureWardrobeDialogProps = {
 };
 
 export default function FigureWardrobeDialog({ title, header, initialFigureConfiguration, hidden, onApply, onClose }: FigureWardrobeDialogProps) {
-    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData>(initialFigureConfiguration);
+    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(initialFigureConfiguration);
 
     useEffect(() => {
         setFigureConfiguration(initialFigureConfiguration);
     }, [initialFigureConfiguration]);
+
+    if(!figureConfiguration) {
+        return null;
+    }
     
     return (
         <Dialog title={title} hidden={hidden} onClose={onClose} width={500} height={530}>

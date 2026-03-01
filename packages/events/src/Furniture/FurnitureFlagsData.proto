@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message FurnitureFlagsData {
+    bool stackable = 1;
+    bool sitable = 2;
+    bool layable = 3;
+    bool walkable = 4;
+    bool giftable = 5;
+    bool tradable = 6;
+    bool recyclable = 7;
+    bool sellable = 8;
+    bool inventory_stackable = 9;
+}

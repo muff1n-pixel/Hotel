@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { SendUserMessageEventData } from "@Shared/Communications/Requests/Rooms/User/SendUserMessageEventData";
-import { SetTypingEventData } from "@Shared/Communications/Requests/Rooms/User/SetTypingEventData";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
 import { useDialogs } from "../../../hooks/useDialogs";
+import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
 
 export default function ToolbarChatbar() {
     const dialogs = useDialogs();
@@ -25,9 +24,9 @@ export default function ToolbarChatbar() {
     }, [value, typing]);
 
     useEffect(() => {
-        webSocketClient.send<SetTypingEventData>("SetTypingEvent", {
+        webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
             typing: (value.length)?(true):(false)
-        });
+        }));
     }, [typing]);
 
     const handleSubmit = useCallback(() => {
@@ -90,9 +89,9 @@ export default function ToolbarChatbar() {
             }
         }
 
-        webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+        webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
             message: value
-        });
+        }));
     }, [dialogs, value]);
 
     return (

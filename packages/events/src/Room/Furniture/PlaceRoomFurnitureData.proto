@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+
+message PlaceRoomFurnitureData {
+    string id = 1;
+    string furniture_id = 2;
+
+    bool stackable = 3;
+
+    RoomPositionData position = 4;
+    uint32 direction = 5;
+}

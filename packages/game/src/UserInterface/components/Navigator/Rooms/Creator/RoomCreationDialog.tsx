@@ -4,16 +4,12 @@ import DialogContent from "../../../Dialog/DialogContent";
 import Input from "../../../Form/Input";
 import DialogButton from "../../../Dialog/Button/DialogButton";
 import RoomMapImage from "../../../Room/Map/RoomMapImage";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomMapData } from "@Shared/Communications/Responses/Navigator/RoomMapsEventData";
 import { webSocketClient } from "../../../../..";
-import { CreateRoomEventData } from "@Shared/Communications/Requests/Navigator/CreateRoomEventData";
-import { RoomCreatedEventData } from "@Shared/Communications/Responses/Navigator/RoomCreatedEventData";
-import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import useRoomMaps from "./Hooks/useRoomMaps";
 import { useDialogs } from "../../../../hooks/useDialogs";
 import { useRoomCategories } from "../../../../hooks/useRoomCategories";
 import Selection from "../../../Form/Selection";
+import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -48,31 +44,28 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
             return;
         }
 
-        const listener = (event: WebSocketEvent<RoomCreatedEventData>) => {
-            if(!event.data.success) {
-                alert("fail");
-            }
+        webSocketClient.addProtobuffListener(RoomCreatedData, {
+            async handle(payload: RoomCreatedData) {
+                closeDialog("room-creation");
+                closeDialog("navigator");
 
-            closeDialog("room-creation");
-            closeDialog("navigator");
-
-            webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                roomId: event.data.roomId
-            });
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<RoomCreatedEventData>>("RoomCreatedEvent", listener, {
+                webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                    id: payload.roomId
+                }));
+            },
+        }, {
             once: true
         });
 
-        webSocketClient.send<CreateRoomEventData>("CreateRoomEvent", {
+        webSocketClient.sendProtobuff(CreateRoomData, CreateRoomData.create({
             name,
             description,
-            category,
-            maxUsers,
 
-            mapId: activeRoomMap.id,
-        });
+            category,
+
+            maxUsers,
+            mapId: activeRoomMap.id
+        }));
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
@@ -165,7 +158,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                     alignItems: "center"
                                 }} onClick={() => setActiveRoomMap(roomMap)}>
                                     <RoomMapImage crop={true} width={135} height={96} style={{
-                                    }} structure={{
+                                    }} structure={RoomStructureData.create({
                                         grid: roomMap.grid,
                                         door: roomMap.door,
                                         floor: {
@@ -177,7 +170,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                             thickness: 0,
                                             hidden: false
                                         }
-                                    }} leftWallColor={["D48612"]}/>
+                                    })} leftWallColor={["D48612"]}/>
                                 </div>
                             ))}
                         </div>

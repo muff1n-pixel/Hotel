@@ -12,7 +12,7 @@ export class UserModel extends Model {
   declare diamonds: number;
   declare duckets: number;
   declare motto: string | null;
-  declare homeRoomId: string | null;
+  declare homeRoomId: string | undefined;
   declare roomChatStyleId: string;
   declare online: boolean;
   declare roles: NonAttribute<PermissionRoleModel[]>;

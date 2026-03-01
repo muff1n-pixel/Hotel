@@ -1,11 +1,11 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomItem from "../Items/RoomItem";
+import { RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default interface RoomItemSpriteInterface {
     item: RoomItem;
     priority: number;
 
     render(context: OffscreenCanvasRenderingContext2D): void;
-    mouseover(position: MousePosition): RoomPosition | null;
+    mouseover(position: MousePosition): RoomPositionWithDirectionData | null;
 };

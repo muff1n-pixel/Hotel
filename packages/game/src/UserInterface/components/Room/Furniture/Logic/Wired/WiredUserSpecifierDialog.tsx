@@ -8,34 +8,36 @@ import WiredInput from "../../../../Dialog/Wired/WiredInput";
 import { useCallback, useState } from "react";
 import WiredRadio from "../../../../Dialog/Wired/WiredRadio";
 import WiredButton from "../../../../Dialog/Wired/WiredButton";
-import { WiredUserSpecifierData } from "@Shared/Interfaces/Room/Furniture/Wired/WiredUserSpecifierData";
 import { webSocketClient } from "../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredUserSpecifierDialogData = {
-    furniture: RoomInstanceFurniture<WiredUserSpecifierData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_enter_room";
 };
 
-export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredUserSpecifierDialogData>) {
-    const [match, setMatch] = useState(data.furniture.data.data?.match ?? "all");
-    const [matchUser, setMatchUser] = useState(data.furniture.data.data?.matchUser ?? "");
+export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [match, setMatch] = useState(data.data.data?.wiredUserSpecifier?.match ?? "all");
+    const [matchUser, setMatchUser] = useState(data.data.data?.wiredUserSpecifier?.matchUser ?? "");
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredUserSpecifierData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+
             data: {
-                match,
-                matchUser
+                wiredUserSpecifier: {
+                    match,
+                    matchUser
+                }
             }
-        });
+        }));
 
         onClose();
     }, [match, matchUser, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

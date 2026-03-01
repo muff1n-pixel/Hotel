@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import OffscreenCanvasRender from "../OffscreenCanvasRender";
-import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import Furniture from "@Client/Furniture/Furniture";
+import { FurnitureData } from "@pixel63/events";
 
 export type FurnitureImageProps = {
-    furnitureData: FurnitureData;
+    furnitureData?: FurnitureData;
 }
 
 export default function FurnitureImage({ furnitureData }: FurnitureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
+        if(!furnitureData) {
+            return;
+        }
+
         const furnitureRenderer = new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color);
 
         furnitureRenderer.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {

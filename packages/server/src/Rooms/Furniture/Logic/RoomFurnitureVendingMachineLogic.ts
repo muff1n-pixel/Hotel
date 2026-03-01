@@ -1,14 +1,14 @@
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
 
     }
 
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         if(!this.roomFurniture.model.furniture.customParams?.length) {
             console.warn("Furniture does not have any custom params.");
 

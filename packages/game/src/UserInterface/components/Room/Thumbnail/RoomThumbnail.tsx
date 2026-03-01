@@ -4,7 +4,7 @@ import { useRoomInstance } from "../../../hooks/useRoomInstance";
 
 export type RoomThumbnailProps = {
     roomId: string;
-    thumbnail: string | null;
+    thumbnail?: string;
     disallowEdit?: boolean;
     children?: ReactNode;
 };

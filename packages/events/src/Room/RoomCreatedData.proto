@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message RoomCreatedData {
+    string room_id = 1;
+}

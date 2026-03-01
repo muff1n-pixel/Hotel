@@ -6,11 +6,11 @@ import RoomFloorPlanEditor, { RoomFloorPlanTool } from "./RoomFloorPlanEditor";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../../..";
-import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
-import { UpdateRoomFloorplanEventData } from "@Shared/Communications/Requests/Rooms/Floorplan/UpdateRoomFloorplanEventData";
 import Checkbox from "../../Form/Checkbox";
 import Selection from "../../Form/Selection";
 import Input from "../../Form/Input";
+import { UpdateRoomStructureData } from "@pixel63/events";
+import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 
 export type RoomFloorPlanDialogProps = {
     hidden?: boolean;
@@ -66,11 +66,11 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
 
         setDirection(room.roomRenderer.structure.door?.direction ?? 2);
 
-        setFloorThickness(room.roomRenderer.structure.floor.thickness);
-        setWallThickness(room.roomRenderer.structure.wall.thickness);
+        setFloorThickness(room.roomRenderer.structure.floor?.thickness ?? 8);
+        setWallThickness(room.roomRenderer.structure.wall?.thickness ?? 8);
         
-        setWallHidden(room.roomRenderer.structure.wall.hidden);
-        setWallHeight(room.roomRenderer.structure.wall.height ?? 0);
+        setWallHidden(room.roomRenderer.structure.wall?.hidden ?? false);
+        setWallHeight(room.roomRenderer.structure.wall?.height ?? 0);
     }, [room, floorPlanEditor]);
 
     useEffect(() => {
@@ -89,8 +89,8 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
             return;
         }
 
-        webSocketClient.send<UpdateRoomFloorplanEventData>("UpdateRoomFloorplanEvent", {
-            offsets: data.offsets,
+        webSocketClient.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
+            offset: data.offsets,
             grid: data.structure.grid,
             door: {
                 row: (data.structure.door?.row ?? 0),
@@ -103,7 +103,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
             wallHeight,
 
             floorThickness
-        });
+        }))
 
         floorPlanEditor.setStructure(data.structure);
     }, [floorPlanEditor, data, direction, wallHidden, wallThickness, wallHeight, floorThickness]);

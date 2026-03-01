@@ -1,21 +1,17 @@
+import { GetRoomChatStylesData, RoomChatStylesData } from "@pixel63/events";
 import { RoomChatStyleModel } from "../../../../../Database/Models/Rooms/Chat/Styles/RoomChatStyleModel.js";
-import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent.js";
 import User from "../../../../../Users/User.js";
 import IncomingEvent from "../../../../Interfaces/IncomingEvent.js";
-import { RoomChatStylesEventData } from "@shared/Communications/Responses/Rooms/Chat/Styles/RoomChatStylesEventData.js";
+import ProtobuffListener from "../../../../Interfaces/ProtobuffListener.js";
 
-export default class GetRoomChatStylesEvent implements IncomingEvent {
+export default class GetRoomChatStylesEvent implements ProtobuffListener<GetRoomChatStylesData> {
     public readonly name = "GetRoomChatStylesEvent";
 
-    async handle(user: User, event: null) {
+    async handle(user: User) {
         const roomChatStyles = await RoomChatStyleModel.findAll();
 
-        user.send(new OutgoingEvent<RoomChatStylesEventData>("RoomChatStylesEvent", {
-            roomChatStyles: roomChatStyles.map((roomChatStyle) => {
-                return {
-                    id: roomChatStyle.id
-                };
-            })
+        user.sendProtobuff(RoomChatStylesData, RoomChatStylesData.create({
+            roomChatStyleIds: roomChatStyles.map((roomChatStyle) => roomChatStyle.id)
         }));
     }
 }

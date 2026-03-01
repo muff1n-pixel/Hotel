@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Shop/Pages/ShopPageData.proto";
+
+message ShopPagesData {
+    string category = 1;
+    repeated ShopPageData pages = 2;
+}

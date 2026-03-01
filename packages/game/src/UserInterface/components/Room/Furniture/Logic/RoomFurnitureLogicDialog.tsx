@@ -1,11 +1,11 @@
-import RoomFurnitureBackgroundDialog, { RoomFurnitureBackgroundDialogData } from "./Background/RoomFurnitureBackgroundDialog";
-import RoomFurnitureDimmerDialog, { RoomFurnitureDimmerData } from "./Dimmer/RoomFurnitureDimmerDialog";
-import RoomFurnitureStickiesDialog, { RoomFurnitureStickiesDialogData } from "./Stickies/RoomFurnitureStickiesDialog";
-import RoomFurnitureBackgroundTonerDialog, { RoomFurnitureBackgroundTonerDialogData } from "./Toner/RoomFurnitureBackgroundTonerDialog";
-import RoomFurnitureTrophyDialog, { RoomFurnitureTrophyDialogData } from "./Trophy/RoomFurnitureTrophyDialog";
+import RoomFurnitureBackgroundDialog from "./Background/RoomFurnitureBackgroundDialog";
+import RoomFurnitureDimmerDialog from "./Dimmer/RoomFurnitureDimmerDialog";
+import RoomFurnitureStickiesDialog from "./Stickies/RoomFurnitureStickiesDialog";
+import RoomFurnitureBackgroundTonerDialog from "./Toner/RoomFurnitureBackgroundTonerDialog";
+import RoomFurnitureTrophyDialog from "./Trophy/RoomFurnitureTrophyDialog";
 import WiredActionShowMessageDialog from "./Wired/Action/WiredActionShowMessageDialog";
 import WiredActionTeleportToFurnitureDialog from "./Wired/Action/WiredActionTeleportToFurnitureDialog";
-import WiredTriggerSaysSomethingDialog, { WiredTriggerSaysSomethingDialogData } from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
+import WiredTriggerSaysSomethingDialog from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
 import WiredUserSpecifierDialog from "./Wired/WiredUserSpecifierDialog";
 import WiredTriggerStuffStateDialog from "./Wired/Trigger/WiredTriggerStuffStateDialog";
 import WiredTriggerUserClicksOnTileDialog from "./Wired/Trigger/WiredTriggerUserClicksOnTileDialog";
@@ -17,33 +17,32 @@ import WiredSignalDialog from "./Wired/WiredSignalDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
 import WiredDialog from "../../../Dialog/Wired/WiredDialog";
 import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
-export type RoomFurnitureLogicDialogProps<T = any> = {
-    data: T;
+export type RoomFurnitureLogicDialogProps = {
+    data: RoomFurniture;
     hidden?: boolean;
     onClose: () => void;
 }
 
-export type RoomFurnitureLogicDialogData =
-    RoomFurnitureDimmerData
-    | RoomFurnitureBackgroundDialogData
-    | RoomFurnitureBackgroundTonerDialogData
-    | RoomFurnitureStickiesDialogData
-    | RoomFurnitureTrophyDialogData
-    | WiredTriggerSaysSomethingDialogData;
+export type RoomFurnitureLogicDialogData = {
+    furniture: RoomFurniture;
+};
 
-export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps<any>) {
-    switch(props.data.type) {
-        case "furniture_roomdimmer":
+export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
+    console.log(props.data.data.furniture?.interactionType);
+
+    switch(props.data.data.furniture?.interactionType) {
+        case "dimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);
             
-        case "furniture_background":
+        case "ads_bg":
             return (<RoomFurnitureBackgroundDialog {...props}/>);
             
         case "furniture_stickie":
             return (<RoomFurnitureStickiesDialog {...props}/>);
             
-        case "furniture_background_color":
+        case "background_toner":
             return (<RoomFurnitureBackgroundTonerDialog {...props}/>);
             
         case "trophy":
@@ -92,10 +91,10 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             return (<WiredSignalDialog {...props}/>);
     }
 
-    if(props.data.type.startsWith("wf_")) {
+    if(props.data.data.furniture?.type.startsWith("wf_")) {
         return (
             <WiredDialog onClose={props.onClose}>
-                <WiredFurniture furniture={props.data.furniture.data}/>
+                <WiredFurniture furniture={props.data.data}/>
             </WiredDialog>
         );
     }

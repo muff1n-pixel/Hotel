@@ -4,6 +4,10 @@ import FigureWorkerInterface from "@Client/Figure/Worker/Interfaces/FigureWorker
 
 export default class FigureWorkerMainThread implements FigureWorkerInterface {
     public async renderInWebWorker(figure: Figure, frame: number, cropped: boolean): Promise<FigureRendererResult> {
+        if(!figure.configuration) {
+            throw new Error();
+        }
+        
         const figureRenderer = new FigureRenderer(figure.configuration, figure.direction, figure.actions, frame, figure.headOnly);
         
         const result = await figureRenderer.renderToCanvas(cropped);

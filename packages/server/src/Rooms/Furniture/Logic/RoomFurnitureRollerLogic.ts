@@ -1,11 +1,8 @@
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { MoveRoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/MoveRoomFurnitureEventData.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
-import { ActorPositionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorPositionEventData.js";
+import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -14,7 +11,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
     private lastExecution: number = 0;
 
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         // do nothing, since the roller is used automatically
         // but do display a use button in the client to show it's an interactable
     }
@@ -24,10 +21,10 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         if(this.roomFurniture.model.animation !== 0) {
             this.roomFurniture.model.animation = 0;
-            
-            room.outgoingEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+
+            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.roomFurniture.getFurnitureData()
+                    this.roomFurniture.model
                 ]
             }));
         }
@@ -44,15 +41,15 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         this.lastExecution = performance.now();
 
-        const outgoingEvents: OutgoingEvent[] = [];
+        let animate = false;
 
-        const offsetPosition = this.roomFurniture.getOffsetPosition(1);
+        const offset = this.roomFurniture.getOffsetPosition(1);
 
-        const blockingUser = room.getRoomUserAtPosition(offsetPosition);
+        const blockingUser = room.getRoomUserAtPosition(offset);
 
         if(!blockingUser) {
             const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
-            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(this.roomFurniture.model.position).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
+            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position)).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
 
             for(const user of usersInteractingWithRoller) {
                 if(user.preoccupiedByActionHandler) {
@@ -62,8 +59,10 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 if(user.path) {
                     continue;
                 }
+        
+                const offsetPosition = RoomPositionData.fromJSON(offset);
 
-                const nextFurniture = room.getUpmostFurnitureAtPosition(offsetPosition);
+                const nextFurniture = room.getUpmostFurnitureAtPosition(offset);
                 
                 if(nextFurniture && !nextFurniture.isWalkable(true)) {
                     continue;
@@ -71,7 +70,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
                 user.preoccupiedByActionHandler = true;
 
-                const nextRoller = room.getAllFurnitureAtPosition(offsetPosition).find((furniture) => furniture.model.furniture.category === "roller");
+                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
 
                 if(nextRoller) {
                     offsetPosition.depth = nextRoller.model.position.depth + nextRoller.model.furniture.dimensions.depth;
@@ -83,6 +82,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 user.position = offsetPosition;
 
                 user.sendPositionEvent(true);
+                
+                animate = true;
             }
 
             for(const furniture of furnitureInteractingWithRoller) {
@@ -97,9 +98,10 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     continue;
                 }
 
-                const offsetPosition = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+                const offset = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+                const offsetPosition = RoomPositionData.fromJSON(offset);
 
-                const nextRoller = room.getAllFurnitureAtPosition(offsetPosition).find((furniture) => furniture.model.furniture.category === "roller");
+                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
 
                 if(!nextRoller) {
                     // remove the depth of the roller
@@ -109,23 +111,23 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 furniture.setPosition(offsetPosition, false);
                 
                 await furniture.model.save();
-        
-                outgoingEvents.push(new OutgoingEvent<MoveRoomFurnitureEventData>("MoveRoomFurnitureEvent", {
+
+                this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
                     id: furniture.model.id,
                     position: offsetPosition
                 }));
+                
+                animate = true;
             }
         }
 
-        if(outgoingEvents.length > 0) {
-            room.outgoingEvents.push(...outgoingEvents);
-            
+        if(animate) {
             if(this.roomFurniture.model.animation !== 2) {
                 this.roomFurniture.model.animation = 2;
                 
-                room.outgoingEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureUpdated: [
-                        this.roomFurniture.getFurnitureData()
+                        this.roomFurniture.model
                     ]
                 }));
             }

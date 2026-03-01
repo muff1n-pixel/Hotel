@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "User/Furniture/UserFurnitureCustomData.proto";
+
+message RoomFurnitureExportData {
+    string type = 1;
+    optional uint32 color = 2;
+
+    UserFurnitureCustomData data = 3;
+
+    RoomPositionData position = 4;
+    uint32 direction = 5;
+
+    uint32 animation = 6;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "Room/Actors/RoomActorIdentifierData.proto";
+
+message RoomActorPositionData {
+    RoomActorIdentifierData actor = 1;
+    RoomPositionData position = 2;
+    optional int32 direction = 3;
+    optional bool use_path = 4;
+}

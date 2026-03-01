@@ -1,19 +1,19 @@
 import User from "../../../Users/User.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { PurchaseShopBotEventData } from "@shared/Communications/Requests/Shop/PurchaseShopBotEventData.js";
-import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import { randomUUID } from "node:crypto";
 import { ShopPageBotModel } from "../../../Database/Models/Shop/ShopPageBotModel.js";
 import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { PurchaseShopBotData } from "@pixel63/events";
 
-export default class PurchaseShopBotEvent implements IncomingEvent<PurchaseShopBotEventData> {
+export default class PurchaseShopBotEvent implements ProtobuffListener<PurchaseShopBotData> {
     public readonly name = "PurchaseShopBotEvent";
 
-    async handle(user: User, event: PurchaseShopBotEventData) {
+    async handle(user: User, payload: PurchaseShopBotData) {
         const shopBot = await ShopPageBotModel.findOne({
             where: {
-                id: event.shopBotId
+                id: payload.id
             }
         });
 
@@ -60,6 +60,6 @@ export default class PurchaseShopBotEvent implements IncomingEvent<PurchaseShopB
 
         await user.getInventory().addBot(userBot);
 
-        user.send(new OutgoingEvent<UserEventData>("UserEvent", user.getUserData()));
+        user.sendUserData();
     }
 }

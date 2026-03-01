@@ -2,27 +2,27 @@ import User from "../../../Users/User.js";
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { GetShopPagesEventData } from "@shared/Communications/Requests/Shop/GetShopPagesEventData.js";
-import { ShopPagesEventData } from "@shared/Communications/Responses/Shop/ShopPagesEventData.js";
 import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
+import { GetShopPagesData, ShopPagesData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEventData> {
+export default class GetShopPagesEvent implements ProtobuffListener<GetShopPagesData> {
     public readonly name = "GetShopPagesEvent";
     
-    async handle(user: User, event: GetShopPagesEventData) {
-        switch(event.category) {
+    async handle(user: User, payload: GetShopPagesData) {
+        switch(payload.category) {
             case "furniture":
-                return this.handleFurniture(user, event);
+                return this.handleFurniture(user, payload);
 
             case "frontpage":
-                return this.handleFurniture(user, event);
+                return this.handleFurniture(user, payload);
         }
     }
 
-    async handleFurniture(user: User, event: GetShopPagesEventData) {
+    async handleFurniture(user: User, payload: GetShopPagesData) {
         const shopPages: ShopPageModel[] = await ShopPageModel.findAll({
             where: {
-                category: event.category,
+                category: payload.category,
             },
             include: [
                 {
@@ -41,8 +41,8 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
             order: ["index"]
         });
 
-        user.send(new OutgoingEvent<ShopPagesEventData>("ShopPagesEventData", {
-            category: event.category,
+        user.sendProtobuff(ShopPagesData, ShopPagesData.create({
+            category: payload.category,
             pages: shopPages.sort((a, b) => a.index - b.index).map((shopPage) => {
                 return {
                     id: shopPage.id,
@@ -72,7 +72,7 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
                                 category: feature.featuredPage.category
                             }
                         };
-                    })
+                    }) ?? []
                 };
             })
         }));

@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import DialogPanel from "../../Dialog/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
-import { ShopPageFurnitureData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
-import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
-import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -28,7 +24,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const activeFurnitureRef = useRef<HTMLCanvasElement>(null);
 
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
-    const [activeFurniture, setActiveFurniture] = useState<ShopPageFurnitureData>();
+    const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
     const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
 
     useEffect(() => {
@@ -54,7 +50,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     }, [roomRef]);
 
     useEffect(() => {
-        if(!roomRenderer || !activeFurniture) {
+        if(!roomRenderer || !activeFurniture?.furniture) {
             return;
         }
 
@@ -107,48 +103,49 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         roomRenderer?.progressFurnitureAnimation();
     }, [roomRenderer, roomFurniturePlacer]);
 
-    const handlePurchaseFurniture = useCallback((position?: RoomPosition, direction?: number) => {
+    const handlePurchaseFurniture = useCallback((position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
             return;
         }
 
         // TODO: disable dialog
-        const listener = (event: WebSocketEvent<ShopFurniturePurchasedEventData>) => {
-            if(roomFurniturePlacer) {
-                roomFurniturePlacer.destroy();
+        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
+            async handle(payload: ShopFurniturePurchaseData) {
+                if(roomFurniturePlacer) {
+                    roomFurniturePlacer.destroy();
 
-                setRoomFurniturePlacer(undefined);
-            }
-            else {
-                if(!event.data.success) {
-                    return;
+                    setRoomFurniturePlacer(undefined);
                 }
+                else {
+                    if(!payload.success) {
+                        return;
+                    }
 
-                if(activeFurnitureRef.current) {
-                    clientInstance.flyingFurnitureIcons.value!.push({
-                        id: Math.random().toString(),
-                        furniture: activeFurniture.furniture,
-                        position: activeFurnitureRef.current.getBoundingClientRect(),
-                        targetElementId: "toolbar-inventory"
-                    });
+                    if(activeFurnitureRef.current && activeFurniture.furniture) {
+                        clientInstance.flyingFurnitureIcons.value!.push({
+                            id: Math.random().toString(),
+                            furniture: activeFurniture.furniture,
+                            position: activeFurnitureRef.current.getBoundingClientRect(),
+                            targetElementId: "toolbar-inventory"
+                        });
 
-                    clientInstance.flyingFurnitureIcons.update();
+                        clientInstance.flyingFurnitureIcons.update();
+                    }
                 }
-            }
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopFurniturePurchasedEventData>>("ShopFurniturePurchasedEvent", listener, {
+            },
+        }, {
             once: true
         });
 
-        webSocketClient.send<PurchaseShopFurnitureEventData>("PurchaseShopFurnitureEvent", {
-            shopFurnitureId: activeFurniture.id,
+        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
+            id: activeFurniture.id,
+
             position,
             direction
-        });
+        }));
     }, [activeFurniture, activeFurnitureRef, roomFurniturePlacer]);
 
-    const onMouseDown = useCallback((furniture: ShopPageFurnitureData) => {
+    const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
         }
@@ -160,7 +157,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         const mousemove = () => {
             document.body.removeEventListener("mousemove", mousemove);
 
-            if(room) {                
+            if(room && furniture.furniture) {                
                 setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture));
             }
         };
@@ -211,9 +208,9 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
 
                         color: "white"
                     }}>
-                        <b>{activeFurniture.furniture.name}</b>
+                        <b>{activeFurniture.furniture?.name}</b>
 
-                        {(activeFurniture.furniture.description) && (
+                        {(activeFurniture.furniture?.description) && (
                             <p style={{ fontSize: 12 }}>{activeFurniture.furniture.description}</p>
                         )}
                     </div>

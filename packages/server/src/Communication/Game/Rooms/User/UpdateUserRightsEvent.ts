@@ -1,15 +1,11 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { UpdateUserRightsEventData } from "@shared/Communications/Requests/Rooms/User/UpdateUserRightsEventData.js";
 import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
 import { randomUUID } from "node:crypto";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomUserRightsEventData } from "@shared/Communications/Responses/Rooms/Users/RoomUserRightsEventData.js";
+import { RoomUserData, SetRoomUserRightsData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRightsEventData> {
-    public readonly name = "UpdateUserRightsEvent";
-
-    async handle(user: User, event: UpdateUserRightsEventData) {
+export default class UpdateUserRightsEvent implements ProtobuffListener<SetRoomUserRightsData> {
+    async handle(user: User, payload: SetRoomUserRightsData) {
         if(!user.room) {
             return;
         }
@@ -18,13 +14,13 @@ export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRi
             throw new Error("User is not room owner.");
         }
 
-        const targetUser = user.room.getRoomUserById(event.userId);
+        const targetUser = user.room.getRoomUserById(payload.id);
 
         if(user.room.model.owner.id === targetUser.user.model.id) {
             throw new Error("Target user is room owner.");
         }
 
-        if(event.hasRights && !targetUser.hasRights()) {
+        if(payload.hasRights && !targetUser.hasRights()) {
             const rights = await RoomRightsModel.create({
                 id: randomUUID(),
                 roomId: user.room.model.id,
@@ -36,7 +32,7 @@ export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRi
 
             user.room.model.rights.push(rights);
         }
-        else if(!event.hasRights && targetUser.hasRights()) {
+        else if(!payload.hasRights && targetUser.hasRights()) {
             const rights = user.room.model.rights.find((rights) => rights.user.id === targetUser.user.model.id);
 
             if(!rights) {
@@ -53,8 +49,8 @@ export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRi
             return;
         }
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomUserRightsEventData>("RoomUserRightsEvent", {
-            userId: targetUser.user.model.id,
+        user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            id: targetUser.user.model.id,
             hasRights: targetUser.hasRights()
         }));
     }

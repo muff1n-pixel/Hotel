@@ -1,6 +1,6 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomAssets from "@Client/Assets/RoomAssets";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
+import { RoomStructureData } from "@pixel63/events";
 
 type FloorRectangle = {
     row: number;
@@ -29,7 +29,15 @@ export default class FloorRenderer {
     private fullSize: number;
     private halfSize: number;
 
-    constructor(public readonly structure: RoomStructure, public floorId: string, private readonly size: number) {
+    public readonly structure: RoomStructureData;
+
+    constructor(structure: RoomStructureData | undefined, public floorId: string, private readonly size: number) {
+        if(!structure) {
+            throw new Error();
+        }
+
+        this.structure = structure;
+
         this.rows = this.structure.grid.length;
         this.columns = Math.max(...this.structure.grid.map((row) => row.length));
         this.depth = 0;
@@ -133,8 +141,8 @@ export default class FloorRenderer {
             flipHorizontal: assetData.flipHorizontal
         });
 
-        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + (this.structure.wall.thickness * 2);
-        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + ((this.structure.wall.thickness + this.structure.floor.thickness) * 2) + this.halfSize;
+        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.structure.wall?.thickness ?? 8) * 2);
+        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (((this.structure.wall?.thickness ?? 8) + (this.structure.floor?.thickness ?? 8)) * 2) + this.halfSize;
 
         const canvas = new OffscreenCanvas(width, height);
 
@@ -161,7 +169,7 @@ export default class FloorRenderer {
 
     private renderLeftEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, 0, 1, this.structure.wall.thickness + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + this.structure.wall.thickness);
+        context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -175,7 +183,7 @@ export default class FloorRenderer {
             const top = (rectangle.row * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.height;
 
             const nextStepEdge = rectangles.find(x => (x.column == rectangle.column) && (x.row == rectangle.row + 0.25 || x.row == rectangle.row + 1) && (x.depth === rectangle.depth - 0.25));
-            let thickness = this.structure.floor.thickness;
+            let thickness = (this.structure.floor?.thickness ?? 8);
 
             if(nextStepEdge && (thickness > this.halfSize / 2)) {
                 thickness = this.halfSize / 2;
@@ -189,7 +197,7 @@ export default class FloorRenderer {
 
     private renderRightEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, -.5, 0, 1, this.structure.wall.thickness + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + this.structure.wall.thickness);
+        context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -208,7 +216,7 @@ export default class FloorRenderer {
             const left = -(row * this.fullSize) + (column * this.fullSize) + rectangle.width - rectangle.height;
             const top = (column * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.width;
 
-            let thickness = this.structure.floor.thickness;
+            let thickness = (this.structure.floor?.thickness ?? 8);
 
             if(nextStepEdge && (thickness > this.halfSize / 2)) {
                 thickness = this.halfSize / 2;
@@ -222,7 +230,7 @@ export default class FloorRenderer {
 
     private renderTiles(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, -1, .5, this.structure.wall.thickness + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + this.structure.wall.thickness);
+        context.setTransform(1, .5, -1, .5, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
         context.fillStyle = context.createPattern(image, "repeat")!;
                 
         const tiles = new Path2D();

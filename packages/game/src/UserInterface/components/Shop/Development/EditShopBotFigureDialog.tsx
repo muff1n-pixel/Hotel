@@ -1,10 +1,8 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
-import { ShopPageBotData } from "@Shared/Communications/Responses/Shop/ShopPageBotsEventData";
 import FigureWardrobeDialog from "../../Wardrobe/FigureWardrobeDialog";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, ShopBotData, ShopPageData } from "@pixel63/events";
 
 export type EditShopBotFigureDialogProps = {
-    data: Partial<ShopPageBotData> & {
+    data: Partial<ShopBotData> & {
         page: ShopPageData;
         figureConfiguration: FigureConfigurationData;
         onChange: (figureConfiguration: FigureConfigurationData) => void;

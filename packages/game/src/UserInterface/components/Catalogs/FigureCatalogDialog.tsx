@@ -5,6 +5,7 @@ import DialogTable from "../Dialog/Table/DialogTable";
 import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import { RoomPositionData } from "@pixel63/events";
 
 export type FigureCatalogDialogProps = {
     hidden?: boolean;
@@ -39,11 +40,11 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     figureData={{
                                         figureConfiguration: user.figureConfiguration,
                                         actions: (action)?([action]):(undefined),
-                                        position: {
+                                        position: RoomPositionData.create({
                                             row: 10,
                                             column: 10,
                                             depth: 1
-                                        }
+                                        })
                                     }}
                                     options={{
                                         rows: 20,
@@ -80,11 +81,11 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     figureData={{
                                         figureConfiguration: user.figureConfiguration,
                                         actions: (action)?([action]):(undefined),
-                                        position: {
+                                        position: RoomPositionData.create({
                                             row: 10,
                                             column: 10,
                                             depth: 1
-                                        }
+                                        })
                                     }}
                                     options={{
                                         rows: 20,

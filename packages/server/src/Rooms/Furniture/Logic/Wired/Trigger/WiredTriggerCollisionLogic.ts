@@ -2,8 +2,8 @@ import RoomUser from "../../../../Users/RoomUser";
 import RoomFurniture from "../../../RoomFurniture";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 
-export default class WiredTriggerCollisionLogic extends WiredTriggerLogic<unknown> {
-    constructor(roomFurniture: RoomFurniture<unknown>) {
+export default class WiredTriggerCollisionLogic extends WiredTriggerLogic {
+    constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
 

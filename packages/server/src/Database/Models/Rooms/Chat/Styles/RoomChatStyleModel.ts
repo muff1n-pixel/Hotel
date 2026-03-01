@@ -1,6 +1,4 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { NonAttribute } from "@sequelize/core";
 
 export class RoomChatStyleModel extends Model {
     declare id: string;

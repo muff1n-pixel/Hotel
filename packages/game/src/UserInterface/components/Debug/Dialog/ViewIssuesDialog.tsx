@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
 import { webSocketClient } from "../../../..";
-import { HotelFeedbackEventData } from "@Shared/Communications/Responses/Hotel/Issues/HotelFeedbackEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import { GetHotelFeedbackData, HotelFeedbackData } from "@pixel63/events";
+import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData";
 
 export type ViewIssuesDialogProps = {
     hidden?: boolean;
@@ -11,19 +11,19 @@ export type ViewIssuesDialogProps = {
 }
 
 export default function ViewIssuesDialog({ hidden, onClose }: ViewIssuesDialogProps) {
-    const [issues, setIssues] = useState<HotelFeedbackEventData>([]);
+    const [issues, setIssues] = useState<HotelFeedbackData[]>([]);
 
     useEffect(() => {
-        const listener = (event: WebSocketEvent<HotelFeedbackEventData>) => {
-            setIssues(event.data);
-        };
+        const listener = webSocketClient.addProtobuffListener(HotelFeedbackCollectionData, {
+            async handle(payload: HotelFeedbackCollectionData) {
+                setIssues(payload.feedback);
+            },
+        });
 
-        webSocketClient.addEventListener("HotelFeedbackEvent", listener);
-
-        webSocketClient.send("GetHotelFeedbackEvent", null);
+        webSocketClient.sendProtobuff(GetHotelFeedbackData, GetHotelFeedbackData.create({}));
 
         return () => {
-            webSocketClient.removeEventListener("HotelFeedbackEvent", listener);
+            webSocketClient.removeProtobuffListener(HotelFeedbackCollectionData, listener);
         };
     }, []);
 
@@ -67,7 +67,7 @@ export default function ViewIssuesDialog({ hidden, onClose }: ViewIssuesDialogPr
                                 </div>
 
                                 <div>
-                                    <b>Reported by {issue.user.name}</b>
+                                    <b>Reported by {issue.user?.name}</b>
                                 </div>
                             </div>
                         ))}

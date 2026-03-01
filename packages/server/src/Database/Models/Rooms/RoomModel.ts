@@ -1,16 +1,14 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
 import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel.js";
-import { RoomMoodlightData } from "@shared/Interfaces/Room/RoomMoodlightData.js";
 import { UserModel } from "../Users/UserModel.js";
 import { RoomRightsModel } from "./Rights/RoomRightsModel.js";
 import { RoomCategoryModel } from "./Categories/RoomCategoryModel.js";
-import { RoomType } from "@shared/Interfaces/Room/RoomType.js";
 import { UserBotModel } from "../Users/Bots/UserBotModel.js";
+import { RoomStructureData } from "@pixel63/events";
 
 export class RoomModel extends Model {
     declare id: string;
-    declare type: RoomType;
+    declare type: string;
     
     declare name: string;
     declare description: string;
@@ -18,7 +16,7 @@ export class RoomModel extends Model {
 
     declare owner: NonAttribute<UserModel>;
 
-    declare structure: RoomStructure;
+    declare structure: Required<RoomStructureData>;
     
     declare thumbnail: string | null;
     declare maxUsers: number;
@@ -65,7 +63,7 @@ export function initializeRoomModel(sequelize: Sequelize) {
               get: function () {
                   return JSON.parse(this.getDataValue("structure"));
               },
-              set: function (value: RoomStructure) {
+              set: function (value: RoomStructureData) {
                   this.setDataValue("structure", JSON.stringify({
                     ...value,
                     grid: value.grid.map((row) => row.toUpperCase())

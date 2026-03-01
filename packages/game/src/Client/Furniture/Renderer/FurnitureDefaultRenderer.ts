@@ -6,11 +6,15 @@ import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
-    constructor(public readonly type: string) {
+    constructor(public readonly type: string | undefined) {
 
     }
 
     public async render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number, grayscaled: boolean) {
+        if(!this.type) {
+            throw new Error();
+        }
+        
         const sprites: FurnitureRendererSprite[] = [];
 
         const visualization = data.visualization.visualizations.find((visualization) => visualization.size == size);

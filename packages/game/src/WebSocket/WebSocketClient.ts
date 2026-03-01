@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
-import { MessageType } from "@pixel63/events";
+import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
 
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
@@ -13,29 +13,17 @@ export default class WebSocketClient extends EventTarget {
         this.socket.binaryType = "arraybuffer";
 
         this.socket.addEventListener("message", (event) => {
-            if(event.data.toString() !== "[object ArrayBuffer]") {
-                const events: [string, any, number | undefined][] = JSON.parse(event.data);
-
-                for(const [type, data, timestamp] of events) {
-                    console.log("Received " + type + " from server", data);
-
-                    if(timestamp !== undefined) {
-                        console.debug("Message received after " + (Date.now() - timestamp) + "ms");
-                    }
-
-                    this.dispatchEvent(new WebSocketEvent(type, data, (timestamp !== undefined)?(Date.now() - timestamp):(undefined)));
-                }
-            }
-            else {
+            try {
                 const data = new Uint8Array(event.data);
 
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
 
-                console.log("Received222 " + type);
-
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
+            }
+            catch(error) {
+                console.error("Failed to decode message", error);
             }
         });
 
@@ -54,26 +42,69 @@ export default class WebSocketClient extends EventTarget {
 
         setInterval(() => {
             if(this.socket.readyState === this.socket.OPEN) {
-                this.send("Ping", null);
+                this.sendProtobuff(PingData, PingData.create({}));
             }
         }, 30 * 1000);
     }
 
-    send<T>(type: string, data: T) {
-        console.log("Sending " + type);
-        
-        this.socket.send(JSON.stringify([[type, data]]));
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        console.log("Sending " + message.$type, payload);
+
+        let encoded;
+
+        try {
+            encoded = message.encode(payload).finish();
+        }
+        catch(error) {
+            console.error("Failed to encode Protobuff", error);
+
+            return;
+        }
+
+        this.sendEncodedProtobuff(message.$type, encoded);
+    }
+
+    private sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
+        try {
+            const typeBytes = new TextEncoder().encode(eventType + "|");
+
+            const message = new Uint8Array(typeBytes.length + encoded.length);
+
+            message.set(typeBytes, 0);
+            message.set(encoded, typeBytes.length);
+
+            this.socket.send(message);
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
     }
 
     public close() {
         this.socket.close();
     }
 
-    addProtobuffListener<T>(message: MessageType, listener: ProtobuffListener<T>) {
-        console.log("addd " + message.$type)
-        this.addEventListener(message.$type, (event: WebSocketEvent<Uint8Array>) => {
-            listener.handle(message.decode(event.data) as T);
-        });
+    addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>, options?: AddEventListenerOptions | boolean) {
+        const listener = (event: WebSocketEvent<Uint8Array>) => {
+            try {
+                const payload = message.decode(event.data) as T;
+
+                console.log("Processing " + message.$type, payload);
+
+                protobuffListener.handle(payload);
+            }
+            catch(error) {
+                console.error("Failed to handle Protobuf", error);
+            }
+        };
+
+        this.addEventListener(message.$type, listener, options);
+
+        return listener;
+    }
+
+    removeProtobuffListener(message: MessageType, listener: (event: WebSocketEvent<Uint8Array<ArrayBufferLike>>) => void) {
+        this.removeEventListener(message.$type, listener);
     }
 
     addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void {

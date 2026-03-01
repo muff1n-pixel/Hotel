@@ -1,12 +1,11 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRoomInstance } from "../../../../hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import { UpdateRoomInformationEventData } from "@Shared/Communications/Requests/Rooms/UpdateRoomInformationEventData";
 import Input from "../../../Form/Input";
 import Selection from "../../../Form/Selection";
 import { useRoomCategories } from "../../../../hooks/useRoomCategories";
-import { RoomType } from "@Shared/Interfaces/Room/RoomType";
 import { usePermissionAction } from "../../../../hooks/usePermissionAction";
+import { UpdateRoomInformationData } from "@pixel63/events";
 
 export default function RoomSettingsBasicTab() {
     const room = useRoomInstance();
@@ -14,14 +13,14 @@ export default function RoomSettingsBasicTab() {
     
     const hasRoomTypePermissions = usePermissionAction("room:type");
 
-    const [name, setName] = useState(room?.information.name ?? "");
-    const [description, setDescription] = useState(room?.information.description ?? "");
+    const [name, setName] = useState(room?.information?.name ?? "");
+    const [description, setDescription] = useState(room?.information?.description ?? "");
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+            webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
                 name
-            });
+            }));
         }, 500);
 
         return () => {
@@ -31,9 +30,9 @@ export default function RoomSettingsBasicTab() {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+            webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
                 description
-            });
+            }));
         }, 500);
 
         return () => {
@@ -42,21 +41,21 @@ export default function RoomSettingsBasicTab() {
     }, [description]);
 
     const handleCategoryChange = useCallback((categoryId: string) => {
-        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             category: categoryId
-        });
+        }));
     }, []);
 
     const handleTypeChange = useCallback((type: string) => {
-        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
-            type: type as RoomType
-        });
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            type
+        }));
     }, []);
 
     const handleMaxUsersChange = useCallback((maxUsers: number) => {
-        webSocketClient.send<UpdateRoomInformationEventData>("UpdateRoomInformationEvent", {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             maxUsers
-        });
+        }));
     }, []);
 
     if(!room) {
@@ -86,7 +85,7 @@ export default function RoomSettingsBasicTab() {
 
                 <b>Room category</b>
 
-                <Selection value={room.information.category} items={roomCategories?.map((category) => {
+                <Selection value={room.information?.category} items={roomCategories?.map((category) => {
                     return {
                         value: category.id,
                         label: category.title
@@ -97,7 +96,7 @@ export default function RoomSettingsBasicTab() {
                     <Fragment>
                         <b>Room type</b>
 
-                        <Selection value={room.information.type} items={[
+                        <Selection value={room.information?.type} items={[
                             {
                                 value: "private",
                                 label: "Private"
@@ -112,7 +111,7 @@ export default function RoomSettingsBasicTab() {
 
                 <b>Maximum amount of visitors</b>
 
-                <Selection value={room.information.maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
+                <Selection value={room.information?.maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
                     return {
                         value: maxUsers,
                         label: maxUsers.toString()

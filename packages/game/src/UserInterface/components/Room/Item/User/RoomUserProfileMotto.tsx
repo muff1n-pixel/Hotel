@@ -3,7 +3,7 @@ import { useState } from "react";
 export type RoomUserProfileMottoProps = {
     canEdit: boolean;
     
-    value: string | null;
+    value?: string;
     onChange: (value: string) => void;
 }
 

@@ -1,33 +1,30 @@
 import RoomFurniture from "../../../RoomFurniture";
-import RoomUser from "../../../../Users/RoomUser";
 import WiredLogic, { WiredTriggerOptions } from "../WiredLogic";
-import { WiredActionShowMessageData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData";
-import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent";
-import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
+import { RoomActorChatData } from "@pixel63/events";
 
 export type DelayedMessageData = {
     userId: string;
     timestamp: number;
 };
 
-export default class WiredActionShowMessageLogic extends WiredLogic<WiredActionShowMessageData> {
+export default class WiredActionShowMessageLogic extends WiredLogic {
     private messages: DelayedMessageData[] = [];
     
-    constructor(roomFurniture: RoomFurniture<WiredActionShowMessageData>) {
+    constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
 
     public async handleActionsInterval(): Promise<void> {
         super.handleActionsInterval();
         
-        if(!this.roomFurniture.model.data) {
+        if(!this.roomFurniture.model.data?.wiredActionShowMessage) {
             return;
         }
         
         for(const message of this.messages) {
             const elapsed = performance.now() - message.timestamp;
 
-            if(elapsed < this.roomFurniture.model.data.delayInSeconds * 1000) {
+            if(elapsed < this.roomFurniture.model.data.wiredActionShowMessage.delayInSeconds * 1000) {
                 continue;
             }
 
@@ -41,10 +38,14 @@ export default class WiredActionShowMessageLogic extends WiredLogic<WiredActionS
 
             this.setActive();
 
-            roomUser.user.send(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
-                type: "user",
-                userId: roomUser.user.model.id,
-                message: this.roomFurniture.model.data.message,
+            roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                actor: {
+                    user: {
+                        userId: roomUser.user.model.id
+                    }
+                },
+
+                message: this.roomFurniture.model.data.wiredActionShowMessage.message,
                 roomChatStyleId: "notification",
                 options: {
                     hideUsername: true
@@ -57,7 +58,7 @@ export default class WiredActionShowMessageLogic extends WiredLogic<WiredActionS
 
     public async handleTrigger(options?: WiredTriggerOptions): Promise<void> {
         if(options?.roomUser) {
-            if(this.roomFurniture.model.data?.message.length) {
+            if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
                 this.messages.push({
                     userId: options.roomUser.user.model.id,
                     timestamp: performance.now()

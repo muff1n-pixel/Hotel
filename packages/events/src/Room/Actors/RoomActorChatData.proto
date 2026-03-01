@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Room/Actors/RoomActorIdentifierData.proto";
+import "Room/Actors/Chat/RoomActorChatOptionsData.proto";
+
+message RoomActorChatData {
+    RoomActorIdentifierData actor = 1;
+
+    string message = 2;
+    optional RoomActorChatOptionsData options = 3;
+    string room_chat_style_id = 4;
+}

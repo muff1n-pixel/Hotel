@@ -2,11 +2,11 @@ import Dialog from "../Dialog/Dialog";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
 import { webSocketClient } from "../../..";
-import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import { useDialogs } from "../../hooks/useDialogs";
 import { useState } from "react";
 import { useNavigator } from "../../hooks/useNavigator";
 import Input from "../Form/Input";
+import { EnterRoomData } from "@pixel63/events";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -39,9 +39,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                         }}>
                             {navigator?.map((navigator) => (
                                 <NavigatorRoomList thumbnail={true} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>
@@ -66,9 +66,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             {navigator?.map((navigator) => (
                                 <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>
@@ -93,9 +93,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                         }}>
                             {navigator?.map((navigator) => (
                                 <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>

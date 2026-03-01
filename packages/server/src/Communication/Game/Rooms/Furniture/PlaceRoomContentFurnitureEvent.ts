@@ -1,12 +1,12 @@
-import { PlaceRoomContentFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/PlaceRoomContentFurnitureEventData";
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { PlaceRoomContentFurnitureData } from "@pixel63/events";
 
-export default class PlaceRoomContentFurnitureEvent implements IncomingEvent<PlaceRoomContentFurnitureEventData> {
+export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener<PlaceRoomContentFurnitureData> {
     public readonly name = "PlaceRoomContentFurnitureEvent";
 
-    async handle(user: User, event: PlaceRoomContentFurnitureEventData) {
+    async handle(user: User, payload: PlaceRoomContentFurnitureData) {
         if(!user.room) {
             return;
         }
@@ -21,11 +21,11 @@ export default class PlaceRoomContentFurnitureEvent implements IncomingEvent<Pla
 
         let userFurniture: UserFurnitureModel | null = null;
         
-        if(event.stackable) {
-            userFurniture = await inventory.getFurnitureByType(event.furnitureId);
+        if(payload.stackable) {
+            userFurniture = await inventory.getFurnitureByType(payload.furnitureId);
         }
         else {
-            userFurniture = await inventory.getFurnitureById(event.userFurnitureId);
+            userFurniture = await inventory.getFurnitureById(payload.id);
         }
 
         if(!userFurniture) {

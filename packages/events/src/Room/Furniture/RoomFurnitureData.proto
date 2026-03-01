@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Furniture/UserFurnitureData.proto";
+
+message RoomFurnitureData {
+    repeated UserFurnitureData furniture_added = 1;
+    repeated UserFurnitureData furniture_updated = 2;
+    repeated UserFurnitureData furniture_removed = 3;
+}

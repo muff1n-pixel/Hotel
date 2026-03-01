@@ -1,8 +1,8 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
 import { webSocketClient } from "../../..";
-import { UseRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class FurnitureMultistateLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
@@ -23,10 +23,10 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
 
         const nextState = this.getNextState();
 
-        webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-            roomFurnitureId: this.roomFurniture.data.id,
+        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+            id: this.roomFurniture.data.id,
             animation: nextState
-        });
+        }));
     }
 
     public getNextState() {

@@ -1,15 +1,16 @@
 import User from "../../../../Users/User.js";
 import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
-import { UpdateShopFurnitureEventData } from "@shared/Communications/Requests/Shop/Development/UpdateShopFurnitureEventData.js";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import GetShopPageFurnitureEvent from "../GetShopPageFurnitureEvent.js";
 import { randomUUID } from "node:crypto";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { GetShopPageFurnitureData, UpdateShopFurnitureData } from "@pixel63/events";
 
-export default class UpdateShopFurnitureEvent implements IncomingEvent<UpdateShopFurnitureEventData> {
+export default class UpdateShopFurnitureEvent implements ProtobuffListener<UpdateShopFurnitureData> {
     public readonly name = "UpdateShopFurnitureEvent";
 
-    async handle(user: User, event: UpdateShopFurnitureEventData) {
+    async handle(user: User, payload: UpdateShopFurnitureData) {
         const permissions = await user.getPermissions();
 
         if(!permissions.hasPermission("shop:edit")) {
@@ -18,15 +19,15 @@ export default class UpdateShopFurnitureEvent implements IncomingEvent<UpdateSho
 
         let furniture = await FurnitureModel.findOne({
             where: {
-                type: event.type,
-                color: event.color
+                type: payload.type,
+                color: payload.color
             }
         });
 
         if(!furniture) {
             furniture = await FurnitureModel.findOne({
                 where: {
-                    type: event.type,
+                    type: payload.type,
                     color: null
                 }
             });
@@ -36,16 +37,16 @@ export default class UpdateShopFurnitureEvent implements IncomingEvent<UpdateSho
             throw new Error("Furniture by type and color does not exist.");
         }
         
-        if(event.id !== null) {
+        if(payload.id !== undefined) {
             await ShopPageFurnitureModel.update({
                 furnitureId: furniture.id,
 
-                credits: (event.credits > 0)?(event.credits):(null),
-                duckets: (event.duckets > 0)?(event.duckets):(null),
-                diamonds: (event.diamonds > 0)?(event.diamonds):(null),
+                credits: (payload.credits > 0)?(payload.credits):(null),
+                duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
             }, {
                 where: {
-                    id: event.id
+                    id: payload.id
                 }
             });
         }
@@ -53,17 +54,17 @@ export default class UpdateShopFurnitureEvent implements IncomingEvent<UpdateSho
             await ShopPageFurnitureModel.create({
                 id: randomUUID(),
                 
-                shopPageId: event.pageId,
+                shopPageId: payload.pageId,
                 furnitureId: furniture.id,
 
-                credits: (event.credits > 0)?(event.credits):(null),
-                duckets: (event.duckets > 0)?(event.duckets):(null),
-                diamonds: (event.diamonds > 0)?(event.diamonds):(null),
+                credits: (payload.credits > 0)?(payload.credits):(null),
+                duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
             });
         }
 
-        await (new GetShopPageFurnitureEvent()).handle(user, {
-            pageId: event.pageId
-        });
+        await (new GetShopPageFurnitureEvent()).handle(user, GetShopPageFurnitureData.create({
+            pageId: payload.pageId
+        }));
     }
 }

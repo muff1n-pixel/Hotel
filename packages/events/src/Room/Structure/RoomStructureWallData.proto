@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message RoomStructureWallData {
+    string id = 1;
+    uint32 thickness = 2;
+    bool hidden = 3;
+    optional uint32 height = 4;
+}

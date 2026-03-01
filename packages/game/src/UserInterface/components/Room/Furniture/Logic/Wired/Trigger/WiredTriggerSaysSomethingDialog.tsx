@@ -9,38 +9,39 @@ import { useCallback, useState } from "react";
 import WiredRadio from "../../../../../Dialog/Wired/WiredRadio";
 import WiredCheckbox from "../../../../../Dialog/Wired/WiredCheckbox";
 import WiredButton from "../../../../../Dialog/Wired/WiredButton";
-import { WiredTriggerUserSaysSomethingData } from "@Shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData";
 import { webSocketClient } from "../../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredTriggerSaysSomethingDialogData = {
-    furniture: RoomInstanceFurniture<WiredTriggerUserSaysSomethingData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_says_something";
 };
 
-export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredTriggerSaysSomethingDialogData>) {
-    const [type, setType] = useState(data.furniture.data.data?.type ?? "match");
-    const [message, setMessage] = useState(data.furniture.data.data?.message ?? "");
-    const [hideMessage, setHideMessage] = useState(data.furniture.data.data?.hideMessage ?? true);
-    const [onlyRoomOwner, setOnlyRoomOwner] = useState(data.furniture.data.data?.onlyRoomOwner ?? false);
+export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [type, setType] = useState(data.data.data?.wiredTriggerUserSaysSomething?.type ?? "match");
+    const [message, setMessage] = useState(data.data.data?.wiredTriggerUserSaysSomething?.message ?? "");
+    const [hideMessage, setHideMessage] = useState(data.data.data?.wiredTriggerUserSaysSomething?.hideMessage ?? true);
+    const [onlyRoomOwner, setOnlyRoomOwner] = useState(data.data.data?.wiredTriggerUserSaysSomething?.onlyRoomOwner ?? false);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredTriggerUserSaysSomethingData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
             data: {
-                type,
-                message,
-                hideMessage,
-                onlyRoomOwner
+                wiredTriggerUserSaysSomething: {
+                    type,
+                    message,
+                    hideMessage,
+                    onlyRoomOwner
+                }
             }
-        });
+        }));
 
         onClose();
     }, [type, message, hideMessage, onlyRoomOwner, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

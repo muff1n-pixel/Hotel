@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Room/Actors/RoomActorIdentifierData.proto";
+
+message RoomActorActionData {
+    RoomActorIdentifierData actor = 1;
+    repeated string actions_added = 2;
+    repeated string actions_removed = 3;
+}

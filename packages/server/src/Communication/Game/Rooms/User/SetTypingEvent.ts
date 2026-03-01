@@ -1,27 +1,23 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { SetTypingEventData } from "@shared/Communications/Requests/Rooms/User/SetTypingEventData.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { UserTypingEventData } from "@shared/Communications/Responses/Rooms/Users/UserTypingEventData.js";
+import { RoomUserData, SetRoomChatTypingData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class SetTypingEvent implements IncomingEvent<SetTypingEventData> {
-    public readonly name = "SetTypingEvent";
-
-    async handle(user: User, event: SetTypingEventData) {
+export default class SetTypingEvent implements ProtobuffListener<SetRoomChatTypingData> {
+    async handle(user: User, payload: SetRoomChatTypingData) {
         if(!user.room) {
             throw new Error("User is not in a room.");
         }
 
         const roomUser = user.room.getRoomUser(user);
 
-        if(roomUser.typing === event.typing) {
+        if(roomUser.typing === payload.typing) {
             return;
         }
 
-        roomUser.typing = event.typing === true;
+        roomUser.typing = payload.typing === true;
 
-        user.room.sendRoomEvent(new OutgoingEvent<UserTypingEventData>("UserTypingEvent", {
-            userId: user.model.id,
+        user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            id: user.model.id,
             typing: roomUser.typing
         }));
     }

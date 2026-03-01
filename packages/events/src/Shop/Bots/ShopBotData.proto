@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message ShopBotData {
+    string id = 1;
+
+    optional uint32 credits = 2;
+    optional uint32 duckets = 3;
+    optional uint32 diamonds = 4;
+
+    FigureConfigurationData figure_configuration = 5;
+
+    string name = 6;
+    optional string motto = 7;
+
+    string type = 8;
+}

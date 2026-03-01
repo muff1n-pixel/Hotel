@@ -2,12 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { webSocketClient } from "../../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomChatEventData } from "@Shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import { useUser } from "../../../hooks/useUser";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { FigureConfigurationData } from "@pixel63/events";
+import { RoomActorChatData } from "@pixel63/events";
 
 type RoomChatMessage = {
     id: number;
@@ -73,12 +70,14 @@ export default function RoomChat() {
             const roomUser = room.getUserById(user.id);
 
             const image = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Welcome to Pixel63, this is a live demo that may contain bugs and glitches.", {
+                $type: "RoomActorChatOptionsData",
                 hideUsername: true,
                 italic: true,
                 transparent: true
             });
 
             const image2 = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Please feel free to report issues in the top left corner, or join our Discord to participate in discussions!", {
+                $type: "RoomActorChatOptionsData",
                 hideUsername: true,
                 italic: true,
                 transparent: true
@@ -113,60 +112,45 @@ export default function RoomChat() {
             return;
         }
 
-        const listener = async (event: WebSocketEvent<RoomChatEventData>) => {
-            let name: string;
-            let figureConfiguration: FigureConfigurationData;
-            let position: RoomPosition;
+        const listener = webSocketClient.addProtobuffListener(RoomActorChatData, {
+            async handle(payload: RoomActorChatData) {
 
-            if(event.data.type === "user") {
-                const user = room.getUserById(event.data.userId);
+                const actor = room.getActor(payload.actor);
 
-                name = user.data.name;
-                figureConfiguration = user.data.figureConfiguration;
+                const name = actor.data.name;
+                const figureConfiguration = actor.data.figureConfiguration;
 
-                if(!user.item.position) {
+                if(!actor.item.position || !figureConfiguration) {
                     return;
                 }
                 
-                position = user.item.position;
-            }
-            else if(event.data.type === "bot") {
-                const bot = room.getBotById(event.data.botId);
+                const position = actor.item.position;
 
-                name = bot.data.name;
-                figureConfiguration = bot.data.figureConfiguration;
-                position = bot.data.position;
-            }
-            else {
-                throw new Error("Unhandled room chat message type.");
-            }
+                const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, figureConfiguration, payload.message, payload.options);
 
-            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, name, figureConfiguration, event.data.message, event.data.options);
+                const screenPosition = room.roomRenderer.getCoordinatePosition(position);
 
-            const screenPosition = room.roomRenderer.getCoordinatePosition(position);
+                const left = screenPosition.left - (image.width / 2) + 64;
 
-            const left = screenPosition.left - (image.width / 2) + 64;
+                const newMessage: RoomChatMessage = {
+                    id: Math.random(),
+                    image,
+                    left,
+                    index: -1
+                };
 
-            const newMessage: RoomChatMessage = {
-                id: Math.random(),
-                image,
-                left,
-                index: -1
-            };
+                moveMessagesUp(messages.current, newMessage);
 
-            moveMessagesUp(messages.current, newMessage);
+                newMessage.index = -1;
 
-            newMessage.index = -1;
+                messages.current.push(newMessage);
 
-            messages.current.push(newMessage);
+                setLatestMessage(performance.now());
+            },
+        })
 
-            setLatestMessage(performance.now());
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<RoomChatEventData>>("RoomChatEvent", listener);
-        
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<RoomChatEventData>>("RoomChatEvent", listener);
+            webSocketClient.removeProtobuffListener(RoomActorChatData, listener);
         };
     }, [room]);
 

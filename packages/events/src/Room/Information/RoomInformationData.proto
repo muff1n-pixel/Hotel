@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "Room/Information/RoomInformationOwnerData.proto";
+
+message RoomInformationData {
+    string type = 1;
+
+    string name = 2;
+    string description = 3;
+    string category = 4;
+    optional string thumbnail = 5;
+
+    RoomInformationOwnerData owner = 6;
+
+    uint32 max_users = 7;
+}

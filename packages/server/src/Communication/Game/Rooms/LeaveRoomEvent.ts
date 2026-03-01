@@ -1,10 +1,10 @@
+import { LeaveRoomData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class LeaveRoomEvent implements IncomingEvent {
-    public readonly name = "LeaveRoomEvent";
-
-    async handle(user: User, event: null) {
+export default class LeaveRoomEvent implements ProtobuffListener<LeaveRoomData> {
+    async handle(user: User) {
         if(!user.room) {
             throw new Error("User is not in a room.");
         }

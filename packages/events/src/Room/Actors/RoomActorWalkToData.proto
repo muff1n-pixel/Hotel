@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "Room/Actors/RoomActorIdentifierData.proto";
+
+message RoomActorWalkToData {
+    RoomActorIdentifierData actor = 1;
+    RoomPositionData from = 2;
+    RoomPositionData to = 3;
+}

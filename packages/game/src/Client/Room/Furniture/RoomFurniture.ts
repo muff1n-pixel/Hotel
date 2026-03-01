@@ -2,7 +2,6 @@ import Furniture from "@Client/Furniture/Furniture";
 import FurnitureDefaultLogic from "@Client/Furniture/Logic/FurnitureDefaultLogic";
 import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
 import FurnitureRoomDimmerLogic from "@Client/Furniture/Logic/FurnitureRoomDimmerLogic";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomFurnitureBackgroundLogic from "@Client/Room/Furniture/Logic/RoomFurnitureBackgroundLogic";
 import RoomFurnitureBackgroundTonerLogic from "@Client/Room/Furniture/Logic/RoomFurnitureBackgroundTonerLogic";
 import RoomFurnitureDiceLogic from "@Client/Room/Furniture/Logic/RoomFurnitureDiceLogic";
@@ -10,34 +9,21 @@ import RoomFurnitureLogic from "@Client/Room/Furniture/Logic/RoomFurnitureLogic"
 import RoomFurnitureTeleportLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTeleportLogic";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import RoomInstance from "@Client/Room/RoomInstance";
-import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
-import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
-import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
 import RoomFurnitureStickieLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStickieLogic";
 import RoomFurnitureTrophyLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTrophyLogic";
 import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitureFortunaLogic";
 import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurnitureWiredLogic";
+import { RoomPositionData, UserFurnitureData } from "@pixel63/events";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
     public readonly item: RoomFurnitureItem;
 
-    constructor(private readonly instance: RoomInstance, public data: RoomFurnitureData) {
-        this.furniture = new Furniture(this.data.furniture.type, 64, this.data.direction, this.data.animation, this.data.furniture.color);
+    constructor(private readonly instance: RoomInstance, public data: UserFurnitureData) {
+        this.furniture = new Furniture(this.data.furniture?.type, 64, this.data.direction, this.data.animation, this.data.furniture?.color);
         this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, this.data.position, this.data.data as any);
 
         this.instance.roomRenderer.items.push(this.item);
-
-        /*if(this.data.furniture.interactionType === "dimmer") {
-            if((this.data.data as RoomMoodlightData)?.enabled) {
-                this.instance.setMoodlight(this.data.data as RoomMoodlightData);
-            }
-        }
-        else if(this.data.furniture.interactionType === "background_toner") {
-            if((this.data.data as RoomFurnitureBackgroundTonerData)?.enabled) {
-                this.instance.setBackgroundToner(this.data.data as RoomFurnitureBackgroundTonerData);
-            }
-        }*/
 
         this.updateData(data);
     }
@@ -47,7 +33,7 @@ export default class RoomFurniture {
             throw new Error("Furniture data is not available.");
         }
 
-        switch(this.data.furniture.interactionType) {
+        switch(this.data.furniture?.interactionType) {
             case "postit":
                 return new RoomFurnitureStickieLogic(this.instance, this);
 
@@ -87,7 +73,7 @@ export default class RoomFurniture {
                 return new FurnitureMultistateLogic(this.instance, this);
         }
 
-        if(this.data.furniture.interactionType.startsWith("wf_trg") || this.data.furniture.interactionType.startsWith("wf_act")) {
+        if(this.data.furniture?.interactionType.startsWith("wf_trg") || this.data.furniture?.interactionType.startsWith("wf_act")) {
             return new RoomFurnitureWiredLogic(this.instance, this);
         }
 
@@ -95,56 +81,79 @@ export default class RoomFurniture {
     }
 
     public getDimensionDepth() {
-        if(this.data.furniture.interactionType === "multiheight" && this.data.furniture.customParams?.[0]) {
-            return this.data.furniture.dimensions.depth + ((this.data.furniture.customParams[0] as number) * this.data.animation);
+        if(!this.data.furniture?.dimensions) {
+            throw new Error();
         }
 
-        return this.data.furniture.dimensions.depth;
+        if(this.data.furniture?.interactionType === "multiheight" && this.data.furniture?.customParams?.[0]) {
+            return this.data.furniture?.dimensions?.depth + ((parseFloat(this.data.furniture?.customParams[0])) * this.data.animation);
+        }
+
+        return this.data.furniture?.dimensions?.depth;
     }
 
-    public updateData(data: RoomFurnitureData) {        
-        if(data.furniture.interactionType === "dimmer") {
-            if((data.data as RoomMoodlightData)?.enabled || (this.data.data as RoomMoodlightData)?.enabled) {
-                this.instance.setMoodlight(data.data as RoomMoodlightData);
+    public updateData(payload: UserFurnitureData) {       
+        if(!payload.furniture) {
+            throw new Error();
+        } 
+
+        if(payload.data) { 
+            if(payload.furniture?.interactionType === "dimmer" && payload.data.moodlight) {
+                if(payload.data.moodlight.enabled || this.data.data?.moodlight?.enabled) {
+                    this.instance.setMoodlight(payload.data.moodlight);
+                }
+            }
+            else if(this.data.furniture?.interactionType === "background_toner" && payload.data.toner) {
+                if(payload.data.toner.enabled || this.data.data?.toner?.enabled) {
+                    this.instance.setBackgroundToner(payload.data.toner);
+                }
             }
         }
-        else if(this.data.furniture.interactionType === "background_toner") {
-            if((data.data as RoomFurnitureBackgroundTonerData)?.enabled || (this.data.data as RoomFurnitureBackgroundTonerData)?.enabled) {
-                this.instance.setBackgroundToner(data.data as RoomFurnitureBackgroundTonerData);
-            }
-        }
-        else if(this.data.furniture.interactionType === "conf_invis_control") {
-            const invisibleTiles = this.instance.furnitures.filter((furniture) => furniture.data.furniture.type.startsWith("room_invisible_"));
+
+        if(this.data.furniture?.interactionType === "conf_invis_control") {
+            const invisibleTiles = this.instance.furnitures.filter((furniture) => furniture.data.furniture?.type.startsWith("room_invisible_"));
 
             for(const invisibleFurniture of invisibleTiles) {
-                invisibleFurniture.item.disabled = (data.animation === 1);
+                invisibleFurniture.item.disabled = (payload.animation === 1);
             }
         }
-        else if(this.data.furniture.type.startsWith("room_invisible_")) {
-            const controllerFurniture = this.instance.furnitures.find((furniture) => furniture.data.furniture.interactionType === "conf_invis_control");
+        else if(this.data.furniture?.type.startsWith("room_invisible_")) {
+            const controllerFurniture = this.instance.furnitures.find((furniture) => furniture.data.furniture?.interactionType === "conf_invis_control");
 
             if(controllerFurniture) {
                 this.item.disabled = (controllerFurniture.data.animation === 1);
             }
         }
 
-        this.data = data;
+        this.data = payload;
 
-        this.item.furnitureRenderer.direction = this.data.direction = data.direction;
-        this.item.furnitureRenderer.animation = this.data.animation = data.animation;
-        this.item.furnitureRenderer.color = this.data.color ?? this.data.furniture.color ?? null;
-
-        if(data.position) {
-            this.item.setPosition(data.position);
+        if(payload.direction !== undefined) {
+            this.item.furnitureRenderer.direction = this.data.direction = payload.direction;
         }
 
-        if(data.data) {
-            this.item.setData(data.data);
+        if(payload.animation !== undefined) {
+            this.item.furnitureRenderer.animation = this.data.animation = payload.animation;
+        }
+
+        if(payload.color !== undefined) {
+            this.item.furnitureRenderer.color = payload.color ?? this.data.furniture?.color ?? undefined;
+        }
+
+        if(payload.position) {
+            this.item.setPosition(payload.position);
+        }
+
+        if(payload.data) {
+            this.item.setData(payload.data);
         }
     }
 
-    isPositionInside(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition) {
+    isPositionInside(position: Omit<RoomPositionData, "depth">, dimensions: RoomPositionData) {
         if(this.item.furnitureRenderer.placement !== "floor") {
+            return false;
+        }
+
+        if(!this.data.position) {
             return false;
         }
 

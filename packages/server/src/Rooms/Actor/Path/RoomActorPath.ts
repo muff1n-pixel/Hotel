@@ -1,10 +1,10 @@
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition";
 import RoomActor from "../RoomActor";
 import RoomUser from "../../Users/RoomUser";
 import RoomBot from "../../Bots/RoomBot";
+import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomActorPath {
-    public path?: Omit<RoomPosition, "depth">[] | undefined;
+    public path?: RoomPositionOffsetData[] | undefined;
     public walkThroughFurniture?: boolean | undefined;
     public pathOnFinish: (() => void) | undefined;
     public pathOnCancel: (() => void) | undefined;
@@ -62,18 +62,18 @@ export default class RoomActorPath {
         const previousPosition = {...this.actor.position};
 
         if(this.actor.hasAction("Sit")) {
-            const furnitureAtPreviousPosition = this.actor.room.getUpmostFurnitureAtPosition(previousPosition);
+            const furnitureAtPreviousPosition = this.actor.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(previousPosition));
 
             if(furnitureAtPreviousPosition?.model.furniture.flags.sitable) {
                 previousPosition.depth = furnitureAtPreviousPosition.model.position.depth + 0.01;
             }
         }
 
-        const position = {
+        const position = RoomPositionData.create({
             row: nextPosition.row,
             column: nextPosition.column,
             depth: depth + 0.01
-        };
+        });
 
         this.actor.removeAction("Sit");
 
@@ -82,15 +82,15 @@ export default class RoomActorPath {
 
         this.actor.sendWalkEvent(previousPosition);
 
-        this.actor.room.floorplan.updatePosition(previousPosition);
-        this.actor.room.floorplan.updatePosition(position);
+        this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
+        this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
-        this.actor.handleWalkEvent?.(previousPosition, position);
+        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position));
 
         this.actor.lastActivity = performance.now();
     }
     
-    public walkTo(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {
+    public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {
         if(!this.actor.room.model.structure.grid[position.row]?.[position.column]) {
             return;
         }
@@ -106,10 +106,10 @@ export default class RoomActorPath {
         });
 
         const path = result.map((position) => {
-            return {
+            return RoomPositionOffsetData.create({
                 row: position[0]!,
                 column: position[1]!
-            }
+            })
         });
 
         path.splice(0, 1);
@@ -124,7 +124,7 @@ export default class RoomActorPath {
         this.actor.room.requestActionsFrame();
     }
 
-    public teleportTo(position: Omit<RoomPosition, "depth">) {
+    public teleportTo(position: RoomPositionOffsetData) {
         if(this.actor.room.model.structure.grid[position.row]?.[position.column] === undefined || this.actor.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return;
         }
@@ -134,32 +134,32 @@ export default class RoomActorPath {
 
         if(sitableFurniture) {
             this.actor.addAction("Sit");
-            this.actor.path.setPosition({
+            this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction, true);            
+            }), sitableFurniture.model.direction, true);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
-            this.setPosition({
+            this.setPosition(RoomPositionData.create({
                 row: position.row,
                 column: position.column,
                 depth
-            }, undefined, true);
+            }), undefined, true);
         }
         else {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
 
-            this.setPosition({
+            this.setPosition(RoomPositionData.create({
                 row: position.row,
                 column: position.column,
                 depth
-            }, undefined, true);
+            }), undefined, true);
         }
     }
 
-    public setPosition(position: RoomPosition, direction?: number, usePath?: boolean) {
+    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
             return;
         }
@@ -168,8 +168,8 @@ export default class RoomActorPath {
 
         this.actor.position = position;
 
-        this.actor.room.floorplan.updatePosition(previousPosition);
-        this.actor.room.floorplan.updatePosition(position);
+        this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
+        this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
         if(direction !== undefined) {
             this.actor.direction = direction;
@@ -182,7 +182,7 @@ export default class RoomActorPath {
 
         this.actor.sendPositionEvent(usePath === true);
 
-        this.actor.handleWalkEvent?.(previousPosition, position);
+        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position));
     }
 
     public async finishPath() {
@@ -190,7 +190,7 @@ export default class RoomActorPath {
             return;
         }
 
-        const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(this.actor.position);
+        const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.actor.position));
 
         if(sitableFurniture) {
             this.actor.addAction("Sit");

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Navigator/Rooms/NavigatorRoomData.proto";
+
+message NavigatorCategoryData {
+    string title = 1;
+    repeated NavigatorRoomData rooms = 2;
+}

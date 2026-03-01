@@ -7,7 +7,7 @@ import { FigureConfigurationData } from "@pixel63/events";
 export type FigureImageProps = {
     actions?: string[];
     frame?: number;
-    figureConfiguration: FigureConfigurationData;
+    figureConfiguration?: FigureConfigurationData;
     direction: number;
     cropped?: boolean;
     headOnly?: boolean;

@@ -1,7 +1,7 @@
-import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import { useEffect, useRef } from "react";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import { FurnitureData } from "@pixel63/events";
 
 export type FlyingFurnitureIconData = {
     id: string;

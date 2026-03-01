@@ -1,31 +1,21 @@
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import User from "../../Users/User.js";
 import Room from "../Room.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { UserLeftRoomEventData } from "@shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData.js";
-import { UserEnteredRoomEventData } from "@shared/Communications/Responses/Rooms/Users/UserEnteredRoomEventData.js";
-import { RoomUserData } from "@shared/Interfaces/Room/RoomUserData.js";
-import { LoadRoomEventData } from "@shared/Communications/Responses/Rooms/LoadRoomEventData.js";
-import { AStarFinder } from "astar-typescript";
-import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
 import { game } from "../../index.js";
-import { UserIdlingEventData } from "@shared/Communications/Responses/Rooms/Users/UserIdlingEventData.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { ActorActionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorActionEventData.js";
-import { ActorPositionEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorPositionEventData.js";
-import { ActorWalkToEventData } from "@shared/Communications/Responses/Rooms/Actors/ActorWalkToEventData.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
+import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
     public path: RoomActorPath;
     
-    public position: RoomPosition;
+    public position: RoomPositionData;
     public direction: number;
     public actions: string[] = [];
     public typing: boolean = false;
@@ -45,56 +35,58 @@ export default class RoomUser implements RoomActor {
         if(this.idling) {
             this.idling = false;
 
-            this.room.outgoingEvents.push(
-                new OutgoingEvent<UserIdlingEventData>("UserIdlingEvent", {
-                    userId: this.user.model.id,
-                    idling: false
-                })
-            );
+            this.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                id: this.user.model.id,
+                idling: false
+            }));
         }
     }
 
-    constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPosition) {
+    constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPositionData) {
         this.user.room = room;
 
         this.position = initialPosition ?? {
+            $type: "RoomPositionData",
             row: room.model.structure.door?.row ?? 0,
             column: room.model.structure.door?.column ?? 0,
             depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
         };
 
-        this.user.room.floorplan.updatePosition(this.position);
+        this.user.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         this.direction = room.model.structure.door?.direction ?? 2;
 
         this.addEventListeners();
 
-        const userEnteredRoomEvent = new OutgoingEvent<UserEnteredRoomEventData>("UserEnteredRoomEvent", this.getRoomUserData());
-        
-        this.room.sendRoomEvent(userEnteredRoomEvent);
-        
-        this.user.send([
-            new OutgoingEvent<LoadRoomEventData>("LoadRoomEvent", {
-                id: this.room.model.id,
-                
-                information: this.room.getInformationData(),
-                
-                structure: this.room.model.structure,
-                
-                users: this.room.users.map((user) => user.getRoomUserData()),
-                furnitures: this.room.furnitures.map((furniture) => furniture.getFurnitureData()),
-                bots: this.room.bots.map((bot) => bot.getBotData()),
+        this.room.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
+            user: this.getRoomUserData()
+        }));
 
-                hasRights: this.hasRights()
-            }),
-            userEnteredRoomEvent
-        ]);
+        this.user.sendProtobuff(RoomLoadData, RoomLoadData.fromJSON({
+            id: this.room.model.id,
+            
+            information: this.room.getInformationData(),
+            
+            structure: this.room.model.structure,
+            
+            users: this.room.users.map((user) => user.getRoomUserData()),
+            furniture: this.room.furnitures.map((furniture) => furniture.model),
+            bots: this.room.bots.map((bot) => bot.model),
+
+            hasRights: this.hasRights()
+        }))
+        
+        this.user.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
+            user: this.getRoomUserData()
+        }));
 
         this.path = new RoomActorPath(this);
     }
     
     private getRoomUserData(): RoomUserData {
         return {
+            $type: "RoomUserData",
+
             id: this.user.model.id,
             name: this.user.model.name,
             figureConfiguration: this.user.model.figureConfiguration,
@@ -121,12 +113,10 @@ export default class RoomUser implements RoomActor {
         if(!this.idling && (performance.now() - this.lastActivity) > 2 * 60 * 1000) {
             this.idling = true;
 
-            this.room.outgoingEvents.push(
-                new OutgoingEvent<UserIdlingEventData>("UserIdlingEvent", {
-                    userId: this.user.model.id,
-                    idling: true
-                })
-            );
+            this.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                id: this.user.model.id,
+                idling: true
+            }))
         }
 
         this.path.handleActionsInterval();
@@ -138,11 +128,11 @@ export default class RoomUser implements RoomActor {
         
         this.room.users.splice(this.room.users.indexOf(this), 1);
 
-        this.room.sendRoomEvent(new OutgoingEvent<UserLeftRoomEventData>("UserLeftRoomEvent", {
+        this.room.sendProtobuff(RoomUserLeftData, RoomUserLeftData.create({
             userId: this.user.model.id
         }));
 
-        this.user.room?.floorplan.updatePosition(this.position);
+        this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         const wiredUserLeavesRoomLogics = this.room.getFurnitureWithCategory(WiredTriggerUserLeavesRoomLogic);
 
@@ -152,7 +142,7 @@ export default class RoomUser implements RoomActor {
 
         delete this.user.room;
 
-        this.user.send(new OutgoingEvent("LeaveRoomEvent", null));
+        this.user.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}));
 
         if(!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
@@ -170,14 +160,15 @@ export default class RoomUser implements RoomActor {
 
         this.actions.push(action);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-
-                actionsAdded: [action],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            actionsAdded: [action]
+        }));
 
         for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
             logic.handleUserAction(this, action);
@@ -207,37 +198,41 @@ export default class RoomUser implements RoomActor {
 
         this.actions.splice(existingActionIndex, 1);
 
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorActionEventData>("ActorActionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-                
-                actionsRemoved: [actionId],
-            })
-        );
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            actionsRemoved: [actionId]
+        }));
     }
 
-    public sendWalkEvent(previousPosition: RoomPosition): void {
-        this.room.outgoingEvents.push(new OutgoingEvent<ActorWalkToEventData>("ActorWalkToEvent", {
-            type: "user",
-            userId: this.user.model.id,
-
+    public sendWalkEvent(previousPosition: RoomPositionData): void {
+        this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
             from: previousPosition,
             to: this.position
         }));
     }
 
     public sendPositionEvent(usePath: boolean) {
-        this.room.outgoingEvents.push(
-            new OutgoingEvent<ActorPositionEventData>("ActorPositionEvent", {
-                type: "user",
-                userId: this.user.model.id,
-
-                position: this.position,
-                direction: this.direction,
-                usePath: usePath === true
-            })
-        );
+        this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            position: this.position,
+            direction: this.direction,
+            usePath
+        }));
     }
 
     public getOffsetPosition(direction: number, offset: number) {
@@ -266,9 +261,13 @@ export default class RoomUser implements RoomActor {
     }
 
     public sendRoomMessage(message: string) {
-        this.room.sendRoomEvent(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
-            type: "user",
-            userId: this.user.model.id,
+        this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
             message,
             roomChatStyleId: this.user.model.roomChatStyleId
         }));
@@ -276,7 +275,7 @@ export default class RoomUser implements RoomActor {
         this.lastActivity = performance.now();
     }
 
-    public async handleWalkEvent(previousPosition: RoomPosition, newPosition: RoomPosition) {
+    public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
         const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
 
         if(previousFurniture) {

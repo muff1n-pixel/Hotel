@@ -4,7 +4,6 @@ import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomCursor from "./Cursor/RoomCursor";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
 import RoomFrameEvent from "@Client/Events/RoomFrameEvent";
 import RoomItem from "./Items/RoomItem";
@@ -12,7 +11,6 @@ import ClientInstance from "@Client/ClientInstance";
 import RoomInstance from "./RoomInstance";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomFurniturePlacer from "./RoomFurniturePlacer";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomLighting from "@Client/Room/RoomLightning";
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
@@ -20,6 +18,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
+import { RoomPositionData, RoomStructureData } from "@pixel63/events";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -59,8 +58,16 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, public structure: RoomStructure) {
+    public structure: RoomStructureData;
+
+    constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, structure?: RoomStructureData) {
         super();
+
+        if(!structure) {
+            throw new Error();
+        }
+
+        this.structure = structure;
 
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
@@ -258,7 +265,7 @@ export default class RoomRenderer extends EventTarget {
         return null;
     }
 
-    public getCoordinatePosition(coordinate: RoomPosition): MousePosition {
+    public getCoordinatePosition(coordinate: RoomPositionData): MousePosition {
         const result = {
             left: Math.round(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
             top: Math.round((coordinate.column * 16) + (coordinate.row * 16) - ((Math.round(coordinate.depth * 1000) / 1000) * 32))
@@ -276,7 +283,7 @@ export default class RoomRenderer extends EventTarget {
         let priority = sprite.item.priority + sprite.priority;
 
         if(sprite.item.position) {
-            if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
+            if(Math.round(sprite.item.position.row) === this.structure.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
                     priority = -2000;
                     priority += (sprite.item.position.depth * 100);
@@ -297,7 +304,7 @@ export default class RoomRenderer extends EventTarget {
         return priority;
     }
 
-    public static getPositionPriority(position: RoomPosition) {
+    public static getPositionPriority(position: RoomPositionData) {
         return (Math.round(position.row) * 1000) + (Math.round(position.column) * 1000) + (position.depth * 10);
     }
 
@@ -358,7 +365,7 @@ export default class RoomRenderer extends EventTarget {
         }
     }
 
-    public isPositionInsideStructure(position: RoomPosition, dimensions: RoomPosition) {
+    public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.structure.grid[row]?.[column] === undefined || this.structure.grid[row]?.[column] === 'X') {
@@ -370,7 +377,7 @@ export default class RoomRenderer extends EventTarget {
         return true;
     }
 
-    public isPositionInsideFigure(position: RoomPosition, dimensions: RoomPosition, ignoreItem?: RoomItem) {
+    public isPositionInsideFigure(position: RoomPositionData, dimensions: RoomPositionData, ignoreItem?: RoomItem) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.items.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
@@ -409,7 +416,7 @@ export default class RoomRenderer extends EventTarget {
     private floorItem?: RoomFloorItem;
     private wallItem?: RoomWallItem;
     
-    public setStructure(structure: RoomStructure) {
+    public setStructure(structure: RoomStructureData) {
         this.structure = structure;
 
         if(this.floorItem) {
@@ -419,7 +426,7 @@ export default class RoomRenderer extends EventTarget {
 
         this.floorItem = new RoomFloorItem(
             this,
-            new FloorRenderer(structure, structure.floor.id, 64),
+            new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
         );
 
         this.items.push(this.floorItem);
@@ -429,10 +436,10 @@ export default class RoomRenderer extends EventTarget {
             this.wallItem = undefined;
         }
 
-        if(!structure.wall.hidden) {
+        if(!structure.wall?.hidden) {
             this.wallItem = new RoomWallItem(
                 this,
-                new WallRenderer(structure, structure.wall.id, 64)
+                new WallRenderer(structure, structure.wall?.id ?? "default", 64)
             );
 
             this.items.push(this.wallItem);

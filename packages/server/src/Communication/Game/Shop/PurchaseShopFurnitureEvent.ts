@@ -1,23 +1,21 @@
 import User from "../../../Users/User.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { PurchaseShopFurnitureEventData } from "@shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData.js";
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import { ShopFurniturePurchasedEventData } from "@shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData.js";
-import { UserEventData } from "@shared/Communications/Responses/User/UserEventData.js";
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { RoomFurnitureTrophyData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureTrophyData.js";
+import { PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class PurchaseShopFurnitureEvent implements IncomingEvent<PurchaseShopFurnitureEventData> {
+export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
     public readonly name = "PurchaseShopFurnitureEvent";
 
-    async handle(user: User, event: PurchaseShopFurnitureEventData) {
+    async handle(user: User, payload: PurchaseShopFurnitureData) {
         const shopFurniture = await ShopPageFurnitureModel.findOne({
             where: {
-                id: event.shopFurnitureId
+                id: payload.id
             },
             include: {
                 model: FurnitureModel,
@@ -26,7 +24,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         });
 
         if(!shopFurniture) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -34,7 +32,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.credits && user.model.credits < shopFurniture.credits)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -42,7 +40,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.duckets && user.model.duckets < shopFurniture.duckets)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -50,7 +48,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.diamonds && user.model.diamonds < shopFurniture.diamonds)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -86,12 +84,14 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         userFurniture.user = user.model;
         userFurniture.furniture = shopFurniture.furniture;
 
-        if(userFurniture.furniture.interactionType === "trophy" && event.data) {
-            userFurniture.data = {
-                engraving: (event.data as RoomFurnitureTrophyData).engraving ?? "",
-                date: new Date().toISOString().split('T')[0]!.toString(),
-                author: user.model.name
-            } satisfies RoomFurnitureTrophyData;
+        if(userFurniture.furniture.interactionType === "trophy" && payload.data?.trophy) {
+            userFurniture.data = UserFurnitureCustomData.create({
+                trophy: {
+                    engraving: payload.data.trophy.engraving ?? "",
+                    date: new Date().toISOString().split('T')[0]!.toString(),
+                    author: user.model.name
+                }
+            });
 
             await userFurniture.save();
         }
@@ -120,24 +120,29 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
             secondUserFurniture.furniture = shopFurniture.furniture;
 
             await userFurniture.update({
-                data: secondUserFurniture.id
+                data: UserFurnitureCustomData.create({
+                    teleport: {
+                        furnitureId: secondUserFurniture.id
+                    }
+                })
             });
 
             await user.getInventory().addFurniture(secondUserFurniture);
         }
 
-        if(user.room && event.position && event.direction !== undefined) {
-            RoomFurniture.place(user.room, userFurniture, event.position, event.direction);
+        await userFurniture.save();
+
+        if(user.room && payload.position && payload.direction !== undefined) {
+            RoomFurniture.place(user.room, userFurniture, payload.position, payload.direction);
         }
         else {
             await user.getInventory().addFurniture(userFurniture);
         }
 
-        user.send([
-            new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
-                success: true
-            }),
-            new OutgoingEvent<UserEventData>("UserEvent", user.getUserData())
-        ]);
+        user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            success: true
+        }));
+
+        user.sendUserData();
     }
 }

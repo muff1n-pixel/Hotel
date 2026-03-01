@@ -1,13 +1,13 @@
-import { PlaceFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/PlaceFurnitureEventData";
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { PlaceRoomFurnitureData } from "@pixel63/events";
 
-export default class PlaceFurnitureEvent implements IncomingEvent<PlaceFurnitureEventData> {
+export default class PlaceFurnitureEvent implements ProtobuffListener<PlaceRoomFurnitureData> {
     public readonly name = "PlaceFurnitureEvent";
 
-    async handle(user: User, event: PlaceFurnitureEventData) {
+    async handle(user: User, payload: PlaceRoomFurnitureData) {
         if(!user.room) {
             return;
         }
@@ -22,15 +22,19 @@ export default class PlaceFurnitureEvent implements IncomingEvent<PlaceFurniture
 
         let userFurniture: UserFurnitureModel | null = null;
 
-        if(event.stackable) {
-            userFurniture = await inventory.getFurnitureByType(event.furnitureId);
+        if(payload.stackable) {
+            userFurniture = await inventory.getFurnitureByType(payload.furnitureId);
         }
         else {
-            userFurniture = await inventory.getFurnitureById(event.userFurnitureId);
+            userFurniture = await inventory.getFurnitureById(payload.id);
         }
 
         if(!userFurniture) {
             throw new Error("User does not have a user furniture by this id.");
+        }
+
+        if(!payload.position) {
+            throw new Error();
         }
 
         if(userFurniture.furniture.category === "teleport") {
@@ -41,6 +45,6 @@ export default class PlaceFurnitureEvent implements IncomingEvent<PlaceFurniture
 
         await inventory.deleteFurniture(userFurniture);
 
-        await RoomFurniture.place(user.room, userFurniture, event.position, event.direction);
+        await RoomFurniture.place(user.room, userFurniture, payload.position, payload.direction);
     }
 }

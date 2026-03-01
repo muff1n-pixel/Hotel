@@ -1,13 +1,10 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { UpdateRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
+import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
+import { RoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoomFurnitureEventData> {
-    public readonly name = "UpdateRoomFurnitureEvent";
-
-    async handle(user: User, event: UpdateRoomFurnitureEventData) {
+export default class UpdateRoomFurnitureEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
+    async handle(user: User, payload: UpdateRoomFurnitureData) {
         if(!user.room) {
             return;
         }
@@ -18,31 +15,84 @@ export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoo
             throw new Error("User does not have rights.");
         }
 
-        const roomFurniture = user.room.getRoomFurniture(event.roomFurnitureId);
+        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.id);
 
-        if(event.direction !== undefined) {
-            if(event.position === undefined) {
-                roomFurniture.setDirection(event.direction);
+        if(!furniture) {
+            throw new Error("Furniture does not exist in room.");
+        }
+        
+        if(payload.direction !== undefined) {
+            if(payload.position === undefined) {
+                furniture.setDirection(payload.direction);
             }
             else {
-                roomFurniture.model.direction = event.direction;
+                furniture.model.direction = payload.direction;
             }
         }
 
-        if(event.position !== undefined) {
-            roomFurniture.setPosition(event.position, false);
+        if(payload.position !== undefined) {
+            furniture.setPosition(payload.position, false);
         }
 
-        if(event.color !== undefined && roomFurniture.model.furniture.interactionType === "postit") {
-            roomFurniture.model.color = event.color;
+        if(payload.color !== undefined && furniture.model.furniture.interactionType === "postit") {
+            furniture.model.color = payload.color;
         }
 
-        await roomFurniture.model.save();
+        if(payload.data) {
+            if(furniture.model.furniture.interactionType === "dimmer" && payload.data?.moodlight) {
+                await this.handleSingleActiveFurniture(user, furniture);
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                furniture.model.data = payload.data;
+
+                furniture.model.animation = (payload.data.moodlight.enabled)?(1):(0);
+            }
+            else if(furniture.model.furniture.interactionType === "background_toner" && payload.data?.toner) {
+                await this.handleSingleActiveFurniture(user, furniture);
+
+                furniture.model.data = payload.data;
+
+                furniture.model.animation = (payload.data.toner.enabled)?(1):(0);
+            }
+            else {
+                furniture.model.data = payload.data
+            }
+        }
+
+        await furniture.model.save();
+
+        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
-                roomFurniture.getFurnitureData()
+                furniture.model
             ]
         }));
+    }
+
+    private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {
+        if(!user.room) {
+            throw new Error("User is not in a room.");
+        }
+
+        const activeFurniture = user.room.getActiveFurniture(furniture.model.furniture.interactionType);
+
+        if(activeFurniture && activeFurniture.model.id !== furniture.model.id) {
+            activeFurniture.model.animation = 0;
+
+            if(activeFurniture.model.changed()) {
+                if(activeFurniture.model.data?.moodlight) {
+                    activeFurniture.model.data.moodlight.enabled = false;
+                }
+                else if(activeFurniture.model.data?.toner) {
+                    activeFurniture.model.data.toner.enabled = false;
+                }
+                
+                await activeFurniture.model.save();
+    
+                user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+                    furnitureUpdated: [
+                        activeFurniture.model
+                    ]
+                }));
+            }
+        }
     }
 }

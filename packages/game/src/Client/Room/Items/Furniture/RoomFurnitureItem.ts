@@ -2,19 +2,18 @@ import Furniture from "@Client/Furniture/Furniture";
 import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomRenderer from "@Client/Room/Renderer";
 import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFurniturePlaceholderSprite";
 import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Background/RoomFurnitureBackgroundSprite";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
-import { RoomFurnitureBackgroundData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundData";
+import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     public readonly id = Math.random();
 
-    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPosition, private data?: unknown) {
+    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
         super(roomRenderer, "furniture");
 
         if(position) {
@@ -30,7 +29,7 @@ export default class RoomFurnitureItem extends RoomItem {
         this.render();
     }
 
-    public setPosition(position: RoomPosition | undefined, index?: number): void {
+    public setPosition(position: RoomPositionData | undefined, index?: number): void {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
             this.position = undefined;
             this.priority = 0;
@@ -44,12 +43,18 @@ export default class RoomFurnitureItem extends RoomItem {
     render() {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
             // TODO: don't update the sprite if we don't have to
-            if((this.data as RoomFurnitureBackgroundData)?.imageUrl) {
+            if(this.data?.background?.imageUrl) {
                 this.position = undefined;
                 this.priority = 0;
 
-                AssetFetcher.fetchImage((this.data as RoomFurnitureBackgroundData).imageUrl).then((image) => {
-                    this.sprites = [new RoomFurnitureBackgroundSprite(this, image, (this.data as RoomFurnitureBackgroundData)?.position)]
+                AssetFetcher.fetchImage(this.data.background.imageUrl).then((image) => {
+                    this.sprites = [
+                        new RoomFurnitureBackgroundSprite(this, image, {
+                            x: this.data?.background?.left ?? 0,
+                            y: this.data?.background?.top ?? 0,
+                            z: this.data?.background?.index ?? 0,
+                        })
+                    ]
                 });
             }
             else {
@@ -80,7 +85,7 @@ export default class RoomFurnitureItem extends RoomItem {
         });
     }
 
-    setData(data: unknown) {
+    setData(data: UserFurnitureCustomData) {
         this.data = data;
     }
 }
