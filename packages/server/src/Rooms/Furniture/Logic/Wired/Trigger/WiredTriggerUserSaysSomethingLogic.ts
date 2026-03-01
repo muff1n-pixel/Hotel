@@ -1,11 +1,10 @@
 import { RoomFurnitureHandleUserChatResult } from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
-import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData";
 import WiredLogic from "../WiredLogic";
 
-export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic<WiredTriggerUserSaysSomethingData> {
-    constructor(roomFurniture: RoomFurniture<WiredTriggerUserSaysSomethingData>) {
+export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic {
+    constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
 
@@ -14,7 +13,7 @@ export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic<Wired
             return null;
         }
 
-        if(this.roomFurniture.model.data.onlyRoomOwner) {
+        if(this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.onlyRoomOwner) {
             if(roomUser.user.model.id !== roomUser.room.model.owner.id) {
                 return null;
             }
@@ -31,17 +30,17 @@ export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic<Wired
         });
 
         return {
-            blockUserChat: this.roomFurniture.model.data.hideMessage === true
+            blockUserChat: this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.hideMessage === true
         };
     }
 
     private isMessageMatched(message: string) {
-        switch(this.roomFurniture.model.data?.type) {
+        switch(this.roomFurniture.model.data?.wiredTriggerUserSaysSomething?.type) {
             case "keyword":
-                return this.roomFurniture.model.data.message.length && message.toLowerCase().includes(this.roomFurniture.model.data.message.toLowerCase());
+                return this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.message.length && message.toLowerCase().includes(this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.message.toLowerCase());
 
             case "match":
-                return this.roomFurniture.model.data.message.length && message.toLowerCase() === this.roomFurniture.model.data.message.toLowerCase();
+                return this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.message.length && message.toLowerCase() === this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.message.toLowerCase();
 
             case "match_all":
                 return true;

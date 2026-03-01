@@ -1,8 +1,5 @@
 import FurnitureImage from "../../../Furniture/FurnitureImage";
 import { clientInstance, webSocketClient } from "../../../../..";
-import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
-import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
-
 import "./RoomFurnitureProfile.css"
 import { useEffect, useState } from "react";
 import { useRoomInstance } from "../../../../hooks/useRoomInstance";
@@ -10,6 +7,7 @@ import { useUser } from "../../../../hooks/useUser";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import { usePermissionAction } from "../../../../hooks/usePermissionAction";
 import { useDialogs } from "../../../../hooks/useDialogs";
+import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureProfileProps = {
     furniture: RoomFurniture;
@@ -59,7 +57,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <b>{furniture.data.furniture.name}</b>
+                    <b>{furniture.data.furniture?.name}</b>
 
                     {(hasEditFurniturePermissions) && (
                         <div className="sprite_room_user_motto_pen" style={{
@@ -82,7 +80,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     <FurnitureImage furnitureData={furniture.data.furniture}/>
                 </div>
 
-                {(furniture.data.furniture.description) && (
+                {(furniture.data.furniture?.description) && (
                     <div style={{
                         width: "100%",
                         height: 1,
@@ -90,7 +88,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     }}/>
                 )}
 
-                {(furniture.data.furniture.description) && (
+                {(furniture.data.furniture?.description) && (
                     <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.data.furniture.description}</p>
                 )}
             </div>
@@ -110,9 +108,9 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
 
                 {(room?.hasRights || furniture.data.userId === user?.id) && (
                     <div className="room-furniture-profile-button" onClick={() => {
-                        webSocketClient.send<PickupRoomFurnitureEventData>("PickupRoomFurnitureEvent", {
-                            roomFurnitureId: furniture.data.id,
-                        });
+                        webSocketClient.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
+                            id: furniture.data.id
+                        }));
                     }}>
                         Pick up
                     </div>
@@ -124,10 +122,11 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                             return;
                         }
 
-                        webSocketClient.send<UpdateRoomFurnitureEventData>("UpdateRoomFurnitureEvent", {
-                            roomFurnitureId: furniture.data.id,
+                        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                            id: furniture.data.id,
+
                             direction: furniture.item.furnitureRenderer.getNextDirection()
-                        });
+                        }));
                         
                         if(furniture.item.position) {
                             furniture.item.setPositionPath(furniture.item.position, [

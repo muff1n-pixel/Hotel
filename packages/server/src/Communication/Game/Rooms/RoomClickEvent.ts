@@ -1,38 +1,38 @@
-import { RoomClickEventData } from "@shared/Communications/Requests/Rooms/RoomClickEventData.js";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import WiredTriggerUserClickUserLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
 import WiredTriggerUserClickFurniLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
 import WiredTriggerUserClickTileLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { RoomClickData } from "@pixel63/events";
 
-export default class RoomClickEvent implements IncomingEvent<RoomClickEventData> {
+export default class RoomClickEvent implements ProtobuffListener<RoomClickData> {
     public readonly name = "RoomClickEvent";
 
-    async handle(user: User, event: RoomClickEventData) {
+    async handle(user: User, payload: RoomClickData) {
         if(!user.room) {
             return;
         }
 
         const roomUser = user.room.getRoomUser(user);
 
-        if(event.userId) {
-            const targetUser = roomUser.room.getRoomUserById(event.userId);
+        if(payload.userId) {
+            const targetUser = roomUser.room.getRoomUserById(payload.userId);
 
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickUserLogic)) {
                 logic.handleUserClickUser(roomUser, targetUser);
             }
         }
-        else if(event.furnitureId) {
-            const roomFurniture = roomUser.room.getRoomFurniture(event.furnitureId);
+        else if(payload.furnitureId) {
+            const roomFurniture = roomUser.room.getRoomFurniture(payload.furnitureId);
 
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickFurniLogic)) {
                 logic.handleUserClicksFurniture(roomUser, roomFurniture);
             }
         }
         
-        if(event.position) {
+        if(payload.position) {
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickTileLogic)) {
-                logic.handleUserClicksTile(roomUser, event.position);
+                logic.handleUserClicksTile(roomUser, payload.position);
             }
         }
     }

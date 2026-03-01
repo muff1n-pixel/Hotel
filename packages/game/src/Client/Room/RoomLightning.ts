@@ -1,20 +1,20 @@
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/Renderer";
-import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
+import { UserFurnitureTonerData } from "@pixel63/events";
 import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
 
 export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
 
     public moodlight?: RoomMoodlightData;
-    public backgroundToner?: RoomFurnitureBackgroundTonerData;
+    public backgroundToner?: UserFurnitureTonerData;
 
     constructor(private roomRenderer: RoomRenderer) {
 
     }
 
-    public setBackgroundTonerData(backgroundToner: RoomFurnitureBackgroundTonerData) {
+    public setBackgroundTonerData(backgroundToner: UserFurnitureTonerData) {
         if(backgroundToner.enabled) {
             this.backgroundToner = backgroundToner;
         }

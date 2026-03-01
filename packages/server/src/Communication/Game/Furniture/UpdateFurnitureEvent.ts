@@ -1,15 +1,11 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { UpdateFurnitureEventData } from "@shared/Communications/Requests/Furniture/UpdateFurnitureEventData.js";
 import { game } from "../../../index.js";
-import { RoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, UpdateFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitureEventData> {
-    public readonly name = "UpdateFurnitureEvent";
-
-    async handle(user: User, event: UpdateFurnitureEventData) {
+export default class UpdateFurnitureEvent implements ProtobuffListener<UpdateFurnitureData> {
+    async handle(user: User, payload: UpdateFurnitureData) {
         const permissions = await user.getPermissions();
 
         if(!permissions.hasPermission("furniture:edit")) {
@@ -18,7 +14,7 @@ export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitu
 
         const furniture = await FurnitureModel.findOne({
             where: {
-                id: event.furnitureId
+                id: payload.id
             }
         });
 
@@ -27,17 +23,17 @@ export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitu
         }
 
         await furniture.update({
-            name: event.name,
-            description: event.description ?? null,
+            name: payload.name,
+            description: payload.description ?? null,
 
-            interactionType: event.interactionType,
-            category: event.category,
+            interactionType: payload.interactionType,
+            category: payload.category,
             
-            flags: event.flags,
+            flags: payload.flags,
 
             dimensions: {
                 ...furniture.dimensions,
-                depth: event.depth
+                depth: payload.depth
             }
         });
 

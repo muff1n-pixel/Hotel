@@ -3,13 +3,12 @@ import DialogPanel from "../../Dialog/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../../..";
-import { PurchaseShopBotEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopBotEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
 import FigureImage from "../../Figure/FigureImage";
 import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
-import { ShopBotData } from "@pixel63/events";
+import { PurchaseShopBotData, ShopBotData } from "@pixel63/events";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -32,9 +31,9 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        webSocketClient.send<PurchaseShopBotEventData>("PurchaseShopBotEvent", {
-            shopBotId: activeBot.id
-        });
+        webSocketClient.sendProtobuff(PurchaseShopBotData, PurchaseShopBotData.create({
+            id: activeBot.id
+        }));
     }, [activeBot, activeBotRef]);
 
     return (

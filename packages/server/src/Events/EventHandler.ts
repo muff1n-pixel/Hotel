@@ -28,12 +28,12 @@ import UpdateRoomInformationEvent from "../Communication/Game/Rooms/UpdateRoomIn
 import SetHomeRoomEvent from "../Communication/Game/Users/SetHomeRoomEvent.js";
 import UpdateUserRightsEvent from "../Communication/Game/Rooms/User/UpdateUserRightsEvent.js";
 import GetHotelFeedbackEvent from "../Communication/Game/Hotel/GetHotelFeedbackEvent.js";
-import SendFeedbackEvent from "../Communication/Game/Hotel/SendFeedbackEvent.js";
+import SendHotelFeedbackEvent from "../Communication/Game/Hotel/SendHotelFeedbackEvent.js";
 import PingEvent from "../Communication/Game/Users/PingEvent.js";
 import GetRoomCategoriesEvent from "../Communication/Game/Navigator/GetRoomCategoriesEvent.js";
 import GetInventoryBadgesEvent from "../Communication/Game/Inventory/GetInventoryBadgesEvent.js";
 import UpdateUserBadgeEvent from "../Communication/Game/Inventory/UpdateUserBadgeEvent.js";
-import GetUserProfileEvent from "../Communication/Game/Rooms/User/GetUserProfileEvent.js";
+import GetUserBadgesEvent from "../Communication/Game/Rooms/User/GetUserProfileEvent.js";
 import SetMottoEvent from "../Communication/Game/Users/SetMottoEvent.js";
 import UpdateShopPageEvent from "../Communication/Game/Shop/Development/UpdateShopPageEvent.js";
 import UpdateShopFurnitureEvent from "../Communication/Game/Shop/Development/UpdateShopFurnitureEvent.js";
@@ -53,6 +53,8 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
+import { CreateRoomData, MessageType, SendHotelFeedbackData, UpdateFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -95,7 +97,27 @@ export default class EventHandler extends EventEmitter {
         });
     }
 
+    addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>) {
+        super.addListener(message.$type, async (user, event) => {
+            protobuffListener.handle(user, message.decode(event) as T);
+
+        });
+    }
+
+    removeProtobuffListener(message: MessageType, listener: (event: Uint8Array<ArrayBufferLike>) => void) {
+        super.removeListener(message.$type, listener);
+    }
+
     registerIncomingEvents() {
+        // Hotel events
+        this.addProtobuffListener(SendHotelFeedbackData, new SendHotelFeedbackEvent())
+
+        // Furniture events
+        this.addProtobuffListener(UpdateFurnitureData, new UpdateFurnitureEvent());
+
+        // Room events
+        this.addProtobuffListener(CreateRoomData, new CreateRoomEvent());
+
         this
             .addIncomingEvent(new GetShopPagesEvent())
             .addIncomingEvent(new GetShopPageFurnitureEvent())
@@ -130,7 +152,7 @@ export default class EventHandler extends EventEmitter {
             .addIncomingEvent(new GetUserEvent())
             .addIncomingEvent(new GetUserFurnitureEvent())
             .addIncomingEvent(new GetUserBotsEvent())
-            .addIncomingEvent(new GetUserProfileEvent())
+            .addIncomingEvent(new GetUserBadgesEvent())
             .addIncomingEvent(new GetInventoryBadgesEvent())
             .addIncomingEvent(new UpdateUserBadgeEvent())
             .addIncomingEvent(new SetRoomChatStyleEvent())
@@ -139,13 +161,11 @@ export default class EventHandler extends EventEmitter {
             .addIncomingEvent(new SetTypingEvent());
             
         this
-            .addIncomingEvent(new CreateRoomEvent())
             .addIncomingEvent(new GetRoomMapsEvent())
             .addIncomingEvent(new GetNavigatorRoomsEvent())
             .addIncomingEvent(new GetRoomCategoriesEvent());
             
         this
-            .addIncomingEvent(new SendFeedbackEvent())
             .addIncomingEvent(new GetHotelFeedbackEvent());
 
         this
@@ -165,7 +185,6 @@ export default class EventHandler extends EventEmitter {
             .addIncomingEvent(new UpdateRoomFloorplanEvent());
 
         this.addIncomingEvent(new GetFurnitureTypesEvent());
-        this.addIncomingEvent(new UpdateFurnitureEvent());
 
         this.addIncomingEvent(new PingEvent());
     }

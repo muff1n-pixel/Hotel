@@ -5,6 +5,7 @@ import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 import RoomFloorplanHelper from "@Shared/Helpers/RoomFloorplanHelper";
 import { clientInstance } from "../../../..";
+import { RoomStructureData } from "@pixel63/events";
 
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
 
@@ -66,10 +67,11 @@ export default class RoomFloorPlanEditor {
         window.requestAnimationFrame(this.process.bind(this));
     }
 
-    public setStructure(structure: RoomStructure) {
+    public setStructure(structure: RoomStructureData) {
         this.data = {
             structure,
             offsets: {
+                $type: "RoomPositionOffsetData",
                 row: 0,
                 column: 0
             }
@@ -154,12 +156,13 @@ export default class RoomFloorPlanEditor {
             if(clientInstance.roomInstance.value) {
                 const upmostFurniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(coordinate);
 
-                if(upmostFurniture && !upmostFurniture.data.furniture.flags.walkable) {
+                if(upmostFurniture && !upmostFurniture.data.furniture?.flags?.walkable) {
                     return;
                 }
             }
 
             this.data.structure.door = {
+                $type: "RoomStructureDoorData",
                 ...coordinate,
                 direction: this.data.structure.door?.direction ?? 2
             };
@@ -389,10 +392,10 @@ export default class RoomFloorPlanEditor {
             rows[row][column] = value;
         }
 
-        this.data.structure = {
+        this.data.structure = RoomStructureData.create({
             ...structure,
             grid: rows.map((row) => row.join(''))
-        };
+        });
 
         this.update(this.data);
     }

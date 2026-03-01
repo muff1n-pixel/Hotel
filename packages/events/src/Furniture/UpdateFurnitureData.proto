@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "Furniture/FurnitureFlagsData.proto";
+
+message UpdateFurnitureData {
+    string id = 1;
+
+    string name = 2;
+    string description = 3;
+
+    string category = 4;
+    string interaction_type = 5;
+
+    FurnitureFlagsData flags = 6;
+
+    float depth = 7;
+}
+

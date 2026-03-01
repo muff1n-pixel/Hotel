@@ -8,12 +8,9 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { UpdateUserRightsEventData } from "@Shared/Communications/Requests/Rooms/User/UpdateUserRightsEventData";
 import { useRoomHoveredUser } from "../../../hooks/useRoomHoveredUser";
 import { useRoomFocusedUser } from "../../../hooks/useRoomFocusedUser";
-import { PickupRoomBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/PickupRoomBotEventData"
-import { UpdateRoomBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData";
-import { SendUserMessageEventData } from "@Shared/Communications/Requests/Rooms/User/SendUserMessageEventData";
+import { PickupRoomBotData, SendRoomChatMessageData, SetRoomUserRightsData, UpdateRoomBotData } from "@pixel63/events";
 
 export default function UserContextMenu() {
     const room = useRoomInstance();
@@ -158,9 +155,9 @@ export default function UserContextMenu() {
                                                         
                                                         <UserContextMenuButton text={focusedUser.item.figureRenderer.hasAction("Dance")?("Stop dancing"):("Dance")} hasDropdown={!focusedUser.item.figureRenderer.hasAction("Dance")} onClick={() => {
                                                             if(focusedUser.item.figureRenderer.hasAction("Dance")) {
-                                                                webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+                                                                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                                                     message: ":dance 0"
-                                                                });
+                                                                }));
 
                                                                 setTab(null);
                                                             }
@@ -171,12 +168,12 @@ export default function UserContextMenu() {
                                                     </Fragment>
                                                 ):(
                                                     <Fragment>
-                                                        {(room?.information.owner.id === user?.id) && (
+                                                        {(room?.information?.owner?.id === user?.id) && (
                                                             <UserContextMenuButton text={(focusedUser.user.data.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {
-                                                                webSocketClient.send<UpdateUserRightsEventData>("UpdateUserRightsEvent", {
-                                                                    userId: focusedUser.user.data.id,
+                                                                webSocketClient.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
+                                                                    id: focusedUser.user.data.id,
                                                                     hasRights: !focusedUser.user.data.hasRights
-                                                                });
+                                                                }));
                                                             }}/>
                                                         )}
 
@@ -196,10 +193,11 @@ export default function UserContextMenu() {
                                                     }}/>
 
                                                     <UserContextMenuButton text={(focusedUser.bot.data.relaxed)?("Stiffen"):("Relax")} onClick={() => {
-                                                        webSocketClient.send<UpdateRoomBotEventData>("UpdateRoomBotEvent", {
-                                                            userBotId: focusedUser.bot.data.id,
+                                                        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+                                                            id: focusedUser.bot.data.id,
+
                                                             relaxed: !focusedUser.bot.data.relaxed
-                                                        });
+                                                        }));
                                                     }}/>
 
                                                     <UserContextMenuButton text={"Setup speech"} onClick={() => {
@@ -209,9 +207,9 @@ export default function UserContextMenu() {
                                                     }}/>
 
                                                     <UserContextMenuButton text={"Pick up"} onClick={() => {
-                                                        webSocketClient.send<PickupRoomBotEventData>("PickupRoomBotEvent", {
-                                                            userBotId: focusedUser.bot.data.id,
-                                                        });
+                                                        webSocketClient.sendProtobuff(PickupRoomBotData, PickupRoomBotData.create({
+                                                            id: focusedUser.bot.data.id
+                                                        }));
                                                     }}/>
                                                 </Fragment>
                                             )}
@@ -221,33 +219,33 @@ export default function UserContextMenu() {
                                     {(tab === "dance") && (
                                         <UserContextMenuList>
                                             <UserContextMenuButton text={"Dance"} onClick={() => {
-                                                webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+                                                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                                     message: ":dance 1"
-                                                });
+                                                }));
 
                                                 setTab(null);
                                             }}/>
                                             
                                             <UserContextMenuButton text={"Pogo Mogo"} onClick={() => {
-                                                webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+                                                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                                     message: ":dance 2"
-                                                });
+                                                }));
 
                                                 setTab(null);
                                             }}/>
                                             
                                             <UserContextMenuButton text={"Duck Funk"} onClick={() => {
-                                                webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+                                                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                                     message: ":dance 3"
-                                                });
+                                                }));
 
                                                 setTab(null);
                                             }}/>
                                             
                                             <UserContextMenuButton text={"The Rollie"} onClick={() => {
-                                                webSocketClient.send<SendUserMessageEventData>("SendUserMessageEvent", {
+                                                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                                     message: ":dance 4"
-                                                });
+                                                }));
 
                                                 setTab(null);
                                             }}/>

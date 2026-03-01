@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message SendHotelFeedbackData {
+    string area = 1;
+    string description = 2;
+}

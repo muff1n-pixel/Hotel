@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "User/Furniture/UserFurnitureCustomData.proto";
+
+message PurchaseShopFurnitureData {
+    string id = 1;
+    optional UserFurnitureCustomData data = 2;
+
+    optional RoomPositionData position = 3;
+    optional uint32 direction = 4;
+}

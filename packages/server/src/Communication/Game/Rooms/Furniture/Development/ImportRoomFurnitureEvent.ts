@@ -1,17 +1,14 @@
-import { ImportRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/Developer/ImportRoomFurnitureEventData";
-import IncomingEvent from "../../../../Interfaces/IncomingEvent.js";
 import User from "../../../../../Users/User.js";
 import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent.js";
 import RoomFurniture from "../../../../../Rooms/Furniture/RoomFurniture.js";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { RoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, RoomFurnitureImportData } from "@pixel63/events";
+import ProtobuffListener from "../../../../Interfaces/ProtobuffListener.js";
 
-export default class ImportRoomFurnitureEvent implements IncomingEvent<ImportRoomFurnitureEventData> {
-    public readonly name = "ImportRoomFurnitureEvent";
-
-    async handle(user: User, event: ImportRoomFurnitureEventData) {
+export default class ImportRoomFurnitureEvent implements ProtobuffListener<RoomFurnitureImportData> {
+    async handle(user: User, payload: RoomFurnitureImportData) {
         if(!user.room) {
             return;
         }
@@ -26,7 +23,7 @@ export default class ImportRoomFurnitureEvent implements IncomingEvent<ImportRoo
 
         const roomEvents: OutgoingEvent[] = [];
 
-        for(let furnitureData of event.furniture) {
+        for(let furnitureData of payload.furniture) {
             const furniture = await FurnitureModel.findOne({
                 where: {
                     type: furnitureData.type,

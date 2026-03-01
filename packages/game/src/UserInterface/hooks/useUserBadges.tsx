@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { webSocketClient } from "../..";
-import { GetUserProfileEventData } from "@Shared/Communications/Requests/Rooms/User/GetUserProfileEventData";
-import { BadgeData, UserBadgesData } from "@pixel63/events";
+import { BadgeData, GetUserBadgesData, UserBadgesData } from "@pixel63/events";
 
 export function useUserBadges(userId: string) {
     const [value, setValue] = useState<BadgeData[]>([]);
@@ -15,9 +14,9 @@ export function useUserBadges(userId: string) {
             },
         })
 
-        webSocketClient.send<GetUserProfileEventData>("GetUserProfileEvent", {
-            userId
-        });
+        webSocketClient.sendProtobuff(GetUserBadgesData, GetUserBadgesData.create({
+            id: userId
+        }));
 
         return () => {
             webSocketClient.removeProtobuffListener(UserBadgesData, listener);

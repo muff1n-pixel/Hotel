@@ -1,19 +1,17 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { SendUserMessageEventData } from "@shared/Communications/Requests/Rooms/User/SendUserMessageEventData.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { game } from "../../../../index.js";
-import { RoomActorChatData, RoomUserData } from "@pixel63/events";
+import { RoomActorChatData, RoomUserData, SendRoomChatMessageData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class SendUserMessageEvent implements IncomingEvent<SendUserMessageEventData> {
+export default class SendUserMessageEvent implements ProtobuffListener<SendRoomChatMessageData> {
     public readonly name = "SendUserMessageEvent";
 
-    async handle(user: User, event: SendUserMessageEventData) {
+    async handle(user: User, payload: SendRoomChatMessageData) {
         if(!user.room) {
             return;
         }
 
-        if(!event.message.length) {
+        if(!payload.message.length) {
             throw new Error("Message is empty.");
         }
 
@@ -21,24 +19,24 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
 
         roomUser.lastActivity = performance.now();
 
-        if(event.message.includes(":)")) {
+        if(payload.message.includes(":)")) {
             roomUser.addAction("GestureSmile");
         }
-        else if(event.message.includes(":D")) {
+        else if(payload.message.includes(":D")) {
             roomUser.addAction("Laugh");
         }
-        else if(event.message.includes(":(")) {
+        else if(payload.message.includes(":(")) {
             roomUser.addAction("GestureSad");
         }
-        else if(event.message.includes(":@")) {
+        else if(payload.message.includes(":@")) {
             roomUser.addAction("GestureAngry");
         }
-        else if(event.message.toLowerCase().includes(":o")) {
+        else if(payload.message.toLowerCase().includes(":o")) {
             roomUser.addAction("GestureSurprised");
         }
 
-        if(event.message[0] === ':' || event.message[0] === '/') {
-            const parts = event.message.split(' ');
+        if(payload.message[0] === ':' || payload.message[0] === '/') {
+            const parts = payload.message.split(' ');
 
             game.commandHandler.dispatchCommand(roomUser, parts[0]!.substring(1), parts.slice(1));
 
@@ -61,7 +59,7 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
         });
 
         for(const furniture of furnitureWithUserChatLogic) {
-            const result = await furniture.getCategoryLogic()?.handleUserChat?.(roomUser, event.message);
+            const result = await furniture.getCategoryLogic()?.handleUserChat?.(roomUser, payload.message);
 
             if(result?.blockUserChat) {
                 userChatBlocked = true;
@@ -71,7 +69,7 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
         roomUser.typing = false;
 
         if(!userChatBlocked) {
-            roomUser.sendRoomMessage(event.message);
+            roomUser.sendRoomMessage(payload.message);
         }
         else {
             user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
@@ -80,7 +78,7 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
                         userId: user.model.id
                     }
                 },
-                message: event.message,
+                message: payload.message,
                 roomChatStyleId: user.model.roomChatStyleId,
                 options: {
                     italic: true,

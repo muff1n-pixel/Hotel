@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
-import { GetShopPageFurnitureEventData } from "@Shared/Communications/Requests/Shop/GetShopPageFurnitureEventData";
-import { ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
+import { GetShopPageFurnitureData, ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
 
 export default function useShopPageFurniture(pageId: string) {
     const [shopFurnitures, setShopFurnitures] = useState<ShopFurnitureData[]>([]);
@@ -19,9 +18,9 @@ export default function useShopPageFurniture(pageId: string) {
         })
 
         if(shopFurnituresRequested.current !== pageId) {
-            webSocketClient.send<GetShopPageFurnitureEventData>("GetShopPageFurnitureEvent", {
-                pageId: pageId
-            });
+            webSocketClient.sendProtobuff(GetShopPageFurnitureData, GetShopPageFurnitureData.create({
+                pageId
+            }));
 
             shopFurnituresRequested.current = pageId;
         }

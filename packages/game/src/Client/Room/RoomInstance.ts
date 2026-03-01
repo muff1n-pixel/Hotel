@@ -5,16 +5,12 @@ import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { webSocketClient } from "../..";
-import { StartWalkingEventData } from "@Shared/Communications/Requests/Rooms/User/StartWalkingEventData";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
-import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomClickEventData } from "@Shared/Communications/Requests/Rooms/RoomClickEventData";
-import { RoomActorIdentifierData, RoomInformationData, RoomLoadData, RoomStructureData, RoomUserData, UserFurnitureData, UserFurnitureMoodlightData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -92,7 +88,7 @@ export default class RoomInstance {
         this.roomRenderer.lighting.setMoodlightData(moodlight);
     }
 
-    public setBackgroundToner(backgroundToner: RoomFurnitureBackgroundTonerData) {
+    public setBackgroundToner(backgroundToner: UserFurnitureTonerData) {
         this.roomRenderer.lighting.setBackgroundTonerData(backgroundToner);
     }
 
@@ -131,28 +127,28 @@ export default class RoomInstance {
                 if(event.otherEntity.item instanceof RoomFurnitureItem) {
                     const roomFurniture = this.getFurnitureByItem(event.otherEntity.item);
 
-                    webSocketClient.send<RoomClickEventData>("RoomClickEvent", {
+                    webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
                         furnitureId: roomFurniture.data.id,
-                        position: event.floorEntity?.position
-                    });
+                        position: event.otherEntity.position
+                    }));
 
                     this.lastSentClickEvent = performance.now();
                 }
                 else if(event.otherEntity.item instanceof RoomFigureItem && event.otherEntity.item.type === "figure") {
-                    const roomFurniture = this.getUserByItem(event.otherEntity.item);
+                    const roomUser = this.getUserByItem(event.otherEntity.item);
 
-                    webSocketClient.send<RoomClickEventData>("RoomClickEvent", {
-                        userId: roomFurniture.data.id,
-                        position: event.floorEntity?.position
-                    });
+                    webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
+                        userId: roomUser.data.id,
+                        position: event.otherEntity.position
+                    }));
 
                     this.lastSentClickEvent = performance.now();
                 }
             }
             else if(event.floorEntity?.position) {
-                webSocketClient.send<RoomClickEventData>("RoomClickEvent", {
+                webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
                     position: event.floorEntity.position
-                });
+                }));
 
                 this.lastSentClickEvent = performance.now();
             }
@@ -163,9 +159,9 @@ export default class RoomInstance {
         }
 
         if(event.floorEntity?.position && !(event.otherEntity?.item instanceof RoomFigureItem)) {
-            webSocketClient.send<StartWalkingEventData>("StartWalkingEvent", {
+            webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
                 target: event.floorEntity.position
-            });
+            }));
         }
     }
 
@@ -317,11 +313,12 @@ export default class RoomInstance {
         roomFurniturePlacer.startPlacing((position, direction) => {
             roomFurniturePlacer.destroy();
 
-            webSocketClient.send<UpdateRoomFurnitureEventData>("UpdateRoomFurnitureEvent", {
-                roomFurnitureId: furniture.data.id,
+            webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                id: furniture.data.id,
+
                 position,
                 direction
-            });
+            }));
         }, () => {
             roomFurniturePlacer.destroy();
         });

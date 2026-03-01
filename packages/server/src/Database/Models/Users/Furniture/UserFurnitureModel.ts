@@ -4,14 +4,15 @@ import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
+import { UserFurnitureCustomData } from "@pixel63/events";
 
-export class UserFurnitureModel<T = unknown> extends Model {
+export class UserFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPosition;
     declare direction: number;
     declare animation: number;
     declare color: number | null;
-    declare data: T | null;
+    declare data?: UserFurnitureCustomData;
     declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;

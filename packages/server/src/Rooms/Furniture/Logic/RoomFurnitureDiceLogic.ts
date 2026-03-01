@@ -1,18 +1,15 @@
-import { game } from "../../../index.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
 
     }
 
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         const relativePosition: Omit<RoomPosition, "depth"> = {
             row: this.roomFurniture.model.position.row - roomUser.position.row,
             column: this.roomFurniture.model.position.column - roomUser.position.column,
@@ -30,7 +27,7 @@ export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
         // Close the dice if deactivating
-        if(event.tag === "deactivate" && this.roomFurniture.model.animation !== 0) {
+        if(payload.tag === "deactivate" && this.roomFurniture.model.animation !== 0) {
             await this.roomFurniture.setAnimation(0);
 
             return;

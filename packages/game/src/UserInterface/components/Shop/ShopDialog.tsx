@@ -4,15 +4,14 @@ import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
 import { usePermissionAction } from "../../hooks/usePermissionAction";
 import { webSocketClient } from "../../..";
-import { GetShopPagesEventData, ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
-import { ShopPageData, ShopPagesData } from "@pixel63/events";
+import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 
 export type ShopDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
 }
 
-const categories = ["frontpage", "furniture", "clothing", "pets"] satisfies ShopPageCategory[];
+const categories = ["frontpage", "furniture", "clothing", "pets"];
 
 export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     const hasEditShopPermission = usePermissionAction("shop:edit");
@@ -22,7 +21,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
-    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: ShopPageCategory; }>();
+    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: string; }>();
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
 
     const onEditClick = useCallback(() => {
@@ -57,9 +56,9 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
             },
         });
 
-        webSocketClient.send<GetShopPagesEventData>("GetShopPagesEvent", {
+        webSocketClient.sendProtobuff(GetShopPagesData, GetShopPagesData.create({
             category
-        });
+        }));
 
         return () => {
             webSocketClient.removeProtobuffListener(ShopPagesData, listener);
@@ -67,7 +66,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     }, [activeIndex, requestedShopPage]);
 
     // TODO: handle category and shop pages here
-    const handleActiveShopPage = useCallback((shopPage: { id: string; category: ShopPageCategory }) => {
+    const handleActiveShopPage = useCallback((shopPage: { id: string; category: string }) => {
         const category = categories.at(activeIndex);
 
         if(shopPage.category !== category) {

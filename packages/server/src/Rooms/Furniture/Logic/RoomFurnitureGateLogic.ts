@@ -1,4 +1,4 @@
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
@@ -8,7 +8,7 @@ export default class RoomFurnitureGateLogic implements RoomFurnitureLogic {
 
     }
 
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         if(!roomUser.hasRights()) {
             console.warn("User does not have rights.");
 
@@ -19,11 +19,11 @@ export default class RoomFurnitureGateLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(event.animation === undefined) {
+        if(payload.animation === undefined) {
             return;
         }
 
-        this.roomFurniture.setAnimation(event.animation);
+        this.roomFurniture.setAnimation(payload.animation);
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
     }

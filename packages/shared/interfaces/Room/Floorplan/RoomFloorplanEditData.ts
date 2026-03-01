@@ -1,7 +1,6 @@
-import { RoomPosition } from "../RoomPosition.js";
-import { RoomStructure } from "../RoomStructure.js";
+import { RoomPositionOffsetData, RoomStructureData } from "@pixel63/events";
 
 export type RoomFloorplanEditData = {
-    structure: RoomStructure;
-    offsets: Omit<RoomPosition, "depth">;
+    structure: RoomStructureData;
+    offsets: RoomPositionOffsetData;
 };

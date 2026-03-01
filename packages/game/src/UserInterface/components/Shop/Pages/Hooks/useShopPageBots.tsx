@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
-import { GetShopPageBotsEventData } from "@Shared/Communications/Requests/Shop/GetShopPageBotsEventData";
-import { ShopBotData, ShopPageBotsData } from "@pixel63/events";
+import { GetShopPageBotsData, ShopBotData, ShopPageBotsData } from "@pixel63/events";
 
 export default function useShopPageBots(pageId: string) {
     const [bots, setBots] = useState<ShopBotData[]>([]);
@@ -19,9 +18,9 @@ export default function useShopPageBots(pageId: string) {
         });
 
         if(pageIdRequested.current !== pageId) {
-            webSocketClient.send<GetShopPageBotsEventData>("GetShopPageBotsEvent", {
-                pageId: pageId
-            });
+            webSocketClient.sendProtobuff(GetShopPageBotsData, GetShopPageBotsData.create({
+                pageId
+            }));
 
             pageIdRequested.current = pageId;
         }

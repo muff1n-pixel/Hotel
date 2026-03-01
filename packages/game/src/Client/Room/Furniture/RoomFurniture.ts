@@ -26,17 +26,6 @@ export default class RoomFurniture {
 
         this.instance.roomRenderer.items.push(this.item);
 
-        /*if(this.data.furniture?.interactionType === "dimmer") {
-            if((this.data.data as RoomMoodlightData)?.enabled) {
-                this.instance.setMoodlight(this.data.data as RoomMoodlightData);
-            }
-        }
-        else if(this.data.furniture?.interactionType === "background_toner") {
-            if((this.data.data as RoomFurnitureBackgroundTonerData)?.enabled) {
-                this.instance.setBackgroundToner(this.data.data as RoomFurnitureBackgroundTonerData);
-            }
-        }*/
-
         this.updateData(data);
     }
     

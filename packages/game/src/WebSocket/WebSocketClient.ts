@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
-import { MessageType } from "@pixel63/events";
+import { MessageType, UnknownMessage } from "@pixel63/events";
 
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
@@ -63,6 +63,23 @@ export default class WebSocketClient extends EventTarget {
         console.log("Sending " + type);
         
         this.socket.send(JSON.stringify([[type, data]]));
+    }
+
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        const encoded = message.encode(payload).finish();
+
+        this.sendEncodedProtobuff(message.$type, encoded);
+    }
+
+    private sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
+        const typeBytes = new TextEncoder().encode(eventType + "|");
+
+        const message = new Uint8Array(typeBytes.length + encoded.length);
+
+        message.set(typeBytes, 0);
+        message.set(encoded, typeBytes.length);
+
+        this.socket.send(message);
     }
 
     public close() {

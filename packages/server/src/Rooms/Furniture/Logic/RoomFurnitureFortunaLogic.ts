@@ -5,7 +5,7 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -15,7 +15,7 @@ export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {
     // Animation 14 - 11 is the final pick (left to right)
     // Animation 24 - 21 is for the slow down (left to right)
     // Animation 32 is for the initial spin
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         if(this.roomFurniture.model.animation !== 0) {
             await this.roomFurniture.setAnimation(0);
 

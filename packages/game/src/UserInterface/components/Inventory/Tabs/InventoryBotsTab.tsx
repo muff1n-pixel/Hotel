@@ -7,9 +7,8 @@ import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
 import FigureImage from "../../Figure/FigureImage";
-import { PlaceBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/PlaceBotEventData";
 import { useUser } from "../../../hooks/useUser";
-import { UserBotData, UserInventoryBotsData } from "@pixel63/events";
+import { PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
 
 export default function InventoryBotsTab() {
     const user = useUser();
@@ -99,12 +98,12 @@ export default function InventoryBotsTab() {
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            webSocketClient.send<PlaceBotEventData>("PlaceBotEvent", {
-                userBotId: activeBot.id,
+            webSocketClient.sendProtobuff(PlaceRoomBotData, PlaceRoomBotData.create({
+                id: activeBot.id,
 
                 position,
                 direction
-            });
+            }));
         }, () => {
             roomFurniturePlacer.destroy();
 
@@ -196,7 +195,7 @@ export default function InventoryBotsTab() {
                             <p>{activeBot?.motto}</p>
                         </div>
 
-                        <DialogButton disabled={!room || room.information.owner.id !== user.id} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton disabled={!room || room.information?.owner?.id !== user.id} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
                     </Fragment>
                 )}
             </div>

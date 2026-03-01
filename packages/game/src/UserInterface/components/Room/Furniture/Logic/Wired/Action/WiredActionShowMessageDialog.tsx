@@ -7,35 +7,37 @@ import WiredSection from "../../../../../Dialog/Wired/WiredSection";
 import WiredInput from "../../../../../Dialog/Wired/WiredInput";
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../../Dialog/Wired/WiredButton";
-import { WiredActionShowMessageData } from "@Shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData";
 import { webSocketClient } from "../../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
 import WiredDelay from "../../../../../Dialog/Wired/WiredDelay";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredActionShowMessageDialogData = {
-    furniture: RoomInstanceFurniture<WiredActionShowMessageData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_says_something";
 };
 
-export default function WiredActionShowMessageDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredActionShowMessageDialogData>) {
-    const [message, setMessage] = useState(data.furniture.data.data?.message ?? "");
-    const [delayInSeconds, setDelayInSeconds] = useState(data.furniture.data.data?.delayInSeconds ?? 0);
+export default function WiredActionShowMessageDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [message, setMessage] = useState(data.data.data?.wiredActionShowMessage?.message ?? "");
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionShowMessage?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredActionShowMessageData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+
             data: {
-                message,
-                delayInSeconds
+                wiredActionShowMessage: {
+                    message,
+                    delayInSeconds
+                }
             }
-        });
+        }));
 
         onClose();
     }, [message, delayInSeconds, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

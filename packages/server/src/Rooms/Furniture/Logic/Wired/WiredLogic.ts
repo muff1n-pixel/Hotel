@@ -8,10 +8,10 @@ export type WiredTriggerOptions = {
     signalFurniture?: RoomFurniture;
 };
 
-export default class WiredLogic<T> implements RoomFurnitureLogic {
+export default class WiredLogic implements RoomFurnitureLogic {
     public lastTriggered: number = 0;
 
-    constructor(public readonly roomFurniture: RoomFurniture<T>) {
+    constructor(public readonly roomFurniture: RoomFurniture) {
 
     }
 

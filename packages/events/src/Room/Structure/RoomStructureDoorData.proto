@@ -3,7 +3,6 @@ syntax = "proto3";
 message RoomStructureDoorData {
     uint32 row = 1;
     uint32 column = 2;
-    uint32 depth = 3;
 
     uint32 direction = 4;
 }

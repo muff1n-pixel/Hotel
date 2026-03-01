@@ -1,19 +1,15 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { GetUserProfileEventData } from "@shared/Communications/Requests/Rooms/User/GetUserProfileEventData.js";
 import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
-import { UserBadgesData } from "@pixel63/events";
+import { GetUserBadgesData, UserBadgesData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class GetUserProfileEvent implements IncomingEvent<GetUserProfileEventData> {
-    public readonly name = "GetUserProfileEvent";
-
-    async handle(user: User, event: GetUserProfileEventData) {
+export default class GetUserBadgesEvent implements ProtobuffListener<GetUserBadgesData> {
+    async handle(user: User, payload: GetUserBadgesData) {
         const targetUser = await UserModel.findOne({
             where: {
-                id: event.userId
+                id: payload.id
             }
         });
 
@@ -36,7 +32,7 @@ export default class GetUserProfileEvent implements IncomingEvent<GetUserProfile
         });
 
         user.sendProtobuff(UserBadgesData, UserBadgesData.create({
-            userId: event.userId,
+            userId: payload.id,
             badges: equippedBadges.map((userBadge) => {
                 return {
                     id: userBadge.badge.id,

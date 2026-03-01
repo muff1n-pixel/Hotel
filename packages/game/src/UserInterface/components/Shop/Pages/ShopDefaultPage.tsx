@@ -5,14 +5,13 @@ import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
-import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -52,7 +51,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     }, [roomRef]);
 
     useEffect(() => {
-        if(!roomRenderer || !activeFurniture) {
+        if(!roomRenderer || !activeFurniture?.furniture) {
             return;
         }
 
@@ -123,7 +122,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                         return;
                     }
 
-                    if(activeFurnitureRef.current) {
+                    if(activeFurnitureRef.current && activeFurniture.furniture) {
                         clientInstance.flyingFurnitureIcons.value!.push({
                             id: Math.random().toString(),
                             furniture: activeFurniture.furniture,
@@ -139,14 +138,15 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             once: true
         });
 
-        webSocketClient.send<PurchaseShopFurnitureEventData>("PurchaseShopFurnitureEvent", {
-            shopFurnitureId: activeFurniture.id,
+        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
+            id: activeFurniture.id,
+
             position,
             direction
-        });
+        }));
     }, [activeFurniture, activeFurnitureRef, roomFurniturePlacer]);
 
-    const onMouseDown = useCallback((furniture: ShopPageFurnitureData) => {
+    const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
         }
@@ -158,7 +158,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         const mousemove = () => {
             document.body.removeEventListener("mousemove", mousemove);
 
-            if(room) {                
+            if(room && furniture.furniture) {                
                 setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture));
             }
         };

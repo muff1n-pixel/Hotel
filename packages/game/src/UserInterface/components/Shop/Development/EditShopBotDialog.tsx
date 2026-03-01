@@ -4,12 +4,11 @@ import DialogContent from "../../Dialog/DialogContent";
 import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { UpdateShopBotEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopBotEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { BotTypeData } from "@Shared/Interfaces/Bots/BotTypeData";
 import FigureImage from "../../Figure/FigureImage";
 import { useUser } from "../../../hooks/useUser";
-import { FigureConfigurationData, ShopBotData, ShopPageData } from "@pixel63/events";
+import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
 
 export type EditShopBotDialogProps = {
     data: Partial<ShopBotData> & {
@@ -35,8 +34,8 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
     const [diamonds, setDiamonds] = useState(data?.diamonds ?? 0);
 
     const handleUpdate = useCallback(() => {
-        webSocketClient.send<UpdateShopBotEventData>("UpdateShopBotEvent", {
-            id: data?.id ?? null,
+        webSocketClient.sendProtobuff(UpdateShopBotData, UpdateShopBotData.create({
+            id: data?.id,
 
             pageId: data.page.id,
 
@@ -50,7 +49,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
             credits,
             duckets,
             diamonds,
-        });
+        }));
 
         dialogs.closeDialog("edit-shop-bot");
     }, [dialogs, data, type, name, motto, figureConfiguration, credits, duckets, diamonds]);

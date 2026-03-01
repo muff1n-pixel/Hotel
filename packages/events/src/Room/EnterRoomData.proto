@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message EnterRoomData {
+    string id = 1;
+}

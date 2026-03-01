@@ -17,9 +17,10 @@ import WiredSignalDialog from "./Wired/WiredSignalDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
 import WiredDialog from "../../../Dialog/Wired/WiredDialog";
 import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
+import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 
-export type RoomFurnitureLogicDialogProps<T = any> = {
-    data: T;
+export type RoomFurnitureLogicDialogProps = {
+    data: RoomInstanceFurniture;
     hidden?: boolean;
     onClose: () => void;
 }
@@ -32,8 +33,8 @@ export type RoomFurnitureLogicDialogData =
     | RoomFurnitureTrophyDialogData
     | WiredTriggerSaysSomethingDialogData;
 
-export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps<any>) {
-    switch(props.data.type) {
+export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
+    switch(props.data.data.furniture?.interactionType) {
         case "furniture_roomdimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);
             
@@ -92,10 +93,10 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             return (<WiredSignalDialog {...props}/>);
     }
 
-    if(props.data.type.startsWith("wf_")) {
+    if(props.data.data.furniture?.type.startsWith("wf_")) {
         return (
             <WiredDialog onClose={props.onClose}>
-                <WiredFurniture furniture={props.data.furniture.data}/>
+                <WiredFurniture furniture={props.data.data}/>
             </WiredDialog>
         );
     }

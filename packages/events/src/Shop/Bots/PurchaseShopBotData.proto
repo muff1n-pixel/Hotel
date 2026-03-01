@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message PurchaseShopBotData {
+    string id = 1;
+}

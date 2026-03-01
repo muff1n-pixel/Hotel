@@ -4,10 +4,9 @@ import DialogContent from "../../Dialog/DialogContent";
 import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { UpdateShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopFurnitureEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
-import { ShopFurnitureData, ShopPageData } from "@pixel63/events";
+import { FurnitureData, FurnitureFlagsData, RoomPositionData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {
@@ -28,8 +27,8 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
     const [diamonds, setDiamonds] = useState(data?.diamonds ?? 0);
 
     const handleUpdate = useCallback(() => {
-        webSocketClient.send<UpdateShopFurnitureEventData>("UpdateShopFurnitureEvent", {
-            id: data?.id ?? null,
+        webSocketClient.sendProtobuff(UpdateShopFurnitureData, UpdateShopFurnitureData.create({
+            id: data?.id,
 
             pageId: data.page.id,
 
@@ -39,7 +38,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
             credits,
             duckets,
             diamonds,
-        });
+        }));
 
         dialogs.closeDialog("edit-shop-furniture");
     }, [dialogs, data, type, color, credits, duckets, diamonds]);
@@ -70,16 +69,16 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <FurnitureImage furnitureData={{
+                        <FurnitureImage furnitureData={FurnitureData.create({
                             id: "unknown",
                             category: "unknown",
                             customParams: [],
-                            dimensions: {
+                            dimensions: RoomPositionData.create({
                                 row: 0,
                                 column: 0,
                                 depth: 0
-                            },
-                            flags: {
+                            }),
+                            flags: FurnitureFlagsData.create({
                                 giftable: false,
                                 inventoryStackable: false,
                                 layable: false,
@@ -89,14 +88,14 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                                 stackable: false,
                                 tradable: false,
                                 walkable: false,
-                            },
+                            }),
                             interactionType: "unknown",
                             name: "unknown",
 
                             placement: "floor",
                             type,
                             color
-                        }}/>
+                        })}/>
                     </div>
 
                     <b>Furniture type</b>

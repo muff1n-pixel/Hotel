@@ -1,12 +1,12 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { SetHomeRoomEventData } from "@shared/Communications/Requests/User/SetHomeRoomEventData.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { SetUserHomeRoomData } from "@pixel63/events";
 
-export default class SetHomeRoomEvent implements IncomingEvent<SetHomeRoomEventData> {
+export default class SetHomeRoomEvent implements ProtobuffListener<SetUserHomeRoomData> {
     public readonly name = "SetHomeRoomEvent";
 
-    async handle(user: User, event: SetHomeRoomEventData) {
-        user.model.homeRoomId = event.roomId;
+    async handle(user: User, payload: SetUserHomeRoomData) {
+        user.model.homeRoomId = payload.roomId;
 
         await user.model.save();
 

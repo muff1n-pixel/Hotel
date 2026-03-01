@@ -1,9 +1,8 @@
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureData, RoomFurnitureMovedData } from "@pixel63/events";
+import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -12,7 +11,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
     private lastExecution: number = 0;
 
-    async use(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void> {
+    async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         // do nothing, since the roller is used automatically
         // but do display a use button in the client to show it's an interactable
     }
@@ -44,9 +43,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         const outgoingEvents: OutgoingEvent[] = [];
 
-        const offsetPosition = this.roomFurniture.getOffsetPosition(1);
+        const offset = this.roomFurniture.getOffsetPosition(1);
 
-        const blockingUser = room.getRoomUserAtPosition(offsetPosition);
+        const blockingUser = room.getRoomUserAtPosition(offset);
 
         if(!blockingUser) {
             const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
@@ -60,6 +59,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 if(user.path) {
                     continue;
                 }
+        
+                const offsetPosition = RoomPositionData.fromJSON(offset);
 
                 const nextFurniture = room.getUpmostFurnitureAtPosition(offsetPosition);
                 
@@ -95,7 +96,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     continue;
                 }
 
-                const offsetPosition = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+                const offset = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+                const offsetPosition = RoomPositionData.fromJSON(offset);
 
                 const nextRoller = room.getAllFurnitureAtPosition(offsetPosition).find((furniture) => furniture.model.furniture.category === "roller");
 

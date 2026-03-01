@@ -1,10 +1,9 @@
 import RoomUser from "../../../../Users/RoomUser";
 import RoomFurniture from "../../../RoomFurniture";
 import WiredTriggerLogic from "../WiredTriggerLogic";
-import { WiredTriggerUserPerformsActionData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserPerformsActionData";
 
-export default class WiredTriggerUserPerformsActionLogic extends WiredTriggerLogic<WiredTriggerUserPerformsActionData> {
-    constructor(roomFurniture: RoomFurniture<WiredTriggerUserPerformsActionData>) {
+export default class WiredTriggerUserPerformsActionLogic extends WiredTriggerLogic {
+    constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
 
@@ -12,12 +11,12 @@ export default class WiredTriggerUserPerformsActionLogic extends WiredTriggerLog
         const actionName = actionId.split('.')[0];
         const actionNumber = actionId.split('.')[1];
 
-        console.log(this.roomFurniture.model.data?.action);
+        console.log(this.roomFurniture.model.data?.wiredTriggerUserPerformsAction?.action);
         console.log(actionName);
 
-        if(this.roomFurniture.model.data?.action === actionName) {
-            if(this.roomFurniture.model.data?.filter && ["Dance", "Sign"].includes(this.roomFurniture.model.data.action)) {
-                if(actionNumber && parseInt(actionNumber) === this.roomFurniture.model.data.filterId) {
+        if(this.roomFurniture.model.data?.wiredTriggerUserPerformsAction?.action === actionName) {
+            if(this.roomFurniture.model.data?.wiredTriggerUserPerformsAction?.filter && ["Dance", "Sign"].includes(this.roomFurniture.model.data.wiredTriggerUserPerformsAction?.action)) {
+                if(actionNumber && parseInt(actionNumber) === this.roomFurniture.model.data.wiredTriggerUserPerformsAction?.filterId) {
                     this.setActive();
                     this.handleTrigger({
                         roomUser

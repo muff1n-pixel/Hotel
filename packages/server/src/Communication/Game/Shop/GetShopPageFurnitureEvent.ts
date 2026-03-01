@@ -1,17 +1,15 @@
 import User from "../../../Users/User.js";
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { GetShopPageFurnitureEventData } from "@shared/Communications/Requests/Shop/GetShopPageFurnitureEventData.js";
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import { ShopPageFurnitureData } from "@pixel63/events";
+import { GetShopPageFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetShopPageFurnitureEvent implements IncomingEvent<GetShopPageFurnitureEventData> {
+export default class GetShopPageFurnitureEvent implements ProtobuffListener<GetShopPageFurnitureData> {
     public readonly name = "GetShopPageFurnitureEvent";
 
-    async handle(user: User, event: GetShopPageFurnitureEventData) {
-        const shopPage = await ShopPageModel.findByPk(event.pageId, {
+    async handle(user: User, payload: GetShopPageFurnitureData) {
+        const shopPage = await ShopPageModel.findByPk(payload.pageId, {
             include: {
                 model: ShopPageFurnitureModel,
                 as: "furniture",

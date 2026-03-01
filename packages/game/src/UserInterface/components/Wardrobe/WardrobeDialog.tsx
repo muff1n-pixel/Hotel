@@ -2,8 +2,7 @@ import { useUser } from "../../hooks/useUser";
 import FigureWardrobeDialog from "./FigureWardrobeDialog";
 import { webSocketClient } from "../../..";
 import { useCallback } from "react";
-import { SetFigureConfigurationEventData } from "@Shared/Communications/Requests/User/SetFigureConfigurationEventData";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, SetUserFigureConfigurationData } from "@pixel63/events";
 
 export type WardrobeDialogProps = {
     hidden?: boolean;
@@ -14,9 +13,9 @@ export default function WardrobeDialog(props: WardrobeDialogProps) {
     const user = useUser();
     
     const handleApply = useCallback((figureConfiguration: FigureConfigurationData) => {
-        webSocketClient.send<SetFigureConfigurationEventData>("SetFigureConfigurationEvent", {
+        webSocketClient.sendProtobuff(SetUserFigureConfigurationData, SetUserFigureConfigurationData.create({
             figureConfiguration
-        });
+        }));
     }, []);
 
     if(!user.figureConfiguration) {

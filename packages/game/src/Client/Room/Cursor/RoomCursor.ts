@@ -4,8 +4,7 @@ import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "../Items/Figure/RoomFigureItem";
 import { clientInstance, webSocketClient } from "../../..";
-import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
-import { PickupRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData";
+import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
@@ -147,10 +146,10 @@ export default class RoomCursor extends EventTarget {
                     const nextDirection = otherEntity.item.furnitureRenderer.getNextDirection();
 
                     if((nextDirection !== otherEntity.item.furnitureRenderer.direction) && roomFurnitureItem.item.position && !roomFurnitureItem.item.positionPathData) {
-                        webSocketClient.send<UpdateRoomFurnitureEventData>("UpdateRoomFurnitureEvent", {
-                            roomFurnitureId: roomFurnitureItem.data.id,
+                        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                            id: roomFurnitureItem.data.id,
                             direction: nextDirection
-                        });
+                        }));
 
                         roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position, [
                             {
@@ -168,9 +167,9 @@ export default class RoomCursor extends EventTarget {
                 }
                 else if(event.ctrlKey) {
                     if(this.roomRenderer.roomInstance.hasRights || roomFurnitureItem.data.userId === this.roomRenderer.roomInstance.clientInstance.user.value?.id) {
-                        webSocketClient.send<PickupRoomFurnitureEventData>("PickupRoomFurnitureEvent", {
-                            roomFurnitureId: roomFurnitureItem.data.id,
-                        });
+                        webSocketClient.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
+                            id: roomFurnitureItem.data.id
+                        }));
                     }
                     
                     return;

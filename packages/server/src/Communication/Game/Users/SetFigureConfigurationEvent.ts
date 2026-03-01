@@ -1,14 +1,16 @@
-import { RoomUserData } from "@pixel63/events";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
+import { RoomUserData, SetUserFigureConfigurationData } from "@pixel63/events";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { SetFigureConfigurationEventData } from "@shared/Communications/Requests/User/SetFigureConfigurationEventData.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class SetFigureConfigurationEvent implements IncomingEvent<SetFigureConfigurationEventData> {
+export default class SetFigureConfigurationEvent implements ProtobuffListener<SetUserFigureConfigurationData> {
     public readonly name = "SetFigureConfigurationEvent";
 
-    async handle(user: User, event: SetFigureConfigurationEventData) {
-        user.model.figureConfiguration = event.figureConfiguration;
+    async handle(user: User, payload: SetUserFigureConfigurationData) {
+        if(!payload.figureConfiguration) {
+            throw new Error();
+        }
+        
+        user.model.figureConfiguration = payload.figureConfiguration;
 
         await user.model.save();
 

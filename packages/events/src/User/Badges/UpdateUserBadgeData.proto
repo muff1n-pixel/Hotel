@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message UpdateUserBadgeData {
+    string badge_id = 1;
+    bool equipped = 2;
+}

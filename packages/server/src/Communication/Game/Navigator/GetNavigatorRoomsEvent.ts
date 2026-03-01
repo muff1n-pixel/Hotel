@@ -1,4 +1,3 @@
-import { GetNavigatorRoomsEventData } from "@shared/Communications/Requests/Navigator/GetNavigatorRoomsEventData.js";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
@@ -6,17 +5,18 @@ import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { game } from "../../../index.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { Op } from "sequelize";
-import { NavigatorData } from "@pixel63/events";
+import { GetNavigatorData, NavigatorData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetNavigatorRoomsEvent implements IncomingEvent<GetNavigatorRoomsEventData> {
+export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     public readonly name = "GetNavigatorRoomsEvent";
 
-    async handle(user: User, event: GetNavigatorRoomsEventData): Promise<void> {
-        if(event.type === "search") {
+    async handle(user: User, payload: GetNavigatorData): Promise<void> {
+        if(payload.search) {
             const roomModels = await RoomModel.findAll({
                 where: {
                     name: {
-                        [Op.like]: `%${event.search}%`
+                        [Op.like]: `%${payload.search}%`
                     }
                 },
                 limit: 20
@@ -46,7 +46,7 @@ export default class GetNavigatorRoomsEvent implements IncomingEvent<GetNavigato
             return;
         }
 
-        switch(event.category) {
+        switch(payload.category) {
             case "public": {
                 const roomModels = await RoomModel.findAll({
                     where: {
@@ -172,7 +172,7 @@ export default class GetNavigatorRoomsEvent implements IncomingEvent<GetNavigato
             }
 
             default:
-                console.warn("Unrecognized navigator tab " + event.category);
+                console.warn("Unrecognized navigator tab " + payload.category);
                 break;
         }
     }

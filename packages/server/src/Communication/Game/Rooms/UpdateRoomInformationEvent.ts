@@ -1,31 +1,29 @@
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { UpdateRoomInformationEventData } from "@shared/Communications/Requests/Rooms/UpdateRoomInformationEventData.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import sharp from "sharp";
-import { RoomInformationData } from "@pixel63/events";
+import { RoomInformationData, UpdateRoomInformationData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateRoomInformationEventData> {
+export default class UpdateRoomInformationEvent implements ProtobuffListener<UpdateRoomInformationData> {
     public readonly name = "UpdateRoomInformationEvent";
 
-    async handle(user: User, event: UpdateRoomInformationEventData) {
+    async handle(user: User, payload: UpdateRoomInformationData) {
         if(!user.room) {
             throw new Error("User is not in a room.");
         }
 
-        if(event.name !== undefined) {
-            user.room.model.name = event.name;
+        if(payload.name !== undefined) {
+            user.room.model.name = payload.name;
         }
         
-        if(event.description !== undefined) {
-            user.room.model.description = event.description;
+        if(payload.description !== undefined) {
+            user.room.model.description = payload.description;
         }
         
-        if(event.category !== undefined) {
+        if(payload.category !== undefined) {
             const category = await RoomCategoryModel.findOne({
                 where: {
-                    id: event.category
+                    id: payload.category
                 }
             });
 
@@ -38,20 +36,20 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
             }
         }
 
-        if(event.maxUsers !== undefined) {
-            if(event.maxUsers >= 5 && event.maxUsers <= 50 && event.maxUsers % 5 === 0) {
-                user.room.model.maxUsers = event.maxUsers;
+        if(payload.maxUsers !== undefined) {
+            if(payload.maxUsers >= 5 && payload.maxUsers <= 50 && payload.maxUsers % 5 === 0) {
+                user.room.model.maxUsers = payload.maxUsers;
             }
         }
 
-        if(event.thumbnail !== undefined) {
-            user.room.model.thumbnail = await this.getValidatedThumbnailImage(event.thumbnail);
+        if(payload.thumbnail !== undefined) {
+            user.room.model.thumbnail = await this.getValidatedThumbnailImage(payload.thumbnail);
         }
 
         const permissions = await user.getPermissions();
 
-        if(event.type && permissions.hasPermission("room:type")) {
-            user.room.model.type = event.type;
+        if(payload.type && permissions.hasPermission("room:type")) {
+            user.room.model.type = payload.type;
         }
 
         if(user.room.model.changed()) {

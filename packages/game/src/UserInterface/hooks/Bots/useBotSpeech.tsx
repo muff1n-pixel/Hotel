@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { webSocketClient } from "../../..";
-import { GetRoomBotSpeechEventData } from "@Shared/Communications/Requests/Rooms/Bots/GetRoomBotSpeechEventData";
-import { BotSpeechData, UserBotSpeechData } from "@pixel63/events";
+import { BotSpeechData, GetUserBotSpeechData, UserBotSpeechData } from "@pixel63/events";
 
 export function useBotSpeech(userBotId: string) {
     const [value, setValue] = useState<BotSpeechData | null>(null);
@@ -15,9 +14,9 @@ export function useBotSpeech(userBotId: string) {
             },
         });
 
-        webSocketClient.send<GetRoomBotSpeechEventData>("GetRoomBotSpeechEvent", {
-            userBotId
-        });
+        webSocketClient.sendProtobuff(GetUserBotSpeechData, GetUserBotSpeechData.create({
+            id: userBotId
+        }));
 
         return () => {
             webSocketClient.removeProtobuffListener(UserBotSpeechData, listener);

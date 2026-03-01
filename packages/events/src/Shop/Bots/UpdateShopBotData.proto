@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message UpdateShopBotData {
+    optional string id = 1;
+
+    string page_id = 2;
+
+    string type = 3;
+
+    string name = 4;
+    optional string motto = 5;
+
+    FigureConfigurationData figure_configuration = 6;
+
+    uint32 credits = 7;
+    uint32 duckets = 8;
+    uint32 diamonds = 9;
+}

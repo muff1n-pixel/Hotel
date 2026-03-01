@@ -1,16 +1,15 @@
 import RoomFurniture from "../../../RoomFurniture";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 import RoomUser from "../../../../Users/RoomUser";
-import { WiredUserSpecifierData } from "@shared/Interfaces/Room/Furniture/Wired/WiredUserSpecifierData";
 
-export default class WiredTriggerUserClickUserLogic extends WiredTriggerLogic<WiredUserSpecifierData> {
-    constructor(roomFurniture: RoomFurniture<WiredUserSpecifierData>) {
+export default class WiredTriggerUserClickUserLogic extends WiredTriggerLogic {
+    constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
     
     public async handleUserClickUser(roomUser: RoomUser, targetUser: RoomUser): Promise<void> {
-        if(this.roomFurniture.model.data?.match === "user") {
-            if(targetUser.user.model.name === this.roomFurniture.model.data.matchUser) {
+        if(this.roomFurniture.model.data?.wiredUserSpecifier?.match === "user") {
+            if(targetUser.user.model.name === this.roomFurniture.model.data.wiredUserSpecifier.matchUser) {
                 this.setActive();
                 
                 this.handleTrigger({

@@ -3,11 +3,10 @@ import { useUserBadges } from "../../../../hooks/useUserBadges";
 import BadgeImage from "../../../Badges/BadgeImage";
 import { useUser } from "../../../../hooks/useUser";
 import { useCallback } from "react";
-import { SetMottoEventData } from "@Shared/Communications/Requests/User/SetMottoEventData";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
-import { RoomUserData } from "@pixel63/events";
+import { RoomUserData, SetUserMottoData } from "@pixel63/events";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -23,9 +22,9 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             return;
         }
 
-        webSocketClient.send<SetMottoEventData>("SetMottoEvent", {
+        webSocketClient.sendProtobuff(SetUserMottoData, SetUserMottoData.create({
             motto
-        });
+        }));
     }, [targetUser, user]);
 
     return (

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+
+message PlaceRoomBotData {
+    string id = 1;
+
+    RoomPositionData position = 2;
+    uint32 direction = 3;
+}

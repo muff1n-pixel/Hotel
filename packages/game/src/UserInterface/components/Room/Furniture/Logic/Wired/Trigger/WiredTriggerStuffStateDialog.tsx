@@ -6,26 +6,25 @@ import WiredDivider from "../../../../../Dialog/Wired/WiredDivider";
 import WiredSection from "../../../../../Dialog/Wired/WiredSection";
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../../Dialog/Wired/WiredButton";
-import { WiredTriggerStuffStateData } from "@Shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerStuffStateData";
 import { webSocketClient } from "../../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
 import WiredFurniturePicker from "../../../../../Dialog/Wired/WiredFurniturePicker";
 import WiredFurnitureSource from "../../../../../Dialog/Wired/WiredFurnitureSource";
 import WiredRadio from "../../../../../Dialog/Wired/WiredRadio";
 import { useRoomInstance } from "../../../../../../hooks/useRoomInstance";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredTriggerStuffStateDialog = {
-    furniture: RoomInstanceFurniture<WiredTriggerStuffStateData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_says_something";
 };
 
-export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredTriggerStuffStateDialog>) {
+export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const room = useRoomInstance();
 
-    const [trigger, setTrigger] = useState(data.furniture.data.data?.trigger ?? "all");
+    const [trigger, setTrigger] = useState(data.data.data?.wiredTriggerStuffState?.trigger ?? "all");
 
-    const [furnitureIds, setFurnitureIds] = useState(data.furniture.data.data?.furnitureIds ?? []);
-    const [furnitureSource, setFurnitureSource] = useState(data.furniture.data.data?.furnitureSource ?? "list");
+    const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredTriggerStuffState?.selection?.furnitureIds ?? []);
+    const [furnitureSource, setFurnitureSource] = useState(data.data.data?.wiredTriggerStuffState?.selection?.furnitureSource ?? "list");
 
     const handleApply = useCallback(() => {
         if(!room) {
@@ -38,23 +37,28 @@ export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurn
             return roomFurniture.furniture.animation;
         });
 
-        webSocketClient.send<SetFurnitureDataEventData<WiredTriggerStuffStateData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
-            data: {
-                furnitureIds,
-                furnitureSource,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
 
-                trigger,
-                furnitureTriggerStates
+            data: {
+                wiredTriggerStuffState: {
+                    selection: {
+                        furnitureIds,
+                        furnitureSource
+                    },
+
+                    trigger,
+                    furnitureTriggerStates
+                }
             }
-        });
+        }));
 
         onClose();
     }, [furnitureIds, furnitureSource, trigger, room, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

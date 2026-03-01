@@ -5,7 +5,6 @@ import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { useRoomInstance } from "../../../../../hooks/useRoomInstance";
-import { RoomFurnitureTrophyData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureTrophyData";
 
 export type RoomFurnitureTrophyDialogData = {
     furniture: RoomInstanceFurniture;
@@ -28,7 +27,7 @@ export default function RoomFurnitureTrophyDialog({ data, onClose }: RoomFurnitu
             return;
         }
 
-        const imageName = ["silver", "gold", "silver", "bronze"][data.furniture.data.color ?? data.furniture.data.furniture.color ?? 0];
+        const imageName = ["silver", "gold", "silver", "bronze"][data.item.furnitureRenderer.color ?? 0];
 
         AssetFetcher.fetchImage(`/assets/trophies/${imageName}.png`).then((image) => {
             const context = canvasRef.current?.getContext("2d");
@@ -104,7 +103,7 @@ export default function RoomFurnitureTrophyDialog({ data, onClose }: RoomFurnitu
 
                 display: "flex",
             }}>
-                <textarea readOnly={!room?.hasRights} value={(data.furniture.data.data as RoomFurnitureTrophyData).engraving} style={{
+                <textarea readOnly={!room?.hasRights} value={data.data.data?.trophy?.engraving} style={{
                     flex: 1,
 
                     outline: "none",
@@ -136,8 +135,8 @@ export default function RoomFurnitureTrophyDialog({ data, onClose }: RoomFurnitu
                 fontSize: 12,
                 fontFamily: "Ubuntu Bold"
             }}>
-                <div>{(data.furniture.data.data as RoomFurnitureTrophyData).date}</div>
-                <div>{(data.furniture.data.data as RoomFurnitureTrophyData).author}</div>
+                <div>{data.data.data?.trophy?.date}</div>
+                <div>{data.data.data?.trophy?.author}</div>
             </div>
         </div>
     );

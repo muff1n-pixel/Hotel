@@ -1,17 +1,10 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
-import { RoomMoodlightData } from "@shared/Interfaces/Room/RoomMoodlightData.js";
-import { SetFurnitureDataEventData } from "@shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData.js";
-import { RoomFurnitureBackgroundData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundData.js";
-import { RoomFurnitureBackgroundTonerData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData.js";
-import { RoomFurniturePostitData } from "@shared/Interfaces/Room/Furniture/RoomFurniturePostitData.js";
-import { RoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class SetFurnitureDataEvent implements IncomingEvent<SetFurnitureDataEventData<unknown>> {
-    public readonly name = "SetFurnitureDataEvent";
-
-    async handle(user: User, event: SetFurnitureDataEventData<unknown>) {
+export default class SetFurnitureDataEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
+    async handle(user: User, payload: UpdateRoomFurnitureData) {
         if(!user.room) {
             return;
         }
@@ -22,110 +15,56 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
             throw new Error("User does not have rights.");
         }
 
-        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === event.furnitureId);
+        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.id);
 
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
-
-        if(this.furnitureIsDimmer(furniture, event.data)) {
-            await this.handleSingleActiveFurniture(user, furniture);
-
-            furniture.model.data = {
-                enabled: event.data.enabled,
-                backgroundOnly: event.data.backgroundOnly,
-                color: event.data.color,
-                alpha: event.data.alpha
-            } satisfies RoomMoodlightData;
-
-            furniture.model.animation = (event.data.enabled)?(1):(0);
-
-            await furniture.model.save();
-
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
-                furnitureUpdated: [
-                    furniture.model.toJSON()
-                ]
-            }));
+        
+        if(payload.direction !== undefined) {
+            if(payload.position === undefined) {
+                furniture.setDirection(payload.direction);
+            }
+            else {
+                furniture.model.direction = payload.direction;
+            }
         }
-        else if(this.isFurnitureBackgroundType(furniture, event.data)) {
-            furniture.model.data = {
-                imageUrl: event.data.imageUrl,
-                position: {
-                    x: event.data.position.x,
-                    y: event.data.position.y,
-                    z: event.data.position.z,
-                }
-            } satisfies RoomFurnitureBackgroundData;
 
-            await furniture.model.save();
-
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
-                furnitureUpdated: [
-                    furniture.model.toJSON()
-                ]
-            }));
+        if(payload.position !== undefined) {
+            furniture.setPosition(payload.position, false);
         }
-        else if(this.isFurnitureBackgroundTonerType(furniture, event.data)) {
-            await this.handleSingleActiveFurniture(user, furniture);
 
-            furniture.model.data = {
-                enabled: event.data.enabled,
-                color: event.data.color
-            } satisfies RoomFurnitureBackgroundTonerData;
-
-            furniture.model.animation = (event.data.enabled)?(1):(0);
-
-            await furniture.model.save();
-
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
-                furnitureUpdated: [
-                    furniture.model.toJSON()
-                ]
-            }));
+        if(payload.color !== undefined && furniture.model.furniture.interactionType === "postit") {
+            furniture.model.color = payload.color;
         }
-        else if(this.isFurniturePostitType(furniture, event.data)) {
-            await this.handleSingleActiveFurniture(user, furniture);
 
-            furniture.model.data = {
-                text: event.data.text
-            } satisfies RoomFurniturePostitData;
+        if(payload.data) {
+            if(furniture.model.furniture.interactionType === "dimmer" && payload.data?.moodlight) {
+                await this.handleSingleActiveFurniture(user, furniture);
 
-            await furniture.model.save();
+                furniture.model.data = payload.data;
 
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
-                furnitureUpdated: [
-                    furniture.model.toJSON()
-                ]
-            }));
+                furniture.model.animation = (payload.data.moodlight.enabled)?(1):(0);
+            }
+            else if(furniture.model.furniture.interactionType === "background_toner" && payload.data?.toner) {
+                await this.handleSingleActiveFurniture(user, furniture);
+
+                furniture.model.data = payload.data;
+
+                furniture.model.animation = (payload.data.toner.enabled)?(1):(0);
+            }
+            else {
+                furniture.model.data = payload.data
+            }
         }
-        else if(furniture.model.furniture.interactionType.startsWith("wf_")) {
-            furniture.model.data = event.data;
 
-            await furniture.model.save();
-            
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
-                furnitureUpdated: [
-                    furniture.model.toJSON()
-                ]
-            }));
-        }
-    }
+        await furniture.model.save();
 
-    private furnitureIsDimmer(furniture: RoomFurniture, data: unknown): data is RoomMoodlightData {
-        return furniture.model.furniture.interactionType === "dimmer";
-    }
-
-    private isFurnitureBackgroundType(furniture: RoomFurniture, data: unknown): data is RoomFurnitureBackgroundData {
-        return furniture.model.furniture.interactionType === "ads_bg";
-    }
-
-    private isFurnitureBackgroundTonerType(furniture: RoomFurniture, data: unknown): data is RoomFurnitureBackgroundTonerData {
-        return furniture.model.furniture.interactionType === "background_toner";
-    }
-
-    private isFurniturePostitType(furniture: RoomFurniture, data: unknown): data is RoomFurniturePostitData {
-        return furniture.model.furniture.interactionType === "postit";
+        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+            furnitureUpdated: [
+                furniture.model.toJSON()
+            ]
+        }));
     }
 
     private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {
@@ -139,10 +78,12 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
             activeFurniture.model.animation = 0;
 
             if(activeFurniture.model.changed()) {
-                activeFurniture.model.data = {
-                    ...activeFurniture.getData<RoomMoodlightData>(),
-                    enabled: false
-                };
+                if(activeFurniture.model.data?.moodlight) {
+                    activeFurniture.model.data.moodlight.enabled = false;
+                }
+                else if(activeFurniture.model.data?.toner) {
+                    activeFurniture.model.data.toner.enabled = false;
+                }
                 
                 await activeFurniture.model.save();
     

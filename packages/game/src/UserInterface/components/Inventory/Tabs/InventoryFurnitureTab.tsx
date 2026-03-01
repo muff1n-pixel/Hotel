@@ -6,11 +6,9 @@ import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { PlaceFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceFurnitureEventData";
-import { PlaceRoomContentFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceRoomContentFurnitureEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
-import { UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
+import { PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
@@ -107,14 +105,14 @@ export default function InventoryFurnitureTab() {
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            webSocketClient.send<PlaceFurnitureEventData>("PlaceFurnitureEvent", {
-                userFurnitureId: activeFurniture.id,
+            webSocketClient.sendProtobuff(PlaceRoomFurnitureData, PlaceRoomFurnitureData.create({
+                id: activeFurniture.id,
                 furnitureId: activeFurniture.furniture!.id,
                 stackable: activeFurniture.furniture!.flags!.inventoryStackable,
                 
                 position,
                 direction
-            });
+            }));
         }, () => {
             roomFurniturePlacer.destroy();
 
@@ -131,11 +129,11 @@ export default function InventoryFurnitureTab() {
         }
 
         if(activeFurniture.furniture?.type === "wallpaper" || activeFurniture.furniture?.type === "floor") {
-            webSocketClient.send<PlaceRoomContentFurnitureEventData>("PlaceRoomContentFurnitureEvent", {
-                userFurnitureId: activeFurniture.id,
+            webSocketClient.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
+                id: activeFurniture.id,
                 furnitureId: activeFurniture.furniture?.id,
                 stackable: activeFurniture.furniture?.flags?.inventoryStackable ?? false
-            });
+            }));
 
             return;
         }

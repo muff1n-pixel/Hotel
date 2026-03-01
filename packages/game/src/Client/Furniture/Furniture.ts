@@ -49,7 +49,7 @@ export default class Furniture {
         this.frame = 0;
     }
 
-    private readonly type: string;
+    public readonly type: string;
 
     constructor(type: string | undefined, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
         if(!type) {

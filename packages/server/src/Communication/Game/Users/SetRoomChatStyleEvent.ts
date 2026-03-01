@@ -1,12 +1,12 @@
+import { SetUserRoomChatStyleData } from "@pixel63/events";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { SetRoomChatStyleEventData } from "@shared/Communications/Requests/User/SetRoomChatStyleEventData.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class SetRoomChatStyleEvent implements IncomingEvent<SetRoomChatStyleEventData> {
+export default class SetRoomChatStyleEvent implements ProtobuffListener<SetUserRoomChatStyleData> {
     public readonly name = "SetRoomChatStyleEvent";
 
-    async handle(user: User, event: SetRoomChatStyleEventData) {
-        user.model.roomChatStyleId = event.id;
+    async handle(user: User, payload: SetUserRoomChatStyleData) {
+        user.model.roomChatStyleId = payload.id;
 
         await user.model.save();
     }

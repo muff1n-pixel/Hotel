@@ -9,7 +9,7 @@ import DialogButton from "../../Dialog/Button/DialogButton";
 import useFurnitureTypes from "../../../hooks/Furniture/useFurnitureTypes";
 import Selection from "../../Form/Selection";
 import { webSocketClient } from "../../../..";
-import { UpdateFurnitureEventData } from "@Shared/Communications/Requests/Furniture/UpdateFurnitureEventData";
+import { UpdateFurnitureData } from "@pixel63/events";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;
@@ -29,8 +29,8 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
     const [flags, setFlags] = useState(data.flags);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<UpdateFurnitureEventData>("UpdateFurnitureEvent", {
-            furnitureId: data.id,
+        webSocketClient.sendProtobuff(UpdateFurnitureData, UpdateFurnitureData.create({
+            id: data.id,
 
             name,
             description,
@@ -39,8 +39,9 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
             interactionType,
 
             flags,
+
             depth
-        });
+        }));
     }, [ data, name, description, category, interactionType, depth, flags ]);
 
     return (

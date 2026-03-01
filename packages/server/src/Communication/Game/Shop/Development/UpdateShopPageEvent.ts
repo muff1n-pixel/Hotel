@@ -1,59 +1,59 @@
 import User from "../../../../Users/User.js";
 import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
-import { UpdateShopPageEventData } from "@shared/Communications/Requests/Shop/Development/UpdateShopPageEventData.js";
 import GetShopPagesEvent from "../GetShopPagesEvent.js";
 import { randomUUID } from "node:crypto";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { UpdateShopPageData } from "@pixel63/events";
 
-export default class UpdateShopPageEvent implements IncomingEvent<UpdateShopPageEventData> {
+export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShopPageData> {
     public readonly name = "UpdateShopPageEvent";
 
-    async handle(user: User, event: UpdateShopPageEventData) {
+    async handle(user: User, payload: UpdateShopPageData) {
         const permissions = await user.getPermissions();
 
         if(!permissions.hasPermission("shop:edit")) {
             throw new Error("User is not privileged to edit the shope.");
         }
         
-        if(event.id !== null) {
+        if(payload.id !== undefined) {
             await ShopPageModel.update({
-                parentId: event.parentId ?? null,
+                parentId: payload.parentId ?? null,
 
-                title: event.title,
-                description: event.description ?? null,
+                title: payload.title,
+                description: payload.description ?? null,
 
-                category: event.category,
+                category: payload.category,
 
-                type: event.type ?? "default",
+                type: payload.type ?? "default",
 
-                icon: event.icon ?? null,
-                header: event.header ?? null,
-                teaser: event.teaser ?? null,
+                icon: payload.icon ?? null,
+                header: payload.header ?? null,
+                teaser: payload.teaser ?? null,
 
-                index: event.index,
+                index: payload.index,
             }, {
                 where: {
-                    id: event.id
+                    id: payload.id
                 }
             });
         }
         else {
             await ShopPageModel.create({
                 id: randomUUID(),
-                parentId: event.parentId ?? null,
+                parentId: payload.parentId ?? null,
 
-                title: event.title,
-                description: event.description ?? null,
+                title: payload.title,
+                description: payload.description ?? null,
 
-                category: event.category,
+                category: payload.category,
 
-                type: event.type ?? "default",
+                type: payload.type ?? "default",
 
-                icon: event.icon ?? null,
-                header: event.header ?? null,
-                teaser: event.teaser ?? null,
+                icon: payload.icon ?? null,
+                header: payload.header ?? null,
+                teaser: payload.teaser ?? null,
 
-                index: event.index,
+                index: payload.index,
             });
         }
 

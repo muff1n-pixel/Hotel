@@ -14,11 +14,8 @@ import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLog
 import RoomUser from "../Users/RoomUser.js";
 import RoomFurnitureFortunaLogic from "./Logic/RoomFurnitureFortunaLogic.js";
 import WiredTriggerUserSaysSomethingLogic from "./Logic/Wired/Trigger/WiredTriggerUserSaysSomethingLogic.js";
-import { WiredTriggerUserSaysSomethingData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerUserSaysSomethingData.js";
 import WiredActionShowMessageLogic from "./Logic/Wired/Action/WiredActionShowMessageLogic.js";
-import { WiredActionShowMessageData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData.js";
 import WiredActionTeleportToLogic from "./Logic/Wired/Action/WiredActionTeleportToLogic.js";
-import { WiredActionTeleportToFurnitureData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionTeleportToFurnitureData.js";
 import WiredTriggerUserEntersRoomLogic from "./Logic/Wired/Trigger/WiredTriggerUserEntersRoomLogic.js";
 import WiredTriggerUserWalksOnFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOnFurnitureLogic.js";
 import WiredTriggerUserWalksOffFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOffFurnitureLogic.js";
@@ -34,12 +31,12 @@ import WiredTriggerUserPerformsActionLogic from "./Logic/Wired/Trigger/WiredTrig
 import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollisionLogic.js";
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
-import { RoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
 
-    constructor(public readonly room: Room, public readonly model: UserFurnitureModel<T>) {
+    constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }
@@ -195,57 +192,57 @@ export default class RoomFurniture<T = unknown> {
                     return this.category = new RoomInvisibleFurnitureControlLogic(this);
 
                 case "wf_trg_says_something":
-                    return this.category = new WiredTriggerUserSaysSomethingLogic(this as RoomFurniture<WiredTriggerUserSaysSomethingData>);
+                    return this.category = new WiredTriggerUserSaysSomethingLogic(this);
 
                 case "wf_trg_enter_room":
-                    return this.category = new WiredTriggerUserEntersRoomLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserEntersRoomLogic(this);
 
                 case "wf_trg_leave_room":
-                    return this.category = new WiredTriggerUserLeavesRoomLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserLeavesRoomLogic(this);
 
                 case "wf_trg_walks_on_furni":
-                    return this.category = new WiredTriggerUserWalksOnFurnitureLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserWalksOnFurnitureLogic(this);
 
                 case "wf_trg_walks_off_furni":
-                    return this.category = new WiredTriggerUserWalksOffFurnitureLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserWalksOffFurnitureLogic(this);
 
                 case "wf_trg_state_changed":
-                    return this.category = new WiredTriggerStateChangedLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerStateChangedLogic(this);
 
                 case "wf_trg_stuff_state":
-                    return this.category = new WiredTriggerStuffStateLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerStuffStateLogic(this);
 
                 case "wf_trg_click_furni":
-                    return this.category = new WiredTriggerUserClickFurniLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserClickFurniLogic(this);
 
                 case "wf_trg_click_user":
-                    return this.category = new WiredTriggerUserClickUserLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserClickUserLogic(this);
 
                 case "wf_trg_click_tile":
-                    return this.category = new WiredTriggerUserClickTileLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserClickTileLogic(this);
 
                 case "wf_trg_periodically":
                 case "wf_trg_period_short":
                 case "wf_trg_period_long":
-                    return this.category = new WiredTriggerPeriodicallyLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerPeriodicallyLogic(this);
 
                 case "wf_trg_user_performs_action":
-                    return this.category = new WiredTriggerUserPerformsActionLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerUserPerformsActionLogic(this);
 
                 case "wf_trg_collision":
                     return this.category = new WiredTriggerCollisionLogic(this);
                     
                 case "wf_act_show_message":
-                    return this.category = new WiredActionShowMessageLogic(this as RoomFurniture<WiredActionShowMessageData>);
+                    return this.category = new WiredActionShowMessageLogic(this);
 
                 case "wf_act_teleport_to":
-                    return this.category = new WiredActionTeleportToLogic(this as RoomFurniture<WiredActionTeleportToFurnitureData>);
+                    return this.category = new WiredActionTeleportToLogic(this);
 
                 case "wf_act_send_signal":
-                    return this.category = new WiredActionSendSignalLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredActionSendSignalLogic(this);
 
                 case "wf_trg_recv_signal":
-                    return this.category = new WiredTriggerReceiveSignalLogic(this as RoomFurniture<any>);
+                    return this.category = new WiredTriggerReceiveSignalLogic(this);
             }
 
             if(!this.category) {
@@ -256,7 +253,7 @@ export default class RoomFurniture<T = unknown> {
         return this.category;
     }
 
-    public getOffsetPosition(offset: number, direction: number = this.model.direction) {
+    public getOffsetPosition(offset: number, direction: number = this.model.direction): RoomPositionOffsetData {
         const position = {...this.model.position};
 
         switch(direction) {
@@ -277,7 +274,7 @@ export default class RoomFurniture<T = unknown> {
                 break;
         }
 
-        return position;
+        return RoomPositionOffsetData.fromJSON(position);
     }
 
     public async setAnimation(animation: number) {

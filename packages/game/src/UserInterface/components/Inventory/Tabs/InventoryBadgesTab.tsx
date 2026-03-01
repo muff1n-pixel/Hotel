@@ -2,9 +2,8 @@ import DialogButton from "../../Dialog/Button/DialogButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
-import { UpdateUserBadgeEventData } from "@Shared/Communications/Requests/Inventory/Badges/UpdateUserBadgeEventData";
 import BadgeImage from "../../Badges/BadgeImage";
-import { UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
+import { UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
 
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
@@ -53,10 +52,10 @@ export default function InventoryBadgesTab() {
             return;
         }
 
-        webSocketClient.send<UpdateUserBadgeEventData>("UpdateUserBadgeEvent", {
+        webSocketClient.sendProtobuff(UpdateUserBadgeData, UpdateUserBadgeData.create({
             badgeId: activeBadge.id,
             equipped: !activeBadge.equipped
-        });
+        }));
     }, [activeBadge]);
 
     if(!userBadges.length) {

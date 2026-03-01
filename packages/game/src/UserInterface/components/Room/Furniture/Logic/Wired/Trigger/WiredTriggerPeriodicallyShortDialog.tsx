@@ -6,33 +6,34 @@ import WiredDivider from "../../../../../Dialog/Wired/WiredDivider";
 import WiredSection from "../../../../../Dialog/Wired/WiredSection";
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../../Dialog/Wired/WiredButton";
-import { WiredTriggerPeriodicallyData } from "@Shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerPeriodicallyData";
 import { webSocketClient } from "../../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
 import WiredSlider from "../../../../../Dialog/Wired/Slider/WiredSlider";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredTriggerPeriodicallyShortDialog = {
-    furniture: RoomInstanceFurniture<WiredTriggerPeriodicallyData>;
+    furniture: RoomInstanceFurniture;
     type: "wf_trg_says_something";
 };
 
-export default function WiredTriggerPeriodicallyShortDialog({ data, onClose }: RoomFurnitureLogicDialogProps<WiredTriggerPeriodicallyShortDialog>) {
-    const [seconds, setSeconds] = useState(data.furniture.data.data?.seconds ?? 5);
+export default function WiredTriggerPeriodicallyShortDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [seconds, setSeconds] = useState(data.data.data?.wiredTriggerPeriodically?.seconds ?? 5);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<WiredTriggerPeriodicallyData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
             data: {
-                seconds,
+                wiredTriggerPeriodically: {
+                    seconds
+                }
             }
-        });
+        }));
 
         onClose();
     }, [seconds, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.furniture.data}/>
+            <WiredFurniture furniture={data.data}/>
 
             <WiredDivider/>
 

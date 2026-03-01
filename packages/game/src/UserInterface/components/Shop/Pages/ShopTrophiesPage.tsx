@@ -4,7 +4,6 @@ import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { clientInstance, webSocketClient } from "../../../..";
-import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
@@ -12,7 +11,7 @@ import FurnitureImage from "../../Furniture/FurnitureImage";
 import TextArea from "../../Form/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
 import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
-import { ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -87,7 +86,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                     return;
                 }
 
-                if(activeFurnitureRef.current) {
+                if(activeFurnitureRef.current && activeFurniture.furniture) {
                     clientInstance.flyingFurnitureIcons.value!.push({
                         id: Math.random().toString(),
                         furniture: activeFurniture.furniture,
@@ -102,12 +101,15 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
             once: true
         });
 
-        webSocketClient.send<PurchaseShopFurnitureEventData>("PurchaseShopFurnitureEvent", {
-            shopFurnitureId: activeFurniture.id,
+        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
+            id: activeFurniture.id,
+
             data: {
-                engraving
+                trophy: {
+                    engraving
+                }
             }
-        });
+        }));
     }, [activeFurniture, engraving, activeFurnitureRef]);
 
     return (

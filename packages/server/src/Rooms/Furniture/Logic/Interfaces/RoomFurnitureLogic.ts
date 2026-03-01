@@ -1,11 +1,10 @@
-import { UseRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../../Users/RoomUser.js";
-import RoomFurniture from "../../RoomFurniture.js";
 
 export type RoomFurnitureHandleUserChatResult = { blockUserChat?: boolean; } | null;
 
 export default interface RoomFurnitureLogic {
-    use?(roomUser: RoomUser, event: UseRoomFurnitureEventData): Promise<void>;
+    use?(roomUser: RoomUser, event: UseRoomFurnitureData): Promise<void>;
 
     handleUserEnteredRoom?(roomUser: RoomUser): Promise<void>;
     handleUserChat?(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult>;

@@ -1,50 +1,47 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { UpdateRoomBotEventData } from "@shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomBotsData } from "@pixel63/events";
+import { RoomBotsData, UpdateRoomBotData } from "@pixel63/events";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class UpdateRoomBotEvent implements IncomingEvent<UpdateRoomBotEventData> {
-    public readonly name = "UpdateRoomBotEvent";
-
-    async handle(user: User, event: UpdateRoomBotEventData) {
+export default class UpdateRoomBotEvent implements ProtobuffListener<UpdateRoomBotData> {
+    async handle(user: User, payload: UpdateRoomBotData) {
         if(!user.room) {
             return;
         }
 
-        const bot = user.room.getBot(event.userBotId);
+        const bot = user.room.getBot(payload.id);
 
         if(bot.model.user.id !== user.model.id) {
             throw new Error("User does not own the bot.");
         }
 
-        if(event.direction !== undefined) {
-            bot.model.direction = event.direction;
+        if(payload.direction !== undefined) {
+            bot.model.direction = payload.direction;
         }
 
-        if(event.position !== undefined) {
-            bot.setPosition(event.position, false);
+        if(payload.position !== undefined) {
+            bot.setPosition(payload.position, false);
         }
 
-        if(event.figureConfiguration !== undefined) {
-            bot.model.figureConfiguration = event.figureConfiguration;
+        if(payload.figureConfiguration !== undefined) {
+            bot.model.figureConfiguration = payload.figureConfiguration;
         }
 
-        if(event.motto !== undefined) {
-            bot.model.motto = event.motto;
+        if(payload.motto !== undefined) {
+            bot.model.motto = payload.motto;
         }
 
-        if(event.relaxed !== undefined) {
-            bot.model.relaxed = event.relaxed === true;
+        if(payload.relaxed !== undefined) {
+            bot.model.relaxed = payload.relaxed === true;
         }
 
-        if(event.speech !== undefined) {
+        if(payload.speech !== undefined) {
             bot.model.speech = {
-                automaticChat: event.speech.automaticChat === true,
-                automaticChatDelay: Math.max(5, Math.min(5 * 60, event.speech.automaticChatDelay)),
-                randomizeMessages: event.speech.randomizeMessages === true,
+                $type: "BotSpeechData",
+                automaticChat: payload.speech.automaticChat === true,
+                automaticChatDelay: Math.max(5, Math.min(5 * 60, payload.speech.automaticChatDelay)),
+                randomizeMessages: payload.speech.randomizeMessages === true,
 
-                messages: event.speech.messages.filter((message) => message.length > 0 && message.length < 128)
+                messages: payload.speech.messages.filter((message) => message.length > 0 && message.length < 128)
             };
         }
 

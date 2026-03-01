@@ -1,12 +1,10 @@
-import { PlaceBotEventData } from "@shared/Communications/Requests/Rooms/Bots/PlaceBotEventData.js";
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import RoomBot from "../../../../Rooms/Bots/RoomBot.js";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { PlaceRoomBotData } from "@pixel63/events";
 
-export default class PlaceBotEvent implements IncomingEvent<PlaceBotEventData> {
-    public readonly name = "PlaceBotEvent";
-
-    async handle(user: User, event: PlaceBotEventData) {
+export default class PlaceBotEvent implements ProtobuffListener<PlaceRoomBotData> {
+    async handle(user: User, payload: PlaceRoomBotData) {
         if(!user.room) {
             return;
         }
@@ -17,14 +15,18 @@ export default class PlaceBotEvent implements IncomingEvent<PlaceBotEventData> {
 
         const inventory = user.getInventory();
 
-        const userBot = await inventory.getBotById(event.userBotId);
+        const userBot = await inventory.getBotById(payload.id);
 
         if(!userBot) {
             throw new Error("User does not have a user bot by this id.");
         }
 
+        if(!payload.position) {
+            throw new Error();
+        }
+
         await inventory.removeBot(userBot);
 
-        await RoomBot.place(user.room, userBot, event.position, event.direction);
+        await RoomBot.place(user.room, userBot, payload.position, payload.direction);
     }
 }

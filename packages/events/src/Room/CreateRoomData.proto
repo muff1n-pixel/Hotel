@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message CreateRoomData {
+    string name = 1;
+    string description = 2;
+
+    string category = 3;
+
+    uint32 max_users = 4;
+
+    string map_id = 5;
+}

@@ -2,15 +2,15 @@ import User from "../../../Users/User.js";
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { GetShopPageBotsEventData } from "@shared/Communications/Requests/Shop/GetShopPageBotsEventData.js";
 import { ShopPageBotModel } from "../../../Database/Models/Shop/ShopPageBotModel.js";
-import { ShopPageBotsData } from "@pixel63/events";
+import { GetShopPageBotsData, ShopPageBotsData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetShopPageBotsEvent implements IncomingEvent<GetShopPageBotsEventData> {
+export default class GetShopPageBotsEvent implements ProtobuffListener<GetShopPageBotsData> {
     public readonly name = "GetShopPageBotsEvent";
 
-    async handle(user: User, event: GetShopPageBotsEventData) {
-        const shopPage = await ShopPageModel.findByPk(event.pageId, {
+    async handle(user: User, payload: GetShopPageBotsData) {
+        const shopPage = await ShopPageModel.findByPk(payload.pageId, {
             include: {
                 model: ShopPageBotModel,
                 as: "bots"

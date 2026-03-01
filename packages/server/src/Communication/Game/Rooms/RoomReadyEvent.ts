@@ -1,7 +1,5 @@
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { EnterRoomEventData } from "@shared/Communications/Requests/Rooms/EnterRoomEventData.js";
-import { game } from "../../../index.js";
 
 export default class RoomReadyEvent implements IncomingEvent {
     public readonly name = "RoomReadyEvent";

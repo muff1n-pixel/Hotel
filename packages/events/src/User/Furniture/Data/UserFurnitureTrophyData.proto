@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message UserFurnitureTrophyData {
+    string engraving = 1;
+    string date = 2;
+    string author = 3;
+}

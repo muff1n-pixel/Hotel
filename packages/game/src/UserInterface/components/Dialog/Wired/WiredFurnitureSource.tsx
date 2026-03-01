@@ -1,10 +1,10 @@
 import WiredSection from "./WiredSection";
 
 export type WiredFurnitureSourceProps = {
-    value: "list" | "selector";
+    value: string;
     furnitureIds: string[];
     maxFurniture: number;
-    onChange: (value: "list" | "selector") => void;
+    onChange: (value: string) => void;
 };
 
 export default function WiredFurnitureSource({ value, furnitureIds, maxFurniture, onChange }: WiredFurnitureSourceProps) {
