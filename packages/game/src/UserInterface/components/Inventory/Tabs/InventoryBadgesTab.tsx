@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import BadgeImage from "../../Badges/BadgeImage";
-import { UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
+import { GetUserInventoryBadgesData, UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
 
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
@@ -18,7 +18,7 @@ export default function InventoryBadgesTab() {
 
         userBadgesRequested.current = true;
 
-        webSocketClient.send("GetInventoryBadgesEvent", null);
+        webSocketClient.sendProtobuff(GetUserInventoryBadgesData, GetUserInventoryBadgesData.create({}));
     }, []);
 
     useEffect(() => {

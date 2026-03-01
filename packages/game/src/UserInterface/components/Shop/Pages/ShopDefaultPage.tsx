@@ -7,11 +7,10 @@ import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -104,7 +103,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         roomRenderer?.progressFurnitureAnimation();
     }, [roomRenderer, roomFurniturePlacer]);
 
-    const handlePurchaseFurniture = useCallback((position?: RoomPosition, direction?: number) => {
+    const handlePurchaseFurniture = useCallback((position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
             return;
         }

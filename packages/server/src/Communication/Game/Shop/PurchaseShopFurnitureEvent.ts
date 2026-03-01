@@ -6,7 +6,7 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
@@ -120,7 +120,11 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             secondUserFurniture.furniture = shopFurniture.furniture;
 
             await userFurniture.update({
-                data: secondUserFurniture.id
+                data: UserFurnitureCustomData.create({
+                    teleport: {
+                        furnitureId: secondUserFurniture.id
+                    }
+                })
             });
 
             await user.getInventory().addFurniture(secondUserFurniture);

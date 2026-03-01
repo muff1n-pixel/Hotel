@@ -1,18 +1,17 @@
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
-import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, RoomPositionData } from "@pixel63/events";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
 
-    private onPlace?: (position: RoomPosition, direction: number) => void;
+    private onPlace?: (position: RoomPositionData, direction: number) => void;
     private onCancel?: () => void;
 
     private readonly renderListener = this.render.bind(this);
@@ -21,7 +20,7 @@ export default class RoomFurniturePlacer {
 
     private readonly iconElement: HTMLCanvasElement;
 
-    private readonly originalPosition?: RoomPosition;
+    private readonly originalPosition?: RoomPositionData;
     private readonly originalDirection?: number;
 
     public static fromFurnitureData(roomInstance: RoomInstance, furnitureData: FurnitureData) {
@@ -37,7 +36,7 @@ export default class RoomFurniturePlacer {
         const roomFurnitureItem = new RoomFigureItem(
             roomInstance.roomRenderer,
             new Figure(figureConfiguration, 2),
-            null
+            undefined
         );
 
         roomFurnitureItem.type = "bot";
@@ -51,11 +50,11 @@ export default class RoomFurniturePlacer {
         }
 
         if(roomFurnitureItem.position) {
-            this.originalPosition = {
+            this.originalPosition = RoomPositionData.create({
                 row: roomFurnitureItem.position.row,
                 column: roomFurnitureItem.position.column,
                 depth: roomFurnitureItem.position.depth
-            };
+            });
         }
 
         if((roomFurnitureItem instanceof RoomFurnitureItem) && roomFurnitureItem.furnitureRenderer.direction) {
@@ -175,11 +174,11 @@ export default class RoomFurniturePlacer {
                 (isFurniture)?(
                     this.roomFurnitureItem.furnitureRenderer.getDimensions()
                 ):(
-                    {
+                    RoomPositionData.create({
                         row: 1,
                         column: 1,
                         depth: 1
-                    }
+                    })
                 )
             );
 
@@ -188,24 +187,24 @@ export default class RoomFurniturePlacer {
 
             if(entity && isPositionInsideStructure && !isPositionInsideFigure) {
                 const furnitureAtPosition = (isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
-                    {
+                    RoomPositionData.create({
                         row: entity.position.row,
                         column: entity.position.column
-                    },
+                    }),
                     dimensions,
                     (isFurniture)?(this.roomFurnitureItem.id):(undefined)
                 );
 
-                if(!furnitureAtPosition || furnitureAtPosition.data.furniture.flags.stackable) {
-                    if(isFurniture && entity.position.direction !== undefined) {
-                        this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
-                    }
+                if(!furnitureAtPosition || furnitureAtPosition.data.furniture?.flags?.stackable) {
+                    //if(isFurniture && entity.position.direction !== undefined) {
+                        //this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
+                    //}
 
-                    this.roomFurnitureItem.setPosition({
+                    this.roomFurnitureItem.setPosition(RoomPositionData.create({
                         row: entity.position.row,
                         column: entity.position.column,
-                        depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
-                    });
+                        depth: (furnitureAtPosition && furnitureAtPosition.data.position)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+                    }));
 
                     this.roomFurnitureItem.disabled = false;
                     this.iconElement.style.display = "none";
@@ -254,19 +253,19 @@ export default class RoomFurniturePlacer {
         );
         
         const furnitureAtPosition = (entity?.position && isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
-            {
+            RoomPositionData.create({
                 row: entity.position.row,
                 column: entity.position.column
-            },
-            dimensions,
+            }),
+            RoomPositionData.create(dimensions),
             (isFurniture)?(this.roomFurnitureItem.id):(undefined)
         );
 
-        const position = (entity?.position)?({
+        const position = (entity?.position)?(RoomPositionData.create({
             row: entity.position.row,
             column: entity.position.column,
-            depth: (furnitureAtPosition)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
-        }):(null);
+            depth: (furnitureAtPosition && furnitureAtPosition.data.position)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+        })):(null);
 
         if(!entity || !position || this.roomFurnitureItem.disabled) {
             if(this.originalPosition) {
@@ -291,7 +290,7 @@ export default class RoomFurniturePlacer {
         this.stopPlacing();
     }
 
-    public startPlacing(onPlace: (position: RoomPosition, direction: number) => void, onCancel: () => void) {
+    public startPlacing(onPlace: (position: RoomPositionData, direction: number) => void, onCancel: () => void) {
         if(this.roomFurnitureItem instanceof RoomFurnitureItem && (this.roomFurnitureItem.furnitureRenderer.type === "wallpaper" || this.roomFurnitureItem.furnitureRenderer.type === "floor")) {
             return;
         }

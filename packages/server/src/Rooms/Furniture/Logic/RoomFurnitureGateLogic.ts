@@ -1,4 +1,4 @@
-import { UseRoomFurnitureData } from "@pixel63/events";
+import { RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
@@ -15,7 +15,7 @@ export default class RoomFurnitureGateLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(roomUser.room.users.some(({ position }) => this.roomFurniture.isPositionInside(position))) {
+        if(roomUser.room.users.some(({ position }) => this.roomFurniture.isPositionInside(RoomPositionOffsetData.fromJSON(position)))) {
             return;
         }
 

@@ -1,8 +1,7 @@
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { UseRoomFurnitureData } from "@pixel63/events";
+import { RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -10,10 +9,10 @@ export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
-        const relativePosition: Omit<RoomPosition, "depth"> = {
+        const relativePosition: Omit<RoomPositionData, "depth"> = RoomPositionData.create({
             row: this.roomFurniture.model.position.row - roomUser.position.row,
             column: this.roomFurniture.model.position.column - roomUser.position.column,
-        };
+        });
 
         // Check if the user is too far away
         if(Math.abs(relativePosition.row) > 1 || Math.abs(relativePosition.column) > 1) {

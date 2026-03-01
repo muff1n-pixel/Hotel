@@ -1,14 +1,14 @@
 import { CSSProperties, useEffect, useRef } from "react";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import { RoomStructureData } from "@pixel63/events";
 
 export type RoomMapImageProps = {
     crop?: boolean;
     width: number;
     height: number;
-    structure: RoomStructure;
+    structure: RoomStructureData;
     style: CSSProperties;
     leftWallColor?: string[];
 }
@@ -31,10 +31,9 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
         (async () => {
             const size = 6;
             const fullSize = size / 2;
-            const halfSize = fullSize / 2;
 
-            const floorRenderer = new FloorRenderer(structure, structure.floor.id, size);
-            const wallRenderer = new WallRenderer(structure, structure.wall.id, size);
+            const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size);
+            const wallRenderer = new WallRenderer(structure, structure.wall?.id ?? "default", size);
 
             const [ floorImage, [wallImage, doorMaskImage] ] = await Promise.all([
                 (async () => {
@@ -63,9 +62,9 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
 
             context.translate((floorRenderer.rows * fullSize), (wallRenderer.depth + 3.5) * fullSize);
 
-            context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.structure.wall.thickness);
-            context.drawImage(floorImage, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall.thickness ?? 0));
-            context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.structure.wall.thickness);
+            context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
+            context.drawImage(floorImage, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+            context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
 
             const resultContext = canvasRef.current?.getContext("2d");
 

@@ -8,7 +8,7 @@ import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
 import FigureImage from "../../Figure/FigureImage";
 import { useUser } from "../../../hooks/useUser";
-import { PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
+import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
 
 export default function InventoryBotsTab() {
     const user = useUser();
@@ -29,7 +29,7 @@ export default function InventoryBotsTab() {
 
         requested.current = true;
 
-        webSocketClient.send("GetUserBotsEvent", null);
+        webSocketClient.sendProtobuff(GetUserInventoryBotsData, GetUserInventoryBotsData.create({}));
     }, []);
 
     useEffect(() => {

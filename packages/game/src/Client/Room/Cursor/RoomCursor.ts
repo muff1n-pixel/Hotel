@@ -4,7 +4,7 @@ import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "../Items/Figure/RoomFigureItem";
 import { clientInstance, webSocketClient } from "../../..";
-import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
+import { PickupRoomFurnitureData, RoomPositionData, UpdateRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
@@ -16,11 +16,11 @@ export default class RoomCursor extends EventTarget {
 
         const furnitureRenderer = new Furniture("tile_cursor", 64, 0);
         
-        this.furnitureItem = new RoomFurnitureItem(this.roomRenderer, furnitureRenderer, {
+        this.furnitureItem = new RoomFurnitureItem(this.roomRenderer, furnitureRenderer, RoomPositionData.create({
             row: 1,
             column: 2,
             depth: 0
-        });
+        }));
 
         this.furnitureItem.disabled = true;
 
@@ -81,11 +81,11 @@ export default class RoomCursor extends EventTarget {
         }
 
         if(entity.position) {
-            this.furnitureItem.setPosition({
+            this.furnitureItem.setPosition(RoomPositionData.create({
                 row: Math.floor(entity.position.row),
                 column: Math.floor(entity.position.column),
                 depth: entity.position.depth
-            });
+            }));
 
             this.furnitureItem.disabled = false;
         }

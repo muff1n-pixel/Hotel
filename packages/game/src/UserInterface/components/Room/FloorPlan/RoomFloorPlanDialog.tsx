@@ -6,11 +6,11 @@ import RoomFloorPlanEditor, { RoomFloorPlanTool } from "./RoomFloorPlanEditor";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../../..";
-import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 import Checkbox from "../../Form/Checkbox";
 import Selection from "../../Form/Selection";
 import Input from "../../Form/Input";
 import { UpdateRoomStructureData } from "@pixel63/events";
+import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 
 export type RoomFloorPlanDialogProps = {
     hidden?: boolean;

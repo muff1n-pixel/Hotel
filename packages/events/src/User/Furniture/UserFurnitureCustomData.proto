@@ -5,6 +5,7 @@ import "User/Furniture/Data/UserFurnitureTonerData.proto";
 import "User/Furniture/Data/UserFurnitureBackgroundData.proto";
 import "User/Furniture/Data/UserFurnitureStickyData.proto";
 import "User/Furniture/Data/UserFurnitureTrophyData.proto";
+import "User/Furniture/Data/UserFurnitureTeleportData.proto";
 
 import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
@@ -35,5 +36,7 @@ message UserFurnitureCustomData {
 
         WiredFurnitureSelectionData wired_furniture_selection = 12;
         WiredUserSpecifierData wired_user_specifier = 13;
+
+        UserFurnitureTeleportData teleport = 14;
     }
 }

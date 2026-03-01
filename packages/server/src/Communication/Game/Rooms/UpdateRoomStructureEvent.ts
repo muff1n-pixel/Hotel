@@ -1,4 +1,4 @@
-import { UpdateRoomStructureData } from "@pixel63/events";
+import { RoomPositionData, UpdateRoomStructureData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
@@ -19,19 +19,19 @@ export default class UpdateRoomStructureEvent implements ProtobuffListener<Updat
         const structure = user.room.getStructure();
 
         if(payload.floorThickness !== undefined && [0, 4, 8, 12, 16].includes(payload.floorThickness)) {
-            structure.floor.thickness = payload.floorThickness;
+            structure.floor!.thickness = payload.floorThickness;
         }
         
         if(payload.wallThickness !== undefined && [0, 4, 8, 12, 16].includes(payload.wallThickness)) {
-            structure.wall.thickness = payload.wallThickness;
+            structure.wall!.thickness = payload.wallThickness;
         }
         
         if(payload.wallHeight !== undefined) {
-            structure.wall.height = Math.min(10, Math.max(0, payload.wallHeight));
+            structure.wall!.height = Math.min(10, Math.max(0, payload.wallHeight));
         }
         
         if(payload.wallHidden !== undefined) {
-            structure.wall.hidden = Boolean(payload.wallHidden);
+            structure.wall!.hidden = Boolean(payload.wallHidden);
         }
 
         if(payload.grid) {
@@ -45,19 +45,19 @@ export default class UpdateRoomStructureEvent implements ProtobuffListener<Updat
         if(payload.offset) {
             if(payload.offset.row > 0 || payload.offset.column > 0) {
                 for(const furniture of user.room.furnitures) {
-                    furniture.setPosition({
+                    furniture.setPosition(RoomPositionData.create({
                         row: furniture.model.position.row + payload.offset.row,
                         column: furniture.model.position.column + payload.offset.column,
                         depth: furniture.model.position.depth
-                    });
+                    }));
                 }
                 
                 for(const roomUser of user.room.users) {
-                    roomUser.path.setPosition({
+                    roomUser.path.setPosition(RoomPositionData.create({
                         row: roomUser.position.row + payload.offset.row,
                         column: roomUser.position.column + payload.offset.column,
                         depth: roomUser.position.depth
-                    });
+                    }));
                 }
             }
         }

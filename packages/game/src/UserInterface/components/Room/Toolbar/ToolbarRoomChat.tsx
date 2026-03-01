@@ -73,14 +73,14 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
 
         const latest = clientInstance.roomHistory.value![clientInstance.roomHistory.value!.length - 1];
 
-        if(latest && latest.type === "room" && latest.name === room.information.name) {
+        if(latest && latest.type === "room" && latest.name === room.information?.name) {
             return;
         }
 
         clientInstance.roomHistory.value!.push({
             id: Math.random(),
             type: "room",
-            name: room.information.name,
+            name: room.information?.name ?? "",
             timestamp: new Date(),
         } satisfies RoomEntry);
 

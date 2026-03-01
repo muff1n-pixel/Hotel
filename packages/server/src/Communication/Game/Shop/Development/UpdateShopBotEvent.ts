@@ -3,7 +3,7 @@ import { ShopPageBotModel } from "../../../../Database/Models/Shop/ShopPageBotMo
 import { randomUUID } from "node:crypto";
 import GetShopPageBotsEvent from "../GetShopPageBotsEvent.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { UpdateShopBotData } from "@pixel63/events";
+import { GetShopPageBotsData, UpdateShopBotData } from "@pixel63/events";
 
 export default class UpdateShopBotEvent implements ProtobuffListener<UpdateShopBotData> {
     async handle(user: User, payload: UpdateShopBotData) {
@@ -50,8 +50,8 @@ export default class UpdateShopBotEvent implements ProtobuffListener<UpdateShopB
             });
         }
 
-        await (new GetShopPageBotsEvent()).handle(user, {
+        await (new GetShopPageBotsEvent()).handle(user, GetShopPageBotsData.create({
             pageId: payload.pageId
-        });
+        }));
     }
 }

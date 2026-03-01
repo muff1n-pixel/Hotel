@@ -1,4 +1,3 @@
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomRenderer from "./Renderer";
 import RoomWallItem from "./Items/Map/RoomWallItem";
@@ -10,8 +9,7 @@ import RoomFloorItem from "./Items/Map/RoomFloorItem";
 import { clientInstance } from "../..";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData, RoomStructureData } from "@pixel63/events";
 
 export type RoomFurnitureRendererOptions = {
     rows?: number;
@@ -31,18 +29,18 @@ export default class RoomFurnitureRenderer {
     private floorItem: RoomFloorItem;
     
     constructor(element: HTMLDivElement, options: RoomFurnitureRendererOptions) {
-        const roomStructure: RoomStructure = {
+        const roomStructure: RoomStructureData = RoomStructureData.create({
             grid: new Array(options.rows ?? 7).fill(null).map((_) => new Array(options.columns ?? 7).fill(null).map(() => '0').join('')),
             floor: {
-                id: clientInstance.roomInstance.value?.roomRenderer.structure.floor.id ?? "111",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
                 thickness: 8
             },
             wall: {
-                id: clientInstance.roomInstance.value?.roomRenderer.structure.wall.id ?? "201",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
                 thickness: 8,
                 hidden: false
             }
-        };
+        });
 
         this.roomRenderer = new RoomRenderer(element, undefined, undefined, roomStructure);
 
@@ -63,31 +61,31 @@ export default class RoomFurnitureRenderer {
             }
         });
 
-        this.wallRenderer = new WallRenderer(roomStructure, roomStructure.wall.id, 64);
+        this.wallRenderer = new WallRenderer(roomStructure, roomStructure.wall?.id ?? "default", 64);
         this.wallItem = new RoomWallItem(this.roomRenderer, this.wallRenderer);
 
         if(!options.withoutWalls) {
             this.roomRenderer.items.push(this.wallItem);
         }
 
-        this.floorRenderer = new FloorRenderer(roomStructure, roomStructure.floor.id, 64);
+        this.floorRenderer = new FloorRenderer(roomStructure, roomStructure.floor?.id ?? "default", 64);
         this.floorItem = new RoomFloorItem(this.roomRenderer, this.floorRenderer);
     
         this.roomRenderer.items.push(this.floorItem);
     }
 
-    async setFigure(figureConfiguration: FigureConfigurationData, actions?: string[], position?: RoomPosition) {
+    async setFigure(figureConfiguration: FigureConfigurationData, actions?: string[], position?: RoomPositionData) {
         if(this.roomItem) {
             this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomItem), 1);
         }
 
         const figureRenderer = new Figure(figureConfiguration, 2, actions);
         
-        this.roomItem = new RoomFigureItem(this.roomRenderer, figureRenderer, {
+        this.roomItem = new RoomFigureItem(this.roomRenderer, figureRenderer, RoomPositionData.create({
             row: position?.row ?? 1,
             column: position?.column ?? 1,
             depth: position?.depth ?? 0
-        });
+        }));
         
         this.roomRenderer.items.push(this.roomItem);
 
@@ -120,17 +118,17 @@ export default class RoomFurnitureRenderer {
         await furnitureRenderer.getData();
 
         this.roomItem = new RoomFurnitureItem(this.roomRenderer, furnitureRenderer, (furnitureData.visualization.placement === "wall") ? (
-            {
+            RoomPositionData.create({
                 row: 1 + Math.max(1, furnitureRenderer.getDimensions(true).row),
                 column: 0,
                 depth: 1.5
-            }
+            })
         ):(
-            {
+            RoomPositionData.create({
                 row: 1,
                 column: 1,
                 depth: 0
-            }
+            })
         )
         );
 

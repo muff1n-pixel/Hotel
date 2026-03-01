@@ -6,11 +6,10 @@ import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -324,7 +323,7 @@ export default class RoomInstance {
         });
     }
     
-    public getFurnitureAtUpmostPosition(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition = { row: 1, column: 1, depth: 0 }, ignoreRoomFurnitureItemId?: number) {
+    public getFurnitureAtUpmostPosition(position: Omit<RoomPositionData, "depth">, dimensions: RoomPositionData = RoomPositionData.create({ row: 1, column: 1, depth: 0 }), ignoreRoomFurnitureItemId?: number) {
         const furniture = this.furnitures
             .filter((furniture) => furniture.item.id !== ignoreRoomFurnitureItemId)
             .filter((furniture) => furniture.isPositionInside(position, dimensions))

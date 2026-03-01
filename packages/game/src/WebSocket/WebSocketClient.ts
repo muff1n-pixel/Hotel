@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
-import { MessageType, UnknownMessage } from "@pixel63/events";
+import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
 
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
@@ -54,15 +54,9 @@ export default class WebSocketClient extends EventTarget {
 
         setInterval(() => {
             if(this.socket.readyState === this.socket.OPEN) {
-                this.send("Ping", null);
+                this.sendProtobuff(PingData, PingData.create({}));
             }
         }, 30 * 1000);
-    }
-
-    send<T>(type: string, data: T) {
-        console.log("Sending " + type);
-        
-        this.socket.send(JSON.stringify([[type, data]]));
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

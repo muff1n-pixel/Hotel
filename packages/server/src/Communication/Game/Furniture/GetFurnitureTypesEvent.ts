@@ -1,9 +1,10 @@
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import { FurnitureTypesData } from "@pixel63/events";
+import { FurnitureTypesData, GetFurnitureTypesData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetFurnitureTypesEvent implements IncomingEvent {
+export default class GetFurnitureTypesEvent implements ProtobuffListener<GetFurnitureTypesData> {
     public readonly name = "GetFurnitureTypesEvent";
 
     async handle(user: User) {

@@ -12,9 +12,7 @@ import PlaceFurnitureEvent from "../Communication/Game/Rooms/Furniture/PlaceFurn
 import StartWalkingEvent from "../Communication/Game/Rooms/User/StartWalkingEvent.js";
 import CreateRoomEvent from "../Communication/Game/Navigator/CreateRoomEvent.js";
 import GetNavigatorRoomsEvent from "../Communication/Game/Navigator/GetNavigatorRoomsEvent.js";
-import EnterHomeRoomEvent from "../Communication/Game/Rooms/EnterHomeRoomEvent.js";
 import LeaveRoomEvent from "../Communication/Game/Rooms/LeaveRoomEvent.js";
-import UpdateRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/UpdateRoomFurnitureEvent.js";
 import PickupRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/PickupRoomFurnitureEvent.js";
 import UseRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/UseRoomFurnitureEvent.js";
 import PlaceRoomContentFurnitureEvent from "../Communication/Game/Rooms/Furniture/PlaceRoomContentFurnitureEvent.js";
@@ -22,7 +20,7 @@ import SendUserMessageEvent from "../Communication/Game/Rooms/User/SendUserMessa
 import GetRoomChatStylesEvent from "../Communication/Game/Rooms/Chat/Styles/GetRoomChatStylesEvent.js";
 import SetRoomChatStyleEvent from "../Communication/Game/Users/SetRoomChatStyleEvent.js";
 import SetFigureConfigurationEvent from "../Communication/Game/Users/SetFigureConfigurationEvent.js";
-import SetFurnitureDataEvent from "../Communication/Game/Rooms/Furniture/SetFurnitureDataEvent.js";
+import UpdateRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/UpdateRoomFurnitureEvent.js";
 import UpdateRoomStructureEvent from "../Communication/Game/Rooms/UpdateRoomStructureEvent.js";
 import UpdateRoomInformationEvent from "../Communication/Game/Rooms/UpdateRoomInformationEvent.js";
 import SetHomeRoomEvent from "../Communication/Game/Users/SetHomeRoomEvent.js";
@@ -39,7 +37,6 @@ import UpdateShopPageEvent from "../Communication/Game/Shop/Development/UpdateSh
 import UpdateShopFurnitureEvent from "../Communication/Game/Shop/Development/UpdateShopFurnitureEvent.js";
 import ImportRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/Development/ImportRoomFurnitureEvent.js";
 import GetRoomMapsEvent from "../Communication/Game/Navigator/GetRoomMapsEvent.js";
-import UpdateRoomFloorplanEvent from "../Communication/Game/Rooms/Floorplan/UpdateRoomFloorplanEvent.js";
 import GetFurnitureTypesEvent from "../Communication/Game/Furniture/GetFurnitureTypesEvent.js";
 import UpdateFurnitureEvent from "../Communication/Game/Furniture/UpdateFurnitureEvent.js";
 import SetTypingEvent from "../Communication/Game/Rooms/User/SetTypingEvent.js";
@@ -53,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { CreateRoomData, MessageType, SendHotelFeedbackData, UpdateFurnitureData } from "@pixel63/events";
+import { CreateRoomData, EnterRoomData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopPageBotsData, GetShopPageFurnitureData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PurchaseShopBotData, PurchaseShopFurnitureData, RoomClickData, RoomFurnitureImportData, RoomReadyData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateFurnitureData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFurnitureData, UpdateShopPageData, UpdateUserBadgeData, UseRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 
 export default class EventHandler extends EventEmitter {
@@ -64,44 +61,38 @@ export default class EventHandler extends EventEmitter {
     }
 
     public decodeAndDispatchMessages(user: User, rawData: RawData) {
-        const payload = JSON.parse(rawData.toString());
+        let buffer: Buffer;
 
-        if(typeof payload !== "object") {
-            throw new Error("Received payload is not an object.");
+        if (typeof rawData === "string") {
+            buffer = Buffer.from(rawData);
+        } else if (rawData instanceof Buffer) {
+            buffer = rawData;
+        } else if (rawData instanceof ArrayBuffer) {
+            buffer = Buffer.from(rawData);
+        } else if (Array.isArray(rawData)) {
+            buffer = Buffer.concat(rawData);
+        } else {
+            throw new Error("Unsupported RawData type");
         }
 
-        if(!Array.isArray(payload)) {
-            throw new Error("Received payload is not an array.");
-        }
+        const sep = buffer.indexOf("|".charCodeAt(0));
+        const type = buffer.subarray(0, sep).toString("utf-8");
+        const payload = buffer.subarray(sep + 1);
 
-        for(let event of payload) {
-            const [ eventName, eventBody ] = event;
+        console.log("Received " + type);
 
-            console.log("Processing event: " + eventName);
+        this.emit(type, user, payload);
 
-            this.emit(eventName, user, eventBody);
-
-            // TODO: remove the user event handler?
-            user.emit(eventName, user, eventBody);
-        }
-    }
-
-    addIncomingEvent<T>(incomingEvent: IncomingEvent<T>): this {
-        return super.addListener(incomingEvent.name, async (user, event) => {
-            try {
-                await incomingEvent.handle(user, event);
-            }
-            catch(error) {
-                console.error(error);
-            }
-        });
+        // TODO: remove the user event handler?
+        user.emit(type, user, payload);
     }
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>) {
         super.addListener(message.$type, async (user, event) => {
             protobuffListener.handle(user, message.decode(event) as T);
-
         });
+
+        return this;
     }
 
     removeProtobuffListener(message: MessageType, listener: (event: Uint8Array<ArrayBufferLike>) => void) {
@@ -118,74 +109,69 @@ export default class EventHandler extends EventEmitter {
         // Room events
         this.addProtobuffListener(CreateRoomData, new CreateRoomEvent());
 
-        this
-            .addIncomingEvent(new GetShopPagesEvent())
-            .addIncomingEvent(new GetShopPageFurnitureEvent())
-            .addIncomingEvent(new GetShopPageBotsEvent())
-            .addIncomingEvent(new PurchaseShopFurnitureEvent())
-            .addIncomingEvent(new PurchaseShopBotEvent());
+        // Shop events
+        this.addProtobuffListener(GetShopPagesData, new GetShopPagesEvent());
+        this.addProtobuffListener(GetShopPageFurnitureData, new GetShopPageFurnitureEvent());
+        this.addProtobuffListener(GetShopPageBotsData, new GetShopPageBotsEvent());
+        this.addProtobuffListener(PurchaseShopFurnitureData, new PurchaseShopFurnitureEvent());
+        this.addProtobuffListener(PurchaseShopBotData, new PurchaseShopBotEvent());
 
-        this.addIncomingEvent(new RoomReadyEvent());
-        this.addIncomingEvent(new RoomClickEvent());
+        this.addProtobuffListener(RoomReadyData, new RoomReadyEvent());
+        this.addProtobuffListener(RoomClickData, new RoomClickEvent());
             
         this
-            .addIncomingEvent(new EnterRoomEvent())
-            .addIncomingEvent(new EnterHomeRoomEvent())
-            .addIncomingEvent(new LeaveRoomEvent())
-            .addIncomingEvent(new PlaceFurnitureEvent())
-            .addIncomingEvent(new PlaceBotEvent())
-            .addIncomingEvent(new PlaceRoomContentFurnitureEvent())
-            .addIncomingEvent(new UseRoomFurnitureEvent())
-            .addIncomingEvent(new UpdateRoomFurnitureEvent())
-            .addIncomingEvent(new UpdateRoomBotEvent())
-            .addIncomingEvent(new PickupRoomFurnitureEvent())
-            .addIncomingEvent(new PickupRoomBotEvent())
-            .addIncomingEvent(new StartWalkingEvent())
-            .addIncomingEvent(new SendUserMessageEvent())
-            .addIncomingEvent(new GetRoomChatStylesEvent())
-            .addIncomingEvent(new SetFurnitureDataEvent())
-            .addIncomingEvent(new UpdateRoomStructureEvent())
-            .addIncomingEvent(new UpdateRoomInformationEvent())
-            .addIncomingEvent(new UpdateUserRightsEvent());
+            .addProtobuffListener(EnterRoomData, new EnterRoomEvent())
+            .addProtobuffListener(LeaveRoomData, new LeaveRoomEvent())
+            .addProtobuffListener(PlaceRoomFurnitureData, new PlaceFurnitureEvent())
+            .addProtobuffListener(PlaceRoomBotData, new PlaceBotEvent())
+            .addProtobuffListener(PlaceRoomContentFurnitureData, new PlaceRoomContentFurnitureEvent())
+            .addProtobuffListener(UseRoomFurnitureData, new UseRoomFurnitureEvent())
+            .addProtobuffListener(UpdateRoomFurnitureData, new UpdateRoomFurnitureEvent())
+            .addProtobuffListener(UpdateRoomBotData, new UpdateRoomBotEvent())
+            .addProtobuffListener(PickupRoomFurnitureData, new PickupRoomFurnitureEvent())
+            .addProtobuffListener(PickupRoomBotData, new PickupRoomBotEvent())
+            .addProtobuffListener(SendRoomUserWalkData, new StartWalkingEvent())
+            .addProtobuffListener(SendRoomChatMessageData, new SendUserMessageEvent())
+            .addProtobuffListener(GetRoomChatStylesData, new GetRoomChatStylesEvent())
+            .addProtobuffListener(UpdateRoomStructureData, new UpdateRoomStructureEvent())
+            .addProtobuffListener(UpdateRoomInformationData, new UpdateRoomInformationEvent())
+            .addProtobuffListener(SetRoomUserRightsData, new UpdateUserRightsEvent());
             
         this
-            .addIncomingEvent(new GetUserEvent())
-            .addIncomingEvent(new GetUserFurnitureEvent())
-            .addIncomingEvent(new GetUserBotsEvent())
-            .addIncomingEvent(new GetUserBadgesEvent())
-            .addIncomingEvent(new GetInventoryBadgesEvent())
-            .addIncomingEvent(new UpdateUserBadgeEvent())
-            .addIncomingEvent(new SetRoomChatStyleEvent())
-            .addIncomingEvent(new SetFigureConfigurationEvent())
-            .addIncomingEvent(new SetHomeRoomEvent())
-            .addIncomingEvent(new SetTypingEvent());
+            .addProtobuffListener(GetUserData, new GetUserEvent())
+            .addProtobuffListener(GetUserInventoryFurnitureData, new GetUserFurnitureEvent())
+            .addProtobuffListener(GetUserInventoryBotsData, new GetUserBotsEvent())
+            .addProtobuffListener(GetUserBadgesData, new GetUserBadgesEvent())
+            .addProtobuffListener(GetUserInventoryBadgesData, new GetInventoryBadgesEvent())
+            .addProtobuffListener(UpdateUserBadgeData, new UpdateUserBadgeEvent())
+            .addProtobuffListener(SetUserRoomChatStyleData, new SetRoomChatStyleEvent())
+            .addProtobuffListener(SetUserFigureConfigurationData, new SetFigureConfigurationEvent())
+            .addProtobuffListener(SetUserHomeRoomData, new SetHomeRoomEvent())
+            .addProtobuffListener(SetRoomChatTypingData, new SetTypingEvent());
             
         this
-            .addIncomingEvent(new GetRoomMapsEvent())
-            .addIncomingEvent(new GetNavigatorRoomsEvent())
-            .addIncomingEvent(new GetRoomCategoriesEvent());
+            .addProtobuffListener(GetRoomMapsData, new GetRoomMapsEvent())
+            .addProtobuffListener(GetNavigatorData, new GetNavigatorRoomsEvent())
+            .addProtobuffListener(GetRoomCategoriesData, new GetRoomCategoriesEvent());
             
         this
-            .addIncomingEvent(new GetHotelFeedbackEvent());
+            .addProtobuffListener(GetHotelFeedbackData, new GetHotelFeedbackEvent());
 
         this
-            .addIncomingEvent(new UpdateShopPageEvent())
-            .addIncomingEvent(new UpdateShopFurnitureEvent())
-            .addIncomingEvent(new UpdateShopBotEvent());
+            .addProtobuffListener(UpdateShopPageData, new UpdateShopPageEvent())
+            .addProtobuffListener(UpdateShopFurnitureData, new UpdateShopFurnitureEvent())
+            .addProtobuffListener(UpdateShopBotData, new UpdateShopBotEvent());
 
-        this.addIncomingEvent(new GetRoomBotSpeechEvent());
-
-        this
-            .addIncomingEvent(new SetMottoEvent());
+        this.addProtobuffListener(GetUserBotSpeechData, new GetRoomBotSpeechEvent());
 
         this
-            .addIncomingEvent(new ImportRoomFurnitureEvent());
+            .addProtobuffListener(SetUserMottoData, new SetMottoEvent());
 
         this
-            .addIncomingEvent(new UpdateRoomFloorplanEvent());
+            .addProtobuffListener(RoomFurnitureImportData, new ImportRoomFurnitureEvent());
 
-        this.addIncomingEvent(new GetFurnitureTypesEvent());
+        this.addProtobuffListener(GetFurnitureTypesData, new GetFurnitureTypesEvent());
 
-        this.addIncomingEvent(new PingEvent());
+        this.addProtobuffListener(PingData, new PingEvent());
     }
 }

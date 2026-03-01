@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../../..";
-import { RoomMapData, RoomMapsData } from "@pixel63/events";
+import { GetRoomMapsData, RoomMapData, RoomMapsData } from "@pixel63/events";
 
 export default function useRoomMaps() {
     const roomMapsRequested = useRef(false);
@@ -22,7 +22,7 @@ export default function useRoomMaps() {
             once: true
         });
 
-        webSocketClient.send("GetRoomMapsEvent", null);
+        webSocketClient.sendProtobuff(GetRoomMapsData, GetRoomMapsData.create({}));
     }, []);
 
     return roomMaps;

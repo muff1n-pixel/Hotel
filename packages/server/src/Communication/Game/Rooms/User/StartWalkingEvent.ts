@@ -1,6 +1,6 @@
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { SendRoomUserWalkData } from "@pixel63/events";
+import { RoomPositionOffsetData, SendRoomUserWalkData } from "@pixel63/events";
 
 export default class StartWalkingEvent implements ProtobuffListener<SendRoomUserWalkData> {
     async handle(user: User, payload: SendRoomUserWalkData) {
@@ -15,10 +15,10 @@ export default class StartWalkingEvent implements ProtobuffListener<SendRoomUser
         const roomUser = user.room.getRoomUser(user);
 
         if(roomUser.teleporting) {
-            roomUser.path.teleportTo(payload.target);
+            roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(payload.target));
         }
         else {
-            roomUser.path.walkTo(payload.target);
+            roomUser.path.walkTo(RoomPositionOffsetData.fromJSON(payload.target));
         }
     }
 }

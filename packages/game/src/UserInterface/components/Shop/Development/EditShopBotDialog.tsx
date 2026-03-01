@@ -5,7 +5,6 @@ import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../hooks/useDialogs";
-import { BotTypeData } from "@Shared/Interfaces/Bots/BotTypeData";
 import FigureImage from "../../Figure/FigureImage";
 import { useUser } from "../../../hooks/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
@@ -90,7 +89,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
 
                     <b>Bot type</b>
 
-                    <Input placeholder="Bot type" value={type} onChange={(type) => setType(type as BotTypeData)}/>
+                    <Input placeholder="Bot type" value={type} onChange={(type) => setType(type)}/>
 
                     <b>Bot name</b>
 

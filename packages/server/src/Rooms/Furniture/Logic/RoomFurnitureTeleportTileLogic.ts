@@ -55,7 +55,7 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             return;
         }
 
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data);
+        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
 
         if(!targetFurniture) {
             console.warn("Target room furniture is not loaded.");

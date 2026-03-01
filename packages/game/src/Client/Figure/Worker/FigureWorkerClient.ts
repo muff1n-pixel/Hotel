@@ -14,6 +14,10 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
     }
 
     public preload(figure: Figure) {
+        if(!figure.configuration) {
+            throw new Error();
+        }
+
         const channel = new MessageChannel();
 
         this.worker.postMessage({
@@ -34,6 +38,10 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
     }
 
     public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean): Promise<FigureRendererResult> {
+        if(!figureRenderer.configuration) {
+            throw new Error();
+        }
+
         const channel = new MessageChannel();
 
         this.worker.postMessage({

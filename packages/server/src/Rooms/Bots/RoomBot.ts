@@ -1,17 +1,15 @@
 import Room from "../Room.js";
 import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
     public actions: string[] = [];
-    public position: RoomPosition;
+    public position: RoomPositionData;
     public direction: number;
 
     public path: RoomActorPath;
@@ -25,7 +23,7 @@ export default class RoomBot implements RoomActor {
         this.path = new RoomActorPath(this);
     }
 
-    public static async place(room: Room, userBot: UserBotModel, position: RoomPosition, direction: number) {
+    public static async place(room: Room, userBot: UserBotModel, position: RoomPositionData, direction: number) {
         await userBot.update({
             position,
             direction,
@@ -36,7 +34,7 @@ export default class RoomBot implements RoomActor {
 
         room.bots.push(roomBot);
 
-        room.floorplan.updatePosition(position);
+        room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
         room.sendProtobuff(RoomBotsData, RoomBotsData.create({
             botsAdded: [
@@ -91,7 +89,7 @@ export default class RoomBot implements RoomActor {
         }));
     }
     
-    public sendWalkEvent(previousPosition: RoomPosition): void {
+    public sendWalkEvent(previousPosition: RoomPositionData): void {
         this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
             actor: {
                 bot: {
@@ -120,7 +118,7 @@ export default class RoomBot implements RoomActor {
     public async pickup() {
         this.room.bots.splice(this.room.bots.indexOf(this), 1);
 
-        this.room.floorplan.updatePosition(this.model.position);
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position));
 
         this.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
             botsRemoved: [
@@ -139,13 +137,13 @@ export default class RoomBot implements RoomActor {
         }
     }
 
-    public async setPosition(position: RoomPosition, save: boolean = true) {
+    public async setPosition(position: RoomPositionData, save: boolean = true) {
         const previousPosition = this.model.position;
 
         this.position = position;
 
-        this.room.floorplan.updatePosition(previousPosition);
-        this.room.floorplan.updatePosition(position);
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
         if(save && this.model.changed()) {
             await this.model.save();
@@ -241,10 +239,10 @@ export default class RoomBot implements RoomActor {
 
         this.lastMovement = performance.now();
 
-        const targetPosition: Omit<RoomPosition, "depth"> = {
+        const targetPosition = RoomPositionOffsetData.create({
             row: this.model.position.row + Math.floor(Math.random() * 7) - 3,
             column: this.model.position.column + Math.floor(Math.random() * 7) - 3,
-        };
+        });
 
         if(this.room.model.structure.door?.row === targetPosition.row && this.room.model.structure.door?.column === targetPosition.column) {
             return;

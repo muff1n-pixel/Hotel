@@ -4,7 +4,6 @@ import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomCursor from "./Cursor/RoomCursor";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomSprite from "./Items/RoomSprite";
 import RoomFrameEvent from "@Client/Events/RoomFrameEvent";
 import RoomItem from "./Items/RoomItem";
@@ -19,7 +18,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
-import { RoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData } from "@pixel63/events";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -266,7 +265,7 @@ export default class RoomRenderer extends EventTarget {
         return null;
     }
 
-    public getCoordinatePosition(coordinate: RoomPosition): MousePosition {
+    public getCoordinatePosition(coordinate: RoomPositionData): MousePosition {
         const result = {
             left: Math.round(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
             top: Math.round((coordinate.column * 16) + (coordinate.row * 16) - ((Math.round(coordinate.depth * 1000) / 1000) * 32))
@@ -305,7 +304,7 @@ export default class RoomRenderer extends EventTarget {
         return priority;
     }
 
-    public static getPositionPriority(position: RoomPosition) {
+    public static getPositionPriority(position: RoomPositionData) {
         return (Math.round(position.row) * 1000) + (Math.round(position.column) * 1000) + (position.depth * 10);
     }
 
@@ -366,7 +365,7 @@ export default class RoomRenderer extends EventTarget {
         }
     }
 
-    public isPositionInsideStructure(position: RoomPosition, dimensions: RoomPosition) {
+    public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.structure.grid[row]?.[column] === undefined || this.structure.grid[row]?.[column] === 'X') {
@@ -378,7 +377,7 @@ export default class RoomRenderer extends EventTarget {
         return true;
     }
 
-    public isPositionInsideFigure(position: RoomPosition, dimensions: RoomPosition, ignoreItem?: RoomItem) {
+    public isPositionInsideFigure(position: RoomPositionData, dimensions: RoomPositionData, ignoreItem?: RoomItem) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.items.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {

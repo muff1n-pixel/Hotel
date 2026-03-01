@@ -8,7 +8,7 @@ import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
-import { PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
+import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
@@ -28,7 +28,7 @@ export default function InventoryFurnitureTab() {
 
         userFurnitureRequested.current = true;
 
-        webSocketClient.send("GetUserFurnitureEvent", null);
+        webSocketClient.sendProtobuff(GetUserInventoryFurnitureData, GetUserInventoryFurnitureData.create({}));
     }, []);
 
     useEffect(() => {

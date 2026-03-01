@@ -2,6 +2,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFloorItem from "../Map/RoomFloorItem";
+import { RoomPositionData } from "@pixel63/events";
 
 export default class RoomFloorSprite extends RoomSprite {
     priority = -3000;
@@ -13,7 +14,7 @@ export default class RoomFloorSprite extends RoomSprite {
 
         this.offset = {
             left: -(this.item.floorRenderer.rows * 32),
-            top: -(this.item.floorRenderer.depth * 32) - 32 - (item.floorRenderer.structure.wall.thickness ?? 0)
+            top: -(this.item.floorRenderer.depth * 32) - 32 - (item.floorRenderer.structure.wall?.thickness ?? 0)
         };
     }
 
@@ -26,7 +27,7 @@ export default class RoomFloorSprite extends RoomSprite {
         
         context.scale(scale, scale);
 
-        context.drawImage(this.image, this.offset.left - this.item.floorRenderer.structure.wall.thickness, this.offset.top);
+        context.drawImage(this.image, this.offset.left - (this.item.floorRenderer.structure.wall?.thickness ?? 0), this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -53,11 +54,11 @@ export default class RoomFloorSprite extends RoomSprite {
 
             //console.log(this.item.floorRenderer.tiles[path]);
 
-            return {
+            return RoomPositionData.create({
                 row: Math.floor(this.item.floorRenderer.tiles[path].row),
                 column: Math.floor(this.item.floorRenderer.tiles[path].column),
                 depth: this.item.floorRenderer.tiles[path].depth
-            };
+            });
         }
 
         return null;

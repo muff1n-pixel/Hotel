@@ -2,19 +2,18 @@ import Furniture from "@Client/Furniture/Furniture";
 import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomRenderer from "@Client/Room/Renderer";
 import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFurniturePlaceholderSprite";
 import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Background/RoomFurnitureBackgroundSprite";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
-import { UserFurnitureCustomData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     public readonly id = Math.random();
 
-    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPosition, private data?: UserFurnitureCustomData) {
+    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
         super(roomRenderer, "furniture");
 
         if(position) {
@@ -30,7 +29,7 @@ export default class RoomFurnitureItem extends RoomItem {
         this.render();
     }
 
-    public setPosition(position: RoomPosition | undefined, index?: number): void {
+    public setPosition(position: RoomPositionData | undefined, index?: number): void {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
             this.position = undefined;
             this.priority = 0;

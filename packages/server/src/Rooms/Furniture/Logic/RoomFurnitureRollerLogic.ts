@@ -2,7 +2,7 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -41,7 +41,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         this.lastExecution = performance.now();
 
-        const outgoingEvents: OutgoingEvent[] = [];
+        let animate = false;
 
         const offset = this.roomFurniture.getOffsetPosition(1);
 
@@ -49,7 +49,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         if(!blockingUser) {
             const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
-            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(this.roomFurniture.model.position).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
+            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position)).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
 
             for(const user of usersInteractingWithRoller) {
                 if(user.preoccupiedByActionHandler) {
@@ -62,7 +62,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
         
                 const offsetPosition = RoomPositionData.fromJSON(offset);
 
-                const nextFurniture = room.getUpmostFurnitureAtPosition(offsetPosition);
+                const nextFurniture = room.getUpmostFurnitureAtPosition(offset);
                 
                 if(nextFurniture && !nextFurniture.isWalkable(true)) {
                     continue;
@@ -70,7 +70,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
                 user.preoccupiedByActionHandler = true;
 
-                const nextRoller = room.getAllFurnitureAtPosition(offsetPosition).find((furniture) => furniture.model.furniture.category === "roller");
+                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
 
                 if(nextRoller) {
                     offsetPosition.depth = nextRoller.model.position.depth + nextRoller.model.furniture.dimensions.depth;
@@ -82,6 +82,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 user.position = offsetPosition;
 
                 user.sendPositionEvent(true);
+                
+                animate = true;
             }
 
             for(const furniture of furnitureInteractingWithRoller) {
@@ -99,7 +101,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 const offset = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
                 const offsetPosition = RoomPositionData.fromJSON(offset);
 
-                const nextRoller = room.getAllFurnitureAtPosition(offsetPosition).find((furniture) => furniture.model.furniture.category === "roller");
+                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
 
                 if(!nextRoller) {
                     // remove the depth of the roller
@@ -114,12 +116,12 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     id: furniture.model.id,
                     position: offsetPosition
                 }));
+                
+                animate = true;
             }
         }
 
-        if(outgoingEvents.length > 0) {
-            room.outgoingEvents.push(...outgoingEvents);
-            
+        if(animate) {
             if(this.roomFurniture.model.animation !== 2) {
                 this.roomFurniture.model.animation = 2;
                 

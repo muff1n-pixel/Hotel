@@ -1,11 +1,9 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 import RoomFloorplanHelper from "@Shared/Helpers/RoomFloorplanHelper";
 import { clientInstance } from "../../../..";
-import { RoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
 
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
 
@@ -29,10 +27,10 @@ export default class RoomFloorPlanEditor {
         top: 0
     };
 
-    private tilesPrepended: Omit<RoomPosition, "depth"> = {
+    private tilesPrepended: Omit<RoomPositionData, "depth"> = RoomPositionData.create({
         row: 0,
         column: 0
-    };
+    });
 
     private mousePosition: MousePosition | null = null;
 
@@ -50,7 +48,7 @@ export default class RoomFloorPlanEditor {
         if(this.moving && !this.middleButton) {
             const coordinate = this.getMousePosition();
 
-            const anyFurnitureOnTile = coordinate && clientInstance.roomInstance.value?.furnitures.some((furniture) => furniture.isPositionInside(coordinate, { row: 1, column: 1, depth: 1 }));
+            const anyFurnitureOnTile = coordinate && clientInstance.roomInstance.value?.furnitures.some((furniture) => furniture.isPositionInside(coordinate, RoomPositionData.create({ row: 1, column: 1, depth: 1 })));
 
             if(coordinate && !anyFurnitureOnTile) {
                 if(this.tool === "add_tile") {
@@ -161,17 +159,16 @@ export default class RoomFloorPlanEditor {
                 }
             }
 
-            this.data.structure.door = {
-                $type: "RoomStructureDoorData",
+            this.data.structure.door = RoomStructureDoorData.create({
                 ...coordinate,
                 direction: this.data.structure.door?.direction ?? 2
-            };
+            });
 
             this.update(this.data);
         }
 
         if(clientInstance.roomInstance.value) {
-            const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside(coordinate, { row: 1, column: 1, depth: 1 }));
+            const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside(coordinate, RoomPositionData.create({ row: 1, column: 1, depth: 1 })));
 
             if(anyFurnitureOnTile) {
                 return;
@@ -212,10 +209,10 @@ export default class RoomFloorPlanEditor {
             top: (this.mousePosition.left - this.canvasOffset.left) * -0.5 + (this.mousePosition.top - this.canvasOffset.top)
         };
 
-        const coordinate: Omit<RoomPosition, "depth"> = {
+        const coordinate: Omit<RoomPositionData, "depth"> = RoomPositionData.create({
             row: Math.floor(innerPosition.top / 16),
             column: Math.floor(innerPosition.left / 16)
-        };
+        });
 
         return coordinate;
     }
@@ -303,7 +300,7 @@ export default class RoomFloorPlanEditor {
                 context.fillRect(left + 1, top + 1, tileSize - 2, tileSize - 2);
 
                 if(clientInstance.roomInstance.value) {
-                    const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside({ row, column }, { row: 1, column: 1, depth: 1 }));
+                    const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside(RoomPositionData.create({ row, column }), RoomPositionData.create({ row: 1, column: 1, depth: 1 })));
 
                     if(anyFurnitureOnTile) {
                         context.fillStyle = "rgba(255, 255, 255, .4)";
@@ -328,7 +325,7 @@ export default class RoomFloorPlanEditor {
             return null;
         }
 
-        const structure: RoomStructure = JSON.parse(JSON.stringify(this.data.structure));
+        const structure: RoomStructureData = JSON.parse(JSON.stringify(this.data.structure));
 
         const rows = structure.grid.map((columns) => columns.split(''));
 

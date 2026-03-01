@@ -5,7 +5,7 @@ import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPag
 import GetShopPageFurnitureEvent from "../GetShopPageFurnitureEvent.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { UpdateShopFurnitureData } from "@pixel63/events";
+import { GetShopPageFurnitureData, UpdateShopFurnitureData } from "@pixel63/events";
 
 export default class UpdateShopFurnitureEvent implements ProtobuffListener<UpdateShopFurnitureData> {
     public readonly name = "UpdateShopFurnitureEvent";
@@ -63,8 +63,8 @@ export default class UpdateShopFurnitureEvent implements ProtobuffListener<Updat
             });
         }
 
-        await (new GetShopPageFurnitureEvent()).handle(user, {
+        await (new GetShopPageFurnitureEvent()).handle(user, GetShopPageFurnitureData.create({
             pageId: payload.pageId
-        });
+        }));
     }
 }

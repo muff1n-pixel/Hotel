@@ -1,4 +1,3 @@
-import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
 import { useBotSpeech } from "../../hooks/Bots/useBotSpeech";
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/DialogContent";
@@ -9,7 +8,7 @@ import Checkbox from "../Form/Checkbox";
 import DialogButton from "../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../hooks/useDialogs";
-import { UpdateRoomBotData } from "@pixel63/events";
+import { UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotSpeechDialogProps = {
     data: UserBotData;

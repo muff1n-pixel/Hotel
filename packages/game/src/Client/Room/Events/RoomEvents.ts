@@ -1,7 +1,7 @@
 import ClientInstance from "@Client/ClientInstance";
 import RoomInstance from "../RoomInstance";
 import { webSocketClient } from "../../..";
-import { RoomLoadData } from "@pixel63/events";
+import { RoomLoadData, RoomReadyData } from "@pixel63/events";
 
 export default function registerRoomEvents(clientInstance: ClientInstance) {
     webSocketClient.addProtobuffListener(RoomLoadData, {
@@ -15,7 +15,7 @@ export default function registerRoomEvents(clientInstance: ClientInstance) {
 
             clientInstance.roomInstance.value = new RoomInstance(clientInstance, payload);
 
-            webSocketClient.send("RoomReadyEvent", null);
+            webSocketClient.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
         },
     })
 }

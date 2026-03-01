@@ -24,7 +24,7 @@ export default class RoomFurnitureWiredLogic implements FurnitureLogic {
             type: "room-furniture-logic",
             data: {
                 furniture: this.roomFurniture,
-                type: this.roomFurniture.data.furniture.interactionType as any
+                type: this.roomFurniture.data.furniture?.interactionType as any
             } satisfies RoomFurnitureLogicDialogData
         });
     }

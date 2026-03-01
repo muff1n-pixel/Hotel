@@ -23,26 +23,6 @@ export default class User extends EventEmitter {
         });
     }
 
-    send(events: OutgoingEvent | OutgoingEvent[]) {
-        if(events instanceof OutgoingEvent) {
-            events = [ events ];
-        }
-
-        const payload = JSON.stringify(events.map((event) => {
-            const eventPayload = [ event.name, event.body ];
-
-            if(debugTimestamps) {
-                eventPayload.push(Date.now());
-            }
-
-            return eventPayload;
-        }));
-
-        console.debug("Sending: " + events.map((event) => event.name).join(', '));
-        
-        this.webSocket.send(payload);
-    };
-
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
         const encoded = message.encode(payload).finish();
 

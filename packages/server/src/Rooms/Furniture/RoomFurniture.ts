@@ -1,7 +1,5 @@
 import Room from "../Room.js";
 import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { game } from "../../index.js";
 import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
 import RoomFurnitureGateLogic from "./Logic/RoomFurnitureGateLogic.js";
@@ -31,18 +29,22 @@ import WiredTriggerUserPerformsActionLogic from "./Logic/Wired/Trigger/WiredTrig
 import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollisionLogic.js";
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
-import { RoomFurnitureData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
 
     constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
+        if(typeof model.furniture.customParams?.[0] == "number") {
+            model.furniture.customParams = model.furniture.customParams.map((value: number) => value.toString());
+        }
+        
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }
     }
 
-    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPosition, direction: number) {
+    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number) {
         await userFurniture.update({
             position,
             direction,
@@ -53,7 +55,7 @@ export default class RoomFurniture<T = unknown> {
 
         room.furnitures.push(roomFurniture);
 
-        room.floorplan.updatePosition(position, roomFurniture.getDimensions());
+        room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position), roomFurniture.getDimensions());
 
         room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureAdded: [
@@ -67,8 +69,8 @@ export default class RoomFurniture<T = unknown> {
     public async pickup() {
         this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
 
-        this.room.floorplan.updatePosition(this.model.position, this.getDimensions());
-        this.room.refreshActorsSitting(this.model.position, this.getDimensions());
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
+        this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureRemoved: [
@@ -117,18 +119,18 @@ export default class RoomFurniture<T = unknown> {
     }
 
     public getDimensions() {
-        return (this.model.direction === 0 || this.model.direction === 4)?({
+        return (this.model.direction === 0 || this.model.direction === 4)?(RoomPositionData.create({
             row: this.model.furniture.dimensions.column,
             column: this.model.furniture.dimensions.row,
             depth: this.model.furniture.dimensions.depth,
-        }):({
+        })):(RoomPositionData.create({
             row: this.model.furniture.dimensions.row,
             column: this.model.furniture.dimensions.column,
             depth: this.model.furniture.dimensions.depth,
-        });
+        }));
     }
 
-    public isPositionInside(position: Omit<RoomPosition, "depth">) {
+    public isPositionInside(position: RoomPositionOffsetData) {
         if(this.model.furniture.placement !== "floor") {
             return false;
         }
@@ -297,18 +299,18 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
-    public async setPosition(position: RoomPosition, save: boolean = true) {
+    public async setPosition(position: RoomPositionData, save: boolean = true) {
         const previousPosition = this.model.position;
         const previousDimensions = this.getDimensions();
 
         this.model.position = position;
 
-        this.room.floorplan.updatePosition(position, this.getDimensions());
-        this.room.floorplan.updatePosition(previousPosition, previousDimensions);
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position), this.getDimensions());
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition), previousDimensions);
 
         if(this.model.furniture.flags.sitable) {
-            this.room.refreshActorsSitting(previousPosition, previousDimensions);
-            this.room.refreshActorsSitting(position, this.getDimensions());
+            this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(previousPosition), previousDimensions);
+            this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(position), this.getDimensions());
         }
 
         if(save && this.model.changed()) {
@@ -327,12 +329,12 @@ export default class RoomFurniture<T = unknown> {
 
         this.model.direction = direction;
 
-        this.room.floorplan.updatePosition(this.model.position, previousDimensions);
-        this.room.floorplan.updatePosition(this.model.position, this.getDimensions());
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), previousDimensions);
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
 
         if(this.model.furniture.flags.sitable) {
-            this.room.refreshActorsSitting(this.model.position, previousDimensions);
-            this.room.refreshActorsSitting(this.model.position, this.getDimensions());
+            this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(this.model.position), previousDimensions);
+            this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
         }
 
         if(save && this.model.changed()) {

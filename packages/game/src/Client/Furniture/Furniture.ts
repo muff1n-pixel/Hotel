@@ -5,6 +5,7 @@ import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRo
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
+import { RoomPositionData } from "@pixel63/events";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -132,24 +133,24 @@ export default class Furniture {
     }
 
     getDimensions(raw: boolean = false) {
-        let result = { row: 0, column: 0, depth: 0 };
+        let result = RoomPositionData.create({ row: 0, column: 0, depth: 0 });
 
         if(!this.data) {
             return result;
         }
         
-        result = {
+        result = RoomPositionData.create({
             row: this.data.logic.model.dimensions.x,
             column: this.data.logic.model.dimensions.y,
             depth: this.data.logic.model.dimensions.z
-        };
+        });
 
         if(!raw && (this.direction === 0 || this.direction === 4)) {
-            result = {
+            result = RoomPositionData.create({
                 row: this.data.logic.model.dimensions.y,
                 column: this.data.logic.model.dimensions.x,
                 depth: this.data.logic.model.dimensions.z
-            };
+            });
         }
 
         return result;

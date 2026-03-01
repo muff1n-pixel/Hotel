@@ -3,7 +3,7 @@ import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
 import { RoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
-export default class SetFurnitureDataEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
+export default class UpdateRoomFurnitureEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
     async handle(user: User, payload: UpdateRoomFurnitureData) {
         if(!user.room) {
             return;

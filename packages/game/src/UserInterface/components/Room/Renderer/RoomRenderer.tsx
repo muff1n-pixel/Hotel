@@ -1,7 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import RoomFurnitureRenderer, { RoomFurnitureRendererOptions } from "@Client/Room/RoomFurnitureRenderer";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData } from "@pixel63/events";
 
 export type RoomRendererProps = {
     style?: CSSProperties;
@@ -16,7 +15,7 @@ export type RoomRendererProps = {
     figureData?: {
         figureConfiguration: FigureConfigurationData;
         actions?: string[];
-        position?: RoomPosition;
+        position?: RoomPositionData;
     };
 };
 

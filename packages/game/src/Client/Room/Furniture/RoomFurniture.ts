@@ -2,7 +2,6 @@ import Furniture from "@Client/Furniture/Furniture";
 import FurnitureDefaultLogic from "@Client/Furniture/Logic/FurnitureDefaultLogic";
 import FurnitureMultistateLogic from "@Client/Furniture/Logic/FurnitureMultistateLogic";
 import FurnitureRoomDimmerLogic from "@Client/Furniture/Logic/FurnitureRoomDimmerLogic";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomFurnitureBackgroundLogic from "@Client/Room/Furniture/Logic/RoomFurnitureBackgroundLogic";
 import RoomFurnitureBackgroundTonerLogic from "@Client/Room/Furniture/Logic/RoomFurnitureBackgroundTonerLogic";
 import RoomFurnitureDiceLogic from "@Client/Room/Furniture/Logic/RoomFurnitureDiceLogic";
@@ -14,7 +13,7 @@ import RoomFurnitureStickieLogic from "@Client/Room/Furniture/Logic/RoomFurnitur
 import RoomFurnitureTrophyLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTrophyLogic";
 import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitureFortunaLogic";
 import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurnitureWiredLogic";
-import { UserFurnitureData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureData } from "@pixel63/events";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -141,7 +140,7 @@ export default class RoomFurniture {
         }
     }
 
-    isPositionInside(position: Omit<RoomPosition, "depth">, dimensions: RoomPosition) {
+    isPositionInside(position: Omit<RoomPositionData, "depth">, dimensions: RoomPositionData) {
         if(this.item.furnitureRenderer.placement !== "floor") {
             return false;
         }

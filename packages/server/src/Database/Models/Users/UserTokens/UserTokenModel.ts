@@ -1,9 +1,4 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { NonAttribute } from "@sequelize/core";
-import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
-import { RoomModel } from "../../Rooms/RoomModel.js";
-import { UserModel } from "../UserModel.js";
 
 export class UserTokenModel extends Model {
     declare id: string;

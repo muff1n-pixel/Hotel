@@ -1,13 +1,12 @@
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/Renderer";
-import { UserFurnitureTonerData } from "@pixel63/events";
-import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
+import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 
 export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
 
-    public moodlight?: RoomMoodlightData;
+    public moodlight?: UserFurnitureMoodlightData;
     public backgroundToner?: UserFurnitureTonerData;
 
     constructor(private roomRenderer: RoomRenderer) {
@@ -23,7 +22,7 @@ export default class RoomLighting {
         }
     }
 
-    public setMoodlightData(moodlight?: RoomMoodlightData) {
+    public setMoodlightData(moodlight?: UserFurnitureMoodlightData) {
         const shouldRerender = 
             (moodlight?.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
             || (moodlight?.backgroundOnly !== this.moodlight?.backgroundOnly)

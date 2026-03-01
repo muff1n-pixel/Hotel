@@ -3,7 +3,7 @@ import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js
 import GetShopPagesEvent from "../GetShopPagesEvent.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { UpdateShopPageData } from "@pixel63/events";
+import { GetShopPagesData, UpdateShopPageData } from "@pixel63/events";
 
 export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShopPageData> {
     public readonly name = "UpdateShopPageEvent";
@@ -57,8 +57,8 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
             });
         }
 
-        await (new GetShopPagesEvent()).handle(user, {
+        await (new GetShopPagesEvent()).handle(user, GetShopPagesData.create({
             category: "furniture"
-        });
+        }));
     }
 }

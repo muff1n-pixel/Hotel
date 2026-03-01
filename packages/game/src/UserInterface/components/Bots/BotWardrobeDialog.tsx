@@ -1,9 +1,8 @@
 import FigureWardrobeDialog from "../Wardrobe/FigureWardrobeDialog";
-import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
 import { useCallback } from "react";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../hooks/useDialogs";
-import { FigureConfigurationData, UpdateRoomBotData } from "@pixel63/events";
+import { FigureConfigurationData, UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotWardrobeDialogProps = {
     data: UserBotData;

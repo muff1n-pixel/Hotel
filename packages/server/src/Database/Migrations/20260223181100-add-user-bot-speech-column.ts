@@ -1,4 +1,4 @@
-import { BotSpeechData } from '@shared/Interfaces/Bots/BotSpeechData';
+import { BotSpeechData } from '@pixel63/events';
 import { QueryInterface, DataTypes } from 'sequelize';
 import type { Migration } from "sequelize-cli";
 
@@ -14,23 +14,23 @@ export default {
                     this.setDataValue("speech", JSON.stringify(value));
                 },
                 allowNull: false,
-                defaultValue: JSON.stringify({
+                defaultValue: JSON.stringify(BotSpeechData.create({
                     automaticChat: false,
                     automaticChatDelay: 30,
                     messages: [],
                     randomizeMessages: true
-                } satisfies BotSpeechData)
+                }))
             }, {
                 transaction
             });
 
             await queryInterface.bulkUpdate("user_bots", {
-                speech: JSON.stringify({
+                speech: JSON.stringify(BotSpeechData.create({
                     automaticChat: false,
                     automaticChatDelay: 30,
                     messages: [],
                     randomizeMessages: true
-                } satisfies BotSpeechData)
+                }))
             }, {}, { transaction });
         }
     ),

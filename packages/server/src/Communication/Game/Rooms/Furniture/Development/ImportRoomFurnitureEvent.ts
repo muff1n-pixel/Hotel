@@ -21,8 +21,6 @@ export default class ImportRoomFurnitureEvent implements ProtobuffListener<RoomF
 
         const room = user.room;
 
-        const roomEvents: OutgoingEvent[] = [];
-
         for(let furnitureData of payload.furniture) {
             const furniture = await FurnitureModel.findOne({
                 where: {
@@ -65,7 +63,5 @@ export default class ImportRoomFurnitureEvent implements ProtobuffListener<RoomF
                 ]
             }));
         }
-
-        room.sendRoomEvent(roomEvents);
     }
 }

@@ -1,10 +1,6 @@
-import { game } from "../../../index.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {

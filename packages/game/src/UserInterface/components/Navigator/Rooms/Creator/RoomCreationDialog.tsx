@@ -9,7 +9,7 @@ import useRoomMaps from "./Hooks/useRoomMaps";
 import { useDialogs } from "../../../../hooks/useDialogs";
 import { useRoomCategories } from "../../../../hooks/useRoomCategories";
 import Selection from "../../../Form/Selection";
-import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData } from "@pixel63/events";
+import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -158,7 +158,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                     alignItems: "center"
                                 }} onClick={() => setActiveRoomMap(roomMap)}>
                                     <RoomMapImage crop={true} width={135} height={96} style={{
-                                    }} structure={{
+                                    }} structure={RoomStructureData.create({
                                         grid: roomMap.grid,
                                         door: roomMap.door,
                                         floor: {
@@ -170,7 +170,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                             thickness: 0,
                                             hidden: false
                                         }
-                                    }} leftWallColor={["D48612"]}/>
+                                    })} leftWallColor={["D48612"]}/>
                                 </div>
                             ))}
                         </div>

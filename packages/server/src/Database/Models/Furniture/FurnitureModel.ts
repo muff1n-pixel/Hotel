@@ -1,6 +1,5 @@
+import { FurnitureFlagsData, RoomPositionData } from "@pixel63/events";
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { FurnitureFlagsData } from "@shared/Interfaces/Furniture/FurnitureFlags";
 
 export class FurnitureModel extends Model {
     declare id: string;
@@ -8,7 +7,7 @@ export class FurnitureModel extends Model {
     declare name: string;
     declare description?: string;
     declare placement: "floor" | "wall";
-    declare dimensions: RoomPosition;
+    declare dimensions: RoomPositionData;
     declare interactionType: string;
     declare color?: number;
     declare category: string;

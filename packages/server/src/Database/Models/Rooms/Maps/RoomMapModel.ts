@@ -1,10 +1,10 @@
-import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
+import { RoomStructureDoorData } from "@pixel63/events";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class RoomMapModel extends Model {
     declare id: string;
     declare grid: string[];
-    declare door: Required<RoomStructure["door"]>;
+    declare door: RoomStructureDoorData;
 }
 
 export function initializeRoomMapModel(sequelize: Sequelize) {

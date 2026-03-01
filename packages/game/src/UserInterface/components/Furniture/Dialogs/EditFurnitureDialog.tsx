@@ -1,6 +1,5 @@
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
-import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import FurnitureImage from "../FurnitureImage";
 import { useCallback, useState } from "react";
 import Input from "../../Form/Input";
@@ -9,7 +8,7 @@ import DialogButton from "../../Dialog/Button/DialogButton";
 import useFurnitureTypes from "../../../hooks/Furniture/useFurnitureTypes";
 import Selection from "../../Form/Selection";
 import { webSocketClient } from "../../../..";
-import { UpdateFurnitureData } from "@pixel63/events";
+import { FurnitureData, UpdateFurnitureData } from "@pixel63/events";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;
@@ -24,7 +23,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
     const [description, setDescription] = useState(data.description ?? "");
     const [category, setCategory] = useState(data.category);
     const [interactionType, setInteractionType] = useState(data.interactionType);
-    const [depth, setDepth] = useState<number>(data.dimensions.depth);
+    const [depth, setDepth] = useState<number>(data.dimensions?.depth ?? 0);
 
     const [flags, setFlags] = useState(data.flags);
 
@@ -43,6 +42,10 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
             depth
         }));
     }, [ data, name, description, category, interactionType, depth, flags ]);
+
+    if(!flags) {
+        return null;
+    }
 
     return (
         <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={350} style={{

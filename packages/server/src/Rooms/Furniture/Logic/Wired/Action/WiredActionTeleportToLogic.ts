@@ -1,3 +1,4 @@
+import { RoomPositionOffsetData } from "@pixel63/events";
 import RoomFurniture from "../../../RoomFurniture";
 import WiredLogic, { WiredTriggerOptions } from "../WiredLogic";
 
@@ -21,7 +22,7 @@ export default class WiredActionTeleportToLogic extends WiredLogic {
                 if(randomFurniture) {
                     this.setActive();
                     
-                    options.roomUser.path.teleportTo(randomFurniture.model.position);
+                    options.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(randomFurniture.model.position));
                 }
             }
         }

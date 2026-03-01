@@ -8,7 +8,7 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -52,7 +52,7 @@ export default class RoomUser implements RoomActor {
             depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
         };
 
-        this.user.room.floorplan.updatePosition(this.position);
+        this.user.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         this.direction = room.model.structure.door?.direction ?? 2;
 
@@ -132,7 +132,7 @@ export default class RoomUser implements RoomActor {
             userId: this.user.model.id
         }));
 
-        this.user.room?.floorplan.updatePosition(this.position);
+        this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         const wiredUserLeavesRoomLogics = this.room.getFurnitureWithCategory(WiredTriggerUserLeavesRoomLogic);
 
@@ -142,7 +142,7 @@ export default class RoomUser implements RoomActor {
 
         delete this.user.room;
 
-        this.user.send(new OutgoingEvent("LeaveRoomEvent", null));
+        this.user.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}));
 
         if(!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
@@ -275,7 +275,7 @@ export default class RoomUser implements RoomActor {
         this.lastActivity = performance.now();
     }
 
-    public async handleWalkEvent(previousPosition: RoomPositionData, newPosition: RoomPositionData) {
+    public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
         const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
 
         if(previousFurniture) {

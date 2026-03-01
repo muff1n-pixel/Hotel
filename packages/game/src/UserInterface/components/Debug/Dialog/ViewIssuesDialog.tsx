@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
 import { webSocketClient } from "../../../..";
-import { HotelFeedbackData } from "@pixel63/events";
+import { GetHotelFeedbackData, HotelFeedbackData } from "@pixel63/events";
 import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData";
 
 export type ViewIssuesDialogProps = {
@@ -20,7 +20,7 @@ export default function ViewIssuesDialog({ hidden, onClose }: ViewIssuesDialogPr
             },
         });
 
-        webSocketClient.send("GetHotelFeedbackEvent", null);
+        webSocketClient.sendProtobuff(GetHotelFeedbackData, GetHotelFeedbackData.create({}));
 
         return () => {
             webSocketClient.removeProtobuffListener(HotelFeedbackCollectionData, listener);

@@ -1,6 +1,5 @@
 import RoomFurniture from "../../../RoomFurniture";
 import WiredTriggerLogic from "../WiredTriggerLogic";
-import { WiredTriggerPeriodicallyData } from "@shared/Interfaces/Room/Furniture/Wired/Trigger/WiredTriggerPeriodicallyData";
 
 export default class WiredTriggerPeriodicallyLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {

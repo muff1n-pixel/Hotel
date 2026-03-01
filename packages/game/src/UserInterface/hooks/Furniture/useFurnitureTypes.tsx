@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { webSocketClient } from "../../..";
-import { FurnitureTypesData } from "@pixel63/events";
+import { FurnitureTypesData, GetFurnitureTypesData } from "@pixel63/events";
 
 export default function useFurnitureTypes() {
     const [categories, setCategories] = useState<string[]>([]);
@@ -14,7 +14,7 @@ export default function useFurnitureTypes() {
             }
         });
 
-        webSocketClient.send("GetFurnitureTypesEvent", null);
+        webSocketClient.sendProtobuff(GetFurnitureTypesData, GetFurnitureTypesData.create({}));
 
         return () => {
             webSocketClient.removeProtobuffListener(FurnitureTypesData, listener);
