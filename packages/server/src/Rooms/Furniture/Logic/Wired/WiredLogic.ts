@@ -27,9 +27,10 @@ export default class WiredLogic implements RoomFurnitureLogic {
 
     public getConnectedWired() {
         const furniture = this.roomFurniture.room.furnitures.find((furniture) => 
-            furniture.model.position.row === this.roomFurniture.model.position.row
+            furniture.model.id !== this.roomFurniture.model.id
+            && furniture.model.position.row === this.roomFurniture.model.position.row
             && furniture.model.position.column === this.roomFurniture.model.position.column
-            && furniture.model.position.depth === this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth + 0.0001
+            && (Math.round(furniture.model.position.depth * 100) / 100) === (Math.round((this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth + 0.0001) * 100) / 100)
         );
 
         if(!furniture) {

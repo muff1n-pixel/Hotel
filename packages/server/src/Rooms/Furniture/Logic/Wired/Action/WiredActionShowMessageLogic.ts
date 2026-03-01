@@ -46,7 +46,7 @@ export default class WiredActionShowMessageLogic extends WiredLogic {
                 },
 
                 message: this.roomFurniture.model.data.wiredActionShowMessage.message,
-                roomChatStyleId: "notificate",
+                roomChatStyleId: "notification",
                 options: {
                     hideUsername: true
                 }
