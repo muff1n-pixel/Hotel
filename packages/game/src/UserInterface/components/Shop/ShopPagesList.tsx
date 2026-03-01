@@ -1,4 +1,4 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
+import { ShopPageData } from "@pixel63/events";
 import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
 import { Fragment } from "react/jsx-runtime";
 

@@ -1,7 +1,6 @@
 import User from "../../Users/User.js";
 import Room from "../Room.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { UserLeftRoomEventData } from "@shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
 import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
@@ -9,7 +8,7 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomUserData, RoomUserEnteredData, UserData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -129,7 +128,7 @@ export default class RoomUser implements RoomActor {
         
         this.room.users.splice(this.room.users.indexOf(this), 1);
 
-        this.room.sendRoomEvent(new OutgoingEvent<UserLeftRoomEventData>("UserLeftRoomEvent", {
+        this.room.sendProtobuff(RoomUserLeftData, RoomUserLeftData.create({
             userId: this.user.model.id
         }));
 

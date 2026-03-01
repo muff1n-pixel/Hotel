@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message ShopFeaturePageData {
+    string id = 1;
+    string category = 2;
+}

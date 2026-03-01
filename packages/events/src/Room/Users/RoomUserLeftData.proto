@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message RoomUserLeftData {
+    string user_id = 1;
+}

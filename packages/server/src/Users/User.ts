@@ -6,8 +6,7 @@ import UserInventory from "./Inventory/UserInventory.js";
 import Room from "../Rooms/Room.js";
 import { debugTimestamps } from "../Database/Database.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
-import { UserPermissionsEventData } from "@shared/Communications/Responses/User/Permissions/UserPermissionsEventData.js";
-import { MessageType, UnknownMessage, UserData } from "@pixel63/events";
+import { MessageType, UnknownMessage, UserData, UserPermissionsData } from "@pixel63/events";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -18,7 +17,9 @@ export default class User extends EventEmitter {
         super();
         
         this.getPermissions().then((permissions) => {
-            this.send(new OutgoingEvent<UserPermissionsEventData>("UserPermissionsEvent", permissions.getPermissionData()));
+            this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
+                permissions: permissions.getPermissionData()
+            }));
         });
     }
 

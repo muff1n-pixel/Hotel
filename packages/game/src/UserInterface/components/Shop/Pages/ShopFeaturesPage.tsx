@@ -2,7 +2,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { ShopPageProps } from "./ShopPage";
 import ShopPageFeatureImage from "./Features/ShopPageFeatureImage";
 import ShopPageFeatureTitle from "./Features/ShopPageFeatureTitle";
-import { ShopPageFeatureData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
+import { ShopFeatureData } from "@pixel63/events";
 
 export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPageProps) {
     const [verticalFeature, setVerticalFeature] = useState(page.features?.find((feature) => feature.type === "vertical"));
@@ -13,8 +13,10 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
         setHorizontalFeatures(page.features?.filter((feature) => feature.type === "horizontal"));
     }, [ page.features ]);
 
-    const handleFeatureClick = useCallback((feature: ShopPageFeatureData) => {
-        setActiveShopPage?.(feature.page);
+    const handleFeatureClick = useCallback((feature: ShopFeatureData) => {
+        if(feature.page) {
+            setActiveShopPage?.(feature.page);
+        }
     }, [setActiveShopPage]);
 
     return (

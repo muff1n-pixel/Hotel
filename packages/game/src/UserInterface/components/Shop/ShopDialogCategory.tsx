@@ -3,10 +3,9 @@ import DialogPanelList from "../Dialog/Panels/DialogPanelList";
 import { useCallback, useEffect } from "react";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import { useDialogs } from "../../hooks/useDialogs";
-import { ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
 import ShopPagesList from "./ShopPagesList";
+import { ShopPageData } from "@pixel63/events";
 
 export type ShopDialogCategoryProps = {
     editMode?: boolean;
@@ -14,7 +13,7 @@ export type ShopDialogCategoryProps = {
 
     shopPages: ShopPageData[];
     activeShopPage?: ShopPageData;
-    setActiveShopPage: (page: { id: string; category: ShopPageCategory; }) => void;
+    setActiveShopPage: (page: { id: string; category: string; }) => void;
 }
 
 export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {

@@ -4,11 +4,11 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { PurchaseShopFurnitureEventData } from "@shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData.js";
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import { ShopFurniturePurchasedEventData } from "@shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData.js";
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { RoomFurnitureTrophyData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureTrophyData.js";
+import { ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default class PurchaseShopFurnitureEvent implements IncomingEvent<PurchaseShopFurnitureEventData> {
     public readonly name = "PurchaseShopFurnitureEvent";
@@ -25,7 +25,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         });
 
         if(!shopFurniture) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -33,7 +33,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.credits && user.model.credits < shopFurniture.credits)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -41,7 +41,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.duckets && user.model.duckets < shopFurniture.duckets)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -49,7 +49,7 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
         }
 
         if((shopFurniture.diamonds && user.model.diamonds < shopFurniture.diamonds)) {
-            user.send(new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
+            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
 
@@ -132,11 +132,9 @@ export default class PurchaseShopFurnitureEvent implements IncomingEvent<Purchas
             await user.getInventory().addFurniture(userFurniture);
         }
 
-        user.send([
-            new OutgoingEvent<ShopFurniturePurchasedEventData>("ShopFurniturePurchasedEvent", {
-                success: true
-            })
-        ]);
+        user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            success: true
+        }));
 
         user.sendUserData();
     }

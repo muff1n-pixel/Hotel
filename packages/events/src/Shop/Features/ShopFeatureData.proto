@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "Shop/Features/ShopFeaturePageData.proto";
+
+message ShopFeatureData {
+    string id = 1;
+
+    string title = 2;
+    string image = 3;
+
+    string type = 4;
+
+    ShopFeaturePageData page = 5;
+}

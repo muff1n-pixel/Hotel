@@ -1,4 +1,3 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
@@ -7,11 +6,11 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { UpdateShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopFurnitureEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
-import { ShopPageFurnitureData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
 import FurnitureImage from "../../Furniture/FurnitureImage";
+import { ShopFurnitureData, ShopPageData } from "@pixel63/events";
 
 export type EditShopFurnitureDialogProps = {
-    data: Partial<ShopPageFurnitureData> & {
+    data: Partial<ShopFurnitureData> & {
         page: ShopPageData;
     };
     hidden?: boolean;

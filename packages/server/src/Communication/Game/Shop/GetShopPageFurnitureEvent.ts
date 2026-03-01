@@ -5,7 +5,7 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { GetShopPageFurnitureEventData } from "@shared/Communications/Requests/Shop/GetShopPageFurnitureEventData.js";
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import { ShopPageFurnitureEventData } from "@shared/Communications/Responses/Shop/ShopPageFurnitureEventData.js";
+import { ShopPageFurnitureData } from "@pixel63/events";
 
 export default class GetShopPageFurnitureEvent implements IncomingEvent<GetShopPageFurnitureEventData> {
     public readonly name = "GetShopPageFurnitureEvent";
@@ -28,12 +28,12 @@ export default class GetShopPageFurnitureEvent implements IncomingEvent<GetShopP
             throw new Error("Shop page does not exist.");
         }
 
-        user.send(new OutgoingEvent<ShopPageFurnitureEventData>("ShopPageFurnitureEvent", {
+        user.sendProtobuff(ShopPageFurnitureData, ShopPageFurnitureData.create({
             pageId: shopPage.id,
             furniture: shopPage.furniture.map((furniture) => {
                 return {
                     id: furniture.id,
-                    furniture: furniture.furniture,
+                    furniture: furniture.furniture.toJSON(),
                     credits: furniture.credits,
                     duckets: furniture.duckets,
                     diamonds: furniture.diamonds

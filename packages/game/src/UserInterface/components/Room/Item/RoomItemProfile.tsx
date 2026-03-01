@@ -1,18 +1,15 @@
 import RoomInstance from "@Client/Room/RoomInstance";
 import { useEffect, useRef, useState } from "react";
-import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import RoomFurnitureProfile from "./Furniture/RoomFurnitureProfile";
 import RoomUserProfile from "./User/RoomUserProfile";
 import { webSocketClient } from "../../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomBotProfile from "./Bot/RoomBotProfile";
-import { RoomBotsData, RoomFurnitureData } from "@pixel63/events";
+import { RoomBotsData, RoomFurnitureData, RoomUserData, RoomUserLeftData } from "@pixel63/events";
 
 export type RoomItemProfileItem = {
     type: "user";
@@ -100,16 +97,16 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
             };
         }
         else if(focusedItem.type === "user") {
-            const listener = (event: WebSocketEvent<UserLeftRoomEventData>) => {
-                if(event.data.userId === focusedItem.user.id) {
-                    setFocusedItem(undefined);
-                }
-            };
-
-            webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", listener);
+            const listener = webSocketClient.addProtobuffListener(RoomUserLeftData, {
+                async handle(payload: RoomUserLeftData) {
+                    if(payload.userId === focusedItem.user.id) {
+                        setFocusedItem(undefined);
+                    }
+                },
+            });
 
             return () => {
-                webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", listener);
+                webSocketClient.removeProtobuffListener(RoomUserLeftData, listener);
             };
         }
         else if(focusedItem.type === "bot") {

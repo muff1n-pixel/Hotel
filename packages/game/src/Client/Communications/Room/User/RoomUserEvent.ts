@@ -38,6 +38,10 @@ export default class RoomUserEvent implements ProtobuffListener<RoomUserData> {
             roomUser.item.idling = payload.idling;
         }
 
+        if(payload.motto !== undefined) {
+            roomUser.data.motto = payload.motto;
+        }
+
         if(payload.actions !== undefined) {
             roomUser.item.figureRenderer.setActions(payload.actions);
         }

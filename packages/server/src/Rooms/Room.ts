@@ -4,7 +4,6 @@ import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
 import RoomUser from "./Users/RoomUser.js";
 import RoomFurniture from "./Furniture/RoomFurniture.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
-import { RoomStructureEventData } from "@shared/Communications/Responses/Rooms/RoomStructureEventData.js";
 import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
 import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
 import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
@@ -12,7 +11,7 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomInformationData, UnknownMessage } from "@pixel63/events";
+import { MessageType, RoomInformationData, RoomPositionData, RoomStructureData, UnknownMessage } from "@pixel63/events";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -35,7 +34,7 @@ export default class Room {
         this.requestActionsFrame();
     }
 
-    public addUserClient(user: User, position?: RoomPosition) {
+    public addUserClient(user: User, position?: RoomPositionData) {
         const roomUser = new RoomUser(this, user, position);
         
         this.users.push(roomUser);
@@ -292,9 +291,7 @@ export default class Room {
 
         await this.model.update({ structure });
 
-        this.sendRoomEvent(new OutgoingEvent<RoomStructureEventData>("RoomStructureEvent", {
-            structure: this.model.structure
-        }));
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
     }
 
     public async setWallId(id: number) {
@@ -303,9 +300,7 @@ export default class Room {
 
         await this.model.update({ structure });
 
-        this.sendRoomEvent(new OutgoingEvent<RoomStructureEventData>("RoomStructureEvent", {
-            structure: this.model.structure
-        }));
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
     }
 
     public async setStructure(structure: RoomStructure) {
@@ -313,9 +308,7 @@ export default class Room {
 
         this.floorplan.regenerateStaticGrid();
 
-        this.sendRoomEvent(new OutgoingEvent<RoomStructureEventData>("RoomStructureEvent", {
-            structure: this.model.structure
-        }));
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
     }
 
     public getStructure() {

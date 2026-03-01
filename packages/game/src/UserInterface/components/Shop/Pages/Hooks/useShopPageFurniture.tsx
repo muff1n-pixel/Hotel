@@ -1,23 +1,22 @@
-import { ShopPageFurnitureData, ShopPageFurnitureEventData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
 import { GetShopPageFurnitureEventData } from "@Shared/Communications/Requests/Shop/GetShopPageFurnitureEventData";
+import { ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
 
 export default function useShopPageFurniture(pageId: string) {
-    const [shopFurnitures, setShopFurnitures] = useState<ShopPageFurnitureData[]>([]);
+    const [shopFurnitures, setShopFurnitures] = useState<ShopFurnitureData[]>([]);
     const shopFurnituresRequested = useRef<string>("");
 
     useEffect(() => {
         setShopFurnitures([]);
 
-        const listener = (event: WebSocketEvent<ShopPageFurnitureEventData>) => {
-            if(event.data.pageId === pageId) {
-                setShopFurnitures(event.data.furniture);
-            }
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopPageFurnitureEventData>>("ShopPageFurnitureEvent", listener);
+        const listener = webSocketClient.addProtobuffListener(ShopPageFurnitureData, {
+            async handle(payload: ShopPageFurnitureData) {
+                if(payload.pageId === pageId) {
+                    setShopFurnitures(payload.furniture);
+                }
+            },
+        })
 
         if(shopFurnituresRequested.current !== pageId) {
             webSocketClient.send<GetShopPageFurnitureEventData>("GetShopPageFurnitureEvent", {
@@ -28,7 +27,7 @@ export default function useShopPageFurniture(pageId: string) {
         }
 
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<ShopPageFurnitureEventData>>("ShopPageFurnitureEvent", listener);
+            webSocketClient.removeProtobuffListener(ShopPageFurnitureData, listener);
         };
     }, [pageId]);
 

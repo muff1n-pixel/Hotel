@@ -3,8 +3,8 @@ import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { GetShopPagesEventData } from "@shared/Communications/Requests/Shop/GetShopPagesEventData.js";
-import { ShopPagesEventData } from "@shared/Communications/Responses/Shop/ShopPagesEventData.js";
 import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
+import { ShopPagesData } from "@pixel63/events";
 
 export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEventData> {
     public readonly name = "GetShopPagesEvent";
@@ -41,7 +41,7 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
             order: ["index"]
         });
 
-        user.send(new OutgoingEvent<ShopPagesEventData>("ShopPagesEventData", {
+        user.sendProtobuff(ShopPagesData, ShopPagesData.create({
             category: event.category,
             pages: shopPages.sort((a, b) => a.index - b.index).map((shopPage) => {
                 return {
@@ -72,7 +72,7 @@ export default class GetShopPagesEvent implements IncomingEvent<GetShopPagesEven
                                 category: feature.featuredPage.category
                             }
                         };
-                    })
+                    }) ?? []
                 };
             })
         }));

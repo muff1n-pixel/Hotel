@@ -1,4 +1,3 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
@@ -7,14 +6,13 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { UpdateShopBotEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopBotEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
-import { ShopPageBotData } from "@Shared/Communications/Responses/Shop/ShopPageBotsEventData";
 import { BotTypeData } from "@Shared/Interfaces/Bots/BotTypeData";
 import FigureImage from "../../Figure/FigureImage";
 import { useUser } from "../../../hooks/useUser";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, ShopBotData, ShopPageData } from "@pixel63/events";
 
 export type EditShopBotDialogProps = {
-    data: Partial<ShopPageBotData> & {
+    data: Partial<ShopBotData> & {
         page: ShopPageData;
     };
     hidden?: boolean;
@@ -28,7 +26,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
     const [name, setName] = useState(data?.name ?? "");
     const [motto, setMotto] = useState(data?.motto ?? "");
 
-    const [type, setType] = useState<BotTypeData>(data?.type ?? "default");
+    const [type, setType] = useState(data?.type ?? "default");
 
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData>(data?.figureConfiguration ?? user.figureConfiguration ?? { $type: "FigureConfigurationData", gender: "male", parts: [] });
 

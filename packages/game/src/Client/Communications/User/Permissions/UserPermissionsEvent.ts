@@ -1,10 +1,10 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { UserPermissionsEventData } from "@Shared/Communications/Responses/User/Permissions/UserPermissionsEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { clientInstance } from "../../../..";
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { UserPermissionsData } from "@pixel63/events";
+import { PermissionAction } from "@Shared/Interfaces/Permissions/PermissionMap";
 
-export default class UserPermissionsEvent implements IncomingEvent<WebSocketEvent<UserPermissionsEventData>> {
-    async handle(event: WebSocketEvent<UserPermissionsEventData>) {
-        clientInstance.permissions.value = event.data;
+export default class UserPermissionsEvent implements ProtobuffListener<UserPermissionsData> {
+    async handle(payload: UserPermissionsData) {
+        clientInstance.permissions.value = payload.permissions as PermissionAction[];
     }
 }

@@ -1,7 +1,7 @@
-import { ShopPageFeatureData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData"
+import { ShopFeatureData } from "@pixel63/events";
 
 export type ShopPageFeatureTitleProps = {
-    feature: ShopPageFeatureData;
+    feature: ShopFeatureData;
 }
 
 export default function ShopPageFeatureTitle({ feature }: ShopPageFeatureTitleProps) {

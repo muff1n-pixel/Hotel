@@ -1,12 +1,11 @@
 import { FigureConfigurationData } from "@pixel63/events";
-import { BotTypeData } from "../../../../Interfaces/Bots/BotTypeData.js";
 
 export type UpdateShopBotEventData = {
     id: string | null;
 
     pageId: string;
 
-    type: BotTypeData;
+    type: string;
     
     name: string;
     motto: string | null;

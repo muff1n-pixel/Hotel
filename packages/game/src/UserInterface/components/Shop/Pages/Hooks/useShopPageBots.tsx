@@ -1,23 +1,22 @@
-import { ShopPageBotData, ShopPageBotsEventData } from "@Shared/Communications/Responses/Shop/ShopPageBotsEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
 import { GetShopPageBotsEventData } from "@Shared/Communications/Requests/Shop/GetShopPageBotsEventData";
+import { ShopBotData, ShopPageBotsData } from "@pixel63/events";
 
 export default function useShopPageBots(pageId: string) {
-    const [bots, setBots] = useState<ShopPageBotData[]>([]);
+    const [bots, setBots] = useState<ShopBotData[]>([]);
     const pageIdRequested = useRef<string>("");
 
     useEffect(() => {
         setBots([]);
 
-        const listener = (event: WebSocketEvent<ShopPageBotsEventData>) => {
-            if(event.data.pageId === pageId) {
-                setBots(event.data.bots);
-            }
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopPageBotsEventData>>("ShopPageBotsEvent", listener);
+        const listener = webSocketClient.addProtobuffListener(ShopPageBotsData, {
+            async handle(payload: ShopPageBotsData) {
+                if(payload.pageId === pageId) {
+                    setBots(payload.bots);
+                }
+            },
+        });
 
         if(pageIdRequested.current !== pageId) {
             webSocketClient.send<GetShopPageBotsEventData>("GetShopPageBotsEvent", {
@@ -28,7 +27,7 @@ export default function useShopPageBots(pageId: string) {
         }
 
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<ShopPageBotsEventData>>("ShopPageBotsEvent", listener);
+            webSocketClient.removeProtobuffListener(ShopPageBotsData, listener);
         };
     }, [pageId]);
 

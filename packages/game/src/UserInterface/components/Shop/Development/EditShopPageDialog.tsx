@@ -1,4 +1,3 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
@@ -8,6 +7,7 @@ import { webSocketClient } from "../../../..";
 import { UpdateShopPageEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopPageEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import Selection from "../../Form/Selection";
+import { ShopPageData } from "@pixel63/events";
 
 export type EditShopPageDialogProps = {
     data: ShopPageData & { shopPages?: ShopPageData[]; } | null;

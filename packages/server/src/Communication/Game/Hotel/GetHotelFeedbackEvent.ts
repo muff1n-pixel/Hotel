@@ -1,9 +1,8 @@
 import { HotelFeedbackModel } from "../../../Database/Models/Hotel/HotelFeedbackModel.js";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { HotelFeedbackEventData } from "@shared/Communications/Responses/Hotel/Issues/HotelFeedbackEventData.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData.js";
 
 export default class GetHotelFeedbackEvent implements IncomingEvent {
     public readonly name = "GetHotelFeedbackEvent";
@@ -27,17 +26,19 @@ export default class GetHotelFeedbackEvent implements IncomingEvent {
             ]
         });
 
-        user.send(new OutgoingEvent<HotelFeedbackEventData>("HotelFeedbackEvent", feedback.map((feedback) => {
-            return {
-                id: feedback.id,
-                user: {
-                    id: feedback.user.id,
-                    name: feedback.user.name,
-                },
-                area: feedback.area,
-                description: feedback.description,
-                status: feedback.status
-            }
-        })));
+        user.sendProtobuff(HotelFeedbackCollectionData, HotelFeedbackCollectionData.create({
+            feedback: feedback.map((feedback) => {
+                return {
+                    id: feedback.id,
+                    user: {
+                        id: feedback.user.id,
+                        name: feedback.user.name,
+                    },
+                    area: feedback.area ?? undefined,
+                    description: feedback.description,
+                    status: feedback.status
+                }
+            })
+        }));
     }
 }

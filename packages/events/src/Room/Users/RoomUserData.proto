@@ -7,16 +7,17 @@ message RoomUserData {
     string id = 1;
 
     optional string name = 2;
+    optional string motto = 3;
 
-    optional FigureConfigurationData figure_configuration = 3;
+    optional FigureConfigurationData figure_configuration = 4;
 
-    optional RoomPositionData position = 4;
-    optional uint32 direction = 5;
+    optional RoomPositionData position = 5;
+    optional uint32 direction = 6;
 
-    optional bool typing = 6;
-    optional bool idling = 7;
+    optional bool typing = 7;
+    optional bool idling = 8;
 
-    optional bool has_rights = 8;
+    optional bool has_rights = 9;
 
-    repeated string actions = 9;
+    repeated string actions = 10;
 }

@@ -2,10 +2,8 @@ import ClientInstance from "@Client/ClientInstance";
 import RoomRenderer from "./Renderer";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import { webSocketClient } from "../..";
 import { StartWalkingEventData } from "@Shared/Communications/Requests/Rooms/User/StartWalkingEventData";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
@@ -107,13 +105,11 @@ export default class RoomInstance {
     }
 
     private registerEventListeners() {
-        webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.addEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.addEventListener("click", this.click.bind(this));
     }
 
     private removeEventListeners() {
-        webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.removeEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.removeEventListener("click", this.click.bind(this));
     }
@@ -121,11 +117,6 @@ export default class RoomInstance {
     private leaveRoomListener = this.leaveRoom.bind(this);
     private leaveRoom() {
         this.terminate();
-    }
-
-    private userLeftRoomListener = this.userLeftRoom.bind(this);
-    private userLeftRoom(event: WebSocketEvent<UserLeftRoomEventData>) {
-        this.removeUser(event.data);
     }
 
     private lastSentClickEvent: number = 0;
@@ -197,13 +188,13 @@ export default class RoomInstance {
         };
     }
 
-    private removeUser(event: UserLeftRoomEventData) {
-        const user = this.getUserById(event.userId);
+    public removeUser(userId: string) {
+        const user = this.getUserById(userId);
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
 
-        if(this.focusedUser.value?.type === "user" && this.focusedUser.value?.user.data.id === event.userId) {
+        if(this.focusedUser.value?.type === "user" && this.focusedUser.value?.user.data.id === userId) {
             this.focusedUser.value = null;
         }
     }

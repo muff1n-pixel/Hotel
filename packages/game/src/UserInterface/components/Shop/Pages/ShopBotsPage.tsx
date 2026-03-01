@@ -7,9 +7,9 @@ import { PurchaseShopBotEventData } from "@Shared/Communications/Requests/Shop/P
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
-import { ShopPageBotData } from "@Shared/Communications/Responses/Shop/ShopPageBotsEventData";
 import FigureImage from "../../Figure/FigureImage";
 import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
+import { ShopBotData } from "@pixel63/events";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -19,7 +19,7 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
 
     const activeBotRef = useRef<HTMLCanvasElement>(null);
 
-    const [activeBot, setActiveBot] = useState<ShopPageBotData>();
+    const [activeBot, setActiveBot] = useState<ShopBotData>();
 
     useEffect(() => {
         if(!page.teaser) {
