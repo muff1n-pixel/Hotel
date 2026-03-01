@@ -35,10 +35,6 @@ export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
 
     constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
-        if(typeof model.furniture.customParams?.[0] == "number") {
-            model.furniture.customParams = model.furniture.customParams.map((value: number) => value.toString());
-        }
-        
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }

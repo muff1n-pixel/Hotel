@@ -13,30 +13,13 @@ export default class WebSocketClient extends EventTarget {
         this.socket.binaryType = "arraybuffer";
 
         this.socket.addEventListener("message", (event) => {
-            if(event.data.toString() !== "[object ArrayBuffer]") {
-                const events: [string, any, number | undefined][] = JSON.parse(event.data);
+            const data = new Uint8Array(event.data);
 
-                for(const [type, data, timestamp] of events) {
-                    console.log("Received " + type + " from server", data);
+            const sep = data.indexOf("|".charCodeAt(0));
+            const type = new TextDecoder().decode(data.slice(0, sep));
+            const payload = data.slice(sep + 1);
 
-                    if(timestamp !== undefined) {
-                        console.debug("Message received after " + (Date.now() - timestamp) + "ms");
-                    }
-
-                    this.dispatchEvent(new WebSocketEvent(type, data, (timestamp !== undefined)?(Date.now() - timestamp):(undefined)));
-                }
-            }
-            else {
-                const data = new Uint8Array(event.data);
-
-                const sep = data.indexOf("|".charCodeAt(0));
-                const type = new TextDecoder().decode(data.slice(0, sep));
-                const payload = data.slice(sep + 1);
-
-                console.log("Received222 " + type);
-
-                this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
-            }
+            this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
         });
 
         if(this.socket.readyState === this.socket.OPEN) {
@@ -82,7 +65,11 @@ export default class WebSocketClient extends EventTarget {
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>, options?: AddEventListenerOptions | boolean) {
         const listener = (event: WebSocketEvent<Uint8Array>) => {
-            protobuffListener.handle(message.decode(event.data) as T);
+            const payload = message.decode(event.data) as T;
+
+            console.log("Received " + message.$type, payload);
+
+            protobuffListener.handle(payload);
         };
 
         this.addEventListener(message.$type, listener, options);

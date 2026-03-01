@@ -68,7 +68,7 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
                 <div style={{ display: "flex", width: 180 }}>
                     <DialogPanel style={{ flex: 1, overflowY: "scroll" }}>
                         <DialogPanelList>
-                            <ShopPagesList tabs={0} parentId={null} editMode={editMode} handleCreatePage={handleCreatePage} handleEditPage={handleEditPage} shopPages={shopPages} activeShopPage={activeShopPage} onPageChange={setActiveShopPage}/>
+                            <ShopPagesList tabs={0} parentId={undefined} editMode={editMode} handleCreatePage={handleCreatePage} handleEditPage={handleEditPage} shopPages={shopPages} activeShopPage={activeShopPage} onPageChange={setActiveShopPage}/>
 
                             {(editMode) && (
                                 <div style={{

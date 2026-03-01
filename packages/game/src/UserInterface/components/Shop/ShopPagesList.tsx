@@ -9,7 +9,7 @@ export type ShopPagesListProps = {
 
     activeShopPage?: ShopPageData;
     shopPages: ShopPageData[];
-    parentId: string | null;
+    parentId?: string;
     onPageChange: (shopPage: ShopPageData) => void;
 
     tabs: number;
