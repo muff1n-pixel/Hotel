@@ -1,12 +1,11 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import Figure from "@Client/Figure/Figure";
-import { RoomChatOptionsData } from "../../../../../shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, RoomActorChatOptionsData } from "@pixel63/events";
 
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomChatOptionsData) {
+    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);

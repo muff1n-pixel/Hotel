@@ -69,11 +69,18 @@ export default class WebSocketClient extends EventTarget {
         this.socket.close();
     }
 
-    addProtobuffListener<T>(message: MessageType, listener: ProtobuffListener<T>) {
-        console.log("addd " + message.$type)
-        this.addEventListener(message.$type, (event: WebSocketEvent<Uint8Array>) => {
-            listener.handle(message.decode(event.data) as T);
-        });
+    addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>, options?: AddEventListenerOptions | boolean) {
+        const listener = (event: WebSocketEvent<Uint8Array>) => {
+            protobuffListener.handle(message.decode(event.data) as T);
+        };
+
+        this.addEventListener(message.$type, listener, options);
+
+        return listener;
+    }
+
+    removeProtobuffListener(message: MessageType, listener: (event: WebSocketEvent<Uint8Array<ArrayBufferLike>>) => void) {
+        this.removeEventListener(message.$type, listener);
     }
 
     addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void {

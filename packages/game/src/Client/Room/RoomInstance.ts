@@ -1,38 +1,31 @@
 import ClientInstance from "@Client/ClientInstance";
 import RoomRenderer from "./Renderer";
-import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
-import { UserEnteredRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserEnteredRoomEventData";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomFurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import { webSocketClient } from "../..";
-import { LoadRoomEventData, RoomInformationData } from "@Shared/Communications/Responses/Rooms/LoadRoomEventData";
 import { StartWalkingEventData } from "@Shared/Communications/Requests/Rooms/User/StartWalkingEventData";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
-import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { ActorIdentifierEventData } from "@Shared/Communications/Responses/Rooms/Actors/ActorIdentifierEventData";
 import { RoomClickEventData } from "@Shared/Communications/Requests/Rooms/RoomClickEventData";
-import { RoomActorIdentifierData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomInformationData, RoomLoadData, RoomStructureData, RoomUserData, UserFurnitureData, UserFurnitureMoodlightData } from "@pixel63/events";
 
-type RoomItem<DataType = RoomUserData | RoomFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
+type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
     item: ItemType;
 };
 
-export type RoomInstanceFurniture<T = unknown> = RoomItem<RoomFurnitureData<T>, RoomFurnitureItem>;
+export type RoomInstanceFurniture = RoomItem<UserFurnitureData, RoomFurnitureItem>;
 
-export type RoomUser = RoomItem<RoomUserData, RoomFigureItem>;
+export type RoomUser = RoomItem<Required<RoomUserData>, RoomFigureItem>;
 
 export type HoveredFigure = {
     type: "user";
@@ -51,31 +44,36 @@ export default class RoomInstance {
 
     public readonly roomRenderer: RoomRenderer;
 
-    private readonly users: RoomUser[] = [];
+    public readonly users: RoomUser[] = [];
     public furnitures: RoomFurniture[] = [];
     public bots: RoomBot[] = [];
 
-    public information: RoomInformationData;
+    public information?: RoomInformationData;
     public hasRights: boolean;
 
     public focusedUser = new ObservableProperty<HoveredFigure | null>(null);
     public hoveredUser = new ObservableProperty<HoveredFigure | null>(null);
 
-    constructor(public readonly clientInstance: ClientInstance, event: LoadRoomEventData) {
+    constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData) {
         this.id = event.id;
         
-        this.information = event.information;
+        if(event.information) {
+            this.information = event.information;
+        }
+
         this.hasRights = event.hasRights;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 
-        this.setStructure(event.structure);
-
-        for(const user of event.users) {
-            this.users.push(this.addUser(user));
+        if(event.structure) {
+            this.setStructure(event.structure);
         }
 
-        for(const furniture of event.furnitures) {
+        for(const user of event.users) {
+            this.users.push(this.addUser(user as Required<RoomUserData>));
+        }
+
+        for(const furniture of event.furniture) {
             this.furnitures.push(new RoomFurniture(this, furniture));
         }
 
@@ -86,13 +84,13 @@ export default class RoomInstance {
         this.registerEventListeners();
     }
 
-    public setStructure(structure: RoomStructure) {
+    public setStructure(structure: RoomStructureData) {
         this.roomRenderer.setStructure(structure);
 
         this.clientInstance.roomInstance.update();
     }
 
-    public setMoodlight(moodlight: RoomMoodlightData) {
+    public setMoodlight(moodlight?: UserFurnitureMoodlightData) {
         this.roomRenderer.lighting.setMoodlightData(moodlight);
     }
 
@@ -109,14 +107,12 @@ export default class RoomInstance {
     }
 
     private registerEventListeners() {
-        webSocketClient.addEventListener<WebSocketEvent<UserEnteredRoomEventData>>("UserEnteredRoomEvent", this.userEnteredRoomListener);
         webSocketClient.addEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.addEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.addEventListener("click", this.click.bind(this));
     }
 
     private removeEventListeners() {
-        webSocketClient.removeEventListener<WebSocketEvent<UserEnteredRoomEventData>>("UserEnteredRoomEvent", this.userEnteredRoomListener);
         webSocketClient.removeEventListener<WebSocketEvent<UserLeftRoomEventData>>("UserLeftRoomEvent", this.userLeftRoomListener);
         webSocketClient.removeEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.removeEventListener("click", this.click.bind(this));
@@ -125,11 +121,6 @@ export default class RoomInstance {
     private leaveRoomListener = this.leaveRoom.bind(this);
     private leaveRoom() {
         this.terminate();
-    }
-
-    private userEnteredRoomListener = this.userEnteredRoom.bind(this);
-    private userEnteredRoom(event: WebSocketEvent<UserEnteredRoomEventData>) {
-        this.users.push(this.addUser(event.data));
     }
 
     private userLeftRoomListener = this.userLeftRoom.bind(this);
@@ -187,7 +178,7 @@ export default class RoomInstance {
         }
     }
 
-    private addUser(userData: RoomUserData): RoomUser {
+    public addUser(userData: Required<RoomUserData>): RoomUser {
         const figureRenderer = new Figure(userData.figureConfiguration, userData.direction, userData.actions);
         const item = new RoomFigureItem(this.roomRenderer, figureRenderer, userData.position);
 
@@ -293,6 +284,10 @@ export default class RoomInstance {
     public removeFurniture(roomFurnitureId: string) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
+        if(!furniture.data.furniture) {
+            throw new Error();
+        }
+
         if(furniture.data.userId === this.clientInstance.user.value?.id) {
             this.clientInstance.flyingFurnitureIcons.value?.push({
                 id: roomFurnitureId,
@@ -345,7 +340,7 @@ export default class RoomInstance {
         const furniture = this.furnitures
             .filter((furniture) => furniture.item.id !== ignoreRoomFurnitureItemId)
             .filter((furniture) => furniture.isPositionInside(position, dimensions))
-            .toSorted((a, b) => b.data.position.depth - a.data.position.depth);
+            .toSorted((a, b) => b.data.position!.depth - a.data.position!.depth);
 
         return furniture[0];
     }

@@ -2,7 +2,7 @@ import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { SetTypingEventData } from "@shared/Communications/Requests/Rooms/User/SetTypingEventData.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { UserTypingEventData } from "@shared/Communications/Responses/Rooms/Users/UserTypingEventData.js";
+import { RoomUserData } from "@pixel63/events";
 
 export default class SetTypingEvent implements IncomingEvent<SetTypingEventData> {
     public readonly name = "SetTypingEvent";
@@ -20,8 +20,8 @@ export default class SetTypingEvent implements IncomingEvent<SetTypingEventData>
 
         roomUser.typing = event.typing === true;
 
-        user.room.sendRoomEvent(new OutgoingEvent<UserTypingEventData>("UserTypingEvent", {
-            userId: user.model.id,
+        user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            id: user.model.id,
             typing: roomUser.typing
         }));
     }

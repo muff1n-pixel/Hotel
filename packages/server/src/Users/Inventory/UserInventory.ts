@@ -1,15 +1,12 @@
-import { UserFurnitureEventData } from "@shared/Communications/Responses/Inventory/UserFurnitureEventData.js";
-import { InventoryBadgesEventData } from "@shared/Communications/Responses/Inventory/UserBadgesEventData.js";
 import User from "../User.js";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { randomUUID } from "node:crypto";
 import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
 import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
-import { UserBotsEventData } from "@shared/Communications/Responses/Inventory/UserBotsEventData.js";
+import { UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -87,12 +84,12 @@ export default class UserInventory {
             const count = await this.getFurnitureCount(userFurniture.furniture.id);
 
             if(count > 1) {
-                this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
+                this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
                     updatedUserFurniture: [
                         {
                             id: userFurniture.id,
                             quantity: count,
-                            furniture: userFurniture.furniture
+                            furniture: userFurniture.furniture.toJSON()
                         }
                     ]
                 }));
@@ -101,40 +98,40 @@ export default class UserInventory {
             }
         }
 
-        this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
             deletedUserFurniture: [
                 {
                     id: userFurniture.id,
-                    furniture: userFurniture.furniture
+                    furniture: userFurniture.furniture.toJSON()
                 }
             ]
         }));
     }
 
     public async addFurniture(userFurniture: UserFurnitureModel) {
-        this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
             updatedUserFurniture: [
                 {
                     id: userFurniture.id,
                     quantity: (userFurniture.furniture.flags.inventoryStackable)?(await this.getFurnitureCount(userFurniture.furniture.id)):(1),
-                    furniture: userFurniture.furniture
+                    furniture: userFurniture.furniture.toJSON()
                 }
             ]
         }));
     }
 
     public async addBot(userBot: UserBotModel) {
-        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
             updatedUserBots: [
-                userBot,
+                userBot.toJSON()
             ]
         }));
     }
 
     public async removeBot(userBot: UserBotModel) {
-        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
             deletedUserBots: [
-                userBot,
+                userBot.toJSON()
             ]
         }));
     }
@@ -152,33 +149,35 @@ export default class UserInventory {
             order: [['updatedAt','DESC']]
         });
 
-        const allUserFurniture: UserFurnitureEventData["allUserFurniture"] = [];
+        const allUserFurniture: UserInventoryFurnitureData[] = [];
 
         for(const userFurniture of userFurnitures) {
             if(userFurniture.furniture.flags.inventoryStackable) {
-                const existingUserfurniture = allUserFurniture.find((furniture) => furniture.furniture.id === userFurniture.furniture.id);
+                const existingUserfurniture = allUserFurniture.find((furniture) => furniture.furniture?.id === userFurniture.furniture.id);
 
                 if(existingUserfurniture) {
                     existingUserfurniture.quantity++;
                 }
                 else {
                     allUserFurniture.push({
+                        "$type": "UserInventoryFurnitureData",
                         id: userFurniture.id,
                         quantity: 1,
-                        furniture: userFurniture.furniture
+                        furniture: userFurniture.furniture.toJSON()
                     });
                 }
             }
             else {
                 allUserFurniture.push({
+                    "$type": "UserInventoryFurnitureData",
                     id: userFurniture.id,
                     quantity: 1,
-                    furniture: userFurniture.furniture
+                    furniture: userFurniture.furniture.toJSON()
                 });
             }
         }
-    
-        this.user.send(new OutgoingEvent<UserFurnitureEventData>("UserFurnitureEvent", {
+        
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
             allUserFurniture
         }));
     }
@@ -192,8 +191,8 @@ export default class UserInventory {
             order: [['updatedAt','DESC']]
         });
 
-        this.user.send(new OutgoingEvent<UserBotsEventData>("UserBotsEvent", {
-            allUserBots: userBots
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
+            allUserBots: userBots.map((bot) => bot.toJSON())
         }));
     }
 
@@ -208,15 +207,15 @@ export default class UserInventory {
             },
             order: [['updatedAt', 'DESC']]
         });
-    
-        this.user.send(new OutgoingEvent<InventoryBadgesEventData>("InventoryBadgesEvent", {
+
+        this.user.sendProtobuff(UserInventoryBadgesData, UserInventoryBadgesData.create({
             badges: userBadges.map((userBadge) => {
                 return {
                     id: userBadge.id,
                     badge: {
                         id: userBadge.badge.id,
-                        name: userBadge.badge.name,
-                        description: userBadge.badge.description,
+                        name: userBadge.badge.name ?? undefined,
+                        description: userBadge.badge.description ?? undefined,
                         image: userBadge.badge.image
                     },
                     equipped: userBadge.equipped

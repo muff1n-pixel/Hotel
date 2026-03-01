@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Badge/BadgeData.proto";
+
+message UserBadgeData {
+    string id = 1;
+    BadgeData badge = 2;
+    bool equipped = 3;
+}

@@ -3,8 +3,7 @@ import User from "../../../../Users/User.js";
 import { SendUserMessageEventData } from "@shared/Communications/Requests/Rooms/User/SendUserMessageEventData.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { game } from "../../../../index.js";
-import { UserTypingEventData } from "@shared/Communications/Responses/Rooms/Users/UserTypingEventData.js";
-import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
+import { RoomActorChatData, RoomUserData } from "@pixel63/events";
 
 export default class SendUserMessageEvent implements IncomingEvent<SendUserMessageEventData> {
     public readonly name = "SendUserMessageEvent";
@@ -46,8 +45,8 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             if(roomUser.typing) {
                 roomUser.typing = false;
 
-                user.room.sendRoomEvent(new OutgoingEvent<UserTypingEventData>("UserTypingEvent", {
-                    userId: user.model.id,
+                user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                    id: user.model.id,
                     typing: roomUser.typing
                 }));
             }
@@ -75,9 +74,12 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
             roomUser.sendRoomMessage(event.message);
         }
         else {
-            user.send(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
-                type: "user",
-                userId: user.model.id,
+            user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                actor: {
+                    user: {
+                        userId: user.model.id
+                    }
+                },
                 message: event.message,
                 roomChatStyleId: user.model.roomChatStyleId,
                 options: {
@@ -86,8 +88,8 @@ export default class SendUserMessageEvent implements IncomingEvent<SendUserMessa
                 }
             }));
 
-            user.room.sendRoomEvent(new OutgoingEvent<UserTypingEventData>("UserTypingEvent", {
-                userId: user.model.id,
+            user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                id: user.model.id,
                 typing: roomUser.typing
             }));
         }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Bot/BotSpeechData.proto";
+
+message UserBotSpeechData {
+    string bot_id = 1;
+
+    BotSpeechData speech = 2;
+}

@@ -1,7 +1,6 @@
-import { RoomMapData, RoomMapsEventData } from "@Shared/Communications/Responses/Navigator/RoomMapsEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../../..";
+import { RoomMapData, RoomMapsData } from "@pixel63/events";
 
 export default function useRoomMaps() {
     const roomMapsRequested = useRef(false);
@@ -15,11 +14,11 @@ export default function useRoomMaps() {
 
         roomMapsRequested.current = true;
 
-        const listener = (event: WebSocketEvent<RoomMapsEventData>) => {
-            setRoomMaps(event.data);
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<RoomMapsEventData>>("RoomMapsEvent", listener, {
+        webSocketClient.addProtobuffListener(RoomMapsData, {
+            async handle(payload: RoomMapsData) {
+                setRoomMaps(payload.maps);
+            },
+        }, {
             once: true
         });
 

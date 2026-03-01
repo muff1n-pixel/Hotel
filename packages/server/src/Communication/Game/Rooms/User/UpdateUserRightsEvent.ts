@@ -3,8 +3,7 @@ import User from "../../../../Users/User.js";
 import { UpdateUserRightsEventData } from "@shared/Communications/Requests/Rooms/User/UpdateUserRightsEventData.js";
 import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
 import { randomUUID } from "node:crypto";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomUserRightsEventData } from "@shared/Communications/Responses/Rooms/Users/RoomUserRightsEventData.js";
+import { RoomUserData } from "@pixel63/events";
 
 export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRightsEventData> {
     public readonly name = "UpdateUserRightsEvent";
@@ -53,8 +52,8 @@ export default class UpdateUserRightsEvent implements IncomingEvent<UpdateUserRi
             return;
         }
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomUserRightsEventData>("RoomUserRightsEvent", {
-            userId: targetUser.user.model.id,
+        user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            id: targetUser.user.model.id,
             hasRights: targetUser.hasRights()
         }));
     }

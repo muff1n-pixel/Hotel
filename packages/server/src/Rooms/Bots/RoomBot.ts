@@ -3,12 +3,9 @@ import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { game } from "../../index.js";
-import { RoomBotEventData } from "@shared/Communications/Responses/Rooms/Bots/RoomBotEventData.js";
-import { UserBotData } from "@shared/Interfaces/Room/RoomBotData.js";
-import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorPositionData, RoomActorWalkToData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData } from "@pixel63/events";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -41,32 +38,13 @@ export default class RoomBot implements RoomActor {
 
         room.floorplan.updatePosition(position);
 
-        room.sendRoomEvent(new OutgoingEvent<RoomBotEventData>("RoomBotEvent", {
-            botAdded: [
-                roomBot.getBotData()
+        room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+            botsAdded: [
+                roomBot.model.toJSON()
             ]
         }));
 
         return roomBot;
-    }
-
-    public getBotData(): UserBotData {
-        return {
-            id: this.model.id,
-            userId: this.model.user.id,
-            
-            position: this.position,
-            direction: this.direction,
-
-            type: this.model.type,
-
-            name: this.model.name,
-            motto: this.model.motto,
-
-            figureConfiguration: this.model.figureConfiguration,
-
-            relaxed: this.model.relaxed,
-        };
     }
 
     public hasAction(actionId: string): boolean {
@@ -144,11 +122,9 @@ export default class RoomBot implements RoomActor {
 
         this.room.floorplan.updatePosition(this.model.position);
 
-        this.room.sendRoomEvent(new OutgoingEvent<RoomBotEventData>("RoomBotEvent", {
-            botRemoved: [
-                {
-                    id: this.model.id
-                }
+        this.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+            botsRemoved: [
+                this.model.toJSON()
             ]
         }));
 
@@ -174,9 +150,9 @@ export default class RoomBot implements RoomActor {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendRoomEvent(new OutgoingEvent<RoomBotEventData>("RoomBotEvent", {
-                botUpdated: [
-                    this.getBotData()
+            this.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+                botsUpdated: [
+                    this.model.toJSON()
                 ]
             }));
         }
@@ -238,9 +214,12 @@ export default class RoomBot implements RoomActor {
             return;
         }
 
-        this.room.sendRoomEvent(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
-            type: "bot",
-            botId: this.model.id,
+        this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
 
             message,
             roomChatStyleId: "bot_guide"

@@ -2,7 +2,7 @@ import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { UpdateRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
+import { RoomFurnitureData } from "@pixel63/events";
 
 export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoomFurnitureEventData> {
     public readonly name = "UpdateRoomFurnitureEvent";
@@ -39,9 +39,9 @@ export default class UpdateRoomFurnitureEvent implements IncomingEvent<UpdateRoo
 
         await roomFurniture.model.save();
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureUpdated: [
-                roomFurniture.getFurnitureData()
+                roomFurniture.model.toJSON()
             ]
         }));
     }

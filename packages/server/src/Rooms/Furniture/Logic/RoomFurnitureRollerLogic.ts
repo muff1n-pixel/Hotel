@@ -3,8 +3,7 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { MoveRoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/MoveRoomFurnitureEventData.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
+import { RoomFurnitureData, RoomFurnitureMovedData } from "@pixel63/events";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -23,10 +22,10 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         if(this.roomFurniture.model.animation !== 0) {
             this.roomFurniture.model.animation = 0;
-            
-            room.outgoingEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+
+            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    this.roomFurniture.getFurnitureData()
+                    this.roomFurniture.model.toJSON()
                 ]
             }));
         }
@@ -108,8 +107,8 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 furniture.setPosition(offsetPosition, false);
                 
                 await furniture.model.save();
-        
-                outgoingEvents.push(new OutgoingEvent<MoveRoomFurnitureEventData>("MoveRoomFurnitureEvent", {
+
+                this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
                     id: furniture.model.id,
                     position: offsetPosition
                 }));
@@ -122,9 +121,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
             if(this.roomFurniture.model.animation !== 2) {
                 this.roomFurniture.model.animation = 2;
                 
-                room.outgoingEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                     furnitureUpdated: [
-                        this.roomFurniture.getFurnitureData()
+                        this.roomFurniture.model.toJSON()
                     ]
                 }));
             }

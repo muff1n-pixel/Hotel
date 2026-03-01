@@ -8,16 +8,15 @@ import RoomFurnitureProfile from "./Furniture/RoomFurnitureProfile";
 import RoomUserProfile from "./User/RoomUserProfile";
 import { webSocketClient } from "../../../..";
 import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import { UserLeftRoomEventData } from "@Shared/Communications/Responses/Rooms/Users/UserLeftRoomEventData";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomBotProfile from "./Bot/RoomBotProfile";
-import { RoomBotEventData } from "@Shared/Communications/Responses/Rooms/Bots/RoomBotEventData";
+import { RoomBotsData, RoomFurnitureData } from "@pixel63/events";
 
 export type RoomItemProfileItem = {
     type: "user";
-    user: RoomUserData;
+    user: Required<RoomUserData>;
 } | {
     type: "furniture";
     furniture: RoomFurniture;
@@ -88,16 +87,16 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
         }
 
         if(focusedItem.type === "furniture") {
-            const listener = (event: WebSocketEvent<RoomFurnitureEventData>) => {
-                if(event.data.furnitureRemoved?.some((removedFurniture) => removedFurniture.id === focusedItem.furniture.data.id)) {
-                    setFocusedItem(undefined);
-                }
-            };
-
-            webSocketClient.addEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", listener);
+            const listener = webSocketClient.addProtobuffListener(RoomFurnitureData, {
+                async handle(payload: RoomFurnitureData) {
+                    if(payload.furnitureRemoved?.some((removedFurniture) => removedFurniture.id === focusedItem.furniture.data.id)) {
+                        setFocusedItem(undefined);
+                    }
+                },
+            });
 
             return () => {
-                webSocketClient.removeEventListener<WebSocketEvent<RoomFurnitureEventData>>("RoomFurnitureEvent", listener);
+                webSocketClient.removeProtobuffListener(RoomFurnitureData, listener);
             };
         }
         else if(focusedItem.type === "user") {
@@ -114,16 +113,16 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
             };
         }
         else if(focusedItem.type === "bot") {
-            const listener = (event: WebSocketEvent<RoomBotEventData>) => {
-                if(event.data.botRemoved?.some((removedBot) => removedBot.id === focusedItem.bot.data.id)) {
-                    setFocusedItem(undefined);
-                }
-            };
-
-            webSocketClient.addEventListener<WebSocketEvent<RoomBotEventData>>("RoomBotEvent", listener);
+            const listener = webSocketClient.addProtobuffListener(RoomBotsData, {
+                async handle(payload: RoomBotsData) {
+                    if(payload.botsRemoved?.some((removedBot) => removedBot.id === focusedItem.bot.data.id)) {
+                        setFocusedItem(undefined);
+                    }
+                },
+            })
 
             return () => {
-                webSocketClient.removeEventListener<WebSocketEvent<RoomBotEventData>>("RoomBotEvent", listener);
+                webSocketClient.removeProtobuffListener(RoomBotsData, listener);
             };
         }
     }, [focusedItem]);

@@ -2,11 +2,11 @@ import { ImportRoomFurnitureEventData } from "@shared/Communications/Requests/Ro
 import IncomingEvent from "../../../../Interfaces/IncomingEvent.js";
 import User from "../../../../../Users/User.js";
 import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
 import RoomFurniture from "../../../../../Rooms/Furniture/RoomFurniture.js";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
+import { RoomFurnitureData } from "@pixel63/events";
 
 export default class ImportRoomFurnitureEvent implements IncomingEvent<ImportRoomFurnitureEventData> {
     public readonly name = "ImportRoomFurnitureEvent";
@@ -62,9 +62,9 @@ export default class ImportRoomFurnitureEvent implements IncomingEvent<ImportRoo
     
             room.furnitures.push(roomFurniture);
 
-            roomEvents.push(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureAdded: [
-                    roomFurniture.getFurnitureData()
+                    roomFurniture.model.toJSON()
                 ]
             }));
         }

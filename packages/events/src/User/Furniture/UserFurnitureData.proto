@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "Furniture/FurnitureData.proto";
+import "Room/RoomPositionData.proto";
+
+import "User/Furniture/UserFurnitureCustomData.proto";
+
+message UserFurnitureData {
+    string id = 1;
+    string user_id = 2;
+
+    FurnitureData furniture = 3;
+
+    RoomPositionData position = 4;
+    uint32 direction = 5;
+
+    uint32 animation = 6;
+    optional uint32 color = 7;
+
+    UserFurnitureCustomData data = 8;
+}
+

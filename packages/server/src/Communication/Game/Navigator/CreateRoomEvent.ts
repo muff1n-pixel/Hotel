@@ -5,8 +5,8 @@ import { game } from "../../../index.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "node:crypto";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomCreatedEventData } from "@shared/Communications/Responses/Navigator/RoomCreatedEventData.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
+import { RoomCreatedData } from "@pixel63/events";
 
 export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventData> {
     public readonly name = "CreateRoomEvent";
@@ -59,11 +59,8 @@ export default class CreateRoomEvent implements IncomingEvent<CreateRoomEventDat
             }
         });
 
-        user.send(
-            new OutgoingEvent<RoomCreatedEventData>("RoomCreatedEvent", {
-                success: true,
-                roomId: room.id
-            })
-        );
+        user.sendProtobuff(RoomCreatedData, RoomCreatedData.create({
+            roomId: room.id
+        }));
     }
 }

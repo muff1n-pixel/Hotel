@@ -6,15 +6,13 @@ import RoomFurniture from "./Furniture/RoomFurniture.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { RoomStructureEventData } from "@shared/Communications/Responses/Rooms/RoomStructureEventData.js";
 import { RoomStructure } from "@shared/Interfaces/Room/RoomStructure.js";
-import { RoomInformationData } from "@shared/Communications/Responses/Rooms/LoadRoomEventData.js";
 import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
 import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
 import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
-import RoomFurnitureLogic from "./Furniture/Logic/Interfaces/RoomFurnitureLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, UnknownMessage } from "@pixel63/events";
+import { MessageType, RoomInformationData, UnknownMessage } from "@pixel63/events";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -332,17 +330,18 @@ export default class Room {
     }
 
     public getInformationData(): RoomInformationData {
-        console.log(this.model.type);
-        
         return {
+            $type: "RoomInformationData",
+            
             type: this.model.type,
 
             name: this.model.name,
             description: this.model.description,
             category: this.model.category.id,
-            thumbnail: (this.model.thumbnail)?(Buffer.from(this.model.thumbnail).toString('utf8')):(null),
+            thumbnail: (this.model.thumbnail)?(Buffer.from(this.model.thumbnail).toString('utf8')):(undefined),
             
             owner: {
+                $type: "RoomInformationOwnerData",
                 id: this.model.owner.id,
                 name: this.model.owner.name
             },

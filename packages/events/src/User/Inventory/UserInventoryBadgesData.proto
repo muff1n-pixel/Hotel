@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "User/Badges/UserBadgeData.proto";
+
+message UserInventoryBadgesData {
+    repeated UserBadgeData badges = 1;
+}

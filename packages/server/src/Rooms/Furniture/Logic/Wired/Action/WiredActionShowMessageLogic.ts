@@ -1,9 +1,8 @@
 import RoomFurniture from "../../../RoomFurniture";
-import RoomUser from "../../../../Users/RoomUser";
 import WiredLogic, { WiredTriggerOptions } from "../WiredLogic";
 import { WiredActionShowMessageData } from "@shared/Interfaces/Room/Furniture/Wired/Action/WiredActionShowMessageData";
 import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent";
-import { RoomChatEventData } from "@shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
+import { RoomActorChatData } from "@pixel63/events";
 
 export type DelayedMessageData = {
     userId: string;
@@ -41,11 +40,15 @@ export default class WiredActionShowMessageLogic extends WiredLogic<WiredActionS
 
             this.setActive();
 
-            roomUser.user.send(new OutgoingEvent<RoomChatEventData>("RoomChatEvent", {
-                type: "user",
-                userId: roomUser.user.model.id,
+            roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                actor: {
+                    user: {
+                        userId: roomUser.user.model.id
+                    }
+                },
+
                 message: this.roomFurniture.model.data.message,
-                roomChatStyleId: "notification",
+                roomChatStyleId: "notificate",
                 options: {
                     hideUsername: true
                 }

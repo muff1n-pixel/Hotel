@@ -2,7 +2,7 @@ import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { GetRoomBotSpeechEventData } from "@shared/Communications/Requests/Rooms/Bots/GetRoomBotSpeechEventData.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomBotSpeechEventData } from "@shared/Communications/Responses/Rooms/Bots/RoomBotSpeechEventData.js";
+import { UserBotSpeechData } from "@pixel63/events";
 
 export default class GetRoomBotSpeechEvent implements IncomingEvent<GetRoomBotSpeechEventData> {
     public readonly name = "GetRoomBotSpeechEvent";
@@ -18,8 +18,8 @@ export default class GetRoomBotSpeechEvent implements IncomingEvent<GetRoomBotSp
             throw new Error("User does not own the bot.");
         }
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomBotSpeechEventData>("RoomBotSpeechEvent", {
-            userBotId: bot.model.id,
+        user.sendProtobuff(UserBotSpeechData, UserBotSpeechData.create({
+            botId: bot.model.id,
 
             speech: bot.model.speech
         }));

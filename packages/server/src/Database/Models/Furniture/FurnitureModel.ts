@@ -13,7 +13,7 @@ export class FurnitureModel extends Model {
     declare color?: number;
     declare category: string;
     declare flags: FurnitureFlagsData;
-    declare customParams: unknown[] | null;
+    declare customParams: any[] | null;
 }
 
 export function initializeFurnitureModel(sequelize: Sequelize) {

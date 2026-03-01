@@ -1,8 +1,7 @@
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import { FurnitureTypesEventData } from "@shared/Communications/Responses/Furniture/FurnitureTypesEventData.js";
+import { FurnitureTypesData } from "@pixel63/events";
 
 export default class GetFurnitureTypesEvent implements IncomingEvent {
     public readonly name = "GetFurnitureTypesEvent";
@@ -26,7 +25,7 @@ export default class GetFurnitureTypesEvent implements IncomingEvent {
             raw: true
         });
 
-        user.send(new OutgoingEvent<FurnitureTypesEventData>("FurnitureTypesEvent", {
+        user.sendProtobuff(FurnitureTypesData, FurnitureTypesData.create({
             categories: categories.map(({ category }) => category),
             interactionTypes: interactionTypes.map(({ interactionType} ) => interactionType),
         }));

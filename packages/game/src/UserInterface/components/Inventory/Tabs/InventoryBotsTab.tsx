@@ -1,17 +1,15 @@
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
-import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
-import { UserBotsEventData } from "@Shared/Communications/Responses/Inventory/UserBotsEventData";
 import FigureImage from "../../Figure/FigureImage";
 import { PlaceBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/PlaceBotEventData";
 import { useUser } from "../../../hooks/useUser";
+import { UserBotData, UserInventoryBotsData } from "@pixel63/events";
 
 export default function InventoryBotsTab() {
     const user = useUser();
@@ -36,34 +34,34 @@ export default function InventoryBotsTab() {
     }, []);
 
     useEffect(() => {
-        const listener = (event: WebSocketEvent<UserBotsEventData>) => {
-            if(event.data.allUserBots) {
-                setBots(event.data.allUserBots);
-            }
-            else {
-                let mutated = [...bots];
-
-                if(event.data.updatedUserBots) {
-                    mutated = 
-                        event.data.updatedUserBots.concat(
-                            ...mutated
-                                .filter((bot) => !event.data.updatedUserBots?.some((userBot) => userBot.id === bot.id))
-                        );
+        const listener = webSocketClient.addProtobuffListener(UserInventoryBotsData, {
+            async handle(payload: UserInventoryBotsData) {
+                if(payload.allUserBots) {
+                    setBots(payload.allUserBots);
                 }
+                else {
+                    let mutated = [...bots];
 
-                if(event.data.deletedUserBots) {
-                    mutated = mutated
-                        .filter((bot) => !event.data.deletedUserBots?.some((userBot) => userBot.id === bot.id))
+                    if(payload.updatedUserBots) {
+                        mutated = 
+                            payload.updatedUserBots.concat(
+                                ...mutated
+                                    .filter((bot) => !payload.updatedUserBots?.some((userBot) => userBot.id === bot.id))
+                            );
+                    }
+
+                    if(payload.deletedUserBots) {
+                        mutated = mutated
+                            .filter((bot) => !payload.deletedUserBots?.some((userBot) => userBot.id === bot.id))
+                    }
+
+                    setBots(mutated);
                 }
-
-                setBots(mutated);
-            }
-        }
-
-        webSocketClient.addEventListener<WebSocketEvent<UserBotsEventData>>("UserBotsEvent", listener);
+            },
+        })
 
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<UserBotsEventData>>("UserBotsEvent", listener);
+            webSocketClient.removeProtobuffListener(UserInventoryBotsData, listener);
         };
     }, [bots]);
 
@@ -118,7 +116,7 @@ export default function InventoryBotsTab() {
     }, [activeBot, roomFurniturePlacer]);
 
     const onPlaceInRoomClick = useCallback(() => {
-        if(!activeBot) {
+        if(!activeBot?.figureConfiguration) {
             return;
         }
 
@@ -164,7 +162,9 @@ export default function InventoryBotsTab() {
                                 width: 40,
                                 height: 40
                             }}>
-                                <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
+                                {bot.figureConfiguration && (
+                                    <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
+                                )}
                             </div>
                     </DialogItem>
                 ))}
@@ -186,7 +186,9 @@ export default function InventoryBotsTab() {
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            <FigureImage direction={4} figureConfiguration={activeBot.figureConfiguration}/>
+                            {(activeBot.figureConfiguration) && (
+                                <FigureImage direction={4} figureConfiguration={activeBot.figureConfiguration}/>
+                            )}
                         </div>
 
                         <div>

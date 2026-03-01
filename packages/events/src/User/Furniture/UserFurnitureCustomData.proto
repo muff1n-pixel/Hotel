@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "User/Furniture/Data/UserFurnitureMoodlightData.proto";
+import "User/Furniture/Data/UserFurnitureTonerData.proto";
+
+message UserFurnitureCustomData {
+    oneof data {
+        UserFurnitureMoodlightData moodlight = 1;
+        UserFurnitureTonerData toner = 2;
+    }
+}

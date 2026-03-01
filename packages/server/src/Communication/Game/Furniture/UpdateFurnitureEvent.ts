@@ -4,7 +4,7 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { UpdateFurnitureEventData } from "@shared/Communications/Requests/Furniture/UpdateFurnitureEventData.js";
 import { game } from "../../../index.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
+import { RoomFurnitureData } from "@pixel63/events";
 
 export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitureEventData> {
     public readonly name = "UpdateFurnitureEvent";
@@ -44,18 +44,18 @@ export default class UpdateFurnitureEvent implements IncomingEvent<UpdateFurnitu
         for(const room of game.roomManager.instances) {
             const affectedUserFurniture = room.furnitures.filter((userFurniture) => userFurniture.model.furniture.id === furniture.id);
 
-            const outgoingEvent: OutgoingEvent<RoomFurnitureEventData> = new OutgoingEvent("RoomFurnitureEvent", {
-                furnitureUpdated: []
-            });
+            const furnitureRemoved: RoomFurnitureData["furnitureRemoved"] = [];
 
             for(const userFurniture of affectedUserFurniture) {
                 userFurniture.model.furniture = furniture;
 
-                outgoingEvent.body.furnitureUpdated?.push(userFurniture.getFurnitureData());
+                furnitureRemoved.push(userFurniture.model.toJSON());
             }
 
-            if(outgoingEvent.body.furnitureUpdated?.length) {
-                room.sendRoomEvent(outgoingEvent);
+            if(furnitureRemoved.length) {
+                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+                    furnitureRemoved
+                }));
             }
         }
     }

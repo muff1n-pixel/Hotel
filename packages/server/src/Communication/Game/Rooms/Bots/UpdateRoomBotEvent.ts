@@ -2,7 +2,7 @@ import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { UpdateRoomBotEventData } from "@shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData.js";
 import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
-import { RoomBotEventData } from "@shared/Communications/Responses/Rooms/Bots/RoomBotEventData.js";
+import { RoomBotsData } from "@pixel63/events";
 
 export default class UpdateRoomBotEvent implements IncomingEvent<UpdateRoomBotEventData> {
     public readonly name = "UpdateRoomBotEvent";
@@ -50,9 +50,9 @@ export default class UpdateRoomBotEvent implements IncomingEvent<UpdateRoomBotEv
 
         await bot.model.save();
 
-        user.room.sendRoomEvent(new OutgoingEvent<RoomBotEventData>("RoomBotEvent", {
-            botUpdated: [
-                bot.getBotData()
+        user.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+            botsUpdated: [
+                bot.model.toJSON()
             ]
         }));
     }

@@ -1,8 +1,6 @@
 import Room from "../Room.js";
 import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
-import { RoomFurnitureData } from "@shared/Interfaces/Room/RoomFurnitureData.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
 import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { game } from "../../index.js";
 import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
@@ -36,6 +34,7 @@ import WiredTriggerUserPerformsActionLogic from "./Logic/Wired/Trigger/WiredTrig
 import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollisionLogic.js";
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
+import { RoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -59,26 +58,13 @@ export default class RoomFurniture<T = unknown> {
 
         room.floorplan.updatePosition(position, roomFurniture.getDimensions());
 
-        room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+        room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureAdded: [
-                roomFurniture.getFurnitureData()
+                roomFurniture.model.toJSON()
             ]
         }));
 
         return roomFurniture;
-    }
-
-    public getFurnitureData(): RoomFurnitureData {
-        return {
-            id: this.model.id,
-            userId: this.model.user.id,
-            furniture: this.model.furniture,
-            position: this.model.position,
-            direction: this.model.direction,
-            animation: this.model.animation,
-            color: this.model.color,
-            data: this.model.data
-        };
     }
 
     public async pickup() {
@@ -87,11 +73,9 @@ export default class RoomFurniture<T = unknown> {
         this.room.floorplan.updatePosition(this.model.position, this.getDimensions());
         this.room.refreshActorsSitting(this.model.position, this.getDimensions());
 
-        this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureRemoved: [
-                {
-                    id: this.model.id
-                }
+                this.model.toJSON()
             ]
         }));
 
@@ -303,9 +287,9 @@ export default class RoomFurniture<T = unknown> {
             await this.model.save();
         }
 
-        this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
             furnitureUpdated: [
-                this.getFurnitureData()
+                this.model.toJSON()
             ]
         }));
 
@@ -333,9 +317,9 @@ export default class RoomFurniture<T = unknown> {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    this.getFurnitureData()
+                    this.model.toJSON()
                 ]
             }));
         }
@@ -357,9 +341,9 @@ export default class RoomFurniture<T = unknown> {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    this.getFurnitureData()
+                    this.model.toJSON()
                 ]
             }));
         }

@@ -49,7 +49,15 @@ export default class Furniture {
         this.frame = 0;
     }
 
-    constructor(public readonly type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | null = null) {
+    private readonly type: string;
+
+    constructor(type: string | undefined, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
+        if(!type) {
+            throw new Error();
+        }
+
+        this.type = type;
+
         this.animation = animation;
 
         if((this.type === "wallpaper" || this.type === "floor") && color !== 0) {

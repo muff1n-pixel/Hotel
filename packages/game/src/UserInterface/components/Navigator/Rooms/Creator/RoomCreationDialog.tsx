@@ -4,16 +4,14 @@ import DialogContent from "../../../Dialog/DialogContent";
 import Input from "../../../Form/Input";
 import DialogButton from "../../../Dialog/Button/DialogButton";
 import RoomMapImage from "../../../Room/Map/RoomMapImage";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomMapData } from "@Shared/Communications/Responses/Navigator/RoomMapsEventData";
 import { webSocketClient } from "../../../../..";
 import { CreateRoomEventData } from "@Shared/Communications/Requests/Navigator/CreateRoomEventData";
-import { RoomCreatedEventData } from "@Shared/Communications/Responses/Navigator/RoomCreatedEventData";
 import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import useRoomMaps from "./Hooks/useRoomMaps";
 import { useDialogs } from "../../../../hooks/useDialogs";
 import { useRoomCategories } from "../../../../hooks/useRoomCategories";
 import Selection from "../../../Form/Selection";
+import { RoomCreatedData, RoomMapData } from "@pixel63/events";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -48,20 +46,16 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
             return;
         }
 
-        const listener = (event: WebSocketEvent<RoomCreatedEventData>) => {
-            if(!event.data.success) {
-                alert("fail");
-            }
+        webSocketClient.addProtobuffListener(RoomCreatedData, {
+            async handle(payload: RoomCreatedData) {
+                closeDialog("room-creation");
+                closeDialog("navigator");
 
-            closeDialog("room-creation");
-            closeDialog("navigator");
-
-            webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                roomId: event.data.roomId
-            });
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<RoomCreatedEventData>>("RoomCreatedEvent", listener, {
+                webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
+                    roomId: payload.roomId
+                });
+            },
+        }, {
             once: true
         });
 

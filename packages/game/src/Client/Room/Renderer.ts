@@ -12,7 +12,6 @@ import ClientInstance from "@Client/ClientInstance";
 import RoomInstance from "./RoomInstance";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomFurniturePlacer from "./RoomFurniturePlacer";
-import { RoomStructure } from "@Shared/Interfaces/Room/RoomStructure";
 import RoomLighting from "@Client/Room/RoomLightning";
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
@@ -20,6 +19,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
+import { RoomStructureData } from "@pixel63/events";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -59,8 +59,16 @@ export default class RoomRenderer extends EventTarget {
         top: 0
     };
 
-    constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, public structure: RoomStructure) {
+    public structure: RoomStructureData;
+
+    constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, structure?: RoomStructureData) {
         super();
+
+        if(!structure) {
+            throw new Error();
+        }
+
+        this.structure = structure;
 
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
@@ -276,7 +284,7 @@ export default class RoomRenderer extends EventTarget {
         let priority = sprite.item.priority + sprite.priority;
 
         if(sprite.item.position) {
-            if(Math.round(sprite.item.position.row) === this.structure?.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
+            if(Math.round(sprite.item.position.row) === this.structure.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
                     priority = -2000;
                     priority += (sprite.item.position.depth * 100);
@@ -409,7 +417,7 @@ export default class RoomRenderer extends EventTarget {
     private floorItem?: RoomFloorItem;
     private wallItem?: RoomWallItem;
     
-    public setStructure(structure: RoomStructure) {
+    public setStructure(structure: RoomStructureData) {
         this.structure = structure;
 
         if(this.floorItem) {
@@ -419,7 +427,7 @@ export default class RoomRenderer extends EventTarget {
 
         this.floorItem = new RoomFloorItem(
             this,
-            new FloorRenderer(structure, structure.floor.id, 64),
+            new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
         );
 
         this.items.push(this.floorItem);
@@ -429,10 +437,10 @@ export default class RoomRenderer extends EventTarget {
             this.wallItem = undefined;
         }
 
-        if(!structure.wall.hidden) {
+        if(!structure.wall?.hidden) {
             this.wallItem = new RoomWallItem(
                 this,
-                new WallRenderer(structure, structure.wall.id, 64)
+                new WallRenderer(structure, structure.wall?.id ?? "default", 64)
             );
 
             this.items.push(this.wallItem);

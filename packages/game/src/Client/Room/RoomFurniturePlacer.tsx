@@ -1,6 +1,5 @@
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import { FurnitureData } from "@Shared/Interfaces/Room/RoomFurnitureData";
 import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomInstance from "@Client/Room/RoomInstance";
@@ -8,7 +7,7 @@ import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;

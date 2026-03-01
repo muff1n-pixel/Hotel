@@ -1,13 +1,12 @@
 import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
-import OutgoingEvent from "../../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomMoodlightData } from "@shared/Interfaces/Room/RoomMoodlightData.js";
 import { SetFurnitureDataEventData } from "@shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData.js";
-import { RoomFurnitureEventData } from "@shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData.js";
 import { RoomFurnitureBackgroundData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundData.js";
 import { RoomFurnitureBackgroundTonerData } from "@shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData.js";
 import { RoomFurniturePostitData } from "@shared/Interfaces/Room/Furniture/RoomFurniturePostitData.js";
+import { RoomFurnitureData } from "@pixel63/events";
 
 export default class SetFurnitureDataEvent implements IncomingEvent<SetFurnitureDataEventData<unknown>> {
     public readonly name = "SetFurnitureDataEvent";
@@ -43,9 +42,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
             await furniture.model.save();
 
-            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    furniture.getFurnitureData()
+                    furniture.model.toJSON()
                 ]
             }));
         }
@@ -61,9 +60,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
             await furniture.model.save();
 
-            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    furniture.getFurnitureData()
+                    furniture.model.toJSON()
                 ]
             }));
         }
@@ -79,9 +78,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
             await furniture.model.save();
 
-            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    furniture.getFurnitureData()
+                    furniture.model.toJSON()
                 ]
             }));
         }
@@ -94,9 +93,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
             await furniture.model.save();
 
-            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    furniture.getFurnitureData()
+                    furniture.model.toJSON()
                 ]
             }));
         }
@@ -105,9 +104,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
 
             await furniture.model.save();
             
-            user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                 furnitureUpdated: [
-                    furniture.getFurnitureData()
+                    furniture.model.toJSON()
                 ]
             }));
         }
@@ -147,9 +146,9 @@ export default class SetFurnitureDataEvent implements IncomingEvent<SetFurniture
                 
                 await activeFurniture.model.save();
     
-                user.room.sendRoomEvent(new OutgoingEvent<RoomFurnitureEventData>("RoomFurnitureEvent", {
+                user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
                     furnitureUpdated: [
-                        activeFurniture.getFurnitureData()
+                        activeFurniture.model.toJSON()
                     ]
                 }));
             }

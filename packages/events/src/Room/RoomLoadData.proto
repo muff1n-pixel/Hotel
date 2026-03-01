@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "Room/Information/RoomInformationData.proto";
+
+import "Room/Users/RoomUserData.proto";
+
+import "Room/Structure/RoomStructureData.proto";
+
+import "User/Furniture/UserFurnitureData.proto";
+import "User/Bots/UserBotData.proto";
+
+message RoomLoadData {
+    string id = 1;
+
+    RoomInformationData information = 2;
+
+    RoomStructureData structure = 3;
+
+    repeated RoomUserData users = 4;
+    repeated UserFurnitureData furniture = 5;
+    repeated UserBotData bots = 6;
+
+    bool has_rights = 7;
+}

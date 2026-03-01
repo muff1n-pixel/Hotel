@@ -25,7 +25,7 @@ export default class RoomFigureItem extends RoomItem {
     private preloaded = false;
     private preloading = false;
 
-    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | null) {
+    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | undefined) {
         super(roomRenderer, "figure");
 
         if(position) {

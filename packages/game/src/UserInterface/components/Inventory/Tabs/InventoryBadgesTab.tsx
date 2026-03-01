@@ -1,16 +1,14 @@
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { useCallback, useEffect, useRef, useState } from "react";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
-import { UserBadgeData } from "@Shared/Interfaces/User/UserBadgeData";
-import { InventoryBadgesEventData } from "@Shared/Communications/Responses/Inventory/UserBadgesEventData";
 import { UpdateUserBadgeEventData } from "@Shared/Communications/Requests/Inventory/Badges/UpdateUserBadgeEventData";
 import BadgeImage from "../../Badges/BadgeImage";
+import { UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
 
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
-    const [userBadges, setUserBadges] = useState<UserBadgeData[]>([]);
+    const [userBadges, setUserBadges] = useState<UserInventoryBadgesData["badges"]>([]);
 
     const userBadgesRequested = useRef<boolean>(false);
 
@@ -25,19 +23,19 @@ export default function InventoryBadgesTab() {
     }, []);
 
     useEffect(() => {
-        const listener = (event: WebSocketEvent<InventoryBadgesEventData>) => {
-            setUserBadges(event.data.badges);
-        }
-
-        webSocketClient.addEventListener<WebSocketEvent<InventoryBadgesEventData>>("InventoryBadgesEvent", listener);
+        const listener = webSocketClient.addProtobuffListener(UserInventoryBadgesData, {
+            async handle(payload: UserInventoryBadgesData) {
+                setUserBadges(payload.badges);
+            },
+        });
 
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<InventoryBadgesEventData>>("InventoryBadgesEvent", listener);
+            webSocketClient.removeProtobuffListener(UserInventoryBadgesData, listener);
         };
     }, []);
 
     useEffect(() => {
-        if(!activeBadge && userBadges.length) {
+        if(!activeBadge && userBadges[0]) {
             setActiveBadge(userBadges[0]);
         }
         else if(activeBadge && !userBadges.includes(activeBadge)) {
@@ -193,8 +191,8 @@ export default function InventoryBadgesTab() {
                         </div>
 
                         <div style={{ flex: 1, alignSelf: "flex-start" }}>
-                            <b>{activeBadge.badge.name}</b>
-                            <p>{activeBadge.badge.description}</p>
+                            <b>{activeBadge.badge?.name}</b>
+                            <p>{activeBadge.badge?.description}</p>
                         </div>
 
                         <div style={{

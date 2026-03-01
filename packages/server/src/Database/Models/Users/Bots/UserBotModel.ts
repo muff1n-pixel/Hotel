@@ -4,8 +4,7 @@ import { NonAttribute } from "@sequelize/core";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
 import { BotTypeData } from "@shared/Interfaces/Bots/BotTypeData.js";
-import { BotSpeechData } from "@shared/Interfaces/Bots/BotSpeechData.js";
-import { FigureConfigurationData } from "@pixel63/events";
+import { BotSpeechData, FigureConfigurationData } from "@pixel63/events";
 
 export class UserBotModel extends Model {
     declare id: string;
@@ -70,6 +69,7 @@ export function initializeUserBotModel(sequelize: Sequelize) {
                 },
                 allowNull: false,
                 defaultValue: JSON.stringify({
+                    $type: "BotSpeechData",
                     automaticChat: false,
                     automaticChatDelay: 30,
                     messages: [],

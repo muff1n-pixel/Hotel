@@ -5,7 +5,7 @@ import { FigureConfigurationData } from "@pixel63/events";
 export default class Figure {
     public actions: string[] = ["Default"]
 
-    constructor(public configuration: FigureConfigurationData, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
+    constructor(public configuration: FigureConfigurationData | undefined, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
         this.actions.push(...actions);
     }
 
@@ -36,6 +36,10 @@ export default class Figure {
     }
 
     public getConfigurationAsString(): string {
+        if(!this.configuration) {
+            return "";
+        }
+        
         return this.configuration.parts.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
     }
 
@@ -49,6 +53,10 @@ export default class Figure {
 
     public hasAction(id: string) {
         return this.actions.some((action) => action.split('.')[0] === id);
+    }
+
+    public setActions(actions: string[]) {
+        this.actions = actions.concat("Default");
     }
 
     public removeAction(id: string) {

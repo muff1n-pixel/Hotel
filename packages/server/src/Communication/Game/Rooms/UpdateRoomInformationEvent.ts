@@ -1,10 +1,10 @@
-import { RoomInformationEventData } from "@shared/Communications/Responses/Rooms/RoomInformationEventData.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { UpdateRoomInformationEventData } from "@shared/Communications/Requests/Rooms/UpdateRoomInformationEventData.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import sharp from "sharp";
+import { RoomInformationData } from "@pixel63/events";
 
 export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateRoomInformationEventData> {
     public readonly name = "UpdateRoomInformationEvent";
@@ -57,9 +57,7 @@ export default class UpdateRoomInformationEvent implements IncomingEvent<UpdateR
         if(user.room.model.changed()) {
             await user.room.model.save();
 
-            user.room.sendRoomEvent(new OutgoingEvent<RoomInformationEventData>("RoomInformationEvent", {
-                information: user.room.getInformationData()
-            }));
+            user.room.sendProtobuff(RoomInformationData, RoomInformationData.create(user.room.getInformationData()));
         }
     }
 

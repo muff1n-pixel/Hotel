@@ -23,12 +23,12 @@ export default class RoomLighting {
         }
     }
 
-    public setMoodlightData(moodlight: RoomMoodlightData) {
+    public setMoodlightData(moodlight?: RoomMoodlightData) {
         const shouldRerender = 
-            (moodlight.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
-            || (moodlight.backgroundOnly !== this.moodlight?.backgroundOnly)
-            || (moodlight.color !== this.moodlight?.color)
-            || (moodlight.alpha !== this.moodlight?.alpha);
+            (moodlight?.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
+            || (moodlight?.backgroundOnly !== this.moodlight?.backgroundOnly)
+            || (moodlight?.color !== this.moodlight?.color)
+            || (moodlight?.alpha !== this.moodlight?.alpha);
 
         this.moodlight = moodlight;
 
