@@ -40,16 +40,16 @@ export default class UpdateFurnitureEvent implements ProtobuffListener<UpdateFur
         for(const room of game.roomManager.instances) {
             const affectedUserFurniture = room.furnitures.filter((userFurniture) => userFurniture.model.furniture.id === furniture.id);
 
-            const furnitureRemoved: RoomFurnitureData["furnitureRemoved"] = [];
+            const furnitureRemoved: RoomFurnitureData[] = [];
 
             for(const userFurniture of affectedUserFurniture) {
                 userFurniture.model.furniture = furniture;
 
-                furnitureRemoved.push(userFurniture.model.toJSON());
+                furnitureRemoved.push(RoomFurnitureData.fromJSON(userFurniture.model));
             }
 
             if(furnitureRemoved.length) {
-                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureRemoved
                 }));
             }

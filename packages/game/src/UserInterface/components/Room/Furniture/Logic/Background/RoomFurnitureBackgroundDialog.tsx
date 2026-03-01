@@ -21,7 +21,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
     const [offsetZ, setOffsetZ] = useState(data.data.data?.background?.index ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
             id: data.data.id,
 
             data: {

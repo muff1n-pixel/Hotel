@@ -22,9 +22,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
         if(this.roomFurniture.model.animation !== 0) {
             this.roomFurniture.model.animation = 0;
 
-            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.roomFurniture.model.toJSON()
+                    this.roomFurniture.model
                 ]
             }));
         }
@@ -125,9 +125,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
             if(this.roomFurniture.model.animation !== 2) {
                 this.roomFurniture.model.animation = 2;
                 
-                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureUpdated: [
-                        this.roomFurniture.model.toJSON()
+                        this.roomFurniture.model
                     ]
                 }));
             }

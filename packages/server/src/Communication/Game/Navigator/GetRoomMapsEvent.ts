@@ -9,8 +9,8 @@ export default class GetRoomMapsEvent implements ProtobuffListener<GetRoomMapsDa
     public readonly name = "GetRoomMapsEvent";
 
     async handle(user: User): Promise<void> {
-        user.sendProtobuff(RoomMapsData, RoomMapsData.create({
-            maps: game.roomNavigatorManager.maps.map((map) => map.toJSON())
+        user.sendProtobuff(RoomMapsData, RoomMapsData.fromJSON({
+            maps: game.roomNavigatorManager.maps.map((map) => map)
         }));
     }
 }

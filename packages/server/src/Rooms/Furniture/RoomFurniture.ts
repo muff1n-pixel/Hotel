@@ -68,9 +68,9 @@ export default class RoomFurniture<T = unknown> {
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
         this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
 
-        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureRemoved: [
-                this.model.toJSON()
+                this.model
             ]
         }));
 
@@ -282,9 +282,9 @@ export default class RoomFurniture<T = unknown> {
             await this.model.save();
         }
 
-        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
-                this.model.toJSON()
+                this.model
             ]
         }));
 
@@ -312,9 +312,9 @@ export default class RoomFurniture<T = unknown> {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model.toJSON()
+                    this.model
                 ]
             }));
         }
@@ -336,9 +336,9 @@ export default class RoomFurniture<T = unknown> {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+            this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model.toJSON()
+                    this.model
                 ]
             }));
         }

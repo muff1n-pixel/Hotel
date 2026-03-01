@@ -60,9 +60,9 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
 
         await furniture.model.save();
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
-                furniture.model.toJSON()
+                furniture.model
             ]
         }));
     }
@@ -87,9 +87,9 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
                 
                 await activeFurniture.model.save();
     
-                user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+                user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureUpdated: [
-                        activeFurniture.model.toJSON()
+                        activeFurniture.model
                     ]
                 }));
             }

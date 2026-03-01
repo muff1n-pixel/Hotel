@@ -63,6 +63,6 @@ export default class User extends EventEmitter {
     }
 
     public sendUserData() {
-        this.sendProtobuff(UserData, this.model.toJSON());
+        this.sendProtobuff(UserData, UserData.fromJSON(this.model));
     }
 }

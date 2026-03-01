@@ -30,17 +30,19 @@ export type RoomFurnitureLogicDialogData = {
 };
 
 export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
+    console.log(props.data.data.furniture?.interactionType);
+
     switch(props.data.data.furniture?.interactionType) {
-        case "furniture_roomdimmer":
+        case "dimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);
             
-        case "furniture_background":
+        case "ads_bg":
             return (<RoomFurnitureBackgroundDialog {...props}/>);
             
         case "furniture_stickie":
             return (<RoomFurnitureStickiesDialog {...props}/>);
             
-        case "furniture_background_color":
+        case "background_toner":
             return (<RoomFurnitureBackgroundTonerDialog {...props}/>);
             
         case "trophy":

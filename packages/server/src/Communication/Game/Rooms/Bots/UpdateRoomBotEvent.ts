@@ -47,9 +47,9 @@ export default class UpdateRoomBotEvent implements ProtobuffListener<UpdateRoomB
 
         await bot.model.save();
 
-        user.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+        user.room.sendProtobuff(RoomBotsData, RoomBotsData.fromJSON({
             botsUpdated: [
-                bot.model.toJSON()
+                bot.model
             ]
         }));
     }

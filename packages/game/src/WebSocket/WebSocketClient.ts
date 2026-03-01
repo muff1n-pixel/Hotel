@@ -43,6 +43,8 @@ export default class WebSocketClient extends EventTarget {
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        console.log("Sending " + message.$type, payload);
+
         const encoded = message.encode(payload).finish();
 
         this.sendEncodedProtobuff(message.$type, encoded);
@@ -67,7 +69,7 @@ export default class WebSocketClient extends EventTarget {
         const listener = (event: WebSocketEvent<Uint8Array>) => {
             const payload = message.decode(event.data) as T;
 
-            console.log("Received " + message.$type, payload);
+            console.log("Processing " + message.$type, payload);
 
             protobuffListener.handle(payload);
         };

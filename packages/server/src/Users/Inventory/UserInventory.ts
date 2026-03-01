@@ -84,12 +84,12 @@ export default class UserInventory {
             const count = await this.getFurnitureCount(userFurniture.furniture.id);
 
             if(count > 1) {
-                this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
+                this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
                     updatedUserFurniture: [
                         {
                             id: userFurniture.id,
                             quantity: count,
-                            furniture: userFurniture.furniture.toJSON()
+                            furniture: userFurniture.furniture
                         }
                     ]
                 }));
@@ -98,40 +98,40 @@ export default class UserInventory {
             }
         }
 
-        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
             deletedUserFurniture: [
                 {
                     id: userFurniture.id,
-                    furniture: userFurniture.furniture.toJSON()
+                    furniture: userFurniture.furniture
                 }
             ]
         }));
     }
 
     public async addFurniture(userFurniture: UserFurnitureModel) {
-        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
             updatedUserFurniture: [
                 {
                     id: userFurniture.id,
                     quantity: (userFurniture.furniture.flags.inventoryStackable)?(await this.getFurnitureCount(userFurniture.furniture.id)):(1),
-                    furniture: userFurniture.furniture.toJSON()
+                    furniture: userFurniture.furniture
                 }
             ]
         }));
     }
 
     public async addBot(userBot: UserBotModel) {
-        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.fromJSON({
             updatedUserBots: [
-                userBot.toJSON()
+                userBot
             ]
         }));
     }
 
     public async removeBot(userBot: UserBotModel) {
-        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.fromJSON({
             deletedUserBots: [
-                userBot.toJSON()
+                userBot
             ]
         }));
     }
@@ -159,25 +159,23 @@ export default class UserInventory {
                     existingUserfurniture.quantity++;
                 }
                 else {
-                    allUserFurniture.push({
-                        "$type": "UserInventoryFurnitureData",
+                    allUserFurniture.push(UserInventoryFurnitureData.fromJSON({
                         id: userFurniture.id,
                         quantity: 1,
-                        furniture: userFurniture.furniture.toJSON()
-                    });
+                        furniture: userFurniture.furniture
+                    }));
                 }
             }
             else {
-                allUserFurniture.push({
-                    "$type": "UserInventoryFurnitureData",
+                allUserFurniture.push(UserInventoryFurnitureData.fromJSON({
                     id: userFurniture.id,
                     quantity: 1,
-                    furniture: userFurniture.furniture.toJSON()
-                });
+                    furniture: userFurniture.furniture
+                }));
             }
         }
         
-        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.create({
+        this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
             allUserFurniture
         }));
     }
@@ -191,8 +189,8 @@ export default class UserInventory {
             order: [['updatedAt','DESC']]
         });
 
-        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.create({
-            allUserBots: userBots.map((bot) => bot.toJSON())
+        this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.fromJSON({
+            allUserBots: userBots.map((bot) => bot)
         }));
     }
 

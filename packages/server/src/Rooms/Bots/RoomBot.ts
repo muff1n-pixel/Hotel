@@ -36,9 +36,9 @@ export default class RoomBot implements RoomActor {
 
         room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
-        room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+        room.sendProtobuff(RoomBotsData, RoomBotsData.fromJSON({
             botsAdded: [
-                roomBot.model.toJSON()
+                roomBot.model
             ]
         }));
 
@@ -120,9 +120,9 @@ export default class RoomBot implements RoomActor {
 
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position));
 
-        this.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+        this.room.sendProtobuff(RoomBotsData, RoomBotsData.fromJSON({
             botsRemoved: [
-                this.model.toJSON()
+                this.model
             ]
         }));
 
@@ -148,9 +148,9 @@ export default class RoomBot implements RoomActor {
         if(save && this.model.changed()) {
             await this.model.save();
 
-            this.room.sendProtobuff(RoomBotsData, RoomBotsData.create({
+            this.room.sendProtobuff(RoomBotsData, RoomBotsData.fromJSON({
                 botsUpdated: [
-                    this.model.toJSON()
+                    this.model
                 ]
             }));
         }

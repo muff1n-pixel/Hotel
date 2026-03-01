@@ -62,7 +62,7 @@ export default class RoomUser implements RoomActor {
             user: this.getRoomUserData()
         }));
 
-        this.user.sendProtobuff(RoomLoadData, RoomLoadData.create({
+        this.user.sendProtobuff(RoomLoadData, RoomLoadData.fromJSON({
             id: this.room.model.id,
             
             information: this.room.getInformationData(),
@@ -70,8 +70,8 @@ export default class RoomUser implements RoomActor {
             structure: this.room.model.structure,
             
             users: this.room.users.map((user) => user.getRoomUserData()),
-            furniture: this.room.furnitures.map((furniture) => furniture.model.toJSON()),
-            bots: this.room.bots.map((bot) => bot.model.toJSON()),
+            furniture: this.room.furnitures.map((furniture) => furniture.model),
+            bots: this.room.bots.map((bot) => bot.model),
 
             hasRights: this.hasRights()
         }))

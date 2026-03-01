@@ -3,7 +3,7 @@ syntax = "proto3";
 message UserFurnitureBackgroundData {
     string image_url = 1;
     
-    uint32 left = 2;
-    uint32 top = 3;
-    uint32 index = 4;
+    int32 left = 2;
+    int32 top = 3;
+    int32 index = 4;
 }

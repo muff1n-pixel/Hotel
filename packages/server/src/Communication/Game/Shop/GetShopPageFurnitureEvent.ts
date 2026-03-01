@@ -26,12 +26,12 @@ export default class GetShopPageFurnitureEvent implements ProtobuffListener<GetS
             throw new Error("Shop page does not exist.");
         }
 
-        user.sendProtobuff(ShopPageFurnitureData, ShopPageFurnitureData.create({
+        user.sendProtobuff(ShopPageFurnitureData, ShopPageFurnitureData.fromJSON({
             pageId: shopPage.id,
             furniture: shopPage.furniture.map((furniture) => {
                 return {
                     id: furniture.id,
-                    furniture: furniture.furniture.toJSON(),
+                    furniture: furniture.furniture,
                     credits: furniture.credits,
                     duckets: furniture.duckets,
                     diamonds: furniture.diamonds
