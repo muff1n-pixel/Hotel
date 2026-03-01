@@ -35,13 +35,13 @@ export default function InventoryBotsTab() {
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryBotsData, {
             async handle(payload: UserInventoryBotsData) {
-                if(payload.allUserBots) {
+                if(payload.allUserBots.length) {
                     setBots(payload.allUserBots);
                 }
                 else {
                     let mutated = [...bots];
 
-                    if(payload.updatedUserBots) {
+                    if(payload.updatedUserBots.length) {
                         mutated = 
                             payload.updatedUserBots.concat(
                                 ...mutated
@@ -49,7 +49,7 @@ export default function InventoryBotsTab() {
                             );
                     }
 
-                    if(payload.deletedUserBots) {
+                    if(payload.deletedUserBots.length) {
                         mutated = mutated
                             .filter((bot) => !payload.deletedUserBots?.some((userBot) => userBot.id === bot.id))
                     }

@@ -2,7 +2,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFloorItem from "../Map/RoomFloorItem";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomFloorSprite extends RoomSprite {
     priority = -3000;
@@ -54,7 +54,7 @@ export default class RoomFloorSprite extends RoomSprite {
 
             //console.log(this.item.floorRenderer.tiles[path]);
 
-            return RoomPositionData.create({
+            return RoomPositionWithDirectionData.create({
                 row: Math.floor(this.item.floorRenderer.tiles[path].row),
                 column: Math.floor(this.item.floorRenderer.tiles[path].column),
                 depth: this.item.floorRenderer.tiles[path].depth

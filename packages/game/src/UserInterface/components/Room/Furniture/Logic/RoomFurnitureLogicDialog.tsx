@@ -1,11 +1,11 @@
-import RoomFurnitureBackgroundDialog, { RoomFurnitureBackgroundDialogData } from "./Background/RoomFurnitureBackgroundDialog";
-import RoomFurnitureDimmerDialog, { RoomFurnitureDimmerData } from "./Dimmer/RoomFurnitureDimmerDialog";
-import RoomFurnitureStickiesDialog, { RoomFurnitureStickiesDialogData } from "./Stickies/RoomFurnitureStickiesDialog";
-import RoomFurnitureBackgroundTonerDialog, { RoomFurnitureBackgroundTonerDialogData } from "./Toner/RoomFurnitureBackgroundTonerDialog";
-import RoomFurnitureTrophyDialog, { RoomFurnitureTrophyDialogData } from "./Trophy/RoomFurnitureTrophyDialog";
+import RoomFurnitureBackgroundDialog from "./Background/RoomFurnitureBackgroundDialog";
+import RoomFurnitureDimmerDialog from "./Dimmer/RoomFurnitureDimmerDialog";
+import RoomFurnitureStickiesDialog from "./Stickies/RoomFurnitureStickiesDialog";
+import RoomFurnitureBackgroundTonerDialog from "./Toner/RoomFurnitureBackgroundTonerDialog";
+import RoomFurnitureTrophyDialog from "./Trophy/RoomFurnitureTrophyDialog";
 import WiredActionShowMessageDialog from "./Wired/Action/WiredActionShowMessageDialog";
 import WiredActionTeleportToFurnitureDialog from "./Wired/Action/WiredActionTeleportToFurnitureDialog";
-import WiredTriggerSaysSomethingDialog, { WiredTriggerSaysSomethingDialogData } from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
+import WiredTriggerSaysSomethingDialog from "./Wired/Trigger/WiredTriggerSaysSomethingDialog";
 import WiredUserSpecifierDialog from "./Wired/WiredUserSpecifierDialog";
 import WiredTriggerStuffStateDialog from "./Wired/Trigger/WiredTriggerStuffStateDialog";
 import WiredTriggerUserClicksOnTileDialog from "./Wired/Trigger/WiredTriggerUserClicksOnTileDialog";
@@ -17,21 +17,17 @@ import WiredSignalDialog from "./Wired/WiredSignalDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
 import WiredDialog from "../../../Dialog/Wired/WiredDialog";
 import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export type RoomFurnitureLogicDialogProps = {
-    data: RoomInstanceFurniture;
+    data: RoomFurniture;
     hidden?: boolean;
     onClose: () => void;
 }
 
-export type RoomFurnitureLogicDialogData =
-    RoomFurnitureDimmerData
-    | RoomFurnitureBackgroundDialogData
-    | RoomFurnitureBackgroundTonerDialogData
-    | RoomFurnitureStickiesDialogData
-    | RoomFurnitureTrophyDialogData
-    | WiredTriggerSaysSomethingDialogData;
+export type RoomFurnitureLogicDialogData = {
+    furniture: RoomFurniture;
+};
 
 export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
     switch(props.data.data.furniture?.interactionType) {

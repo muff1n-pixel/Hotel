@@ -146,7 +146,7 @@ export default class RoomInstance {
             }
             else if(event.floorEntity?.position) {
                 webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
-                    position: event.floorEntity.position
+                    position: RoomPositionData.fromJSON(event.floorEntity.position)
                 }));
 
                 this.lastSentClickEvent = performance.now();
@@ -159,7 +159,7 @@ export default class RoomInstance {
 
         if(event.floorEntity?.position && !(event.otherEntity?.item instanceof RoomFigureItem)) {
             webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
-                target: event.floorEntity.position
+                target: RoomPositionData.fromJSON(event.floorEntity.position)
             }));
         }
     }

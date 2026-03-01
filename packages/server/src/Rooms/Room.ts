@@ -263,7 +263,7 @@ export default class Room {
         }
 
         if(furniture.model.furniture.interactionType === "multiheight" && furniture.model.furniture.customParams?.[0]) {
-            return furniture.model.position.depth + furniture.model.furniture.dimensions.depth + (parseInt(furniture.model.furniture.customParams[0]) * furniture.model.animation);
+            return furniture.model.position.depth + furniture.model.furniture.dimensions.depth + (parseFloat(furniture.model.furniture.customParams[0]) * furniture.model.animation);
         }
 
         return furniture.model.position.depth + furniture.model.furniture.dimensions.depth;

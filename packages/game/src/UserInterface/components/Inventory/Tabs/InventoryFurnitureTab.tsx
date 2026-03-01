@@ -34,13 +34,13 @@ export default function InventoryFurnitureTab() {
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryFurnitureCollectionData, {
             async handle(payload: UserInventoryFurnitureCollectionData) {
-                if(payload.allUserFurniture) {
+                if(payload.allUserFurniture.length) {
                     setUserFurniture(payload.allUserFurniture);
                 }
                 else {
                     let mutatedUserFurniture = [...userFurniture];
 
-                    if(payload.updatedUserFurniture) {
+                    if(payload.updatedUserFurniture.length) {
                         mutatedUserFurniture = 
                             payload.updatedUserFurniture.concat(
                                 ...mutatedUserFurniture
@@ -50,7 +50,7 @@ export default function InventoryFurnitureTab() {
                             );
                     }
 
-                    if(payload.deletedUserFurniture) {
+                    if(payload.deletedUserFurniture.length) {
                         mutatedUserFurniture = mutatedUserFurniture
                             .filter((userFurniture) => !payload.deletedUserFurniture?.some((updatedUserFurniture) => 
                                 (updatedUserFurniture.furniture?.flags?.inventoryStackable)?(updatedUserFurniture.furniture?.id === userFurniture.furniture?.id):(updatedUserFurniture.id === userFurniture.id)

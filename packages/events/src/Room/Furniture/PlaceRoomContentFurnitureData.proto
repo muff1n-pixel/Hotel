@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "Room/RoomPositionData.proto";
-
 message PlaceRoomContentFurnitureData {
     string id = 1;
     string furniture_id = 2;

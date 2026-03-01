@@ -86,7 +86,7 @@ export default class RoomFurniture {
         }
 
         if(this.data.furniture?.interactionType === "multiheight" && this.data.furniture?.customParams?.[0]) {
-            return this.data.furniture?.dimensions?.depth + ((this.data.furniture?.customParams[0] as any as number) * this.data.animation);
+            return this.data.furniture?.dimensions?.depth + ((parseFloat(this.data.furniture?.customParams[0])) * this.data.animation);
         }
 
         return this.data.furniture?.dimensions?.depth;

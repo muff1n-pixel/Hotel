@@ -3,7 +3,7 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomItemSpriteInterface from "../Interfaces/RoomItemSpriteInterface";
 import RoomItem from "./RoomItem";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionData, RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomSprite implements RoomItemSpriteInterface {
     priority: number = 0;
@@ -17,7 +17,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         
     }
 
-    mouseover(position: MousePosition): RoomPositionData | null {
+    mouseover(position: MousePosition): RoomPositionWithDirectionData | null {
         return null;
     }
 

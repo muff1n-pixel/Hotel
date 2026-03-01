@@ -57,6 +57,10 @@ export default class Furniture {
             throw new Error();
         }
 
+        if(this.color === undefined) {
+            this.color = 0;
+        }
+
         this.type = type;
 
         this.animation = animation;

@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "Figure/FigureConfigurationData.proto";
-
 message SetUserHomeRoomData {
     optional string room_id = 1;
 }

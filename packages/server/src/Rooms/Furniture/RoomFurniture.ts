@@ -53,9 +53,9 @@ export default class RoomFurniture<T = unknown> {
 
         room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position), roomFurniture.getDimensions());
 
-        room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.create({
+        room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureAdded: [
-                roomFurniture.model.toJSON()
+                roomFurniture.model
             ]
         }));
 

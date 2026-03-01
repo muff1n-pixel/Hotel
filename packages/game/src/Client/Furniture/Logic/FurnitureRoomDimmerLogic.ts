@@ -1,8 +1,8 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
 import { clientInstance } from "../../..";
-import { RoomFurnitureDimmerData } from "../../../UserInterface/components/Room/Furniture/Logic/Dimmer/RoomFurnitureDimmerDialog";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import { RoomFurnitureLogicDialogData } from "../../../UserInterface/components/Room/Furniture/Logic/RoomFurnitureLogicDialog";
 
 export default class FurnitureRoomDimmerLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
@@ -24,9 +24,8 @@ export default class FurnitureRoomDimmerLogic implements FurnitureLogic {
                 id: Math.random().toString(),
                 type: "room-furniture-logic",
                 data: {
-                    furniture: this.roomFurniture as any,
-                    type: "furniture_roomdimmer"
-                } satisfies RoomFurnitureDimmerData
+                    furniture: this.roomFurniture
+                } satisfies RoomFurnitureLogicDialogData
             }
         ]);
     }

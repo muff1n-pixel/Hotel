@@ -2,7 +2,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFigureItem from "./RoomFigureItem";
 import { FigureRendererSpriteResult } from "@Client/Figure/Renderer/FigureRenderer";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomFigureSprite extends RoomSprite {
     public offset: MousePosition;
@@ -52,7 +52,7 @@ export default class RoomFigureSprite extends RoomSprite {
             return null;
         }
 
-        return RoomPositionData.create({
+        return RoomPositionWithDirectionData.create({
             row: this.item.position!.row,
             column: this.item.position!.column,
             depth: this.item.position!.depth

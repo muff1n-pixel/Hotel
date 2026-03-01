@@ -6,13 +6,7 @@ import DimmerDialogSlider from "../../../../Dialog/Dimmer/DimmerDialogSlider";
 import DimmerDialogCheckbox from "../../../../Dialog/Dimmer/DimmerDialogCheckbox";
 import DimmerDialogButton from "../../../../Dialog/Dimmer/DimmerDialogButton";
 import { webSocketClient } from "../../../../../..";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-
-export type RoomFurnitureDimmerData = {
-    furniture: RoomInstanceFurniture;
-    type: "furniture_roomdimmer";
-};
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();

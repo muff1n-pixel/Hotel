@@ -167,7 +167,9 @@ export default class RoomFurniturePlacer {
             )
         );
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === "floor" && isFloorPlacement);
+        const placement = (isFloorPlacement)?("floor"):("wall");
+
+        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
 
         if(entity?.position) {
             const dimensions = (
@@ -182,8 +184,8 @@ export default class RoomFurniturePlacer {
                 )
             );
 
-            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(entity.position, dimensions)));
-            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(entity.position, dimensions, this.roomFurnitureItem)));
+            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(entity.position), dimensions)));
+            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(RoomPositionData.fromJSON(entity.position), dimensions, this.roomFurnitureItem)));
 
             if(entity && isPositionInsideStructure && !isPositionInsideFigure) {
                 const furnitureAtPosition = (isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
@@ -196,9 +198,9 @@ export default class RoomFurniturePlacer {
                 );
 
                 if(!furnitureAtPosition || furnitureAtPosition.data.furniture?.flags?.stackable) {
-                    //if(isFurniture && entity.position.direction !== undefined) {
-                        //this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
-                    //}
+                    if(isFurniture && entity.position.direction !== undefined) {
+                        this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
+                    }
 
                     this.roomFurnitureItem.setPosition(RoomPositionData.create({
                         row: entity.position.row,
@@ -238,8 +240,10 @@ export default class RoomFurniturePlacer {
             )
         );
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === "floor" && isFloorPlacement);
-        
+        const placement = (isFloorPlacement)?("floor"):("wall");
+
+        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+
         const dimensions = (
             (isFurniture)?(
                 this.roomFurnitureItem.furnitureRenderer.getDimensions()
