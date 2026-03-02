@@ -1,5 +1,6 @@
-import { defaultImageDataWorker } from "@Client/Figure/Worker/ImageDataWorkerClient";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
+import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageDataWorkerInterface";
+import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
 
 export type AssetSpriteProperties = {
     id?: number;
@@ -37,6 +38,8 @@ export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
     private static images: Map<string, Promise<ImageBitmap>> = new Map();
     private static sprites: Record<string, (AssetSpriteProperties & AssetSpriteResult)[]> = {};
+
+    public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
     public static async fetchJson<T>(url: string): Promise<T> {
         if(this.json.has(url)) {
@@ -188,7 +191,7 @@ export default class AssetFetcher {
                 }
             }
             else {
-                defaultImageDataWorker.getImageData(output.image).then((imageData) => {
+                AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
                     result.imageData = imageData;
                     output.imageData = imageData;
 

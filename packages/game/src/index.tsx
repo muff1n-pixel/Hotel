@@ -5,6 +5,7 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import LoaderInstance from "./Loader";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Cookies from "js-cookie";
+import Figure from "@Client/Figure/Figure";
 
 import "./Polyfills/OffscreenCanvas";
 
@@ -30,20 +31,20 @@ async function start(text?: string) {
 
     const config = await response.json();
 
-    if(!clientElement) {
+    if (!clientElement) {
         throw new Error("Client root element is not created.");
     }
 
-    if(!interfaceElement) {
+    if (!interfaceElement) {
         throw new Error("User interface root element is not created.");
     }
 
-    if(!loaderElement) {
+    if (!loaderElement) {
         throw new Error("Loader root element is not created.");
     }
 
     loaderInstance = new LoaderInstance(loaderElement);
-    
+
     loaderInstance.render(text);
 
     webSocketClient = new WebSocketClient(

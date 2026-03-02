@@ -19,6 +19,7 @@
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,
+    "declaration": true,
 
     /* Type Checking */
     "strict": true,

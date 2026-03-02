@@ -6,7 +6,7 @@ export class WebArticleLikeModel extends Model {
     declare id: string;
 }
 
-export function initializeWebArticleLikeModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     WebArticleLikeModel.init(
         {
             id: {
@@ -19,7 +19,9 @@ export function initializeWebArticleLikeModel(sequelize: Sequelize) {
             sequelize
         },
     );
+}
 
+export function associate() {
     WebArticleLikeModel.belongsTo(WebArticleModel, {
         as: "article",
         foreignKey: "articleId",

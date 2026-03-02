@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import './MePage.css';
 import { ThemeContext } from '../../ThemeProvider';
 import { useLocation, useNavigate } from 'react-router';
@@ -10,17 +10,45 @@ import clockIcon from '../../Images/me/clock.gif'
 import discordIcon from '../../Images/me/discord.png'
 import diamondsIcon from '../../Images/me/diamonds.png'
 import NewsContainer from '../../Components/NewsContainer/NewsContainer';
+import UnknowUserImage from '../../Images/unknow_user.gif';
+
+// TODO: add type declarations
+//@ts-expect-error
+import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
 
 const MePage = () => {
     const navigate = useNavigate();
+    
+    const figureCanvasRef = useRef<HTMLCanvasElement>(null);
+
+    const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
 
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     useEffect(() => {
         if (!currentUser) {
             navigate("/");
+        } else {
+            if(figureCanvasRef.current) {
+                FigureAssets.loadAssets().then(() => {
+                    const figure = new Figure(currentUser.figureConfiguration, 2);
+
+                    figure.renderToCanvas(new FigureWorkerMainThread(), 0, false).then(({ figure }: any) => {
+                        const context = figureCanvasRef.current?.getContext("2d");
+
+                        if(!context) {
+                            throw new Error();
+                        }
+
+                        context.canvas.width = figure.image.width;
+                        context.canvas.height = figure.image.height;
+
+                        context.drawImage(figure.image, 0, 0);
+                    });
+                });
+            }
         }
-    }, [currentUser, navigate]);
+    }, [figureCanvasRef, currentUser, navigate]);
 
     return (
         <div className='me_page resize'>
@@ -36,7 +64,11 @@ const MePage = () => {
                         <div className='my_data'>
                             <div className='my_avatar'>
                                 <div className='avatar'>
-                                    <img src='https://www.habbo.com/habbo-imaging/avatarimage?user=uik&direction=2&head_direction=2&action=&gesture=nrm&size=m' alt="Avatar" />
+                                    <div className='avatar_img'>
+                                        <canvas ref={figureCanvasRef} style={{
+                                            transform: "translate(-84px, -60px)"
+                                        }}/>
+                                    </div>
                                 </div>
 
                                 <div className='motto'><span>{currentUser?.name}: </span> {currentUser?.motto}</div>
@@ -66,7 +98,7 @@ const MePage = () => {
                         <div className='row small'>
                             <img src={clockIcon} alt="Clock Icon" />
                             <div className='description'>
-                                <p>Last signed in: XXX</p>
+                                <p>Last signed in: {currentUser?.lastLogin ? (new Date(currentUser.lastLogin).toLocaleString()).replace(" ", " at ") : "Never"}</p>
                             </div>
                         </div>
                     </div>

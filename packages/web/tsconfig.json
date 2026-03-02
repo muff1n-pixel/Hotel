@@ -26,8 +26,8 @@
     /* Completeness */
     "skipLibCheck": true,
     "paths": {
-      "@Client/*": ["./src/Client/*"],
-      "@Shared/*": ["../shared/*"]
+      "@client/*": ["./src/Client/*"],
+      "@shared/*": ["../shared/*"]
     },
   },
   "parcel-plugin-typescript": {

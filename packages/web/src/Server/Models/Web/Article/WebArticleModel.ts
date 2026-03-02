@@ -10,7 +10,7 @@ export class WebArticleModel extends Model {
     declare author: NonAttribute<UserModel>;
 }
 
-export function initializeWebArticleModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     WebArticleModel.init(
         {
             id: {
@@ -35,7 +35,9 @@ export function initializeWebArticleModel(sequelize: Sequelize) {
             sequelize
         },
     );
-    
+}
+
+export function associate() {
     WebArticleModel.belongsTo(UserModel, {
         as: "author",
         foreignKey: "authorId",

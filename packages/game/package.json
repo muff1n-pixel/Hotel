@@ -1,8 +1,34 @@
 {
+  "name": "@pixel63/game",
   "type": "module",
+  "source": "src/library.ts",
+
+  "main": "./build/library.js",
+  "exports": {
+    ".": {
+      "import": "./build/library.js"
+    }
+  },
+
+  "targets": {
+    "game": {
+      "context": "browser",
+      "outputFormat": "esmodule",
+      "isLibrary": false,
+      "distDir": "../../build/game"
+    },
+    "library": {
+      "context": "browser",
+      "outputFormat": "esmodule",
+      "isLibrary": true,
+      "distDir": "build"
+    }
+  },
+
   "scripts": {
     "start": "npm run watch",
-    "build": "npx parcel build src/index.tsx --dist-dir ../../build/game",
+    "build": "npx parcel build src/index.tsx --dist-dir ../../build/game --target game",
+    "build:lib": "parcel build src/library.ts --dist-dir build --target library",
     "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/game",
     "spritesheet": "npx ts-node src/UserInterface/utils/generateSpritesheet.ts",
     "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts"
@@ -12,8 +38,7 @@
     "js-cookie": "^3.0.5",
     "react": "^19.1.0",
     "react-color-palette": "^7.3.1",
-    "react-dom": "^19.1.0",
-    "@pixel63/events": "file:../events"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

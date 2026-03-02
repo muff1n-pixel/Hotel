@@ -1,6 +1,6 @@
 import FigureWorkerInterface from "@Client/Figure/Worker/Interfaces/FigureWorkerInterface";
-import FigureWorkerClient from "./Worker/FigureWorkerClient";
 import { FigureConfigurationData } from "@pixel63/events";
+import { FigureRendererResult } from "@Client/Figure/Renderer/FigureRenderer";
 
 export default class Figure {
     public actions: string[] = ["Default"]
@@ -9,11 +9,11 @@ export default class Figure {
         this.actions.push(...actions);
     }
 
-    public async preload(worker: FigureWorkerClient) {
+    public async preload(worker: FigureWorkerInterface) {
         await worker.preload(this);
     }
 
-    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false) {
+    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false): Promise<FigureRendererResult> {
         /*let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
 
         if(this.headOnly) {
