@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import './MePage.css';
 import { ThemeContext } from '../../ThemeProvider';
 import { useLocation, useNavigate } from 'react-router';
@@ -11,10 +11,16 @@ import discordIcon from '../../Images/me/discord.png'
 import diamondsIcon from '../../Images/me/diamonds.png'
 import NewsContainer from '../../Components/NewsContainer/NewsContainer';
 import UnknowUserImage from '../../Images/unknow_user.gif';
-import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
+
+// TODO: add type declarations
+//@ts-expect-error
+import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
 
 const MePage = () => {
     const navigate = useNavigate();
+    
+    const figureCanvasRef = useRef<HTMLCanvasElement>(null);
+
     const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
 
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -23,13 +29,26 @@ const MePage = () => {
         if (!currentUser) {
             navigate("/");
         } else {
-            AvatarImager(currentUser.figureConfiguration).then((avatarData: Base64URLString) => {
-                setMyAvatar(avatarData);
-            }).catch((e: any) => {
-                console.log("Failed to load avatar image:", e);
-            });
+            if(figureCanvasRef.current) {
+                FigureAssets.loadAssets().then(() => {
+                    const figure = new Figure(currentUser.figureConfiguration, 2);
+
+                    figure.renderToCanvas(new FigureWorkerMainThread(), 0, false).then(({ figure }: any) => {
+                        const context = figureCanvasRef.current?.getContext("2d");
+
+                        if(!context) {
+                            throw new Error();
+                        }
+
+                        context.canvas.width = figure.image.width;
+                        context.canvas.height = figure.image.height;
+
+                        context.drawImage(figure.image, 0, 0);
+                    });
+                });
+            }
         }
-    }, [currentUser, navigate]);
+    }, [figureCanvasRef, currentUser, navigate]);
 
     return (
         <div className='me_page resize'>
@@ -45,7 +64,11 @@ const MePage = () => {
                         <div className='my_data'>
                             <div className='my_avatar'>
                                 <div className='avatar'>
-                                    <div className='avatar_img' style={{ backgroundImage: `url(${myAvatar})` }}></div>
+                                    <div className='avatar_img'>
+                                        <canvas ref={figureCanvasRef} style={{
+                                            transform: "translate(-84px, -60px)"
+                                        }}/>
+                                    </div>
                                 </div>
 
                                 <div className='motto'><span>{currentUser?.name}: </span> {currentUser?.motto}</div>

@@ -63,24 +63,19 @@ class App {
             root: path.join((this.config as Config).static, "web")
         }));
 
-        this.expressApp.listen(this.config.port);
+        if(this.config.hostname) {
+            this.expressApp.listen(this.config.port, this.config.hostname);
+        }
+        else {
+            this.expressApp.listen(this.config.port);
+        }
     }
-    catch (e) {
-        return response.json({
-            error: "An error occured"
-        });
-    }
-});
-
-if(config.hostname) {
-    app.listen(config.port, config.hostname);
-}
-else {
-    app.listen(config.port);
-}
+};
 
 const Server = new App();
+
 Server.init()
     .then(() => sendLog("SUCCESS", `Web server listening on port ${Server.config?.port}`))
     .catch((error: string) => { sendCriticalError(error) });
+
 export default Server;

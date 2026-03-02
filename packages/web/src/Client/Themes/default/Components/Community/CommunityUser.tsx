@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Skeleton from '../../Images/community/habbo_skeleton.gif';
-import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager'
+
+// TODO: add type declarations
+//@ts-expect-error
+import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
 
 type UserProps = {
     name?: string | null;
@@ -9,20 +12,38 @@ type UserProps = {
 }
 
 const CommunityUser = ({ name = null, motto = null, figureConfiguration = null }: UserProps) => {
-    const [avatar, setAvatar] = useState<string>(Skeleton);
+    const figureCanvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (name && motto && figureConfiguration) {
-            AvatarImager(figureConfiguration, 4).then((avatarData) => {
-                setAvatar(avatarData);
-            }).catch((e) => {
-                console.log("Failed to load avatar image:", e);
+        if (figureConfiguration && figureCanvasRef.current) {
+            FigureAssets.loadAssets().then(() => {
+                const figure = new Figure(figureConfiguration, 4);
+
+                figure.renderToCanvas(new FigureWorkerMainThread(), 0, false).then(({ figure }: any) => {
+                    const context = figureCanvasRef.current?.getContext("2d");
+
+                    if(!context) {
+                        throw new Error();
+                    }
+
+                    context.canvas.width = figure.image.width;
+                    context.canvas.height = figure.image.height;
+
+                    context.drawImage(figure.image, 0, 0);
+                });
             });
         }
-    })
+    }, [figureConfiguration, figureCanvasRef]);
 
     return (
-        <div className='row' style={{ backgroundImage: `url(${avatar})` }}>
+        <div className='row' style={(figureConfiguration)?({ position: "relative", background: "none" }):(undefined)}>
+            <canvas ref={figureCanvasRef} style={{
+                position: "absolute",
+
+                left: -90,
+                top: -60
+            }}/>
+
             {name &&
                 <div className='info'>
                     <div className='username'>{name}</div>

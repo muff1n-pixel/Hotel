@@ -3,9 +3,13 @@ import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 
 import "../../Polyfills/OffscreenCanvas";
+import AssetFetcher from "@Client/Assets/AssetFetcher";
+import { createImageDataWorkerClient } from "@Client/Figure/Worker/ImageDataWorkerClient";
 
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     const port = event.ports[0];
+
+    AssetFetcher.imageDataClient = createImageDataWorkerClient();
 
     await FigureAssets.loadAssets();
 
