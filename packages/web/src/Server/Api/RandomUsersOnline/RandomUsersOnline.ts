@@ -5,12 +5,17 @@ import { UserModel } from "../../Models/Users/UserModel";
 const router = Router();
 
 router.post("/", async (req, res) => {
+    let limit = req.body.limit;
+
+    if(!limit || isNaN(parseInt(limit)) || parseInt(limit) > 50)
+        limit = 50;
+
     const usersOnline = await UserModel.findAll({
         where: {
             online: true
         },
         order: Sequelize.literal('rand()'),
-        limit: 18
+        limit: limit
     });
 
     const usersData: Array<any> = [];
