@@ -29,7 +29,7 @@
     "start": "npm run watch",
     "build": "npx parcel build src/index.tsx --dist-dir ../../build/game --target game",
     "build:lib": "parcel build src/library.ts --dist-dir build --target library",
-    "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/game",
+    "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/game --target game",
     "spritesheet": "npx ts-node src/UserInterface/utils/generateSpritesheet.ts",
     "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts"
   },
