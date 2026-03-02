@@ -23,35 +23,6 @@ export let userInterface: UserInterfaceInstance;
 start();
 
 async function start(text?: string) {
-    if (searchParams.get("avatarImager") !== null) {
-        try {
-            const figureConfiguration = JSON.parse(decodeURIComponent(searchParams.get("avatarImager") as string));
-
-            const direction = parseInt(searchParams.get("direction") as string) || 2;
-            const actions = JSON.parse(decodeURIComponent(searchParams.get("actions") as string)) || [];
-            const frame = parseInt(searchParams.get("frame") as string) || 0;
-            const headOnly = Boolean(parseInt(searchParams.get("headOnly") as string)) || undefined;
-
-            const furnitureRenderer = new Figure(figureConfiguration, direction, ["wav"], headOnly);
-
-            document.body.innerHTML = "";
-
-            window.generateAvatar = async () => {
-                const rendered = await furnitureRenderer.renderToCanvas(Figure.figureWorker, frame, true);
-                const bitmap = rendered.figure.image as ImageBitmap;
-                const canvas = document.createElement("canvas");
-                canvas.width = bitmap.width;
-                canvas.height = bitmap.height;
-                const ctx = canvas.getContext("2d");
-                ctx?.drawImage(bitmap, 0, 0);
-                return canvas.toDataURL("image/png");
-            };
-        } catch (e) {
-            console.error("Failed to parse figure configuration.", e);
-        }
-        return;
-    }
-
     const response = await fetch("/game/config.json", {
         headers: {
             "Accept": "application/json"
