@@ -1,11 +1,11 @@
-import { Fragment, ReactNode } from "react";
+import { ReactNode } from "react";
 
 export type UserContextMenuListProps = {
     children: ReactNode | ReactNode[];
 };
 
 export default function UserContextMenuList({ children }: UserContextMenuListProps) {
-    const mappedChildren = (Array.isArray(children))?(children):([children]);
+    /*const mappedChildren = (Array.isArray(children))?(children):([children]);
     
     return mappedChildren.filter(Boolean).map((child, index, array) => (
         (index === array.length - 1)?(
@@ -20,5 +20,7 @@ export default function UserContextMenuList({ children }: UserContextMenuListPro
                 }}/>
             </Fragment>
         )
-    ));
+    ));*/
+
+    return children;
 }

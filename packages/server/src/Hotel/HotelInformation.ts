@@ -1,7 +1,6 @@
-import { HotelEventData } from "@shared/Communications/Responses/Hotel/HotelEventData.js";
 import { game } from "../index.js";
-import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { HotelData } from "@pixel63/events";
 
 export default class HotelInformation {
     private previousUserCount: number = 0;
@@ -17,7 +16,7 @@ export default class HotelInformation {
         this.previousUserCount = game.users.length;
 
         for (const user of game.users) {
-            user.send(new OutgoingEvent<HotelEventData>("HotelEvent", {
+            user.sendProtobuff(HotelData, HotelData.create({
                 users: game.users.length
             }));
         }

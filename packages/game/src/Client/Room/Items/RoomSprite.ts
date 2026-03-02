@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import RoomItemSpriteInterface from "../Interfaces/RoomItemSpriteInterface";
 import RoomItem from "./RoomItem";
+import { RoomPositionData, RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomSprite implements RoomItemSpriteInterface {
     priority: number = 0;
@@ -17,7 +17,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         
     }
 
-    mouseover(position: MousePosition): RoomPosition | null {
+    mouseover(position: MousePosition): RoomPositionWithDirectionData | null {
         return null;
     }
 

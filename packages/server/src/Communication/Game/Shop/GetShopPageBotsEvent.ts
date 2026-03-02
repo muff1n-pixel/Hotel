@@ -2,16 +2,15 @@ import User from "../../../Users/User.js";
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { GetShopPageBotsEventData } from "@shared/Communications/Requests/Shop/GetShopPageBotsEventData.js";
-import { ShopPageFurnitureEventData } from "@shared/Communications/Responses/Shop/ShopPageFurnitureEventData.js";
 import { ShopPageBotModel } from "../../../Database/Models/Shop/ShopPageBotModel.js";
-import { ShopPageBotsEventData } from "@shared/Communications/Responses/Shop/ShopPageBotsEventData.js";
+import { GetShopPageBotsData, ShopPageBotsData } from "@pixel63/events";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
-export default class GetShopPageBotsEvent implements IncomingEvent<GetShopPageBotsEventData> {
+export default class GetShopPageBotsEvent implements ProtobuffListener<GetShopPageBotsData> {
     public readonly name = "GetShopPageBotsEvent";
 
-    async handle(user: User, event: GetShopPageBotsEventData) {
-        const shopPage = await ShopPageModel.findByPk(event.pageId, {
+    async handle(user: User, payload: GetShopPageBotsData) {
+        const shopPage = await ShopPageModel.findByPk(payload.pageId, {
             include: {
                 model: ShopPageBotModel,
                 as: "bots"
@@ -22,14 +21,14 @@ export default class GetShopPageBotsEvent implements IncomingEvent<GetShopPageBo
             throw new Error("Shop page does not exist.");
         }
 
-        user.send(new OutgoingEvent<ShopPageBotsEventData>("ShopPageBotsEvent", {
+        user.sendProtobuff(ShopPageBotsData, ShopPageBotsData.create({
             pageId: shopPage.id,
             bots: shopPage.bots.map((bot) => {
                 return {
                     id: bot.id,
 
                     name: bot.name,
-                    motto: bot.motto,
+                    motto: bot.motto ?? undefined,
 
                     figureConfiguration: bot.figureConfiguration,
 

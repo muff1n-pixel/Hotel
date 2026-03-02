@@ -13,6 +13,7 @@ export default class WebSocket {
 
     constructor() {
         this.server = new WebSocketServer({
+            host: config.hostname,
             port: config.port ?? 7632
         });
 

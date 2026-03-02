@@ -1,35 +1,33 @@
 import User from "../../../../Users/User.js";
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
-import { UpdateShopBotEventData } from "@shared/Communications/Requests/Shop/Development/UpdateShopBotEventData.js";
 import { ShopPageBotModel } from "../../../../Database/Models/Shop/ShopPageBotModel.js";
 import { randomUUID } from "node:crypto";
 import GetShopPageBotsEvent from "../GetShopPageBotsEvent.js";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { GetShopPageBotsData, UpdateShopBotData } from "@pixel63/events";
 
-export default class UpdateShopBotEvent implements IncomingEvent<UpdateShopBotEventData> {
-    public readonly name = "UpdateShopBotEvent";
-
-    async handle(user: User, event: UpdateShopBotEventData) {
+export default class UpdateShopBotEvent implements ProtobuffListener<UpdateShopBotData> {
+    async handle(user: User, payload: UpdateShopBotData) {
         const permissions = await user.getPermissions();
 
         if(!permissions.hasPermission("shop:edit")) {
             throw new Error("User is not privileged to edit the shope.");
         }
         
-        if(event.id !== null) {
+        if(payload.id !== undefined) {
             await ShopPageBotModel.update({
-                type: event.type,
+                type: payload.type,
                 
-                name: event.name,
-                motto: event.motto ?? null,
+                name: payload.name,
+                motto: payload.motto ?? null,
                 
-                figureConfiguration: event.figureConfiguration,
+                figureConfiguration: payload.figureConfiguration,
 
-                credits: (event.credits > 0)?(event.credits):(null),
-                duckets: (event.duckets > 0)?(event.duckets):(null),
-                diamonds: (event.diamonds > 0)?(event.diamonds):(null),
+                credits: (payload.credits > 0)?(payload.credits):(null),
+                duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
             }, {
                 where: {
-                    id: event.id
+                    id: payload.id
                 }
             });
         }
@@ -37,23 +35,23 @@ export default class UpdateShopBotEvent implements IncomingEvent<UpdateShopBotEv
             await ShopPageBotModel.create({
                 id: randomUUID(),
                 
-                shopPageId: event.pageId,
+                shopPageId: payload.pageId,
 
-                type: event.type,
+                type: payload.type,
                 
-                name: event.name,
-                motto: event.motto ?? null,
+                name: payload.name,
+                motto: payload.motto ?? null,
                 
-                figureConfiguration: event.figureConfiguration,
+                figureConfiguration: payload.figureConfiguration,
 
-                credits: (event.credits > 0)?(event.credits):(null),
-                duckets: (event.duckets > 0)?(event.duckets):(null),
-                diamonds: (event.diamonds > 0)?(event.diamonds):(null),
+                credits: (payload.credits > 0)?(payload.credits):(null),
+                duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
             });
         }
 
-        await (new GetShopPageBotsEvent()).handle(user, {
-            pageId: event.pageId
-        });
+        await (new GetShopPageBotsEvent()).handle(user, GetShopPageBotsData.create({
+            pageId: payload.pageId
+        }));
     }
 }

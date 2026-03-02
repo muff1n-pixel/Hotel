@@ -1,7 +1,7 @@
 import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
+import { UserBotData } from "@pixel63/events";
 
 export default class RoomBot {
     public readonly figure: Figure;

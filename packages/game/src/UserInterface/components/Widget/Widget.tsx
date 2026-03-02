@@ -1,3 +1,4 @@
+import { useDialogs } from "../../hooks/useDialogs";
 import { useUser } from "../../hooks/useUser";
 import WidgetButton from "./WidgetButton";
 import WidgetCurrency from "./WidgetCurrency";
@@ -6,6 +7,7 @@ import WidgetItem from "./WidgetItem";
 
 export default function Widget() {
     const user = useUser();
+    const dialogs = useDialogs();
 
     return (
         <div style={{
@@ -98,7 +100,9 @@ export default function Widget() {
                             Discord
                         </WidgetButton>
 
-                        <WidgetButton color="#716A85" disabled onClick={() => {}}>
+                        <WidgetButton color="#716A85" onClick={() => {
+                            dialogs.addUniqueDialog("settings");
+                        }}>
                             <div className="sprite_widget_settings"/>
                         </WidgetButton>
 

@@ -1,3 +1,4 @@
+import { NavigatorRoomData } from "@pixel63/events";
 import DialogList from "../../Dialog/List/DialogList";
 import DialogListContainer from "../../Dialog/List/DialogListContainer";
 import RoomThumbnail from "../../Room/Thumbnail/RoomThumbnail";
@@ -9,13 +10,7 @@ export type NavigatorRoomListProps = {
    
     thumbnail?: boolean;
     
-    rooms: {
-        id: string;
-        name: string;
-        users: number;
-        thumbnail: string | null;
-        maxUsers: number;
-    }[];
+    rooms: NavigatorRoomData[];
 
     onClick: (room: NavigatorRoomListProps["rooms"][0]) => void;
 };

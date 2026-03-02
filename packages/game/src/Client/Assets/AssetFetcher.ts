@@ -1,4 +1,4 @@
-import ImageDataWorkerClient from "@Client/Figure/Worker/ImageDataWorkerClient";
+import { defaultImageDataWorker } from "@Client/Figure/Worker/ImageDataWorkerClient";
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
 
 export type AssetSpriteProperties = {
@@ -11,6 +11,8 @@ export type AssetSpriteProperties = {
     height?: number;
 
     flipHorizontal?: boolean;
+
+    grayscaled?: boolean;
 
     source?: string;
     color?: string | string[];
@@ -99,7 +101,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight);
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && properties.grayscaled === grayscaled);
 
         if(existingSprite) {
             const output = await existingSprite.result;
@@ -171,15 +173,68 @@ export default class AssetFetcher {
 
             this.sprites[url].push(result);
 
-            const output = await result.result;
+            let output = await result.result;
 
-            ImageDataWorkerClient.default.getImageData(output.image).then(async (imageData) => {
-                result.imageData = imageData;
-                output.imageData = imageData;
-            })
+            const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+
+            if(existingSpriteWithImageData?.imageData) {
+                result.imageData = existingSpriteWithImageData.imageData;
+                output.imageData = existingSpriteWithImageData.imageData;
+
+                if(properties.grayscaled) {
+                    const promise = this.drawGrayscaledImage(existingSpriteWithImageData.imageData);
+                    result.result = promise;
+                    output = await promise;
+                }
+            }
+            else {
+                defaultImageDataWorker.getImageData(output.image).then((imageData) => {
+                    result.imageData = imageData;
+                    output.imageData = imageData;
+
+                    if(properties.grayscaled) {
+                        result.result = this.drawGrayscaledImage(imageData);
+                    }
+                });
+            }
 
             return output;
         })();
+    }
+
+    private static async drawGrayscaledImage(imageData: ImageData): AssetSpriteResult["result"] {
+        const canvas = new OffscreenCanvas(imageData.width, imageData.height);
+
+        const context = canvas.getContext("2d");
+
+        if(!context) {
+            throw new ContextNotAvailableError();
+        }
+
+        for(let index = 0; index < imageData.data.length; index += 4) {
+            const red = imageData.data[index];
+            const green = imageData.data[index + 1];
+            const blue = imageData.data[index + 2];
+            const alpha = imageData.data[index + 3];
+
+            if(alpha === 0) {
+                continue;
+            }
+
+            if(red < 20 && green < 20 && blue < 20) {
+                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = 255;
+            }
+            else {
+                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = 153;
+            }
+        }
+
+        context.putImageData(imageData, 0, 0);
+
+        return {
+            image: canvas.transferToImageBitmap(),
+            imageData
+        };
     }
 
     private static async drawSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
@@ -272,7 +327,7 @@ export default class AssetFetcher {
             }*/
 
             return {
-                image: await createImageBitmap(canvas),
+                image: canvas.transferToImageBitmap(),
                 imageData
             };
         }

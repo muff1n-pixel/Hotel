@@ -1,13 +1,12 @@
-import { RoomUserData } from "@Shared/Interfaces/Room/RoomUserData";
 import FigureImage from "../../../Figure/FigureImage";
-import { useUserProfile } from "../../../../hooks/useUserProfile";
+import { useUserBadges } from "../../../../hooks/useUserBadges";
 import BadgeImage from "../../../Badges/BadgeImage";
 import { useUser } from "../../../../hooks/useUser";
 import { useCallback } from "react";
-import { SetMottoEventData } from "@Shared/Communications/Requests/User/SetMottoEventData";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
+import { RoomUserData, SetUserMottoData } from "@pixel63/events";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -16,21 +15,17 @@ export type RoomUserProfileProps = {
 export default function RoomUserProfile({ user: targetUser }: RoomUserProfileProps) {
     const user = useUser();
 
-    const profile = useUserProfile(targetUser.id);
+    const badges = useUserBadges(targetUser.id);
 
     const handleMottoChange = useCallback((motto: string) => {
         if(targetUser.id !== user?.id) {
             return;
         }
 
-        webSocketClient.send<SetMottoEventData>("SetMottoEvent", {
+        webSocketClient.sendProtobuff(SetUserMottoData, SetUserMottoData.create({
             motto
-        });
+        }));
     }, [targetUser, user]);
-
-    if(!profile) {
-        return null;
-    }
 
     return (
         <div style={{
@@ -74,7 +69,9 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                     width: 67,
                     height: 130
                 }}>
-                    <FigureImage figureConfiguration={targetUser.figureConfiguration} direction={2}/>
+                    {(targetUser.figureConfiguration) && (
+                        <FigureImage figureConfiguration={targetUser.figureConfiguration} direction={2}/>
+                    )}
                 </div>
 
                 <div style={{
@@ -86,12 +83,12 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                     alignContent: "flex-start",
                     gap: 4
                 }}>
-                    {profile?.badges.toReversed().map((userBadge) => (
+                    {badges.toReversed().map((badge) => (
                         <div style={{
                             width: 40,
                             height: 40
                         }}>
-                            <BadgeImage badge={userBadge.badge}/>
+                            <BadgeImage badge={badge}/>
                         </div>
                     ))}
                 </div>
@@ -103,7 +100,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                 background: "#333333"
             }}/>
 
-            <RoomUserProfileMotto canEdit={user.id == targetUser.id} value={profile.motto} onChange={handleMottoChange}/>
+            <RoomUserProfileMotto canEdit={user.id == targetUser.id} value={targetUser.motto ?? ""} onChange={handleMottoChange}/>
         </div>
     );
 }

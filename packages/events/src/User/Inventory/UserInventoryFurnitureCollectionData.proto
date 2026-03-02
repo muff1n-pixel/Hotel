@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Inventory/Furniture/UserInventoryFurnitureData.proto";
+
+message UserInventoryFurnitureCollectionData {
+    repeated UserInventoryFurnitureData all_user_furniture = 1;
+    repeated UserInventoryFurnitureData updated_user_furniture = 2;
+    repeated UserInventoryFurnitureData deleted_user_furniture = 3;
+}

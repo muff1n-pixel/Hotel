@@ -362,13 +362,20 @@ export async function createFurnitureData(assetName: string) {
 
     if (!furniTypes.length) {
         furniTypes = document["furnidata"]["wallitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
-        isWallFurniture = true;
+        
+        if(furniTypes.length) {
+            isWallFurniture = true;
+        }
     }
 
     if (!furniTypes.length) {
         console.error("Failed to find furni type in furnidata for " + assetName);
 
-        return null;
+        furniTypes = [
+            {
+                "@_classname": assetName
+            }
+        ];
     }
 
     return await Promise.all(furniTypes.map(async (furniType: any) => {

@@ -7,6 +7,8 @@ import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Cookies from "js-cookie";
 import Figure from "@Client/Figure/Figure";
 
+import "./Polyfills/OffscreenCanvas";
+
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");
 const loaderElement = document.getElementById("loader");

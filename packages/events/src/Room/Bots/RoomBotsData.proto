@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Bots/UserBotData.proto";
+
+message RoomBotsData {
+    repeated UserBotData bots_added = 1;
+    repeated UserBotData bots_updated = 2;
+    repeated UserBotData bots_removed = 3;
+}

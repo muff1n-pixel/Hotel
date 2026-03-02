@@ -2,10 +2,9 @@ import { useCallback } from "react";
 import { useDialogs } from "../../hooks/useDialogs";
 import { useHotel } from "../../hooks/useHotel";
 import { useRoomInstance } from "../../hooks/useRoomInstance";
-import { RoomFurnitureExportData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureExportData";
 import { webSocketClient } from "../../..";
-import { ImportRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/Developer/ImportRoomFurnitureEventData";
 import { usePermissions } from "../../hooks/usePermissions";
+import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
 
 export default function DebugInformationPanel() {
     const room = useRoomInstance();
@@ -28,11 +27,15 @@ export default function DebugInformationPanel() {
             return;
         }
 
-        const exportData: RoomFurnitureExportData = {
-            furniture: room.furnitures.map<RoomFurnitureExportData["furniture"][0]>((furniture) => {
-                return {
+        const exportData: RoomFurnitureImportData = RoomFurnitureImportData.create({
+            furniture: room.furnitures.map<RoomFurnitureExportData>((furniture) => {
+                if(!furniture.data.furniture) {
+                    throw new Error();
+                }
+
+                return RoomFurnitureExportData.create({
                     type: furniture.data.furniture.type,
-                    color: furniture.data.furniture.color ?? null,
+                    color: furniture.data.furniture.color,
                     
                     data: furniture.data.data,
 
@@ -40,9 +43,9 @@ export default function DebugInformationPanel() {
                     direction: furniture.data.direction,
                     
                     animation: furniture.data.animation
-                };
+                });
             })
-        };
+        });
 
         navigator.clipboard.writeText(JSON.stringify(exportData))
             .then(() => {
@@ -77,7 +80,7 @@ export default function DebugInformationPanel() {
                     return;
                 }
 
-                webSocketClient.send<ImportRoomFurnitureEventData>("ImportRoomFurnitureEvent", exportData);
+                webSocketClient.sendProtobuff(RoomFurnitureImportData, exportData);
             })
             .catch(() => {
                 dialogs.addDialog("alert", {

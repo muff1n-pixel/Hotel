@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Room/Categories/RoomCategoryData.proto";
+
+message RoomCategoriesData {
+    repeated RoomCategoryData categories = 1;
+}

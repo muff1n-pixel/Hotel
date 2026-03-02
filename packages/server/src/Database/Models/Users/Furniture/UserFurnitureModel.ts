@@ -1,17 +1,18 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition.js";
 import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
+import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 
 export class UserFurnitureModel extends Model {
     declare id: string;
-    declare position: RoomPosition;
+    declare position: RoomPositionData;
     declare direction: number;
     declare animation: number;
     declare color: number | null;
-    declare data: unknown;
+    declare data?: UserFurnitureCustomData;
+    declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
@@ -58,7 +59,7 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
                   this.setDataValue("data", JSON.stringify(value));
               },
               allowNull: true
-          },
+          }
         },
         {
           tableName: 'user_furnitures',

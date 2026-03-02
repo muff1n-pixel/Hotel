@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
+import { RoomPositionData } from "@pixel63/events";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/Renderer";
 
 export default class RoomItem implements RoomItemInterface {
-    position?: RoomPosition;
+    position?: RoomPositionData;
     priority: number = 0;
 
     disabled: boolean = false;
@@ -19,29 +19,29 @@ export default class RoomItem implements RoomItemInterface {
     process(frame: number): void {
     }
 
-    public setPosition(position: RoomPosition | undefined, index: number = 0) {
+    public setPosition(position: RoomPositionData | undefined, index: number = 0) {
         //this.data.position = { row, column, depth };
         this.position = position;
         this.priority = index;
     }
 
     public positionPathData?: {
-        fromPosition: RoomPosition;
-        toPosition: RoomPosition | RoomPosition[];
-        relativePosition: RoomPosition;
+        fromPosition: RoomPositionData;
+        toPosition: RoomPositionData | RoomPositionData[];
+        relativePosition: RoomPositionData;
 
         startTimestamp: number;
         durationInMilliseconds: number;
     };
 
-    public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition | RoomPosition[], durationInMilliseconds: number = 500) {
+    public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData | RoomPositionData[], durationInMilliseconds: number = 500) {
         const startPosition = (Array.isArray(toPosition))?(toPosition[0]):(toPosition);
 
-        const relativePosition: RoomPosition = {
+        const relativePosition: RoomPositionData = RoomPositionData.create({
             row: startPosition.row - fromPosition.row,
             column: startPosition.column - fromPosition.column,
             depth: startPosition.depth - fromPosition.depth
-        };
+        });
 
         if(Array.isArray(toPosition)) {
             this.positionPathData = {
@@ -86,11 +86,11 @@ export default class RoomItem implements RoomItemInterface {
 
                 this.positionPathData.toPosition.splice(0, 1);
 
-                const relativePosition: RoomPosition = {
+                const relativePosition: RoomPositionData = RoomPositionData.create({
                     row: this.positionPathData.toPosition[0].row - fromPosition.row,
                     column: this.positionPathData.toPosition[0].column - fromPosition.column,
                     depth: this.positionPathData.toPosition[0].depth - fromPosition.depth
-                };
+                });
 
                 this.positionPathData.fromPosition = fromPosition;
                 this.positionPathData.relativePosition = relativePosition;
@@ -105,11 +105,11 @@ export default class RoomItem implements RoomItemInterface {
             return;
         }
 
-        this.setPosition({
+        this.setPosition(RoomPositionData.create({
             row: this.positionPathData.fromPosition.row + ((this.positionPathData.relativePosition.row / this.positionPathData.durationInMilliseconds) * elapsedSincedStart),
             column: this.positionPathData.fromPosition.column + ((this.positionPathData.relativePosition.column / this.positionPathData.durationInMilliseconds) * elapsedSincedStart),
             depth: this.positionPathData.fromPosition.depth + ((this.positionPathData.relativePosition.depth / this.positionPathData.durationInMilliseconds) * elapsedSincedStart)
-        });
+        }));
     }
 
     public finishPositionPath() {

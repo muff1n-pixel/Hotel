@@ -5,6 +5,8 @@ import { ShopPageBotModel } from "./ShopPageBotModel.js";
 
 export class ShopPageModel extends Model {
     declare id: string;
+    declare parentId?: string;
+    
     declare index: number;
     
     declare title: string;
@@ -17,7 +19,6 @@ export class ShopPageModel extends Model {
     declare header: string | null;
     declare teaser: string | null;
     
-    declare children: NonAttribute<ShopPageModel[]>;
     declare furniture: NonAttribute<ShopPageFurnitureModel[]>;
     declare bots: NonAttribute<ShopPageBotModel[]>;
     declare features?: NonAttribute<ShopPageFeatureModel[]>;
@@ -29,6 +30,12 @@ export function initializeShopPageModel(sequelize: Sequelize) {
           id: {
             type: DataTypes.UUID,
             primaryKey: true
+          },
+          parentId: {
+            type: DataTypes.UUID,
+            primaryKey: false,
+            defaultValue: null,
+            allowNull: true
           },
           index: {
             type: DataTypes.INTEGER,
@@ -72,9 +79,4 @@ export function initializeShopPageModel(sequelize: Sequelize) {
           sequelize
         }
     );
-    
-    ShopPageModel.hasMany(ShopPageModel, {
-        as: "children",
-        foreignKey: "parentId"
-    });
 }

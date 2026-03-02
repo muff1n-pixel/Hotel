@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react";
 import { clientInstance, webSocketClient } from "../..";
-import { GetNavigatorRoomsEventData } from "@Shared/Communications/Requests/Navigator/GetNavigatorRoomsEventData";
+import { GetNavigatorData } from "@pixel63/events";
 
-export function useNavigator(category: string) {
-  const [navigator, setNavigator] = useState(clientInstance.navigator.value);
-  const [_state, setState] = useState(clientInstance.navigator.state);
+export function useNavigator(category: string, search?: string) {
+    const [navigator, setNavigator] = useState(clientInstance.navigator.value);
+    const [_state, setState] = useState(clientInstance.navigator.state);
 
-  useEffect(() => {
-    return clientInstance.navigator.subscribe((navigator) => {
-      setNavigator(navigator);
-      setState(clientInstance.navigator.state);
-    });
-  }, []);
+    useEffect(() => {
+        return clientInstance.navigator.subscribe((navigator) => {
+            setNavigator(navigator);
+            setState(clientInstance.navigator.state);
+        });
+    }, []);
 
-  useEffect(() => {
-    webSocketClient.send<GetNavigatorRoomsEventData>("GetNavigatorRoomsEvent", {
-      category
-    });
-  }, [category]);
+    useEffect(() => {
+        if (search?.length) {
+            webSocketClient.sendProtobuff(GetNavigatorData, GetNavigatorData.create({
+                search
+            }));
+        }
+        else {
+            webSocketClient.sendProtobuff(GetNavigatorData, GetNavigatorData.create({
+                category
+            }));
+        }
+    }, [category, search]);
 
-  return navigator;
+    return navigator;
 }

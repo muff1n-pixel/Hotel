@@ -1,20 +1,19 @@
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/Renderer";
-import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
-import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
+import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 
 export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
 
-    public moodlight?: RoomMoodlightData;
-    public backgroundToner?: RoomFurnitureBackgroundTonerData;
+    public moodlight?: UserFurnitureMoodlightData;
+    public backgroundToner?: UserFurnitureTonerData;
 
     constructor(private roomRenderer: RoomRenderer) {
 
     }
 
-    public setBackgroundTonerData(backgroundToner: RoomFurnitureBackgroundTonerData) {
+    public setBackgroundTonerData(backgroundToner: UserFurnitureTonerData) {
         if(backgroundToner.enabled) {
             this.backgroundToner = backgroundToner;
         }
@@ -23,12 +22,12 @@ export default class RoomLighting {
         }
     }
 
-    public setMoodlightData(moodlight: RoomMoodlightData) {
+    public setMoodlightData(moodlight?: UserFurnitureMoodlightData) {
         const shouldRerender = 
-            (moodlight.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
-            || (moodlight.backgroundOnly !== this.moodlight?.backgroundOnly)
-            || (moodlight.color !== this.moodlight?.color)
-            || (moodlight.alpha !== this.moodlight?.alpha);
+            (moodlight?.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
+            || (moodlight?.backgroundOnly !== this.moodlight?.backgroundOnly)
+            || (moodlight?.color !== this.moodlight?.color)
+            || (moodlight?.alpha !== this.moodlight?.alpha);
 
         this.moodlight = moodlight;
 

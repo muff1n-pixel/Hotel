@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message RoomPositionOffsetData {
+    float row    = 1;
+    float column = 2;
+}

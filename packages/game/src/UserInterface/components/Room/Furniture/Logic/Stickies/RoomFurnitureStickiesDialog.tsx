@@ -6,9 +6,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { useRoomInstance } from "../../../../../hooks/useRoomInstance";
 import { webSocketClient } from "../../../../../..";
-import { UpdateRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UpdateRoomFurnitureEventData";
-import { RoomFurniturePostitData } from "@Shared/Interfaces/Room/Furniture/RoomFurniturePostitData";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureStickiesDialogData = {
     furniture: RoomInstanceFurniture;
@@ -22,8 +20,8 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
 
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();
 
-    const [text, setText] = useState<string>((data.furniture.data.data as RoomFurniturePostitData)?.text ?? "");
-    const [colorId, setColorId] = useState<number>(data.furniture.data.color ?? data.furniture.data.furniture.color ?? 0);
+    const [text, setText] = useState<string>(data.data.data?.sticky?.text ?? "");
+    const [colorId, setColorId] = useState<number>(data.item.furnitureRenderer.color ?? 0);
     const [colors, setColors] = useState<string[]>([]);
 
     useEffect(() => {
@@ -35,7 +33,7 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
             return;
         }
 
-        const color = data.furniture.item.furnitureRenderer.getColor(colorId) ?? undefined;
+        const color = data.item.furnitureRenderer.getColor(colorId) ?? undefined;
 
         AssetFetcher.fetchImageSprite("/assets/stickies/blanco.png", {
             x: 0,
@@ -62,18 +60,21 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
             context.drawImage(image, 0, 0);
         });
 
-        setColors(data.furniture.item.furnitureRenderer.getColors());
+        setColors(data.item.furnitureRenderer.getColors());
     }, [room, canvasRef, data, colorId]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if(text !== (data.furniture.data.data as RoomFurniturePostitData)?.text) {
-                webSocketClient.send<SetFurnitureDataEventData<RoomFurniturePostitData>>("SetFurnitureDataEvent", {
-                    furnitureId: data.furniture.data.id,
+            if(text !== data.data.data?.sticky?.text) {
+                webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                    id: data.data.id,
+
                     data: {
-                        text
+                        sticky: {
+                            text
+                        }
                     }
-                });
+                }));
             }
         }, 1000);
 
@@ -85,10 +86,10 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
     const handleColor = useCallback((color: number) => {
         setColorId(color + 1);
 
-        webSocketClient.send<UpdateRoomFurnitureEventData>("UpdateRoomFurnitureEvent", {
-            roomFurnitureId: data.furniture.data.id,
-            color: color + 1 
-        });
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+            color: color + 1
+        }));
     }, [data]);
 
     return (

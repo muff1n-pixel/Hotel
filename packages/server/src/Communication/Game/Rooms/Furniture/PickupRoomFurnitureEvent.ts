@@ -1,17 +1,15 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import { PickupRoomFurnitureEventData } from "@shared/Communications/Requests/Rooms/Furniture/PickupRoomFurnitureEventData.js";
+import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { PickupRoomFurnitureData } from "@pixel63/events";
 
-export default class PickupRoomFurnitureEvent implements IncomingEvent<PickupRoomFurnitureEventData> {
-    public readonly name = "PickupRoomFurnitureEvent";
-
-    async handle(user: User, event: PickupRoomFurnitureEventData) {
+export default class PickupRoomFurnitureEvent implements ProtobuffListener<PickupRoomFurnitureData> {
+    async handle(user: User, payload: PickupRoomFurnitureData) {
         if(!user.room) {
             return;
         }
 
         const roomUser = user.room.getRoomUser(user);
-        const roomFurniture = user.room.getRoomFurniture(event.roomFurnitureId);
+        const roomFurniture = user.room.getRoomFurniture(payload.id);
 
         if(roomFurniture.model.user.id !== user.model.id && !roomUser.hasRights()) {
             throw new Error("User is not owner of the furniture and does not have rights.");

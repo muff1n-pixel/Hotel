@@ -2,6 +2,7 @@ import type { Options } from "sequelize";
 
 export type Config = {
     port: number;
+    hostname?: string;
 
     database: Options;
 

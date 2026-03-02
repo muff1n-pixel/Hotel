@@ -3,7 +3,6 @@ import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError"
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { figureRenderPriority } from "./Geometry/FigureRenderPriority";
 import { FigureData } from "@Client/Interfaces/Figure/FigureData";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import { FigureAnimationFrameEffectData } from "@Client/Interfaces/Figure/FigureAnimationData";
 import { figureGeometryTypes } from "@Client/Figure/Renderer/Geometry/FigureGeometry";
 import { figurePartSets } from "@Client/Figure/Renderer/Geometry/FigurePartSets";
@@ -12,14 +11,15 @@ import { FurnitureAsset } from "@Client/Interfaces/Furniture/FurnitureAssets";
 import { getGlobalCompositeModeFromInkNumber } from "@Client/Renderers/GlobalCompositeModes";
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import Performance from "@Client/Utilities/Performance";
+import { FigureConfigurationData } from "@pixel63/events";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
-    effects: FigureRendererSpriteResult[];
+    effects: (Omit<FigureRendererSpriteResult, "imageData"> & { imageData?: ImageData | null; })[];
 };
 
-export type FigureRendererSpriteResult = FigureRendererSprite & {
-    imageData: Uint8Array;
+export type FigureRendererSpriteResult = Omit<FigureRendererSprite, "imageData"> & {
+    imageData?: Uint8Array;
 };
 
 export type FigureRendererSprite = {
@@ -36,7 +36,7 @@ export type FigureRendererSprite = {
 
 type SpriteConfiguration = {
     id: string;
-    type: FigurePartKeyAbbreviation;
+    type: string;
 
     index: number;
     
@@ -75,8 +75,8 @@ type EffectData = {
 export default class FigureRenderer {
     private avatarEffect?: FigureAnimationFrameEffectData;
 
-    constructor(public readonly configuration: FigureConfiguration, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
-
+    constructor(public readonly configuration: FigureConfigurationData, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
+        
     }
 
     public async heavilyPreloadFigureSprites() {
@@ -157,7 +157,7 @@ export default class FigureRenderer {
         console.timeEnd("Prepare");
     }
 
-    private getSettypeForPartAndSet(part: FigurePartKeyAbbreviation) {
+    private getSettypeForPartAndSet(part: string) {
         return FigureAssets.figuredata!.settypes.find((settype) => settype.type === part);
     }
 
@@ -165,7 +165,7 @@ export default class FigureRenderer {
         return settype.sets.find((set) => set.id === setId);
     }
 
-    private getAssetForSetPart(assetId: string, assetType: FigurePartKeyAbbreviation) {
+    private getAssetForSetPart(assetId: string, assetType: string) {
         for(let index = FigureAssets.figuremap!.length - 1; index >= 0; index--) {
             if(FigureAssets.figuremap![index].id.startsWith("hh_human_50")) {
                 continue;
@@ -348,7 +348,7 @@ export default class FigureRenderer {
 
     private getSpritesFromConfiguration() {
         const result: SpriteConfiguration[] = [];
-        const hiddenPartTypes: FigurePartKeyAbbreviation[] = [];
+        const hiddenPartTypes: string[] = [];
 
         for(const configurationPart of this.configuration.parts) {
             const settypeData = this.getSettypeForPartAndSet(configurationPart.type);
@@ -761,7 +761,7 @@ export default class FigureRenderer {
         }
 
         return {
-            image: await createImageBitmap(sprite.image),
+            image: sprite.image,
             
             x: x - 32,
             y: destinationY + assetData.y + 32,
@@ -787,7 +787,7 @@ export default class FigureRenderer {
             ignoreImageData: false
         });
 
-        const priorityTypes: Partial<Record<string, FigurePartKeyAbbreviation>> = {
+        const priorityTypes: Partial<Record<string, string>> = {
             "cp": "ch",
             "cc": "ch",
             "lc": "ls",
@@ -808,7 +808,7 @@ export default class FigureRenderer {
         }
 
         return {
-            image: await createImageBitmap(sprite.image),
+            image: sprite.image,
             imageData: sprite.imageData,
             
             x: x - 32,
@@ -895,8 +895,6 @@ export default class FigureRenderer {
                 minimumY -= this.avatarEffect.destinationY;
             }
 
-            const image = await createImageBitmap(canvas);
-
             //Performance.startPerformanceCheck("getImageData", 1);
             //const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
             //Performance.endPerformanceCheck("getImageData");
@@ -925,7 +923,7 @@ export default class FigureRenderer {
 
             return {
                 figure: {
-                    image,
+                    image: canvas.transferToImageBitmap(),
                     imageData: imageDataArray,
 
                     x: -minimumX,

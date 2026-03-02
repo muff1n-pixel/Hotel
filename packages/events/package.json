@@ -1,0 +1,16 @@
+{
+  "name": "@pixel63/events",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "build/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "node scripts/generate.js"
+  },
+  "dependencies": {
+    "ts-proto": "^1.181.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

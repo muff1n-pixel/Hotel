@@ -3,14 +3,14 @@ import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
 import FigureWardrobe, { FigureWardrobeColor, FigureWardrobeItem } from "@Client/Figure/Wardrobe/FigureWardrobe";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import { FigureConfigurationData } from "@pixel63/events";
 
 export type WardrobeSelectionProps = {
-    part: FigurePartKeyAbbreviation;
-    figureConfiguration: FigureConfiguration;
+    part: string;
+    figureConfiguration: FigureConfigurationData;
 
-    onFigureConfigurationChange: (figureConfiguration: FigureConfiguration) => void;
+    onFigureConfigurationChange: (figureConfiguration: FigureConfigurationData) => void;
 };
 
 export default function WardrobeSelection({ part, figureConfiguration, onFigureConfigurationChange }: WardrobeSelectionProps) {
@@ -77,6 +77,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     figureConfiguration.parts.filter((configuration) => configuration.type !== part)
                                     .concat([
                                         {
+                                            $type: "FigurePartData",
                                             type: part,
                                             setId,
                                             colors: (colorable) ? (activeConfiguration?.colors ?? figureDataResponse.colors.map((color) => color.id) ?? []) : ([])

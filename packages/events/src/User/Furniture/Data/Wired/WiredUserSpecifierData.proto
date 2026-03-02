@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredUserSpecifierData {
+    string match = 1;
+    string match_user = 2;
+}

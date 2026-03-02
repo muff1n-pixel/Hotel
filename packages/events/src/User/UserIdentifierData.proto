@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UserIdentifierData {
+    string user_id = 1;
+}

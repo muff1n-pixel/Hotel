@@ -1,13 +1,12 @@
 import { useCallback, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { webSocketClient } from "../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
-import { RoomFurnitureBackgroundTonerData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundTonerData";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import Dialog from "../../../../Dialog/Dialog";
 import DialogContent from "../../../../Dialog/DialogContent";
 import DialogButton from "../../../../Dialog/Button/DialogButton";
 import DialogColorPicker from "../../../../Dialog/ColorPicker/DialogColorPicker";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureBackgroundTonerDialogData = {
     furniture: RoomInstanceFurniture;
@@ -15,29 +14,33 @@ export type RoomFurnitureBackgroundTonerDialogData = {
 };
 
 export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
-    const [enabled, setEnabled] = useState((data.furniture.data.data as RoomFurnitureBackgroundTonerData)?.enabled ?? false);
-    const [color, setColor] = useState((data.furniture.data.data as RoomFurnitureBackgroundTonerData)?.color ?? "#000000");
+    const [enabled, setEnabled] = useState(data.data.data?.toner?.enabled ?? false);
+    const [color, setColor] = useState(data.data.data?.toner?.color ?? "#000000");
 
-    const handleApply = useCallback(() => {        
-        webSocketClient.send<SetFurnitureDataEventData<RoomFurnitureBackgroundTonerData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+    const handleApply = useCallback(() => {       
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
             data: {
-                enabled,
-                color
+                toner: {
+                    enabled,
+                    color
+                }
             }
-        });
+        }));
     }, [enabled, color, data]);
     
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
 
-        webSocketClient.send<SetFurnitureDataEventData<RoomFurnitureBackgroundTonerData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
             data: {
-                enabled: !enabled,
-                color
+                toner: {
+                    enabled: !enabled,
+                    color
+                }
             }
-        });
+        }));
     }, [enabled, color, data]);
 
     if(hidden) {

@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "User/Furniture/Data/UserFurnitureMoodlightData.proto";
+import "User/Furniture/Data/UserFurnitureTonerData.proto";
+import "User/Furniture/Data/UserFurnitureBackgroundData.proto";
+import "User/Furniture/Data/UserFurnitureStickyData.proto";
+import "User/Furniture/Data/UserFurnitureTrophyData.proto";
+import "User/Furniture/Data/UserFurnitureTeleportData.proto";
+
+import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
+
+import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
+import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
+import "User/Furniture/Data/Wired/Triggers/WiredTriggerUserPerformsActionData.proto";
+import "User/Furniture/Data/Wired/Triggers/WiredTriggerUserSaysSomethingData.proto";
+
+import "User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
+import "User/Furniture/Data/Wired/WiredUserSpecifierData.proto";
+
+message UserFurnitureCustomData {
+    oneof data {
+        UserFurnitureMoodlightData moodlight = 1;
+        UserFurnitureTonerData toner = 2;
+        UserFurnitureBackgroundData background = 3;
+        UserFurnitureStickyData sticky = 4;
+        UserFurnitureTrophyData trophy = 5;
+
+        WiredActionShowMessageData wired_action_show_message = 6;
+        WiredActionTeleportToFurnitureData wired_action_teleport_to_furniture = 7;
+
+        WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
+        WiredTriggerStuffStateData wired_trigger_stuff_state = 9;
+        WiredTriggerUserPerformsActionData wired_trigger_user_performs_action = 10;
+        WiredTriggerUserSaysSomethingData wired_trigger_user_says_something = 11;
+
+        WiredFurnitureSelectionData wired_furniture_selection = 12;
+        WiredUserSpecifierData wired_user_specifier = 13;
+
+        UserFurnitureTeleportData teleport = 14;
+    }
+}

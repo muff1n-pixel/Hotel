@@ -1,13 +1,12 @@
 import { useCallback, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { webSocketClient } from "../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
-import { RoomFurnitureBackgroundData } from "@Shared/Interfaces/Room/Furniture/RoomFurnitureBackgroundData";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import Dialog from "../../../../Dialog/Dialog";
 import DialogContent from "../../../../Dialog/DialogContent";
 import DialogButton from "../../../../Dialog/Button/DialogButton";
 import Input from "../../../../Form/Input";
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureBackgroundDialogData = {
     furniture: RoomInstanceFurniture;
@@ -15,24 +14,27 @@ export type RoomFurnitureBackgroundDialogData = {
 };
 
 export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
-    const [imageUrl, setImageUrl] = useState((data.furniture.data.data as RoomFurnitureBackgroundData)?.imageUrl);
+    const [imageUrl, setImageUrl] = useState(data.data.data?.background?.imageUrl ?? "");
     
-    const [offsetX, setOffsetX] = useState((data.furniture.data.data as RoomFurnitureBackgroundData)?.position?.x ?? 0);
-    const [offsetY, setOffsetY] = useState((data.furniture.data.data as RoomFurnitureBackgroundData)?.position?.y ?? 0);
-    const [offsetZ, setOffsetZ] = useState((data.furniture.data.data as RoomFurnitureBackgroundData)?.position?.z ?? 0);
+    const [offsetX, setOffsetX] = useState(data.data.data?.background?.left ?? 0);
+    const [offsetY, setOffsetY] = useState(data.data.data?.background?.top ?? 0);
+    const [offsetZ, setOffsetZ] = useState(data.data.data?.background?.index ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<RoomFurnitureBackgroundData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
+            id: data.data.id,
+
             data: {
-                imageUrl,
-                position: {
-                    x: offsetX,
-                    y: offsetY,
-                    z: offsetZ
+                background: {
+                    imageUrl,
+
+                    left: offsetX,
+                    top: offsetY,
+
+                    index: offsetZ
                 }
             }
-        });
+        }));
     }, [data, imageUrl, offsetX, offsetY, offsetZ]);
 
     if(hidden) {

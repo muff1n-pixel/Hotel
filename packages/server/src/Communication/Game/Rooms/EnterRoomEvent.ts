@@ -1,19 +1,19 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { EnterRoomEventData } from "@shared/Communications/Requests/Rooms/EnterRoomEventData.js";
 import { game } from "../../../index.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { EnterRoomData } from "@pixel63/events";
 
-export default class EnterRoomEvent implements IncomingEvent<EnterRoomEventData> {
+export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> {
     public readonly name = "EnterRoomEvent";
 
-    async handle(user: User, event: EnterRoomEventData) {
+    async handle(user: User, payload: EnterRoomData) {
         if(user.room) {
             const roomUser = user.room.getRoomUser(user);
 
             roomUser.disconnect();
         }
         
-        const roomInstance = await game.roomManager.getOrLoadRoomInstance(event.roomId);
+        const roomInstance = await game.roomManager.getOrLoadRoomInstance(payload.id);
 
         if(!roomInstance) {
             console.error("Room does not exist.");

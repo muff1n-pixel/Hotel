@@ -1,19 +1,19 @@
 import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { FigureConfiguration } from "@shared/Interfaces/Figure/FigureConfiguration.js";
 import { PermissionRoleModel } from "../Permissions/PermissionRoleModel.js";
+import { FigureConfigurationData } from "@pixel63/events";
 
 export class UserModel extends Model {
   declare id: string;
   declare name: string;
   declare password: string;
   declare email: string;
-  declare lastLogin: Date | null;
-  declare figureConfiguration: FigureConfiguration;
+  declare lastLogin: Date | null
+  declare figureConfiguration: FigureConfigurationData;
   declare credits: number;
   declare diamonds: number;
   declare duckets: number;
   declare motto: string | null;
-  declare homeRoomId: string | null;
+  declare homeRoomId: string | undefined;
   declare roomChatStyleId: string;
   declare online: boolean;
   declare roles: NonAttribute<PermissionRoleModel[]>;

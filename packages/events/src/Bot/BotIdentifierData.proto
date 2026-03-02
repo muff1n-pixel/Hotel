@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message BotIdentifierData {
+    string bot_id = 1;
+}

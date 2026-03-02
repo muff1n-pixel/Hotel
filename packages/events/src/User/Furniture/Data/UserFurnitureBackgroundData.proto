@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message UserFurnitureBackgroundData {
+    string image_url = 1;
+    
+    int32 left = 2;
+    int32 top = 3;
+    int32 index = 4;
+}

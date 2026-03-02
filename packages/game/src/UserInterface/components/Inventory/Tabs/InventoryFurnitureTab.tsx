@@ -2,24 +2,20 @@ import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import RoomRenderer from "../../Room/Renderer/RoomRenderer";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { UserFurnitureData } from "@Shared/Interfaces/User/UserFurnitureData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { UserFurnitureEventData } from "@Shared/Communications/Responses/Inventory/UserFurnitureEventData";
-import { PlaceFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceFurnitureEventData";
-import { PlaceRoomContentFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/PlaceRoomContentFurnitureEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
+import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
-    const [activeFurniture, setActiveFurniture] = useState<UserFurnitureData>();
-    const [userFurniture, setUserFurniture] = useState<UserFurnitureData[]>([]);
+    const [activeFurniture, setActiveFurniture] = useState<UserInventoryFurnitureData>();
+    const [userFurniture, setUserFurniture] = useState<UserInventoryFurnitureData[]>([]);
     const userFurnitureRequested = useRef<boolean>(false);
 
     const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
@@ -32,42 +28,42 @@ export default function InventoryFurnitureTab() {
 
         userFurnitureRequested.current = true;
 
-        webSocketClient.send("GetUserFurnitureEvent", null);
+        webSocketClient.sendProtobuff(GetUserInventoryFurnitureData, GetUserInventoryFurnitureData.create({}));
     }, []);
 
     useEffect(() => {
-        const listener = (event: WebSocketEvent<UserFurnitureEventData>) => {
-            if(event.data.allUserFurniture) {
-                setUserFurniture(event.data.allUserFurniture);
-            }
-            else {
-                let mutatedUserFurniture = [...userFurniture];
-
-                if(event.data.updatedUserFurniture) {
-                    mutatedUserFurniture = 
-                        event.data.updatedUserFurniture.concat(
-                            ...mutatedUserFurniture
-                                .filter((userFurniture) => !event.data.updatedUserFurniture?.some((updatedUserFurniture) => (
-                                    (updatedUserFurniture.furniture.flags.inventoryStackable)?(updatedUserFurniture.furniture.id === userFurniture.furniture.id):(updatedUserFurniture.id === userFurniture.id)
-                                )))
-                        );
+        const listener = webSocketClient.addProtobuffListener(UserInventoryFurnitureCollectionData, {
+            async handle(payload: UserInventoryFurnitureCollectionData) {
+                if(payload.allUserFurniture.length) {
+                    setUserFurniture(payload.allUserFurniture);
                 }
+                else {
+                    let mutatedUserFurniture = [...userFurniture];
 
-                if(event.data.deletedUserFurniture) {
-                    mutatedUserFurniture = mutatedUserFurniture
-                        .filter((userFurniture) => !event.data.deletedUserFurniture?.some((updatedUserFurniture) => 
-                            (updatedUserFurniture.furniture.flags.inventoryStackable)?(updatedUserFurniture.furniture.id === userFurniture.furniture.id):(updatedUserFurniture.id === userFurniture.id)
-                        ))
+                    if(payload.updatedUserFurniture.length) {
+                        mutatedUserFurniture = 
+                            payload.updatedUserFurniture.concat(
+                                ...mutatedUserFurniture
+                                    .filter((userFurniture) => !payload.updatedUserFurniture?.some((updatedUserFurniture) => (
+                                        (updatedUserFurniture.furniture?.flags?.inventoryStackable)?(updatedUserFurniture.furniture?.id === userFurniture.furniture?.id):(updatedUserFurniture.id === userFurniture.id)
+                                    )))
+                            );
+                    }
+
+                    if(payload.deletedUserFurniture.length) {
+                        mutatedUserFurniture = mutatedUserFurniture
+                            .filter((userFurniture) => !payload.deletedUserFurniture?.some((updatedUserFurniture) => 
+                                (updatedUserFurniture.furniture?.flags?.inventoryStackable)?(updatedUserFurniture.furniture?.id === userFurniture.furniture?.id):(updatedUserFurniture.id === userFurniture.id)
+                            ))
+                    }
+
+                    setUserFurniture(mutatedUserFurniture);
                 }
-
-                setUserFurniture(mutatedUserFurniture);
-            }
-        }
-
-        webSocketClient.addEventListener<WebSocketEvent<UserFurnitureEventData>>("UserFurnitureEvent", listener);
+            },
+        })
 
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<UserFurnitureEventData>>("UserFurnitureEvent", listener);
+            webSocketClient.removeProtobuffListener(UserInventoryFurnitureCollectionData, listener);
         };
     }, [userFurniture]);
 
@@ -76,13 +72,13 @@ export default function InventoryFurnitureTab() {
             setActiveFurniture(userFurniture[0]);
         }
         else if(activeFurniture && !userFurniture.some((userFurniture) => (
-            (activeFurniture.furniture.flags.inventoryStackable)?(activeFurniture.furniture.id === userFurniture.furniture.id):(activeFurniture.id === userFurniture.id)
+            (activeFurniture.furniture?.flags?.inventoryStackable)?(activeFurniture.furniture?.id === userFurniture.furniture?.id):(activeFurniture.id === userFurniture.id)
         ))) {
             setActiveFurniture(userFurniture[0] ?? undefined);
         }
         else if(activeFurniture) {
             const active = userFurniture.find((userFurniture) => 
-                (activeFurniture.furniture.flags.inventoryStackable)?(activeFurniture.furniture.id === userFurniture.furniture.id):(activeFurniture.id === userFurniture.id)
+                (activeFurniture.furniture?.flags?.inventoryStackable)?(activeFurniture.furniture?.id === userFurniture.furniture?.id):(activeFurniture.id === userFurniture.id)
             );
 
             setActiveFurniture(active);
@@ -96,7 +92,7 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        if(!activeFurniture || roomFurniturePlacerId.current !== ((activeFurniture?.furniture.flags.inventoryStackable)?(activeFurniture?.furniture.id):(activeFurniture?.id))) {
+        if(!activeFurniture || roomFurniturePlacerId.current !== ((activeFurniture?.furniture?.flags?.inventoryStackable)?(activeFurniture?.furniture.id):(activeFurniture?.id))) {
             roomFurniturePlacer.destroy();
 
             setRoomFurniturePlacer(undefined);
@@ -109,16 +105,14 @@ export default function InventoryFurnitureTab() {
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            console.log({ position, direction });
-            
-            webSocketClient.send<PlaceFurnitureEventData>("PlaceFurnitureEvent", {
-                userFurnitureId: activeFurniture.id,
-                furnitureId: activeFurniture.furniture.id,
-                stackable: activeFurniture.furniture.flags.inventoryStackable,
+            webSocketClient.sendProtobuff(PlaceRoomFurnitureData, PlaceRoomFurnitureData.create({
+                id: activeFurniture.id,
+                furnitureId: activeFurniture.furniture!.id,
+                stackable: activeFurniture.furniture!.flags!.inventoryStackable,
                 
                 position,
                 direction
-            });
+            }));
         }, () => {
             roomFurniturePlacer.destroy();
 
@@ -130,16 +124,16 @@ export default function InventoryFurnitureTab() {
     }, [activeFurniture, roomFurniturePlacer]);
 
     const onPlaceInRoomClick = useCallback(() => {
-        if(!activeFurniture) {
+        if(!activeFurniture?.furniture) {
             return;
         }
 
-        if(activeFurniture.furniture.type === "wallpaper" || activeFurniture.furniture.type === "floor") {
-            webSocketClient.send<PlaceRoomContentFurnitureEventData>("PlaceRoomContentFurnitureEvent", {
-                userFurnitureId: activeFurniture.id,
-                furnitureId: activeFurniture.furniture.id,
-                stackable: activeFurniture.furniture.flags.inventoryStackable
-            });
+        if(activeFurniture.furniture?.type === "wallpaper" || activeFurniture.furniture?.type === "floor") {
+            webSocketClient.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
+                id: activeFurniture.id,
+                furnitureId: activeFurniture.furniture?.id,
+                stackable: activeFurniture.furniture?.flags?.inventoryStackable ?? false
+            }));
 
             return;
         }
@@ -149,7 +143,7 @@ export default function InventoryFurnitureTab() {
         }
 
         setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, activeFurniture.furniture));
-        roomFurniturePlacerId.current = (activeFurniture?.furniture.flags.inventoryStackable)?(activeFurniture?.furniture.id):(activeFurniture?.id);
+        roomFurniturePlacerId.current = (activeFurniture?.furniture.flags?.inventoryStackable)?(activeFurniture?.furniture.id):(activeFurniture?.id);
     }, [roomFurniturePlacer, activeFurniture]);
 
     if(!userFurniture.length) {
@@ -178,7 +172,7 @@ export default function InventoryFurnitureTab() {
             }}>
                 {userFurniture?.map((userFurniture) => (
                     <DialogItem
-                        key={(userFurniture.furniture.flags.inventoryStackable)?(userFurniture.furniture.id):(userFurniture.id)}
+                        key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
                         active={activeFurniture?.id === userFurniture.id}
                         onClick={() => setActiveFurniture(userFurniture)}>
                             <FurnitureIcon furnitureData={userFurniture.furniture}/>
@@ -214,14 +208,14 @@ export default function InventoryFurnitureTab() {
             }}>
                 {(activeFurniture) && (
                     <Fragment>
-                        <RoomRenderer key={activeFurniture.id} options={{ withoutWalls: activeFurniture.furniture.placement === "floor" }} furnitureData={activeFurniture?.furniture} style={{
+                        <RoomRenderer key={activeFurniture.id} options={{ withoutWalls: activeFurniture.furniture?.placement === "floor" }} furnitureData={activeFurniture?.furniture} style={{
                             height: 130,
                             width: "100%",
                         }}/>
 
                         <div style={{ flex: 1 }}>
-                            <b>{activeFurniture?.furniture.name}</b>
-                            <p>{activeFurniture?.furniture.description}</p>
+                            <b>{activeFurniture?.furniture?.name}</b>
+                            <p>{activeFurniture?.furniture?.description}</p>
                         </div>
 
                         <DialogButton disabled={!room || !room.hasRights} onClick={onPlaceInRoomClick}>Place in room</DialogButton>

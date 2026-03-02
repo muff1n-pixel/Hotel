@@ -3,11 +3,11 @@ import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
 import { webSocketClient } from "../../../..";
-import { SetHomeRoomEventData } from "@Shared/Communications/Requests/User/SetHomeRoomEventData";
 import RoomThumbnail from "../Thumbnail/RoomThumbnail";
 import { useUser } from "../../../hooks/useUser";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { useDialogs } from "../../../hooks/useDialogs";
+import { SetUserHomeRoomData } from "@pixel63/events";
 
 export type RoomInformationDialogProps = {
     hidden?: boolean;
@@ -26,9 +26,9 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
             return;
         }
 
-        webSocketClient.send<SetHomeRoomEventData>("SetHomeRoomEvent", {
-            roomId: (homeRoomActive)?(null):(room.id)
-        });
+        webSocketClient.sendProtobuff(SetUserHomeRoomData, SetUserHomeRoomData.create({
+            roomId: (homeRoomActive)?(undefined):(room.id)
+        }));
 
         setHomeRoomActive(!homeRoomActive);
     }, [room, homeRoomActive]);
@@ -52,7 +52,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                         justifyContent: "space-between"
                     }}>
                         <div>
-                            <b>{room.information.name}</b>
+                            <b>{room.information?.name}</b>
                         </div>
 
                         <div style={{
@@ -62,11 +62,11 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                         </div>
                     </div>
 
-                    <div><b style={{ color: "#7A7A7A" }}>Owner:</b> {room.information.owner.name}</div>
+                    <div><b style={{ color: "#7A7A7A" }}>Owner:</b> {room.information?.owner?.name}</div>
 
-                    {(room.information.description) && (
+                    {(room.information?.description) && (
                         <div>
-                            <p>{room.information.description}</p>
+                            <p>{room.information?.description}</p>
                         </div>
                     )}
 
@@ -77,7 +77,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <RoomThumbnail roomId={room.id} thumbnail={room.information.thumbnail}/>
+                        <RoomThumbnail roomId={room.id} thumbnail={room.information?.thumbnail}/>
                     </div>
 
                     {(room.hasRights) && (

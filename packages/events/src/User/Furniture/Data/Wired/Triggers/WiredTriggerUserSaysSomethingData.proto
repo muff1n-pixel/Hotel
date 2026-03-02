@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message WiredTriggerUserSaysSomethingData {
+    string type = 1;
+    string message = 2;
+    bool hide_message = 3;
+    bool only_room_owner = 4;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message UpdateShopFurnitureData {
+    optional string id = 1;
+
+    string page_id = 2;
+
+    string type = 3;
+    uint32 color = 4;
+
+    uint32 credits = 7;
+    uint32 duckets = 8;
+    uint32 diamonds = 9;
+}

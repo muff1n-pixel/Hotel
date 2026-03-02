@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Navigator/Categories/NavigatorCategoryData.proto";
+
+message NavigatorData {
+    repeated NavigatorCategoryData categories = 1;
+}

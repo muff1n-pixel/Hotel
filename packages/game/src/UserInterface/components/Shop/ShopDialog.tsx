@@ -3,17 +3,15 @@ import Dialog from "../Dialog/Dialog";
 import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
 import { usePermissionAction } from "../../hooks/usePermissionAction";
-import { ShopPageData, ShopPagesEventData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import { webSocketClient } from "../../..";
-import { GetShopPagesEventData, ShopPageCategory } from "@Shared/Communications/Requests/Shop/GetShopPagesEventData";
+import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 
 export type ShopDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
 }
 
-const categories = ["frontpage", "furniture", "clothing", "pets"] satisfies ShopPageCategory[];
+const categories = ["frontpage", "furniture", "clothing", "pets"];
 
 export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     const hasEditShopPermission = usePermissionAction("shop:edit");
@@ -23,7 +21,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
-    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: ShopPageCategory; }>();
+    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: string; }>();
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
 
     const onEditClick = useCallback(() => {
@@ -37,48 +35,38 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
             return;
         }
 
-        const listener = (event: WebSocketEvent<ShopPagesEventData>) => {
-            if(event.data.category === category) {
-                setShopPages(event.data.pages);
-
-                if(requestedShopPage?.category === category) {
-                    for(const page of event.data.pages) {
-                        if(page.id === requestedShopPage.id) {
-                            setActiveShopPage(page);
-
-                            break;
+        const listener = webSocketClient.addProtobuffListener(ShopPagesData, {
+            async handle(payload: ShopPagesData) {
+                if(payload.category === category) {
+                    setShopPages(payload.pages.sort((a, b) => {
+                        if (a.index !== b.index) {
+                            return a.index - b.index;
                         }
 
-                        if(page.children) {
-                            for(const child of page.children) {
-                                if(child.id === requestedShopPage.id) {
-                                    setActiveShopPage(child);
+                        return a.title.localeCompare(b.title);
+                    }));
 
-                                    break;
-                                }
-                            }
-                        }
+                    if(requestedShopPage?.category === category) {
+                        setActiveShopPage(shopPages.find((shopPage) => shopPage.id === requestedShopPage.id));
+                    }
+                    else {
+                        setActiveShopPage(payload.pages[0]);
                     }
                 }
-                else {
-                    setActiveShopPage(event.data.pages[0]);
-                }
-            }
-        }
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopPagesEventData>>("ShopPagesEventData", listener);
-
-        webSocketClient.send<GetShopPagesEventData>("GetShopPagesEvent", {
-            category
+            },
         });
 
+        webSocketClient.sendProtobuff(GetShopPagesData, GetShopPagesData.create({
+            category
+        }));
+
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<ShopPagesEventData>>("ShopPagesEventData", listener);
+            webSocketClient.removeProtobuffListener(ShopPagesData, listener);
         };
     }, [activeIndex, requestedShopPage]);
 
     // TODO: handle category and shop pages here
-    const handleActiveShopPage = useCallback((shopPage: { id: string; category: ShopPageCategory }) => {
+    const handleActiveShopPage = useCallback((shopPage: { id: string; category: string }) => {
         const category = categories.at(activeIndex);
 
         if(shopPage.category !== category) {
@@ -86,23 +74,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
             setActiveIndex(categories.indexOf(shopPage.category));
         }
         else {
-            for(const page of shopPages) {
-                if(page.id === shopPage.id) {
-                    setActiveShopPage(page);
-
-                    break;
-                }
-
-                if(page.children) {
-                    for(const child of page.children) {
-                        if(child.id === shopPage.id) {
-                            setActiveShopPage(child);
-
-                            break;
-                        }
-                    }
-                }
-            }
+            setActiveShopPage(shopPages.find((_shopPage) => _shopPage.id === shopPage.id));
         }
     }, [activeIndex, shopPages]);
 

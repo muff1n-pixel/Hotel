@@ -5,6 +5,7 @@ import DialogTable from "../Dialog/Table/DialogTable";
 import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import { RoomPositionData } from "@pixel63/events";
 
 export type FigureCatalogDialogProps = {
     hidden?: boolean;
@@ -15,6 +16,10 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
     const user = useUser();
 
     const [action, setAction] = useState<string | null>(null);
+
+    if(!user.figureConfiguration) {
+        return null;
+    }
 
     return (
         <Dialog title="Figure Catalog" hidden={hidden} onClose={onClose} width={410} height={560} initialPosition="center">
@@ -35,11 +40,11 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     figureData={{
                                         figureConfiguration: user.figureConfiguration,
                                         actions: (action)?([action]):(undefined),
-                                        position: {
+                                        position: RoomPositionData.create({
                                             row: 10,
                                             column: 10,
                                             depth: 1
-                                        }
+                                        })
                                     }}
                                     options={{
                                         rows: 20,
@@ -76,11 +81,11 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     figureData={{
                                         figureConfiguration: user.figureConfiguration,
                                         actions: (action)?([action]):(undefined),
-                                        position: {
+                                        position: RoomPositionData.create({
                                             row: 10,
                                             column: 10,
                                             depth: 1
-                                        }
+                                        })
                                     }}
                                     options={{
                                         rows: 20,

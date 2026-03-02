@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+
+message RoomClickData {
+    optional string user_id = 1;
+    optional string furniture_id = 2;
+    optional RoomPositionData position = 3;
+}

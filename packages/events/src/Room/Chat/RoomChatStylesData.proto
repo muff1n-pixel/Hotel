@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message RoomChatStylesData {
+    repeated string room_chat_style_ids = 1;
+}

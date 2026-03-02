@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message FurnitureTypesData {
+    repeated string categories = 1;
+    repeated string interaction_types = 2;
+}

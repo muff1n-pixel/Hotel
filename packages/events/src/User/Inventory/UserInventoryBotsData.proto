@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Bots/UserBotData.proto";
+
+message UserInventoryBotsData {
+    repeated UserBotData all_user_bots = 1;
+    repeated UserBotData updated_user_bots = 2;
+    repeated UserBotData deleted_user_bots = 3;
+}

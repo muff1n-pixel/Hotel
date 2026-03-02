@@ -1,14 +1,13 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { RoomStructureEventData } from "@Shared/Communications/Responses/Rooms/RoomStructureEventData";
 import { clientInstance } from "../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { RoomStructureData } from "@pixel63/events";
 
-export default class RoomStructureEvent implements IncomingEvent<WebSocketEvent<RoomStructureEventData>> {
-    async handle(event: WebSocketEvent<RoomStructureEventData>) {
+export default class RoomStructureEvent implements ProtobuffListener<RoomStructureData> {
+    async handle(payload: RoomStructureData) {
         if(!clientInstance.roomInstance.value) {
             throw new Error("Room instance is not created.");
         }
-        
-        clientInstance.roomInstance.value.setStructure(event.data.structure);
+
+        clientInstance.roomInstance.value.setStructure(payload);
     }
 }

@@ -33,7 +33,7 @@ export default function FigureDialog({ hidden, onClose }: FigureDialogProps) {
                         <div style={{
                             flex: 1
                         }}>
-                            <FigureImage key={index} frame={frame} figureConfiguration={user.figureConfiguration} actions={(action.length)?([action]):([])} direction={index} cropped/>
+                            <FigureImage key={index} frame={frame} figureConfiguration={user.figureConfiguration!} actions={(action.length)?([action]):([])} direction={index} cropped/>
                         </div>
                     ))}
                 </div>

@@ -177,8 +177,6 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
                         sprites: spritesheet
                     };
 
-                    data.visualization.fdsdf;
-
                     writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
                         encoding: "utf-8"
                     });

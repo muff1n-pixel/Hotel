@@ -6,47 +6,46 @@ import DimmerDialogSlider from "../../../../Dialog/Dimmer/DimmerDialogSlider";
 import DimmerDialogCheckbox from "../../../../Dialog/Dimmer/DimmerDialogCheckbox";
 import DimmerDialogButton from "../../../../Dialog/Dimmer/DimmerDialogButton";
 import { webSocketClient } from "../../../../../..";
-import { SetFurnitureDataEventData } from "@Shared/Communications/Requests/Rooms/Furniture/SetFurnitureDataEventData";
-import { RoomMoodlightData } from "@Shared/Interfaces/Room/RoomMoodlightData";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
-
-export type RoomFurnitureDimmerData = {
-    furniture: RoomInstanceFurniture;
-    type: "furniture_roomdimmer";
-};
+import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();
 
-    const [enabled, setEnabled] = useState((data.furniture.data.data as RoomMoodlightData)?.enabled ?? false);
-    const [color, setColor] = useState((data.furniture.data.data as RoomMoodlightData)?.color ?? "#FF3333");
-    const [alpha, setAlpha] = useState((data.furniture.data.data as RoomMoodlightData)?.alpha ?? 128);
-    const [backgroundOnly, setBackgroundOnly] = useState((data.furniture.data.data as RoomMoodlightData)?.backgroundOnly ?? false);
+    const [enabled, setEnabled] = useState(data.data.data?.moodlight?.enabled ?? false);
+    const [color, setColor] = useState(data.data.data?.moodlight?.color ?? "#FF3333");
+    const [alpha, setAlpha] = useState(data.data.data?.moodlight?.alpha ?? 128);
+    const [backgroundOnly, setBackgroundOnly] = useState(data.data.data?.moodlight?.backgroundOnly ?? false);
 
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
 
-        webSocketClient.send<SetFurnitureDataEventData<RoomMoodlightData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+
             data: {
-                enabled: !enabled,
-                color,
-                alpha,
-                backgroundOnly
+                moodlight: {
+                    enabled: !enabled,
+                    color,
+                    alpha,
+                    backgroundOnly
+                }
             }
-        });
+        }));
     }, [enabled]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<SetFurnitureDataEventData<RoomMoodlightData>>("SetFurnitureDataEvent", {
-            furnitureId: data.furniture.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            id: data.data.id,
+
             data: {
-                enabled,
-                color,
-                alpha,
-                backgroundOnly
+                moodlight: {
+                    enabled,
+                    color,
+                    alpha,
+                    backgroundOnly
+                }
             }
-        });
+        }));
     }, [enabled, color, alpha, backgroundOnly]);
 
     if(hidden) {

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "Shop/Features/ShopFeatureData.proto";
+
+message ShopPageData {
+    string id = 1;
+    optional string parent_id = 2;
+    
+    string category = 3;
+
+    string title = 4;
+    optional string description = 5;
+
+    string type = 6;
+
+    optional string icon = 7;
+    optional string header = 8;
+    optional string teaser = 9;
+
+    uint32 index = 10;
+
+    repeated ShopFeatureData features = 11;
+}

@@ -1,12 +1,13 @@
 import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomItem from "../RoomItem";
-import { RoomPosition } from "@Client/Interfaces/RoomPosition";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureSprite from "./RoomFigureSprite";
 import RoomFigureEffectSprite from "@Client/Room/Items/Figure/RoomFigureEffectSprite";
 import RoomRenderer from "@Client/Room/Renderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/RoomFigureTypingSprite";
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/RoomFigureIdlingSprite";
+import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
+import { RoomPositionData } from "@pixel63/events";
 
 export default class RoomFigureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -24,7 +25,7 @@ export default class RoomFigureItem extends RoomItem {
     private preloaded = false;
     private preloading = false;
 
-    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPosition | null) {
+    constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPositionData | undefined) {
         super(roomRenderer, "figure");
 
         if(position) {
@@ -53,7 +54,7 @@ export default class RoomFigureItem extends RoomItem {
 
         const frame = this.frame;
 
-        this.figureRenderer.renderToCanvas(Figure.figureWorker, this.frame).then((result) => {
+        this.figureRenderer.renderToCanvas(defaultFigureWorkerClient, this.frame).then((result) => {
             if(frame !== this.frame) {
                 return;
             }
@@ -67,17 +68,34 @@ export default class RoomFigureItem extends RoomItem {
 
             if(this.typing) {
                 if(!this.typingSprite) {
-                    this.typingSprite = new RoomFigureTypingSprite(this, result.figure);
+                    this.typingSprite = new RoomFigureTypingSprite(this, {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    });
                 }
+                else {
+                    this.typingSprite.figureOffsets = {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    };
+                }
+
 
                 this.sprites.push(this.typingSprite);
             }
-
-            if(this.idling) {
+            else if(this.idling) {
                 if(!this.idlingSprite) {
-                    this.idlingSprite = new RoomFigureIdlingSprite(this, result.figure);
+                    this.idlingSprite = new RoomFigureIdlingSprite(this, {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    });
                 }
                 else {
+                    this.idlingSprite.figureOffsets = {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    };
+
                     this.idlingSprite.process();
                 }
 
@@ -86,14 +104,14 @@ export default class RoomFigureItem extends RoomItem {
         });
     }
 
-    public setPositionPath(fromPosition: RoomPosition, toPosition: RoomPosition, delay: number = 0, useAction: boolean = true): void {
+    public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData, delay: number = 0, useAction: boolean = true): void {
         super.setPositionPath(fromPosition, toPosition, 500 - delay);
 
-        const relativePosition: RoomPosition = {
+        const relativePosition: RoomPositionData = RoomPositionData.create({
             row: toPosition.row - fromPosition.row,
             column: toPosition.column - fromPosition.column,
             depth: toPosition.depth - fromPosition.depth
-        };
+        });
 
         if(useAction) {
             this.figureRenderer.direction = this.getDirectionFromRelativePosition(relativePosition);
@@ -108,7 +126,7 @@ export default class RoomFigureItem extends RoomItem {
         this.figureRenderer.removeAction("Move");
     }
 
-    private getDirectionFromRelativePosition(relativePosition: RoomPosition): number {
+    private getDirectionFromRelativePosition(relativePosition: RoomPositionData): number {
         if(relativePosition.row > 0) {
             relativePosition.row = 1;
         }

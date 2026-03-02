@@ -1,5 +1,3 @@
-import { FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
-
 export type FiguredataData = {
     palettes: {
         id: number;
@@ -14,7 +12,7 @@ export type FiguredataData = {
     }[];
 
     settypes: {
-        type: FigurePartKeyAbbreviation;
+        type: string;
         paletteId: number;
         mandatoryGender: {
             male: boolean[];
@@ -30,12 +28,12 @@ export type FiguredataData = {
             paletteId: number;
             parts: {
                 id: string;
-                type: FigurePartKeyAbbreviation;
+                type: string;
                 colorable: boolean;
                 index: number;
                 colorIndex: number;
             }[];
-            hiddenPartTypes?: FigurePartKeyAbbreviation[];
+            hiddenPartTypes?: string[];
         }[];
     }[];
 };

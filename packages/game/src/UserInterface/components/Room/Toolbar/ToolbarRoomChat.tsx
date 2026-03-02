@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import ToolbarToggle from "../../Toolbar/ToolbarToggle";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
-import { RoomChatEventData } from "@Shared/Communications/Responses/Rooms/Chat/RoomChatEventData";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import OffscreenCanvasRender from "../../OffscreenCanvasRender";
 import { useRoomHistory } from "../../../hooks/useRoomHistory";
+import { RoomActorChatData } from "@pixel63/events";
 
 export type ToolbarRoomChatProps = {
     minimized: boolean;
@@ -39,29 +38,31 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
             return;
         }
 
-        const listener = async (event: WebSocketEvent<RoomChatEventData>) => {
-            if(event.data.type !== "user") {
-                return;
-            }
-            
-            const user = room.getUserById(event.data.userId);
+        const listener = webSocketClient.addProtobuffListener(RoomActorChatData, {
+            async handle(payload: RoomActorChatData) {
+                if(!payload.actor?.user) {
+                    return;
+                }
+                
+                const user = room.getUserById(payload.actor.user.userId);
 
-            const image = await RoomChatRenderer.render(event.data.roomChatStyleId, user.data.name, user.data.figureConfiguration, event.data.message, {});
+                const image = await RoomChatRenderer.render(payload.roomChatStyleId, user.data.name, user.data.figureConfiguration, payload.message, {
+                    $type: "RoomActorChatOptionsData"
+                });
 
-            clientInstance.roomHistory.value!.push({
-                id: Math.random(),
-                type: "message",
-                image,
-                timestamp: new Date(),
-            } satisfies RoomChatMessage);
+                clientInstance.roomHistory.value!.push({
+                    id: Math.random(),
+                    type: "message",
+                    image,
+                    timestamp: new Date(),
+                } satisfies RoomChatMessage);
 
-            clientInstance.roomHistory.update();
-        };
+                clientInstance.roomHistory.update();
+            },
+        })
 
-        webSocketClient.addEventListener<WebSocketEvent<RoomChatEventData>>("RoomChatEvent", listener);
-        
         return () => {
-            webSocketClient.removeEventListener<WebSocketEvent<RoomChatEventData>>("RoomChatEvent", listener);
+            webSocketClient.removeProtobuffListener(RoomActorChatData, listener);
         };
     }, [room, history]);
     
@@ -72,14 +73,14 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
 
         const latest = clientInstance.roomHistory.value![clientInstance.roomHistory.value!.length - 1];
 
-        if(latest && latest.type === "room" && latest.name === room.information.name) {
+        if(latest && latest.type === "room" && latest.name === room.information?.name) {
             return;
         }
 
         clientInstance.roomHistory.value!.push({
             id: Math.random(),
             type: "room",
-            name: room.information.name,
+            name: room.information?.name ?? "",
             timestamp: new Date(),
         } satisfies RoomEntry);
 

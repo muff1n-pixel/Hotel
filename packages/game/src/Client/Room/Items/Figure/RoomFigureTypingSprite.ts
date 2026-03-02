@@ -1,19 +1,18 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFigureItem from "./RoomFigureItem";
-import { FigureRendererSprite } from "@Client/Figure/Renderer/FigureRenderer";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 export default class RoomFigureTypingSprite extends RoomSprite {
     private offset: MousePosition;
     private image?: ImageBitmap;
 
-    constructor(public readonly item: RoomFigureItem, private readonly figureSprite: FigureRendererSprite) {
+    constructor(public readonly item: RoomFigureItem, public figureOffsets: MousePosition) {
         super(item);
 
         this.offset = {
-            left: this.figureSprite.x + 128 + 64 + 16,
-            top: this.figureSprite.y + 64
+            left: 128 + 64 + 16,
+            top: 64
         };
 
         AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => this.image = image);
@@ -28,7 +27,7 @@ export default class RoomFigureTypingSprite extends RoomSprite {
 
         context.scale(scale, scale);
         
-        context.drawImage(this.image, this.offset.left, this.offset.top);
+        context.drawImage(this.image, this.figureOffsets.left + this.offset.left, this.figureOffsets.top + this.offset.top);
     }
 
     mouseover() {

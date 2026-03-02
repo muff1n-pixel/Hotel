@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message NavigatorRoomData {
+    string id = 1;
+    string name = 2;
+    uint32 users = 3;
+    optional string thumbnail = 4;
+    uint32 max_users = 5;
+}

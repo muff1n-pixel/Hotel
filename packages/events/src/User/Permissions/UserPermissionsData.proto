@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UserPermissionsData {
+    repeated string permissions = 1;
+}

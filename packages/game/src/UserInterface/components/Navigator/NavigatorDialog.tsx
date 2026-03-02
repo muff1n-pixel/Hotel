@@ -2,10 +2,11 @@ import Dialog from "../Dialog/Dialog";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
 import { webSocketClient } from "../../..";
-import { EnterRoomEventData } from "@Shared/Communications/Requests/Rooms/EnterRoomEventData";
 import { useDialogs } from "../../hooks/useDialogs";
 import { useState } from "react";
 import { useNavigator } from "../../hooks/useNavigator";
+import Input from "../Form/Input";
+import { EnterRoomData } from "@pixel63/events";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -16,8 +17,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
     const { addUniqueDialog, closeDialog } = useDialogs();
 
     const [tab, setTab] = useState("all");
+    const [search, setSearch] = useState("");
 
-    const navigator = useNavigator(tab);
+    const navigator = useNavigator(tab, search);
 
     return (
         <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={420} height={530}>
@@ -35,11 +37,11 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                             display: "flex",
                             flexDirection: "column"
                         }}>
-                            {navigator!.map((navigator) => (
+                            {navigator?.map((navigator) => (
                                 <NavigatorRoomList thumbnail={true} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>
@@ -58,11 +60,15 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                             display: "flex",
                             flexDirection: "column"
                         }}>
-                            {navigator!.map((navigator) => (
+                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
+                                <div className="sprite_room_user_motto_pen"/>
+                            </Input>
+
+                            {navigator?.map((navigator) => (
                                 <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>
@@ -85,11 +91,11 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                             display: "flex",
                             flexDirection: "column"
                         }}>
-                            {navigator!.map((navigator) => (
+                            {navigator?.map((navigator) => (
                                 <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
-                                    webSocketClient.send<EnterRoomEventData>("EnterRoomEvent", {
-                                        roomId: room.id
-                                    });
+                                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                        id: room.id
+                                    }));
 
                                     closeDialog("navigator");
                                 }}/>

@@ -6,7 +6,7 @@ import RoomUserProfileMotto from "../User/RoomUserProfileMotto";
 import { useUser } from "../../../../hooks/useUser";
 import { useCallback } from "react";
 import { webSocketClient } from "../../../../..";
-import { UpdateRoomBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData";
+import { UpdateRoomBotData } from "@pixel63/events";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;
@@ -16,10 +16,11 @@ export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
     const user = useUser();
 
     const handleMottoChange = useCallback((motto: string) => {
-        webSocketClient.send<UpdateRoomBotEventData>("UpdateRoomBotEvent", {
-            userBotId: bot.data.id,
+        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+            id: bot.data.id,
+
             motto
-        });
+        }));
     }, [bot]);
 
     return (
@@ -96,6 +97,7 @@ export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
                         height: 40
                     }}>
                         <BadgeImage badge={{
+                            $type: "BadgeData",
                             id: "bot",
                             image: "BOT.gif",
                             name: "Bot",

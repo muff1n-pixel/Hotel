@@ -4,6 +4,7 @@ import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/Use
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import { RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -21,14 +22,16 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             console.log("User is not in entrance position, starting walk to position");
 
             await new Promise<void>((resolve, reject) => {
-                roomUser.walkTo(offsetPosition, undefined, resolve, reject);
+                roomUser.path.walkTo(offsetPosition, undefined, resolve, reject);
             });
         }
+
+        await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
         await this.roomFurniture.setAnimation(1);
 
         await new Promise<void>((resolve, reject) => {
-            roomUser.walkTo(this.roomFurniture.model.position, true, resolve, reject);
+            roomUser.path.walkTo(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position), true, resolve, reject);
         });
 
         await this.roomFurniture.setAnimation(2);
@@ -43,7 +46,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
 
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
-                id: this.roomFurniture.model.data
+                id: this.roomFurniture.model.data?.teleport?.furnitureId
             },
             include: [
                 {
@@ -73,7 +76,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             return;
         }
 
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data);
+        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
 
         if(!targetFurniture) {
             console.warn("Target room furniture is not loaded.");
@@ -95,7 +98,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             }, 500);
         });
 
-        roomUser.setPosition({
+        roomUser.path.setPosition({
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
         });
@@ -105,7 +108,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         const targetOffsetPosition = targetFurniture.getOffsetPosition(1);
 
         await new Promise<void>((resolve, reject) => {
-            roomUser.walkTo(targetOffsetPosition, undefined, resolve, reject);
+            roomUser.path.walkTo(targetOffsetPosition, undefined, resolve, reject);
         });
 
         await targetFurniture.setAnimation(0);

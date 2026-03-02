@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message UserData {
+    string id   = 1;
+    string name = 2;
+
+    int32 credits  = 3;
+    int32 duckets  = 4;
+    int32 diamonds = 5;
+
+    FigureConfigurationData figure_configuration = 6;
+
+    optional string home_room_id = 7;
+}

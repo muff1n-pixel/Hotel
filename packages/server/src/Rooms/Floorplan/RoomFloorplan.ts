@@ -1,8 +1,7 @@
 import { AStarFinder } from "astar-typescript";
 import Room from "../Room";
-import RoomUser from "../Users/RoomUser";
-import { RoomPosition } from "@shared/Interfaces/Room/RoomPosition";
-import RoomFurniture from "../Furniture/RoomFurniture";
+import RoomActor from "../Actor/RoomActor";
+import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFloorplan {
     private grid: number[][];
@@ -14,7 +13,7 @@ export default class RoomFloorplan {
     private generateStaticGrid() {
         return this.room.model.structure.grid.map((row, rowIndex) => {
             return row.split('').map((column, columnIndex) => {
-                return this.getPositionWeight({ row: rowIndex, column: columnIndex });
+                return this.getPositionWeight(RoomPositionOffsetData.create({ row: rowIndex, column: columnIndex }));
             });
         });
     }
@@ -27,7 +26,7 @@ export default class RoomFloorplan {
         return [...this.grid];
     }
 
-    public updatePosition(position: Omit<RoomPosition, "depth">, previousPosition?: Omit<RoomPosition, "depth">, dimensions: Omit<RoomPosition, "depth"> = { row: 1, column: 1 }) {
+    public updatePosition(position: RoomPositionOffsetData, dimensions: RoomPositionData = RoomPositionData.create({ row: 1, column: 1 })) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
                 if(this.grid[row]?.[column] === undefined) {
@@ -36,16 +35,15 @@ export default class RoomFloorplan {
                     return;
                 }
 
-                this.grid[row]![column] = this.getPositionWeight(position);
+                this.grid[row]![column] = this.getPositionWeight(RoomPositionOffsetData.create({
+                    row,
+                    column
+                }));
             }
-        }
-
-        if(previousPosition && (previousPosition.row !== position.row || previousPosition.column !== position.column)) {
-            this.updatePosition(previousPosition, undefined, dimensions);
         }
     }
 
-    private getPositionWeight(position: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false) {
+    private getPositionWeight(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, finalDestination: boolean = false) {
         if(this.room.model.structure.grid[position.row]?.[position.column] === undefined || this.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return 1;
         }
@@ -54,7 +52,7 @@ export default class RoomFloorplan {
             const upmostFurniture = this.room.getUpmostFurnitureAtPosition(position);
             
             if(upmostFurniture) {
-                if(!upmostFurniture.isWalkable()) {
+                if(!upmostFurniture.isWalkable(finalDestination)) {
                     return 1;
                 }
             }
@@ -75,23 +73,21 @@ export default class RoomFloorplan {
         return 0;
     }
 
-    public getAstarFinder(roomUser: RoomUser, targetPosition: Omit<RoomPosition, "depth">, walkThroughFurniture: boolean = false) {
+    public getAstarFinder(actor: RoomActor, targetPosition: RoomPositionOffsetData, walkThroughFurniture: boolean = false) {
         const grid = this.getMutableGrid();
 
         if(walkThroughFurniture) {
             for(let row = 0; row < this.room.model.structure.grid.length; row++) {
                 for(let column = 0; column < this.room.model.structure.grid[row]!.length; column++) {
-                    grid[row]![column] = this.getPositionWeight({ row, column }, true);
+                    grid[row]![column] = this.getPositionWeight(RoomPositionOffsetData.create({ row, column }), true);
                 }
             }
         }
 
-        grid[roomUser.position.row]![roomUser.position.column] = 0;
-
-        const usersAtTargetPosition = this.room.users.filter((user) => user.position.row === targetPosition.row && user.position.column === targetPosition.column);
-
-        for(const userAtTargetPosition of usersAtTargetPosition) {
-            //grid[targetPosition.row]![targetPosition.column] = 0;
+        grid[actor.position.row]![actor.position.column] = 0;
+        
+        if(grid[targetPosition.row] && grid[targetPosition.row]?.[targetPosition.column]) {
+            grid[targetPosition.row]![targetPosition.column] = this.getPositionWeight(targetPosition, walkThroughFurniture, true);
         }
 
         const columns = grid[0]!.map((_, colIndex) => grid.map(row => row[colIndex]!));

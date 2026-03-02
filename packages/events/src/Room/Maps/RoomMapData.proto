@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Room/Structure/RoomStructureDoorData.proto";
+
+message RoomMapData {
+    string id = 1;
+    repeated string grid = 2;
+    RoomStructureDoorData door = 3;
+}

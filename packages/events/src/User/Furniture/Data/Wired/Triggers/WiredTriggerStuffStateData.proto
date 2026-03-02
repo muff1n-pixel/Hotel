@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
+
+message WiredTriggerStuffStateData {
+    string trigger = 1;
+    repeated uint32 furniture_trigger_states = 2;
+
+    WiredFurnitureSelectionData selection = 3;
+}

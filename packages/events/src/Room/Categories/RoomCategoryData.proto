@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message RoomCategoryData {
+    string id = 1;
+    string title = 2;
+}

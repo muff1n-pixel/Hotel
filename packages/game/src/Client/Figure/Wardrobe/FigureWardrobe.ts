@@ -1,7 +1,6 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import FigureWorkerClient from "../Worker/FigureWorkerClient";
+import { createFigureWorkerClient } from "../Worker/FigureWorkerClient";
 import Figure from "../Figure";
-import { FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
 
 export type FigureWardrobeItem = {
     image: Promise<ImageBitmap>;
@@ -16,9 +15,9 @@ export type FigureWardrobeColor = {
 };
 
 export default class FigureWardrobe {
-    public static figureWorker = new FigureWorkerClient();
+    public static figureWorker = createFigureWorkerClient();
 
-    public static async getWardrobePartTypes(part: FigurePartKeyAbbreviation, colors: number[] | undefined, gender: "male" | "female") {
+    public static async getWardrobePartTypes(part: string, colors: number[] | undefined, gender: string) {
         const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === part);
 
         if(!settype) {
@@ -30,9 +29,11 @@ export default class FigureWardrobe {
         const imagePromises = await Promise.allSettled(
             settype.sets.filter((set) => set.selectable && (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female"))).map(async (set) => {
                 const figureRenderer = new Figure({
+                    $type: "FigureConfigurationData",
                     gender,
                     parts: [
                         {
+                            $type: "FigurePartData",
                             type: settype.type,
                             setId: set.id,
                             colors: (set.colorable)?(colors ?? palette?.colors.map((color) => color.id) ?? []):([])
@@ -65,7 +66,7 @@ export default class FigureWardrobe {
         return {
             items,
             colors: paletteColors,
-            mandatory: settype.mandatoryGender[gender][0]
+            mandatory: settype.mandatoryGender[gender as "male" | "female"][0]
         };
     }
 }

@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 export type InputProps = {
     type?: "text" | "number";
@@ -11,9 +11,10 @@ export type InputProps = {
     step?: number;
     readonly?: boolean;
     maxLength?: number;
+    children?: ReactNode;
 }
 
-export default function Input({ style, readonly, step, type = "text", placeholder, value, onChange, min, max, maxLength }: InputProps) {
+export default function Input({ style, readonly, step, type = "text", placeholder, value, onChange, min, max, maxLength, children }: InputProps) {
     return (
         <div style={{
             borderBottom: "1px solid #FFFFFF",
@@ -24,10 +25,14 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                 border: "1px solid #808080",
                 borderRadius: 6,
 
+                paddingRight: 4,
+
                 height: 24,
 
                 display: "flex",
-                flexDirection: "row"
+                flexDirection: "row",
+
+                alignItems: "center"
             }}>
                 <input
                     type={type}
@@ -45,6 +50,8 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                         border: "none",
                         ...style
                     }}/>
+
+                {children}
             </div>
         </div>
     );

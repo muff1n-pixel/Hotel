@@ -5,30 +5,30 @@ import DialogTabs from "../Dialog/Tabs/DialogTabs";
 import WardrobeAvatar from "./WardrobeAvatar";
 import WardrobeSelection from "./Selection/WardrobeSelection";
 import DialogButton from "../Dialog/Button/DialogButton";
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import { FigureConfigurationData } from "@pixel63/events";
 
 const wardrobeTabs = [
     {
         spriteName: "sprite_wardrobe_head_tab",
         tabs: [
             {
-                part: "hr" satisfies FigurePartKeyAbbreviation,
+                part: "hr",
                 spriteName: "sprite_wardrobe_head_hair",
             },
             {
-                part: "ha" satisfies FigurePartKeyAbbreviation,
+                part: "ha",
                 spriteName: "sprite_wardrobe_head_hats",
             },
             {
-                part: "fa" satisfies FigurePartKeyAbbreviation,
+                part: "fa",
                 spriteName: "sprite_wardrobe_head_accessories",
             },
             {
-                part: "ea" satisfies FigurePartKeyAbbreviation,
+                part: "ea",
                 spriteName: "sprite_wardrobe_head_eyewear",
             },
             {
-                part: "he" satisfies FigurePartKeyAbbreviation,
+                part: "he",
                 spriteName: "sprite_wardrobe_head_face_accesories",
             }
         ]
@@ -37,19 +37,19 @@ const wardrobeTabs = [
         spriteName: "sprite_wardrobe_torso_tab",
         tabs: [
             {
-                part: "ch" satisfies FigurePartKeyAbbreviation,
+                part: "ch",
                 spriteName: "sprite_wardrobe_top_shirt",
             },
             {
-                part: "cp" satisfies FigurePartKeyAbbreviation,
+                part: "cp",
                 spriteName: "sprite_wardrobe_top_prints",
             },
             {
-                part: "cc" satisfies FigurePartKeyAbbreviation,
+                part: "cc",
                 spriteName: "sprite_wardrobe_top_jacket",
             },
             {
-                part: "ca" satisfies FigurePartKeyAbbreviation,
+                part: "ca",
                 spriteName: "sprite_wardrobe_top_accessories",
             }
         ]
@@ -58,15 +58,15 @@ const wardrobeTabs = [
         spriteName: "sprite_wardrobe_legs_tab",
         tabs: [
             {
-                part: "lg" satisfies FigurePartKeyAbbreviation,
+                part: "lg",
                 spriteName: "sprite_wardrobe_trousers",
             },
             {
-                part: "sh" satisfies FigurePartKeyAbbreviation,
+                part: "sh",
                 spriteName: "sprite_wardrobe_shoes",
             },
             {
-                part: "wa" satisfies FigurePartKeyAbbreviation,
+                part: "wa",
                 spriteName: "sprite_wardrobe_accessories",
             }
         ]
@@ -76,20 +76,24 @@ const wardrobeTabs = [
 export type FigureWardrobeDialogProps = {
     title: string;
     header: string;
-    initialFigureConfiguration: FigureConfiguration;
+    initialFigureConfiguration?: FigureConfigurationData;
 
     hidden?: boolean;
     onClose?: () => void;
 
-    onApply: (figureConfiguration: FigureConfiguration) => void;
+    onApply: (figureConfiguration: FigureConfigurationData) => void;
 };
 
 export default function FigureWardrobeDialog({ title, header, initialFigureConfiguration, hidden, onApply, onClose }: FigureWardrobeDialogProps) {
-    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfiguration>(initialFigureConfiguration);
+    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(initialFigureConfiguration);
 
     useEffect(() => {
         setFigureConfiguration(initialFigureConfiguration);
     }, [initialFigureConfiguration]);
+
+    if(!figureConfiguration) {
+        return null;
+    }
     
     return (
         <Dialog title={title} hidden={hidden} onClose={onClose} width={500} height={530}>
@@ -114,14 +118,14 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                     icon: (<div className="sprite_wardrobe_male"/>),
                                     activeIcon: (<div className="sprite_wardrobe_male_on"/>),
                                     element: (
-                                        <WardrobeSelection part={"hd" as FigurePartKeyAbbreviation} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
+                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
                                     )
                                 },
                                 {
                                     icon: (<div className="sprite_wardrobe_female"/>),
                                     activeIcon: (<div className="sprite_wardrobe_female_on"/>),
                                     element: (
-                                        <WardrobeSelection part={"hd" as FigurePartKeyAbbreviation} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
+                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
                                     )
                                 }
                             ]}/>
@@ -162,7 +166,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                     return {
                                         icon: (<div className={tab.spriteName}/>),
                                         activeIcon: (<div className={`${tab.spriteName}_on`}/>),
-                                        element: (<WardrobeSelection part={tab.part as FigurePartKeyAbbreviation} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>)
+                                        element: (<WardrobeSelection part={tab.part} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>)
                                     };
                                 })}/>
 

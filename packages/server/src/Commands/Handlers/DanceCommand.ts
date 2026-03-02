@@ -5,6 +5,10 @@ export default class DanceCommand implements IncomingCommandHandler {
     public readonly command = "dance";
 
     async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
+        if(roomUser.actions.includes("Sit")) {
+            throw new Error("User is sitting down.");
+        }
+
         if(!inputs[0]) {
             throw new Error("Missing id parameter.");
         }

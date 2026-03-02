@@ -5,7 +5,7 @@ import Input from "../../Form/Input";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../hooks/useDialogs";
-import { SendFeedbackEventData } from "@Shared/Communications/Requests/Hotel/SendFeedbackEventData";
+import { SendHotelFeedbackData } from "@pixel63/events";
 
 export type ReportIssueDialogProps = {
     hidden?: boolean;
@@ -25,10 +25,10 @@ export default function ReportIssueDialog({ hidden, onClose }: ReportIssueDialog
 
         onClose?.();
 
-        webSocketClient.send<SendFeedbackEventData>("SendFeedbackEvent", {
+        webSocketClient.sendProtobuff(SendHotelFeedbackData, SendHotelFeedbackData.create({
             area,
             description
-        });
+        }));
     }, [area, description, addDialog, onClose]);
 
     return (

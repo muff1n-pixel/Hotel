@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+
+message RoomFurnitureMovedData {
+    string id = 1;
+    RoomPositionData position = 2;
+}

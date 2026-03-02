@@ -1,4 +1,3 @@
-import { UserBotData } from "@Shared/Interfaces/Room/RoomBotData";
 import { useBotSpeech } from "../../hooks/Bots/useBotSpeech";
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/DialogContent";
@@ -8,8 +7,8 @@ import Input from "../Form/Input";
 import Checkbox from "../Form/Checkbox";
 import DialogButton from "../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../..";
-import { UpdateRoomBotEventData } from "@Shared/Communications/Requests/Rooms/Bots/UpdateRoomBotEventData";
 import { useDialogs } from "../../hooks/useDialogs";
+import { UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotSpeechDialogProps = {
     data: UserBotData;
@@ -50,8 +49,8 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
     }, [messages]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.send<UpdateRoomBotEventData>("UpdateRoomBotEvent", {
-            userBotId: data.id,
+        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+            id: data.id,
 
             speech: {
                 automaticChat,
@@ -59,7 +58,7 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
                 randomizeMessages,
                 messages: messages.filter((message) => message.length > 0)
             }
-        });
+        }));
 
         dialogs.closeDialog("bot-speech");
     }, [data, dialogs, automaticChat, automaticChatDelay, randomizeMessages, messages]);

@@ -1,8 +1,8 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
-import { UseRoomFurnitureEventData } from "@Shared/Communications/Requests/Rooms/Furniture/UseRoomFurnitureEventData";
 import { webSocketClient } from "../../../..";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureFortunaLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {
@@ -17,8 +17,8 @@ export default class RoomFurnitureFortunaLogic implements FurnitureLogic {
             return;
         }
 
-        webSocketClient.send<UseRoomFurnitureEventData>("UseRoomFurnitureEvent", {
-            roomFurnitureId: this.roomFurniture.data.id
-        });
+        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+            id: this.roomFurniture.data.id
+        }));
     }
 }

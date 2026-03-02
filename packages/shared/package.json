@@ -6,6 +6,9 @@
     "build": "npx tsc",
     "watch": "npx tsc -w"
   },
+  "dependencies": {
+    "@pixel63/events": "file:../events"
+  },
   "devDependencies": {
     "@types/node": "^25.3.0",
     "typescript": "^5.9.3"

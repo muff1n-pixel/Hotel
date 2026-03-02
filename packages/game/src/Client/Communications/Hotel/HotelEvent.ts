@@ -1,10 +1,9 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { HotelEventData } from "@Shared/Communications/Responses/Hotel/HotelEventData";
 import { clientInstance } from "../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { HotelData } from "@pixel63/events";
 
-export default class HotelEvent implements IncomingEvent<WebSocketEvent<HotelEventData>> {
-    async handle(event: WebSocketEvent<HotelEventData>) {
-        clientInstance.hotel.value = event.data;
+export default class HotelEvent implements ProtobuffListener<HotelData> {
+    async handle(payload: HotelData) {
+        clientInstance.hotel.value = payload;
     }
 }

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message UpdateShopPageData {
+    optional string id = 1;
+    optional string parent_id = 2;
+
+    string category = 3;
+
+    string title = 4;
+    string description = 5;
+
+    string type = 6;
+
+    string icon = 7;
+    string header = 8;
+    string teaser = 9;
+
+    uint32 index = 10;
+}

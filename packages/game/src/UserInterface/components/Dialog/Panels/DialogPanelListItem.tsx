@@ -5,7 +5,7 @@ export type DialogPanelListItemProps = {
     active: boolean;
     icon?: ReactNode;
     title: string;
-    subItem?: boolean;
+    subItem?: number;
     onClick: () => void;
     children?: ReactNode;
     editable?: boolean;
@@ -21,7 +21,7 @@ export default function DialogPanelListItem({ active, icon, title, onClick, chil
                     padding: "0 2px",
                     cursor: "pointer",
 
-                    paddingLeft: (subItem)?(16):(2),
+                    paddingLeft: ((subItem ?? 0) * 14) + 2,
 
                     display: "flex",
                     alignItems: "center",

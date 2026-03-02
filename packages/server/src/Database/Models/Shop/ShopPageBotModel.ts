@@ -1,7 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { ShopPageModel } from "./ShopPageModel.js";
-import { BotTypeData } from "@shared/Interfaces/Bots/BotTypeData.js";
-import { FigureConfiguration } from "@shared/Interfaces/Figure/FigureConfiguration.js";
+import { FigureConfigurationData } from "@pixel63/events";
 
 export class ShopPageBotModel extends Model {
     declare id: string;
@@ -13,9 +12,9 @@ export class ShopPageBotModel extends Model {
     declare name: string;
     declare motto: string | null;
 
-    declare figureConfiguration: FigureConfiguration;
+    declare figureConfiguration: FigureConfigurationData;
 
-    declare type: BotTypeData;
+    declare type: string;
 }
 
 export function initializeShopPageBotModel(sequelize: Sequelize) {

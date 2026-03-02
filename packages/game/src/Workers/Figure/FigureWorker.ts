@@ -2,6 +2,8 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRenderEvent } from "@Client/Figure/Interfaces/FigureRenderEvent";
 
+import "../../Polyfills/OffscreenCanvas";
+
 onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     const port = event.ports[0];
 
@@ -17,9 +19,9 @@ onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
         transferables.push(figure.image);
         transferables.push(figure.imageData.buffer);
 
-        for(const effect of effects) {
+        /*for(const effect of effects) {
             transferables.push(effect.image);
-        }
+        }*/
         
         port.postMessage({
             figure,

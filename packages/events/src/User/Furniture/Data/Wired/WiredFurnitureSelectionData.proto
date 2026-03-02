@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredFurnitureSelectionData {
+    repeated string furniture_ids = 1;
+    string furniture_source = 2;
+}

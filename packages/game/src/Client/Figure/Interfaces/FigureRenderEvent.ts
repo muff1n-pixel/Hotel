@@ -1,9 +1,9 @@
-import { FigureConfiguration } from "@Shared/Interfaces/Figure/FigureConfiguration";
+import { FigureConfigurationData } from "@pixel63/events";
 import { FigureRendererSpriteResult } from "../Renderer/FigureRenderer";
 
 export type FigureRenderEvent = {
     type: "render";
-    configuration: FigureConfiguration;
+    configuration: FigureConfigurationData;
     direction: number;
     frame: number;
     actions: string[];
@@ -11,7 +11,7 @@ export type FigureRenderEvent = {
     headOnly?: boolean;
 } | {
     type: "preload";
-    configuration: FigureConfiguration;
+    configuration: FigureConfigurationData;
 };
 
 export type FigureRenderResultEvent = {

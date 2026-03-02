@@ -1,29 +1,28 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { RoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/RoomFurnitureEventData";
 import { clientInstance } from "../../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { RoomFurnitureData } from "@pixel63/events";
 
-export default class RoomFurnitureEvent implements IncomingEvent<WebSocketEvent<RoomFurnitureEventData>> {
-    async handle(event: WebSocketEvent<RoomFurnitureEventData>) {
+export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitureData> {
+    async handle(payload: RoomFurnitureData) {
         if(!clientInstance.roomInstance.value) {
             throw new Error("Room instance is not created.");
         }
 
-        if(event.data.furnitureUpdated?.length) {
-            for(const furniture of event.data.furnitureUpdated) {
+        if(payload.furnitureUpdated?.length) {
+            for(const furniture of payload.furnitureUpdated) {
                 const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furniture.id);
 
                 roomFurnitureItem.updateData(furniture);
             }
         }
 
-        if(event.data.furnitureAdded?.length) {
-            clientInstance.roomInstance.value.furnitures.push(...event.data.furnitureAdded.map((roomFurnitureData) => new RoomFurniture(clientInstance.roomInstance.value!, roomFurnitureData)));
+        if(payload.furnitureAdded?.length) {
+            clientInstance.roomInstance.value.furnitures.push(...payload.furnitureAdded.map((roomFurnitureData) => new RoomFurniture(clientInstance.roomInstance.value!, roomFurnitureData)));
         }
 
-        if(event.data.furnitureRemoved?.length) {
-            event.data.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id));
+        if(payload.furnitureRemoved?.length) {
+            payload.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id));
         }
 
         clientInstance.roomInstance.update();

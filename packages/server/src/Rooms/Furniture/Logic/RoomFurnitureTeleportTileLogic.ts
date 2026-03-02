@@ -18,11 +18,11 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
         const offsetPosition = this.roomFurniture.getOffsetPosition(1);
 
         if(offsetPosition.row !== roomUser.position.row || offsetPosition.column !== roomUser.position.column) {
-            roomUser.walkTo(offsetPosition, undefined);
+            roomUser.path.walkTo(offsetPosition, undefined);
         }
     }
 
-    async walkOn(roomUser: RoomUser): Promise<void> {
+    async handleUserWalksOn(roomUser: RoomUser): Promise<void> {
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
                 id: this.roomFurniture.model.data
@@ -55,7 +55,7 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             return;
         }
 
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data);
+        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
 
         if(!targetFurniture) {
             console.warn("Target room furniture is not loaded.");
@@ -63,7 +63,7 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             return;
         }
 
-        roomUser.path = undefined;
+        roomUser.path.path = undefined;
 
         if(roomUser.room.model.id !== targetRoom.model.id) {
             roomUser.disconnect();
@@ -71,13 +71,9 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             roomUser = targetRoom.addUserClient(roomUser.user, targetFurniture.model.position);
         }
 
-        roomUser.setPosition({
+        roomUser.path.setPosition({
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
         }, (targetFurniture.model.direction + 4) % 8);
-    }
-
-    async handleActionsInterval(): Promise<void> {
-        
     }
 }

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "Figure/FigureConfigurationData.proto";
+import "Bot/BotSpeechData.proto";
+
+message UpdateRoomBotData {
+    string id = 1;
+
+    optional RoomPositionData position = 2;
+    optional uint32 direction = 3;
+
+    optional string motto = 4;
+
+    optional FigureConfigurationData figure_configuration = 5;
+
+    optional BotSpeechData speech = 6;
+
+    optional bool relaxed = 7;
+}
+

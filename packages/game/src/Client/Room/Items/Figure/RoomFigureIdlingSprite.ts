@@ -1,7 +1,6 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFigureItem from "./RoomFigureItem";
-import { FigureRendererSprite } from "@Client/Figure/Renderer/FigureRenderer";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 export default class RoomFigureIdlingSprite extends RoomSprite {
@@ -12,7 +11,7 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
     private currentAssetFrame: number = 0;
     private lastAssetFrameChange: number = performance.now();
 
-    constructor(public readonly item: RoomFigureItem, private readonly figureSprite: FigureRendererSprite) {
+    constructor(public readonly item: RoomFigureItem, public figureOffsets: MousePosition) {
         super(item);
 
         this.process();
@@ -33,8 +32,8 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
 
         if(this.currentAssetName !== assetName) {
             this.offset = {
-                left: this.figureSprite.x + 128 + 64 + 16,
-                top: this.figureSprite.y + 64
+                left: this.figureOffsets.left + 128 + 64 + 16,
+                top: this.figureOffsets.top + 64
             };
 
             if(this.item.figureRenderer.direction > 3 && this.item.figureRenderer.direction < 7) {

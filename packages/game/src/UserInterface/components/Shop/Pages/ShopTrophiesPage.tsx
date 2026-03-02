@@ -1,13 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import DialogPanel from "../../Dialog/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import { clientInstance, webSocketClient } from "../../../..";
-import { ShopPageFurnitureData } from "@Shared/Communications/Responses/Shop/ShopPageFurnitureEventData";
-import { PurchaseShopFurnitureEventData } from "@Shared/Communications/Requests/Shop/PurchaseShopFurnitureEventData";
-import { ShopFurniturePurchasedEventData } from "@Shared/Communications/Responses/Shop/ShopFurniturePurchasedEventData";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
@@ -15,6 +11,7 @@ import FurnitureImage from "../../Furniture/FurnitureImage";
 import TextArea from "../../Form/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
 import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
+import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -24,10 +21,10 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
 
     const activeFurnitureRef = useRef<HTMLCanvasElement>(null);
 
-    const [activeFurniture, setActiveFurniture] = useState<ShopPageFurnitureData>();
-    const [activeFilteredFurniture, setActiveFilteredFurniture] = useState<{ furniture: ShopPageFurnitureData; color: string; }[]>([]);
+    const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
+    const [activeFilteredFurniture, setActiveFilteredFurniture] = useState<{ furniture: ShopFurnitureData; color: string; }[]>([]);
 
-    const [filteredShopFurniture, setFilteredShopFurniture] = useState<ShopPageFurnitureData[]>([]);
+    const [filteredShopFurniture, setFilteredShopFurniture] = useState<ShopFurnitureData[]>([]);
     const [engraving, setEngraving] = useState("");
 
     useEffect(() => {
@@ -37,14 +34,14 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     }, [page, filteredShopFurniture]);
 
     useEffect(() => {
-        const filteredShopFurniture: ShopPageFurnitureData[] = [];
+        const filteredShopFurniture: ShopFurnitureData[] = [];
 
         for(const furniture of shopFurniture) {
-            if(filteredShopFurniture.some((filteredFurniture) => filteredFurniture.furniture.type === furniture.furniture.type)) {
+            if(filteredShopFurniture.some((filteredFurniture) => filteredFurniture.furniture?.type === furniture.furniture?.type)) {
                 continue;
             }
 
-            const filteredFurniture = shopFurniture.find((unfilteredFurniture) => unfilteredFurniture.furniture.type === furniture.furniture.type && unfilteredFurniture.furniture.color === 1) ?? furniture;
+            const filteredFurniture = shopFurniture.find((unfilteredFurniture) => unfilteredFurniture.furniture?.type === furniture.furniture?.type && unfilteredFurniture.furniture?.color === 1) ?? furniture;
 
             filteredShopFurniture.push(filteredFurniture);
         }
@@ -62,16 +59,16 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
         setActiveFilteredFurniture([]);
 
         Promise.all(shopFurniture
-            .filter((furniture) => furniture.furniture.type === activeFurniture.furniture.type)
-            .sort((a, b) => (a.furniture.color ?? 0) - (b.furniture.color ?? 0))
+            .filter((furniture) => furniture.furniture?.type === activeFurniture.furniture?.type)
+            .sort((a, b) => (a.furniture?.color ?? 0) - (b.furniture?.color ?? 0))
             .map(async (shopFurniture) => {
-                const furniture =  new Furniture(shopFurniture.furniture.type, 64, undefined, undefined, null);
+                const furniture =  new Furniture(shopFurniture.furniture?.type, 64, undefined, undefined, undefined);
 
                 await furniture.getData();
 
                 return {
                     furniture: shopFurniture,
-                    color: '#' + (furniture.getColor(shopFurniture.furniture.color ?? 0) ?? "FFFFFF")
+                    color: '#' + (furniture.getColor(shopFurniture.furniture?.color ?? 0) ?? "FFFFFF")
                 };
             }))
             .then(setActiveFilteredFurniture);
@@ -83,33 +80,36 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
         }
 
         // TODO: disable dialog
-        const listener = (event: WebSocketEvent<ShopFurniturePurchasedEventData>) => {
-            if(!event.data.success) {
-                return;
-            }
+        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
+            async handle(payload: ShopFurniturePurchaseData) {
+                if(!payload.success) {
+                    return;
+                }
 
-            if(activeFurnitureRef.current) {
-                clientInstance.flyingFurnitureIcons.value!.push({
-                    id: Math.random().toString(),
-                    furniture: activeFurniture.furniture,
-                    position: activeFurnitureRef.current.getBoundingClientRect(),
-                    targetElementId: "toolbar-inventory"
-                });
+                if(activeFurnitureRef.current && activeFurniture.furniture) {
+                    clientInstance.flyingFurnitureIcons.value!.push({
+                        id: Math.random().toString(),
+                        furniture: activeFurniture.furniture,
+                        position: activeFurnitureRef.current.getBoundingClientRect(),
+                        targetElementId: "toolbar-inventory"
+                    });
 
-                clientInstance.flyingFurnitureIcons.update();
-            }
-        };
-
-        webSocketClient.addEventListener<WebSocketEvent<ShopFurniturePurchasedEventData>>("ShopFurniturePurchasedEvent", listener, {
+                    clientInstance.flyingFurnitureIcons.update();
+                }
+            },
+        }, {
             once: true
         });
 
-        webSocketClient.send<PurchaseShopFurnitureEventData>("PurchaseShopFurnitureEvent", {
-            shopFurnitureId: activeFurniture.id,
+        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
+            id: activeFurniture.id,
+
             data: {
-                engraving
+                trophy: {
+                    engraving
+                }
             }
-        });
+        }));
     }, [activeFurniture, engraving, activeFurnitureRef]);
 
     return (
@@ -156,10 +156,10 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                         justifyContent: "space-between"
                     }}>
                         <div>
-                            <b>{activeFurniture.furniture.name}</b>
+                            <b>{activeFurniture.furniture?.name}</b>
 
-                            {(activeFurniture.furniture.description) && (
-                                <p style={{ fontSize: 12 }}>{activeFurniture.furniture.description}</p>
+                            {(activeFurniture.furniture?.description) && (
+                                <p style={{ fontSize: 12 }}>{activeFurniture.furniture?.description}</p>
                             )}
                         </div>
 
@@ -197,7 +197,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                         padding: 2
                     }}>
                         {activeFilteredFurniture.map((furniture) => (
-                            <div key={furniture.furniture.id} style={{
+                            <div key={furniture.furniture?.id} style={{
                                 border: "1px solid black",
                                 borderRadius: 3,
                                 cursor: "pointer"
@@ -207,11 +207,11 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                                     height: 30,
 
                                     border: "2px solid white",
-                                    borderWidth: (activeFurniture?.id === furniture.furniture.id)?(4):(2),
+                                    borderWidth: (activeFurniture?.id === furniture.furniture?.id)?(4):(2),
                                     borderRadius: 3,
                                     boxSizing: "border-box",
 
-                                    boxShadow: (activeFurniture?.id === furniture.furniture.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
+                                    boxShadow: (activeFurniture?.id === furniture.furniture?.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
 
                                     background: furniture.color ?? ""
                                 }}/>
@@ -238,8 +238,8 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
 
                             borderRadius: 5,
 
-                            border: (activeFurniture?.furniture.type === furniture.furniture.type)?("2px solid #62C4E8"):("2px solid transparent"),
-                            background: (activeFurniture?.furniture.type === furniture.furniture.type)?("#FFFFFF"):(undefined),
+                            border: (activeFurniture?.furniture?.type === furniture.furniture?.type)?("2px solid #62C4E8"):("2px solid transparent"),
+                            background: (activeFurniture?.furniture?.type === furniture.furniture?.type)?("#FFFFFF"):(undefined),
 
                             display: "flex",
                             justifyContent: "center",
@@ -254,7 +254,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                                 position: "relative"
                             }}>
                                 <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <FurnitureIcon ref={(activeFurniture?.furniture.type === furniture.furniture.type)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
+                                    <FurnitureIcon ref={(activeFurniture?.furniture?.type === furniture.furniture?.type)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
                                 </div>
 
                                 {(editMode) && (

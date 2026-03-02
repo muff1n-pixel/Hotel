@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message SetUserRoomChatStyleData {
+    string id = 1;
+}

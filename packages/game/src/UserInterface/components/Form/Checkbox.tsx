@@ -13,7 +13,9 @@ export default function Checkbox({ label, value, onChange }: CheckboxProps) {
             gap: 4,
 
             fontSize: 12,
-        }}>
+
+            cursor: "pointer"
+        }} onClick={() => onChange(value)}>
             <div style={{
                 border: "1px solid #808080",
                 
@@ -24,10 +26,8 @@ export default function Checkbox({ label, value, onChange }: CheckboxProps) {
 
                 padding: 1,
 
-                display: "flex",
-
-                cursor: "pointer"
-            }} onClick={() => onChange(!value)}>
+                display: "flex"
+            }}>
                 {(value) && (
                     <div style={{
                         flex: 1,

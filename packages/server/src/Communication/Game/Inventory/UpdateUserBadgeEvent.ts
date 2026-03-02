@@ -1,15 +1,15 @@
-import { UpdateUserBadgeEventData } from "@shared/Communications/Requests/Inventory/Badges/UpdateUserBadgeEventData.js";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeModel.js";
+import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { UpdateUserBadgeData } from "@pixel63/events";
 
-export default class UpdateUserBadgeEvent implements IncomingEvent<UpdateUserBadgeEventData> {
+export default class UpdateUserBadgeEvent implements ProtobuffListener<UpdateUserBadgeData> {
     public readonly name = "UpdateUserBadgeEvent";
 
-    async handle(user: User, event: UpdateUserBadgeEventData): Promise<void> {
+    async handle(user: User, payload: UpdateUserBadgeData): Promise<void> {
         const userBadge = await UserBadgeModel.findOne({
             where: {
-                id: event.badgeId,
+                id: payload.badgeId,
                 userId: user.model.id
             }
         });
@@ -25,11 +25,11 @@ export default class UpdateUserBadgeEvent implements IncomingEvent<UpdateUserBad
             }
         });
 
-        if(event.equipped && equippedBadgesCount === 6) {
+        if(payload.equipped && equippedBadgesCount === 6) {
             throw new Error("User already has 6 equipped badges.");
         }
 
-        userBadge.equipped = event.equipped;
+        userBadge.equipped = payload.equipped;
 
         if(userBadge.changed()) {
             await userBadge.save();

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "User/UserIdentifierData.proto";
+import "Bot/BotIdentifierData.proto";
+
+message RoomActorIdentifierData {
+    oneof actor {
+        UserIdentifierData user = 1;
+        BotIdentifierData bot = 2;
+    }
+}

@@ -86,7 +86,7 @@ export default function Reception() {
             }}>
                 <img src="/assets/reception/nov19_background_left.png"/>
 
-                {(user) && (
+                {(user.figureConfiguration) && (
                     <div style={{
                         position: "absolute",
                         left: 145,

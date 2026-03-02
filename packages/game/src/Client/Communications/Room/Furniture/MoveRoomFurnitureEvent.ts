@@ -1,17 +1,20 @@
-import IncomingEvent from "@Client/Communications/IncomingEvent";
-import { MoveRoomFurnitureEventData } from "@Shared/Communications/Responses/Rooms/Furniture/MoveRoomFurnitureEventData";
 import { clientInstance } from "../../../..";
-import WebSocketEvent from "@Shared/WebSocket/Events/WebSocketEvent";
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { RoomFurnitureMovedData } from "@pixel63/events";
 
-export default class MoveRoomFurnitureEvent implements IncomingEvent<WebSocketEvent<MoveRoomFurnitureEventData>> {
-    async handle(event: WebSocketEvent<MoveRoomFurnitureEventData>) {
+export default class RoomFurnitureMovedEvent implements ProtobuffListener<RoomFurnitureMovedData> {
+    async handle(payload: RoomFurnitureMovedData) {
         if(!clientInstance.roomInstance.value) {
             throw new Error("Room instance is not created.");
         }
 
-        const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(event.data.id);
+        if(!payload.position) {
+            return;
+        }
 
-        roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, event.data.position);
-        roomFurnitureItem.data.position = event.data.position;
+        const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(payload.id);
+
+        roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, payload.position);
+        roomFurnitureItem.data.position = payload.position;
     }
 }

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message BotSpeechData {
+    repeated string messages = 1;
+    bool automatic_chat = 2;
+    bool randomize_messages = 3;
+    uint32 automatic_chat_delay = 4;
+}

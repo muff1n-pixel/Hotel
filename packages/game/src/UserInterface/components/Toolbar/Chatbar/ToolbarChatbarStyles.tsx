@@ -1,6 +1,6 @@
+import { SetUserRoomChatStyleData } from "@pixel63/events";
 import { webSocketClient } from "../../../..";
 import { useRoomChatStyles } from "../../../hooks/useRoomChatStyles";
-import { SetRoomChatStyleEventData } from "@Shared/Communications/Requests/User/SetRoomChatStyleEventData";
 
 export type ToolbarChatbarStylesProps = {
     onClose: () => void;
@@ -27,17 +27,17 @@ export default function ToolbarChatbarStyles({ onClose }: ToolbarChatbarStylesPr
             padding: 6
         }}>
             {roomChatStyles?.map((roomChatStyle) => (
-                <div key={roomChatStyle.id} style={{
+                <div key={roomChatStyle} style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <img src={`/assets/room/chat/${roomChatStyle.id}_selector_preview_png.png`} style={{
+                    <img src={`/assets/room/chat/${roomChatStyle}_selector_preview_png.png`} style={{
                         cursor: "pointer"
                     }} onClick={() => {
-                        webSocketClient.send<SetRoomChatStyleEventData>("SetRoomChatStyleEvent", {
-                            id: roomChatStyle.id
-                        });
+                        webSocketClient.sendProtobuff(SetUserRoomChatStyleData, SetUserRoomChatStyleData.create({
+                            id: roomChatStyle
+                        }));
 
                         onClose();
                     }}/>

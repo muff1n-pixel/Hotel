@@ -1,11 +1,12 @@
-import { FigureConfiguration, FigurePartKeyAbbreviation } from "../Interfaces/Figure/FigureConfiguration.js";
+import { FigureConfigurationData } from "@pixel63/events";
 
 export default class FigureConfigurationHelper {
-    public static getConfigurationFromString(figureString: string): FigureConfiguration {
+    public static getConfigurationFromString(figureString: string): FigureConfigurationData {
         const parts = figureString.split('.');
 
         // TODO: guess gender from head part
-        const configuration: FigureConfiguration = {
+        const configuration: FigureConfigurationData = {
+            $type: "FigureConfigurationData",
             gender: "male",
             parts: []
         };
@@ -14,7 +15,8 @@ export default class FigureConfigurationHelper {
             const sections = part.split('-');
 
             configuration.parts.push({
-                type: sections[0] as FigurePartKeyAbbreviation,
+                $type: "FigurePartData",
+                type: sections[0] as string,
                 setId: sections[1] as string,
                 colors: (sections[2])?([parseInt(sections[2])]):([])
             });

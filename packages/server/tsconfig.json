@@ -9,7 +9,7 @@
 		"outDir": "build/",
 		"rootDir": "src/",
 		/* Specify what module code is generated. */
-		"module": "es2022",
+		"module": "commonjs",
 		/* Specify how TypeScript looks up a file from a given module specifier. */
 		"moduleResolution": "node",
 		"isolatedModules": true,

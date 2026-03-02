@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message WiredTriggerUserPerformsActionData {
+    string action = 1;
+    optional bool filter = 2;
+    optional uint32 filter_id = 3;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Room/Structure/RoomStructureDoorData.proto";
+import "Room/Structure/RoomStructureWallData.proto";
+import "Room/Structure/RoomStructureFloorData.proto";
+
+message RoomStructureData {
+    repeated string grid = 1;
+    
+    RoomStructureDoorData door = 2;
+    RoomStructureWallData wall = 3;
+    RoomStructureFloorData floor = 4;
+}

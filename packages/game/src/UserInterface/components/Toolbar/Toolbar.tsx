@@ -7,6 +7,7 @@ import { useDialogs } from "../../hooks/useDialogs";
 import ToolbarToggle from "./ToolbarToggle";
 import { useState } from "react";
 import { useUser } from "../../hooks/useUser";
+import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
 
 export default function Toolbar() {
     const user = useUser();
@@ -46,12 +47,12 @@ export default function Toolbar() {
 
                 {(!minimized) && (
                     (room)?(
-                        <ToolbarItem onClick={() => webSocketClient.send("LeaveRoomEvent", null)}>
+                        <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))}>
                             <div className="sprite_toolbar_logo"/>
                         </ToolbarItem>
                     ):(
                         (user?.homeRoomId) && (
-                            <ToolbarItem onClick={() => webSocketClient.send("EnterHomeRoomEvent", null)}>
+                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))}>
                                 <div className="sprite_toolbar_home"/>
                             </ToolbarItem>
                         )

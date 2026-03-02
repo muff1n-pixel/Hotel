@@ -5,6 +5,7 @@ import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRo
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
+import { RoomPositionData } from "@pixel63/events";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -36,6 +37,8 @@ export default class Furniture {
 
     public readonly renderer: FurnitureRenderer;
 
+    public grayscaled: boolean = false;
+
     public _animation: number = 0;
 
     public get animation() {
@@ -47,7 +50,19 @@ export default class Furniture {
         this.frame = 0;
     }
 
-    constructor(public readonly type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | null = null) {
+    public readonly type: string;
+
+    constructor(type: string | undefined, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
+        if(!type) {
+            throw new Error();
+        }
+
+        if(this.color === undefined) {
+            this.color = 0;
+        }
+
+        this.type = type;
+
         this.animation = animation;
 
         if((this.type === "wallpaper" || this.type === "floor") && color !== 0) {
@@ -88,7 +103,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame, this.grayscaled);
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
@@ -122,24 +137,24 @@ export default class Furniture {
     }
 
     getDimensions(raw: boolean = false) {
-        let result = { row: 0, column: 0, depth: 0 };
+        let result = RoomPositionData.create({ row: 0, column: 0, depth: 0 });
 
         if(!this.data) {
             return result;
         }
         
-        result = {
+        result = RoomPositionData.create({
             row: this.data.logic.model.dimensions.x,
             column: this.data.logic.model.dimensions.y,
             depth: this.data.logic.model.dimensions.z
-        };
+        });
 
         if(!raw && (this.direction === 0 || this.direction === 4)) {
-            result = {
+            result = RoomPositionData.create({
                 row: this.data.logic.model.dimensions.y,
                 column: this.data.logic.model.dimensions.x,
                 depth: this.data.logic.model.dimensions.z
-            };
+            });
         }
 
         return result;

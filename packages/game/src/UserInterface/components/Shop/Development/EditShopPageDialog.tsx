@@ -1,16 +1,15 @@
-import { ShopPageData } from "@Shared/Communications/Responses/Shop/ShopPagesEventData";
 import DialogButton from "../../Dialog/Button/DialogButton";
 import Dialog from "../../Dialog/Dialog";
 import DialogContent from "../../Dialog/DialogContent";
 import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { UpdateShopPageEventData } from "@Shared/Communications/Requests/Shop/Development/UpdateShopPageEventData";
 import { useDialogs } from "../../../hooks/useDialogs";
 import Selection from "../../Form/Selection";
+import { ShopPageData, UpdateShopPageData } from "@pixel63/events";
 
 export type EditShopPageDialogProps = {
-    data: ShopPageData & { parent?: ShopPageData; shopPages?: ShopPageData[]; } | null;
+    data: ShopPageData & { shopPages?: ShopPageData[]; } | null;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -25,11 +24,11 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [header, setHeader] = useState(data?.header ?? "");
     const [teaser, setTeaser] = useState(data?.teaser ?? "");
     const [index, setIndex] = useState(data?.index ?? 0);
-    const [parentId, setParentId] = useState(data?.parent?.id ?? null);
+    const [parentId, setParentId] = useState(data?.parentId);
 
     const handleUpdate = useCallback(() => {
-        webSocketClient.send<UpdateShopPageEventData>("UpdateShopPageEvent", {
-            id: data?.id ?? null,
+        webSocketClient.sendProtobuff(UpdateShopPageData, UpdateShopPageData.create({
+            id: data?.id,
 
             parentId,
 
@@ -45,10 +44,10 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
             teaser,
 
             index
-        });
+        }));
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, type, title, description, header, teaser, index]);
+    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
