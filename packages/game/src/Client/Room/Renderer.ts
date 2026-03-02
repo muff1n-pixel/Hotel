@@ -324,6 +324,10 @@ export default class RoomRenderer extends EventTarget {
 
             if(figureSprite) {
                 translatePosition.top += figureSprite.offset.top + 128;
+
+                if(figureSprite.item.figureRenderer.hasAction("Sit")) {
+                    translatePosition.top += 16;
+                }
             }
         }
 
