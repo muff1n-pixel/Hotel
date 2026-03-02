@@ -45,7 +45,7 @@ export function initializeUserModel(sequelize: Sequelize) {
         defaultValue: null
       },
       lastLogin: {
-        type: DataTypes.DATE || null,
+        type: DataTypes.DATE,
         allowNull: true,
         defaultValue: null
       },
