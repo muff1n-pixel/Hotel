@@ -46,7 +46,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
 
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
-                id: this.roomFurniture.model.data
+                id: this.roomFurniture.model.data?.teleport?.furnitureId
             },
             include: [
                 {
