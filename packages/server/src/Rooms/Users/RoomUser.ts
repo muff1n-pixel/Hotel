@@ -89,6 +89,8 @@ export default class RoomUser implements RoomActor {
 
             id: this.user.model.id,
             name: this.user.model.name,
+            motto: this.user.model.motto ?? undefined,
+
             figureConfiguration: this.user.model.figureConfiguration,
 
             position: this.position,
