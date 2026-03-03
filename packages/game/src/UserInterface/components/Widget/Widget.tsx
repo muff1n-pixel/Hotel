@@ -16,7 +16,7 @@ export default function Widget() {
             right: 14
         }}>
             <div style={{
-                border: "1px solid rgba(28, 28, 28, .75)",
+                border: "1px solid rgba(0, 0, 0, 0.64)",
                 borderTop: "none",
                 borderLeftWidth: 1,
                 borderRightWidth: 1,
@@ -25,9 +25,9 @@ export default function Widget() {
                 borderBottomRightRadius: 8,
             }}>
                 <div style={{
-                    border: "2px solid rgba(64, 64, 64, .75)",
+                    border: "2px solid rgba(102, 100, 94, 0.64)",
                     borderTop: "none",
-                    background: "rgba(28, 28, 26, .9)",
+                    background: "rgba(0, 0, 0, 0.64)",
 
                     borderBottomLeftRadius: 8,
                     borderBottomRightRadius: 8,
