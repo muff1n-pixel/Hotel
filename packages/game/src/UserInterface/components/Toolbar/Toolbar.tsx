@@ -25,71 +25,80 @@ export default function Toolbar() {
             bottom: 0,
 
             width: "100%",
-            height: 47,
 
-            background: "rgba(28, 28, 26, .9)",
+            display: "flex",
 
-            borderTop: "2px solid rgba(64, 64, 64, .75)",
-            borderBottom: "1px solid rgba(64, 64, 64, .75)",
-            
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            borderTop: "1px solid rgba(0, 0, 0, 0.64)",
 
             pointerEvents: "auto"
         }}>
             <div style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 14,
-                alignItems: "center"
-            }}>
-                <ToolbarToggle toggled={minimized} onToggle={setMinimized}/>
+                flex: 1,
+            
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
 
-                {(!minimized) && (
-                    (room)?(
-                        <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))}>
-                            <div className="sprite_toolbar_logo"/>
-                        </ToolbarItem>
-                    ):(
-                        (user?.homeRoomId) && (
-                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))}>
-                                <div className="sprite_toolbar_home"/>
+                height: 47,
+
+                background: "rgba(44, 42, 41, 0.64)",
+
+                borderTop: "2px solid rgba(102, 100, 94, 0.64)",
+                borderBottom: "1px solid rgba(102, 100, 94, 0.64)",
+            }}>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 14,
+                    alignItems: "center"
+                }}>
+                    <ToolbarToggle toggled={minimized} onToggle={setMinimized}/>
+
+                    {(!minimized) && (
+                        (room)?(
+                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))}>
+                                <div className="sprite_toolbar_logo"/>
                             </ToolbarItem>
+                        ):(
+                            (user?.homeRoomId) && (
+                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))}>
+                                    <div className="sprite_toolbar_home"/>
+                                </ToolbarItem>
+                            )
                         )
-                    )
-                )}
+                    )}
 
-                {(!minimized) && (
-                    <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
-                        <div className="sprite_toolbar_navigator"/>
+                    {(!minimized) && (
+                        <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
+                            <div className="sprite_toolbar_navigator"/>
+                        </ToolbarItem>
+                    )}
+
+                    <ToolbarItem onClick={() => addUniqueDialog("shop")}>
+                        <div className="sprite_toolbar_shop"/>
                     </ToolbarItem>
-                )}
 
-                <ToolbarItem onClick={() => addUniqueDialog("shop")}>
-                    <div className="sprite_toolbar_shop"/>
-                </ToolbarItem>
+                    {(room) && (
+                        <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
+                            <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
+                        </ToolbarItem>
+                    )}
 
-                {(room) && (
-                    <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
-                        <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
-                    </ToolbarItem>
-                )}
+                    {(room) && (
+                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")}>
+                            <ToolbarFigureItem/>
+                        </ToolbarItem>
+                    )}
+                </div>
 
-                {(room) && (
-                    <ToolbarItem onClick={() => addUniqueDialog("wardrobe")}>
-                        <ToolbarFigureItem/>
-                    </ToolbarItem>
-                )}
-            </div>
-
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }}>
-                {(room) && (
-                    <ToolbarChatbar/>
-                )}
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    {(room) && (
+                        <ToolbarChatbar/>
+                    )}
+                </div>
             </div>
         </div>
     );
