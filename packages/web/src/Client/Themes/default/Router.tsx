@@ -58,7 +58,7 @@ export const routes = [
     ]
   },
   {
-    path: "/article/:articleId?/:articleName?",
+    path: "/article/:articleDate?/:articleTitle?",
     element: <Layout />,
     children: [
       { index: true, element: <ArticlePage /> }, 

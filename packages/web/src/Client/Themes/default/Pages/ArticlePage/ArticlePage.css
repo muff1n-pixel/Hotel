@@ -45,6 +45,19 @@
                 .articleTitle {
                     font-size: 16px;
                     padding: 5px;
+                    height: 60px;
+                    line-height: 20px;
+                    word-break: break-all;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -moz-box-orient: vertical;
+                    -ms-box-orient: vertical;
+                    box-orient: vertical;
+                    -webkit-line-clamp: 3;
+                    -moz-line-clamp: 3;
+                    -ms-line-clamp: 3;
+                    line-clamp: 3;
+                    overflow: hidden;
                 }
 
                 .author {
@@ -82,8 +95,65 @@
     }
 
     .articleContent {
-        img {
-            max-width: 100%;
+        .content {
+            text-align: justify;
+
+            img {
+                max-width: 100%;
+            }
+        }
+
+        .footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            padding-top: 10px;
+            display: flex;
+            align-items: center;
+
+            .author {
+                display: flex;
+                align-items: center;
+
+                .avatar {
+                    position: relative;
+                    height: 60px;
+                    overflow: hidden;
+                    margin-right: 5px;
+                }
+
+                .data {
+                    .username {
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                    }
+
+                    .date {
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            .infos {
+                margin-left: auto;
+                font-weight: bold;
+
+                .row {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 5px;
+                    background-color: rgba(0, 0, 0, 0.1);
+                    padding: 5px 10px;
+                    border-radius: 8px;
+
+                    img {
+                        margin-right: 10px;
+                    }
+                }
+
+                .row:last-child {
+                    margin-bottom: 0;
+                }
+            }
         }
     }
 }

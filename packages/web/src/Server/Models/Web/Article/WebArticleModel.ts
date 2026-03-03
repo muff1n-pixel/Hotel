@@ -6,8 +6,9 @@ export class WebArticleModel extends Model {
     declare bannerUrl: string;
     declare title: string;
     declare content: string;
-
-    declare author: NonAttribute<UserModel>;
+    declare createdAt: Date;
+    declare updatedAt: Date;
+    declare authorId: NonAttribute<UserModel>;
 }
 
 export function initialize(sequelize: Sequelize) {
@@ -29,6 +30,14 @@ export function initialize(sequelize: Sequelize) {
                 type: DataTypes.TEXT,
                 allowNull: false,
             },
+            createdAt: {
+                type: DataTypes.DATE,
+                defaultValue: Date.now()
+            },
+            updatedAt: {
+                type: DataTypes.DATE,
+                defaultValue: Date.now()
+            }
         },
         {
             tableName: 'web_articles',

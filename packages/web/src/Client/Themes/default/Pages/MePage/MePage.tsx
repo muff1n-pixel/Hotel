@@ -9,7 +9,7 @@ import keyIcon from '../../Images/me/key.gif'
 import clockIcon from '../../Images/me/clock.gif'
 import discordIcon from '../../Images/me/discord.png'
 import diamondsIcon from '../../Images/me/diamonds.png'
-import NewsContainer from '../../Components/NewsContainer/NewsContainer';
+import ArticlesContainer from '../../Components/ArticleContainer/ArticleContainer';
 import UnknowUserImage from '../../Images/unknow_user.gif';
 import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
 
@@ -88,7 +88,7 @@ const MePage = () => {
                 </div>
 
                 <div className='grid_row'>
-                    <NewsContainer />
+                    <ArticlesContainer />
 
                     <div className='box'>
                         <div className='title red'>Title Box</div>
