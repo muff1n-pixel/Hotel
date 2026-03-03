@@ -9,6 +9,7 @@ import DialogItem from "../../Dialog/Item/DialogItem";
 import FigureImage from "../../Figure/FigureImage";
 import { useUser } from "../../../hooks/useUser";
 import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
+import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 
 export default function InventoryBotsTab() {
     const user = useUser();
@@ -140,34 +141,36 @@ export default function InventoryBotsTab() {
             display: "flex",
             flexDirection: "row"
         }}>
-            <div style={{
-                flex: 1,
+            <DialogScrollArea style={{ gap: 1 }} hideInactive>
+                <div style={{
+                    flex: 1,
 
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                alignContent: "start",
-                gap: 4,
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    alignContent: "start",
+                    gap: 4,
 
-                overflowY: "scroll"
-            }}>
-                {bots?.map((bot) => (
-                    <DialogItem
-                        key={bot.id}
-                        width={44}
-                        active={activeBot?.id === bot.id}
-                        onClick={() => setActiveBot(bot)}>
-                            <div style={{
-                                width: 40,
-                                height: 40
-                            }}>
-                                {bot.figureConfiguration && (
-                                    <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
-                                )}
-                            </div>
-                    </DialogItem>
-                ))}
-            </div>
+                    overflowY: "scroll"
+                }}>
+                    {bots?.map((bot) => (
+                        <DialogItem
+                            key={bot.id}
+                            width={44}
+                            active={activeBot?.id === bot.id}
+                            onClick={() => setActiveBot(bot)}>
+                                <div style={{
+                                    width: 40,
+                                    height: 40
+                                }}>
+                                    {bot.figureConfiguration && (
+                                        <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
+                                    )}
+                                </div>
+                        </DialogItem>
+                    ))}
+                </div>
+            </DialogScrollArea>
 
             <div style={{
                 width: 170,

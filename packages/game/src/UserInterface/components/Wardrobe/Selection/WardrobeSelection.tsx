@@ -5,6 +5,7 @@ import WardrobeSelectionColors from "./WardrobeSelectionColors";
 import FigureWardrobe, { FigureWardrobeColor, FigureWardrobeItem } from "@Client/Figure/Wardrobe/FigureWardrobe";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FigureConfigurationData } from "@pixel63/events";
+import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 
 export type WardrobeSelectionProps = {
     part: string;
@@ -46,12 +47,12 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
             flexDirection: "column",
             gap: 10,
 
-            width: 6 * 50,
+            width: (6 * 50) + 20,
         }}>
-            <div style={{
+            <DialogScrollArea style={{
+                flex: "unset",
                 height: 4 * 50,
-
-                overflowY: "overlay"
+                overflow: "hidden"
             }}>
                 <div style={{
                     display: "flex",
@@ -89,7 +90,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                         </WardrobeSelectionItem>
                     ))}
                 </div>
-            </div>
+            </DialogScrollArea>
 
             <div style={{
                 display: "flex",

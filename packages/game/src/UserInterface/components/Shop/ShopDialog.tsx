@@ -79,7 +79,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
     }, [activeIndex, shopPages]);
 
     return (
-        <Dialog title="Shop" hidden={hidden} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={570} height={670}>
+        <Dialog title="Shop" hidden={hidden} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={580} height={670}>
             <DialogTabs index={activeIndex} onChange={setActiveIndex} header={header} withLargeTabs tabs={[
                 {
                     icon: "Frontpage",

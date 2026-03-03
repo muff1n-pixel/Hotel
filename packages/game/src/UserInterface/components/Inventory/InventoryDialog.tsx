@@ -12,7 +12,7 @@ export type InventoryDialogProps = {
 
 export default function InventoryDialog({ hidden, onClose }: InventoryDialogProps) {
     return (
-        <Dialog title="Inventory" width={490} height={340} hidden={hidden} onClose={onClose}>
+        <Dialog title="Inventory" width={500} height={340} hidden={hidden} onClose={onClose}>
             <DialogTabs withoutHeader tabs={[
                 {
                     icon: "Furniture",

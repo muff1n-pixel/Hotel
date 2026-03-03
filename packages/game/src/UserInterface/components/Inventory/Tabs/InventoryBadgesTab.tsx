@@ -4,6 +4,7 @@ import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import BadgeImage from "../../Badges/BadgeImage";
 import { GetUserInventoryBadgesData, UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
+import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
@@ -76,51 +77,53 @@ export default function InventoryBadgesTab() {
                 flexDirection: "row",
                 gap: 20
             }}>
-                <div style={{
-                    flex: 1,
+                <DialogScrollArea style={{ gap: 1 }} hideInactive>
+                    <div style={{
+                        flex: 1,
 
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    alignContent: "start",
-                    gap: 4,
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        alignContent: "start",
+                        gap: 4,
 
-                    overflowY: "scroll"
-                }}>
-                    {userBadges?.filter((userBadge) => !userBadge.equipped).map((userBadge) => (
-                        <div key={userBadge.id} style={{
-                            display: "flex",
+                        overflowY: "scroll"
+                    }}>
+                        {userBadges?.filter((userBadge) => !userBadge.equipped).map((userBadge) => (
+                            <div key={userBadge.id} style={{
+                                display: "flex",
 
-                            width: 44,
-                            height: 44,
+                                width: 44,
+                                height: 44,
 
 
-                            border: "1px solid black",
-                            borderRadius: 6,
-
-                            cursor: "pointer",
-
-                            position: "relative"
-                        }} onClick={() => setActiveBadge(userBadge)}>
-                            <div style={{
-                                flex: 1,
-
-                                border: (activeBadge?.id === userBadge.id)?("2px solid white"):("2px solid transparent"),
+                                border: "1px solid black",
                                 borderRadius: 6,
 
-                                boxSizing: "border-box",
+                                cursor: "pointer",
 
-                                background: "#CBCBCB",
+                                position: "relative"
+                            }} onClick={() => setActiveBadge(userBadge)}>
+                                <div style={{
+                                    flex: 1,
 
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                <BadgeImage badge={userBadge.badge}/>
+                                    border: (activeBadge?.id === userBadge.id)?("2px solid white"):("2px solid transparent"),
+                                    borderRadius: 6,
+
+                                    boxSizing: "border-box",
+
+                                    background: "#CBCBCB",
+
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <BadgeImage badge={userBadge.badge}/>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                </DialogScrollArea>
 
                 <div style={{
                     width: 44 + 44 + 8,

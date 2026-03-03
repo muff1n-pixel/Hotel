@@ -11,6 +11,7 @@ import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -236,117 +237,120 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             </div>
 
             <DialogPanel style={{ flex: "1 1 0", overflow: "hidden" }} contentStyle={{ display: "flex", flex: 1 }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    
-                    padding: 4,
-                    overflowY: "scroll"
-                }}>
-                    {shopFurniture.map((furniture) => (
-                        <div key={furniture.id} style={{
-                            width: 53,
-                            height: 62,
-                            boxSizing: "border-box",
+                <DialogScrollArea hideInactive>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        
+                        padding: 4,
+                        paddingRight: 0,
+                        overflowY: "scroll"
+                    }}>
+                        {shopFurniture.map((furniture) => (
+                            <div key={furniture.id} style={{
+                                width: 53,
+                                height: 62,
+                                boxSizing: "border-box",
 
-                            borderRadius: 5,
+                                borderRadius: 5,
 
-                            border: (activeFurniture?.id === furniture.id)?("2px solid #62C4E8"):("2px solid transparent"),
-                            background: (activeFurniture?.id === furniture.id)?("#FFFFFF"):(undefined),
+                                border: (activeFurniture?.id === furniture.id)?("2px solid #62C4E8"):("2px solid transparent"),
+                                background: (activeFurniture?.id === furniture.id)?("#FFFFFF"):(undefined),
 
-                            display: "flex",
-                            justifyContent: "center",
+                                display: "flex",
+                                justifyContent: "center",
 
-                            cursor: "pointer"
-                        }} onClick={() => (activeFurniture?.id !== furniture.id) && setActiveFurniture(furniture)}>
-                            <div style={{
-                                flex: 1,
-                                alignSelf: "center",
-                                justifySelf: "center",
+                                cursor: "pointer"
+                            }} onClick={() => (activeFurniture?.id !== furniture.id) && setActiveFurniture(furniture)}>
+                                <div style={{
+                                    flex: 1,
+                                    alignSelf: "center",
+                                    justifySelf: "center",
 
-                                position: "relative"
-                            }}>
-                                <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={() => onMouseDown(furniture)}>
-                                    <FurnitureIcon ref={(activeFurniture?.id === furniture.id)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
+                                    position: "relative"
+                                }}>
+                                    <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={() => onMouseDown(furniture)}>
+                                        <FurnitureIcon ref={(activeFurniture?.id === furniture.id)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
+                                    </div>
+
+                                    {(furniture.credits) && (
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 2,
+                                            alignItems: "flex-end",
+                                            justifyContent: "flex-end",
+                                            padding: 2,
+                                        }}>
+                                            <b>{furniture.credits}</b>
+
+                                            <div className="sprite_currencies_credits-small"/>
+                                        </div>
+                                    )}
+
+                                    {(furniture.duckets) && (
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 2,
+                                            alignItems: "flex-end",
+                                            justifyContent: "flex-end",
+                                            padding: 2,
+                                        }}>
+                                            <b>{furniture.duckets}</b>
+
+                                            <div className="sprite_currencies_duckets-small"/>
+                                        </div>
+                                    )}
+
+                                    {(furniture.diamonds) && (
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 2,
+                                            alignItems: "flex-end",
+                                            justifyContent: "flex-end",
+                                            padding: 2,
+                                        }}>
+                                            <b>{furniture.diamonds}</b>
+
+                                            <div className="sprite_currencies_diamonds-small"/>
+                                        </div>
+                                    )}
+
+                                    {(editMode) && (
+                                        <div style={{
+                                            position: "absolute",
+                                            top: -10,
+                                            right: -6,
+                                            cursor: "pointer"
+                                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { ...furniture, page: page })}>
+                                            <div className="sprite_room_user_motto_pen"/>
+                                        </div>
+                                    )}
                                 </div>
-
-                                {(furniture.credits) && (
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 2,
-                                        alignItems: "flex-end",
-                                        justifyContent: "flex-end",
-                                        padding: 2,
-                                    }}>
-                                        <b>{furniture.credits}</b>
-
-                                        <div className="sprite_currencies_credits-small"/>
-                                    </div>
-                                )}
-
-                                {(furniture.duckets) && (
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 2,
-                                        alignItems: "flex-end",
-                                        justifyContent: "flex-end",
-                                        padding: 2,
-                                    }}>
-                                        <b>{furniture.duckets}</b>
-
-                                        <div className="sprite_currencies_duckets-small"/>
-                                    </div>
-                                )}
-
-                                {(furniture.diamonds) && (
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 2,
-                                        alignItems: "flex-end",
-                                        justifyContent: "flex-end",
-                                        padding: 2,
-                                    }}>
-                                        <b>{furniture.diamonds}</b>
-
-                                        <div className="sprite_currencies_diamonds-small"/>
-                                    </div>
-                                )}
-
-                                {(editMode) && (
-                                    <div style={{
-                                        position: "absolute",
-                                        top: -10,
-                                        right: -6,
-                                        cursor: "pointer"
-                                    }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { ...furniture, page: page })}>
-                                        <div className="sprite_room_user_motto_pen"/>
-                                    </div>
-                                )}
                             </div>
-                        </div>
-                    ))}
+                        ))}
 
-                    {(editMode) && (
-                        <div style={{
-                            width: 53,
-                            height: 62,
+                        {(editMode) && (
+                            <div style={{
+                                width: 53,
+                                height: 62,
 
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
 
-                            cursor: "pointer"
-                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { page })}>
-                            <div className="sprite_add" style={{
-                                marginTop: -8
-                            }}/>
-                        </div>
-                    )}
-                </div>
+                                cursor: "pointer"
+                            }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { page })}>
+                                <div className="sprite_add" style={{
+                                    marginTop: -8
+                                }}/>
+                            </div>
+                        )}
+                    </div>
+                </DialogScrollArea>
             </DialogPanel>
 
             <div style={{

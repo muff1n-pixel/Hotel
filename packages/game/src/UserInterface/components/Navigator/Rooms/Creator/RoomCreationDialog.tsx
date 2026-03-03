@@ -10,6 +10,7 @@ import { useDialogs } from "../../../../hooks/useDialogs";
 import { useRoomCategories } from "../../../../hooks/useRoomCategories";
 import Selection from "../../../Form/Selection";
 import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
+import DialogScrollArea from "../../../Dialog/Scroll/DialogScrollArea";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -69,7 +70,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
-        <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={580} height={360}>
+        <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={600} height={360}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -123,6 +124,8 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                     </div>
 
                     <div style={{
+                        flex: 1,
+
                         display: "flex",
                         flexDirection: "column",
                         gap: 10
@@ -131,49 +134,50 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                             <b>Choose room layout</b>
                         </div>
 
-                        <div style={{
-                            flex: "1 1 0",
-                            overflowY: "scroll",
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: 10
-                        }}>
-                            {roomMaps.map((roomMap) => (
-                                <div key={roomMap.id} style={{
-                                    width: 135,
-                                    height: 96,
+                        <DialogScrollArea>
+                            <div style={{
+                                flex: "1 1 0",
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr",
+                                gap: 10
+                            }}>
+                                {roomMaps.map((roomMap) => (
+                                    <div key={roomMap.id} style={{
+                                        width: 135,
+                                        height: 96,
 
-                                    border: "1px solid #5D5D5A",
-                                    background: (activeRoomMap?.id === roomMap.id)?("#6E8184"):("#CBCBCB"),
+                                        border: "1px solid #5D5D5A",
+                                        background: (activeRoomMap?.id === roomMap.id)?("#6E8184"):("#CBCBCB"),
 
-                                    borderRadius: 6,
-                                    overflow: "hidden",
+                                        borderRadius: 6,
+                                        overflow: "hidden",
 
-                                    position: "relative",
+                                        position: "relative",
 
-                                    cursor: "pointer",
+                                        cursor: "pointer",
 
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }} onClick={() => setActiveRoomMap(roomMap)}>
-                                    <RoomMapImage crop={true} width={135} height={96} style={{
-                                    }} structure={RoomStructureData.create({
-                                        grid: roomMap.grid,
-                                        door: roomMap.door,
-                                        floor: {
-                                            id: "preview",
-                                            thickness: 0
-                                        },
-                                        wall: {
-                                            id: "preview",
-                                            thickness: 0,
-                                            hidden: false
-                                        }
-                                    })} leftWallColor={["D48612"]}/>
-                                </div>
-                            ))}
-                        </div>
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }} onClick={() => setActiveRoomMap(roomMap)}>
+                                        <RoomMapImage crop={true} width={135} height={96} style={{
+                                        }} structure={RoomStructureData.create({
+                                            grid: roomMap.grid,
+                                            door: roomMap.door,
+                                            floor: {
+                                                id: "preview",
+                                                thickness: 0
+                                            },
+                                            wall: {
+                                                id: "preview",
+                                                thickness: 0,
+                                                hidden: false
+                                            }
+                                        })} leftWallColor={["D48612"]}/>
+                                    </div>
+                                ))}
+                            </div>
+                        </DialogScrollArea>
                     </div>
                 </div>
             </DialogContent>

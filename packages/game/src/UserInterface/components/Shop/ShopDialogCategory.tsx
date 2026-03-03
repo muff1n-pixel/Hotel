@@ -1,11 +1,11 @@
 import DialogPanel from "../Dialog/Panels/DialogPanel";
-import DialogPanelList from "../Dialog/Panels/DialogPanelList";
 import { useCallback, useEffect } from "react";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import { useDialogs } from "../../hooks/useDialogs";
 import ShopPagesList from "./ShopPagesList";
 import { ShopPageData } from "@pixel63/events";
+import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";
 
 export type ShopDialogCategoryProps = {
     editMode?: boolean;
@@ -59,15 +59,16 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
     return (
         <div style={{
             flex: "1 1 0",
-            overflow: "hidden",
 
             display: "flex",
-            gap: 10
+            gap: 10,
+
+            overflow: "hidden"
         }}>
             {(activeShopPage?.type !== "features") && (
-                <div style={{ display: "flex", width: 180 }}>
-                    <DialogPanel style={{ flex: 1, overflowY: "scroll" }}>
-                        <DialogPanelList>
+                <div style={{ display: "flex", width: 190 }}>
+                    <DialogPanel style={{ flex: 1 }} contentStyle={{ display: "flex" }}>
+                        <DialogScrollArea style={{ gap: 1 }} hideInactive>
                             <ShopPagesList tabs={0} parentId={undefined} editMode={editMode} handleCreatePage={handleCreatePage} handleEditPage={handleEditPage} shopPages={shopPages} activeShopPage={activeShopPage} onPageChange={setActiveShopPage}/>
 
                             {(editMode) && (
@@ -82,7 +83,7 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
                                     }} onClick={() => handleCreatePage()}/>
                                 </div>
                             )}
-                        </DialogPanelList>
+                        </DialogScrollArea>
                     </DialogPanel>
                 </div>
             )}

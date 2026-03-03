@@ -96,7 +96,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
     }
     
     return (
-        <Dialog title={title} hidden={hidden} onClose={onClose} width={500} height={530}>
+        <Dialog title={title} hidden={hidden} onClose={onClose} width={520} height={530}>
             <DialogTabs initialActiveIndex={0} header={{ title: header }} tabs={[
                 {
                     icon: (<div className="sprite_wardrobe_generic_tab"/>),

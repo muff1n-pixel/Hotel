@@ -9,6 +9,7 @@ import { useRoomInstance } from "../../../hooks/useRoomInstance";
 import { useDialogs } from "../../../hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
 import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
+import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
@@ -157,47 +158,49 @@ export default function InventoryFurnitureTab() {
             overflow: "hidden",
 
             display: "flex",
-            flexDirection: "row"
+            flexDirection: "row",
+
+            gap: 10
         }}>
-            <div style={{
-                flex: 1,
+            <DialogScrollArea style={{ gap: 1 }} hideInactive>
+                <div style={{
+                    flex: 1,
 
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                alignContent: "start",
-                gap: 4,
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    alignContent: "start",
+                    gap: 4
+                }}>
+                    {userFurniture?.map((userFurniture) => (
+                        <DialogItem
+                            key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
+                            active={activeFurniture?.id === userFurniture.id}
+                            onClick={() => setActiveFurniture(userFurniture)}>
+                                <FurnitureIcon furnitureData={userFurniture.furniture}/>
 
-                overflowY: "scroll"
-            }}>
-                {userFurniture?.map((userFurniture) => (
-                    <DialogItem
-                        key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
-                        active={activeFurniture?.id === userFurniture.id}
-                        onClick={() => setActiveFurniture(userFurniture)}>
-                            <FurnitureIcon furnitureData={userFurniture.furniture}/>
+                                {(userFurniture.quantity > 1) && (
+                                    <div style={{
+                                        position: "absolute",
 
-                            {(userFurniture.quantity > 1) && (
-                                <div style={{
-                                    position: "absolute",
+                                        right: 2,
+                                        top: 2,
 
-                                    right: 2,
-                                    top: 2,
+                                        border: "1px solid #2F6982",
+                                        background: "#FFF",
+                                        color: "#306A83",
 
-                                    border: "1px solid #2F6982",
-                                    background: "#FFF",
-                                    color: "#306A83",
+                                        fontSize: 10,
 
-                                    fontSize: 10,
-
-                                    padding: "0px 2px"
-                                }}>
-                                    {userFurniture.quantity}
-                                </div>
-                            )}
-                    </DialogItem>
-                ))}
-            </div>
+                                        padding: "0px 2px"
+                                    }}>
+                                        {userFurniture.quantity}
+                                    </div>
+                                )}
+                        </DialogItem>
+                    ))}
+                </div>
+            </DialogScrollArea>
 
             <div style={{
                 width: 170,

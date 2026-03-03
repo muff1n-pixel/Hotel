@@ -21,7 +21,7 @@ export default class Performance {
         const duration = endTimestamp - this.performanceChecks[label].startTimestamp;
 
         if(duration > this.performanceChecks[label].minimumDurationInMilliseconds) {
-            console.warn(`Performance check "${label}" exceeded ${this.performanceChecks[label].minimumDurationInMilliseconds}ms: ${duration.toFixed(2)}`);
+            //console.warn(`Performance check "${label}" exceeded ${this.performanceChecks[label].minimumDurationInMilliseconds}ms: ${duration.toFixed(2)}`);
         }
 
         delete this.performanceChecks[label];
