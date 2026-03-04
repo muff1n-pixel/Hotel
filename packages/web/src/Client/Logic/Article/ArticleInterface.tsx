@@ -11,5 +11,6 @@ export interface ArticleInterface {
     content: string,
     createdAt: Date,
     updatedAt: Date,
-    author: null | Author
+    author: null | Author,
+    likes: Array<string>
 }

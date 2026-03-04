@@ -1,18 +1,22 @@
 import { Router } from "express";
-import Sequelize, { and } from 'sequelize';
 import { UserModel } from "../../Models/Users/UserModel";
 import { WebArticleModel } from "../../Models/Web/Article/WebArticleModel";
+import { WebArticleLikeModel } from "../../Models/Web/Article/Like/WebArticleLikeModel";
 
 const router = Router();
 
 router.post("/", async (req, res) => {
-    let limit = req.body.limit;
+    let limit = req.body.limit,
+        skip = req.body.skip;
 
     if (limit) {
         if (isNaN(parseInt(limit)) || parseInt(limit) > 50)
             limit = 10;
 
+        const totalArticles = await WebArticleModel.findAndCountAll();
+
         const lastArticles = await WebArticleModel.findAll({
+            offset: (!isNaN(parseInt(skip)) && parseInt(skip) > 0) ? parseInt(skip) : 0,
             order: [['createdAt', 'DESC']],
             limit: parseInt(limit)
         });
@@ -45,7 +49,10 @@ router.post("/", async (req, res) => {
             })
         };
 
-        return res.json(articles);
+        return res.json({
+            totalArticles: totalArticles.count,
+            articles: articles
+        });
     }
     else {
         const date = req.body.date,
@@ -83,6 +90,17 @@ router.post("/", async (req, res) => {
             }
         }
 
+        const articlesLikes = await WebArticleLikeModel.findAll({
+            where: {
+                articleId: article.id
+            }
+        });
+
+        const likes: Array<string> = [];
+        articlesLikes.forEach((articleLike) => {
+            likes.push(articleLike.userId);
+        })
+
         return res.json({
             id: article.id,
             bannerUrl: article.bannerUrl,
@@ -90,7 +108,8 @@ router.post("/", async (req, res) => {
             content: article.content,
             createdAt: article.createdAt,
             updateAt: article.updatedAt,
-            author: author
+            author: author,
+            likes: likes
         });
     }
 });

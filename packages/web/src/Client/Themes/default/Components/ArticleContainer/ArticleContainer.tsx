@@ -23,7 +23,7 @@ const ArticleContainer = () => {
         })
             .then((response) => response.json())
             .then((result) => {
-                setArticles(result);
+                setArticles(result.articles);
                 setLoading(false);
             })
             .catch((e) => {

@@ -1,47 +1,62 @@
 import './ArticlePage.css'
 import articleIcon from '../../Images/articles/articleIcon.gif'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ArticleInterface } from '@client/Logic/Article/ArticleInterface'
 import { useNavigate, useParams } from 'react-router'
 import Loading from '../../Components/Loading/Loading'
 import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
 import UnknowUserImage from '../../Images/unknow_user.gif';
-import likeIcon from '../../Images/icons/small/like.gif';
+import likeIcon from '../../Images/icons/small/favorite.gif';
+import likeInactiveIcon from '../../Images/icons/small/favorite_inactive.gif';
 import commentIcon from '../../Images/icons/small/comment.gif';
+import arrowRight from '../../Images/icons/medium/arrow_right.gif';
+import { ThemeContext } from '../../ThemeProvider'
 
 const ArticlePage = () => {
+    const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const navigate = useNavigate();
     const { articleDate, articleTitle } = useParams();
+    const fetchArticleLimit = 5;
+    const [totalArticles, setTotalArticles] = useState<number>(0);
     const [lastArticles, setLastArticles] = useState<Array<ArticleInterface>>([]);
     const [lastArticlesLoading, setLastArticlesLoading] = useState<boolean>(true);
+
     const [articleData, setArticleData] = useState<null | ArticleInterface>(null);
     const [articleDataLoading, setArticleDataLoading] = useState<boolean>(true);
     const [articleAuthorAvatar, setArticleAuthorAvatar] = useState<string | Base64URLString>(UnknowUserImage);
 
-    useEffect(() => {
+    const fetchLastArticles = () => {
+        setLastArticlesLoading(true);
+
         fetch("/api/articles", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                limit: 10,
+                limit: fetchArticleLimit,
+                skip: lastArticles.length
             })
         })
             .then((response) => response.json())
             .then((result) => {
-                if (result.length === 0)
+                if (lastArticles.length === 0 && result.length === 0)
                     return navigate("/me");
 
-                setLastArticles(result);
+                setTotalArticles(result.totalArticles);
+                setLastArticles(lastArticles.concat(result.articles));
                 setLastArticlesLoading(false);
 
                 if (!articleDate || !articleTitle)
-                    return navigate(`/article/${new Date(result[0].createdAt).getTime()}/${encodeURI(result[0].title)}`);
+                    return navigate(`/article/${new Date(result.articles[0].createdAt).getTime()}/${encodeURI(result.articles[0].title)}`);
             })
             .catch((e) => {
                 console.log("(Error) Impossible to fetch lasts articles:", e)
             })
+    }
+
+    useEffect(() => {
+        fetchLastArticles();
     }, []);
 
     useEffect(() => {
@@ -84,11 +99,37 @@ const ArticlePage = () => {
             })
     }, [navigate])
 
+    const toggleLike = () => {
+        if(!articleData || !currentUser)
+            return;
+
+        fetch("/api/articles/like", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                articleId: articleData.id
+            })
+        })
+            .then((response) => response.json())
+            .then((result) => {                
+                if(result.error)
+                    console.log("(Error) Can't like article:", result.error)
+                else {
+                    setArticleData({...articleData, likes: result})
+                }
+            })
+            .catch((e) => {
+                console.log("(Error) Can't like article:", e)
+            })
+    }
+
     return (
         <div className="articlePage resize">
             <div className='grid first_medium'>
                 <div className='grid_row'>
-                    {lastArticlesLoading ?
+                    {lastArticlesLoading && lastArticles.length === 0 ?
                         <Loading />
                         :
                         <div className='articleList'>
@@ -108,6 +149,9 @@ const ArticlePage = () => {
                                     </div>
                                 )
                             })}
+
+                            {totalArticles > lastArticles.length && !lastArticlesLoading && <button className='loadMore' onClick={() => fetchLastArticles()}><img src={arrowRight} alt="Arrow Right" /> Load more</button>}
+                            {lastArticlesLoading && <Loading />}
                         </div>
                     }
                 </div>
@@ -136,7 +180,7 @@ const ArticlePage = () => {
                                         }
 
                                         <div className='infos'>
-                                            <div className='row'><img src={likeIcon} alt="Like Icon" /> 0</div>
+                                            <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !articleData.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon"/> {articleData.likes.length}</div>
                                             <div className='row'><img src={commentIcon} alt="Comment Icon" /> 0</div>
                                         </div>
                                     </div>

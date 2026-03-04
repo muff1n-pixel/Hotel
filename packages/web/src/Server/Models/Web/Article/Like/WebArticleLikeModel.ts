@@ -4,6 +4,8 @@ import { WebArticleModel } from "../WebArticleModel";
 
 export class WebArticleLikeModel extends Model {
     declare id: string;
+    declare articleId: string;
+    declare userId: string;
 }
 
 export function initialize(sequelize: Sequelize) {
