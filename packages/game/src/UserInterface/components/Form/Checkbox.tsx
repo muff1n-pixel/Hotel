@@ -15,7 +15,7 @@ export default function Checkbox({ label, value, onChange }: CheckboxProps) {
             fontSize: 12,
 
             cursor: "pointer"
-        }} onClick={() => onChange(value)}>
+        }} onClick={() => onChange(!value)}>
             <div style={{
                 border: "1px solid #808080",
                 
