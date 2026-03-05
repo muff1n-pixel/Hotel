@@ -1,8 +1,8 @@
-import { initializeModels, recreateShop, resetDatabase } from "./Database/Database";
-import Game from "./Game";
-import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData";
-import { recreateShopPages } from "./Database/Development/ShopDevelopmentData";
-import InitializerManager from "./Initializer/InitializerManager";
+import { initializeModels, recreateShop } from "./Database/Database.js";
+import Game from "./Workers/Game.js";
+import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData.js";
+import { recreateShopPages } from "./Database/Development/ShopDevelopmentData.js";
+import InitializerManager from "./Initializer/InitializerManager.js";
 
 let game: Game;
 

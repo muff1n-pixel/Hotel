@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Hotel/Feedback/HotelFeedbackData.proto";
+
+message HotelFeedbackCollectionData {
+    repeated HotelFeedbackData feedback = 1; 
+}

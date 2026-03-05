@@ -1,5 +1,7 @@
 {
   "type": "module",
+  "name": "@pixel64/shared",
+  "main": "build/index.js",
   "composite": true,
   "scripts": {
     "start": "npm run watch",

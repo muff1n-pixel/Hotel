@@ -118,12 +118,6 @@ export default class WebSocket {
                 await game.hotelInformation.updateUsersCount();
             });
 
-            if(user.model.homeRoomId) {
-                const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
-
-                room?.addUserClient(user);
-            }
-
             const userBadgesCount = await UserBadgeModel.count({
                 where: {
                     userId: user.model.id
@@ -152,6 +146,10 @@ export default class WebSocket {
                         equipped: false
                     };
                 }));
+            }
+
+            if(user.model.homeRoomId) {
+                await game.roomManager.addUserToRoom(user, user.model.homeRoomId);
             }
 
             await game.hotelInformation.updateUsersCount();

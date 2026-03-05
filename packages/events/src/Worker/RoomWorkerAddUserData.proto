@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message RoomWorkerAddUserData {
+    string room_id = 1;
+    string user_id = 2;
+}

@@ -12,15 +12,7 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
 
             roomUser.disconnect();
         }
-        
-        const roomInstance = await game.roomManager.getOrLoadRoomInstance(payload.id);
 
-        if(!roomInstance) {
-            console.error("Room does not exist.");
-
-            return;
-        }
-
-        roomInstance.addUserClient(user);
+        await game.roomManager.addUserToRoom(user, payload.id);
     }
 }

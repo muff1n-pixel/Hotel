@@ -1,10 +1,8 @@
 import { HotelFeedbackModel } from "../../../Database/Models/Hotel/HotelFeedbackModel.js";
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
-import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { GetHotelFeedbackData } from "@pixel63/events";
+import { GetHotelFeedbackData, HotelFeedbackCollectionData } from "@pixel63/events";
 
 export default class GetHotelFeedbackEvent implements ProtobuffListener<GetHotelFeedbackData> {
     public readonly name = "GetHotelFeedbackEvent";

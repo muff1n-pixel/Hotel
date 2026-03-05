@@ -74,29 +74,14 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             return;
         }
 
-        const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
 
-        if(!targetRoom) {
-            console.warn("Target room does not exist.");
-            
-            return;
-        }
-
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
-
-        if(!targetFurniture) {
-            console.warn("Target room furniture is not loaded.");
-            
-            return;
-        }
-
-        if(roomUser.room.model.id !== targetRoom.model.id) {
+        if(roomUser.room.model.id !== targetUserFurniture.room.id) {
             roomUser.disconnect();
-            
-            roomUser = targetRoom.addUserClient(roomUser.user, targetFurniture.model.position);
+
+            await game.roomManager.addUserToRoom(roomUser.user, targetUserFurniture.room.id);
         }
 
-        await targetFurniture.setAnimation(2);
+        /*await targetFurniture.setAnimation(2);
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -117,7 +102,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             roomUser.path.walkTo(targetOffsetPosition, undefined, resolve, reject);
         });
 
-        await targetFurniture.setAnimation(0);
+        await targetFurniture.setAnimation(0);*/
     }
 
     async handleActionsInterval(): Promise<void> {

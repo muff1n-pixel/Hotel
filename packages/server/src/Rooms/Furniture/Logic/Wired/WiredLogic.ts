@@ -1,6 +1,6 @@
-import RoomFurnitureLogic, { RoomFurnitureHandleUserChatResult } from "../Interfaces/RoomFurnitureLogic";
-import RoomFurniture from "../../RoomFurniture";
-import RoomUser from "../../../Users/RoomUser";
+import RoomFurnitureLogic, { RoomFurnitureHandleUserChatResult } from "../Interfaces/RoomFurnitureLogic.js";
+import RoomFurniture from "../../RoomFurniture.js";
+import RoomUser from "../../../Users/RoomUser.js";
 
 export type WiredTriggerOptions = {
     roomUser?: RoomUser;

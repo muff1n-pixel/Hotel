@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message RoomWorkerLoadedData {
+    string room_id = 1;
+}

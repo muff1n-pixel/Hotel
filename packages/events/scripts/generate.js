@@ -1,11 +1,11 @@
 const { execSync } = require("child_process");
-const { readdirSync, writeFileSync, statSync } = require("fs");
+const { readdirSync, writeFileSync, statSync, existsSync, mkdirSync } = require("fs");
 const path = require("path");
 const { join, resolve, relative } = require("path");
 
 const ROOT = process.cwd();
 const SRC_DIR = resolve(ROOT, "src");
-const OUT_DIR = resolve(ROOT, "build");
+const OUT_DIR = resolve(ROOT, "generated");
 
 function findProtoFiles(dir) {
   const entries = readdirSync(dir);
@@ -35,6 +35,12 @@ if (protoFiles.length === 0) {
 const relativeProtoFiles = protoFiles.map(file =>
   relative(ROOT, file)
 );
+
+if(!existsSync(OUT_DIR)) {
+  mkdirSync(OUT_DIR, {
+    recursive: true
+  });
+}
 
 const command = [
   `protoc`,

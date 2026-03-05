@@ -1,4 +1,4 @@
-import { PermissionAction } from "@shared/Interfaces/Permissions/PermissionMap";
+import { PermissionAction } from "@pixel63/shared/Interfaces/Permissions/PermissionMap";
 import { QueryInterface, Op } from "sequelize";
 import type { Migration } from "sequelize-cli";
 

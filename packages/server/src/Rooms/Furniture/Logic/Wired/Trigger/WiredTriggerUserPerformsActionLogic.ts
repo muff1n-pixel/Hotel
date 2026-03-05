@@ -1,6 +1,6 @@
-import RoomUser from "../../../../Users/RoomUser";
-import RoomFurniture from "../../../RoomFurniture";
-import WiredTriggerLogic from "../WiredTriggerLogic";
+import RoomUser from "../../../../Users/RoomUser.js";
+import RoomFurniture from "../../../RoomFurniture.js";
+import WiredTriggerLogic from "../WiredTriggerLogic.js";
 
 export default class WiredTriggerUserPerformsActionLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {

@@ -1,5 +1,5 @@
-import RoomFurniture from "../../../RoomFurniture";
-import WiredTriggerLogic from "../WiredTriggerLogic";
+import RoomFurniture from "../../../RoomFurniture.js";
+import WiredTriggerLogic from "../WiredTriggerLogic.js";
 
 export default class WiredTriggerStuffStateLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {

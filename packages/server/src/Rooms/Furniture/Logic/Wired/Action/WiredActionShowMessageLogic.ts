@@ -1,5 +1,5 @@
-import RoomFurniture from "../../../RoomFurniture";
-import WiredLogic, { WiredTriggerOptions } from "../WiredLogic";
+import RoomFurniture from "../../../RoomFurniture.js";
+import WiredLogic, { WiredTriggerOptions } from "../WiredLogic.js";
 import { RoomActorChatData } from "@pixel63/events";
 
 export type DelayedMessageData = {

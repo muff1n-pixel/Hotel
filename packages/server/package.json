@@ -1,7 +1,7 @@
 {
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start": "npm run build && node build/index.js",
     "build": "npx tsc",
     "dev": "tsx --watch src/index.ts",
     "init": "tsx src/index.ts --init",
@@ -34,7 +34,8 @@
     "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",
     "ws": "^8.19.0",
-    "@pixel63/events": "file:../events"
+    "@pixel63/events": "file:../events",
+    "@pixel63/shared": "file:../shared"
   },
   "optionalDependencies": {
     "bufferutil": "*"

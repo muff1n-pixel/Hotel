@@ -12,7 +12,3 @@ message HotelFeedbackData {
     string description = 4;
     uint32 status = 5;
 }
-
-message HotelFeedbackCollectionData {
-    repeated HotelFeedbackData feedback = 1; 
-}

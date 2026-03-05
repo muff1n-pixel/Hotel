@@ -1,4 +1,4 @@
-import { PermissionAction } from "@shared/Interfaces/Permissions/PermissionMap";
+import { PermissionAction } from "@pixel63/shared/Interfaces/Permissions/PermissionMap";
 import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class PermissionModel extends Model {

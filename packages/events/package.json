@@ -2,10 +2,11 @@
   "name": "@pixel63/events",
   "version": "1.0.0",
   "type": "commonjs",
-  "main": "build/index.ts",
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "node scripts/generate.js"
+    "generate": "node scripts/generate.js",
+    "build": "npm run generate && npx tsc"
   },
   "dependencies": {
     "ts-proto": "^1.181.2"

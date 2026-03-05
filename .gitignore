@@ -14,6 +14,7 @@ node_modules/
 packages/*/build/
 
 packages/*/node_modules/
+packages/*/generated/
 utils/*/node_modules/
 
 assets/*/

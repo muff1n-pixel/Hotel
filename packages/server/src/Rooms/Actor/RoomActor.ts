@@ -1,6 +1,6 @@
-import Room from "../Room";
-import RoomFurniture from "../Furniture/RoomFurniture";
-import RoomActorPath from "./Path/RoomActorPath";
+import Room from "../Room.js";
+import RoomFurniture from "../Furniture/RoomFurniture.js";
+import RoomActorPath from "./Path/RoomActorPath.js";
 import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default interface RoomActor {

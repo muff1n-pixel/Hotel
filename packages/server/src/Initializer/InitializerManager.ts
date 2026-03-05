@@ -1,14 +1,13 @@
 import Inquirer from 'inquirer';
 import fs from 'fs';
-import { config } from '../Config/Config';
-import { IncomingMessage } from "http";
+import { config } from '../Config/Config.js';
 import cliProgress from 'cli-progress';
-import { initializeModels } from '../Database/Database';
-import { initializeDevelopmentData } from '../Database/Development/DatabaseDevelopmentData';
-import { startServer } from '..';
+import { initializeModels } from '../Database/Database.js';
+import { initializeDevelopmentData } from '../Database/Development/DatabaseDevelopmentData.js';
+import { startServer } from '../index.js';
 import StreamZip from 'node-stream-zip';
 import { Readable } from 'stream';
-import {sendLog} from "@shared/Logger/Logger";
+import {sendLog} from "@pixel63/shared";
 
 export default class InitializerManager {
     progressCount: number;

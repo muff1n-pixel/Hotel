@@ -47,33 +47,18 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             return;
         }
 
-        const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
-
-        if(!targetRoom) {
-            console.warn("Target room does not exist.");
-            
-            return;
-        }
-
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
-
-        if(!targetFurniture) {
-            console.warn("Target room furniture is not loaded.");
-            
-            return;
-        }
-
         roomUser.path.path = undefined;
 
-        if(roomUser.room.model.id !== targetRoom.model.id) {
+        if(roomUser.room.model.id !== targetUserFurniture.room.id) {
             roomUser.disconnect();
-            
-            roomUser = targetRoom.addUserClient(roomUser.user, targetFurniture.model.position);
-        }
 
-        roomUser.path.setPosition({
-            ...targetFurniture.model.position,
-            depth: targetFurniture.model.position.depth + 0.01
-        }, (targetFurniture.model.direction + 4) % 8);
+            await game.roomManager.addUserToRoom(roomUser.user, targetUserFurniture.room.id);
+        }
+        else {
+            roomUser.path.setPosition({
+                ...targetUserFurniture.position,
+                depth: targetUserFurniture.position.depth + 0.01
+            }, (targetUserFurniture.direction + 4) % 8);
+        }
     }
 }

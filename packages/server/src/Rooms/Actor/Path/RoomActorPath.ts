@@ -1,6 +1,6 @@
-import RoomActor from "../RoomActor";
-import RoomUser from "../../Users/RoomUser";
-import RoomBot from "../../Bots/RoomBot";
+import RoomActor from "../RoomActor.js";
+import RoomUser from "../../Users/RoomUser.js";
+import RoomBot from "../../Bots/RoomBot.js";
 import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomActorPath {

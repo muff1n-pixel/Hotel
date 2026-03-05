@@ -17,5 +17,9 @@
         "password": "PASSWORD",
         "host": "localhost",
         "port": 3306
+    },
+
+    "workers": {
+        "maximumRoomThreads": 2
     }
 }
