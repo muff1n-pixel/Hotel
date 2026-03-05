@@ -1,7 +1,7 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
+import IncomingEvent from "../../../../Communication/Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
 import { GetUserBotSpeechData, UserBotSpeechData } from "@pixel63/events";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class GetRoomBotSpeechEvent implements ProtobuffListener<GetUserBotSpeechData> {
     async handle(user: User, payload: GetUserBotSpeechData) {

@@ -1,5 +1,7 @@
-import { MessageType, UnknownMessage } from "@pixel63/events";
+import { MessageType, RoomWorkerUserMessageData, UnknownMessage } from "@pixel63/events";
 import EventEmitter, { NodeEventTarget } from "node:events";
+import RoomUser from "../Rooms/Users/RoomUser";
+import ProtobuffWorkerListener from "./Interfaces/ProtobuffWorkerListener";
 
 export default class ProtobuffMessaging extends EventEmitter {
     constructor(private _postMessage: (message: Uint8Array) => void) {
@@ -7,6 +9,26 @@ export default class ProtobuffMessaging extends EventEmitter {
     }
 
     public handleProtobuffMessage(message: unknown) {
+        const decodedMessage = this.getDecodedMessage(message);
+
+        if(!decodedMessage) {
+            return;
+        }
+
+        this.emit(decodedMessage.type, decodedMessage.payload);
+    }
+
+    public handleUserProtobuffMessage(user: RoomUser, message: unknown) {
+        const decodedMessage = this.getDecodedMessage(message);
+
+        if(!decodedMessage) {
+            return;
+        }
+
+        this.emit(decodedMessage.type, user, decodedMessage.payload);
+    }
+
+    private getDecodedMessage(message: unknown) {
         try {
             let buffer: Buffer;
 
@@ -31,7 +53,7 @@ export default class ProtobuffMessaging extends EventEmitter {
 
             console.log("Received " + type);
 
-            this.emit(type, payload);
+            return { type, payload };
         }
         catch(error) {
             console.error("Failed to process Protobuff", error);
@@ -42,6 +64,21 @@ export default class ProtobuffMessaging extends EventEmitter {
         const listener = async (payload: Uint8Array) => {
             try {
                 await protobuffListener(message.decode(payload) as T);
+            }
+            catch(error) {
+                console.error("Failed to process event", error);
+            }
+        };
+
+        super.addListener(message.$type, listener);
+
+        return listener;
+    }
+    
+    public addUserProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffWorkerListener<T>) {
+        const listener = async (user: RoomUser, payload: Uint8Array) => {
+            try {
+                await protobuffListener.handle(user, message.decode(payload) as T);
             }
             catch(error) {
                 console.error("Failed to process event", error);
@@ -68,7 +105,7 @@ export default class ProtobuffMessaging extends EventEmitter {
         }
     }
 
-    private sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
+    private getEncodedProtobuff(eventType: string, encoded: Uint8Array) {
         try {
             const typeBytes = new TextEncoder().encode(eventType + "|");
 
@@ -77,12 +114,34 @@ export default class ProtobuffMessaging extends EventEmitter {
             message.set(typeBytes, 0);
             message.set(encoded, typeBytes.length);
 
-            console.log("Sending", message);
-
-            this._postMessage(message);
+            return message;
         }
         catch(error) {
             console.error("Failed to send encoded Protobuff", error);
+        }
+    }
+
+    private sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
+        try {
+            const message = this.getEncodedProtobuff(eventType, encoded);
+
+            if(message) {
+                this._postMessage(message);
+            }
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
+    }
+
+    public sendUserProtobuff<Message extends UnknownMessage = UnknownMessage>(userId: string, messageType: MessageType, payload: Message) {
+        const message = this.getEncodedProtobuff(messageType.$type, messageType.encode(payload).finish());
+
+        if(message) {
+            this.sendProtobuff(RoomWorkerUserMessageData, RoomWorkerUserMessageData.create({
+                userId,
+                message
+            }));
         }
     }
 }

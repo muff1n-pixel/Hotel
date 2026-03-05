@@ -1,6 +1,6 @@
 import User from "../../../../Users/User.js";
-import RoomBot from "../../../../Rooms/Bots/RoomBot.js";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import RoomBot from "../../../Bots/RoomBot.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 import { PlaceRoomBotData } from "@pixel63/events";
 
 export default class PlaceBotEvent implements ProtobuffListener<PlaceRoomBotData> {

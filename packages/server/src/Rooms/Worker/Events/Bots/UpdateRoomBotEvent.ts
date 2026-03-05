@@ -1,6 +1,6 @@
 import User from "../../../../Users/User.js";
 import { RoomBotsData, UpdateRoomBotData } from "@pixel63/events";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomBotEvent implements ProtobuffListener<UpdateRoomBotData> {
     async handle(user: User, payload: UpdateRoomBotData) {

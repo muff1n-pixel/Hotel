@@ -1,11 +1,11 @@
 import User from "../../../../../Users/User.js";
 import OutgoingEvent from "../../../../../Events/Interfaces/OutgoingEvent.js";
-import RoomFurniture from "../../../../../Rooms/Furniture/RoomFurniture.js";
+import RoomFurniture from "../../../../Furniture/RoomFurniture.js";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { RoomFurnitureData, RoomFurnitureImportData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class ImportRoomFurnitureEvent implements ProtobuffListener<RoomFurnitureImportData> {
     async handle(user: User, payload: RoomFurnitureImportData) {

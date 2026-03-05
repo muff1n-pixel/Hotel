@@ -1,6 +1,6 @@
 import { RoomPositionData, RoomStructureData, UpdateRoomStructureData } from "@pixel63/events";
 import User from "../../../Users/User.js";
-import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomStructureEvent implements ProtobuffListener<UpdateRoomStructureData> {
     public readonly name = "UpdateRoomStructureEvent";

@@ -1,6 +1,6 @@
-import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
+import IncomingEvent from "../../../../Communication/Interfaces/IncomingEvent.js";
 import User from "../../../../Users/User.js";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 import { PickupRoomBotData } from "@pixel63/events";
 
 export default class PickupRoomBotEvent implements ProtobuffListener<PickupRoomBotData> {

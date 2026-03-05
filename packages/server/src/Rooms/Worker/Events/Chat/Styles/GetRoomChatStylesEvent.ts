@@ -1,8 +1,8 @@
 import { GetRoomChatStylesData, RoomChatStylesData } from "@pixel63/events";
 import { RoomChatStyleModel } from "../../../../../Database/Models/Rooms/Chat/Styles/RoomChatStyleModel.js";
 import User from "../../../../../Users/User.js";
-import IncomingEvent from "../../../../Interfaces/IncomingEvent.js";
-import ProtobuffListener from "../../../../Interfaces/ProtobuffListener.js";
+import IncomingEvent from "../../../../../Communication/Interfaces/IncomingEvent.js";
+import ProtobuffListener from "../../../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class GetRoomChatStylesEvent implements ProtobuffListener<GetRoomChatStylesData> {
     public readonly name = "GetRoomChatStylesEvent";

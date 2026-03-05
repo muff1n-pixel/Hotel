@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
-import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
+import RoomFurniture from "../../../Furniture/RoomFurniture.js";
 import { RoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomFurnitureEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
     async handle(user: User, payload: UpdateRoomFurnitureData) {

@@ -1,5 +1,5 @@
 import User from "../../../../Users/User.js";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 import { PickupRoomFurnitureData } from "@pixel63/events";
 
 export default class PickupRoomFurnitureEvent implements ProtobuffListener<PickupRoomFurnitureData> {

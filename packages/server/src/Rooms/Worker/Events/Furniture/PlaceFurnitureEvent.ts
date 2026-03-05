@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
-import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
+import RoomFurniture from "../../../Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
-import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../../Communication/Interfaces/ProtobuffListener.js";
 import { PlaceRoomFurnitureData } from "@pixel63/events";
 
 export default class PlaceFurnitureEvent implements ProtobuffListener<PlaceRoomFurnitureData> {

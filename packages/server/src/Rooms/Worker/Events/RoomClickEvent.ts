@@ -1,8 +1,8 @@
 import User from "../../../Users/User.js";
-import WiredTriggerUserClickUserLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
-import WiredTriggerUserClickFurniLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
-import WiredTriggerUserClickTileLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
-import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import WiredTriggerUserClickUserLogic from "../../Furniture/Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
+import WiredTriggerUserClickFurniLogic from "../../Furniture/Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
+import WiredTriggerUserClickTileLogic from "../../Furniture/Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
+import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener.js";
 import { RoomClickData } from "@pixel63/events";
 
 export default class RoomClickEvent implements ProtobuffListener<RoomClickData> {

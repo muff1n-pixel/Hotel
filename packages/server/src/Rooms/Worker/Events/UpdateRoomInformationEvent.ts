@@ -2,7 +2,7 @@ import User from "../../../Users/User.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import sharp from "sharp";
 import { RoomInformationData, UpdateRoomInformationData } from "@pixel63/events";
-import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomInformationEvent implements ProtobuffListener<UpdateRoomInformationData> {
     public readonly name = "UpdateRoomInformationEvent";
