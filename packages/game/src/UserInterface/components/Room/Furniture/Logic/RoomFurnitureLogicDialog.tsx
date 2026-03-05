@@ -39,7 +39,7 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         case "ads_bg":
             return (<RoomFurnitureBackgroundDialog {...props}/>);
             
-        case "furniture_stickie":
+        case "postit":
             return (<RoomFurnitureStickiesDialog {...props}/>);
             
         case "background_toner":
