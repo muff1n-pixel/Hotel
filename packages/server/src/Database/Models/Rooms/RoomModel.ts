@@ -5,6 +5,7 @@ import { RoomRightsModel } from "./Rights/RoomRightsModel.js";
 import { RoomCategoryModel } from "./Categories/RoomCategoryModel.js";
 import { UserBotModel } from "../Users/Bots/UserBotModel.js";
 import { RoomStructureData } from "@pixel63/events";
+import { UserPetModel } from "../Users/Pets/UserPetModel.js";
 
 export class RoomModel extends Model {
     declare id: string;
@@ -25,6 +26,7 @@ export class RoomModel extends Model {
     declare rights: NonAttribute<RoomRightsModel[]>;
     declare roomFurnitures: NonAttribute<UserFurnitureModel[]>;
     declare roomBots: NonAttribute<UserBotModel[]>;
+    declare roomPets: NonAttribute<UserPetModel[]>;
 }
 
 export function initializeRoomModel(sequelize: Sequelize) {

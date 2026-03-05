@@ -29,6 +29,8 @@ import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArti
 import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
 import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
 import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
+import { initializePetModel } from "./Models/Pets/PetModel.js";
+import { initializeUserPetModel } from "./Models/Users/Pets/UserPetModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -36,6 +38,7 @@ export async function initializeModels() {
   initializeBadgeModel(sequelize);
 
   initializeFurnitureModel(sequelize);
+  initializePetModel(sequelize);
 
   initializeShopPageModel(sequelize);
   initializeShopPageFurnitureModel(sequelize);
@@ -57,6 +60,7 @@ export async function initializeModels() {
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
 
+  initializeUserPetModel(sequelize);
   initializeUserBotModel(sequelize);
   initializeUserFurnitureModel(sequelize);
   initializeRoomChatStyleModel(sequelize);

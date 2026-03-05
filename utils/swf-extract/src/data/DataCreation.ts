@@ -249,6 +249,20 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                             }
                         })
                     }
+                }),
+
+                postures: getValueAsArray(visualization["postures"]?.["posture"]).map((posture: any) => {
+                    return {
+                        id: posture["@_id"],
+                        animationId: parseInt(posture["@_animationId"])
+                    };
+                }),
+
+                gestures: getValueAsArray(visualization["gestures"]?.["gesture"]).map((gesture: any) => {
+                    return {
+                        id: gesture["@_id"],
+                        animationId: parseInt(gesture["@_animationId"])
+                    };
                 })
             } satisfies FurnitureVisualization["visualizations"][0]
         })
