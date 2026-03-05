@@ -1,4 +1,4 @@
-import { RoomPositionData, UpdateRoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, UpdateRoomStructureData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
@@ -16,7 +16,7 @@ export default class UpdateRoomStructureEvent implements ProtobuffListener<Updat
             throw new Error("User does not have room rights.");
         }
 
-        const structure = user.room.getStructure();
+        const structure = RoomStructureData.create(user.room.model.structure);
 
         if(payload.floorThickness !== undefined && [0, 4, 8, 12, 16].includes(payload.floorThickness)) {
             structure.floor!.thickness = payload.floorThickness;

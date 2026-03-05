@@ -285,7 +285,7 @@ export default class Room {
     }
 
     public async setFloorId(id: number) {
-        const structure = this.getStructure();
+        const structure = RoomStructureData.create(this.model.structure);
         structure.floor!.id = id.toString();
 
         await this.model.update({ structure });
@@ -294,7 +294,7 @@ export default class Room {
     }
 
     public async setWallId(id: number) {
-        const structure = this.getStructure();
+        const structure = RoomStructureData.create(this.model.structure);
         structure.wall!.id = id.toString();
 
         await this.model.update({ structure });
@@ -308,10 +308,6 @@ export default class Room {
         this.floorplan.regenerateStaticGrid();
 
         this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
-    }
-
-    public getStructure(): Required<RoomStructureData> {
-        return {...this.model.structure};
     }
 
     public getActiveFurniture(interactionType: string) {

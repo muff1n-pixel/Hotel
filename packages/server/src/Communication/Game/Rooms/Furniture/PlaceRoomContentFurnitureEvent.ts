@@ -37,7 +37,7 @@ export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener
                 throw new Error("User room content furniture does not have a color.");
             }
 
-            user.room.setWallId(userFurniture.furniture.color);
+            await user.room.setWallId(userFurniture.furniture.color);
 
             await userFurniture.destroy();
 
@@ -48,7 +48,7 @@ export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener
                 throw new Error("User room content furniture does not have a color.");
             }
 
-            user.room.setFloorId(userFurniture.furniture.color);
+            await user.room.setFloorId(userFurniture.furniture.color);
 
             await userFurniture.destroy();
 

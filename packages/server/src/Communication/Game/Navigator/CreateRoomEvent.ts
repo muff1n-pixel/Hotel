@@ -3,7 +3,7 @@ import { game } from "../../../index.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "node:crypto";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
-import { CreateRoomData, RoomCreatedData } from "@pixel63/events";
+import { CreateRoomData, RoomCreatedData, RoomStructureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class CreateRoomEvent implements ProtobuffListener<CreateRoomData> {
@@ -40,7 +40,7 @@ export default class CreateRoomEvent implements ProtobuffListener<CreateRoomData
             categoryId: category.id,
             maxUsers: payload.maxUsers,
 
-            structure: {
+            structure: RoomStructureData.create({
                 door: map.door,
                 grid: map.grid,
                 floor: {
@@ -52,7 +52,7 @@ export default class CreateRoomEvent implements ProtobuffListener<CreateRoomData
                     thickness: 8,
                     hidden: false
                 }
-            }
+            })
         });
 
         user.sendProtobuff(RoomCreatedData, RoomCreatedData.create({
