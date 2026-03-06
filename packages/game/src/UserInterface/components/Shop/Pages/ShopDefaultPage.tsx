@@ -192,7 +192,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 height: 240,
                 width: "100%",
 
-                cursor: "pointer",
+                cursor: (activeFurniture)?("pointer"):("inherit"),
 
                 position: "relative"
             }}>
