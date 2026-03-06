@@ -47,7 +47,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                     }));
 
                     if(requestedShopPage?.category === category) {
-                        setActiveShopPage(shopPages.find((shopPage) => shopPage.id === requestedShopPage.id));
+                        setActiveShopPage(payload.pages.find((shopPage) => shopPage.id === requestedShopPage.id));
                     }
                     else {
                         setActiveShopPage(payload.pages[0]);
