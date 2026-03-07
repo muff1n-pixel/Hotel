@@ -1,5 +1,5 @@
 import './CommunityPage.css';
-import NewsContainer from '../../Components/NewsContainer/NewsContainer';
+import ArticlesContainer from '../../Components/ArticleContainer/ArticleContainer';
 import { useEffect, useState } from 'react';
 import CommunityUser from '../../Components/Community/CommunityUser';
 
@@ -18,7 +18,10 @@ const CommunityPage = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({
+                limit: 18,
+            })
         })
             .then((response) => response.json())
             .then((result) => {
@@ -45,7 +48,7 @@ const CommunityPage = () => {
                 </div>
 
                 <div className='gridRow'>
-                    <NewsContainer />
+                    <ArticlesContainer />
                 </div>
             </div>
         </div>

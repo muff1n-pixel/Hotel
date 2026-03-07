@@ -4,6 +4,8 @@ import { UserModel } from "../../../Users/UserModel.js";
 
 export class WebArticleLikeModel extends Model {
     declare id: string;
+    declare articleId: string;
+    declare userId: string;
 }
 
 export function initializeWebArticleLikeModel(sequelize: Sequelize) {

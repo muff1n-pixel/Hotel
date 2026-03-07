@@ -11,6 +11,7 @@
     "ts-proto": "^1.181.2"
   },
   "devDependencies": {
+    "protoc": "^34.0.0",
     "ts-node": "^10.9.2"
   }
 }

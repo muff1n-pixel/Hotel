@@ -1,0 +1,31 @@
+.safetyPage {
+    .container {
+        background-color: #FFF;
+        padding: 10px;
+        -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+
+        table {
+            font-size: 12px;
+
+            h4 {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .right,
+            .wrong {
+                padding-left: 18px;
+            }
+
+            .right {
+                background: transparent url('../../Images/safety/way/right.gif') center left no-repeat;
+            }
+
+            .wrong {
+                background: transparent url('../../Images/safety/way/wrong.gif') center left no-repeat;
+            }
+        }
+    }
+}

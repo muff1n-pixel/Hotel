@@ -6,7 +6,8 @@ export class WebArticleModel extends Model {
     declare bannerUrl: string;
     declare title: string;
     declare content: string;
-    
+    declare createdAt: Date;
+    declare updatedAt: Date;
     declare author: NonAttribute<UserModel>;
 }
 
