@@ -21,7 +21,7 @@ export default function PetImage({ data }: PetImageProps) {
         },{
             tags: ["tail", "hair"],
             paletteId: 51
-        }]);
+        }], "mv");
 
         pet.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
             setImage(image);

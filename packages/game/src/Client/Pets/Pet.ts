@@ -8,15 +8,14 @@ export default class Pet {
     private frame: number = 0;
     private direction: number = 2;
     private size: number = 64;
-    private animation: number = 0;
     private color: number = 0;
     private grayscaled: boolean = false;
 
     private readonly renderer: FurnitureRenderer;
     private data?: FurnitureData;
 
-    constructor(public readonly type: string, public readonly breedPalettes: { tags: string[]; paletteId: number; }[]) {
-        this.renderer = new PetDefaultRenderer(this.type, this.breedPalettes);
+    constructor(public readonly type: string, public readonly palettes: { tags: string[]; paletteId: number; }[], public posture: string = "std") {
+        this.renderer = new PetDefaultRenderer(this.type, this.palettes);
     }
     
     public async render() {
@@ -26,7 +25,7 @@ export default class Pet {
             this.data = await PetAssets.getData(this.type);
         }
 
-        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame, this.grayscaled);
+        return await this.renderer.render(this.data, this.direction, this.size, this.getAnimationId(), this.color ?? 0, this.frame, this.grayscaled);
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
@@ -34,6 +33,26 @@ export default class Pet {
             this.data = await PetAssets.getData(this.type);
         }
 
-        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.getAnimationId(), this.color ?? 0, this.frame);
+    }
+
+    private getAnimationId() {
+        if(!this.data) {
+            return 0;
+        }
+
+        const visualization = this.data.visualization.visualizations.find((visualization) => visualization.size === this.size);
+
+        if(!visualization) {
+            return 0;
+        }
+
+        const posture = visualization.postures.find((posture) => posture.id === this.posture);
+       
+        if(!posture) {
+            return 0;
+        }
+
+        return posture.animationId;
     }
 }

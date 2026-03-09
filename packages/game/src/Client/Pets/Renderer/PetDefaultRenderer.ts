@@ -7,12 +7,12 @@ import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
 
 export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
-    private palettes: {
+    private palettesData: {
         tags: string[];
         colors: string[];
     }[] = [];
 
-    constructor(public readonly type: string, public readonly breedPalettes: { tags: string[]; paletteId: number; }[]) {
+    constructor(public readonly type: string, public readonly palettes: { tags: string[]; paletteId: number; }[]) {
         super(type);
     }
 
@@ -21,13 +21,13 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     }
 
     public getPaletteData(data: FurnitureData, tag: string) {
-        const breedPalette = this.breedPalettes.find((breed) => breed.tags.includes(tag));
+        const palette = this.palettes.find((breed) => breed.tags.includes(tag));
 
-        if(!breedPalette) {
+        if(!palette) {
             return null;
         }
 
-        return data.palettes?.find((palette) => palette.id === breedPalette.paletteId && palette.tags.includes(tag));
+        return data.palettes?.find((_palette) => _palette.id === palette.paletteId);
     }
 
     public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, tag: string | undefined, usesPalette: boolean) {
@@ -49,7 +49,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
             console.log({ tag, usesPalette });
 
         if(imageData && tag && usesPalette) {
-            let palette = this.palettes.find((palette) => palette.tags.includes(tag));
+            let palette = this.palettesData.find((palette) => palette.tags.includes(tag));
 
             if(!palette) {
                 const paletteData = this.getPaletteData(data, tag);
@@ -67,7 +67,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                     colors: await PetAssets.getPaletteData(this.type, paletteData.source)
                 };
 
-                this.palettes.push(palette);
+                this.palettesData.push(palette);
             }
 
             const canvas = new OffscreenCanvas(image.width, image.height);
