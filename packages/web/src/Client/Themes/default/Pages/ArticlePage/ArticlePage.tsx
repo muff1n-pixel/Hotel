@@ -276,7 +276,7 @@ const ArticlePage = () => {
 
                                             <div className='infos'>
                                                 <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !articleData.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon" /> {articleData.likes.length}</div>
-                                                <div className='row'><img src={commentIcon} alt="Comment Icon" /> 0</div>
+                                                <div className='row'><img src={commentIcon} alt="Comment Icon" /> {articleData.totalComments}</div>
                                             </div>
                                         </div>
                                     </div>
