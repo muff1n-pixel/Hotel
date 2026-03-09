@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Pets/PetData.proto";
+
+message ShopPetData {
+    string id = 1;
+
+    optional uint32 credits = 2;
+    optional uint32 duckets = 3;
+    optional uint32 diamonds = 4;
+
+    PetData pet = 5;
+}

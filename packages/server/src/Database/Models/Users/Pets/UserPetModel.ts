@@ -9,8 +9,6 @@ export class UserPetModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
     declare direction: number;
-    declare animation: number;
-    declare color: number | null;
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;

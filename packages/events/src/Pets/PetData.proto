@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message PetData {
+    string id = 1;
+    string type = 2;
+    string name = 3;
+    optional string description = 4;
+}

@@ -8,6 +8,8 @@ import { ShopPageData } from "@pixel63/events";
 import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";
 
 export type ShopDialogCategoryProps = {
+    category: string;
+
     editMode?: boolean;
     onHeaderChange: (header: DialogTabHeaderProps) => void;
 
@@ -16,7 +18,7 @@ export type ShopDialogCategoryProps = {
     setActiveShopPage: (page: { id: string; category: string; }) => void;
 }
 
-export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
+export default function ShopDialogCategory({ category, editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
 
     useEffect(() => {
@@ -46,15 +48,17 @@ export default function ShopDialogCategory({ editMode, onHeaderChange, shopPages
 
         dialogs.addUniqueDialog("edit-shop-page", {
             ...shopPage,
-            shopPages
+            shopPages,
+            category
         });
-    }, [editMode, shopPages, dialogs]);
+    }, [editMode, shopPages, dialogs, category]);
 
     const handleCreatePage = useCallback((parentShopPage?: ShopPageData) => {
         dialogs.addUniqueDialog("edit-shop-page", {
-            parentId: parentShopPage?.id
+            parentId: parentShopPage?.id,
+            category
         });
-    }, [dialogs]);
+    }, [dialogs, category]);
 
     return (
         <div style={{

@@ -16,6 +16,9 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
 
             case "frontpage":
                 return this.handleFurniture(user, payload);
+
+            case "pets":
+                return this.handleFurniture(user, payload);
         }
     }
 

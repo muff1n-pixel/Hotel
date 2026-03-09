@@ -6,7 +6,6 @@ export class PetModel extends Model {
     declare type: string;
     declare name: string;
     declare description?: string;
-    declare color?: number;
 }
 
 export function initializePetModel(sequelize: Sequelize) {
@@ -16,34 +15,26 @@ export function initializePetModel(sequelize: Sequelize) {
             type: DataTypes.UUID,
             primaryKey: true
           },
+          
           type: {
             type: new DataTypes.STRING(64),
             allowNull: false
           },
+
           name: {
             type: new DataTypes.STRING(256),
             allowNull: false
           },
+
           description: {
             type: new DataTypes.STRING(256),
             allowNull: true,
             defaultValue: null
           },
-          color: {
-            type: DataTypes.INTEGER,
-            defaultValue: null
-          },
         },
         {
           tableName: "pets",
-          sequelize,
-          
-          indexes: [
-            {
-              unique: true,
-              fields: ['type', 'color']
-            }
-          ],
+          sequelize
         }
     );
 }

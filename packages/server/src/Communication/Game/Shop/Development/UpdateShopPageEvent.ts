@@ -58,7 +58,7 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
         }
 
         await (new GetShopPagesEvent()).handle(user, GetShopPagesData.create({
-            category: "furniture"
+            category: payload.category
         }));
     }
 }

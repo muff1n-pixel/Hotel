@@ -3,6 +3,7 @@ import ShopFeaturesPage from "./ShopFeaturesPage";
 import ShopTrophiesPage from "./ShopTrophiesPage";
 import ShopBotsPage from "./ShopBotsPage";
 import { ShopPageData } from "@pixel63/events";
+import ShopPetsPage from "./ShopPetsPage";
 
 export type ShopPageProps = {
     editMode?: boolean;
@@ -20,6 +21,9 @@ export default function ShopPage({ editMode, page, setActiveShopPage }: ShopPage
             
         case "bots":
             return (<ShopBotsPage key={page.id} editMode={editMode} page={page}/>);
+            
+        case "pets":
+            return (<ShopPetsPage key={page.id} editMode={editMode} page={page}/>);
 
         case "features":
             return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} setActiveShopPage={setActiveShopPage}/>);
