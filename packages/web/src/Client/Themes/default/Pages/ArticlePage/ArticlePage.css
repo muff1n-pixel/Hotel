@@ -35,8 +35,7 @@
             .content {
                 opacity: 0.9;
                 height: 100px;
-                background-position: bottom;
-                background-image: url('../../Images/me/news/ikuturso_McMurpysTrip_topstory.gif');
+                background-position: center;
                 position: relative;
                 border-radius: 4px;
                 overflow: hidden;

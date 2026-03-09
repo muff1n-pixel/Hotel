@@ -232,7 +232,7 @@ const ArticlePage = () => {
                             {lastArticles.map((article) => {
                                 return (
                                     <div className='row' onClick={() => navigate(`/article/${new Date(article.createdAt).getTime()}/${encodeURI(article.title)}`)} key={article.id}>
-                                        <div className='content'>
+                                        <div className='content' style={{ backgroundImage: `url(${article.bannerUrl})`}}>
                                             <div className='articleTitle'>{article.title}</div>
 
                                             <div className='author'>
