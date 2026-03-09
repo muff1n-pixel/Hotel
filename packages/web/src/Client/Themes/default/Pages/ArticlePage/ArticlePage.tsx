@@ -12,7 +12,8 @@ import commentIcon from '../../Images/icons/small/comment.gif';
 import arrowRight from '../../Images/icons/medium/arrow_right.gif';
 import { ThemeContext } from '../../ThemeProvider'
 import ArticleComment from '../../Components/Article/Comment/Comment'
-import { Alert, AlertType } from '../../Components/Alert/Alert'
+import { Alert, AlertType } from '../../Components/Alert/Alert';
+import { useRef } from "react";
 
 const ArticlePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -27,6 +28,7 @@ const ArticlePage = () => {
     const [articleDataLoading, setArticleDataLoading] = useState<boolean>(true);
     const [articleAuthorAvatar, setArticleAuthorAvatar] = useState<string | Base64URLString>(UnknowUserImage);
 
+    const commentsRef = useRef<HTMLDivElement | null>(null);
     const fetchCommentsLimit = 5;
     const [lastCommentsLoading, setLastCommentsLoading] = useState<boolean>(false);
     const [newCommentAlert, setNewCommentAlert] = useState<null | Alert>(null);
@@ -217,7 +219,14 @@ const ArticlePage = () => {
                     message: "Impossible to call API server."
                 })
             })
-    }, [commentContent, setCommentContent])
+    }, [commentContent, setCommentContent]);
+
+    const scrollToComments = () => {
+        commentsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    };
 
     return (
         <div className="articlePage resize">
@@ -232,7 +241,7 @@ const ArticlePage = () => {
                             {lastArticles.map((article) => {
                                 return (
                                     <div className='row' onClick={() => navigate(`/article/${new Date(article.createdAt).getTime()}/${encodeURI(article.title)}`)} key={article.id}>
-                                        <div className='content' style={{ backgroundImage: `url(${article.bannerUrl})`}}>
+                                        <div className='content' style={{ backgroundImage: `url(${article.bannerUrl})` }}>
                                             <div className='articleTitle'>{article.title}</div>
 
                                             <div className='author'>
@@ -276,29 +285,31 @@ const ArticlePage = () => {
 
                                             <div className='infos'>
                                                 <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !articleData.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon" /> {articleData.likes.length}</div>
-                                                <div className='row'><img src={commentIcon} alt="Comment Icon" /> {articleData.totalComments}</div>
+                                                <div className='row' onClick={scrollToComments}><img src={commentIcon} alt="Comment Icon" /> {articleData.totalComments}</div>
                                             </div>
                                         </div>
                                     </div>
                                 }
                             </div>
 
-                            {currentUser &&
-                                <form onSubmit={sendNewComment}>
-                                    {newCommentAlert && <div className={`alert ${newCommentAlert.type === AlertType.SUCCESS ? "success" : "error"}`}>{newCommentAlert.message}</div>}
-                                    <textarea maxLength={1000} placeholder='Adding a new comment...' value={commentContent} onChange={(e) => setCommentContent(e.target.value)}></textarea>
-                                    <button><img src={commentIcon} alt="Comment Icon" /> Send my comment</button>
-                                </form>
-                            }
+                            <div className='comments' ref={commentsRef}>
+                                {currentUser &&
+                                    <form onSubmit={sendNewComment}>
+                                        {newCommentAlert && <div className={`alert ${newCommentAlert.type === AlertType.SUCCESS ? "success" : "error"}`}>{newCommentAlert.message}</div>}
+                                        <textarea maxLength={1000} placeholder='Adding a new comment...' value={commentContent} onChange={(e) => setCommentContent(e.target.value)}></textarea>
+                                        <button><img src={commentIcon} alt="Comment Icon" /> Send my comment</button>
+                                    </form>
+                                }
 
-                            {articleData?.comments.map((comment) => {
-                                return (
-                                    <ArticleComment {...comment} key={comment.id} setArticleData={setArticleData} />
-                                )
-                            })}
+                                {articleData?.comments.map((comment) => {
+                                    return (
+                                        <ArticleComment {...comment} key={comment.id} setArticleData={setArticleData} />
+                                    )
+                                })}
 
-                            {articleData && articleData.totalComments > articleData.comments.length && !lastCommentsLoading && <button className='loadMore' onClick={() => fetchLastComments()}><img src={arrowRight} alt="Arrow Right" /> Load more comments</button>}
-                            {lastCommentsLoading && <Loading />}
+                                {articleData && articleData.totalComments > articleData.comments.length && !lastCommentsLoading && <button className='loadMore' onClick={() => fetchLastComments()}><img src={arrowRight} alt="Arrow Right" /> Load more comments</button>}
+                                {lastCommentsLoading && <Loading />}
+                            </div>
                         </div>
                     }
                 </div>
