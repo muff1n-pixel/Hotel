@@ -74,7 +74,7 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
         y: parseFloat(asset["@_y"]) * -1,
         flipHorizontal: asset["@_flipH"] === '1',
         source: asset["@_source"]
-    }));
+    }satisfies FurnitureAsset));
 }
 
 export function createAssetsDataFromManifest(collection: SwfExtractionCollection): FigureAssets {

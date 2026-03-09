@@ -1,9 +1,11 @@
 import path from "node:path";
 import { extractSwf } from "../swf/SwfExtraction.ts";
-import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createSpritesheet } from "../spritesheet/SpritesheetCreation.ts";
 import { createAssetsData, createFurnitureData, createIndexData, createLogicData, createVisualizationData } from "../data/DataCreation.ts";
 import type { FurnitureData } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureData.ts";
+import PaletteDataExtraction from "../data/Palettes/PaletteDataExtraction.ts";
+import CustomPartsDataExtraction from "../data/Parts/CustomPartsDataExtraction.ts";
 
 export default async function extractPets(assetNames: string[]) {
     for(const assetName of assetNames) {
@@ -46,12 +48,19 @@ export default async function extractPets(assetNames: string[]) {
         const visualization = await createVisualizationData(swfCollection);
         const index = createIndexData(swfCollection);
 
+        const customParts = CustomPartsDataExtraction.getAssetParts(swfCollection);
+        const palettes = PaletteDataExtraction.getAssetPalettes(swfCollection);
+
+        PaletteDataExtraction.extractFilePalettes(assetName, outputPath, swfCollection, palettes);
+
         const data: FurnitureData = {
             index,
             visualization,
             logic,
+            palettes,
+            customParts,
             assets,
-            sprites: spritesheet
+            sprites: spritesheet,
         };
 
         writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {
