@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
 import passwordIcon from '../../Images/settings/password.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
 
 const SettingsPasswordForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);

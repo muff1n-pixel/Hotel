@@ -1,6 +1,6 @@
 import './ArticlePage.css'
 import articleIcon from '../../Images/articles/articleIcon.gif'
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { ArticleInterface } from '@client/Logic/Article/ArticleInterface'
 import { useNavigate, useParams } from 'react-router'
 import Loading from '../../Components/Loading/Loading'
@@ -11,6 +11,8 @@ import likeInactiveIcon from '../../Images/icons/small/favorite_inactive.gif';
 import commentIcon from '../../Images/icons/small/comment.gif';
 import arrowRight from '../../Images/icons/medium/arrow_right.gif';
 import { ThemeContext } from '../../ThemeProvider'
+import ArticleComment from '../../Components/Article/Comment/Comment'
+import { Alert, AlertType } from '../../Components/Alert/Alert'
 
 const ArticlePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -24,6 +26,11 @@ const ArticlePage = () => {
     const [articleData, setArticleData] = useState<null | ArticleInterface>(null);
     const [articleDataLoading, setArticleDataLoading] = useState<boolean>(true);
     const [articleAuthorAvatar, setArticleAuthorAvatar] = useState<string | Base64URLString>(UnknowUserImage);
+
+    const fetchCommentsLimit = 5;
+    const [lastCommentsLoading, setLastCommentsLoading] = useState<boolean>(false);
+    const [newCommentAlert, setNewCommentAlert] = useState<null | Alert>(null);
+    const [commentContent, setCommentContent] = useState<string | undefined>(undefined);
 
     const fetchLastArticles = () => {
         setLastArticlesLoading(true);
@@ -78,6 +85,9 @@ const ArticlePage = () => {
                 if (result.error)
                     navigate("/community")
                 else {
+                    setNewCommentAlert(null);
+                    setCommentContent("");
+
                     if (result.author) {
                         AvatarImager(result.author.figureConfiguration).then((avatarData: Base64URLString) => {
                             setArticleAuthorAvatar(avatarData);
@@ -124,6 +134,90 @@ const ArticlePage = () => {
                 console.log("(Error) Can't like article:", e)
             })
     }
+
+    const fetchLastComments = () => {
+        if (!articleData || lastCommentsLoading)
+            return;
+
+        setLastCommentsLoading(true);
+
+        fetch("/api/articles/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                articleId: articleData.id,
+                limit: fetchCommentsLimit,
+                skip: articleData.comments.length
+            })
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                setLastCommentsLoading(false);
+                setArticleData((prev) => {
+                    if (!prev) return prev;
+
+                    return {
+                        ...prev,
+                        comments: [...prev.comments, ...result]
+                    };
+                });
+            })
+            .catch((e) => {
+                console.log("(Error) Impossible to fetch lasts articles:", e)
+            })
+    }
+
+    const sendNewComment = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!articleData || !currentUser)
+            return;
+
+        fetch("/api/articles/newComment", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                articleId: articleData.id,
+                comment: commentContent
+            })
+        })
+            .then((response) => response.json())
+            .then((result) => {
+
+                if (result.error)
+                    setNewCommentAlert({
+                        type: AlertType.ERROR,
+                        message: result.error
+                    })
+                else if (result.success) {
+                    setCommentContent("");
+                    setArticleData((prev) => {
+                        if (!prev) return prev;
+
+                        return {
+                            ...prev,
+                            comments: [result.success, ...prev.comments],
+                            totalComments: prev.totalComments + 1
+                        };
+                    });
+
+                    setNewCommentAlert({
+                        type: AlertType.SUCCESS,
+                        message: "Your comment has been published."
+                    })
+                }
+            })
+            .catch((e) => {
+                setNewCommentAlert({
+                    type: AlertType.ERROR,
+                    message: "Impossible to call API server."
+                })
+            })
+    }, [commentContent, setCommentContent])
 
     return (
         <div className="articlePage resize">
@@ -189,12 +283,22 @@ const ArticlePage = () => {
                                 }
                             </div>
 
-                            {currentUser && 
-                            <form>
-                                <textarea maxLength={500} name="comment" placeholder='Adding a new comment...'></textarea>
-                                <button><img src={commentIcon} alt="Comment Icon" /> Send my comment</button>
-                            </form>
+                            {currentUser &&
+                                <form onSubmit={sendNewComment}>
+                                    {newCommentAlert && <div className={`alert ${newCommentAlert.type === AlertType.SUCCESS ? "success" : "error"}`}>{newCommentAlert.message}</div>}
+                                    <textarea maxLength={1000} placeholder='Adding a new comment...' value={commentContent} onChange={(e) => setCommentContent(e.target.value)}></textarea>
+                                    <button><img src={commentIcon} alt="Comment Icon" /> Send my comment</button>
+                                </form>
                             }
+
+                            {articleData?.comments.map((comment) => {
+                                return (
+                                    <ArticleComment {...comment} key={comment.id} setArticleData={setArticleData} />
+                                )
+                            })}
+
+                            {articleData && articleData.totalComments > articleData.comments.length && !lastCommentsLoading && <button className='loadMore' onClick={() => fetchLastComments()}><img src={arrowRight} alt="Arrow Right" /> Load more comments</button>}
+                            {lastCommentsLoading && <Loading />}
                         </div>
                     }
                 </div>

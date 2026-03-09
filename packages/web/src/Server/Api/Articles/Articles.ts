@@ -2,6 +2,7 @@ import { Router } from "express";
 import { UserModel } from "../../Models/Users/UserModel";
 import { WebArticleModel } from "../../Models/Web/Article/WebArticleModel";
 import { WebArticleLikeModel } from "../../Models/Web/Article/Like/WebArticleLikeModel";
+import { WebArticleCommentModel } from "../../Models/Web/Article/Comment/WebArticleCommentModel";
 
 const router = Router();
 
@@ -39,7 +40,6 @@ router.post("/", async (req, res) => {
                 title: article.title,
                 content: article.content,
                 createdAt: article.createdAt,
-                updateAt: article.updatedAt,
                 author: author
             })
         };
@@ -80,16 +80,62 @@ router.post("/", async (req, res) => {
             }
         }
 
-        const articlesLikes = await WebArticleLikeModel.findAll({
+        const articleLikes = await WebArticleLikeModel.findAll({
             where: {
                 articleId: article.id
             }
         });
 
         const likes: Array<string> = [];
-        articlesLikes.forEach((articleLike) => {
+        articleLikes.forEach((articleLike) => {
             likes.push(articleLike.userId);
         })
+
+        const totalComments = await WebArticleCommentModel.findAndCountAll({
+            where: {
+                articleId: article.id
+            }
+        });
+
+        const comments: Array<any> = [];
+        const articleComments = await WebArticleCommentModel.findAll({
+            where: {
+                articleId: article.id
+            },
+            order: [['createdAt', 'DESC']],
+            include: [{ model: UserModel, as: "user" }],
+            limit: 5
+        });
+
+        for await (const articleComment of articleComments) {
+            const commentLikes = await WebArticleLikeModel.findAll({
+                where: {
+                    commentId: articleComment.id
+                }
+            });
+
+            const commentLikesData: Array<string> = [];
+            commentLikes.forEach((commentLike) => {
+                commentLikesData.push(commentLike.userId);
+            })
+
+            let userData: any = null;
+            if (articleComment.user) {
+                userData = {
+                    id: articleComment.user.id,
+                    name: articleComment.user.name,
+                    figureConfiguration: articleComment.user.figureConfiguration
+                }
+            }
+
+            comments.push({
+                id: articleComment.id,
+                content: articleComment.content,
+                user: userData,
+                createdAt: articleComment.createdAt,
+                likes: commentLikesData
+            });
+        }
 
         return res.json({
             id: article.id,
@@ -97,9 +143,10 @@ router.post("/", async (req, res) => {
             title: article.title,
             content: article.content,
             createdAt: article.createdAt,
-            updateAt: article.updatedAt,
             author: author,
-            likes: likes
+            likes: likes,
+            totalComments: totalComments.count,
+            comments: comments
         });
     }
 });

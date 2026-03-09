@@ -5,6 +5,7 @@ import jsonWebToken from "jsonwebtoken";
 import { WebArticleModel } from "../../../Models/Web/Article/WebArticleModel";
 import { WebArticleLikeModel } from "../../../Models/Web/Article/Like/WebArticleLikeModel";
 import { randomUUID } from 'crypto';
+import { WebArticleCommentModel } from "../../../Models/Web/Article/Comment/WebArticleCommentModel";
 
 const router = Router();
 
@@ -87,6 +88,49 @@ router.post("/", async (req, res) => {
             const likes: Array<string> = [];
             articlesLikes.forEach((articleLike) => {
                 likes.push(articleLike.userId);
+            })
+
+            return res.json(likes);
+        }
+        else if(commentId) {
+            const comment = await WebArticleCommentModel.findOne({
+                where: {
+                    id: commentId
+                }
+            });
+
+            if (!comment)
+                return res.json({
+                    error: "Impossible to find this article"
+                });
+
+            const commentLike = await WebArticleLikeModel.findOne({
+                where: {
+                    commentId: comment.id,
+                    userId: user.id
+                }
+            });
+
+            if (!commentLike) {
+                await WebArticleLikeModel.create({
+                    id: randomUUID(),
+                    commentId: comment.id,
+                    userId: user.id
+                })
+            }
+            else {
+                await commentLike.destroy();
+            }
+
+            const commentLikes = await WebArticleLikeModel.findAll({
+                where: {
+                    commentId: comment.id
+                }
+            });
+
+            const likes: Array<string> = [];
+            commentLikes.forEach((commentLike) => {
+                likes.push(commentLike.userId);
             })
 
             return res.json(likes);
