@@ -72,7 +72,7 @@ export default class PaletteDataExtraction {
         let currentBytes: string[] = [];
         let currentSection = 0;
 
-        const result: string[][] = [];
+        const colors: string[] = [];
 
         for (let index = 0; index < buffer.length; index++) {
             const hex = buffer[index]!.toString(16).padStart(2, "0");
@@ -80,23 +80,12 @@ export default class PaletteDataExtraction {
             currentBytes.push(hex);
 
             if(currentBytes.length === 3) {
-                if(!result[currentSection]) {
-                    result.push([]);
-                }
-
-                result[currentSection]!.push(currentBytes.join('').toUpperCase());
+                colors.push(currentBytes.join('').toUpperCase());
 
                 currentBytes = [];
             }
-
-            readBytes++;
-
-            if(readBytes === (16 * 3)) {
-                readBytes = 0;
-                currentSection++;
-            }
         }
 
-        return result;
+        return colors;
     }
 }

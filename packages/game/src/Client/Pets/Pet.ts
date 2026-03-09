@@ -1,8 +1,8 @@
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
-import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
+import PetDefaultRenderer from "@Client/Pets/Renderer/PetDefaultRenderer";
 
 export default class Pet {
     private frame: number = 0;
@@ -15,8 +15,8 @@ export default class Pet {
     private readonly renderer: FurnitureRenderer;
     private data?: FurnitureData;
 
-    constructor(public readonly type: string) {
-        this.renderer = new FurnitureDefaultRenderer(this.type);
+    constructor(public readonly type: string, public readonly breedPalettes: { tags: string[]; paletteId: number; }[]) {
+        this.renderer = new PetDefaultRenderer(this.type, this.breedPalettes);
     }
     
     public async render() {

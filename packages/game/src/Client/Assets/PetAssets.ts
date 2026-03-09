@@ -7,6 +7,10 @@ export default class PetAssets {
         return await AssetFetcher.fetchJson<FurnitureData>(`/assets/pets/${assetName}/${assetName}.json`);
     }
 
+    public static async getPaletteData(assetName: string, source: string) {
+        return await AssetFetcher.fetchJson<string[]>(`/assets/pets/${assetName}/palettes/${source}.json`);
+    }
+
     public static async getSpritesheet(assetName: string) {
         return await AssetFetcher.fetchImage(`/assets/pets/${assetName}/${assetName}.png`);
     }

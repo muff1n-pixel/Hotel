@@ -3,6 +3,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
+import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
@@ -99,21 +100,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === color);
 
-            const { image, imageData } = await FurnitureAssets.getFurnitureSprite(this.type, {
-                x: spriteData.x,
-                y: spriteData.y,
-
-                width: spriteData.width,
-                height: spriteData.height,
-
-                flipHorizontal: assetData.flipHorizontal,
-
-                grayscaled,
-
-                color: colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color
-            });
-
             const layerData = visualization.layers.find((layerData) => layerData.id === layer);
+
+            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color, grayscaled, layerData?.tag, assetData.usesPalette);
+
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
             let x = assetData.x;
@@ -154,6 +144,24 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         }
 
         return sprites;
+    }
+
+    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, tag: string | undefined, usesPalette: boolean) {
+        const { image, imageData } = await FurnitureAssets.getFurnitureSprite(type, {
+            x: spriteData.x,
+            y: spriteData.y,
+
+            width: spriteData.width,
+            height: spriteData.height,
+
+            flipHorizontal: flipHorizontal,
+
+            grayscaled,
+
+            color
+        });
+
+        return { image, imageData };
     }
     
     public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {

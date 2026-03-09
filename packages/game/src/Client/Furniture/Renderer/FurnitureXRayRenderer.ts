@@ -82,6 +82,8 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
                         flipHorizontal: sourceAsset.flipHorizontal,
 
                         source: rootSourceAsset.name,
+
+                        usesPalette: rootSourceAsset.usesPalette
                     });
                 }
             }

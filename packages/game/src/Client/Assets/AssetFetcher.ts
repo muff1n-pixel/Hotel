@@ -23,6 +23,8 @@ export type AssetSpriteProperties = {
 
     ignoreImageData?: boolean;
     ignoreExistingImageData?: boolean;
+
+    requireImageData?: boolean;
 };
 
 export type AssetSpriteResult = {
@@ -104,7 +106,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && properties.grayscaled === grayscaled);
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && properties.grayscaled === grayscaled && (!properties.requireImageData || imageData));
 
         if(existingSprite) {
             const output = await existingSprite.result;
@@ -191,7 +193,7 @@ export default class AssetFetcher {
                 }
             }
             else {
-                AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
+                const promise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
                     result.imageData = imageData;
                     output.imageData = imageData;
 
@@ -199,6 +201,10 @@ export default class AssetFetcher {
                         result.result = this.drawGrayscaledImage(imageData);
                     }
                 });
+
+                if(properties.requireImageData) {
+                    await promise;
+                }
             }
 
             return output;
