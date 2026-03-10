@@ -49,7 +49,7 @@ const ArticlePage = () => {
         })
             .then((response) => response.json())
             .then((result) => {
-                if (lastArticles.length === 0 && result.length === 0)
+                if (lastArticles.length === 0 && result.articles.length === 0)
                     return navigate("/me");
 
                 setTotalArticles(result.totalArticles);
