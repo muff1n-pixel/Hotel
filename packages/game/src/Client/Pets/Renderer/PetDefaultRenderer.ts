@@ -2,6 +2,7 @@ import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
+import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
@@ -17,8 +18,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         super(type);
     }
 
-    public async render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number, grayscaled: boolean): Promise<FurnitureRendererSprite[]> {
-        return super.render(data, direction, size, animation, color, frame, grayscaled);
+    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
+        return super.render(data, options);
     }
 
     public getPaletteData(data: FurnitureData, tag: string) {

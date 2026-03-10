@@ -1,5 +1,6 @@
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
+import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 
@@ -8,7 +9,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
 
     public frame: number = 0;
 
-    public render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number, grayscaled: boolean): Promise<FurnitureRendererSprite[]> {
+    public render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
         for(const visualization of data.visualization.visualizations) {
             if(!visualization.layers.length) {
                 continue;
@@ -62,7 +63,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
             this.addAsset(data, visualization, 'l', 'e');
         }
 
-        return super.render(data, direction, size, animation, color, frame, grayscaled);
+        return super.render(data, options);
     }
 
     private addAsset(data: FurnitureData, visualization: FurnitureVisualization["visualizations"][0], newLayerId: string, sourceLayerId: string) {

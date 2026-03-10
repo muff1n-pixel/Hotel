@@ -222,20 +222,20 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                     }}>
                         {((editMode)?(pets):(filteredPets)).map((pet) => (
                             <div key={pet.id} style={{
-                                width: 100,
-                                height: 120,
+                                width: 60,
+                                height: 60,
                                 boxSizing: "border-box",
 
                                 borderRadius: 5,
 
-                                border: (activePet?.pet?.type === pet.pet?.type)?("2px solid #62C4E8"):("2px solid transparent"),
-                                background: (activePet?.pet?.type === pet.pet?.type)?("#FFFFFF"):(undefined),
+                                border: (activePet?.id === pet.id)?("2px solid #62C4E8"):("2px solid transparent"),
+                                background: (activePet?.id === pet.id)?("#FFFFFF"):(undefined),
 
                                 display: "flex",
                                 justifyContent: "center",
 
                                 cursor: "pointer"
-                            }} onClick={() => (activePet?.pet?.type !== pet.pet?.type) && setActivePet(pet)}>
+                            }} onClick={() => (activePet?.id !== pet.id) && setActivePet(pet)}>
                                 <div style={{
                                     flex: 1,
                                     alignSelf: "center",
@@ -244,7 +244,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                                     position: "relative"
                                 }}>
                                     <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                        <PetImage data={pet.pet}/>
+                                        <PetImage data={pet.pet} headOnly/>
                                     </div>
 
                                     {(editMode) && (

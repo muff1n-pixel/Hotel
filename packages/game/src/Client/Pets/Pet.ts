@@ -1,6 +1,5 @@
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
-import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import PetDefaultRenderer from "@Client/Pets/Renderer/PetDefaultRenderer";
 import { PetPaletteData } from "@pixel63/events";
@@ -15,7 +14,7 @@ export default class Pet {
     private readonly renderer: PetDefaultRenderer;
     private data?: FurnitureData;
 
-    constructor(public readonly type: string, public readonly palettes: PetPaletteData[], public posture: string = "std") {
+    constructor(public readonly type: string, public readonly palettes: PetPaletteData[], public posture: string = "std", public headonly: boolean = false) {
         this.renderer = new PetDefaultRenderer(this.type, this.palettes);
     }
     
@@ -26,7 +25,15 @@ export default class Pet {
             this.data = await PetAssets.getData(this.type);
         }
 
-        return await this.renderer.render(this.data, this.direction, this.size, this.getAnimationId(), this.color ?? 0, this.frame, this.grayscaled);
+        return await this.renderer.render(this.data, {
+            direction: this.direction,
+            size: this.size, 
+            animation: this.getAnimationId(), 
+            color: this.color ?? 0,
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: (this.headonly)?(["head", "hair"]):(undefined)
+        });
     }
 
     public async getData() {
@@ -42,7 +49,15 @@ export default class Pet {
             this.data = await PetAssets.getData(this.type);
         }
 
-        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.getAnimationId(), this.color ?? 0, this.frame);
+        return await this.renderer.renderToCanvas(options, this.data, {
+            direction: this.direction,
+            size: this.size, 
+            animation: this.getAnimationId(), 
+            color: this.color ?? 0,
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: (this.headonly)?(["head", "hair"]):(undefined)
+        });
     }
 
     private getAnimationId() {

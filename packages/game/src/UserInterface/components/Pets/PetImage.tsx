@@ -5,9 +5,10 @@ import { PetData } from "@pixel63/events";
 
 export type PetImageProps = {
     data?: PetData;
+    headOnly?: boolean;
 }
 
-export default function PetImage({ data }: PetImageProps) {
+export default function PetImage({ data, headOnly }: PetImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -15,7 +16,7 @@ export default function PetImage({ data }: PetImageProps) {
             return;
         }
 
-        const pet = new Pet(data.type, data.palettes);
+        const pet = new Pet(data.type, data.palettes, undefined, headOnly);
 
         pet.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
             setImage(image);
