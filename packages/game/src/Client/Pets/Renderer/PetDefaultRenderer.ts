@@ -14,7 +14,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         colors: string[];
     }[] = [];
 
-    constructor(public readonly type: string, public readonly palettes: PetPaletteData[]) {
+    constructor(public readonly type: string, public readonly palettes: PetPaletteData[] | undefined) {
         super(type);
     }
 
@@ -23,7 +23,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     }
 
     public getPaletteData(data: FurnitureData, tag: string) {
-        const palette = this.palettes.find((breed) => breed.tags.includes(tag));
+        const palette = this.palettes?.find((breed) => breed.tags.includes(tag));
 
         if(!palette) {
             return data.palettes?.find((palette) => palette.master && palette.tags.includes(tag));

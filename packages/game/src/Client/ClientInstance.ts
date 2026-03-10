@@ -18,7 +18,7 @@ import RoomActorChatEvent from "@Client/Communications/Room/Actors/RoomActorChat
 import RoomBotsEvent from "@Client/Communications/Room/Bots/RoomBotsEvent";
 import RoomActorPositionEvent from "@Client/Communications/Room/Actors/RoomActorPositionEvent";
 import { LocalSettings } from "../UserInterface/components/Settings/Interfaces/LocalSettings";
-import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData } from "@pixel63/events";
+import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData } from "@pixel63/events";
 import RoomActorWalkToEvent from "@Client/Communications/Room/Actors/RoomActorWalkToEvent";
 import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 import RoomCategoriesEvent from "@Client/Communications/Room/Categories/RoomCategoriesEvent";
@@ -27,6 +27,7 @@ import RoomUserEnteredEvent from "@Client/Communications/Room/User/RoomUserEnter
 import RoomUserEvent from "@Client/Communications/Room/User/RoomUserEvent";
 import RoomUserLeftEvent from "@Client/Communications/Room/User/RoomUserLeftEvent";
 import LeaveRoomEvent from "@Client/Communications/Room/LeaveRoomEvent";
+import RoomPetsEvent from "@Client/Communications/Room/Pets/RoomPetsEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -77,6 +78,9 @@ export default class ClientInstance extends EventTarget {
 
         // Room bot events
         webSocketClient.addProtobuffListener(RoomBotsData, new RoomBotsEvent());
+
+        // Room pet events
+        webSocketClient.addProtobuffListener(RoomPetsData, new RoomPetsEvent());
 
         // Room furniture events
         webSocketClient.addProtobuffListener(RoomFurnitureMovedData, new RoomFurnitureMovedEvent());

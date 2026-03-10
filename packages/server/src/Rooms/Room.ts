@@ -10,10 +10,12 @@ import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
 import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage } from "@pixel63/events";
+import RoomPet from "./Pets/RoomPet.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
     public readonly bots: RoomBot[] = [];
+    public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
 
     public readonly floorplan: RoomFloorplan;
@@ -24,6 +26,7 @@ export default class Room {
     constructor(public readonly model: RoomModel) {
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
         this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
+        this.pets = model.roomPets.map((userPet) => new RoomPet(this, userPet));
 
         this.floorplan = new RoomFloorplan(this);
 

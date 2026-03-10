@@ -63,7 +63,7 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
         userPet.user = user.model;
         userPet.pet = shopPet.pet;
 
-        //await user.getInventory().addPet(userFurniture);
+        await user.getInventory().addPet(userPet);
 
         user.sendUserData();
     }

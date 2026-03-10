@@ -82,7 +82,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             const assetData = data.assets.find((asset) => asset.name === assetName);
 
             if(!assetData) {
-                console.warn("Failed to find asset data for " + assetName);
+                //console.warn("Failed to find asset data for " + assetName);
     
                 FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
@@ -93,6 +93,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             
             if(!spriteData) {
                 console.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
+                
                 FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
                 continue;

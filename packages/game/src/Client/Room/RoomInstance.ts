@@ -10,6 +10,7 @@ import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import RoomPet from "@Client/Room/Pets/RoomPet";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -40,6 +41,7 @@ export default class RoomInstance {
     public readonly users: RoomUser[] = [];
     public furnitures: RoomFurniture[] = [];
     public bots: RoomBot[] = [];
+    public pets: RoomPet[] = [];
 
     public information?: RoomInformationData;
     public hasRights: boolean;
@@ -72,6 +74,10 @@ export default class RoomInstance {
 
         for(const bot of event.bots) {
             this.bots.push(new RoomBot(this, bot));
+        }
+
+        for(const pet of event.pets) {
+            this.pets.push(new RoomPet(this, pet));
         }
 
         this.registerEventListeners();
@@ -225,12 +231,16 @@ export default class RoomInstance {
     }
 
     public getActor(data?: RoomActorIdentifierData) {
+        if(data?.user) {
+            return this.getUserById(data.user.userId);
+        }
+
         if(data?.bot) {
             return this.getBotById(data.bot.botId);
         }
 
-        if(data?.user) {
-            return this.getUserById(data.user.userId);
+        if(data?.pet) {
+            return this.getPetById(data.pet.petId);
         }
 
         throw new Error("Unhandled actor type.");
@@ -244,6 +254,16 @@ export default class RoomInstance {
         }
 
         return bot;
+    }
+
+    public getPetById(id: string) {
+        const pet = this.pets.find((pet) => pet.data.id === id);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
     }
 
     public getFurnitureById(id: string) {

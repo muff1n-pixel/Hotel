@@ -8,6 +8,7 @@ import "Room/Structure/RoomStructureData.proto";
 
 import "User/Furniture/UserFurnitureData.proto";
 import "User/Bots/UserBotData.proto";
+import "User/Pets/UserPetData.proto";
 
 message RoomLoadData {
     string id = 1;
@@ -19,6 +20,7 @@ message RoomLoadData {
     repeated RoomUserData users = 4;
     repeated UserFurnitureData furniture = 5;
     repeated UserBotData bots = 6;
+    repeated UserPetData pets = 7;
 
-    bool has_rights = 7;
+    bool has_rights = 8;
 }

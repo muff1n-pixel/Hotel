@@ -6,7 +6,7 @@ import { PetPaletteData } from "@pixel63/events";
 
 export default class Pet {
     private frame: number = 0;
-    private direction: number = 2;
+    public direction: number = 2;
     private size: number = 64;
     private color: number = 0;
     private grayscaled: boolean = false;
@@ -14,7 +14,7 @@ export default class Pet {
     private readonly renderer: PetDefaultRenderer;
     private data?: FurnitureData;
 
-    constructor(public readonly type: string, public readonly palettes: PetPaletteData[], public posture: string = "std", public headonly: boolean = false) {
+    constructor(public readonly type: string, public readonly palettes: PetPaletteData[] | undefined, public posture: string = "std", public headonly: boolean = false) {
         this.renderer = new PetDefaultRenderer(this.type, this.palettes);
     }
     

@@ -1,5 +1,6 @@
 import { clientInstance } from "../../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { RoomActorPositionData } from "@pixel63/events";
 
 export default class RoomActorPositionEvent implements ProtobuffListener<RoomActorPositionData> {
@@ -24,7 +25,12 @@ export default class RoomActorPositionEvent implements ProtobuffListener<RoomAct
         }
 
         if(payload.direction !== undefined) {
-            actor.item.figureRenderer.direction = payload.direction;
+            if(actor.item instanceof RoomFigureItem) {
+                actor.item.figureRenderer.direction = payload.direction;
+            }
+            else {
+                actor.item.pet.direction = payload.direction;
+            }
         }
     }
 }

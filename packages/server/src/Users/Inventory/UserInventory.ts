@@ -6,7 +6,9 @@ import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
 import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
-import { UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
+import { UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
+import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
+import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -219,6 +221,63 @@ export default class UserInventory {
                     equipped: userBadge.equipped
                 };
             })
+        }));
+    }
+
+    // Pets
+    public async getPetById(userPetId: string) {
+        return await UserPetModel.findOne({
+            where: {
+                id: userPetId,
+                userId: this.user.model.id,
+                roomId: null
+            },
+            include: [
+                {
+                    model: UserModel,
+                    as: "user"
+                },
+                {
+                    model: PetModel,
+                    as: "pet"
+                }
+            ]
+        });
+    }
+
+    public async sendPets() {
+        const userPets = await UserPetModel.findAll({
+            where: {
+                userId: this.user.model.id,
+                roomId: null
+            },
+            order: [['updatedAt','DESC']],
+            include: [
+                {
+                    model: PetModel,
+                    as: "pet"
+                }
+            ]
+        });
+
+        this.user.sendProtobuff(UserInventoryPetsData, UserInventoryPetsData.fromJSON({
+            allUserPets: userPets
+        }));
+    }
+
+    public async addPet(userPet: UserPetModel) {
+        this.user.sendProtobuff(UserInventoryPetsData, UserInventoryPetsData.fromJSON({
+            updatedUserPets: [
+                userPet
+            ]
+        }));
+    }
+
+    public async removePet(userPet: UserPetModel) {
+        this.user.sendProtobuff(UserInventoryPetsData, UserInventoryPetsData.fromJSON({
+            deletedUserPets: [
+                userPet
+            ]
         }));
     }
 }
