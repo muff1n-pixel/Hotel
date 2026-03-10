@@ -1,9 +1,13 @@
 import loadingImage from '../../Images/loading/loading_bubble.gif';
 import './Loading.css'
 
-const Loading = () => {
+type LoadingProps = {
+  style?: React.CSSProperties;
+};
+
+const Loading = ({ style }: LoadingProps) => {
     return (
-        <div className="loading">
+        <div className="loading" style={style}>
             <img src={loadingImage} alt="Loading" />
         </div>
     )

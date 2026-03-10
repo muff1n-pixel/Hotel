@@ -12,6 +12,7 @@ import diamondsIcon from '../../Images/me/diamonds.png'
 import ArticlesContainer from '../../Components/ArticleContainer/ArticleContainer';
 import UnknowUserImage from '../../Images/unknow_user.gif';
 import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
+import HotRooms from '../../Components/HotRooms/HotRooms';
 
 const MePage = () => {
     const navigate = useNavigate();
@@ -40,7 +41,7 @@ const MePage = () => {
                         <div className='hotel_view'>
                             <div className='enter_button'>
                                 <div className='bg'></div>
-                                <Button color='green' size='medium' onClick={() => window.location.href = "/game"}>Enter Hotel <div className='arrow'></div></Button>
+                                <Button color='green' size='medium' onClick={() => window.open("/game", "_blank", "noopener,noreferrer")}>Enter Hotel <div className='arrow'></div></Button>
                             </div>
                         </div>
                         <div className='my_data'>
@@ -90,10 +91,7 @@ const MePage = () => {
                 <div className='grid_row'>
                     <ArticlesContainer />
 
-                    <div className='box'>
-                        <div className='title red'>Title Box</div>
-                        <div className='content'>Nunc ut arcu ac tellus iaculis placerat. Praesent bibendum felis eget elementum tincidunt. Nullam sit amet suscipit mi. Nulla quis auctor metus. Aliquam rhoncus non diam quis feugiat. Pellentesque a elit sed ante dignissim eleifend sit amet nec risus. Maecenas sapien urna, feugiat eget laoreet et, gravida lacinia mauris.</div>
-                    </div>
+                    <HotRooms />
                 </div>
             </div>
         </div>

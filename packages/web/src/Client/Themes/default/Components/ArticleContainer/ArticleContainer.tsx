@@ -51,7 +51,7 @@ const ArticleContainer = () => {
     }, [articles.length]);
 
     if (loading)
-        return <Loading />
+        return <Loading style={{ marginBottom: "20px" }}  />
     else if (articles.length > 0) {
         return (
             <div className='articlesContainer'>

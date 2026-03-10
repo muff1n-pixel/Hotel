@@ -2,10 +2,16 @@ import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
 import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
 
+type ClientOptions = {
+  userId: string;
+  accessToken: string;
+  room?: string | undefined;
+};
+
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    constructor(secure: boolean, hostname: string, port: number, options: Record<"userId" | "accessToken", string>) {
+    constructor(secure: boolean, hostname: string, port: number, options: ClientOptions) {
         super();
 
         this.socket = new WebSocket(`${(secure)?("wss"):("ws")}://${hostname}:${port}?${new URLSearchParams(options).toString()}`);

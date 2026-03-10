@@ -53,7 +53,8 @@ async function start(text?: string) {
         config.server.port,
         {
             accessToken: Cookies.get("accessToken") ?? "",
-            userId: searchParams.get("user") ?? "user1"
+            userId: searchParams.get("user") ?? "user1",
+            room: searchParams.get("room") ?? undefined,
         }
     );
 

@@ -1,0 +1,70 @@
+.hot_rooms {
+    .row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 8px;
+
+        .icon {
+            width: 32px;
+            height: 32px;
+            background-image: url('../../Images/rooms/room_icon_1.gif');
+            margin-right: 10px;
+        }
+
+        .icon.green {
+            background-image: url('../../Images/rooms/room_icon_2.gif');
+        }
+
+        .icon.orange {
+            background-image: url('../../Images/rooms/room_icon_3.gif');
+        }
+
+        .icon.red {
+            background-image: url('../../Images/rooms/room_icon_4.gif');
+        }
+
+        .infos {
+            .name {
+                font-weight: bold;
+                max-width: 170px;
+                word-break: break-all;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -moz-box-orient: vertical;
+                -ms-box-orient: vertical;
+                box-orient: vertical;
+                -webkit-line-clamp: 1;
+                -moz-line-clamp: 1;
+                -ms-line-clamp: 1;
+                line-clamp: 1;
+                overflow: hidden;
+            }
+
+            .owner {
+                font-size: 12px;
+                color: #e7570f;
+            }
+        }
+
+        .joinRoom {
+            margin-left: auto;
+            transition-duration: 0.5s;
+            display: none;
+        }
+    }
+
+    .row:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+
+        .joinRoom {
+            display: block;
+        }
+    }
+
+    .row:last-child {
+        margin-bottom: 0;
+    }
+}

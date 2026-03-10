@@ -130,7 +130,7 @@ const Header = () => {
                             </div>
                         </div>
 
-                        {currentUser !== null && <Button color='green' onClick={() => window.location.href = "/game"}>Enter Pixel63</Button>}
+                        {currentUser !== null && <Button color='green' onClick={() => window.open("/game", "_blank", "noopener,noreferrer")}>Enter Pixel63</Button>}
                     </div>
 
                     <div className='onlines'>
