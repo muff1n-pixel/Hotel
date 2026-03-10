@@ -92,7 +92,7 @@ export default class RoomCursor extends EventTarget {
     }
 
     private frame() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure", "bot"].includes(item.type));
+        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure", "bot", "pet"].includes(item.type));
 
         if(this.roomRenderer.roomInstance?.hoveredUser.value && (!entity || this.roomRenderer.items.indexOf(entity.item) !== this.roomRenderer.items.indexOf(this.roomRenderer.roomInstance?.hoveredUser.value.item))) {
             this.roomRenderer.roomInstance.hoveredUser.value = null;
