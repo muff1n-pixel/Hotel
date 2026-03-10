@@ -25,7 +25,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         const palette = this.palettes.find((breed) => breed.tags.includes(tag));
 
         if(!palette) {
-            return null;
+            return data.palettes?.find((palette) => palette.master && palette.tags.includes(tag));
         }
 
         return data.palettes?.find((_palette) => _palette.id === palette.paletteId);
@@ -66,6 +66,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                 this.palettesData.push(palette);
             }
 
+            const newImageData = new ImageData(imageData.width, imageData.height);
+
             const canvas = new OffscreenCanvas(image.width, image.height);
 
             for(let index = 0; index < imageData.data.length; index += 4) {
@@ -74,15 +76,22 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                 if(palette.colors[green] !== "FFFFFF") {
                     const rgba = hexToRgb(palette.colors[green]);
 
-                    imageData.data[index] = rgba.red;
-                    imageData.data[index + 1] = rgba.green;
-                    imageData.data[index + 2] = rgba.blue;
+                    newImageData.data[index] = rgba.red;
+                    newImageData.data[index + 1] = rgba.green;
+                    newImageData.data[index + 2] = rgba.blue;
+                    newImageData.data[index + 3] = imageData.data[index + 3];
+                }
+                else {
+                    newImageData.data[index] = imageData.data[index];
+                    newImageData.data[index + 1] = imageData.data[index + 1];
+                    newImageData.data[index + 2] = imageData.data[index + 2];
+                    newImageData.data[index + 3] = imageData.data[index + 3];
                 }
             }
 
             const context = canvas.getContext("2d");
 
-            context?.putImageData(imageData, 0, 0);
+            context?.putImageData(newImageData, 0, 0);
 
             return {
                 image: canvas.transferToImageBitmap(),

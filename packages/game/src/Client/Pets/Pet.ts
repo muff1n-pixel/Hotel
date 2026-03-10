@@ -12,7 +12,7 @@ export default class Pet {
     private color: number = 0;
     private grayscaled: boolean = false;
 
-    private readonly renderer: FurnitureRenderer;
+    private readonly renderer: PetDefaultRenderer;
     private data?: FurnitureData;
 
     constructor(public readonly type: string, public readonly palettes: PetPaletteData[], public posture: string = "std") {
@@ -27,6 +27,14 @@ export default class Pet {
         }
 
         return await this.renderer.render(this.data, this.direction, this.size, this.getAnimationId(), this.color ?? 0, this.frame, this.grayscaled);
+    }
+
+    public async getData() {
+        if(!this.data) {
+            this.data = await PetAssets.getData(this.type);
+        }
+
+        return this.data;
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
@@ -55,5 +63,27 @@ export default class Pet {
         }
 
         return posture.animationId;
+    }
+
+    public getPaletteColors(tag: string) {
+        if(!this.data) {
+            return null;
+        }
+
+        const palette = this.renderer.getPaletteData(this.data, tag);
+
+        if(!palette) {
+            return null;
+        }
+
+        const colors = [
+            palette.color1
+        ];
+
+        if(palette.color2) {
+            colors.push(palette.color2);
+        }
+
+        return colors;
     }
 }

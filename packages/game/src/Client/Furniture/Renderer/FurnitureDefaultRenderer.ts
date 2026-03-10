@@ -69,7 +69,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
             }
 
-            if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
+            /*if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
                 const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${color}_${grayscaled}`);
 
                 if(assetSprite) {
@@ -77,7 +77,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 }
 
                 continue;
-            }
+            }*/
 
             const assetData = data.assets.find((asset) => asset.name === assetName);
 

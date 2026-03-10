@@ -15,7 +15,7 @@ export default function PetImage({ data }: PetImageProps) {
             return;
         }
 
-        const pet = new Pet(data.type, data.palettes, "mv");
+        const pet = new Pet(data.type, data.palettes);
 
         pet.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
             setImage(image);
