@@ -74,8 +74,8 @@ router.post("/", async (req, res) => {
     });
 
     return res.json({
-        id: user.id,
         accessToken: accessToken,
+        id: user.id,
         name: user.name,
         email: user.email,
         lastLoggin: user.lastLogin,
