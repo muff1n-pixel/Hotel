@@ -158,7 +158,7 @@ export default class RoomPet implements RoomActor {
 
     public async handleActionsInterval() {
         //if(this.model.relaxed) {
-        //    await this.handleRelaxed();
+            await this.handleRelaxed();
         //}
 
         this.path.handleActionsInterval();
@@ -169,7 +169,7 @@ export default class RoomPet implements RoomActor {
     public async handleRelaxed() {
         const elapsedSinceLastMovement = performance.now() - this.lastMovement;
 
-        if(elapsedSinceLastMovement < 5 * 1000) {
+        if(elapsedSinceLastMovement < 3 * 1000) {
             return;
         }
 

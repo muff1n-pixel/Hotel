@@ -232,6 +232,15 @@ export default class Room {
             }
         }
 
+        for(const pet of this.pets) {
+            try {
+                await pet.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle pet actions interval", error);
+            }
+        }
+
         /*if(!this.users.some((user) => user.path?.length)) {
             clearInterval(this.actionsInterval);
 
