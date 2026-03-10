@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message PetPaletteData {
+    repeated string tags = 1;
+    uint32 palette_id = 2;
+}

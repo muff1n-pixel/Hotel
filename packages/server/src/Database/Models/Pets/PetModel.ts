@@ -1,40 +1,56 @@
-import { FurnitureFlagsData, RoomPositionData } from "@pixel63/events";
+import { FurnitureFlagsData, PetPaletteData, RoomPositionData } from "@pixel63/events";
 import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class PetModel extends Model {
     declare id: string;
+
     declare type: string;
+
     declare name: string;
     declare description?: string;
+
+    declare palettes: PetPaletteData;
 }
 
 export function initializePetModel(sequelize: Sequelize) {
     PetModel.init(
         {
-          id: {
-            type: DataTypes.UUID,
-            primaryKey: true
-          },
-          
-          type: {
-            type: new DataTypes.STRING(64),
-            allowNull: false
-          },
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true
+            },
 
-          name: {
-            type: new DataTypes.STRING(256),
-            allowNull: false
-          },
+            type: {
+                type: new DataTypes.STRING(64),
+                allowNull: false
+            },
 
-          description: {
-            type: new DataTypes.STRING(256),
-            allowNull: true,
-            defaultValue: null
-          },
+            name: {
+                type: new DataTypes.STRING(256),
+                allowNull: false
+            },
+
+            description: {
+                type: new DataTypes.STRING(256),
+                allowNull: true,
+                defaultValue: null
+            },
+
+            palettes: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("palettes"));
+                },
+                set: function (value) {
+                    this.setDataValue("palettes", JSON.stringify(value));
+                },
+                allowNull: true,
+                defaultValue: null
+            },
         },
         {
-          tableName: "pets",
-          sequelize
+            tableName: "pets",
+            sequelize
         }
     );
 }

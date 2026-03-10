@@ -1,6 +1,6 @@
 import User from "../../../Users/User.js";
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
-import { GetShopPagePetsData, ShopPagePetsData } from "@pixel63/events";
+import { GetShopPagePetsData, PetData, ShopPagePetsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
 import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
@@ -31,13 +31,7 @@ export default class GetShopPagePetsEvent implements ProtobuffListener<GetShopPa
                 return {
                     id: shopPet.id,
 
-                    pet: {
-                        id: shopPet.pet.id,
-                        type: shopPet.pet.type,
-
-                        name: shopPet.pet.name,
-                        description: shopPet.pet.description
-                    },
+                    pet: PetData.fromJSON(shopPet.pet.toJSON()),
                     
                     credits: shopPet.credits,
                     duckets: shopPet.duckets,

@@ -5,6 +5,7 @@ import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaul
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
+import { PetPaletteData } from "@pixel63/events";
 
 export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     private palettesData: {
@@ -12,7 +13,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         colors: string[];
     }[] = [];
 
-    constructor(public readonly type: string, public readonly palettes: { tags: string[]; paletteId: number; }[]) {
+    constructor(public readonly type: string, public readonly palettes: PetPaletteData[]) {
         super(type);
     }
 
@@ -46,7 +47,6 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
 
             requireImageData: true
         });
-            console.log({ tag, usesPalette });
 
         if(imageData && tag && usesPalette) {
             let palette = this.palettesData.find((palette) => palette.tags.includes(tag));
@@ -55,10 +55,6 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                 const paletteData = this.getPaletteData(data, tag);
 
                 if(!paletteData) {
-                    console.warn("Palette does not exist.", {
-                        tag
-                    });
-
                     return { image, imageData };
                 }
 
