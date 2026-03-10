@@ -2,4 +2,6 @@ syntax = "proto3";
 
 message PurchaseShopPetData {
     string id = 1;
+
+    string name = 2;
 }

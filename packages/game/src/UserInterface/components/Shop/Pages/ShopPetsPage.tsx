@@ -5,10 +5,12 @@ import DialogButton from "../../Dialog/Button/DialogButton";
 import { useDialogs } from "../../../hooks/useDialogs";
 import { useUser } from "../../../hooks/useUser";
 import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
-import { PetData, ShopPetData } from "@pixel63/events";
+import { PurchaseShopPetData, ShopPetData } from "@pixel63/events";
 import useShopPagePets from "./Hooks/useShopPagePets";
 import PetImage from "../../Pets/PetImage";
 import Pet from "@Client/Pets/Pet";
+import Input from "../../Form/Input";
+import { webSocketClient } from "../../../..";
 
 type FilteredShopPet = {
     pet: ShopPetData;
@@ -27,6 +29,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
     const [activeFilteredPets, setActiveFilteredPets] = useState<FilteredShopPet[]>([]);
 
     const [filteredPets, setFilteredPets] = useState<ShopPetData[]>([]);
+
+    const [name, setName] = useState("");
 
     useEffect(() => {
         if(!page.teaser) {
@@ -83,10 +87,11 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        /*webSocketClient.sendProtobuff(PurchaseShopBotData, PurchaseShopBotData.create({
-            id: activeBot.id
-        }));*/
-    }, [activePet, activePetRef]);
+        webSocketClient.sendProtobuff(PurchaseShopPetData, PurchaseShopPetData.create({
+            id: activePet.id,
+            name
+        }));
+    }, [activePet, activePetRef, name]);
 
     return (
         <div style={{
@@ -279,8 +284,16 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
             )}
 
             <div style={{
-                //height: 52,
+                display: "flex",
+                flexDirection: "column",
+                gap: 5
+            }}>
+                <div style={{ fontSize: 12 }}>Name your pet:</div>
 
+                <Input value={name} onChange={setName} maxLength={24}/>
+            </div>
+
+            <div style={{
                 display: "flex",
                 flexDirection: "column"
             }}>
@@ -292,7 +305,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activePet || (
+                    <DialogButton disabled={!name.length || !activePet || (
                         (activePet.credits ?? 0) > user.credits
                         || (activePet.duckets ?? 0) > user.duckets
                         || (activePet.diamonds ?? 0) > user.diamonds

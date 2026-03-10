@@ -22,7 +22,7 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
         });
 
         if(!shopPet) {
-            return;
+            throw new Error("Shop pet does not exist.");
         }
 
         if((shopPet.credits && user.model.credits < shopPet.credits)) {
@@ -37,6 +37,10 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
             return;
         }
 
+        if(payload.name.length === 0 || payload.name.length > 24) {
+            throw new Error("Payload name is too short or too long.");
+        }
+
         user.model.credits -= shopPet.credits ?? 0;
         user.model.duckets -= shopPet.duckets ?? 0;
         user.model.diamonds -= shopPet.diamonds ?? 0;
@@ -48,17 +52,12 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
 
             position: RoomPositionData.create(),
             direction: 0,
+
+            name: payload.name,
         
             roomId: null,
             userId: user.model.id,
             petId: shopPet.pet.id
-        }, {
-            include: [
-                {
-                    model: FurnitureModel,
-                    as: "furniture"
-                }
-            ]
         });
 
         userPet.user = user.model;

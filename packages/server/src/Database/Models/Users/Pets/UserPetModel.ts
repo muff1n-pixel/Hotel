@@ -9,6 +9,7 @@ export class UserPetModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
     declare direction: number;
+    declare name: string;
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
@@ -21,6 +22,10 @@ export function initializeUserPetModel(sequelize: Sequelize) {
           id: {
             type: DataTypes.UUID,
             primaryKey: true,
+          },
+          name: {
+            type: DataTypes.STRING,
+            allowNull: false,
           },
           position: {
               type: DataTypes.TEXT,
