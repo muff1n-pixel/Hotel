@@ -4,6 +4,7 @@ import { GetShopPagePetsData, PetData, ShopPagePetsData } from "@pixel63/events"
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
 import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class GetShopPagePetsEvent implements ProtobuffListener<GetShopPagePetsData> {
     async handle(user: User, payload: GetShopPagePetsData) {
@@ -15,7 +16,14 @@ export default class GetShopPagePetsEvent implements ProtobuffListener<GetShopPa
                 include: [
                     {
                         model: PetModel,
-                        as: "pet"
+                        as: "pet",
+
+                        include: [
+                            {
+                                model: PetBreedModel,
+                                as: "breed"
+                            }
+                        ]
                     }
                 ]
             }

@@ -42,7 +42,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
         const filteredPets: ShopPetData[] = [];
 
         for(const pet of pets) {
-            if(filteredPets.some((filteredPet) => filteredPet.pet?.type === pet.pet?.type)) {
+            if(pet.pet?.breed && filteredPets.some((filteredPet) => filteredPet.pet?.breed === pet.pet?.breed)) {
                 continue;
             }
 
@@ -58,9 +58,9 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
         }
             
         Promise.all(pets
-            .filter((shopPet) => shopPet.pet?.type === activePet.pet?.type)
+            .filter((shopPet) => ((activePet.pet?.breed)?(shopPet.pet?.breed === activePet.pet?.breed):(activePet.id === shopPet.id)))
             .map(async (shopPet) => {
-                if(!shopPet.pet?.type) {
+                if(!shopPet.pet) {
                     return null;
                 }
 

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message PetBreedData {
+    string id = 1;
+
+    string name = 2;
+}

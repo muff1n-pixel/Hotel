@@ -6,6 +6,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseShopPetData> {
     async handle(user: User, payload: PurchaseShopPetData) {
@@ -16,7 +17,14 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
             include: [
                 {
                     model: PetModel,
-                    as: "pet"
+                    as: "pet",
+
+                    include: [
+                        {
+                            model: PetBreedModel,
+                            as: "breed"
+                        }
+                    ]
                 }
             ]
         });

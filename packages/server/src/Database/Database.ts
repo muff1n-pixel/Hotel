@@ -32,6 +32,7 @@ import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
 import { initializePetModel } from "./Models/Pets/PetModel.js";
 import { initializeUserPetModel } from "./Models/Users/Pets/UserPetModel.js";
 import { initializeShopPagePetModel } from "./Models/Shop/ShopPagePetModel.js";
+import { initializePetBreedModel } from "./Models/Pets/PetBreedModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -39,6 +40,8 @@ export async function initializeModels() {
   initializeBadgeModel(sequelize);
 
   initializeFurnitureModel(sequelize);
+
+  initializePetBreedModel(sequelize);
   initializePetModel(sequelize);
 
   initializeShopPageModel(sequelize);

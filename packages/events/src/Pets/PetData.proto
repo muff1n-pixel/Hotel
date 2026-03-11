@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Pets/PetPaletteData.proto";
+import "Pets/PetBreedData.proto";
 
 message PetData {
     string id = 1;
@@ -11,4 +12,5 @@ message PetData {
     optional string description = 4;
 
     repeated PetPaletteData palettes = 5;
+    PetBreedData breed = 6;
 }

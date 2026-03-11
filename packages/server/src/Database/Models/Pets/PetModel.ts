@@ -1,5 +1,6 @@
 import { FurnitureFlagsData, PetPaletteData, RoomPositionData } from "@pixel63/events";
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
+import { PetBreedModel } from "./PetBreedModel";
 
 export class PetModel extends Model {
     declare id: string;
@@ -10,6 +11,8 @@ export class PetModel extends Model {
     declare description?: string;
 
     declare palettes: PetPaletteData;
+
+    declare breed?: NonAttribute<PetBreedModel>;
 }
 
 export function initializePetModel(sequelize: Sequelize) {
@@ -53,4 +56,9 @@ export function initializePetModel(sequelize: Sequelize) {
             sequelize
         }
     );
+        
+    PetModel.belongsTo(PetBreedModel, {
+        as: "breed",
+        foreignKey: "breedId"
+    });
 }
