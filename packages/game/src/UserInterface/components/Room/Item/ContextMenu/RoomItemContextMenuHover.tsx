@@ -18,18 +18,18 @@ export default function RoomItemContextMenuHover({ item }: RoomItemContextMenuHo
     useEffect(() => {
         if(item instanceof RoomFigureItem) {
             if(item.type === "figure") {
-                const user = room?.getUserByItem(item);
+                const user = room?.users.find((user) => user.item.id === item.id);
 
                 setName(user?.data.name);
             }
             else if(item.type === "bot") {
-                const bot = room?.getBotByItem(item);
+                const bot = room?.bots.find((bot) => bot.item.id === item.id);
 
                 setName(bot?.data.name);
             }
         }
         else if(item instanceof RoomPetItem) {
-            const pet = room?.getPetByItem(item);
+            const pet = room?.pets.find((pet) => pet.item.id === item.id);
 
             setName(pet?.data.name);
         }

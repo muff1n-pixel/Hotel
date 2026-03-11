@@ -18,10 +18,10 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
     const room = useRoomInstance();
     const user = useUser();
 
-    const [bot, setBot] = useState(room?.getBotByItem(item));
+    const [bot, setBot] = useState(room?.bots.find((bot) => bot.item.id === item.id));
 
     useEffect(() => {
-        setBot(room?.getBotByItem(item));
+        setBot(room?.bots.find((bot) => bot.item.id === item.id));
     }, [room, item]);
 
     if(!bot) {

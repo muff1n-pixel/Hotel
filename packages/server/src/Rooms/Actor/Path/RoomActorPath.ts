@@ -119,8 +119,6 @@ export default class RoomActorPath {
         this.pathOnFinish = onFinish;
         this.pathOnCancel = onCancel;
 
-        console.log("Result: " + JSON.stringify(path));
-
         this.actor.room.requestActionsFrame();
     }
 
@@ -199,9 +197,6 @@ export default class RoomActorPath {
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
             }, sitableFurniture.model.direction);
         }
-
-
-        console.log("User path finished");
 
         this.path = undefined;
         this.pathOnFinish?.();

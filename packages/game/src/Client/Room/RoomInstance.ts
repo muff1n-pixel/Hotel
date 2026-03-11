@@ -4,7 +4,7 @@ import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { webSocketClient } from "../..";
+import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
@@ -192,6 +192,12 @@ export default class RoomInstance {
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
+        
+        if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
+            this.roomRenderer.focusedItem.value = null;
+        }
+        
+        clientInstance.roomInstance.update();
     }
 
     public getUserById(userId: string) {
@@ -270,6 +276,19 @@ export default class RoomInstance {
         return pet;
     }
 
+    public removePet(petId: string) {
+        const pet = this.getPetById(petId);
+
+        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(pet.item), 1);
+        this.pets.splice(this.pets.indexOf(pet), 1);
+
+        if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
+            this.roomRenderer.focusedItem.value = null;
+        }
+        
+        clientInstance.roomInstance.update();
+    }
+
     public getFurnitureById(id: string) {
         const furniture = this.furnitures.find((furniture) => furniture.data.id === id);
 
@@ -321,7 +340,11 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(bot.item), 1);
         this.bots.splice(this.bots.indexOf(bot), 1);
 
-        this.clientInstance.roomInstance.update();
+        if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {
+            this.roomRenderer.focusedItem.value = null;
+        }
+
+        clientInstance.roomInstance.update();
     }
 
     public moveFurniture(roomFurnitureId: string) {

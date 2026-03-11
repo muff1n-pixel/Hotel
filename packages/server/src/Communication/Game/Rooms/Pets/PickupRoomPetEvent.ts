@@ -8,12 +8,12 @@ export default class PickupRoomPetEvent implements ProtobuffListener<PickupRoomP
             return;
         }
 
-        const userBot = user.room.getPetById(payload.id);
+        const userPet = user.room.getPetById(payload.id);
 
-        if(userBot.model.user.id !== user.model.id) {
+        if(userPet.model.user.id !== user.model.id) {
             throw new Error("User is not owner of the pet.");
         }
 
-        await userBot.pickup();
+        await userPet.pickup();
     }
 }

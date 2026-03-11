@@ -23,7 +23,7 @@ export default class RoomPetsEvent implements ProtobuffListener<RoomPetsData> {
 
         if(payload.petsRemoved?.length) {
             payload.petsRemoved.forEach((botData) => {
-                clientInstance.roomInstance.value!.removeBot(botData.id);
+                clientInstance.roomInstance.value!.removePet(botData.id);
             });
         }
 

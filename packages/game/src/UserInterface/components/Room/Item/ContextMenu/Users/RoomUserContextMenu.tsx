@@ -19,11 +19,11 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
     const room = useRoomInstance();
     const user = useUser();
 
-    const [targetUser, setTargetUser] = useState(room?.getUserByItem(item));
+    const [targetUser, setTargetUser] = useState(room?.users.find((user) => user.item.id === item.id));
     const [tab, setTab] = useState<null | "dance">(null);
 
     useEffect(() => {
-        setTargetUser(room?.getUserByItem(item));
+        setTargetUser(room?.users.find((user) => user.item.id === item.id));
     }, [room, item]);
 
     if(!targetUser) {
