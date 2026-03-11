@@ -19,6 +19,8 @@ import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
 import { RoomPositionData, RoomStructureData } from "@pixel63/events";
+import ObservableProperty from "@Client/Utilities/ObservableProperty";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -41,6 +43,8 @@ export default class RoomRenderer extends EventTarget {
     private readonly framesPerSecond: number = 24;
     private readonly millisecondsPerFrame: number = 1000 / this.framesPerSecond;
     
+    public focusedItem = new ObservableProperty<RoomItem | null>(null);
+    public hoveredItem = new ObservableProperty<RoomItem | null>(null);
 
     private readonly cappedFramesPerSecond: number = 60;
     private readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
@@ -329,6 +333,9 @@ export default class RoomRenderer extends EventTarget {
                     translatePosition.top += 16;
                 }
             }
+        }
+        else if(item instanceof RoomPetItem) {
+            translatePosition.top -= 16;
         }
 
         return {

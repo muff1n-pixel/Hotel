@@ -24,7 +24,7 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
                 }
             }
 
-            clientInstance.roomInstance.value.focusedUser.update();
+            clientInstance.roomInstance.value.roomRenderer.focusedItem.update();
         }
     }
 }

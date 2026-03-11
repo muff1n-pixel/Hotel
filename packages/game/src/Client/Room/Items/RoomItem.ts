@@ -6,6 +6,8 @@ import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/Renderer";
 
 export default class RoomItem implements RoomItemInterface {
+    public id: number = Math.random();
+    
     position?: RoomPositionData;
     priority: number = 0;
 

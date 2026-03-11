@@ -11,6 +11,7 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -45,9 +46,6 @@ export default class RoomInstance {
 
     public information?: RoomInformationData;
     public hasRights: boolean;
-
-    public focusedUser = new ObservableProperty<HoveredFigure | null>(null);
-    public hoveredUser = new ObservableProperty<HoveredFigure | null>(null);
 
     constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData) {
         this.id = event.id;
@@ -194,10 +192,6 @@ export default class RoomInstance {
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
-
-        if(this.focusedUser.value?.type === "user" && this.focusedUser.value?.user.data.id === userId) {
-            this.focusedUser.value = null;
-        }
     }
 
     public getUserById(userId: string) {
@@ -258,6 +252,16 @@ export default class RoomInstance {
 
     public getPetById(id: string) {
         const pet = this.pets.find((pet) => pet.data.id === id);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
+    public getPetByItem(item: RoomPetItem) {
+        const pet = this.pets.find((pet) => pet.item.id === item.id);
 
         if(!pet) {
             throw new Error("Pet does not exist in room.");
