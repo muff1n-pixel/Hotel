@@ -69,6 +69,16 @@ export default class Room {
         return bot;
     }
 
+    public getPetById(userPetId: string) {
+        const pet = this.pets.find((pet) => pet.model.id === userPetId);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
     public getRoomUserAtPosition(position: RoomPositionOffsetData) {
         return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
     }
