@@ -50,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { CreateRoomData, EnterRoomData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopPageBotsData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopFurnitureData, PurchaseShopPetData, RoomClickData, RoomFurnitureImportData, RoomReadyData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateFurnitureData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UseRoomFurnitureData } from "@pixel63/events";
+import { CreateRoomData, EnterRoomData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopPageBotsData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopFurnitureData, PurchaseShopPetData, RoomClickData, RoomFurnitureImportData, RoomReadyData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateFurnitureData, UpdatePetData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UseRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 import GetShopPagePetsEvent from "../Communication/Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "../Communication/Game/Shop/Development/UpdateShopPetEvent.js";
@@ -58,6 +58,9 @@ import PurchaseShopPetEvent from "../Communication/Game/Shop/PurchaseShopPetEven
 import GetUserInventoryPetsEvent from "../Communication/Game/Inventory/Pets/GetUserInventoryPetsEvent.js";
 import PlaceRoomPetEvent from "../Communication/Game/Rooms/Pets/PlaceRoomPetEvent.js";
 import PickupRoomPetEvent from "../Communication/Game/Rooms/Pets/PickupRoomPetEvent.js";
+import GetPetBrowserEvent from "../Communication/Game/Pets/GetPetBrowserEvent.js";
+import GetPetBreedsEvent from "../Communication/Game/Pets/GetPetBreedsEvent.js";
+import UpdatePetEvent from "../Communication/Game/Pets/UpdatePetEvent.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -143,6 +146,11 @@ export default class EventHandler extends EventEmitter {
         // Room pet events
         this.addProtobuffListener(PlaceRoomPetData, new PlaceRoomPetEvent());
         this.addProtobuffListener(PickupRoomPetData, new PickupRoomPetEvent());
+
+        // Pet events
+        this.addProtobuffListener(GetPetBrowserData, new GetPetBrowserEvent());
+        this.addProtobuffListener(GetPetBreedsData, new GetPetBreedsEvent());
+        this.addProtobuffListener(UpdatePetData, new UpdatePetEvent());
 
         this.addProtobuffListener(RoomReadyData, new RoomReadyEvent());
         this.addProtobuffListener(RoomClickData, new RoomClickEvent());

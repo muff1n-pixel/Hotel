@@ -16,7 +16,7 @@ export default class UpdateShopPetEvent implements ProtobuffListener<UpdateShopP
 
         const pet = await PetModel.findOne({
             where: {
-                type: payload.type
+                id: payload.petId
             }
         });
 

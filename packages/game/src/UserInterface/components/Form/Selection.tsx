@@ -57,11 +57,13 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
                     display: "flex",
                     flexDirection: "row",
 
-                    height: 24,
+                    height: 26,
 
                     background: "#FFFFFF",
                     border: "1px solid #808080",
                     borderRadius: 6,
+
+                    boxSizing: "border-box",
 
                     alignItems: "center",
 
@@ -91,6 +93,8 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
 
                         width: "100%",
 
+                        boxSizing: "border-box",
+
                         background: "#FFFFFF",
                         border: "1px solid #808080",
                         borderRadius: 6,
@@ -103,6 +107,8 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
                                 height: 24,
 
                                 paddingLeft: 6,
+
+                                boxSizing: "border-box",
 
                                 display: "flex",
 

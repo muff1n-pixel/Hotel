@@ -42,7 +42,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
         const filteredPets: ShopPetData[] = [];
 
         for(const pet of pets) {
-            if(pet.pet?.breed && filteredPets.some((filteredPet) => filteredPet.pet?.breed === pet.pet?.breed)) {
+            if(pet.pet?.breed && filteredPets.some((filteredPet) => filteredPet.pet?.breed?.id === pet.pet?.breed?.id)) {
                 continue;
             }
 
@@ -58,7 +58,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
         }
             
         Promise.all(pets
-            .filter((shopPet) => ((activePet.pet?.breed)?(shopPet.pet?.breed === activePet.pet?.breed):(activePet.id === shopPet.id)))
+            .filter((shopPet) => ((activePet.pet?.breed)?(shopPet.pet?.breed?.id === activePet.pet?.breed?.id):(activePet.id === shopPet.id)))
             .map(async (shopPet) => {
                 if(!shopPet.pet) {
                     return null;
@@ -91,6 +91,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
             id: activePet.id,
             name
         }));
+
+        dialogs.closeDialog("edit-pet");
     }, [activePet, activePetRef, name]);
 
     return (
@@ -138,8 +140,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                         <div>
                             <b>{activePet.pet?.name}</b>
 
-                            {(activePet.pet?.description) && (
-                                <p style={{ fontSize: 12 }}>{activePet.pet.description}</p>
+                            {(activePet.pet?.breed) && (
+                                <div>{activePet.pet.breed.name}</div>
                             )}
                         </div>
 
@@ -168,59 +170,59 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                 )}
             </div>
             
-            {(activeFilteredPets.length > 1) && (
-                <DialogPanel>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 5,
-                        padding: 2
-                    }}>
-                        {activeFilteredPets.map((filteredPet) => (
-                            <div key={filteredPet?.pet.id} style={{
-                                border: "1px solid black",
+            <DialogPanel>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 5,
+                    padding: 2
+                }}>
+                    {activeFilteredPets.map((filteredPet) => (
+                        <div key={filteredPet?.pet.id} style={{
+                            border: "1px solid black",
+                            borderRadius: 3,
+                            cursor: "pointer"
+                        }} onClick={() => setActivePet(filteredPet.pet)}>
+                            <div style={{
+                                width: 38,
+                                height: 30,
+
+                                border: "2px solid white",
+                                borderWidth: (activePet?.id === filteredPet.pet?.id)?(4):(2),
                                 borderRadius: 3,
-                                cursor: "pointer"
-                            }} onClick={() => setActivePet(filteredPet.pet)}>
-                                <div style={{
-                                    width: 38,
-                                    height: 30,
+                                boxSizing: "border-box",
 
-                                    border: "2px solid white",
-                                    borderWidth: (activePet?.id === filteredPet.pet?.id)?(4):(2),
-                                    borderRadius: 3,
-                                    boxSizing: "border-box",
+                                boxShadow: (activePet?.id === filteredPet.pet?.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
 
-                                    boxShadow: (activePet?.id === filteredPet.pet?.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
+                                display: "flex",
+                                flexDirection: "row"
+                            }}>
+                                {filteredPet.colors.map((color) => (
+                                    <div key={color} style={{
+                                        flex: 1,
 
-                                    display: "flex",
-                                    flexDirection: "row"
-                                }}>
-                                    {filteredPet.colors.map((color) => (
-                                        <div key={color} style={{
-                                            flex: 1,
-
-                                            background: color
-                                        }}/>
-                                    ))}
-                                </div>
+                                        background: color
+                                    }}/>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </DialogPanel>
-            )}
+                        </div>
+                    ))}
+                </div>
+            </DialogPanel>
 
-            {(editMode || filteredPets.length > 1)?(
-                <DialogPanel style={{ flex: "1 1 0", overflow: "hidden" }} contentStyle={{ display: "flex", flex: 1 }}>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
+            <DialogPanel style={{ flex: "1 1 0", overflow: "hidden" }} contentStyle={{ display: "flex", flex: 1 }}>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    
+                    padding: 4,
+                    overflowY: "scroll"
+                }}>
+                    {((editMode)?(pets):(filteredPets)).map((pet) => {
+                        const active = (editMode)?(pet.id === activePet?.id):(pet.pet?.breed?.id === activePet?.pet?.breed?.id);
                         
-                        padding: 4,
-                        overflowY: "scroll"
-                    }}>
-                        {((editMode)?(pets):(filteredPets)).map((pet) => (
+                        return (
                             <div key={pet.id} style={{
                                 width: 60,
                                 height: 60,
@@ -228,14 +230,14 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
 
                                 borderRadius: 5,
 
-                                border: (activePet?.id === pet.id)?("2px solid #62C4E8"):("2px solid transparent"),
-                                background: (activePet?.id === pet.id)?("#FFFFFF"):(undefined),
+                                border: (active)?("2px solid #62C4E8"):("2px solid transparent"),
+                                background: (active)?("#FFFFFF"):(undefined),
 
                                 display: "flex",
                                 justifyContent: "center",
 
                                 cursor: "pointer"
-                            }} onClick={() => (activePet?.id !== pet.id) && setActivePet(pet)}>
+                            }} onClick={() => (!active) && setActivePet(pet)}>
                                 <div style={{
                                     flex: 1,
                                     alignSelf: "center",
@@ -259,29 +261,27 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                                     )}
                                 </div>
                             </div>
-                        ))}
+                        );
+                    })}
 
-                        {(editMode) && (
-                            <div style={{
-                                width: 53,
-                                height: 62,
+                    {(editMode) && (
+                        <div style={{
+                            width: 53,
+                            height: 62,
 
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
 
-                                cursor: "pointer"
-                            }} onClick={() => dialogs.addUniqueDialog("edit-shop-pet", { page })}>
-                                <div className="sprite_add" style={{
-                                    marginTop: -8
-                                }}/>
-                            </div>
-                        )}
-                    </div>
-                </DialogPanel>
-            ):(
-                <div style={{ flex: 1 }}/>
-            )}
+                            cursor: "pointer"
+                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-pet", { page })}>
+                            <div className="sprite_add" style={{
+                                marginTop: -8
+                            }}/>
+                        </div>
+                    )}
+                </div>
+            </DialogPanel>
 
             <div style={{
                 display: "flex",

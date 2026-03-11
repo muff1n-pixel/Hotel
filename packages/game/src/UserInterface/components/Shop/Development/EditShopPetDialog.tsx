@@ -19,7 +19,7 @@ export type EditShopPetDialogProps = {
 export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPetDialogProps) {
     const dialogs = useDialogs();
 
-    const [type, setType] = useState(data?.pet?.type ?? "");
+    const [pet, setPet] = useState(data.pet);
 
     const [credits, setCredits] = useState(data?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
@@ -31,7 +31,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
 
             pageId: data.page.id,
 
-            type,
+            petId: pet?.id,
 
             credits,
             duckets,
@@ -39,7 +39,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
         }));
 
         dialogs.closeDialog("edit-shop-pet");
-    }, [dialogs, data, type, credits, duckets, diamonds]);
+    }, [dialogs, data, pet, credits, duckets, diamonds]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop pet"):("Create shop pet")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
@@ -67,14 +67,39 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <PetImage data={PetData.create({
-                            type
-                        })}/>
+                        <PetImage data={pet}/>
                     </div>
 
-                    <b>Pet type</b>
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "space-between"
+                    }}>
+                        <b>Pet</b>
 
-                    <Input placeholder="Pet type" value={type} onChange={setType}/>
+                        {(pet) && (
+                            <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: () => setPet(pet) });
+                            }}>
+                                Edit pet
+                            </div>
+                        )}
+                    </div>
+
+                    <Input readonly placeholder="Pet ID" value={pet?.id ?? ""}/>
+    
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "flex-end"
+                    }}>
+                        <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                            dialogs.addUniqueDialog("pet-browser", {
+                                activePet: pet,
+                                onSelect: (pet: PetData) => setPet(pet)
+                            });
+                        }}>
+                            Open pet browser
+                        </div>
+                    </div>
 
                     <b>Pet price</b>
 

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Pets/PetBreedData.proto";
+
+message PetBreedsData {
+    string type = 1;
+
+    repeated PetBreedData breeds = 2;
+}

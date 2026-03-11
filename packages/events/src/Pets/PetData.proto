@@ -9,8 +9,7 @@ message PetData {
     string type = 2;
     
     string name = 3;
-    optional string description = 4;
 
-    repeated PetPaletteData palettes = 5;
-    PetBreedData breed = 6;
+    repeated PetPaletteData palettes = 4;
+    PetBreedData breed = 5;
 }

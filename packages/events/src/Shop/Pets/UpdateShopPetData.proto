@@ -5,7 +5,7 @@ message UpdateShopPetData {
 
     string page_id = 2;
 
-    string type = 3;
+    string pet_id = 3;
 
     uint32 credits = 4;
     uint32 duckets = 5;

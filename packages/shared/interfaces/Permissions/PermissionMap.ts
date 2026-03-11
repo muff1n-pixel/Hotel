@@ -1,6 +1,9 @@
 export type FurniturePermissions = 
     "furniture:edit";
 
+export type PetPermissions = 
+    "pets:view";
+
 export type ShopPermissions = 
     "shop:edit";
 
@@ -20,4 +23,5 @@ export type PermissionAction =
     | ShopPermissions
     | FeedbackPermissions
     | RoomPermissions
-    | CommandPermissions;
+    | CommandPermissions
+    | PetPermissions;

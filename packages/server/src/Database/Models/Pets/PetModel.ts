@@ -8,7 +8,6 @@ export class PetModel extends Model {
     declare type: string;
 
     declare name: string;
-    declare description?: string;
 
     declare palettes: PetPaletteData;
 
@@ -31,12 +30,6 @@ export function initializePetModel(sequelize: Sequelize) {
             name: {
                 type: new DataTypes.STRING(256),
                 allowNull: false
-            },
-
-            description: {
-                type: new DataTypes.STRING(256),
-                allowNull: true,
-                defaultValue: null
             },
 
             palettes: {
