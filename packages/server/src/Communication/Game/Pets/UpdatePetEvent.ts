@@ -10,7 +10,7 @@ export default class UpdatePetEvent implements ProtobuffListener<UpdatePetData> 
     async handle(user: User, payload: UpdatePetData) {
         const permissions = await user.getPermissions();
 
-        if(!permissions.hasPermission("pets:view")) {
+        if(!permissions.hasPermission("pets:edit")) {
             throw new Error("User does not have edit pets privileges.");
         }
 

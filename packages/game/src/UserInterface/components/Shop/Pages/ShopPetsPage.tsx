@@ -181,7 +181,9 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                         <div key={filteredPet?.pet.id} style={{
                             border: "1px solid black",
                             borderRadius: 3,
-                            cursor: "pointer"
+                            cursor: "pointer",
+
+                            position: "relative"
                         }} onClick={() => setActivePet(filteredPet.pet)}>
                             <div style={{
                                 width: 38,
@@ -205,6 +207,17 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                                     }}/>
                                 ))}
                             </div>
+
+                            {(editMode) && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: -10,
+                                    right: -10,
+                                    cursor: "pointer"
+                                }} onClick={() => dialogs.addUniqueDialog("edit-shop-pet", { ...filteredPet.pet, page: page })}>
+                                    <div className="sprite_room_user_motto_pen"/>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -219,8 +232,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                     padding: 4,
                     overflowY: "scroll"
                 }}>
-                    {((editMode)?(pets):(filteredPets)).map((pet) => {
-                        const active = (editMode)?(pet.id === activePet?.id):(pet.pet?.breed?.id === activePet?.pet?.breed?.id);
+                    {(filteredPets).map((pet) => {
+                        const active = pet.pet?.breed?.id === activePet?.pet?.breed?.id;
                         
                         return (
                             <div key={pet.id} style={{

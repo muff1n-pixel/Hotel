@@ -2,7 +2,8 @@ export type FurniturePermissions =
     "furniture:edit";
 
 export type PetPermissions = 
-    "pets:view";
+    "pets:view"
+    | "pets:edit";
 
 export type ShopPermissions = 
     "shop:edit";

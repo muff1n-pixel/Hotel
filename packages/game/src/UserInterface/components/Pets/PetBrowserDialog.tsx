@@ -7,6 +7,7 @@ import { webSocketClient } from "../../..";
 import { useDialogs } from "../../hooks/useDialogs";
 import PetPaletteItem from "./PetPaletteItem";
 import DialogButton from "../Dialog/Button/DialogButton";
+import { usePermissionAction } from "../../hooks/usePermissionAction";
 
 export type PetBrowserDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type PetBrowserDialogProps = {
 
 export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDialogProps) {
     const dialogs = useDialogs();
+    const hasEditPetsPermissions = usePermissionAction("pets:edit");
 
     const [state, setState] = useState(performance.now());
 
@@ -91,7 +93,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                                         </div>
                                     )
                                 ],
-                                tools: (
+                                tools: (hasEditPetsPermissions) && (
                                     <div className="sprite_room_user_motto_pen" style={{
                                         cursor: "pointer"
                                     }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: () => handleRefresh() })}/>
@@ -99,7 +101,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                                 onClick: () => setActivePet(pet)
                             };
                         })}
-                        tools={(
+                        tools={(hasEditPetsPermissions) && (
                             <div className="sprite_add" style={{
                                 cursor: "pointer"
                             }} onClick={() => dialogs.addUniqueDialog("edit-pet", { onClose: () => handleRefresh() })}/>
