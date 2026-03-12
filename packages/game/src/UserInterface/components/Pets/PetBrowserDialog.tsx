@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/DialogContent";
 import DialogTable from "../Dialog/Table/DialogTable";
@@ -94,9 +94,15 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                                     )
                                 ],
                                 tools: (hasEditPetsPermissions) && (
-                                    <div className="sprite_room_user_motto_pen" style={{
-                                        cursor: "pointer"
-                                    }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: handleRefresh })}/>
+                                    <Fragment>
+                                        <div className="sprite_room_user_motto_pen" style={{
+                                            cursor: "pointer"
+                                        }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: handleRefresh })}/>
+                                        
+                                        <div className="sprite_add" style={{
+                                            cursor: "pointer"
+                                        }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, id: undefined, onClose: handleRefresh })}/>
+                                    </Fragment>
                                 ),
                                 onClick: () => setActivePet(pet)
                             };
