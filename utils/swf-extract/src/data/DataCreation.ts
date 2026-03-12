@@ -247,8 +247,19 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
 
                                 frameSequence: getValueAsArray(layer["frameSequence"]?.["frame"]).map((frame: any) => {
                                     return {
-                                        id: parseInt(frame["@_id"])
-                                    }
+                                        id: parseInt(frame["@_id"]),
+
+                                        offsets: (frame["offsets"])?(
+                                            getValueAsArray(frame["offsets"]["offset"]).map((offset: any) => {
+                                                return {
+                                                    direction: parseInt(offset["@_direction"]),
+
+                                                    left: (offset["@_x"])?(parseInt(offset["@_x"])):(undefined),
+                                                    top: (offset["@_y"])?(parseInt(offset["@_y"])):(undefined),
+                                                };
+                                            })
+                                        ):(undefined)
+                                    };
                                 })
                             }
                         })

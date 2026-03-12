@@ -4,6 +4,7 @@ import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
+import { FurnitureAnimationLayerFrame, FurnitureAnimationLayerFrameOffset } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
@@ -32,6 +33,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
 
             let spriteFrame = 0;
+            let animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined = undefined;
 
             if(animationLayer?.frameSequence?.length) {
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
@@ -59,6 +61,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     console.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
                 }
                 else {
+                    animationFrameOffset = animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options.direction);
                     spriteFrame = animationLayer?.frameSequence[frameSequenceIndex].id;
                 }
             }
@@ -124,6 +127,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             
             if(directionLayerData?.y !== undefined) {
                 y += directionLayerData.y;
+            }
+
+            if(animationFrameOffset?.left !== undefined) {
+                x += animationFrameOffset?.left;
+            }
+
+            if(animationFrameOffset?.top !== undefined) {
+                y += animationFrameOffset?.top;
             }
 
             const assetSprite: FurnitureRendererSprite = {
