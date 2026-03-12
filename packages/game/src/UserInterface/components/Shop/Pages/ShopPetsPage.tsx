@@ -41,7 +41,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
     useEffect(() => {
         const filteredPets: ShopPetData[] = [];
 
-        for(const pet of pets) {
+        for(const pet of pets.toSorted((petA, petB) => (petB.pet?.breed?.index ?? 0) - (petA.pet?.breed?.index ?? 0))) {
             if(pet.pet?.breed && filteredPets.some((filteredPet) => filteredPet.pet?.breed?.id === pet.pet?.breed?.id)) {
                 continue;
             }
