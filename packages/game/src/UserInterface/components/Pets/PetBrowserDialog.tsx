@@ -115,9 +115,23 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
 
                         fontSize: 12
                     }}>
-                        <div>Showing {pets.length} / {count} {(count === 1)?("result"):("results")}</div>
+                        <div>Showing {(page * 20) + pets.length} / {count} {(count === 1)?("result"):("results")}</div>
 
-                        <div>Page {page + 1} / {1 + Math.floor(count / 20)}</div>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: 5
+                        }}>
+                            {(count > 20) && (
+                                <div style={{ cursor: "pointer" }} onClick={() => setPage(Math.max(page - 1, 0))}><b>{"<"}</b></div>
+                            )}
+
+                            <div>Page {page + 1} / {Math.floor((count) / 20) + 1}</div>
+
+                            {(count > 20) && (
+                                <div style={{ cursor: "pointer" }} onClick={() => setPage(Math.min(page + 1, Math.floor((count) / 20)))}><b>{">"}</b></div>
+                            )}
+                        </div>
 
                         {(data?.onSelect) && (
                             <div style={{
