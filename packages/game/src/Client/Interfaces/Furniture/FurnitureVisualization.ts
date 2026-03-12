@@ -50,5 +50,17 @@ export type FurnitureVisualization = {
                 }[];
             }[];
         }[];
+
+        postures: {
+            id: string;
+
+            animationId: number;
+        }[];
+
+        gestures: {
+            id: string;
+
+            animationId: number;
+        }[];
     }[];
 };

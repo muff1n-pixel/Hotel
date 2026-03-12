@@ -72,6 +72,7 @@ export default class RoomUser implements RoomActor {
             users: this.room.users.map((user) => user.getRoomUserData()),
             furniture: this.room.furnitures.map((furniture) => furniture.model),
             bots: this.room.bots.map((bot) => bot.model),
+            pets: this.room.pets.map((pet) => pet.model),
 
             hasRights: this.hasRights()
         }))

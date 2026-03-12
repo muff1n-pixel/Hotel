@@ -93,8 +93,8 @@ export default function InventoryBadgesTab() {
                             <div key={userBadge.id} style={{
                                 display: "flex",
 
-                                width: 44,
-                                height: 44,
+                                width: 46,
+                                height: 46,
 
 
                                 border: "1px solid black",

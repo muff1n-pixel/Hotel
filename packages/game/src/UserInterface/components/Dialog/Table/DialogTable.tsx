@@ -86,7 +86,7 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                                     color: "#000",
                                     fontSize: 12
                                 }}>
-                                    {value}
+                                    {(value?.toString().length)?(value):(<i>Empty</i>)}
                                 </div>
                             </div>
                         ))}

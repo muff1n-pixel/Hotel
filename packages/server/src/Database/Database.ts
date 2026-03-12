@@ -29,6 +29,10 @@ import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArti
 import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
 import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
 import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
+import { initializePetModel } from "./Models/Pets/PetModel.js";
+import { initializeUserPetModel } from "./Models/Users/Pets/UserPetModel.js";
+import { initializeShopPagePetModel } from "./Models/Shop/ShopPagePetModel.js";
+import { initializePetBreedModel } from "./Models/Pets/PetBreedModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -37,10 +41,14 @@ export async function initializeModels() {
 
   initializeFurnitureModel(sequelize);
 
+  initializePetBreedModel(sequelize);
+  initializePetModel(sequelize);
+
   initializeShopPageModel(sequelize);
   initializeShopPageFurnitureModel(sequelize);
   initializeShopPageFeatureModel(sequelize);
   initializeShopPageBotModel(sequelize);
+  initializeShopPagePetModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);
@@ -57,6 +65,7 @@ export async function initializeModels() {
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
 
+  initializeUserPetModel(sequelize);
   initializeUserBotModel(sequelize);
   initializeUserFurnitureModel(sequelize);
   initializeRoomChatStyleModel(sequelize);

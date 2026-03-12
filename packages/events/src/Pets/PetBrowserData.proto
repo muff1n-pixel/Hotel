@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Pets/PetData.proto";
+
+message PetBrowserData {
+    repeated PetData pets = 1;
+
+    uint32 count = 2;
+}

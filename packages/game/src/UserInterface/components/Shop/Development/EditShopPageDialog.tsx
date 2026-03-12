@@ -32,7 +32,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
 
             parentId,
 
-            category: "furniture",
+            category: data?.category ?? "furniture",
 
             type,
 

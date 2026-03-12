@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message PickupRoomPetData {
+    string id = 1;
+}

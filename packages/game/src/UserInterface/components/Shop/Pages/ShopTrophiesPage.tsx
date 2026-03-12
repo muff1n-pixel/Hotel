@@ -62,7 +62,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
             .filter((furniture) => furniture.furniture?.type === activeFurniture.furniture?.type)
             .sort((a, b) => (a.furniture?.color ?? 0) - (b.furniture?.color ?? 0))
             .map(async (shopFurniture) => {
-                const furniture =  new Furniture(shopFurniture.furniture?.type, 64, undefined, undefined, undefined);
+                const furniture = new Furniture(shopFurniture.furniture?.type, 64, undefined, undefined, undefined);
 
                 await furniture.getData();
 

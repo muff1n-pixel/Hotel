@@ -6,7 +6,9 @@ import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
-import { FigureConfigurationData, FurnitureData, RoomPositionData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData } from "@pixel63/events";
+import Pet from "@Client/Pets/Pet";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -27,6 +29,15 @@ export default class RoomFurniturePlacer {
         const roomFurnitureItem = new RoomFurnitureItem(
             roomInstance.roomRenderer,
             new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color)
+        );
+
+        return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
+    }
+
+    public static fromPetData(roomInstance: RoomInstance, petData: PetData) {
+        const roomFurnitureItem = new RoomPetItem(
+            roomInstance.roomRenderer,
+            new Pet(petData.type, petData.palettes)
         );
 
         return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
@@ -92,6 +103,20 @@ export default class RoomFurniturePlacer {
 
         if(this.roomFurnitureItem instanceof RoomFurnitureItem) {
             new Furniture(this.roomFurnitureItem.furnitureRenderer.type, 1, 0, 0, this.roomFurnitureItem.furnitureRenderer.color).renderToCanvas().then((image) => {
+                this.iconElement.width = image.width;
+                this.iconElement.height = image.height;
+
+                const context = this.iconElement.getContext("2d");
+
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
+
+                context.drawImage(image, 0, 0);
+            });
+        }
+        else if(this.roomFurnitureItem instanceof RoomPetItem) {
+            new Pet(this.roomFurnitureItem.pet.type, this.roomFurnitureItem.pet.palettes, undefined, true).renderToCanvas().then((image) => {
                 this.iconElement.width = image.width;
                 this.iconElement.height = image.height;
 
@@ -288,6 +313,9 @@ export default class RoomFurniturePlacer {
             }
             else if(this.roomFurnitureItem instanceof RoomFigureItem) {
                 this.onPlace?.(position, this.roomFurnitureItem.figureRenderer.direction!);
+            }
+            else if(this.roomFurnitureItem instanceof RoomPetItem) {
+                this.onPlace?.(position, this.roomFurnitureItem.pet.direction!);
             }
         }
 

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+import "Pets/PetData.proto";
+
+message UserPetData {
+    string id = 1;
+    string user_id = 2;
+    
+    string name = 4;
+    PetData pet = 5;
+
+    RoomPositionData position = 6;
+    uint32 direction = 7;
+}

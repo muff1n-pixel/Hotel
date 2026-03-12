@@ -73,8 +73,10 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
         x: parseFloat(asset["@_x"]) * -1,
         y: parseFloat(asset["@_y"]) * -1,
         flipHorizontal: asset["@_flipH"] === '1',
-        source: asset["@_source"]
-    }));
+        source: asset["@_source"],
+        
+        usesPalette: (asset["@_usesPalette"] === '1')
+    } satisfies FurnitureAsset));
 }
 
 export function createAssetsDataFromManifest(collection: SwfExtractionCollection): FigureAssets {
@@ -96,6 +98,8 @@ export function createAssetsDataFromManifest(collection: SwfExtractionCollection
 
             x: parseFloat(offset?.[0] ?? 0) * -1,
             y: parseFloat(offset?.[1] ?? 0) * -1,
+
+            usesPalette: (asset["@_usesPalette"] === '1')
         };
     }).concat(
         getValueAsArray(document.manifest.library.aliases?.alias).map((alias: any) => {
@@ -249,6 +253,20 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                             }
                         })
                     }
+                }),
+
+                postures: getValueAsArray(visualization["postures"]?.["posture"]).map((posture: any) => {
+                    return {
+                        id: posture["@_id"],
+                        animationId: parseInt(posture["@_animationId"])
+                    };
+                }),
+
+                gestures: getValueAsArray(visualization["gestures"]?.["gesture"]).map((gesture: any) => {
+                    return {
+                        id: gesture["@_id"],
+                        animationId: parseInt(gesture["@_animationId"])
+                    };
                 })
             } satisfies FurnitureVisualization["visualizations"][0]
         })

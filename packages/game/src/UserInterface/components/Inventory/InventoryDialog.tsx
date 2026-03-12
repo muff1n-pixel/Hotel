@@ -2,8 +2,8 @@ import Dialog from "../Dialog/Dialog";
 import DialogTabs from "../Dialog/Tabs/DialogTabs";
 import InventoryBadgesTab from "./Tabs/InventoryBadgesTab";
 import InventoryBotsTab from "./Tabs/InventoryBotsTab";
-import InventoryEmptyTab from "./Tabs/InventoryEmptyTab";
 import InventoryFurnitureTab from "./Tabs/InventoryFurnitureTab";
+import InventoryPetsTab from "./Tabs/InventoryPetsTab";
 
 export type InventoryDialogProps = {
     hidden?: boolean;
@@ -20,7 +20,7 @@ export default function InventoryDialog({ hidden, onClose }: InventoryDialogProp
                 },
                 {
                     icon: "Pets",
-                    element: (<InventoryEmptyTab/>)
+                    element: (<InventoryPetsTab/>)
                 },
                 {
                     icon: "Badges",

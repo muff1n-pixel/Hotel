@@ -8,6 +8,10 @@ export type DialogCurrencyPanelProps = {
 }
 
 export default function DialogCurrencyPanel({ credits, diamonds, duckets }: DialogCurrencyPanelProps) {
+    if(!credits && !diamonds && !duckets) {
+        return null;
+    }
+    
     return (
         <DialogPanel>
             <div style={{

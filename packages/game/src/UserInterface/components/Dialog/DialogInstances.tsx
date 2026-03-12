@@ -25,6 +25,9 @@ import BotSpeechDialog from "../Bots/BotSpeechDialog";
 import FigureDialog from "../Figure/FigureDialog";
 import RoomChatCommandsDialog from "../Room/Chat/Commands/RoomChatCommandsDialog";
 import SettingsDialog from "../Settings/SettingsDialog";
+import EditShopPetDialog from "../Shop/Development/EditShopPetDialog";
+import PetBrowserDialog from "../Pets/PetBrowserDialog";
+import EditPetDialog from "../Pets/EditPetDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -94,6 +97,9 @@ export default function DialogInstances() {
                     case "edit-shop-furniture":
                         return (<EditShopFurnitureDialog {...props} key={dialog.id}/>);
 
+                    case "edit-shop-pet":
+                        return (<EditShopPetDialog {...props} key={dialog.id}/>);
+
                     case "edit-shop-bot":
                         return (<EditShopBotDialog {...props} key={dialog.id}/>);
 
@@ -114,6 +120,12 @@ export default function DialogInstances() {
 
                     case "figure":
                         return (<FigureDialog {...props} key={dialog.id}/>);
+
+                    case "pet-browser":
+                        return (<PetBrowserDialog {...props} key={dialog.id}/>);
+
+                    case "edit-pet":
+                        return (<EditPetDialog {...props} key={dialog.id}/>);
                 }
             })}
         </Fragment>

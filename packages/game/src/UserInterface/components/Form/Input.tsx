@@ -4,8 +4,8 @@ export type InputProps = {
     type?: "text" | "number";
     placeholder?: string;
     style?: CSSProperties;
-    value: string;
-    onChange: (value: string) => void;
+    value?: string;
+    onChange?: (value: string) => void;
     min?: number;
     max?: number;
     step?: number;
@@ -25,7 +25,8 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                 border: "1px solid #808080",
                 borderRadius: 6,
 
-                paddingRight: 4,
+                paddingRight: 6,
+                paddingLeft: 4,
 
                 height: 24,
 
@@ -40,12 +41,13 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                     step={step}
                     placeholder={placeholder}
                     value={value}
-                    onChange={(event) => onChange((event.currentTarget as HTMLInputElement).value)}
+                    onChange={(event) => onChange?.((event.currentTarget as HTMLInputElement).value)}
                     min={min}
                     max={max}
                     maxLength={maxLength}
                     style={{
                         flex: 1,
+                        width: 0,
                         background: "none",
                         border: "none",
                         ...style

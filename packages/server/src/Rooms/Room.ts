@@ -10,10 +10,12 @@ import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
 import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage } from "@pixel63/events";
+import RoomPet from "./Pets/RoomPet.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
     public readonly bots: RoomBot[] = [];
+    public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
 
     public readonly floorplan: RoomFloorplan;
@@ -24,6 +26,7 @@ export default class Room {
     constructor(public readonly model: RoomModel) {
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
         this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
+        this.pets = model.roomPets.map((userPet) => new RoomPet(this, userPet));
 
         this.floorplan = new RoomFloorplan(this);
 
@@ -64,6 +67,16 @@ export default class Room {
         }
 
         return bot;
+    }
+
+    public getPetById(userPetId: string) {
+        const pet = this.pets.find((pet) => pet.model.id === userPetId);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
     }
 
     public getRoomUserAtPosition(position: RoomPositionOffsetData) {
@@ -154,6 +167,10 @@ export default class Room {
         return this.bots.find((bot) => bot.model.position.row === position.row && bot.model.position.column === position.column);
     }
 
+    public getPetAtPosition(position: RoomPositionOffsetData) {
+        return this.pets.find((pet) => pet.model.position.row === position.row && pet.model.position.column === position.column);
+    }
+
     public getRoomUser(user: User) {
         return this.getRoomUserById(user.model.id);
     }
@@ -222,6 +239,15 @@ export default class Room {
             }
             catch(error) {
                 console.error("Failed to handle bot actions interval", error);
+            }
+        }
+
+        for(const pet of this.pets) {
+            try {
+                await pet.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle pet actions interval", error);
             }
         }
 

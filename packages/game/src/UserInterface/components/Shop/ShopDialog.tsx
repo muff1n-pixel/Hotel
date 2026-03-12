@@ -84,13 +84,13 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 {
                     icon: "Frontpage",
                     element: (
-                        <ShopDialogCategory activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
                     ),
                 },
                 {
                     icon: "Furniture",
                     element: (
-                        <ShopDialogCategory activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
                     ),
                 },
                 {
@@ -99,7 +99,9 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 },
                 {
                     icon: "Pets",
-                    element: (<div/>),
+                    element: (
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                    ),
                 }
             ]}>
 
