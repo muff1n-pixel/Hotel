@@ -85,18 +85,24 @@ export default class Pet {
             return null;
         }
 
-        const palette = this.renderer.getPaletteData(this.data, tag);
+        const palette = this.palettes?.find((palette) => (tag)?(palette.tags.includes(tag)):(!palette.tags.length));
 
         if(!palette) {
             return null;
         }
 
+        const paletteData = this.renderer.getPaletteData(this.data, tag);
+
+        if(!paletteData) {
+            return null;
+        }
+
         const colors = [
-            palette.color1
+            paletteData.color1
         ];
 
-        if(palette.color2) {
-            colors.push(palette.color2);
+        if(paletteData.color2) {
+            colors.push(paletteData.color2);
         }
 
         return colors;

@@ -23,7 +23,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     }
 
     public getPaletteData(data: FurnitureData, tag: string | undefined) {
-        const palette = this.palettes?.find((breed) => (tag)?(breed.tags.includes(tag)):(!breed.tags));
+        const palette = this.palettes?.find((breed) => (tag)?(breed.tags.includes(tag)):(!breed.tags.length));
 
         if(!palette) {
             return data.palettes?.find((palette) => palette.master && (tag)?(palette.tags?.includes(tag)):(!palette.tags));

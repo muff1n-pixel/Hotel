@@ -77,7 +77,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
 
                 await pet.getData();
 
-                const colors = pet.getPaletteColors("body");
+                const colors = pet.getPaletteColors("body") ?? pet.getPaletteColors(undefined);
 
                 if(!colors) {
                     return null;
@@ -179,58 +179,60 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                 )}
             </div>
             
-            <DialogPanel>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 5,
-                    padding: 2
-                }}>
-                    {activeFilteredPets.map((filteredPet) => (
-                        <div key={filteredPet?.pet.id} style={{
-                            border: "1px solid black",
-                            borderRadius: 3,
-                            cursor: "pointer",
-
-                            position: "relative"
-                        }} onClick={() => setActivePet(filteredPet.pet)}>
-                            <div style={{
-                                width: 38,
-                                height: 30,
-
-                                border: "2px solid white",
-                                borderWidth: (activePet?.id === filteredPet.pet?.id)?(4):(2),
+            {(activeFilteredPets.length > 1) && (
+                <DialogPanel>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        padding: 2
+                    }}>
+                        {activeFilteredPets.map((filteredPet) => (
+                            <div key={filteredPet?.pet.id} style={{
+                                border: "1px solid black",
                                 borderRadius: 3,
-                                boxSizing: "border-box",
+                                cursor: "pointer",
 
-                                boxShadow: (activePet?.id === filteredPet.pet?.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
-
-                                display: "flex",
-                                flexDirection: "row"
-                            }}>
-                                {filteredPet.colors.map((color) => (
-                                    <div key={color} style={{
-                                        flex: 1,
-
-                                        background: color
-                                    }}/>
-                                ))}
-                            </div>
-
-                            {(editMode) && (
+                                position: "relative"
+                            }} onClick={() => setActivePet(filteredPet.pet)}>
                                 <div style={{
-                                    position: "absolute",
-                                    top: -10,
-                                    right: -10,
-                                    cursor: "pointer"
-                                }} onClick={() => dialogs.addUniqueDialog("edit-shop-pet", { ...filteredPet.pet, page: page })}>
-                                    <div className="sprite_room_user_motto_pen"/>
+                                    width: 38,
+                                    height: 30,
+
+                                    border: "2px solid white",
+                                    borderWidth: (activePet?.id === filteredPet.pet?.id)?(4):(2),
+                                    borderRadius: 3,
+                                    boxSizing: "border-box",
+
+                                    boxShadow: (activePet?.id === filteredPet.pet?.id)?("inset 0 0 0 1px rgba(0, 0, 0, .4)"):("none"),
+
+                                    display: "flex",
+                                    flexDirection: "row"
+                                }}>
+                                    {filteredPet.colors.map((color) => (
+                                        <div key={color} style={{
+                                            flex: 1,
+
+                                            background: color
+                                        }}/>
+                                    ))}
                                 </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </DialogPanel>
+
+                                {(editMode) && (
+                                    <div style={{
+                                        position: "absolute",
+                                        top: -10,
+                                        right: -10,
+                                        cursor: "pointer"
+                                    }} onClick={() => dialogs.addUniqueDialog("edit-shop-pet", { ...filteredPet.pet, page: page })}>
+                                        <div className="sprite_room_user_motto_pen"/>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </DialogPanel>
+            )}
 
             <DialogPanel style={{ flex: "1 1 0", overflow: "hidden" }} contentStyle={{ display: "flex", flex: 1 }}>
                 <div style={{
