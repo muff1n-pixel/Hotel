@@ -33,7 +33,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     }
 
     public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, tag: string | undefined, usesPalette: boolean) {
-        const { image, imageData } = await FurnitureAssets.getFurnitureSprite(type, {
+        const { image, imageData } = await PetAssets.getSprite(type, {
             x: spriteData.x,
             y: spriteData.y,
 
