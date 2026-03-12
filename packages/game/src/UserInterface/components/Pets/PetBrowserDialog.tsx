@@ -96,7 +96,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                                 tools: (hasEditPetsPermissions) && (
                                     <div className="sprite_room_user_motto_pen" style={{
                                         cursor: "pointer"
-                                    }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: () => handleRefresh() })}/>
+                                    }} onClick={() => dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: handleRefresh })}/>
                                 ),
                                 onClick: () => setActivePet(pet)
                             };
@@ -104,7 +104,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                         tools={(hasEditPetsPermissions) && (
                             <div className="sprite_add" style={{
                                 cursor: "pointer"
-                            }} onClick={() => dialogs.addUniqueDialog("edit-pet", { onClose: () => handleRefresh() })}/>
+                            }} onClick={() => dialogs.addUniqueDialog("edit-pet", { onClose: handleRefresh })}/>
                         )}/>
 
                     <div style={{
