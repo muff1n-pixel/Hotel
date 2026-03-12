@@ -64,6 +64,15 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                     return null;
                 }
 
+                const palette = shopPet.pet.palettes.find((palette) => palette.tags.includes("body"));
+
+                if(palette?.color) {
+                    return {
+                        pet: shopPet,
+                        colors: [palette.color]
+                    };
+                }
+
                 const pet = new Pet(shopPet.pet.type, shopPet.pet?.palettes);
 
                 await pet.getData();

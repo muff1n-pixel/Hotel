@@ -92,7 +92,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
     }, [ data, onClose, type, name, breed, breedIndex, palettes ]);
 
     return (
-        <Dialog title="Pet Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={820} height={300} style={{
+        <Dialog title="Pet Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={820} height={340} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -210,39 +210,56 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                             )}/>
 
                         {(paletteIndex !== null) && (
-                            <div style={{
-                                fontSize: 12,
-                                lineHeight: 1.5,
+                            <Fragment>
+                                <div style={{
+                                    fontSize: 12,
+                                    lineHeight: 1.5,
 
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 5
-                            }}>
-                                <div style={{ flex: 1 }}>
-                                    <i>Tags</i>
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 5
+                                }}>
+                                    <div style={{ flex: 1 }}>
+                                        <i>Tags</i>
 
-                                    <Input value={paletteTags} onChange={(tags) => {
-                                        const mutatedPalettes = [...palettes];
+                                        <Input value={paletteTags} onChange={(tags) => {
+                                            const mutatedPalettes = [...palettes];
 
-                                        mutatedPalettes[paletteIndex].tags = tags.split(',').map((tag) => tag.trim()).filter(Boolean);
-                                        
-                                        setPalettes(mutatedPalettes);
-                                        setPaletteTags(tags);
-                                    }}/>
+                                            mutatedPalettes[paletteIndex].tags = tags.split(',').map((tag) => tag.trim()).filter(Boolean);
+                                            
+                                            setPalettes(mutatedPalettes);
+                                            setPaletteTags(tags);
+                                        }}/>
+                                    </div>
+
+                                    <div style={{ flex: 1}}>
+                                        <i>Palette</i>
+
+                                        <PetPaletteSelection type={type} breed={breedIndex} tags={palettes[paletteIndex].tags} value={palettes[paletteIndex].paletteId} onChange={(paletteId) => {
+                                            const mutatedPalettes = [...palettes];
+
+                                            mutatedPalettes[paletteIndex].paletteId = paletteId;
+                                            
+                                            setPalettes(mutatedPalettes);
+                                        }}/>
+                                    </div>
                                 </div>
 
-                                <div style={{ flex: 1}}>
-                                    <i>Palette</i>
-
-                                    <PetPaletteSelection type={type} breed={breedIndex} tags={palettes[paletteIndex].tags} value={palettes[paletteIndex].paletteId} onChange={(paletteId) => {
+                                <div style={{
+                                    fontSize: 12,
+                                    lineHeight: 1.5
+                                }}>
+                                    <i>Palette color</i>
+                                    
+                                    <Input value={palettes[paletteIndex].color} onChange={(value) => {
                                         const mutatedPalettes = [...palettes];
 
-                                        mutatedPalettes[paletteIndex].paletteId = paletteId;
+                                        mutatedPalettes[paletteIndex].color = value;
                                         
                                         setPalettes(mutatedPalettes);
                                     }}/>
                                 </div>
-                            </div>
+                            </Fragment>
                         )}
 
                         <div>

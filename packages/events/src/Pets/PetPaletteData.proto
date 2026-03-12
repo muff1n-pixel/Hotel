@@ -3,4 +3,5 @@ syntax = "proto3";
 message PetPaletteData {
     repeated string tags = 1;
     uint32 palette_id = 2;
+    optional string color = 3;
 }

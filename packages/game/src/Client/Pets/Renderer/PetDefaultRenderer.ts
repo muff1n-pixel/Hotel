@@ -32,6 +32,16 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return data.palettes?.find((_palette) => _palette.id === palette.paletteId);
     }
 
+    public getPaletteColor(tag: string | undefined) {
+        const palette = this.palettes?.find((breed) => (tag)?(breed.tags.includes(tag)):(!breed.tags));
+
+        if(!palette?.color) {
+            return null;
+        }
+
+        return hexToRgb(palette.color);
+    }
+
     public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, tag: string | undefined, usesPalette: boolean) {
         const { image, imageData } = await PetAssets.getSprite(type, {
             x: spriteData.x,
@@ -67,6 +77,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                 this.palettesData.push(palette);
             }
 
+            const color = this.getPaletteColor(tag);
+
             const newImageData = new ImageData(imageData.width, imageData.height);
 
             const canvas = new OffscreenCanvas(image.width, image.height);
@@ -87,6 +99,12 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                     newImageData.data[index + 1] = imageData.data[index + 1];
                     newImageData.data[index + 2] = imageData.data[index + 2];
                     newImageData.data[index + 3] = imageData.data[index + 3];
+                }
+
+                if(color) {
+                    newImageData.data[index] *= color.red / 255;
+                    newImageData.data[index + 1] *= color.green / 255;
+                    newImageData.data[index + 2] *= color.blue / 255;
                 }
             }
 

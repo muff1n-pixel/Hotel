@@ -9,7 +9,7 @@ export class PetModel extends Model {
 
     declare name: string;
 
-    declare palettes: PetPaletteData;
+    declare palettes: PetPaletteData[];
 
     declare breed?: NonAttribute<PetBreedModel>;
 }
