@@ -27,7 +27,7 @@ export function initializePetBreedModel(sequelize: Sequelize) {
             },
 
             index: {
-                type: DataTypes.NUMBER,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0
             }
