@@ -258,14 +258,16 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                                 display: "flex",
                                 justifyContent: "center",
 
-                                cursor: "pointer"
+                                cursor: "pointer",
+                                
+                                overflow: "hidden"
                             }} onClick={() => (!active) && setActivePet(pet)}>
                                 <div style={{
                                     flex: 1,
                                     alignSelf: "center",
                                     justifySelf: "center",
 
-                                    position: "relative"
+                                    position: "relative",
                                 }}>
                                     <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
                                         <PetImage data={pet.pet} headOnly/>

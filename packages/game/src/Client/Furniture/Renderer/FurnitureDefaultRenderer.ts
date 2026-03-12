@@ -106,7 +106,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const layerData = visualization.layers.find((layerData) => layerData.id === layer);
 
-            if(options.tags && (!layerData?.tag || !options.tags.includes(layerData?.tag))) {
+            if(options.tags && (layerData?.tag && !options.tags.includes(layerData?.tag))) {
                 continue;
             }
 

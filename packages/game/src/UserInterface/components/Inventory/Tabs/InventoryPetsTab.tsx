@@ -157,7 +157,10 @@ export default function InventoryPetsTab() {
                             key={userPet.id}
                             active={activePet?.id === userPet.id}
                             onClick={() => setActivePet(userPet)}
-                            width={46}>
+                            width={46}
+                            style={{
+                                overflow: "hidden"
+                            }}>
                             <PetImage data={userPet.pet} headOnly/>
                         </DialogItem>
                     ))}

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 
 export type DialogItemProps = PropsWithChildren & {
     width?: number;
@@ -7,9 +7,10 @@ export type DialogItemProps = PropsWithChildren & {
     active?: boolean;
     onClick?: () => void;
     onMouseDown?: () => void;
+    style?: CSSProperties;
 };
 
-export default function DialogItem({ width = 40, height = width, active, onClick, onMouseDown, children }: DialogItemProps) {
+export default function DialogItem({ width = 40, height = width, active, onClick, onMouseDown, children, style }: DialogItemProps) {
     return (
         <div style={{
             display: "flex",
@@ -35,7 +36,9 @@ export default function DialogItem({ width = 40, height = width, active, onClick
 
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+
+                ...style
             }}>
                 {children}
             </div>
