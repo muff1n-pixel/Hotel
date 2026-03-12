@@ -27,7 +27,9 @@ export default class GetPetBrowserEvent implements ProtobuffListener<GetPetBrows
                     model: PetBreedModel,
                     as: "breed"
                 }
-            ]
+            ],
+
+            order: ["breedId"]
         });
 
         user.sendProtobuff(PetBrowserData, PetBrowserData.create({

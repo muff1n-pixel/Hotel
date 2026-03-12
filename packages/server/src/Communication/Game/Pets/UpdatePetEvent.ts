@@ -1,10 +1,11 @@
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
-import { RoomFurnitureData, UpdatePetData } from "@pixel63/events";
+import { GetPetBrowserData, RoomFurnitureData, UpdatePetData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 import { randomUUID } from "node:crypto";
+import GetPetBrowserEvent from "./GetPetBrowserEvent.js";
 
 export default class UpdatePetEvent implements ProtobuffListener<UpdatePetData> {
     async handle(user: User, payload: UpdatePetData) {
@@ -57,5 +58,9 @@ export default class UpdatePetEvent implements ProtobuffListener<UpdatePetData> 
                 }));
             }
         }
+
+        new GetPetBrowserEvent().handle(user, GetPetBrowserData.create({
+            offset: 0
+        }));
     }
 }
