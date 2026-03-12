@@ -7,7 +7,7 @@ export type FurniturePalette = {
 
     master: boolean;
 
-    tags: string[];
+    tags?: string[];
 
     breed?: number;
     colorTag?: number;

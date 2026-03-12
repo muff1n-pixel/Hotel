@@ -10,7 +10,7 @@ import { PetPaletteData } from "@pixel63/events";
 
 export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     private palettesData: {
-        tags: string[];
+        tags: string[] | undefined;
         colors: string[];
     }[] = [];
 
@@ -22,11 +22,11 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return super.render(data, options);
     }
 
-    public getPaletteData(data: FurnitureData, tag: string) {
-        const palette = this.palettes?.find((breed) => breed.tags.includes(tag));
+    public getPaletteData(data: FurnitureData, tag: string | undefined) {
+        const palette = this.palettes?.find((breed) => (tag)?(breed.tags.includes(tag)):(!breed.tags));
 
         if(!palette) {
-            return data.palettes?.find((palette) => palette.master && palette.tags.includes(tag));
+            return data.palettes?.find((palette) => palette.master && (tag)?(palette.tags?.includes(tag)):(!palette.tags));
         }
 
         return data.palettes?.find((_palette) => _palette.id === palette.paletteId);
@@ -49,8 +49,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
             requireImageData: true
         });
 
-        if(imageData && tag && usesPalette) {
-            let palette = this.palettesData.find((palette) => palette.tags.includes(tag));
+        if(imageData && usesPalette) {
+            let palette = this.palettesData.find((palette) => (tag)?(palette.tags?.includes(tag)):(!palette.tags));
 
             if(!palette) {
                 const paletteData = this.getPaletteData(data, tag);

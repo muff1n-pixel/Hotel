@@ -80,7 +80,7 @@ export default class Pet {
         return posture.animationId;
     }
 
-    public getPaletteColors(tag: string) {
+    public getPaletteColors(tag: string | undefined) {
         if(!this.data) {
             return null;
         }

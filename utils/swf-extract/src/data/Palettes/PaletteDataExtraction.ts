@@ -22,7 +22,7 @@ export default class PaletteDataExtraction {
 
                 master: palette["@_master"] === "true",
 
-                tags: palette["@_tags"].split(','),
+                tags: (palette["@_tags"])?(palette["@_tags"].split(',')):(undefined),
 
                 breed: (palette["@_breed"])?(parseInt(palette["@_breed"])):(undefined),
                 colorTag: (palette["@_colortag"])?(parseInt(palette["@_colortag"])):(undefined),

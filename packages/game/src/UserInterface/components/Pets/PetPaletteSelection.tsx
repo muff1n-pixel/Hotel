@@ -17,7 +17,7 @@ export default function PetPaletteSelection({ value, onChange, type, breed, tags
 
     useEffect(() => {
         PetAssets.getData(type).then((data) => {
-            setPalettes(data.palettes?.filter((palette) => (!breed || !palette.breed || palette.breed === breed) && palette.tags.some((tag) => tags.includes(tag))) ?? []);
+            setPalettes(data.palettes?.filter((palette) => (!breed || !palette.breed || palette.breed === breed) && ((!palette.tags || palette.tags.some((tag) => tags.includes(tag))))) ?? []);
         });
     }, [ type, tags ]);
 
