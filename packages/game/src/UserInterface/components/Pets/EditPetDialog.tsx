@@ -162,7 +162,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                             }}/>
                         )}
 
-                        {(newBreed) && (
+                        {(!breeds.length || newBreed) && (
                             <Fragment>
                                 <b>Pet breed index</b>
 
