@@ -248,8 +248,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                         
                         return (
                             <div key={pet.id} style={{
-                                width: 60,
-                                height: 60,
+                                width: 68,
+                                height: 68,
                                 boxSizing: "border-box",
 
                                 borderRadius: 5,
