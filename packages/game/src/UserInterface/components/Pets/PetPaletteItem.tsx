@@ -1,20 +1,28 @@
 import PetAssets from "@Client/Assets/PetAssets";
-import { FurniturePalette } from "@Client/Interfaces/Furniture/FurniturePalette";
+import { PetPaletteData } from "@pixel63/events";
 import { useEffect, useState } from "react";
 
 export type PetPaletteItemProps = {
     type: string;
-    paletteId: number;
+    palette: PetPaletteData;
 };
 
-export default function PetPaletteItem({ type, paletteId }: PetPaletteItemProps) {
-    const [palette, setPalette] = useState<FurniturePalette | null>(null);
+export default function PetPaletteItem({ type, palette }: PetPaletteItemProps) {
+    const [colors, setColors] = useState<string[]>([]);
 
     useEffect(() => {
+        if(palette.color) {
+            setColors([palette.color]);
+
+            return;
+        }
+
         PetAssets.getData(type).then((data) => {
-            setPalette(data.palettes?.find((palette) => palette.id === paletteId) ?? null);
+            const paletteData = data.palettes?.find((_palette) => _palette.id === palette.paletteId);
+
+            setColors([paletteData?.color1, paletteData?.color2].filter<string>((value) => typeof value === "string"));
         });
-    }, [ type, paletteId ]);
+    }, [ type, palette ]);
 
     return (
         (palette) && (
@@ -25,7 +33,7 @@ export default function PetPaletteItem({ type, paletteId }: PetPaletteItemProps)
                 display: "flex",
                 flexDirection: "row",
             }}>
-                {[palette.color1, palette.color2].filter(Boolean).map((color) => (
+                {colors.map((color) => (
                     <div key={color} style={{ flex: 1, background: color }}/>
                 ))}
             </div>

@@ -86,7 +86,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                                                         alignItems: "center",
                                                         gap: 5
                                                     }}>
-                                                        <PetPaletteItem type={pet.type} paletteId={palette.paletteId}/> {palette.tags.join(', ')}
+                                                        <PetPaletteItem type={pet.type} palette={palette}/> {palette.tags.join(', ')}
                                                     </div>
                                                 );
                                             })}
