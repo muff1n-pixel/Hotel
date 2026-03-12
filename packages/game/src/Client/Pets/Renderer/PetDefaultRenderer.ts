@@ -86,7 +86,9 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
             for(let index = 0; index < imageData.data.length; index += 4) {
                 const green = imageData.data[index + 1];
 
-                if(palette.colors[green] !== "FFFFFF") {
+                const isSolidBlack = imageData.data[index + 0] < 10 && imageData.data[index + 1] < 10 && imageData.data[index + 2] < 10;
+
+                if(!isSolidBlack) {
                     const rgba = hexToRgb(palette.colors[green]);
 
                     newImageData.data[index] = rgba.red;
