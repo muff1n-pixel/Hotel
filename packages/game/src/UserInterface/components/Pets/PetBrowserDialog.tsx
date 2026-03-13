@@ -1,12 +1,12 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
-import DialogTable from "../Dialog/Table/DialogTable";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
+import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import { GetPetBrowserData, PetBrowserData, PetData } from "@pixel63/events";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
 import PetPaletteItem from "./PetPaletteItem";
-import DialogButton from "../Dialog/Button/DialogButton";
+import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
 
 export type PetBrowserDialogProps = {

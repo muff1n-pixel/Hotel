@@ -1,4 +1,4 @@
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { useDialogs } from "../../../Hooks/useDialogs";
 
 export default function InventoryEmptyTab() {

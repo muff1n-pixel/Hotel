@@ -1,5 +1,5 @@
 import { CSSProperties, PropsWithChildren } from "react";
-import DialogHeader from "./DialogHeader";
+import DialogHeader from "./Components/DialogHeader";
 import useDialogMovement from "./Hooks/useDialogMovement";
 
 export type DialogProps = PropsWithChildren & {

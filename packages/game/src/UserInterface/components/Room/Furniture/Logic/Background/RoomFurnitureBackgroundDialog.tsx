@@ -2,10 +2,10 @@ import { useCallback, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { webSocketClient } from "../../../../../..";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
-import Dialog from "../../../../Dialog/Dialog";
-import DialogContent from "../../../../Dialog/DialogContent";
-import DialogButton from "../../../../Dialog/Button/DialogButton";
-import Input from "../../../../Form/Input";
+import Dialog from "../../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../../Common/Dialog/Components/DialogContent";
+import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogButton";
+import Input from "../../../../../Common/Form/Components/Input";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureBackgroundDialogData = {

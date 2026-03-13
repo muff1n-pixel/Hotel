@@ -1,5 +1,5 @@
 import { ShopPageData } from "@pixel63/events";
-import DialogPanelListItem from "../Dialog/Panels/DialogPanelListItem";
+import DialogPanelListItem from "../../Common/Dialog/Components/Panels/DialogPanelListItem";
 import { Fragment } from "react/jsx-runtime";
 
 export type ShopPagesListProps = {

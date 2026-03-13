@@ -1,6 +1,6 @@
 import { NavigatorRoomData } from "@pixel63/events";
-import DialogList from "../../Dialog/List/DialogList";
-import DialogListContainer from "../../Dialog/List/DialogListContainer";
+import DialogList from "../../../Common/Dialog/Components/List/DialogList";
+import DialogListContainer from "../../../Common/Dialog/Components/List/DialogListContainer";
 import RoomThumbnail from "../../Room/Thumbnail/RoomThumbnail";
 import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";

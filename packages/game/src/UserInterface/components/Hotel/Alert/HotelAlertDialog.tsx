@@ -1,6 +1,6 @@
-import DialogButton from "../../Dialog/Button/DialogButton";
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 
 export type HotelAlertDialogProps = {
     data?: any;

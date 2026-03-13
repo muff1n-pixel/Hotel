@@ -1,8 +1,8 @@
 import { clientInstance } from "../../..";
 import { useSettings } from "../../Hooks/useSettings";
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
-import Checkbox from "../Form/Checkbox";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
+import Checkbox from "../../Common/Form/Components/Checkbox";
 
 export type SettingsDialogProps = {
     hidden?: boolean;

@@ -1,8 +1,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import Input from "../../../Form/Input";
-import Selection from "../../../Form/Selection";
+import Input from "../../../../Common/Form/Components/Input";
+import Selection from "../../../../Common/Form/Components/Selection";
 import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { UpdateRoomInformationData } from "@pixel63/events";

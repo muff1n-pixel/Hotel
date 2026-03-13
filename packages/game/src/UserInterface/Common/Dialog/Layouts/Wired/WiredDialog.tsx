@@ -1,5 +1,5 @@
 import { CSSProperties, PropsWithChildren } from "react";
-import useDialogMovement from "../Hooks/useDialogMovement";
+import useDialogMovement from "../../Hooks/useDialogMovement";
 
 export type WiredDialogProps = PropsWithChildren & {
     hidden?: boolean;

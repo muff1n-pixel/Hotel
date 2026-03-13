@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { MousePosition } from "../DialogHeader";
+import { MousePosition } from "../Components/DialogHeader";
 import useDialogMouse from "./useDialogMouse";
 
 export default function useDialogMovement(initialPosition: MousePosition = { left: 200, top: 200 }) {

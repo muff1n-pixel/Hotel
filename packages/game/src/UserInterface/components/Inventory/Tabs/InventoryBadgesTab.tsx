@@ -1,10 +1,10 @@
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
-import BadgeImage from "../../Badges/BadgeImage";
+import BadgeImage from "../../../Common/Badges/BadgeImage";
 import { GetUserInventoryBadgesData, UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();

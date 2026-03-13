@@ -15,8 +15,8 @@ import WiredTriggerPeriodicallyLongDialog from "./Wired/Trigger/WiredTriggerPeri
 import WiredTriggerUserPerformsActionDialog from "./Wired/Trigger/WiredTriggerUserPerformsActionDialog";
 import WiredSignalDialog from "./Wired/WiredSignalDialog";
 import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog";
-import WiredDialog from "../../../Dialog/Wired/WiredDialog";
-import WiredFurniture from "../../../Dialog/Wired/WiredFurniture";
+import WiredDialog from "../../../../Common/Dialog/Layouts/Wired/WiredDialog";
+import WiredFurniture from "../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export type RoomFurnitureLogicDialogProps = {

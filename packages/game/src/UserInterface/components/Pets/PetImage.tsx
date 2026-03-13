@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import OffscreenCanvasRender from "../OffscreenCanvasRender";
+import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Pet from "@Client/Pets/Pet";
 import { PetData } from "@pixel63/events";
 

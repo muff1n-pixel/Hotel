@@ -1,11 +1,11 @@
-import DialogPanel from "../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../Common/Dialog/Components/Panels/DialogPanel";
 import { useCallback, useEffect } from "react";
 import ShopPage from "./Pages/ShopPage";
-import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
+import { DialogTabHeaderProps } from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import { useDialogs } from "../../Hooks/useDialogs";
 import ShopPagesList from "./ShopPagesList";
 import { ShopPageData } from "@pixel63/events";
-import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type ShopDialogCategoryProps = {
     category: string;

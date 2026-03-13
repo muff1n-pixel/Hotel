@@ -1,10 +1,10 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import Dialog from "../Dialog/Dialog";
+import Dialog from "../../Common/Dialog/Dialog";
 import { useUser } from "../../Hooks/useUser";
-import DialogTable from "../Dialog/Table/DialogTable";
+import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import { RoomPositionData } from "@pixel63/events";
 
 export type FigureCatalogDialogProps = {

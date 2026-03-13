@@ -1,13 +1,13 @@
-import WiredDialog from "../../../../../Dialog/Wired/WiredDialog";
+import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
-import WiredFurniture from "../../../../../Dialog/Wired/WiredFurniture";
-import WiredDivider from "../../../../../Dialog/Wired/WiredDivider";
-import WiredSection from "../../../../../Dialog/Wired/WiredSection";
+import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
+import WiredDivider from "../../../../../../Common/Dialog/Layouts/Wired/WiredDivider";
+import WiredSection from "../../../../../../Common/Dialog/Layouts/Wired/WiredSection";
 import { useCallback, useState } from "react";
-import WiredButton from "../../../../../Dialog/Wired/WiredButton";
+import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../../..";
-import WiredSlider from "../../../../../Dialog/Wired/Slider/WiredSlider";
+import WiredSlider from "../../../../../../Common/Dialog/Layouts/Wired/Slider/WiredSlider";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredTriggerPeriodicallyDialog = {

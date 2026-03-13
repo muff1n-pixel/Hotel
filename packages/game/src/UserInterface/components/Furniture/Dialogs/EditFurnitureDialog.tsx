@@ -1,12 +1,12 @@
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import FurnitureImage from "../FurnitureImage";
 import { useCallback, useState } from "react";
-import Input from "../../Form/Input";
-import Checkbox from "../../Form/Checkbox";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import Input from "../../../Common/Form/Components/Input";
+import Checkbox from "../../../Common/Form/Components/Checkbox";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import useFurnitureTypes from "../../../Hooks/Furniture/useFurnitureTypes";
-import Selection from "../../Form/Selection";
+import Selection from "../../../Common/Form/Components/Selection";
 import { webSocketClient } from "../../../..";
 import { FurnitureData, UpdateFurnitureData } from "@pixel63/events";
 

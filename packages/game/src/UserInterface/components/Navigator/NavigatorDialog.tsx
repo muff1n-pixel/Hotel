@@ -1,13 +1,13 @@
-import Dialog from "../Dialog/Dialog";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useState } from "react";
 import { useNavigator } from "../../Hooks/useNavigator";
-import Input from "../Form/Input";
+import Input from "../../Common/Form/Components/Input";
 import { EnterRoomData } from "@pixel63/events";
-import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;

@@ -1,13 +1,13 @@
 import { GetPetBreedsData, PetBreedData, PetBreedsData, PetData, PetPaletteData, UpdatePetData } from "@pixel63/events";
 import { Fragment, useCallback, useEffect, useState } from "react";
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
 import PetImage from "./PetImage";
-import Input from "../Form/Input";
-import Selection from "../Form/Selection";
-import DialogButton from "../Dialog/Button/DialogButton";
+import Input from "../../Common/Form/Components/Input";
+import Selection from "../../Common/Form/Components/Selection";
+import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
-import DialogTable from "../Dialog/Table/DialogTable";
+import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import PetPaletteSelection from "./PetPaletteSelection";
 import { useDialogs } from "../../Hooks/useDialogs";
 

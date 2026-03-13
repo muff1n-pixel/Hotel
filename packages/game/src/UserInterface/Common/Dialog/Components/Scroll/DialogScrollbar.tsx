@@ -5,10 +5,10 @@ export type DialogScrollbarProps = {
     hideInactive?: boolean;
 }
 
-const scrollHandleBackgroundImage = new URL('../../../images/dialog/scroll/handle_background.png', import.meta.url);
+const scrollHandleBackgroundImage = new URL('../../../../Images/dialog/scroll/handle_background.png', import.meta.url);
 
-const scrollBackgroundImageEnabled = new URL('../../../images/dialog/scroll/enabled_background.png', import.meta.url);
-const scrollBackgroundImageDisabled = new URL('../../../images/dialog/scroll/disabled_background.png', import.meta.url);
+const scrollBackgroundImageEnabled = new URL('../../../../Images/dialog/scroll/enabled_background.png', import.meta.url);
+const scrollBackgroundImageDisabled = new URL('../../../../Images/dialog/scroll/disabled_background.png', import.meta.url);
 
 export default function DialogScrollbar({ containerRef, hideInactive }: DialogScrollbarProps) {
     const handleContainerRef = useRef<HTMLDivElement>(null);

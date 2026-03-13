@@ -10,6 +10,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
+    "baseUrl": "./",
+
     /* Emit */
     "noEmit": true,
 

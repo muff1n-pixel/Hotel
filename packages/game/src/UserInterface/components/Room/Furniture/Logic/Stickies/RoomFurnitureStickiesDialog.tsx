@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import useDialogMovement from "../../../../Dialog/Hooks/useDialogMovement";
+import useDialogMovement from "../../../../../Common/Dialog/Hooks/useDialogMovement";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import AssetFetcher from "@Client/Assets/AssetFetcher";

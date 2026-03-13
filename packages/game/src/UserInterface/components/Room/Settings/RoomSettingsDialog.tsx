@@ -1,5 +1,5 @@
-import Dialog from "../../Dialog/Dialog";
-import DialogTabs from "../../Dialog/Tabs/DialogTabs";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogTabs from "../../../Common/Dialog/Components/Tabs/DialogTabs";
 import RoomSettingsBasicTab from "./Tabs/RoomSettingsBasicTab";
 import RoomSettingsCustomizeTab from "./Tabs/RoomSettingsCustomizeTab";
 

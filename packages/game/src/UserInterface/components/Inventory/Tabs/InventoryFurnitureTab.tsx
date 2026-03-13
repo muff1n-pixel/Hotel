@@ -1,5 +1,5 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import RoomRenderer from "../../Room/Renderer/RoomRenderer";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
@@ -7,9 +7,9 @@ import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { useDialogs } from "../../../Hooks/useDialogs";
-import DialogItem from "../../Dialog/Item/DialogItem";
+import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();

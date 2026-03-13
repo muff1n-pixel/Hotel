@@ -1,7 +1,7 @@
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurniturePalette } from "@Client/Interfaces/Furniture/FurniturePalette";
 import { useEffect, useState } from "react";
-import Selection from "../Form/Selection";
+import Selection from "../../Common/Form/Components/Selection";
 
 export type PetPaletteSelectionProps = {
     type: string;

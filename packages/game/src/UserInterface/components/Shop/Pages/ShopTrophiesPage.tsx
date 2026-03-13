@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import DialogPanel from "../../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import FurnitureImage from "../../Furniture/FurnitureImage";
-import TextArea from "../../Form/TextArea";
+import TextArea from "../../../Common/Form/Components/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
-import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
+import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {

@@ -2,7 +2,7 @@ import { Hue, Saturation, useColor } from "react-color-palette";
 
 import "react-color-palette/dist/css/rcp.css";
 import "./DialogColorPicker.css";
-import Input from "../../Form/Input";
+import Input from "../../Form/Components/Input";
 
 export type DialogColorPickerProps = {
     value: string;

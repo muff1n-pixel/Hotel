@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import useDialogMovement from "../../../../Dialog/Hooks/useDialogMovement";
+import useDialogMovement from "../../../../../Common/Dialog/Hooks/useDialogMovement";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import RoomFurnitureDimmerDialogColors from "./RoomFurnitureDimmerDialogColors";
-import DimmerDialogSlider from "../../../../Dialog/Dimmer/DimmerDialogSlider";
-import DimmerDialogCheckbox from "../../../../Dialog/Dimmer/DimmerDialogCheckbox";
-import DimmerDialogButton from "../../../../Dialog/Dimmer/DimmerDialogButton";
+import DimmerDialogSlider from "../../../../../Common/Dialog/Layouts/Dimmer/DimmerDialogSlider";
+import DimmerDialogCheckbox from "../../../../../Common/Dialog/Layouts/Dimmer/DimmerDialogCheckbox";
+import DimmerDialogButton from "../../../../../Common/Dialog/Layouts/Dimmer/DimmerDialogButton";
 import { webSocketClient } from "../../../../../..";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 

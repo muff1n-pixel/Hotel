@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { AppContext } from "../Contexts/AppContext";
 import Toolbar from "./Toolbar/Toolbar";
 import RoomInterface from "./Room/RoomInterface";
-import DialogInstances from "./Dialog/DialogInstances";
+import DialogInstances from "../Common/Dialog/DialogInstances";
 import { webSocketClient } from "../..";
 import Reception from "./Reception/Reception";
 import { useRoomInstance } from "../Hooks/useRoomInstance";

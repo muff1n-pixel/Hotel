@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useState } from "react";
-import OffscreenCanvasRender from "../OffscreenCanvasRender";
+import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Furniture from "@Client/Furniture/Furniture";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FurnitureData } from "@pixel63/events";

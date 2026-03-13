@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Dialog from "../Dialog/Dialog";
-import DialogSubTabs from "../Dialog/Tabs/DialogSubTabs";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogSubTabs from "../../Common/Dialog/Components/Tabs/DialogSubTabs";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import WardrobeAvatar from "./WardrobeAvatar";
 import WardrobeSelection from "./Selection/WardrobeSelection";
-import DialogButton from "../Dialog/Button/DialogButton";
+import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { FigureConfigurationData } from "@pixel63/events";
 
 const wardrobeTabs = [

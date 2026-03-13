@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import Dialog from "../Dialog/Dialog";
-import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogTabs, { DialogTabHeaderProps } from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import { webSocketClient } from "../../..";

@@ -1,11 +1,11 @@
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
-import Dialog from "../../../Dialog/Dialog";
-import DialogContent from "../../../Dialog/DialogContent";
-import DialogTable from "../../../Dialog/Table/DialogTable";
-import Input from "../../../Form/Input";
+import Dialog from "../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
+import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable";
+import Input from "../../../../Common/Form/Components/Input";
 import { useState } from "react";
-import Selection from "../../../Form/Selection";
+import Selection from "../../../../Common/Form/Components/Selection";
 
 export type RoomFurnitureDialogProps = {
     hidden?: boolean;

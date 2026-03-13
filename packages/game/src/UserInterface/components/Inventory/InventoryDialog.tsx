@@ -1,5 +1,5 @@
-import Dialog from "../Dialog/Dialog";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import InventoryBadgesTab from "./Tabs/InventoryBadgesTab";
 import InventoryBotsTab from "./Tabs/InventoryBotsTab";
 import InventoryFurnitureTab from "./Tabs/InventoryFurnitureTab";

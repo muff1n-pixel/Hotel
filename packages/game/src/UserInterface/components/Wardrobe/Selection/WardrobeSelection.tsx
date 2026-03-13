@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import OffscreenCanvasRender from "../../OffscreenCanvasRender";
+import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
 import FigureWardrobe, { FigureWardrobeColor, FigureWardrobeItem } from "@Client/Figure/Wardrobe/FigureWardrobe";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FigureConfigurationData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type WardrobeSelectionProps = {
     part: string;

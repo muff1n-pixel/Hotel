@@ -1,12 +1,12 @@
-import FigureImage from "../../../Figure/FigureImage";
 import { useUserBadges } from "../../../../Hooks/useUserBadges";
-import BadgeImage from "../../../Badges/BadgeImage";
+import BadgeImage from "../../../../Common/Badges/BadgeImage";
 import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;

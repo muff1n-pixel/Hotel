@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import DialogPanel from "../../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
-import FigureImage from "../../Figure/FigureImage";
-import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
+import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { PurchaseShopBotData, ShopBotData } from "@pixel63/events";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();

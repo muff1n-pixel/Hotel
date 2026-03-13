@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import DialogPanel from "../../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
@@ -11,7 +11,7 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();

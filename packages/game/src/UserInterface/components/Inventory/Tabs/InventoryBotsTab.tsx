@@ -1,15 +1,15 @@
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { useDialogs } from "../../../Hooks/useDialogs";
-import DialogItem from "../../Dialog/Item/DialogItem";
-import FigureImage from "../../Figure/FigureImage";
+import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { useUser } from "../../../Hooks/useUser";
 import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export default function InventoryBotsTab() {
     const user = useUser();

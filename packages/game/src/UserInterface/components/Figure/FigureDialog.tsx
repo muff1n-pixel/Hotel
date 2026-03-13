@@ -1,9 +1,9 @@
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
-import FigureImage from "./FigureImage";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
 import { useUser } from "../../Hooks/useUser";
-import Input from "../Form/Input";
+import Input from "../../Common/Form/Components/Input";
 import { useState } from "react";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export type FigureDialogProps = {
     hidden?: boolean;

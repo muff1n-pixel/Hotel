@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
-import OffscreenCanvasRender from "../OffscreenCanvasRender";
+import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Figure from "@Client/Figure/Figure";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FigureConfigurationData } from "@pixel63/events";
