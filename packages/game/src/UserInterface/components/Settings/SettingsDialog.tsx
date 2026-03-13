@@ -1,5 +1,5 @@
 import { clientInstance } from "../../..";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../Hooks/useSettings";
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/DialogContent";
 import Checkbox from "../Form/Checkbox";

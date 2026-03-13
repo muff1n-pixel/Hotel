@@ -7,9 +7,9 @@ import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { useDialogs } from "../../../hooks/useDialogs";
-import { useUser } from "../../../hooks/useUser";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useUser } from "../../../Hooks/useUser";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
 
 export default function ToolbarChatbar() {

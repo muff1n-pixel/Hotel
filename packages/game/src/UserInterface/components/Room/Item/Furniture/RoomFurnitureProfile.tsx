@@ -2,11 +2,11 @@ import FurnitureImage from "../../../Furniture/FurnitureImage";
 import { clientInstance, webSocketClient } from "../../../../..";
 import "./RoomFurnitureProfile.css"
 import { useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
-import { useUser } from "../../../../hooks/useUser";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
+import { useUser } from "../../../../Hooks/useUser";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { usePermissionAction } from "../../../../hooks/usePermissionAction";
-import { useDialogs } from "../../../../hooks/useDialogs";
+import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
+import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureProfileProps = {

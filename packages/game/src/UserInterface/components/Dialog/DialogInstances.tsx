@@ -4,7 +4,7 @@ import ShopDialog from "../Shop/ShopDialog";
 import InventoryDialog from "../Inventory/InventoryDialog";
 import NavigatorDialog from "../Navigator/NavigatorDialog";
 import RoomCreationDialog from "../Navigator/Rooms/Creator/RoomCreationDialog";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import RoomFurnitureLogicDialog from "../Room/Furniture/Logic/RoomFurnitureLogicDialog";
 import RoomSettingsDialog from "../Room/Settings/RoomSettingsDialog";
 import RoomInformationDialog from "../Room/Information/RoomInformationDialog";

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Dialog from "../Dialog/Dialog";
 import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
-import { usePermissionAction } from "../../hooks/usePermissionAction";
+import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import { webSocketClient } from "../../..";
 import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 

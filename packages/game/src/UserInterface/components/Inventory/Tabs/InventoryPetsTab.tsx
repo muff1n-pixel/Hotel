@@ -3,13 +3,13 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import DialogItem from "../../Dialog/Item/DialogItem";
 import { GetUserInventoryPetsData, PlaceRoomPetData, UserInventoryPetsData, UserPetData } from "@pixel63/events";
 import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
 import PetImage from "../../Pets/PetImage";
-import { useUser } from "../../../hooks/useUser";
+import { useUser } from "../../../Hooks/useUser";
 
 export default function InventoryPetsTab() {
     const user = useUser();

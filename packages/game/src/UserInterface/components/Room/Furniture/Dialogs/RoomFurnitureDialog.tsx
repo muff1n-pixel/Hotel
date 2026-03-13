@@ -1,5 +1,5 @@
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import Dialog from "../../../Dialog/Dialog";
 import DialogContent from "../../../Dialog/DialogContent";
 import DialogTable from "../../../Dialog/Table/DialogTable";

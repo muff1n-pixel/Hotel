@@ -1,12 +1,12 @@
 import ToolbarFigureItem from "./Items/ToolbarFigureItem";
 import ToolbarItem from "./Items/ToolbarItem";
-import { useRoomInstance } from "../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import ToolbarToggle from "./ToolbarToggle";
 import { useState } from "react";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../Hooks/useUser";
 import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
 
 export default function Toolbar() {

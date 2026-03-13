@@ -10,7 +10,7 @@ import { webSocketClient } from "../../../../../../..";
 import WiredFurniturePicker from "../../../../../Dialog/Wired/WiredFurniturePicker";
 import WiredFurnitureSource from "../../../../../Dialog/Wired/WiredFurnitureSource";
 import WiredRadio from "../../../../../Dialog/Wired/WiredRadio";
-import { useRoomInstance } from "../../../../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../../../Hooks/useRoomInstance";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type WiredTriggerStuffStateDialog = {

@@ -1,5 +1,5 @@
 import FigureImage from "../Figure/FigureImage";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../Hooks/useUser";
 import DialogButton from "../Dialog/Button/DialogButton";
 
 export default function Reception() {

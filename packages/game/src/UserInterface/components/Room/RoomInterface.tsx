@@ -1,4 +1,4 @@
-import { useRoomInstance } from "../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import RoomChat from "./Chat/RoomChat";
 import RoomItemContextMenu from "./Item/ContextMenu/RoomItemContextMenu";
 import RoomItemProfile from "./Item/RoomItemProfile";

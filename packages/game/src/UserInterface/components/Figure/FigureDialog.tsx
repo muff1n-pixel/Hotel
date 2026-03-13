@@ -1,7 +1,7 @@
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/DialogContent";
 import FigureImage from "./FigureImage";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../Hooks/useUser";
 import Input from "../Form/Input";
 import { useState } from "react";
 

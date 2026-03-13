@@ -4,7 +4,7 @@ import DialogContent from "../../Dialog/DialogContent";
 import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
 import { FurnitureData, FurnitureFlagsData, RoomPositionData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 

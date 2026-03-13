@@ -9,7 +9,7 @@ import DialogButton from "../Dialog/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import DialogTable from "../Dialog/Table/DialogTable";
 import PetPaletteSelection from "./PetPaletteSelection";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 
 export type EditPetDialogProps = {
     hidden?: boolean;

@@ -1,7 +1,7 @@
 import FigureImage from "../../../Figure/FigureImage";
-import { useUserBadges } from "../../../../hooks/useUserBadges";
+import { useUserBadges } from "../../../../Hooks/useUserBadges";
 import BadgeImage from "../../../Badges/BadgeImage";
-import { useUser } from "../../../../hooks/useUser";
+import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";

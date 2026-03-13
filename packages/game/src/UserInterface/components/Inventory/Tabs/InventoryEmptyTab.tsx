@@ -1,5 +1,5 @@
 import DialogButton from "../../Dialog/Button/DialogButton";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 
 export default function InventoryEmptyTab() {
     const { addUniqueDialog } = useDialogs();

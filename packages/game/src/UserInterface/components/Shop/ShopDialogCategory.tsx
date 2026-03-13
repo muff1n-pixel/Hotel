@@ -2,7 +2,7 @@ import DialogPanel from "../Dialog/Panels/DialogPanel";
 import { useCallback, useEffect } from "react";
 import ShopPage from "./Pages/ShopPage";
 import { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import ShopPagesList from "./ShopPagesList";
 import { ShopPageData } from "@pixel63/events";
 import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";

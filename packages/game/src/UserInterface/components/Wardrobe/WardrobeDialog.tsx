@@ -1,4 +1,4 @@
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../Hooks/useUser";
 import FigureWardrobeDialog from "./FigureWardrobeDialog";
 import { webSocketClient } from "../../..";
 import { useCallback } from "react";

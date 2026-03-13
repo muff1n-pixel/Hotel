@@ -1,6 +1,6 @@
 import RoomItem from "@Client/Room/Items/RoomItem";
 import { useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 
 export default function useRoomItemScreenPosition(item: RoomItem) {
     const room = useRoomInstance();

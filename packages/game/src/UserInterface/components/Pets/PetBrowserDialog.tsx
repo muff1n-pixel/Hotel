@@ -4,10 +4,10 @@ import DialogContent from "../Dialog/DialogContent";
 import DialogTable from "../Dialog/Table/DialogTable";
 import { GetPetBrowserData, PetBrowserData, PetData } from "@pixel63/events";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import PetPaletteItem from "./PetPaletteItem";
 import DialogButton from "../Dialog/Button/DialogButton";
-import { usePermissionAction } from "../../hooks/usePermissionAction";
+import { usePermissionAction } from "../../Hooks/usePermissionAction";
 
 export type PetBrowserDialogProps = {
     hidden?: boolean;

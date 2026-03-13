@@ -4,9 +4,9 @@ import DialogContent from "../../Dialog/DialogContent";
 import Input from "../../Form/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import FigureImage from "../../Figure/FigureImage";
-import { useUser } from "../../../hooks/useUser";
+import { useUser } from "../../../Hooks/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
 
 export type EditShopBotDialogProps = {

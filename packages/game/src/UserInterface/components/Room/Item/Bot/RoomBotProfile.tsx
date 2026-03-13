@@ -3,7 +3,7 @@ import FigureImage from "../../../Figure/FigureImage";
 import "../User/RoomUserProfile.css";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomUserProfileMotto from "../User/RoomUserProfileMotto";
-import { useUser } from "../../../../hooks/useUser";
+import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import { webSocketClient } from "../../../../..";
 import { UpdateRoomBotData } from "@pixel63/events";

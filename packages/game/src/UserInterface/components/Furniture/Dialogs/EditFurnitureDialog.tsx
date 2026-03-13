@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import Input from "../../Form/Input";
 import Checkbox from "../../Form/Checkbox";
 import DialogButton from "../../Dialog/Button/DialogButton";
-import useFurnitureTypes from "../../../hooks/Furniture/useFurnitureTypes";
+import useFurnitureTypes from "../../../Hooks/Furniture/useFurnitureTypes";
 import Selection from "../../Form/Selection";
 import { webSocketClient } from "../../../..";
 import { FurnitureData, UpdateFurnitureData } from "@pixel63/events";
