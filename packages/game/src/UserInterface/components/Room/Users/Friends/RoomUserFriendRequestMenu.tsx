@@ -46,12 +46,12 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
 
                     fontSize: 12,
 
-                    padding: "5px 12px",
+                    padding: 5,
 
                     flexWrap: "wrap",
 
                     display: "flex",
-                    gap: 6
+                    gap: 10
                 }}>
                     <div style={{
                         flex: 1,
