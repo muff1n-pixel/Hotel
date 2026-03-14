@@ -1,3 +1,4 @@
+import RoomUserFriendRequests from "src/UserInterface/Components/Room/Users/Friends/RoomUserFriendRequests";
 import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import RoomChat from "./Chat/RoomChat";
 import RoomItemContextMenu from "./Item/ContextMenu/RoomItemContextMenu";
@@ -26,6 +27,8 @@ export default function RoomInterface() {
             <RoomChat/>
 
             <RoomItemContextMenu/>
+
+            <RoomUserFriendRequests/>
 
             <RoomItemProfile room={room}/>
 

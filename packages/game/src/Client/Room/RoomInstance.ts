@@ -7,7 +7,6 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
