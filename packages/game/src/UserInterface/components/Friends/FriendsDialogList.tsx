@@ -6,6 +6,7 @@ export default function FriendsDialogList() {
     const user = useUser();
 
     const [offlineFriendsMinimized, setOfflineFriendsMinimized] = useState(true);
+    const [friendRequestsMinimized, setFriendRequestsMinimized] = useState(true);
 
     return (
         <div style={{
@@ -57,6 +58,73 @@ export default function FriendsDialogList() {
                     </div>
                 </div>
             </div>
+
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+
+                cursor: "pointer"
+            }} onClick={() => setFriendRequestsMinimized(!friendRequestsMinimized)}>
+                <div>
+                    Incoming friend requests (1)
+                </div>
+                
+                <div className="sprite_forms_arrow" style={{
+                    transform: (friendRequestsMinimized)?("rotateZ(-90deg)"):(undefined)
+                }}/>
+            </div>
+
+            {(!friendRequestsMinimized) && (
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10
+                }}>
+                    <FigureImage figureConfiguration={user.figureConfiguration} headOnly cropped direction={2} style={{
+                        marginTop: 6
+                    }}/>
+
+                    <div style={{
+                        flex: 1,
+
+                        display: "flex",
+                        flexDirection: "column"
+                    }}>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: 5,
+                            alignItems: "center"
+                        }}>
+                            <b>{user.name}</b>
+
+                            <div className="sprite_users_profile-small" style={{
+                                cursor: "pointer"
+                            }}/>
+                        </div>
+                        
+                        <div style={{ fontSize: 12 }}>Last seen 1 day ago</div>
+                    </div>
+
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 5
+                    }}>
+                        <div className="sprite_friends_accept" style={{
+                            cursor: "pointer"
+                        }}/>
+                        
+                        <div className="sprite_friends_decline" style={{
+                            cursor: "pointer"
+                        }}/>
+                    </div>
+                </div>
+            )}
 
             <div style={{
                 display: "flex",
