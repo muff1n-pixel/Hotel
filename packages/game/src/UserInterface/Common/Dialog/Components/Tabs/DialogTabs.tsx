@@ -4,6 +4,7 @@ import DialogContent from "../DialogContent";
 export type DialogTabHeaderProps = {
     iconImage?: string;
     backgroundImage?: string;
+    backgroundImageOffset?: number;
 
     title?: string;
     description?: string;
@@ -16,17 +17,20 @@ export type DialogTabsProps = PropsWithChildren & {
 
     header?: DialogTabHeaderProps;
     withoutHeader?: boolean;
+    height?: number;
 
     tabs: {
         icon: ReactNode;
         element: ReactNode;
         header?: DialogTabHeaderProps;
+        transparent?: boolean;
+        alignSelf?: string;
     }[];
 
     onChange?: (index: number) => void;
 };
 
-export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeader, tabs, header, withLargeTabs = false, children, onChange }: DialogTabsProps) {
+export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeader, height = 119, tabs, header, withLargeTabs = false, children, onChange }: DialogTabsProps) {
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
     useEffect(() => {
@@ -47,7 +51,7 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
             flexDirection: "column",
         }}>
             <div style={{
-                height: (withoutHeader)?(40):(119),
+                height: (withoutHeader)?(40):(height),
                 width: "100%",
                
                 background: (withoutHeader)?(undefined):("#0E3F52"),
@@ -85,6 +89,9 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
 
                                 width: "100%",
                                 height: "100%",
+
+                                objectPosition: (currentHeader.backgroundImageOffset)?(`center ${currentHeader.backgroundImageOffset}px`):(undefined),
+
                                 objectFit: "cover",
                                 imageRendering: "pixelated",
 
@@ -143,56 +150,77 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
                     flexDirection: "row",
                     transform: "translate(0px, 1px)",
                 }}>
-                    {tabs.map(({ icon }, index) => (
-                        <div key={index} style={{
-                            display: "flex",
+                    {tabs.map(({ icon, transparent, alignSelf }, index) => (
+                        (!transparent)?(
+                            <div key={index} style={{
+                                display: "flex",
 
-                            flex: (withLargeTabs)?(1):(undefined),
+                                flex: (withLargeTabs)?(1):(undefined),
 
-                            height: 31,
-                            minWidth: 52,
+                                height: 31,
+                                minWidth: 52,
 
-                            border: (activeIndex === index)?("2px solid black"):("1px solid #272E31"),
-                            borderBottom: (activeIndex === index)?("none"):("1px solid #272E31"),
-                            
-                            borderTopLeftRadius: 8,
-                            borderTopRightRadius: 8,
-
-                            overflow: "hidden"
-                        }}>
-                            <div style={{
-                                flex: 1,
-
-                                background: (activeIndex === index)?("#ECEAE0"):(inactiveBackgroundColor),
-
-                                borderLeft: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
-                                borderTop: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
-                                borderRight: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                border: (activeIndex === index)?("2px solid black"):("1px solid #272E31"),
+                                borderBottom: (activeIndex === index)?("none"):("1px solid #272E31"),
                                 
                                 borderTopLeftRadius: 8,
                                 borderTopRightRadius: 8,
+                                overflow: "hidden"
+                            }}>
+                                <div style={{
+                                    flex: 1,
 
-                                minWidth: 30,
+                                    background: (activeIndex === index)?("#ECEAE0"):(inactiveBackgroundColor),
 
-                                padding: (withLargeTabs)?("6px 10px"):((activeIndex === index)?("0 9px"):("0 10px")),
+                                    borderLeft: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                    borderTop: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                    borderRight: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                    
+                                    borderTopLeftRadius: 8,
+                                    borderTopRightRadius: 8,
 
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                    minWidth: 30,
 
-                                overflow: "hidden",
+                                    padding: (withLargeTabs)?("6px 10px"):((activeIndex === index)?("0 9px"):("0 10px")),
+
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+
+                                    overflow: "hidden",
+
+                                    cursor: "pointer",
+
+                                    color: "black",
+                                    fontSize: 13
+                                }} onClick={() => {
+                                    onChange?.(index);
+                                    setActiveIndex(index);
+                                }}>
+                                    {icon}
+                                </div>
+                            </div>
+                        ):(
+                            <div key={index} style={{
+                                height: 31,
+                                minWidth: 52,
 
                                 cursor: "pointer",
 
-                                color: "black",
-                                fontSize: 13
+                                display: "flex",
+
+                                marginLeft: (alignSelf === "flex-end")?("auto"):(undefined),
+
+                                opacity: (activeIndex === index)?(1):(0.6),
+
+                                justifyContent: "center"
                             }} onClick={() => {
                                 onChange?.(index);
                                 setActiveIndex(index);
                             }}>
                                 {icon}
                             </div>
-                        </div>
+                        )
                     ))}
                 </div>
             </div>

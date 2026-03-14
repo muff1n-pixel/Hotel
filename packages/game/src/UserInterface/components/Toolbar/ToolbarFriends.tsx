@@ -2,10 +2,12 @@ import { useState } from "react";
 import FriendsPanel from "src/UserInterface/Common/Friends/Components/FriendsPanel";
 import ToolbarItem from "src/UserInterface/Components/Toolbar/Items/ToolbarItem";
 import ToolbarToggle from "src/UserInterface/Components/Toolbar/ToolbarToggle";
+import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
 import { useUser } from "src/UserInterface/Hooks/useUser";
 
 export default function ToolbarFriends() {
     const user = useUser();
+    const dialogs = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
 
@@ -21,7 +23,7 @@ export default function ToolbarFriends() {
 
             position: "relative"
         }}>
-            <ToolbarItem onClick={() => {}}>
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends")}>
                 <div className="sprite_friends_list"/>
             </ToolbarItem>
             

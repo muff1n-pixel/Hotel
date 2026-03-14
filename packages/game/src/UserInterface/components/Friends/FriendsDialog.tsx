@@ -1,0 +1,41 @@
+import DialogTabs from "src/UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
+import Dialog from "src/UserInterface/Common/Dialog/Dialog";
+import FriendsDialogList from "src/UserInterface/Components/Friends/FriendsDialogList";
+
+export type FriendsDialogProps = {
+    hidden?: boolean;
+    data?: {
+        tab: "list" | "search";
+    };
+    onClose?: () => void;
+}
+
+export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogProps) {
+    return (
+        <Dialog title="Friends" hidden={hidden} onClose={onClose} width={270} height={380} style={{
+            overflow: "visible"
+        }}>
+            <DialogTabs
+                height={60}
+                header={{
+                    backgroundImage: "./assets/friends/Friendsfor4Town.png",
+                    backgroundImageOffset: -10
+                }}
+                tabs={[
+                    {
+                        icon: "My friends",
+                        element: (<FriendsDialogList/>),
+                    },
+                    {
+                        icon: (<div className="sprite_friends_search" style={{ overflow: "visible", position: "absolute", bottom: 1 }}/>),
+                        transparent: true,
+                        alignSelf: "flex-end",
+
+                        element: (<div/>),
+                    }
+                ]}>
+
+            </DialogTabs>
+        </Dialog>
+    );
+}
