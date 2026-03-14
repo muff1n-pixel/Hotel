@@ -1,6 +1,7 @@
 import DialogTabs from "src/UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import Dialog from "src/UserInterface/Common/Dialog/Dialog";
 import FriendsDialogList from "src/UserInterface/Components/Friends/FriendsDialogList";
+import FriendsDialogSearch from "src/UserInterface/Components/Friends/FriendsDialogSearch";
 
 export type FriendsDialogProps = {
     hidden?: boolean;
@@ -32,7 +33,7 @@ export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogPr
                         transparent: true,
                         alignSelf: "flex-end",
 
-                        element: (<div/>),
+                        element: (<FriendsDialogSearch/>),
                     }
                 ]}>
 
