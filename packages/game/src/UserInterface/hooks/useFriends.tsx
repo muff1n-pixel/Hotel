@@ -4,6 +4,8 @@ import { clientInstance, webSocketClient } from "src";
 
 export default function useFriends() {
     const [friends, setFriends] = useState<UserFriendData[] | undefined>(clientInstance.friends.value);
+    const [offlineFriends, setOfflineFriends] = useState<UserFriendData[] | undefined>(clientInstance.friends.value);
+
     const [incomingRequests, setIncomingRequests] = useState<UserFriendData[] | undefined>(clientInstance.incomingFriendRequests.value);
     const [outgoingRequests, setOutgoingRequests] = useState<UserFriendData[] | undefined>(clientInstance.outgoingFriendRequests.value);
 
@@ -13,7 +15,11 @@ export default function useFriends() {
         }
 
         const listeners = [
-            clientInstance.friends.subscribe(setFriends),
+            clientInstance.friends.subscribe((friends) => {
+                setFriends(friends?.filter((friend) => friend.online));
+
+                setOfflineFriends(friends?.filter((friend) => !friend.online))
+            }),
             clientInstance.incomingFriendRequests.subscribe(setIncomingRequests),
             clientInstance.outgoingFriendRequests.subscribe(setOutgoingRequests),
         ];
@@ -21,5 +27,11 @@ export default function useFriends() {
         return () => listeners.forEach((listener) => listener());
     }, []);
 
-    return { friends, incomingRequests, outgoingRequests };
+    return {
+        friends,
+        offlineFriends,
+        
+        incomingRequests,
+        outgoingRequests
+    };
 }

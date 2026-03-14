@@ -1,4 +1,4 @@
-import { UserFriendData, UserFriendsData } from "@pixel63/events";
+import { UserFriendData, UserFriendsData, UserFriendUpdateData } from "@pixel63/events";
 import { UserFriendModel } from "../../Database/Models/Users/Friends/UserFriendModel";
 import { UserFriendRequestModel } from "../../Database/Models/Users/Friends/UserFriendRequestModel";
 import { UserModel } from "../../Database/Models/Users/UserModel";
@@ -62,14 +62,30 @@ export default class UserFriends {
 
     public sendFriendsData() {
         this.user.sendProtobuff(UserFriendsData, UserFriendsData.create({
-            friends: this.friends.map((friend) => this.getFriendData(friend.friend)),
+            friends: this.friends.map((friend) => UserFriends.getFriendData(friend.friend)),
 
-            incomingRequests: this.incomingRequests.map((request) => this.getFriendData(request.sender)),
-            outgoingRequests: this.outgoingRequests.map((request) => this.getFriendData(request.receiver))
+            incomingRequests: this.incomingRequests.map((request) => UserFriends.getFriendData(request.sender)),
+            outgoingRequests: this.outgoingRequests.map((request) => UserFriends.getFriendData(request.receiver))
         }));
     }
 
-    public getFriendData(user: UserModel): UserFriendData {
+    public updateFriends() {
+        const friendData = UserFriends.getFriendData(this.user.model);
+
+        for(const friend of this.friends) {
+            const friendUser = game.getUserById(friend.friend.id);
+
+            if(friendUser) {
+                friendUser.sendProtobuff(UserFriendUpdateData, UserFriendUpdateData.create({
+                    friend: friendData,
+
+                    type: "friend"
+                }));
+            }
+        }
+    }
+
+    public static getFriendData(user: UserModel): UserFriendData {
         return UserFriendData.create({
             id: user.id,
             

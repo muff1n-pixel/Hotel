@@ -7,6 +7,8 @@ import jsonWebToken from "jsonwebtoken";
 import { UserTokenModel } from "../Database/Models/Users/UserTokens/UserTokenModel.js";
 import { UserBadgeModel } from "../Database/Models/Users/Badges/UserBadgeModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
+import { UserFriendUpdateData } from "@pixel63/events";
+import UserFriends from "../Users/Friends/UserFriends.js";
 
 export default class WebSocket {
     private readonly server: WebSocketServer;
@@ -98,6 +100,8 @@ export default class WebSocket {
 
             game.users.push(user);
 
+            user.friends.updateFriends();
+
             webSocket.on("error", console.error);
 
             webSocket.on("message", (rawData) => {
@@ -118,6 +122,8 @@ export default class WebSocket {
                 });
 
                 await game.hotelInformation.updateUsersCount();
+
+                user.friends.updateFriends();
             });
 
             if(user.model.homeRoomId) {

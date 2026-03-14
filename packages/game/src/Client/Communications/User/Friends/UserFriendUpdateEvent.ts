@@ -8,9 +8,21 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
             throw new Error("Validation error.");
         }
 
+        if(!clientInstance.friends.value) {
+            throw new Error("Friends are not loaded.");
+        }
+
         switch(payload.type) {
             case "friend": {
-                clientInstance.friends.value?.push(payload.friend);
+                const existingFriendIndex = clientInstance.friends.value.findIndex((friend) => friend.id === payload.friend!.id);
+
+                if(existingFriendIndex !== -1) {
+                    clientInstance.friends.value[existingFriendIndex] = payload.friend;
+                }
+                else {
+                    clientInstance.friends.value.push(payload.friend);
+                }
+                
                 clientInstance.friends.update();
 
                 clientInstance.incomingFriendRequests.value = clientInstance.incomingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);

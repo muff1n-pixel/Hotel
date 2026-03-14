@@ -5,6 +5,7 @@ import { UserModel } from "../../../../Database/Models/Users/UserModel";
 import { UserFriendRequestModel } from "../../../../Database/Models/Users/Friends/UserFriendRequestModel";
 import { randomUUID } from "node:crypto";
 import { game } from "../../../..";
+import UserFriends from "../../../../Users/Friends/UserFriends";
 
 export default class SendUserFriendRequestEvent implements ProtobuffListener<SendUserFriendRequestData> {
     async handle(user: User, payload: SendUserFriendRequestData): Promise<void> {
@@ -45,7 +46,7 @@ export default class SendUserFriendRequestEvent implements ProtobuffListener<Sen
         user.friends.outgoingRequests.push(request);
 
         user.sendProtobuff(UserFriendUpdateData, UserFriendUpdateData.create({
-            friend: user.friends.getFriendData(request.receiver),
+            friend: UserFriends.getFriendData(request.receiver),
 
             type: "outgoing_request"
         }));
@@ -57,7 +58,7 @@ export default class SendUserFriendRequestEvent implements ProtobuffListener<Sen
             targetUserClient.friends.incomingRequests.push(request);
 
             targetUserClient.sendProtobuff(UserFriendUpdateData, UserFriendUpdateData.create({
-                friend: targetUserClient.friends.getFriendData(request.sender),
+                friend: UserFriends.getFriendData(request.sender),
 
                 type: "incoming_request"
             }));
