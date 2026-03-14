@@ -3,7 +3,7 @@ import RoomItem from "../RoomItem";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureSprite from "./RoomFigureSprite";
 import RoomFigureEffectSprite from "@Client/Room/Items/Figure/RoomFigureEffectSprite";
-import RoomRenderer from "@Client/Room/Renderer";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/RoomFigureTypingSprite";
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/RoomFigureIdlingSprite";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";

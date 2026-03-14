@@ -2,7 +2,7 @@ import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInter
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import RoomItem from "../RoomItem";
 import RoomFloorSprite from "../Floor/RoomFloorSprite";
-import RoomRenderer from "@Client/Room/Renderer";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 
 export default class RoomFloorItem extends RoomItem {

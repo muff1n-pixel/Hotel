@@ -1,5 +1,5 @@
 import ClientInstance from "@Client/ClientInstance";
-import RoomRenderer from "./Renderer";
+import RoomRenderer from "./RoomRenderer";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";

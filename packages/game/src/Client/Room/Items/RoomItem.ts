@@ -3,7 +3,7 @@
 import { RoomPositionData } from "@pixel63/events";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
-import RoomRenderer from "@Client/Room/Renderer";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();

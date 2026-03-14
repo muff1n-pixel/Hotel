@@ -1,5 +1,5 @@
 import Furniture from "@Client/Furniture/Furniture";
-import RoomRenderer from "../Renderer";
+import RoomRenderer from "../RoomRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { clientInstance, webSocketClient } from "../../..";
