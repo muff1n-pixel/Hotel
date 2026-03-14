@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message RemoveUserFriendData {
+    string user_id = 1;
+}

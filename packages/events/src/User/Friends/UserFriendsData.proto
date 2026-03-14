@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Friends/UserFriendData.proto";
+
+message UserFriendsData {
+    repeated UserFriendData friends = 1;
+    repeated UserFriendData incoming_requests = 2;
+    repeated UserFriendData outgoing_requests = 3;
+}

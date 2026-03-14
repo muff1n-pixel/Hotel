@@ -3,6 +3,9 @@ import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { RoomUser } from "@Client/Room/RoomInstance";
 import UserLink from "src/UserInterface/Common/Users/UserLink";
 import DialogButton from "src/UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { webSocketClient } from "src";
+import { UpdateUserFriendRequestData } from "@pixel63/events";
+import { useState } from "react";
 
 export type RoomUserFriendRequestMenuProps = {
     user: RoomUser;
@@ -12,7 +15,13 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
     const room = useRoomInstance();
     const position = useRoomItemScreenPosition(user.item);
 
+    const [minimized, setMinimized] = useState(false);
+
     if(room?.roomRenderer.focusedItem.value?.id === user.item.id) {
+        return null;
+    }
+
+    if(minimized) {
         return null;
     }
 
@@ -70,7 +79,7 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
 
                         <div style={{
                             cursor: "pointer"
-                        }}>
+                        }} onClick={() => setMinimized(true)}>
                             <div className="sprite_dialog_close"/>
                         </div>
                     </div>
@@ -89,6 +98,11 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
                             cursor: "pointer",
 
                             textDecoration: "underline"
+                        }} onClick={() => {
+                            webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
+                                userId: user.data.id,
+                                accept: false
+                            }));
                         }}>
                             Decline
                         </div>
@@ -100,6 +114,11 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
 
                             fontSize: 11,
                             fontFamily: "Ubuntu Bold"
+                        }} onClick={() => {
+                            webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
+                                userId: user.data.id,
+                                accept: true
+                            }));
                         }}>
                             Accept
                         </DialogButton>

@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message SendUserFriendRequestData {
+    string user_id = 1;
+}

@@ -8,7 +8,8 @@ import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { webSocketClient } from "../../../../../..";
-import { SendRoomChatMessageData, SetRoomUserRightsData } from "@pixel63/events";
+import { SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
+import useFriends from "src/UserInterface/Hooks/useFriends";
 
 export type RoomUserContextMenuProps = {
     item: RoomFigureItem;
@@ -18,6 +19,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
     const dialogs = useDialogs();
     const room = useRoomInstance();
     const user = useUser();
+    const { friends, incomingRequests, outgoingRequests } = useFriends();
 
     const [targetUser, setTargetUser] = useState(room?.users.find((user) => user.item.id === item.id));
     const [tab, setTab] = useState<null | "dance">(null);
@@ -59,6 +61,32 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                         </Fragment>
                     ):(
                         <Fragment>
+                            {outgoingRequests?.some((request) => request.id === targetUser.data.id)?(
+                                <UserContextMenuButton text={"Revoke request"} style={{ fontSize: 11 }} onClick={() => {
+                                    webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
+                                        userId: targetUser.data.id,
+                                        accept: false
+                                    }));
+                                }}/>
+                            ):(
+                                (incomingRequests?.some((request) => request.id === targetUser.data.id))?(
+                                    <UserContextMenuButton text={"Accept request"} style={{ fontSize: 11 }} onClick={() => {
+                                        webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
+                                            userId: targetUser.data.id,
+                                            accept: true
+                                        }));
+                                    }}/>
+                                ):(
+                                    (!friends?.some((friend) => friend.id === targetUser.data.id)) && (
+                                        <UserContextMenuButton text={"Ask to be a friend"} style={{ fontSize: 10 }} onClick={() => {
+                                            webSocketClient.sendProtobuff(SendUserFriendRequestData, SendUserFriendRequestData.create({
+                                                userId: targetUser.data.id
+                                            }));
+                                        }}/>
+                                    )
+                                )
+                            )}
+
                             {(room?.information?.owner?.id === user?.id) && (
                                 <UserContextMenuButton text={(targetUser.data.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {
                                     webSocketClient.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({

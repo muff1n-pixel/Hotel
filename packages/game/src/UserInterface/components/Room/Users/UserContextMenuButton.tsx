@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import "./UserContextMenuButton.css";
 
 export type UserContextMenuButtonProps = {
@@ -5,16 +6,17 @@ export type UserContextMenuButtonProps = {
     onClick: () => void;
     hasDropdown?: boolean;
     hasBack?: boolean;
+    style?: CSSProperties;
 };
 
-export default function UserContextMenuButton({ hasBack, hasDropdown, text, onClick }: UserContextMenuButtonProps) {
+export default function UserContextMenuButton({ hasBack, hasDropdown, text, style, onClick }: UserContextMenuButtonProps) {
     return (
         <div className="button" style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
 
-            height: 26,
+            minHeight: 26,
             maxWidth: 100,
 
             cursor: "pointer",
@@ -22,7 +24,12 @@ export default function UserContextMenuButton({ hasBack, hasDropdown, text, onCl
             padding: "5px 6px",
             boxSizing: "border-box",
 
-            position: "relative"
+            textWrap: "wrap",
+            textAlign: "center",
+
+            position: "relative",
+
+            ...style
         }} onClick={onClick}>
             {text}
 

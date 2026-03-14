@@ -94,6 +94,8 @@ export default class WebSocket {
 
             const user = new User(webSocket, model);
 
+            await user.friends.loadFriends();
+
             game.users.push(user);
 
             webSocket.on("error", console.error);

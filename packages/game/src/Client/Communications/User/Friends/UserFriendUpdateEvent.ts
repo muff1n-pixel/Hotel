@@ -1,0 +1,49 @@
+import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { UserFriendUpdateData } from "@pixel63/events";
+import { clientInstance } from "src";
+
+export default class UserFriendUpdateEvent implements ProtobuffListener<UserFriendUpdateData> {
+    async handle(payload: UserFriendUpdateData) {
+        if(!payload.friend) {
+            throw new Error("Validation error.");
+        }
+
+        switch(payload.type) {
+            case "friend": {
+                clientInstance.friends.value?.push(payload.friend);
+                clientInstance.friends.update();
+
+                clientInstance.incomingFriendRequests.value = clientInstance.incomingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
+                clientInstance.outgoingFriendRequests.value = clientInstance.outgoingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
+
+                return;
+            }
+
+            case "incoming_request": {
+                clientInstance.incomingFriendRequests.value?.push(payload.friend);
+                clientInstance.incomingFriendRequests.update();
+
+                return;
+            }
+
+            case "incoming_request_removed": {
+                clientInstance.incomingFriendRequests.value = clientInstance.incomingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
+
+                return;
+            }
+            
+            case "outgoing_request": {
+                clientInstance.outgoingFriendRequests.value?.push(payload.friend);
+                clientInstance.outgoingFriendRequests.update();
+
+                return;
+            }
+
+            case "outgoing_request_removed": {
+                clientInstance.outgoingFriendRequests.value = clientInstance.outgoingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
+
+                return;
+            }
+        }
+    }
+}
