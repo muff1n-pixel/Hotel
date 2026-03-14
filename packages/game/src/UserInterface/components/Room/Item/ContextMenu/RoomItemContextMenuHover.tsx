@@ -35,6 +35,10 @@ export default function RoomItemContextMenuHover({ item }: RoomItemContextMenuHo
         }
     }, [room, item]);
 
+    if(!name) {
+        return;
+    }
+
     return (
         <div style={{
             position: "absolute",
