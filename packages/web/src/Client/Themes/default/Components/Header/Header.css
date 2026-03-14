@@ -111,6 +111,11 @@ header {
                     overflow: hidden;
                 }
 
+                a.green {
+                    background: linear-gradient(to bottom, #49cf04 45%, #38aa00 45%);
+                    border-color: #276604;
+                }
+
                 a:hover {
                     filter: brightness(115%);
                 }

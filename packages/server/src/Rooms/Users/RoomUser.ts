@@ -130,6 +130,7 @@ export default class RoomUser implements RoomActor {
         this.removeEventListeners();
         
         this.room.users.splice(this.room.users.indexOf(this), 1);
+        this.room.updateUsersCount();
 
         this.room.sendProtobuff(RoomUserLeftData, RoomUserLeftData.create({
             userId: this.user.model.id

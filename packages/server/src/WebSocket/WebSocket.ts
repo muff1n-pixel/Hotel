@@ -118,7 +118,15 @@ export default class WebSocket {
                 await game.hotelInformation.updateUsersCount();
             });
 
-            if(user.model.homeRoomId) {
+            const connectRoom = url.searchParams.get("room");
+
+            if(connectRoom)
+            {
+                const room = await game.roomManager.getOrLoadRoomInstance(connectRoom);
+
+                room?.addUserClient(user);
+            }
+            else if(user.model.homeRoomId) {
                 const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
 
                 room?.addUserClient(user);

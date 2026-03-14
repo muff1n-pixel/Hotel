@@ -35,9 +35,7 @@ export default function RegistrationSection() {
                     setError(result.error);
 
                     return;
-                }
-
-                if(result.accessToken) {
+                } else if(result.accessToken) {
                     const date = new Date();
                     date.setFullYear(date.getFullYear() + 1);
 

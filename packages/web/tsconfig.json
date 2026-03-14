@@ -12,6 +12,7 @@
 
     /* Emit */
     "noEmit": true,
+    "noImplicitAny": false,
 
     /* Interop Constraints */
     "isolatedModules": true,

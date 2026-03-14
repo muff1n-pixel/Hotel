@@ -3,7 +3,7 @@ import { ThemeContext } from "../../ThemeProvider";
 import friendsIcon from '../../Images/settings/friends.gif';
 import addIcon from '../../Images/settings/add.gif';
 import friendsFollowIcon from '../../Images/settings/friends_follow.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
 
 
 const SettingsFriendsForm = () => {

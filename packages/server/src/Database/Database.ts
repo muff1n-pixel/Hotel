@@ -59,8 +59,8 @@ export async function initializeModels() {
   initializeUserPreferencesModel(sequelize);
 
   initializeWebArticleModel(sequelize);
-  initializeWebArticleLikeModel(sequelize);
   initializeWebArticleCommentModel(sequelize);
+  initializeWebArticleLikeModel(sequelize);
 
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);

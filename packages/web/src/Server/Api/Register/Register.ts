@@ -123,6 +123,7 @@ router.post("/", async (req, res) => {
         });
 
         return res.json({
+            accessToken: accessToken,
             id: user.id,
             name: user.name,
             email: user.email,

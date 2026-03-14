@@ -37,6 +37,7 @@ export default class Room {
         const roomUser = new RoomUser(this, user, position);
         
         this.users.push(roomUser);
+        this.updateUsersCount();
 
         return roomUser;
     }
@@ -173,6 +174,12 @@ export default class Room {
 
     public getRoomUser(user: User) {
         return this.getRoomUserById(user.model.id);
+    }
+
+    public updateUsersCount() {
+        this.model.update({
+            currentUsers: this.users.length
+        })
     }
 
     public getRoomUserById(userId: string) {

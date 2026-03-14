@@ -20,6 +20,7 @@ export class RoomModel extends Model {
     declare structure: Required<RoomStructureData>;
     
     declare thumbnail: string | null;
+    declare currentUsers: number;
     declare maxUsers: number;
     declare speed: number;
     
@@ -54,6 +55,11 @@ export function initializeRoomModel(sequelize: Sequelize) {
             type: new DataTypes.BLOB("medium"),
             allowNull: true,
             defaultValue: null
+          },
+          currentUsers: {
+            type: new DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
           },
           maxUsers: {
             type: new DataTypes.INTEGER,

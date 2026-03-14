@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
 import mailIcon from '../../Images/settings/mail.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
 
 const SettingsEmailForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
