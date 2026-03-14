@@ -29,6 +29,7 @@ import EditShopPetDialog from "../../Components/Shop/Development/EditShopPetDial
 import PetBrowserDialog from "../../Components/Pets/PetBrowserDialog";
 import EditPetDialog from "../../Components/Pets/EditPetDialog";
 import FriendsDialog from "src/UserInterface/Components/Friends/FriendsDialog";
+import MessengerDialog from "src/UserInterface/Components/Messenger/MessengerDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -130,6 +131,9 @@ export default function DialogInstances() {
 
                     case "friends":
                         return (<FriendsDialog {...props} key={dialog.id}/>);
+
+                    case "messenger":
+                        return (<MessengerDialog {...props} key={dialog.id}/>);
                 }
             })}
         </Fragment>

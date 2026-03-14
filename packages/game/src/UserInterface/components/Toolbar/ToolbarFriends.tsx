@@ -31,7 +31,7 @@ export default function ToolbarFriends() {
                 <div className="sprite_friends_search"/>
             </ToolbarItem>
 
-            <ToolbarItem onClick={() => {}}>
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("messenger")}>
                 <div className="sprite_friends_chats"/>
             </ToolbarItem>
 

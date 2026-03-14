@@ -1,0 +1,50 @@
+.messenger-message-bubble {
+    position: relative;
+}
+
+.messenger-message-bubble:after, .messenger-message-bubble:before {
+    top: 15px;
+
+    border: solid transparent;
+
+    content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.messenger-message-bubble:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-width: 6px;
+	margin-top: -6px;
+}
+.messenger-message-bubble:before {
+	border-color: rgba(0, 0, 0, 0);
+	border-width: 7px;
+	margin-top: -7px;
+}
+
+.messenger-message-bubble-left:after, .messenger-message-bubble-left:before {
+    right: 100%;
+}
+
+.messenger-message-bubble-left:after {
+    border-right-color: #FFFFFF;
+}
+
+.messenger-message-bubble-left:before {
+    border-right-color: #CCCCCC;
+}
+
+.messenger-message-bubble-right:after, .messenger-message-bubble-right:before {
+    left: 100%;
+}
+
+.messenger-message-bubble-right:after {
+    border-left-color: #FFFFFF;
+}
+
+.messenger-message-bubble-right:before {
+    border-left-color: #CCCCCC;
+}
