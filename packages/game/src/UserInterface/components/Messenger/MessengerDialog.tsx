@@ -20,7 +20,9 @@ export default function MessengerDialog({ hidden, onClose }: MessengerDialogProp
     const [message, setMessage] = useState("");
 
     return (
-        <Dialog title="Messenger" hidden={hidden} initialPosition="center" onClose={onClose} width={280} height={380} style={{
+        <Dialog title={
+            (<UserLink id={user.id} name={user.name}/>)
+        } hidden={hidden} initialPosition="center" onClose={onClose} width={280} height={380} style={{
             overflow: "visible"
         }}>
             <DialogContent style={{
@@ -45,35 +47,6 @@ export default function MessengerDialog({ hidden, onClose }: MessengerDialogProp
                     }}>
                         <MessengerFigure figureConfiguration={user.figureConfiguration}/>
                     </div>
-
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
-                        <div style={{
-                            fontFamily: "Ubuntu Bold",
-                            fontSize: 12
-                        }}>
-                            <UserLink id={user.id} name={user.name}/>
-                        </div>
-
-                        <div style={{
-                            width: 12,
-                            height: 12,
-
-                            cursor: "pointer",
-
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
-                            <div className="sprite_friends_close" style={{
-                                filter: "invert()",
-                            }}/>
-                        </div>
-                    </div>
                 </div>
 
                 <div style={{
@@ -84,9 +57,13 @@ export default function MessengerDialog({ hidden, onClose }: MessengerDialogProp
                     padding: "5px"
                 }}>
 
-                    <DialogScrollArea hideInactive style={{ gap: 5 }}>
-                        <MessengerMessage side={"right"} figureConfiguration={user.figureConfiguration} messages={["hey! how are u?", "i haven't seen you in a while"]}/>
-                        <MessengerMessage side={"left"} figureConfiguration={user.figureConfiguration} messages={["i am ok!", "how are you?"]}/>
+                    <DialogScrollArea hideInactive style={{ gap: 5 }} contentStyle={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 5
+                    }}>
+                        <MessengerMessage side={"right"} name={user.name} figureConfiguration={user.figureConfiguration} messages={["hey! how are u?", "i haven't seen you in a while"]}/>
+                        <MessengerMessage side={"left"} name={user.name} figureConfiguration={user.figureConfiguration} messages={["i am ok!", "how are you?"]}/>
 
                         <MessengerStatus>Your friend went offline</MessengerStatus>
                     </DialogScrollArea>

@@ -3,13 +3,14 @@ import "./MessengerMessage.css";
 import { FigureConfigurationData } from "@pixel63/events";
 
 export type MessengerMessageProps = {
+    name: string;
     figureConfiguration?: FigureConfigurationData;
     messages: string[];
 
     side: "left" | "right";
 };
 
-export default function MessengerMessage({ side, figureConfiguration, messages }: MessengerMessageProps) {
+export default function MessengerMessage({ name, side, figureConfiguration, messages }: MessengerMessageProps) {
     return (
         <div style={{
             display: "flex",
@@ -23,8 +24,10 @@ export default function MessengerMessage({ side, figureConfiguration, messages }
                 flexDirection: "column",
                 gap: 3,
 
-                padding: "10px 0"
+                padding: "0 0 6px"
             }}>
+                <b style={{ fontSize: 12, padding: "0 6px" }}>{name}:</b>
+
                 <div style={{
                     flex: 1
                 }}>

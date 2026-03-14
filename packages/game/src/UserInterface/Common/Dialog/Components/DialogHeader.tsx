@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 export type MousePosition = {
     left: number;
@@ -6,7 +6,7 @@ export type MousePosition = {
 };
 
 export type DialogHeaderProps = {
-    title: string;
+    title: ReactNode;
     onDialogMove: MouseEventHandler<HTMLDivElement>;
     onClose?: () => void;
     onEditClick?: (() => void) | false;

@@ -9,7 +9,8 @@ export default function UserLink({ name }: UserLinkProps) {
             display: "flex",
             flexDirection: "row",
             gap: 5,
-            alignItems: "center"
+            alignItems: "center",
+            pointerEvents: "auto"
         }}>
             <div>{name}</div>
 

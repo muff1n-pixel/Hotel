@@ -1,9 +1,9 @@
-import { CSSProperties, PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren, ReactNode } from "react";
 import DialogHeader from "./Components/DialogHeader";
 import useDialogMovement from "./Hooks/useDialogMovement";
 
 export type DialogProps = PropsWithChildren & {
-    title: string;
+    title: ReactNode;
     width: number;
     height: number;
     hidden?: boolean;
