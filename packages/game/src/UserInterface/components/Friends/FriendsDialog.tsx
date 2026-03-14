@@ -17,6 +17,7 @@ export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogPr
         }}>
             <DialogTabs
                 height={60}
+                initialActiveIndex={(data?.tab === "search")?(1):(0)}
                 header={{
                     backgroundImage: "./assets/friends/Friendsfor4Town.png",
                     backgroundImageOffset: -10
