@@ -1,17 +1,38 @@
 import { FigureConfigurationData } from "@pixel63/events";
-import { useState } from "react";
 import DialogPanel from "src/UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 import "./FriendsPanel.css";
+import { useEffect, useRef } from "react";
 
 export type FriendsPanelProps = {
     figureConfiguration?: FigureConfigurationData;
     name?: string;
     roomId?: string;
+
+    expanded?: boolean;
+    onExpand?: (expanded: boolean) => void;
 };
 
-export default function FriendsPanel({ figureConfiguration, name, roomId }: FriendsPanelProps) {
-    const [expanded, setExpanded] = useState(false);
+export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand }: FriendsPanelProps) {
+    const elementRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if(expanded && onExpand) {
+            const listener = (event: MouseEvent) => {
+                if(elementRef.current?.contains(event.target as Element)) {
+                    return;
+                }
+
+                onExpand(false);
+            };
+
+            document.body.addEventListener("click", listener);
+
+            return () => {
+                document.body.removeEventListener("click", listener);
+            };
+        }
+    }, [expanded, onExpand, elementRef]);
 
     return (
         <div style={{
@@ -30,8 +51,8 @@ export default function FriendsPanel({ figureConfiguration, name, roomId }: Frie
                 
                 position: "absolute",
                 bottom: 0
-            }} onClick={(expanded)?(undefined):(() => {})}>
-                <div style={{
+            }} onClick={(onExpand && !expanded)?(() => {}):(undefined)}>
+                <div ref={elementRef} style={{
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
@@ -40,7 +61,7 @@ export default function FriendsPanel({ figureConfiguration, name, roomId }: Frie
                     height: 30,
 
                     paddingLeft: 2
-                }} onClick={(figureConfiguration)?(() => setExpanded(!expanded)):(undefined)}>
+                }} onClick={(onExpand)?(() => onExpand?.(!expanded)):(undefined)}>
                     <div>
                         {(figureConfiguration)?(
                             <FigureImage figureConfiguration={figureConfiguration} headOnly cropped direction={2} style={{ marginTop: 5 }}/>

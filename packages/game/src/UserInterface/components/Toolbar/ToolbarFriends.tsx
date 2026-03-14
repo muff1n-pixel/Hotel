@@ -6,8 +6,10 @@ import { useUser } from "src/UserInterface/Hooks/useUser";
 
 export default function ToolbarFriends() {
     const user = useUser();
-    
+
     const [minimized, setMinimized] = useState(false);
+
+    const [expandedFriendId, setExpandedFriendId] = useState<string | null>(null);
 
     return (
         <div style={{
@@ -39,9 +41,9 @@ export default function ToolbarFriends() {
 
                     position: "relative"
                 }}>
-                    <FriendsPanel name={user.name} figureConfiguration={user.figureConfiguration}/>
+                    <FriendsPanel expanded={"1" === expandedFriendId} onExpand={(value) => setExpandedFriendId((value)?("1"):(null))} name={user.name} figureConfiguration={user.figureConfiguration}/>
                     
-                    <FriendsPanel name={user.name} figureConfiguration={user.figureConfiguration} roomId="123"/>
+                    <FriendsPanel expanded={"2" === expandedFriendId} onExpand={(value) => setExpandedFriendId((value)?("2"):(null))} name={user.name} figureConfiguration={user.figureConfiguration} roomId="123"/>
 
                     <FriendsPanel/>
                 </div>
