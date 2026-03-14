@@ -1,16 +1,20 @@
 import { CSSProperties, PropsWithChildren } from "react";
+import "./DialogPanel.css";
 
 export type DialogPanelProps = PropsWithChildren & {
     style?: CSSProperties;
     contentStyle?: CSSProperties;
+    color?: "silver" | "green" | "light-blue";
+    onClick?: () => void;
 }
 
-export default function DialogPanel({ style, contentStyle, children }: DialogPanelProps) {
+export default function DialogPanel({ style, onClick, contentStyle, children, color = "silver" }: DialogPanelProps) {
     return (
-        <div style={{
+        <div className={[(onClick)?("dialog-panel-clickable"):(false), `dialog-panel-${color}`].map((value) => value).join(' ')} style={{
             display: "flex",
 
-            border: "1px solid #757571",
+            borderWidth: 1,
+            borderStyle: "solid",
             borderBottomWidth: 2,
             borderRadius: 5,
 
@@ -19,8 +23,8 @@ export default function DialogPanel({ style, contentStyle, children }: DialogPan
             <div style={{
                 flex: 1,
 
-                background: "#D2D1CB",
-                border: "2px solid #F4F4F0",
+                borderWidth: 2,
+                borderStyle: "solid",
                 borderRadius: 5,
 
                 ...contentStyle

@@ -1,0 +1,38 @@
+.dialog-panel-clickable {
+    cursor: pointer;
+}
+
+.dialog-panel-clickable:hover {
+    filter: brightness(115%);
+}
+
+.dialog-panel-silver {
+    border-color: #757571;
+}
+
+.dialog-panel-silver > div {
+    background-color: #D2D1CB;
+    border-color: #F4F4F0;
+}
+
+/* Light blue, used for new friends panel */
+
+.dialog-panel-light-blue {
+    border-color: #000000;
+}
+
+.dialog-panel-light-blue > div {
+    background-color: #5C8F9C;
+    border-color: #7EC7DD;
+}
+
+/* Green, used for friends panel */
+
+.dialog-panel-green {
+    border-color: #000000;
+}
+
+.dialog-panel-green > div {
+    background-color: #72893F;
+    border-color: #9CBE59;
+}

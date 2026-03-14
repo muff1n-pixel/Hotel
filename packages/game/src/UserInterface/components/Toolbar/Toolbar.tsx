@@ -8,6 +8,7 @@ import ToolbarToggle from "./ToolbarToggle";
 import { useState } from "react";
 import { useUser } from "../../Hooks/useUser";
 import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
+import ToolbarFriends from "src/UserInterface/Components/Toolbar/ToolbarFriends";
 
 export default function Toolbar() {
     const user = useUser();
@@ -37,6 +38,7 @@ export default function Toolbar() {
             
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr",
+                gap: 10,
 
                 height: 47,
 
@@ -99,6 +101,8 @@ export default function Toolbar() {
                         <ToolbarChatbar/>
                     )}
                 </div>
+
+                <ToolbarFriends/>
             </div>
         </div>
     );
