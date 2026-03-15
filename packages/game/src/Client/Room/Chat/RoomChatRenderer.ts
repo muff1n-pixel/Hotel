@@ -5,7 +5,7 @@ import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerCli
 import { FigureConfigurationData, RoomActorChatOptionsData } from "@pixel63/events";
 
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData, cry?: boolean) {
+    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);
