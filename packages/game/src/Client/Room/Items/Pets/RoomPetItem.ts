@@ -27,6 +27,12 @@ export default class RoomPetItem extends RoomItem {
     }
 
     render() {
+        if(this.pet.size !== this.roomRenderer.size) {
+            this.pet.size = this.roomRenderer.size;
+
+            this.sprites = [];
+        }
+
         this.pet.render().then((sprites) => {
             if(sprites.length) {
                 this.sprites = sprites.map((sprite) => new RoomPetSprite(this, sprite));

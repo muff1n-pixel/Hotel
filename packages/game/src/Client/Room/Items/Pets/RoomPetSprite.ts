@@ -19,6 +19,9 @@ export default class RoomPetSprite extends RoomSprite {
         this.offset.left += 64;
         this.offset.top += 16;
 
+        this.offset.left *= this.item.roomRenderer.getSizeScale();
+        this.offset.top *= this.item.roomRenderer.getSizeScale();
+
         this.offset.left += this.sprite.x;
         this.offset.top += this.sprite.y;
     }

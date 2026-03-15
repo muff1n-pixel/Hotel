@@ -7,7 +7,7 @@ import { PetPaletteData } from "@pixel63/events";
 export default class Pet {
     private frame: number = 0;
     public direction: number = 2;
-    private size: number = 64;
+    public size: number = 64;
     private color: number = 0;
     private grayscaled: boolean = false;
 
