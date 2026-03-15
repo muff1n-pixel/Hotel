@@ -55,8 +55,6 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
             gap: 10
         }}>
             <div style={{
-                flex: 1,
-
                 backgroundColor: "#FFFFFF",
                 borderRadius: 5,
 
