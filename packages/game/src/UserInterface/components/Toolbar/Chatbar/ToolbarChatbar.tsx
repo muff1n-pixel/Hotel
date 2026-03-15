@@ -91,7 +91,7 @@ export default function ToolbarChatbar() {
 
         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
             message: value,
-            cry: shiftPressed.current ? true : false
+            shout: shiftPressed.current ? true : false
         }));
     }, [dialogs, value, shiftPressed]);
 

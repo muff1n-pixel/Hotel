@@ -263,7 +263,7 @@ export default class RoomUser implements RoomActor {
         return false;
     }
 
-    public sendRoomMessage(message: string, cry: boolean | undefined = false) {
+    public sendRoomMessage(message: string, shout: boolean | undefined = false) {
         this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
             actor: {
                 user: {
@@ -274,7 +274,7 @@ export default class RoomUser implements RoomActor {
             message,
             roomChatStyleId: this.user.model.roomChatStyleId,
             options: {
-                bold: cry ? true : false
+                bold: shout ? true : false
             }
         }));
 
