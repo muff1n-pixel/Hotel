@@ -13,6 +13,7 @@ import ArticlePage from "./Pages/ArticlePage/ArticlePage";
 import SafetyPage from "./Pages/SafetyPage/SafetyPage";
 import './Theme.css';
 import './Fonts.css';
+import StaffPage from "./Pages/StaffPage/StaffPage";
 
 const Layout = () => (
   <>
@@ -65,6 +66,13 @@ export const routes = [
     element: <Layout />,
     children: [
       { index: true, element: <ArticlePage /> },
+    ]
+  },
+  {
+    path: "staff",
+    element: <Layout />,
+    children: [
+      { index: true, element: <StaffPage /> },
     ]
   },
   {

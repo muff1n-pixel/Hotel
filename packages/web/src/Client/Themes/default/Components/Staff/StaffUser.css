@@ -1,0 +1,60 @@
+.staffPage {
+    .box {
+        .staffUser {
+            padding: 5px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+
+            .avatar {
+                margin-right: 10px;
+            }
+
+            .infos {
+                .username {
+                    display: flex;
+                    align-items: center;
+                    font-weight: bold;
+                    font-size: 14px;
+                    margin-bottom: 5px;
+
+                    img {
+                        margin-left: 10px;
+                    }
+                }
+
+                .motto,
+                .role {
+                    opacity: 0.8;
+                    font-size: 12px;
+                }
+
+                .role {
+                    opacity: 1;
+                }
+
+                .badges {
+                    margin-top: 10px;
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                        margin-right: 10px
+                    }
+
+                    img:last-child {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+
+        .staffUser:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .staffUser:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

@@ -10,7 +10,10 @@ export default defineConfig({
     }
   },
   server: {
-    host: true
+    host: true,
+    fs: {
+      allow: [path.resolve(__dirname, "../../assets")]
+    }
   },
   build: {
     outDir: path.resolve(__dirname, "../../build/web"),
