@@ -9,20 +9,29 @@ const HotRooms = () => {
     const [rooms, setRooms] = useState<Array<RoomInterface>>([]);
 
     useEffect(() => {
-        fetch("/api/hotrooms", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then((response) => response.json())
-            .then((result) => {
-                setRooms(result);
-                setLoading(false);
+        const fetchRooms = () => {
+            fetch("/api/hotrooms", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
             })
-            .catch((e) => {
-                console.log("(Error) Impossible to fetch articles:", e)
-            })
+                .then((response) => response.json())
+                .then((result) => {
+                    setRooms(result);
+                    setLoading(false);
+                })
+                .catch((e) => {
+                    console.log("(Error) Impossible to fetch articles:", e)
+                });
+        };
+
+        fetchRooms();
+
+        const interval = setInterval(fetchRooms, 120000);
+
+        return () => clearInterval(interval);
+
     }, []);
 
     return (
@@ -34,7 +43,7 @@ const HotRooms = () => {
                     :
                     <div className="hot_rooms">
                         {rooms.length === 0 ?
-                            <div style={{textAlign: "center", marginBottom: "10px", fontSize: "12px"}}>No rooms available at the moment.</div>
+                            <div style={{ textAlign: "center", marginBottom: "10px", fontSize: "12px" }}>No rooms available at the moment.</div>
                             :
                             rooms.map((room) => {
                                 let iconClass = "";
