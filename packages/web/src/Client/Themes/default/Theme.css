@@ -1,6 +1,5 @@
-body {
-    background-image: url('./Images/bg.png');
-    background-repeat: repeat;
+* {
+    margin: 0;
 }
 
 :root {
@@ -9,6 +8,28 @@ body {
     --light-blue: #53a5d6;
     --green: #2bb500;
     --orange: #ff6103;
+}
+
+html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    background-image: url('./Images/bg.png');
+    background-repeat: repeat;
+    font-family: "Ubuntu";
+    display: flex;
+    font-size: 14px;
+}
+
+img, canvas {
+    image-rendering: pixelated;
+}
+
+
+b {
+    font-family: "Ubuntu Bold";
 }
 
 .resize {

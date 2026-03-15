@@ -4,13 +4,13 @@ interface InitialStateType {
     currentUser: null
 }
 
-const initialState = {
+const initialState: InitialStateType = {
     currentUser: null
-}
+};
 
-const reducer = (state: any, action: any) => {
+const reducer = (state: InitialStateType, action: any) => {
     return { ...state, ...action };
-}
+};
 
 const ThemeContext = createContext<{
     state: InitialStateType;
@@ -20,12 +20,12 @@ const ThemeContext = createContext<{
     dispatch: () => {}
 });
 
-const ThemeProvider: React.FC<{children: React.ReactNode }> = ({ children }) => {
+const ThemeProvider = (props: { children?: React.ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
         <ThemeContext.Provider value={{ state, dispatch }}>
-            {children}
+            {props.children}
         </ThemeContext.Provider>
     );
 };

@@ -1,15 +1,18 @@
+import { useRoutes, type RouteObject } from "react-router";
+import { ThemeProvider } from "./ThemeProvider";
 import { Outlet } from "react-router";
 import Header from "./Components/Header/Header";
 import IndexPage from "./Pages/IndexPage/IndexPage";
 import LogoutPage from "./Pages/LogoutPage/LogoutPage";
 import MePage from "./Pages/MePage/MePage";
 import Footer from "./Components/Footer/Footer";
-import './General.css';
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import CommunityPage from "./Pages/CommunityPage/CommunityPage";
 import ArticlePage from "./Pages/ArticlePage/ArticlePage";
 import SafetyPage from "./Pages/SafetyPage/SafetyPage";
+import './Theme.css';
+import './Fonts.css';
 
 const Layout = () => (
   <>
@@ -76,3 +79,13 @@ export const routes = [
     element: <LogoutPage />
   },
 ];
+
+export default function Theme() {
+  const element = useRoutes(routes);
+
+  return (
+    <ThemeProvider>
+      {element}
+    </ThemeProvider>
+  );
+}
