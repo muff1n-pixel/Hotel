@@ -7,7 +7,6 @@ import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events"
 export default function ToolbarChatbar() {
     const dialogs = useDialogs();
 
-    const shiftPressed = useRef<boolean>(false);
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
     const [typing, setTyping] = useState(false);
@@ -30,98 +29,53 @@ export default function ToolbarChatbar() {
         }));
     }, [typing]);
 
-    const handleSubmit = useCallback(() => {
-        if (!value.length) {
-            return;
-        }
+    const handleSubmit = useCallback((shout: boolean) => {
+        if (!value.length) return;
 
         setTyping(false);
 
         if (value[0] === ':' || value[0] === '/') {
             const input = value.split(' ');
-
             const command = input[0].substring(1);
 
             switch (command) {
-                case "commands": {
+                case "commands":
                     dialogs.addUniqueDialog("room-chat-commands");
-
                     return;
-                }
 
-                case "furni": {
+                case "furni":
                     dialogs.addUniqueDialog("room-furni");
-
                     return;
-                }
 
-                case "enable": {
-                    if (input.length === 1) {
-                        dialogs.addUniqueDialog("figure-catalog");
-
-                        return;
-                    }
-
-                    break;
-                }
-
-                case "carry": {
-                    if (input.length === 1) {
-                        dialogs.addUniqueDialog("figure-catalog");
-
-                        return;
-                    }
-
-                    break;
-                }
-
-                case "figure": {
+                case "figure":
                     dialogs.addUniqueDialog("figure");
-
                     return;
-                }
 
-                case "floor": {
+                case "floor":
                     dialogs.addUniqueDialog("room-floorplan");
-
                     return;
-                }
             }
         }
 
-        webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
-            message: value,
-            shout: shiftPressed.current ? true : false
-        }));
-    }, [dialogs, value, shiftPressed]);
-
-    const handleKeyUp = useCallback(
-        (event: React.KeyboardEvent<HTMLDivElement>) => {
-            if (event.key === "Enter") {
-                handleSubmit();
-                setValue("")
-                return;
-            }
-
-            if(event.key === "Shift") {
-                shiftPressed.current = false;
-            }
-        },
-        [handleSubmit, shiftPressed, setValue]
-    );
+        webSocketClient.sendProtobuff(
+            SendRoomChatMessageData,
+            SendRoomChatMessageData.create({
+                message: value,
+                shout
+            })
+        );
+    }, [dialogs, value]);
 
     const handleKeyDown = useCallback(
         (event: React.KeyboardEvent<HTMLDivElement>) => {
             if (event.key === "Enter") {
-                event.preventDefault()
-                return;
-            }
+                event.preventDefault();
 
-            if(event.key === "Shift") {
-                shiftPressed.current = true;
+                handleSubmit(event.shiftKey);
+                setValue("");
             }
         },
-        [shiftPressed]
+        [handleSubmit, setValue]
     );
 
     return (
@@ -176,7 +130,6 @@ export default function ToolbarChatbar() {
                 type="text"
                 value={value}
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
-                onKeyUp={(event) => handleKeyUp(event)}
                 onKeyDown={(event) => handleKeyDown(event)}
                 placeholder="Click here to chat..."
                 style={{
