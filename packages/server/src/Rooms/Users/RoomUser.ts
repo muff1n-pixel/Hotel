@@ -14,7 +14,7 @@ export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
     public path: RoomActorPath;
-    
+
     public position: RoomPositionData;
     public direction: number;
     public actions: string[] = [];
@@ -32,7 +32,7 @@ export default class RoomUser implements RoomActor {
     public set lastActivity(value: number) {
         this._lastActivity = value;
 
-        if(this.idling) {
+        if (this.idling) {
             this.idling = false;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({
@@ -64,25 +64,25 @@ export default class RoomUser implements RoomActor {
 
         this.user.sendProtobuff(RoomLoadData, RoomLoadData.fromJSON({
             id: this.room.model.id,
-            
+
             information: this.room.getInformationData(),
-            
+
             structure: this.room.model.structure,
-            
+
             users: this.room.users.map((user) => user.getRoomUserData()),
             furniture: this.room.furnitures.map((furniture) => furniture.model),
             bots: this.room.bots.map((bot) => bot.model),
 
             hasRights: this.hasRights()
         }))
-        
+
         this.user.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
             user: this.getRoomUserData()
         }));
 
         this.path = new RoomActorPath(this);
     }
-    
+
     private getRoomUserData(): RoomUserData {
         return {
             $type: "RoomUserData",
@@ -95,7 +95,7 @@ export default class RoomUser implements RoomActor {
 
             position: this.position,
             direction: this.direction,
-            
+
             hasRights: this.hasRights(),
             actions: this.actions,
             typing: this.typing,
@@ -112,7 +112,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleActionsInterval() {
-        if(!this.idling && (performance.now() - this.lastActivity) > 2 * 60 * 1000) {
+        if (!this.idling && (performance.now() - this.lastActivity) > 2 * 60 * 1000) {
             this.idling = true;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({
@@ -127,7 +127,7 @@ export default class RoomUser implements RoomActor {
     private readonly disconnectListener = this.disconnect.bind(this);
     public disconnect() {
         this.removeEventListeners();
-        
+
         this.room.users.splice(this.room.users.indexOf(this), 1);
         this.room.updateUsersCount();
 
@@ -139,7 +139,7 @@ export default class RoomUser implements RoomActor {
 
         const wiredUserLeavesRoomLogics = this.room.getFurnitureWithCategory(WiredTriggerUserLeavesRoomLogic);
 
-        for(const logic of wiredUserLeavesRoomLogics) {
+        for (const logic of wiredUserLeavesRoomLogics) {
             logic.handleUserLeftRoom(this);
         }
 
@@ -147,7 +147,7 @@ export default class RoomUser implements RoomActor {
 
         this.user.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}));
 
-        if(!this.room.users.length) {
+        if (!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
         }
     }
@@ -157,7 +157,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public addAction(action: string, removeAfterMs?: number) {
-        if(this.actions.includes(action)) {
+        if (this.actions.includes(action)) {
             return;
         }
 
@@ -169,21 +169,21 @@ export default class RoomUser implements RoomActor {
                     userId: this.user.model.id
                 }
             },
-            
+
             actionsAdded: [action]
         }));
 
-        for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
+        for (const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
             logic.handleUserAction(this, action);
         }
 
         // TODO: move this to the client?
-        if(removeAfterMs !== undefined) {
+        if (removeAfterMs !== undefined) {
             setTimeout(() => {
                 this.removeAction(action);
             }, removeAfterMs);
         }
-        else if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
+        else if (["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
             setTimeout(() => {
                 this.removeAction(action);
             }, 2000);
@@ -195,7 +195,7 @@ export default class RoomUser implements RoomActor {
 
         const existingActionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
 
-        if(existingActionIndex === -1) {
+        if (existingActionIndex === -1) {
             return;
         }
 
@@ -207,7 +207,7 @@ export default class RoomUser implements RoomActor {
                     userId: this.user.model.id
                 }
             },
-            
+
             actionsRemoved: [actionId]
         }));
     }
@@ -231,7 +231,7 @@ export default class RoomUser implements RoomActor {
                     userId: this.user.model.id
                 }
             },
-            
+
             position: this.position,
             direction: this.direction,
             usePath
@@ -239,9 +239,9 @@ export default class RoomUser implements RoomActor {
     }
 
     public getOffsetPosition(direction: number, offset: number) {
-        const position = {...this.position};
+        const position = { ...this.position };
 
-        switch(direction) {
+        switch (direction) {
             case 2:
                 position.column += offset;
 
@@ -252,11 +252,11 @@ export default class RoomUser implements RoomActor {
     }
 
     public hasRights() {
-        if(this.room.model.owner.id === this.user.model.id) {
+        if (this.room.model.owner.id === this.user.model.id) {
             return true;
         }
 
-        if(this.room.model.rights.some((rights) => rights.user.id === this.user.model.id)) {
+        if (this.room.model.rights.some((rights) => rights.user.id === this.user.model.id)) {
             return true;
         }
 
@@ -270,10 +270,12 @@ export default class RoomUser implements RoomActor {
                     userId: this.user.model.id
                 }
             },
-            
+
             message,
             roomChatStyleId: this.user.model.roomChatStyleId,
-            cry: cry ? true : false
+            options: {
+                bold: cry ? true : false
+            }
         }));
 
         this.lastActivity = performance.now();
@@ -282,13 +284,13 @@ export default class RoomUser implements RoomActor {
     public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
         const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
 
-        if(previousFurniture) {
+        if (previousFurniture) {
             await this.handleWalksOffFurniture?.(previousFurniture);
         }
 
         const currentFurniture = this.room.getUpmostFurnitureAtPosition(newPosition);
 
-        if(currentFurniture) {
+        if (currentFurniture) {
             await this.handleWalksOnFurniture?.(currentFurniture);
         }
     }

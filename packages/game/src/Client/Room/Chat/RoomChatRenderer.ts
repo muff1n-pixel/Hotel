@@ -21,7 +21,7 @@ export default class RoomChatRenderer {
         context.font = `${(options?.italic) ? ("italic") : ("")} 12px "Ubuntu Bold"`;
         const userText = (options?.hideUsername) ? ({ width: 0 }) : (context.measureText(`${user}: `));
 
-        context.font = `${options?.italic ? "italic " : ""} ${cry ? "bold " : ""} 12px Ubuntu C`;
+        context.font = `${options?.italic ? "italic " : ""} ${options?.bold ? "bold " : ""} 12px Ubuntu C`;
         const messageText = context.measureText(message);
 
         const textWidth = Math.ceil(userText.width + messageText.width);
@@ -64,7 +64,7 @@ export default class RoomChatRenderer {
             context.fillText(`${user}: `, roomChatStyle.text.left + 2, roomChatStyle.text.top + 2);
         }
 
-        context.font = `${options?.italic ? "italic " : ""} ${cry ? "bold " : ""} 12px Ubuntu C`;
+        context.font = `${options?.italic ? "italic " : ""} ${options?.bold ? "bold " : ""} 12px Ubuntu C`;
 
         context.fillText(message, roomChatStyle.text.left + 2 + userText.width, roomChatStyle.text.top + 2);
 

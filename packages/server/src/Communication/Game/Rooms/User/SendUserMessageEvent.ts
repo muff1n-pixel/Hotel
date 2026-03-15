@@ -79,9 +79,9 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
                     }
                 },
                 message: payload.message,
-                cry: payload.cry ? true : false,
                 roomChatStyleId: user.model.roomChatStyleId,
                 options: {
+                    bold: payload.cry ? true : false,
                     italic: true,
                     transparent: true
                 }

@@ -126,7 +126,7 @@ export default function RoomChat() {
                 
                 const position = actor.item.position;
 
-                const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, figureConfiguration, payload.message, payload.options, payload.cry);
+                const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, figureConfiguration, payload.message, payload.options);
 
                 const screenPosition = room.roomRenderer.getCoordinatePosition(position);
 
