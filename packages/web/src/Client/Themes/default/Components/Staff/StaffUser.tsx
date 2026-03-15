@@ -28,7 +28,7 @@ const StaffUser = (props: UserProps) => {
 
     return (
         <div className='staffUser'>
-            <img src={avatar} alt='Avatar' className='avatar' />
+            <div className='avatar' style={{ backgroundImage: `url(${avatar})` }}></div>
 
             <div className='infos'>
                 <div className='username'>{props.name} <img src={props.online ? OnlineImage : OfflineImage} alt='State' /></div>
