@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "User/Friends/UserFriendData.proto";
+
+message UserFriendsSearchData {
+    repeated UserFriendData users = 1;
+}
