@@ -86,8 +86,9 @@ export default class Room {
     public getActorAtPosition(position: RoomPositionOffsetData) {
         const user = this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
         const bot = this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
+        const pet = this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
 
-        return user || bot;
+        return user || bot || pet;
     }
 
     public getActorsAtPosition(position: RoomPositionOffsetData, dimensions?: RoomPositionData): RoomActor[] {
