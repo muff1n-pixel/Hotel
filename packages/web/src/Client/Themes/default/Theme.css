@@ -34,8 +34,13 @@ b {
 
 .resize {
     width: 80%;
+    min-width: 765px;
     max-width: 765px;
     margin: 0 auto;
+}
+
+.minWidth {
+    min-width: 765px;
 }
 
 .grid {

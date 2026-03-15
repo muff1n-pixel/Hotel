@@ -122,7 +122,7 @@ const Header = () => {
 
     return (
         <header>
-            <div className='top_content'>
+            <div className='top_content minWidth'>
                 <div className='resize'>
                     <div className='content'>
                         <div className='logo' onClick={() => navigate("/me")}><img src={Logo} alt="Logo" /></div>
