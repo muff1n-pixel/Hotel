@@ -24,6 +24,8 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             await new Promise<void>((resolve, reject) => {
                 roomUser.path.walkTo(offsetPosition, undefined, resolve, reject);
             });
+
+            console.log("concluded");
         }
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);

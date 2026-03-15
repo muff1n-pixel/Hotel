@@ -114,6 +114,12 @@ export default class RoomActorPath {
 
         path.splice(0, 1);
 
+        if(!path.length) {
+            onCancel?.();
+
+            return;
+        }
+
         this.path = path;
         this.walkThroughFurniture = walkThroughFurniture;
         this.pathOnFinish = onFinish;
@@ -187,6 +193,8 @@ export default class RoomActorPath {
         if(this.path === undefined) {
             return;
         }
+
+        console.log("path finished")
 
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.actor.position));
 
