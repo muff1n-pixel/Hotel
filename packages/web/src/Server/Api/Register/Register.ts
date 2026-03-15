@@ -126,7 +126,7 @@ router.post("/", async (req, res) => {
         sendLog("VERBOSE", `${user.name} just registered from website.`);
 
         return res.json({
-            accessToken: accessToken,
+            accessToken,
             id: user.id,
             name: user.name,
             email: user.email,
