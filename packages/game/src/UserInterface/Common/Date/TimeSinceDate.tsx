@@ -18,5 +18,5 @@ export default function TimeSinceDate({ date }: TimeSinceDateProps) {
         };
     }, []);
 
-    return (<div>{timeSinceDate}</div>);
+    return timeSinceDate;
 }

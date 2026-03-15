@@ -45,6 +45,26 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
                 return;
             }
 
+            case "friend_removed": {
+                const existingFriendIndex = clientInstance.friends.value.findIndex((friend) => friend.id === payload.friend!.id);
+
+                console.log({ existingFriendIndex });
+
+                if(existingFriendIndex !== -1) {
+                    clientInstance.friends.value.splice(existingFriendIndex, 1);
+                    clientInstance.friends.update();
+                }
+
+                const messenger = clientInstance.messenger.value?.find((tab) => tab.friend.id === payload.friend!.id);
+
+                if(messenger) {
+                    clientInstance.messenger.value?.splice(clientInstance.messenger.value.indexOf(messenger), 1);
+                    clientInstance.messenger.update();
+                }
+
+                return;
+            }
+
             case "incoming_request": {
                 clientInstance.incomingFriendRequests.value?.push(payload.friend);
                 clientInstance.incomingFriendRequests.update();
