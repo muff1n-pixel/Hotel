@@ -18,10 +18,18 @@ export default function useFriends() {
             clientInstance.friends.subscribe((friends) => {
                 setFriends(friends?.filter((friend) => friend.online));
 
-                setOfflineFriends(friends?.filter((friend) => !friend.online))
+                setOfflineFriends(friends?.filter((friend) => !friend.online));
             }),
-            clientInstance.incomingFriendRequests.subscribe(setIncomingRequests),
-            clientInstance.outgoingFriendRequests.subscribe(setOutgoingRequests),
+            clientInstance.incomingFriendRequests.subscribe((value) => {
+                if(value){
+                    setIncomingRequests([...value!]);
+                }
+            }),
+            clientInstance.outgoingFriendRequests.subscribe((value) => {
+                if(value) {
+                    setOutgoingRequests([...value]);
+                }
+            }),
         ];
 
         return () => listeners.forEach((listener) => listener());

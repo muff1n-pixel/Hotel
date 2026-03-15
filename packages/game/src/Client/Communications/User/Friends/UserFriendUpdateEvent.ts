@@ -52,7 +52,7 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
                 return;
             }
 
-            case "incoming_request_removed": {
+            case "incoming_request_declined": {
                 clientInstance.incomingFriendRequests.value = clientInstance.incomingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
 
                 return;
@@ -65,7 +65,7 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
                 return;
             }
 
-            case "outgoing_request_removed": {
+            case "outgoing_request_declined": {
                 clientInstance.outgoingFriendRequests.value = clientInstance.outgoingFriendRequests.value?.filter((request) => request.id !== payload.friend!.id);
 
                 return;

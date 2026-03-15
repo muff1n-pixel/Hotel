@@ -33,6 +33,8 @@ export default class UpdateUserFriendRequestEvent implements ProtobuffListener<U
             userFriend.user = user.model;
             userFriend.friend = targetUser;
 
+            user.friends.friends.push(userFriend);
+
             // Create target friend
             const targetFriend = await UserFriendModel.create({
                 id: randomUUID(),
@@ -43,6 +45,12 @@ export default class UpdateUserFriendRequestEvent implements ProtobuffListener<U
 
             targetFriend.user = targetUser;
             targetFriend.friend = user.model;
+            
+            const targetUserClient = game.getUserById(targetUser.id);
+
+            if(targetUserClient) {
+                targetUserClient.friends.friends.push(targetFriend);
+            }
         }
 
         await friendRequest.destroy();
