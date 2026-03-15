@@ -1,12 +1,11 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { game } from "../../../index.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { Op } from "sequelize";
 import { GetNavigatorData, NavigatorData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { UserModel } from "../../../Database/Models/Users/UserModel.js";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     public readonly name = "GetNavigatorRoomsEvent";
@@ -22,7 +21,13 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             [Op.like]: `%${payload.search}%`
                         },
                         ownerId: user.model.id
-                    }
+                    },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ]
                 });
                 (payload.category === "mine")?(user.model.id):(undefined)
             }
@@ -34,6 +39,12 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         },
                         type: (payload.category === "public")?("public"):("private"),
                     },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ],
                     limit: 20
                 });
             }
@@ -47,7 +58,12 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
                             return {
                                 id: roomModel.id,
+
                                 name: roomModel.name,
+                                description: roomModel.description,
+
+                                ownerId: roomModel.owner.id,
+                                ownerName: roomModel.owner.name,
 
                                 users: room?.users.length ?? 0,
                                 maxUsers: roomModel.maxUsers,
@@ -73,6 +89,11 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     ],
                     include: [
                         {
+                            model: UserModel,
+                            as: "owner"
+                        },
+
+                        {
                             model: RoomCategoryModel,
                             as: "category"
                         }
@@ -93,6 +114,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                                 return {
                                     id: roomModel.id,
                                     name: roomModel.name,
+                                    description: roomModel.description,
+
+                                    ownerId: roomModel.owner.id,
+                                    ownerName: roomModel.owner.name,
 
                                     users: room?.users.length ?? 0,
                                     maxUsers: roomModel.maxUsers,
@@ -112,6 +137,12 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     order: [
                         [ "createdAt", "DESC" ]
                     ],
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ],
                     limit: 20
                 });
 
@@ -123,6 +154,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                                 return {
                                     id: room.model.id,
                                     name: room.model.name,
+                                    description: room.model.description,
+
+                                    ownerId: room.model.owner.id,
+                                    ownerName: room.model.owner.name,
 
                                     users: room.users.length ?? 0,
                                     maxUsers: room.model.maxUsers,
@@ -139,6 +174,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                                 return {
                                     id: roomModel.id,
                                     name: roomModel.name,
+                                    description: roomModel.description,
+
+                                    ownerId: roomModel.owner.id,
+                                    ownerName: roomModel.owner.name,
 
                                     users: room?.users.length ?? 0,
                                     maxUsers: roomModel.maxUsers,
@@ -158,6 +197,12 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     where: {
                         ownerId: user.model.id,
                     },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ],
                     order: [
                         [ "createdAt", "DESC" ]
                     ]
@@ -173,6 +218,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                                 return {
                                     id: roomModel.id,
                                     name: roomModel.name,
+                                    description: roomModel.description,
+
+                                    ownerId: roomModel.owner.id,
+                                    ownerName: roomModel.owner.name,
 
                                     users: room?.users.length ?? 0,
                                     maxUsers: roomModel.maxUsers,

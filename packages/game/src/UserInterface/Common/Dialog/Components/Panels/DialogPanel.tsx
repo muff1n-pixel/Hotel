@@ -1,16 +1,18 @@
-import { CSSProperties, PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren, RefObject } from "react";
 import "./DialogPanel.css";
 
 export type DialogPanelProps = PropsWithChildren & {
+    ref?: RefObject<HTMLDivElement | null>;
     style?: CSSProperties;
     contentStyle?: CSSProperties;
-    color?: "silver" | "green" | "light-blue";
+    color?: "silver" | "green" | "light-blue" | "beige";
     onClick?: () => void;
+    arrow?: boolean;
 }
 
-export default function DialogPanel({ style, onClick, contentStyle, children, color = "silver" }: DialogPanelProps) {
+export default function DialogPanel({ ref, style, onClick, contentStyle, children, color = "silver", arrow }: DialogPanelProps) {
     return (
-        <div className={[(onClick)?("dialog-panel-clickable"):(false), `dialog-panel-${color}`].map((value) => value).join(' ')} style={{
+        <div ref={ref} className={[(onClick)?("dialog-panel-clickable"):(false), `dialog-panel-${color}`, (arrow)?("dialog-panel-arrow"):(false)].map((value) => value).join(' ')} style={{
             display: "flex",
 
             borderWidth: 1,

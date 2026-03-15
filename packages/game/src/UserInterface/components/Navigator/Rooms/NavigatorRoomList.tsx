@@ -64,7 +64,7 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
             ):(
                 <DialogList>
                     {rooms.map((room) => (
-                        <NavigatorRoomListItem {...room} onClick={() => onClick(room)}/>
+                        <NavigatorRoomListItem room={room} onClick={() => onClick(room)}/>
                     ))}
                 </DialogList>
             )}
