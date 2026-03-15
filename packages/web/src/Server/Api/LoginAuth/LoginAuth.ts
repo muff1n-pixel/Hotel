@@ -4,6 +4,7 @@ import { UserModel } from "../../Models/Users/UserModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
 import { randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
+import { sendLog } from "@shared/Logger/Logger";
 
 const router = Router();
 
@@ -47,6 +48,8 @@ router.post("/", async (req, res) => {
                 id: randomUUID()
             }
         });
+
+        sendLog("VERBOSE", `${user.name} just logged in (Auth) from website.`);
 
         return res.json({
             id: user.id,

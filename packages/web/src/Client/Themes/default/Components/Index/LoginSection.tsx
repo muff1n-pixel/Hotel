@@ -12,6 +12,7 @@ export type LoginSectionProps = {
 
 export default function LoginSection({ showRegistration }: LoginSectionProps) {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
+    const navigate = useNavigate();
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
     const [name, setName] = useState("");
@@ -46,6 +47,8 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                     setCookie("accessToken", result.accessToken, {
                         expires: date
                     });
+                    
+                    navigate("/me");
                 }
             });
     }, [name, password, dispatch, setCookie]);

@@ -43,35 +43,35 @@ export const routes = [
     path: "/me",
     element: <Layout />,
     children: [
-      { index: true, element: <MePage /> }, 
+      { index: true, element: <MePage /> },
     ]
   },
   {
     path: "/settings/:section?",
     element: <Layout />,
     children: [
-      { index: true, element: <SettingsPage /> }, 
+      { index: true, element: <SettingsPage /> },
     ]
   },
   {
     path: "community",
     element: <Layout />,
     children: [
-      { index: true, element: <CommunityPage /> }, 
+      { index: true, element: <CommunityPage /> },
     ]
   },
   {
     path: "/article/:articleDate?/:articleTitle?",
     element: <Layout />,
     children: [
-      { index: true, element: <ArticlePage /> }, 
+      { index: true, element: <ArticlePage /> },
     ]
   },
   {
     path: "/safety/:section?",
     element: <Layout />,
     children: [
-      { index: true, element: <SafetyPage /> }, 
+      { index: true, element: <SafetyPage /> },
     ]
   },
   {

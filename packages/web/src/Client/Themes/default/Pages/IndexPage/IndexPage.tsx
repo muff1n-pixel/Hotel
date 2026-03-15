@@ -39,7 +39,7 @@ const IndexPage = () => {
                     navigate(from, { replace: true });
                 });
         }
-    }, [cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
+    }, []);
 
     return (
         <div className="index" style={{

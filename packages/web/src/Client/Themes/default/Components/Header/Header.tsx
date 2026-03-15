@@ -29,13 +29,12 @@ const Header = () => {
             })
     }
 
-
     useEffect(() => {
-        fetchOnlines();
-
-        const intervalId = setInterval(() => {
-            fetchOnlines();
-        }, 60000);
+        switch (location.pathname.split("/")[1]) {
+            case "me":
+            case "settings":
+                return;
+        }
 
         if (!currentUser && cookies.accessToken) {
             fetch("/api/loginAuth", {
@@ -52,44 +51,54 @@ const Header = () => {
                     if (result.error) {
                         dispatch({ currentUser: null })
                         removeCookie("accessToken");
+
                         return;
                     }
 
                     dispatch({ currentUser: result });
                 });
         }
+    }, [currentUser])
+
+
+    useEffect(() => {
+        fetchOnlines();
+
+        const intervalId = setInterval(() => {
+            fetchOnlines();
+        }, 60000);
 
         return () => {
             clearInterval(intervalId);
         };
-    }, [fetchOnlines, setInterval, clearInterval, cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
+    }, [fetchOnlines, setInterval, clearInterval]);
 
     const generateSubMenu = () => {
         switch (location.pathname.split("/")[1]) {
             case "community":
-            case "article": 
+            case "article":
             case "staff":
             case "forums":
-            {
-                return (
-                    <nav className='submenu'>
-                        <NavLink to="/community">Community</NavLink>
-                        <NavLink to="/article">Articles</NavLink>
-                        <NavLink to="/staff">Staff</NavLink>
-                        <NavLink to="/forums">Forums</NavLink>
-                    </nav>
-                )
-            }
+                {
+                    return (
+                        <nav className='submenu'>
+                            <NavLink to="/community">Community</NavLink>
+                            <NavLink to="/article">Articles</NavLink>
+                            <NavLink to="/staff">Staff</NavLink>
+                            <NavLink to="/forums">Forums</NavLink>
+                        </nav>
+                    )
+                }
 
             case "safety":
-            {
-                return (
-                    <nav className='submenu'>
-                        <NavLink to="/safety/safety_tips">Safety Tips</NavLink>
-                        <NavLink to="/safety/pixel_way">Pixel Way</NavLink>
-                    </nav>
-                )
-            }
+                {
+                    return (
+                        <nav className='submenu'>
+                            <NavLink to="/safety/safety_tips">Safety Tips</NavLink>
+                            <NavLink to="/safety/pixel_way">Pixel Way</NavLink>
+                        </nav>
+                    )
+                }
 
             default: {
                 if (currentUser)

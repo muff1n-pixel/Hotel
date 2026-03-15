@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { ThemeContext } from "../../ThemeProvider";
 import Button from "../Button";
 import Container from "../Container";
@@ -6,6 +7,7 @@ import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 
 export default function RegistrationSection() {
+    const navigate = useNavigate();
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [_cookies, setCookie] = useCookies(["accessToken"]);
     
@@ -44,6 +46,8 @@ export default function RegistrationSection() {
                     setCookie("accessToken", result.accessToken, {
                         expires: date
                     });
+
+                    navigate("/me");
                 }
             });
     }, [name, email, password, confirmPassword, setCookie, dispatch]);
