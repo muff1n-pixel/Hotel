@@ -97,6 +97,10 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
         return null;
     }
 
+    if(!messenger.length) {
+        return null;
+    }
+
     return (
         <Dialog title={(<UserLink id={activeTab.friend.id} name={activeTab.friend.name}/>)} hidden={hidden} initialPosition="center" onClose={onClose} width={280} height={380} style={{
             overflow: "visible"

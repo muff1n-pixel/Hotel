@@ -49,7 +49,7 @@ export default function FriendsDialogSearch() {
             {(!result.length)?(
                 <div>No users found.</div>
             ):(
-                <DialogScrollArea style={{ gap: 10 }} hideInactive>
+                <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
                     {result.map((friend) => (
                         <FriendUser key={friend.id} friend={friend}/>
                     ))}

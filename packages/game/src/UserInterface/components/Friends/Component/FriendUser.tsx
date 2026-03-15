@@ -32,9 +32,8 @@ export default function FriendUser({ active, onClick, friend }: FriendUserProps)
             marginLeft: -10,
             marginRight: -10,
 
-            marginTop: -8,
 
-            padding: "0 10px"
+            padding: "5px 20px"
         }}>
             <div style={{
                 flex: 1,

@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { webSocketClient } from "src";
 import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
 import DialogButton from "src/UserInterface/Common/Dialog/Components/Button/DialogButton";
+import DialogScrollArea from "src/UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 import FriendUser from "src/UserInterface/Components/Friends/Component/FriendUser";
 import useFriends from "src/UserInterface/Hooks/useFriends";
@@ -33,15 +34,17 @@ export default function FriendsDialogList() {
             <div style={{
                 flex: 1
             }}>
-                {(!friends?.length) && (
+                {(!friends?.length)?(
                     <div>
                         You have no friends online!
                     </div>
+                ):(
+                    <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
+                        {friends?.filter((friend) => friend.online).map((friend) => (
+                            <FriendUser key={friend.id} active={activeFriend?.id === friend.id} friend={friend} onClick={() => setActiveFriend((activeFriend?.id === friend.id)?(null):(friend))}/>
+                        ))}
+                    </DialogScrollArea>
                 )}
-
-                {friends?.filter((friend) => friend.online).map((friend) => (
-                    <FriendUser key={friend.id} active={activeFriend?.id === friend.id} friend={friend} onClick={() => setActiveFriend((activeFriend?.id === friend.id)?(null):(friend))}/>
-                ))}
             </div>
 
             {(activeFriend) && (
@@ -85,9 +88,11 @@ export default function FriendsDialogList() {
                     </div>
 
                     {(!friendRequestsMinimized) && (
-                        incomingRequests.map((friend) => (
-                            <FriendUser key={friend.id} friend={friend}/>
-                        ))
+                        <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
+                            {incomingRequests.map((friend) => (
+                                <FriendUser key={friend.id} friend={friend}/>
+                            ))}
+                        </DialogScrollArea>
                     )}
                 </Fragment>
             )}
@@ -112,9 +117,11 @@ export default function FriendsDialogList() {
                     </div>
 
                     {(!outgoingRequestsMinimized) && (
-                        outgoingRequests.map((friend) => (
-                            <FriendUser key={friend.id} friend={friend}/>
-                        ))
+                        <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
+                            {outgoingRequests.map((friend) => (
+                                <FriendUser key={friend.id} friend={friend}/>
+                            ))}
+                        </DialogScrollArea>
                     )}
                 </Fragment>
             )}
@@ -139,40 +146,42 @@ export default function FriendsDialogList() {
                     </div>
 
                     {(!offlineFriendsMinimized) && (
-                        offlineFriends.map((friend) => (
-                            <div key={friend.id} style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 10
-                            }}>
-                                <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
-                                    marginTop: 6
-                                }}/>
-
-                                <div style={{
-                                    flex: 1,
-
+                        <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
+                            {offlineFriends.map((friend) => (
+                                <div key={friend.id} style={{
                                     display: "flex",
-                                    flexDirection: "column"
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: 10
                                 }}>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 5,
-                                        alignItems: "center"
-                                    }}>
-                                        <b>{friend.name}</b>
+                                    <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
+                                        marginTop: 6
+                                    }}/>
 
-                                        <div className="sprite_users_profile-small" style={{
-                                            cursor: "pointer"
-                                        }}/>
+                                    <div style={{
+                                        flex: 1,
+
+                                        display: "flex",
+                                        flexDirection: "column"
+                                    }}>
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 5,
+                                            alignItems: "center"
+                                        }}>
+                                            <b>{friend.name}</b>
+
+                                            <div className="sprite_users_profile-small" style={{
+                                                cursor: "pointer"
+                                            }}/>
+                                        </div>
+                                        
+                                        <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
                                     </div>
-                                    
-                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
                                 </div>
-                            </div>
-                        ))
+                            ))}
+                        </DialogScrollArea>
                     )}
                 </Fragment>
             )}
