@@ -4,6 +4,11 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      $assets: path.resolve(__dirname, "../../assets")
+    }
+  },
   server: {
     host: true
   },
