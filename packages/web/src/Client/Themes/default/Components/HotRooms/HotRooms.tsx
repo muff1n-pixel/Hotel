@@ -22,7 +22,7 @@ const HotRooms = () => {
                     setLoading(false);
                 })
                 .catch((e) => {
-                    console.log("(Error) Impossible to fetch articles:", e)
+                    console.log("(Error) Impossible to fetch hot rooms:", e)
                 });
         };
 
