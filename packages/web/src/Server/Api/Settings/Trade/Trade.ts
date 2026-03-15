@@ -9,8 +9,7 @@ const router = Router();
 
 router.post("/", async (req, res) => {
     const accessToken = req.cookies.accessToken,
-        allowFriendsRequest = req.body.allowFriendsRequest,
-        allowFriendsFollow = req.body.allowFriendsFollow;
+        allowTrade = req.body.allowTrade;
 
     if (!accessToken) {
         return res.json({
@@ -42,7 +41,7 @@ router.post("/", async (req, res) => {
                 error: "An error occured"
             });
 
-        if (typeof allowFriendsRequest !== "boolean" || typeof allowFriendsFollow !== "boolean") {
+        if (typeof allowTrade !== "boolean") {
             return res.json({
                 error: "The data sent is invalid."
             });
@@ -62,12 +61,11 @@ router.post("/", async (req, res) => {
         }
 
         await userPreferences.update({
-            allowFriendsRequest,
-            allowFriendsFollow
+            allowTrade
         })
 
         return res.json({
-            success: "Your friends settings has been edited."
+            success: "Your trade settings has been edited."
         });
 
     }

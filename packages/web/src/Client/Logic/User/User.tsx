@@ -15,6 +15,7 @@ export default class User implements UserInterface {
     declare preferences: {
         allowFriendsRequest: boolean;
         allowFriendsFollow: boolean;
+        allowTrade: boolean;
     };
 
     constructor(data: UserInterface) {
@@ -32,6 +33,7 @@ export default class User implements UserInterface {
         this.preferences = {
             allowFriendsFollow: data.preferences.allowFriendsFollow,
             allowFriendsRequest: data.preferences.allowFriendsRequest,
+            allowTrade: data.preferences.allowTrade
         };
     }
 }

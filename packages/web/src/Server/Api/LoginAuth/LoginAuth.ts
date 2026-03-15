@@ -64,7 +64,8 @@ router.post("/", async (req, res) => {
 
             preferences: {
                 allowFriendsFollow: userPreferences.allowFriendsFollow,
-                allowFriendsRequest: userPreferences.allowFriendsRequest
+                allowFriendsRequest: userPreferences.allowFriendsRequest,
+                allowTrade: userPreferences.allowTrade
             }
         });
     }

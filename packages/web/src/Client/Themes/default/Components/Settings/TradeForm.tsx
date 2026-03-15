@@ -1,12 +1,10 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
-import friendsIcon from '../../Images/settings/friends.gif';
-import addIcon from '../../Images/settings/add.gif';
-import friendsFollowIcon from '../../Images/settings/friends_follow.gif';
+import tradeIcon from '../../Images/icons/small/tools_edit.gif';
 import { Alert, AlertType } from "../Alert/Alert";
 
 
-const SettingsFriendsForm = () => {
+const SettingsTradeForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     if (!currentUser)
@@ -16,21 +14,18 @@ const SettingsFriendsForm = () => {
             </div>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
-
-        const [allowFriendsRequest, setAllowFriendsRequest] = useState(currentUser.preferences.allowFriendsRequest)
-        const [allowFriendsFollow, setAllowFriendsFollow] = useState(currentUser.preferences.allowFriendsFollow);
+        const [allowTrade, setAllowTrade] = useState(currentUser.preferences.allowTrade);
 
         const submitForm = useCallback((e: React.SubmitEvent<HTMLFormElement>) => {
             e.preventDefault();
 
-            fetch("/api/settings/friends", {
+            fetch("/api/settings/trade", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    allowFriendsRequest,
-                    allowFriendsFollow
+                    allowTrade
                 })
             })
                 .then((response) => response.json())
@@ -46,8 +41,7 @@ const SettingsFriendsForm = () => {
                         Object.getOwnPropertyDescriptors(currentUser)
                     );
 
-                    newUser.preferences.allowFriendsRequest = allowFriendsRequest;
-                    newUser.preferences.allowFriendsFollow = allowFriendsFollow;
+                    newUser.preferences.allowTrade = allowTrade;
 
                     dispatch({ currentUser: newUser });
                     setAlert({
@@ -56,32 +50,25 @@ const SettingsFriendsForm = () => {
                     });
 
                 });
-        }, [allowFriendsRequest, allowFriendsFollow]);
+        }, [allowTrade]);
 
         return (
             <div className="box">
-                <div className="title">Edit my friends settings</div>
+                <div className="title">Edit my trade settings</div>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
                     <div className="row">
-                        <span><img src={addIcon} alt="Add icon" /> Accept friends request</span>
-                        <select value={Number(allowFriendsRequest)} onChange={(e) => setAllowFriendsRequest(e.target.value === "1") }>
+                        <span><img src={tradeIcon} alt="Trade icon" /> Allow trade</span>
+                        <select value={Number(allowTrade)} onChange={(e) => setAllowTrade(e.target.value === "1") }>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <div className="row">
-                        <span><img src={friendsFollowIcon} alt="Friends follow icon" /> Allow friends follow</span>
-                        <select value={Number(allowFriendsFollow)} onChange={(e) => setAllowFriendsFollow(e.target.value === "1") }>
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
-                        </select>
-                    </div>
-                    <button><img src={friendsIcon} alt="Friends Icon" /> Edit my friends settings</button>
+                    <button><img src={tradeIcon} alt="Trade Icon" /> Edit my trade settings</button>
                 </form>
             </div>
         )
     }
 }
 
-export default SettingsFriendsForm;
+export default SettingsTradeForm;

@@ -13,5 +13,6 @@ export interface UserInterface {
     preferences: {
         allowFriendsRequest: boolean;
         allowFriendsFollow: boolean;
+        allowTrade: boolean;
     };
 }
