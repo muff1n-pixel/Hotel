@@ -33,6 +33,9 @@ export default function RoomItemContextMenuHover({ item }: RoomItemContextMenuHo
 
             setName(pet?.data.name);
         }
+        else {
+            setName(undefined);
+        }
     }, [room, item]);
 
     if(!name) {
