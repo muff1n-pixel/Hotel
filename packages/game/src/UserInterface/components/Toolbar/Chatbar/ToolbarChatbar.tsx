@@ -7,9 +7,7 @@ import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events"
 export default function ToolbarChatbar() {
     const dialogs = useDialogs();
 
-    const inputRef = useRef<HTMLDivElement>(null);
     const shiftPressed = useRef<boolean>(false);
-    const altPressed = useRef<boolean>(false);
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
     const [typing, setTyping] = useState(false);
@@ -99,28 +97,17 @@ export default function ToolbarChatbar() {
 
     const handleKeyUp = useCallback(
         (event: React.KeyboardEvent<HTMLDivElement>) => {
-            if (!inputRef.current)
-                return;
-
             if (event.key === "Enter") {
                 handleSubmit();
                 setValue("")
-                inputRef.current.textContent = "";
                 return;
             }
 
             if(event.key === "Shift") {
                 shiftPressed.current = false;
             }
-
-            // TODO ---> ADDING ALT ICONS
-            if(event.key === "Alt") {
-                altPressed.current = false;
-            }
-
-            setValue(inputRef.current.textContent);
         },
-        [handleSubmit, shiftPressed, altPressed, setValue]
+        [handleSubmit, shiftPressed, setValue]
     );
 
     const handleKeyDown = useCallback(
@@ -133,12 +120,8 @@ export default function ToolbarChatbar() {
             if(event.key === "Shift") {
                 shiftPressed.current = true;
             }
-
-            if(event.key === "Alt") {
-                altPressed.current = true;
-            }
         },
-        [shiftPressed, altPressed]
+        [shiftPressed]
     );
 
     return (
@@ -189,12 +172,15 @@ export default function ToolbarChatbar() {
                 )}
             </div>
 
-            <div
-                contentEditable={true}
-                ref={inputRef}
+            <input
+                type="text"
+                value={value}
+                onChange={(event) => setValue((event.target as HTMLInputElement).value)}
                 onKeyUp={(event) => handleKeyUp(event)}
                 onKeyDown={(event) => handleKeyDown(event)}
+                placeholder="Click here to chat..."
                 style={{
+                    fontFamily: "Ubuntu C",
                     flex: 1,
                     border: "none",
                     borderTopRightRadius: 8,
@@ -203,8 +189,7 @@ export default function ToolbarChatbar() {
                     fontSize: 16,
                     background: "transparent",
                     padding: "6px"
-                }}>
-            </div>
+                }} />
         </div>
     );
 }

@@ -5,6 +5,12 @@
 }
 
 @font-face {
+    font-family: "Ubuntu C";
+    font-weight: normal;
+    src: url("./../../../../../assets/fonts/Ubuntu/Ubuntu-C.ttf") format("truetype");
+}
+
+@font-face {
     font-family: "Ubuntu Italic";
     font-weight: normal;
     font-style: italic;

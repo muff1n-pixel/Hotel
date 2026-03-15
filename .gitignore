@@ -17,6 +17,7 @@ packages/*/node_modules/
 utils/*/node_modules/
 
 assets/*/
+!assets/fonts/
 !assets/reception/
 !assets/shop/*/
 assets/shop/headers/
