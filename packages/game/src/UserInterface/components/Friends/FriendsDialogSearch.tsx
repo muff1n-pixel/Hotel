@@ -5,6 +5,7 @@ import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
 import DialogScrollArea from "src/UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 import Input from "src/UserInterface/Common/Form/Components/Input";
+import FriendUser from "src/UserInterface/Components/Friends/Component/FriendUser";
 import useFriends from "src/UserInterface/Hooks/useFriends";
 
 export default function FriendsDialogSearch() {
@@ -50,50 +51,7 @@ export default function FriendsDialogSearch() {
             ):(
                 <DialogScrollArea style={{ gap: 10 }} hideInactive>
                     {result.map((friend) => (
-                        <div key={friend.id} style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10
-                        }}>
-                            <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
-                                marginTop: 6
-                            }}/>
-
-                            <div style={{
-                                flex: 1,
-
-                                display: "flex",
-                                flexDirection: "column"
-                            }}>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                    alignItems: "center"
-                                }}>
-                                    <b>{friend.name}</b>
-
-                                    <div className="sprite_users_profile-small" style={{
-                                        cursor: "pointer"
-                                    }}/>
-                                </div>
-                                
-                                <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
-                            </div>
-
-                            <div>
-                                {!outgoingRequests?.some((request) => request.id === friend.id) && !incomingRequests?.some((request) => request.id === friend.id) && (
-                                    <div className="sprite_friends_add" style={{
-                                        cursor: "pointer"
-                                    }} onClick={() => {
-                                        webSocketClient.sendProtobuff(SendUserFriendRequestData, SendUserFriendRequestData.create({
-                                            userId: friend.id
-                                        }));
-                                    }}/>
-                                )}
-                            </div>
-                        </div>
+                        <FriendUser key={friend.id} friend={friend}/>
                     ))}
                 </DialogScrollArea>
             )}

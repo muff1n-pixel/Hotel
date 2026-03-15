@@ -1,14 +1,13 @@
-import { RemoveUserFriendData, UpdateUserFriendRequestData, UserFriendData } from "@pixel63/events";
+import { RemoveUserFriendData, UserFriendData } from "@pixel63/events";
 import { Fragment, useEffect, useState } from "react";
 import { webSocketClient } from "src";
 import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
 import DialogButton from "src/UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
-import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
+import FriendUser from "src/UserInterface/Components/Friends/Component/FriendUser";
 import useFriends from "src/UserInterface/Hooks/useFriends";
 
 export default function FriendsDialogList() {
-    const dialogs = useDialogs();
     const { friends, offlineFriends, incomingRequests, outgoingRequests } = useFriends();
 
     const [activeFriend, setActiveFriend] = useState<UserFriendData | null>(null);
@@ -41,66 +40,7 @@ export default function FriendsDialogList() {
                 )}
 
                 {friends?.filter((friend) => friend.online).map((friend) => (
-                    <div key={friend.id} style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-
-                        cursor: "pointer",
-
-                        background: (activeFriend?.id === friend.id)?("rgba(0, 0, 0, .1)"):(undefined),
-
-                        marginLeft: -10,
-                        marginRight: -10,
-
-                        marginTop: -8,
-
-                        padding: "0 10px"
-                    }}>
-                        <div style={{
-                            flex: 1,
-
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10
-                        }} onClick={() => setActiveFriend((activeFriend?.id === friend.id)?(null):(friend))}>
-                            <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
-                                marginTop: 6
-                            }}/>
-
-                            <div style={{
-                                flex: 1,
-
-                                display: "flex",
-                                flexDirection: "column"
-                            }}>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                    alignItems: "center"
-                                }}>
-                                    <b>{friend.name}</b>
-
-                                    <div className="sprite_users_profile-small" style={{
-                                        cursor: "pointer"
-                                    }}/>
-                                </div>
-                                
-                                <div style={{ fontSize: 12 }}>Online right now</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="sprite_friends_chats" style={{
-                                cursor: "pointer"
-                            }} onClick={() => dialogs.openUniqueDialog("messenger", {
-                                friendId: friend.id
-                            })}/>
-                        </div>
-                    </div>
+                    <FriendUser key={friend.id} active={activeFriend?.id === friend.id} friend={friend} onClick={() => setActiveFriend((activeFriend?.id === friend.id)?(null):(friend))}/>
                 ))}
             </div>
 
@@ -146,63 +86,7 @@ export default function FriendsDialogList() {
 
                     {(!friendRequestsMinimized) && (
                         incomingRequests.map((friend) => (
-                            <div key={friend.id} style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 10
-                            }}>
-                                <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
-                                    marginTop: 6
-                                }}/>
-
-                                <div style={{
-                                    flex: 1,
-
-                                    display: "flex",
-                                    flexDirection: "column"
-                                }}>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 5,
-                                        alignItems: "center"
-                                    }}>
-                                        <b>{friend.name}</b>
-
-                                        <div className="sprite_users_profile-small" style={{
-                                            cursor: "pointer"
-                                        }}/>
-                                    </div>
-                                    
-                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
-                                </div>
-
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: 5
-                                }}>
-                                    <div className="sprite_friends_accept" style={{
-                                        cursor: "pointer"
-                                    }} onClick={() => {
-                                        webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
-                                            userId: friend.id,
-                                            accept: true
-                                        }));
-                                    }}/>
-                                    
-                                    <div className="sprite_friends_decline" style={{
-                                        cursor: "pointer"
-                                    }} onClick={() => {
-                                        webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
-                                            userId: friend.id,
-                                            accept: false
-                                        }));
-                                    }}/>
-                                </div>
-                            </div>
+                            <FriendUser key={friend.id} friend={friend}/>
                         ))
                     )}
                 </Fragment>
@@ -229,54 +113,7 @@ export default function FriendsDialogList() {
 
                     {(!outgoingRequestsMinimized) && (
                         outgoingRequests.map((friend) => (
-                            <div key={friend.id} style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 10
-                            }}>
-                                <FigureImage figureConfiguration={friend.figureConfiguration} headOnly cropped direction={2} style={{
-                                    marginTop: 6
-                                }}/>
-
-                                <div style={{
-                                    flex: 1,
-
-                                    display: "flex",
-                                    flexDirection: "column"
-                                }}>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        gap: 5,
-                                        alignItems: "center"
-                                    }}>
-                                        <b>{friend.name}</b>
-
-                                        <div className="sprite_users_profile-small" style={{
-                                            cursor: "pointer"
-                                        }}/>
-                                    </div>
-                                    
-                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
-                                </div>
-
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: 5
-                                }}>
-                                    <div className="sprite_friends_decline" style={{
-                                        cursor: "pointer"
-                                    }} onClick={() => {
-                                        webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
-                                            userId: friend.id,
-                                            accept: false
-                                        }));
-                                    }}/>
-                                </div>
-                            </div>
+                            <FriendUser key={friend.id} friend={friend}/>
                         ))
                     )}
                 </Fragment>

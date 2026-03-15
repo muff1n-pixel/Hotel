@@ -10,9 +10,12 @@ export default class SearchUserFriendsEvent implements ProtobuffListener<SearchU
     async handle(user: User, payload: SearchUserFriendsData): Promise<void> {
         const users = await UserModel.findAll({
             where: {
+                id: {
+                    [Op.not]: user.model.id,
+                },
                 name: {
                     [Op.like]: `%${payload.name}%`
-                }
+                },
             },
             limit: 20
         });
