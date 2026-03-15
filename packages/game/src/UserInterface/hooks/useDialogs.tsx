@@ -46,6 +46,29 @@ export function useDialogs() {
         clientInstance.dialogs.update();
     }, [dialogs]);
 
+    const openUniqueDialog = useCallback((type: string, data: unknown = null) => {
+        if (!dialogs) {
+            return;
+        }
+
+        const existingIndex = dialogs.findIndex((dialog) => dialog.id === type);
+
+        if (existingIndex !== -1) {
+            clientInstance.dialogs.value![existingIndex].data = data;
+            clientInstance.dialogs.value![existingIndex].hidden = false;
+        }
+        else {
+            clientInstance.dialogs.value!.push({
+                id: type,
+                data,
+                type
+            });
+        }
+
+
+        clientInstance.dialogs.update();
+    }, [dialogs]);
+
     const setDialogHidden = useCallback((id: string, hidden: boolean) => {
         if (!dialogs) {
             return;
@@ -85,6 +108,8 @@ export function useDialogs() {
 
         addDialog,
         addUniqueDialog,
+
+        openUniqueDialog,
 
         setDialogHidden,
 

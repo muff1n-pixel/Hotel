@@ -1,5 +1,9 @@
-export default function getTimeSinceDate(date: string) {
-    const [number, verb] = getIntervalSinceDate(new Date(date));
+export default function getTimeSinceDate(date: Date) {
+    const [number, verb] = getIntervalSinceDate(date);
+
+    if(verb === "now") {
+        return "Just now";
+    }
 
     if(number === 1) {
         return `${number} ${verb.substring(0, verb.length - 1)} ago`;
@@ -9,7 +13,7 @@ export default function getTimeSinceDate(date: string) {
 }
 
 function getIntervalSinceDate(date: Date): [number, string] {
-    const seconds = Math.floor((new Date().getMilliseconds() - date.getMilliseconds()) / 1000);
+    const seconds = Math.floor(new Date().getMilliseconds() - date.getMilliseconds());
 
     let interval = seconds / 31536000;
 
@@ -39,6 +43,10 @@ function getIntervalSinceDate(date: Date): [number, string] {
     
     if (interval > 1) {
         return [ Math.floor(interval), "minutes"];
+    }
+
+    if(seconds < 5) {
+        return [0, "now"];
     }
     
     return [ Math.floor(seconds), "seconds"];

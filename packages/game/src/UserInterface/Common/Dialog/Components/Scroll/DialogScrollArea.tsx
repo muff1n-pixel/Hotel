@@ -6,9 +6,10 @@ export type DialogScrollAreaProps = {
     style?: CSSProperties;
     contentStyle?: CSSProperties;
     hideInactive?: boolean;
+    reversed?: boolean;
 };
 
-export default function DialogScrollArea({ style, contentStyle, children, hideInactive }: DialogScrollAreaProps) {
+export default function DialogScrollArea({ style, contentStyle, children, hideInactive, reversed }: DialogScrollAreaProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
@@ -32,7 +33,7 @@ export default function DialogScrollArea({ style, contentStyle, children, hideIn
                 {children}
             </div>
 
-            <DialogScrollbar containerRef={containerRef} hideInactive={hideInactive}/>
+            <DialogScrollbar containerRef={containerRef} hideInactive={hideInactive} reversed={reversed}/>
         </div>
     );
 }

@@ -1,16 +1,18 @@
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 import "./MessengerMessage.css";
 import { FigureConfigurationData } from "@pixel63/events";
+import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
 
 export type MessengerMessageProps = {
     name: string;
     figureConfiguration?: FigureConfigurationData;
     messages: string[];
+    receivedAt: Date;
 
     side: "left" | "right";
 };
 
-export default function MessengerMessage({ name, side, figureConfiguration, messages }: MessengerMessageProps) {
+export default function MessengerMessage({ name, side, figureConfiguration, messages, receivedAt }: MessengerMessageProps) {
     return (
         <div style={{
             display: "flex",
@@ -37,6 +39,8 @@ export default function MessengerMessage({ name, side, figureConfiguration, mess
                         borderRadius: 10,
                         padding: "5px 10px",
 
+                        lineBreak: "anywhere",
+
                         fontSize: 12
                     }}>
                         {messages.map((message, index) => (
@@ -45,7 +49,7 @@ export default function MessengerMessage({ name, side, figureConfiguration, mess
                     </div>
                 </div>
 
-                <div style={{ fontSize: 10, padding: "0 6px" }}><i>23 minutes ago</i></div>
+                <div style={{ fontSize: 10, padding: "0 6px" }}><i><TimeSinceDate date={receivedAt}/></i></div>
             </div>
 
             <div style={{

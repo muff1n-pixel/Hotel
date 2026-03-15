@@ -9,6 +9,7 @@ export default function MessengerStatus({ children }: MessengerStatusProps) {
         <div style={{
             display: "flex",
             justifyContent: "center",
+            textAlign: "center",
 
             padding: 5,
 

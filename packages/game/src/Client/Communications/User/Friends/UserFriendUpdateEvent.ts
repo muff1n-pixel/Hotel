@@ -17,6 +17,20 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
                 const existingFriendIndex = clientInstance.friends.value.findIndex((friend) => friend.id === payload.friend!.id);
 
                 if(existingFriendIndex !== -1) {
+                    const messenger = clientInstance.messenger.value?.find((tab) => tab.friend.id === payload.friend!.id);
+
+                    if(messenger) {
+                        if(clientInstance.friends.value[existingFriendIndex].online !== payload.friend.online) {
+                            messenger.entries.push({
+                                id: Math.random(),
+                                type: "status",
+
+                                status: (payload.friend.online)?("Your friend came online"):("Your friend went offline"),
+                                receivedAt: new Date(),
+                            });
+                        }
+                    }
+
                     clientInstance.friends.value[existingFriendIndex] = payload.friend;
                 }
                 else {

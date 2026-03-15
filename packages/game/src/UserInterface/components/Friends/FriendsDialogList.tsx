@@ -1,9 +1,11 @@
 import { Fragment, useState } from "react";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
 import useFriends from "src/UserInterface/Hooks/useFriends";
 import getTimeSinceDate from "src/UserInterface/Utils/getTimeSinceDate";
 
 export default function FriendsDialogList() {
+    const dialogs = useDialogs();
     const { friends, offlineFriends, incomingRequests, outgoingRequests } = useFriends();
 
     const [offlineFriendsMinimized, setOfflineFriendsMinimized] = useState(true);
@@ -56,7 +58,9 @@ export default function FriendsDialogList() {
                         <div>
                             <div className="sprite_friends_chats" style={{
                                 cursor: "pointer"
-                            }}/>
+                            }} onClick={() => dialogs.openUniqueDialog("messenger", {
+                                friendId: friend.id
+                            })}/>
                         </div>
                     </div>
                 ))}
@@ -112,7 +116,7 @@ export default function FriendsDialogList() {
                                         }}/>
                                     </div>
                                     
-                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(getTimeSinceDate(friend.lastOnline)):("never")}</div>
+                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(getTimeSinceDate(new Date(friend.lastOnline))):("never")}</div>
                                 </div>
 
                                 <div style={{
@@ -185,7 +189,7 @@ export default function FriendsDialogList() {
                                         }}/>
                                     </div>
                                     
-                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(getTimeSinceDate(friend.lastOnline)):("never")}</div>
+                                    <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(getTimeSinceDate(new Date(friend.lastOnline))):("never")}</div>
                                 </div>
                             </div>
                         ))

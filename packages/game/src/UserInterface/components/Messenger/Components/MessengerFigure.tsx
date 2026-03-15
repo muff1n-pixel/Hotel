@@ -3,10 +3,12 @@ import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export type MessengerFigureProps = {
     figureConfiguration?: FigureConfigurationData;
+    
+    onClick?: () => void;
     onClose?: () => void;
 };
 
-export default function MessengerFigure({ figureConfiguration, onClose }: MessengerFigureProps) {
+export default function MessengerFigure({ figureConfiguration, onClick, onClose }: MessengerFigureProps) {
     return (
         <div style={{
             width: 50,
@@ -32,7 +34,7 @@ export default function MessengerFigure({ figureConfiguration, onClose }: Messen
                 alignItems: "flex-start",
 
                 overflow: "hidden"
-            }}>
+            }} onClick={onClick}>
                 <FigureImage figureConfiguration={figureConfiguration} direction={2}/>
             </div>
 
