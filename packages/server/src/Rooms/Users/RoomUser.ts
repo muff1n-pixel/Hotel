@@ -263,7 +263,7 @@ export default class RoomUser implements RoomActor {
         return false;
     }
 
-    public sendRoomMessage(message: string) {
+    public sendRoomMessage(message: string, cry: boolean | undefined = false) {
         this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
             actor: {
                 user: {
@@ -272,7 +272,8 @@ export default class RoomUser implements RoomActor {
             },
             
             message,
-            roomChatStyleId: this.user.model.roomChatStyleId
+            roomChatStyleId: this.user.model.roomChatStyleId,
+            cry: cry ? true : false
         }));
 
         this.lastActivity = performance.now();

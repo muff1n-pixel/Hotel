@@ -48,7 +48,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
 
                 const image = await RoomChatRenderer.render(payload.roomChatStyleId, user.data.name, user.data.figureConfiguration, payload.message, {
                     $type: "RoomActorChatOptionsData"
-                });
+                }, payload.cry);
 
                 clientInstance.roomHistory.value!.push({
                     id: Math.random(),

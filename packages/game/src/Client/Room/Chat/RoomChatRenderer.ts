@@ -5,7 +5,7 @@ import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerCli
 import { FigureConfigurationData, RoomActorChatOptionsData } from "@pixel63/events";
 
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData) {
+    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData, cry?: boolean) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);
@@ -14,14 +14,14 @@ export default class RoomChatRenderer {
 
         const context = canvas.getContext("2d");
 
-        if(!context) {
+        if (!context) {
             throw new ContextNotAvailableError();
         }
 
-        context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
-        const userText = (options?.hideUsername)?({ width: 0 }):(context.measureText(`${user}: `));
+        context.font = `${(options?.italic) ? ("italic") : ("")} 12px "Ubuntu Bold"`;
+        const userText = (options?.hideUsername) ? ({ width: 0 }) : (context.measureText(`${user}: `));
 
-        context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu"`;
+        context.font = `${options?.italic ? "italic " : ""} ${cry ? "bold " : ""} 12px Ubuntu`;
         const messageText = context.measureText(message);
 
         const textWidth = Math.ceil(userText.width + messageText.width);
@@ -33,7 +33,7 @@ export default class RoomChatRenderer {
 
         const roomChatStyle = roomChatStyles.find((roomChatStyle) => roomChatStyle.assetName === style);
 
-        if(!roomChatStyle) {
+        if (!roomChatStyle) {
             throw new Error("Invalid room chat style.");
         }
 
@@ -54,26 +54,27 @@ export default class RoomChatRenderer {
         );
 
         context.textBaseline = "top";
-        
-        if(options?.transparent) {
+
+        if (options?.transparent) {
             context.globalAlpha = 0.75;
         }
 
-        if(!options?.hideUsername) {
-            context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
+        if (!options?.hideUsername) {
+            context.font = `${(options?.italic) ? ("italic") : ("")} 12px "Ubuntu Bold"`;
             context.fillText(`${user}: `, roomChatStyle.text.left + 2, roomChatStyle.text.top + 2);
         }
 
-        context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu"`;
+        context.font = `${options?.italic ? "italic " : ""} ${cry ? "bold " : ""} 12px Ubuntu`;
+
         context.fillText(message, roomChatStyle.text.left + 2 + userText.width, roomChatStyle.text.top + 2);
 
         context.globalAlpha = 1;
 
-        if(roomChatStyle.figure) {
+        if (roomChatStyle.figure) {
             const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);
 
             const { figure } = await figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false);
-            
+
             context.drawImage(
                 figure.image,
                 0, 0, figure.image.width, 74 * 2,

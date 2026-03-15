@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
 import { useDialogs } from "../../../hooks/useDialogs";
@@ -7,45 +7,47 @@ import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events"
 export default function ToolbarChatbar() {
     const dialogs = useDialogs();
 
+    const inputRef = useRef<HTMLDivElement>(null);
+    const shiftPressed = useRef<boolean>(false);
+    const altPressed = useRef<boolean>(false);
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
     const [typing, setTyping] = useState(false);
 
     useEffect(() => {
-        if(value.length && !typing) {
+        if (value.length && !typing) {
             setTyping(true);
 
             return;
         }
 
-        if(!value.length && typing) {
+        if (!value.length && typing) {
             setTyping(false);
         }
     }, [value, typing]);
 
     useEffect(() => {
         webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
-            typing: (value.length)?(true):(false)
+            typing: (value.length) ? (true) : (false)
         }));
     }, [typing]);
 
     const handleSubmit = useCallback(() => {
-        if(!value.length) {
+        if (!value.length) {
             return;
         }
 
         setTyping(false);
-        setValue("");
 
-        if(value[0] === ':' || value[0] === '/') {
+        if (value[0] === ':' || value[0] === '/') {
             const input = value.split(' ');
 
             const command = input[0].substring(1);
 
-            switch(command) {
+            switch (command) {
                 case "commands": {
                     dialogs.addUniqueDialog("room-chat-commands");
-                
+
                     return;
                 }
 
@@ -56,7 +58,7 @@ export default function ToolbarChatbar() {
                 }
 
                 case "enable": {
-                    if(input.length === 1) {
+                    if (input.length === 1) {
                         dialogs.addUniqueDialog("figure-catalog");
 
                         return;
@@ -66,7 +68,7 @@ export default function ToolbarChatbar() {
                 }
 
                 case "carry": {
-                    if(input.length === 1) {
+                    if (input.length === 1) {
                         dialogs.addUniqueDialog("figure-catalog");
 
                         return;
@@ -83,16 +85,61 @@ export default function ToolbarChatbar() {
 
                 case "floor": {
                     dialogs.addUniqueDialog("room-floorplan");
-                    
+
                     return;
                 }
             }
         }
 
         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
-            message: value
+            message: value,
+            cry: shiftPressed.current ? true : false
         }));
-    }, [dialogs, value]);
+    }, [dialogs, value, shiftPressed]);
+
+    const handleKeyUp = useCallback(
+        (event: React.KeyboardEvent<HTMLDivElement>) => {
+            if (!inputRef.current)
+                return;
+
+            if (event.key === "Enter") {
+                handleSubmit();
+                setValue("")
+                inputRef.current.textContent = "";
+                return;
+            }
+
+            if(event.key === "Shift") {
+                shiftPressed.current = false;
+            }
+
+            // TODO ---> ADDING ALT ICONS
+            if(event.key === "Alt") {
+                altPressed.current = false;
+            }
+
+            setValue(inputRef.current.textContent);
+        },
+        [handleSubmit, shiftPressed, altPressed, setValue]
+    );
+
+    const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === "Enter") {
+                event.preventDefault()
+                return;
+            }
+
+            if(event.key === "Shift") {
+                shiftPressed.current = true;
+            }
+
+            if(event.key === "Alt") {
+                altPressed.current = true;
+            }
+        },
+        [shiftPressed, altPressed]
+    );
 
     return (
         <div style={{
@@ -130,33 +177,34 @@ export default function ToolbarChatbar() {
 
                     cursor: "pointer"
                 }} onClick={() => setRoomChatStyles(!roomChatStyles)}>
-                    <div className="sprite_toolbar_chat_styles"/>
+                    <div className="sprite_toolbar_chat_styles" />
 
                     <div className="sprite_toolbar_chat_pointer" style={{
-                        transform: (roomChatStyles)?("rotateZ(-90deg)"):(undefined)
-                    }}/>
+                        transform: (roomChatStyles) ? ("rotateZ(-90deg)") : (undefined)
+                    }} />
                 </div>
 
                 {(roomChatStyles) && (
-                    <ToolbarChatbarStyles onClose={() => setRoomChatStyles(false)}/>
+                    <ToolbarChatbarStyles onClose={() => setRoomChatStyles(false)} />
                 )}
             </div>
 
-            <input
-                type="text"
-                value={value}
-                onChange={(event) => setValue((event.target as HTMLInputElement).value)}
-                onKeyUp={(event) => event.key === "Enter" && handleSubmit()}
-                placeholder="Click here to chat..."
+            <div
+                contentEditable={true}
+                ref={inputRef}
+                onKeyUp={(event) => handleKeyUp(event)}
+                onKeyDown={(event) => handleKeyDown(event)}
                 style={{
                     flex: 1,
                     border: "none",
                     borderTopRightRadius: 8,
+                    color: '#333',
                     borderBottomRightRadius: 8,
                     fontSize: 16,
                     background: "transparent",
-                    padding: "0 6px"
-                }}/>
+                    padding: "6px"
+                }}>
+            </div>
         </div>
     );
 }

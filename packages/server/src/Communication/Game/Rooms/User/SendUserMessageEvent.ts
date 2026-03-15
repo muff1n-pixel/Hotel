@@ -69,7 +69,7 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
         roomUser.typing = false;
 
         if(!userChatBlocked) {
-            roomUser.sendRoomMessage(payload.message);
+            roomUser.sendRoomMessage(payload.message, payload.cry);
         }
         else {
             user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
@@ -79,6 +79,7 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
                     }
                 },
                 message: payload.message,
+                cry: payload.cry ? true : false,
                 roomChatStyleId: user.model.roomChatStyleId,
                 options: {
                     italic: true,

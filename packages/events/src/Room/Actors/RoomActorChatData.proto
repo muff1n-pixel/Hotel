@@ -9,4 +9,5 @@ message RoomActorChatData {
     string message = 2;
     optional RoomActorChatOptionsData options = 3;
     string room_chat_style_id = 4;
+    optional bool cry = 5; 
 }
