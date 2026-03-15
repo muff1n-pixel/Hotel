@@ -4,10 +4,12 @@ import DialogScrollbar from "./DialogScrollbar";
 export type DialogScrollAreaProps = {
     children?: ReactNode;
     style?: CSSProperties;
+    contentStyle?: CSSProperties;
     hideInactive?: boolean;
+    reversed?: boolean;
 };
 
-export default function DialogScrollArea({ style, children, hideInactive }: DialogScrollAreaProps) {
+export default function DialogScrollArea({ style, contentStyle, children, hideInactive, reversed }: DialogScrollAreaProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
@@ -24,12 +26,14 @@ export default function DialogScrollArea({ style, children, hideInactive }: Dial
         }}>
             <div ref={containerRef} style={{
                 flex: "1 1 0",
-                overflowY: "scroll"
+                overflowY: "scroll",
+
+                ...contentStyle
             }}>
                 {children}
             </div>
 
-            <DialogScrollbar containerRef={containerRef} hideInactive={hideInactive}/>
+            <DialogScrollbar containerRef={containerRef} hideInactive={hideInactive} reversed={reversed}/>
         </div>
     );
 }

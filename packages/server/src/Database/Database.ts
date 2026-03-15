@@ -33,6 +33,8 @@ import { initializePetModel } from "./Models/Pets/PetModel.js";
 import { initializeUserPetModel } from "./Models/Users/Pets/UserPetModel.js";
 import { initializeShopPagePetModel } from "./Models/Shop/ShopPagePetModel.js";
 import { initializePetBreedModel } from "./Models/Pets/PetBreedModel.js";
+import { initializeUserFriendModel } from "./Models/Users/Friends/UserFriendModel.js";
+import { initializeUserFriendRequestModel } from "./Models/Users/Friends/UserFriendRequestModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -57,6 +59,9 @@ export async function initializeModels() {
   initializeUserTokenModel(sequelize);
   initializeUserBadgeModel(sequelize);
   initializeUserPreferencesModel(sequelize);
+  
+  initializeUserFriendModel(sequelize);
+  initializeUserFriendRequestModel(sequelize);
 
   initializeWebArticleModel(sequelize);
   initializeWebArticleLikeModel(sequelize);

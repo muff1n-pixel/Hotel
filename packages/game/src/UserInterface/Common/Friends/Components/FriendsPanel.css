@@ -1,0 +1,15 @@
+.friends-panel-button {
+    cursor: pointer;
+}
+
+.friends-panel-button:hover {
+    filter: brightness(110%);
+
+    transform: translate(-1px, -1px);
+}
+
+.friends-panel-button:active {
+    filter: brightness(80%);
+
+    transform: translate(0px, 0px);
+}

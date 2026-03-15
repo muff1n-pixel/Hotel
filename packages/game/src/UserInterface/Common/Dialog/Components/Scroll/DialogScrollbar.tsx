@@ -3,6 +3,7 @@ import { RefObject, useEffect, useRef, useState } from "react";
 export type DialogScrollbarProps = {
     containerRef: RefObject<HTMLDivElement | null>;
     hideInactive?: boolean;
+    reversed?: boolean;
 }
 
 const scrollHandleBackgroundImage = new URL('../../../../Images/dialog/scroll/handle_background.png', import.meta.url);
@@ -10,7 +11,7 @@ const scrollHandleBackgroundImage = new URL('../../../../Images/dialog/scroll/ha
 const scrollBackgroundImageEnabled = new URL('../../../../Images/dialog/scroll/enabled_background.png', import.meta.url);
 const scrollBackgroundImageDisabled = new URL('../../../../Images/dialog/scroll/disabled_background.png', import.meta.url);
 
-export default function DialogScrollbar({ containerRef, hideInactive }: DialogScrollbarProps) {
+export default function DialogScrollbar({ reversed, containerRef, hideInactive }: DialogScrollbarProps) {
     const handleContainerRef = useRef<HTMLDivElement>(null);
 
     const [active, setActive] = useState(false);
@@ -49,7 +50,9 @@ export default function DialogScrollbar({ containerRef, hideInactive }: DialogSc
 
             const fullContainerHeight = containerRef.current.scrollHeight;
 
-            const scrollPercentage = (containerRef.current.scrollTop / fullContainerHeight) * 100;
+            console.log({ fullContainerHeight, scrollTop: containerRef.current.scrollTop });
+
+            const scrollPercentage = (Math.abs(containerRef.current.scrollTop) / fullContainerHeight) * 100;
 
             setScrollPercentage(scrollPercentage);
         };
@@ -101,7 +104,8 @@ export default function DialogScrollbar({ containerRef, hideInactive }: DialogSc
                     <div style={{
                         position: "absolute",
 
-                        top: `${scrollPercentage}%`,
+                        top: (!reversed)?(`${scrollPercentage}%`):(undefined),
+                        bottom: (reversed)?(`${scrollPercentage}%`):(undefined),
 
                         height: `${containerHeightPercentage}%`,
 

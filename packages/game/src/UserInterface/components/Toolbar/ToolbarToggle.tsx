@@ -1,9 +1,12 @@
+import { CSSProperties } from "react";
+
 export type ToolbarToggleProps = {
     toggled: boolean;
     onToggle: (toggled: boolean) => void;
+    style?: CSSProperties;
 };
 
-export default function ToolbarToggle({ toggled, onToggle }: ToolbarToggleProps) {
+export default function ToolbarToggle({ toggled, onToggle, style }: ToolbarToggleProps) {
     return (
         <div style={{
             display: "flex",
@@ -15,7 +18,9 @@ export default function ToolbarToggle({ toggled, onToggle }: ToolbarToggleProps)
             paddingBottom: 1,
             boxSizing: "border-box",
 
-            cursor: "pointer"
+            cursor: "pointer",
+
+            ...style
         }} onClick={() => onToggle(!toggled)}>
             <div style={{
                 flex: 1,

@@ -18,7 +18,7 @@ import RoomActorChatEvent from "@Client/Communications/Room/Actors/RoomActorChat
 import RoomBotsEvent from "@Client/Communications/Room/Bots/RoomBotsEvent";
 import RoomActorPositionEvent from "@Client/Communications/Room/Actors/RoomActorPositionEvent";
 import { LocalSettings } from "../UserInterface/Components/Settings/Interfaces/LocalSettings";
-import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData } from "@pixel63/events";
+import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData, UserFriendData, UserFriendsData, UserFriendUpdateData, UserFriendMessageData } from "@pixel63/events";
 import RoomActorWalkToEvent from "@Client/Communications/Room/Actors/RoomActorWalkToEvent";
 import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 import RoomCategoriesEvent from "@Client/Communications/Room/Categories/RoomCategoriesEvent";
@@ -28,6 +28,10 @@ import RoomUserEvent from "@Client/Communications/Room/User/RoomUserEvent";
 import RoomUserLeftEvent from "@Client/Communications/Room/User/RoomUserLeftEvent";
 import LeaveRoomEvent from "@Client/Communications/Room/LeaveRoomEvent";
 import RoomPetsEvent from "@Client/Communications/Room/Pets/RoomPetsEvent";
+import UserFriendsEvent from "@Client/Communications/User/Friends/UserFriendsEvent";
+import UserFriendUpdateEvent from "@Client/Communications/User/Friends/UserFriendUpdateEvent";
+import { MessengerTab } from "src/UserInterface/Components/Messenger/Interfaces/MessengerTab";
+import UserFriendMessageEvent from "@Client/Communications/User/Friends/UserFriendMessageEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -38,6 +42,13 @@ export default class ClientInstance extends EventTarget {
     public hotel = new ObservableProperty<HotelData>();
     public navigator = new ObservableProperty<NavigatorCategoryData[]>();
     public permissions = new ObservableProperty<PermissionAction[]>([]);
+
+    public friends = new ObservableProperty<UserFriendData[]>();
+    public incomingFriendRequests = new ObservableProperty<UserFriendData[]>();
+    public outgoingFriendRequests = new ObservableProperty<UserFriendData[]>();
+
+    public messenger = new ObservableProperty<MessengerTab[]>([]);
+    public messengerUnread = new ObservableProperty<boolean>(false);
 
     public flyingFurnitureIcons = new ObservableProperty<FlyingFurnitureIconData[]>([]);
     
@@ -97,6 +108,13 @@ export default class ClientInstance extends EventTarget {
 
         // Navigator events
         webSocketClient.addProtobuffListener(NavigatorData, new NavigatorEvent());
+
+        // User friends events
+        webSocketClient.addProtobuffListener(UserFriendsData, new UserFriendsEvent());
+        webSocketClient.addProtobuffListener(UserFriendUpdateData, new UserFriendUpdateEvent());
+
+        // User friend messages events
+        webSocketClient.addProtobuffListener(UserFriendMessageData, new UserFriendMessageEvent());
     }
 
     addEventListener<T>(type: string, callback: (event: T) => void | null, options?: AddEventListenerOptions | boolean): void {

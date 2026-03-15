@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message UserFriendMessageData {
+    string friend_id = 1;
+    string author_id = 2;
+    string message = 3;
+}

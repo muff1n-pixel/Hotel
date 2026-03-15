@@ -6,6 +6,7 @@ export type InputProps = {
     style?: CSSProperties;
     value?: string;
     onChange?: (value: string) => void;
+    onSubmit?: (value: string) => void;
     min?: number;
     max?: number;
     step?: number;
@@ -14,7 +15,7 @@ export type InputProps = {
     children?: ReactNode;
 }
 
-export default function Input({ style, readonly, step, type = "text", placeholder, value, onChange, min, max, maxLength, children }: InputProps) {
+export default function Input({ style, readonly, step, type = "text", placeholder, value, onChange, onSubmit, min, max, maxLength, children }: InputProps) {
     return (
         <div style={{
             borderBottom: "1px solid #FFFFFF",
@@ -42,6 +43,11 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                     placeholder={placeholder}
                     value={value}
                     onChange={(event) => onChange?.((event.currentTarget as HTMLInputElement).value)}
+                    onKeyDown={(event) => {
+                        if(event.key === "Enter") {
+                            onSubmit?.(value ?? "");
+                        }
+                    }}
                     min={min}
                     max={max}
                     maxLength={maxLength}
