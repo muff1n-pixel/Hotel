@@ -30,6 +30,7 @@
     "skipLibCheck": true,
     "paths": {
       "@Client/*": ["./src/Client/*"],
+      "@UserInterface/*": ["./src/UserInterface/*"],
       "@Shared/*": ["../shared/*"]
     },
   },

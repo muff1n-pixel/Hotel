@@ -1,8 +1,11 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { CSSProperties, MouseEvent as ReactMouseEvent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { clientInstance } from "src";
+import { useEffect, useRef, useState } from "react";
 
-export default function Tooltip() {
+export type TooltipProps = {
+    hideTooltips?: boolean;
+}
+
+export default function Tooltip({ hideTooltips }: TooltipProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     const [label, setLabel] = useState<string>();
@@ -14,10 +17,6 @@ export default function Tooltip() {
 
         if(!label) {
             listener = (event: MouseEvent) => {
-                if(clientInstance.settings.value?.hideTooltips) {
-                    return;
-                }
-
                 const closestTooltip = (event.target as HTMLElement).closest("[data-tooltip]");
 
                 if(closestTooltip) {
@@ -77,6 +76,10 @@ export default function Tooltip() {
             document.body.removeEventListener("mousemove", listener);
         };
     }, [label, ref]);
+
+    if(hideTooltips) {
+        return null;
+    }
 
     if(!label) {
         return null;

@@ -10,6 +10,9 @@ export default function DimmerDialogCheckbox({ label, value, onChange }: DimmerD
             display: "flex",
             flexDirection: "row",
             gap: 4,
+
+            color: "#00ED1F",
+            fontSize: 12,
         }}>
             <div style={{
                 border: "1px solid #00ED1F",

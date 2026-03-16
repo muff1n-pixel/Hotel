@@ -3,7 +3,7 @@ import { AppContext } from "../Contexts/AppContext";
 import Toolbar from "./Toolbar/Toolbar";
 import RoomInterface from "./Room/RoomInterface";
 import DialogInstances from "../Common/Dialog/DialogInstances";
-import { webSocketClient } from "../..";
+import { clientInstance, webSocketClient } from "../..";
 import Reception from "./Reception/Reception";
 import { useRoomInstance } from "../Hooks/useRoomInstance";
 import Widget from "./Widget/Widget";
@@ -48,7 +48,7 @@ export default function InterfaceInstance() {
 
             <FlyingFurnitureInstances/>
 
-            <Tooltip/>
+            <Tooltip hideTooltips={clientInstance.settings.value?.hideTooltips}/>
         </AppContext>
     );
 }

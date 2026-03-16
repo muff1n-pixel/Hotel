@@ -20,6 +20,8 @@ export default function DialogPanel({ ref, style, onClick, contentStyle, childre
             borderBottomWidth: 2,
             borderRadius: 5,
 
+            color: "#000000",
+
             ...style
         }}>
             <div style={{

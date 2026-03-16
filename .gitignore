@@ -30,3 +30,5 @@ tsconfig.tsbuildinfo
 config.json
 
 *.zip
+
+storybook-static

@@ -6,8 +6,13 @@ export type DimmerDialogButtonProps = {
 export default function DimmerDialogButton({ label, onClick }: DimmerDialogButtonProps) {
     return (
         <div style={{
+            color: "#00ED1F",
+            fontSize: 11,
+            
             border: "2px solid #00AE17",
             borderRadius: 3,
+
+            padding: "0 4px",
 
             height: 13,
 
@@ -16,8 +21,6 @@ export default function DimmerDialogButton({ label, onClick }: DimmerDialogButto
             alignItems: "center",
 
             cursor: "pointer",
-            
-            fontSize: 11
         }} onClick={onClick}>
             <div>{label}</div>
         </div>

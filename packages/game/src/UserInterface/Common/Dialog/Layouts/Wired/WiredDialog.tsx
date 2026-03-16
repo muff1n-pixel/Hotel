@@ -9,8 +9,18 @@ export type WiredDialogProps = PropsWithChildren & {
     style?: CSSProperties;
 };
 
-export default function WiredDialog({ children, hidden, onClose }: WiredDialogProps) {
-    const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();
+export default function WiredDialog({ children, initialPosition, hidden, onClose }: WiredDialogProps) {
+    const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement((initialPosition === "corner")?(
+        {
+            left: 200,
+            top: 200
+        }
+    ):(
+        {
+            left: Math.round((window.innerWidth - 240) / 2),
+            top: 10
+        }
+    ));
 
     if(hidden) {
         return null;

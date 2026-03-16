@@ -2,14 +2,12 @@
   "name": "@pixel63/game",
   "type": "module",
   "source": "src/library.ts",
-
   "main": "./build/library.js",
   "exports": {
     ".": {
       "import": "./build/library.js"
     }
   },
-
   "targets": {
     "game": {
       "context": "browser",
@@ -24,14 +22,15 @@
       "distDir": "build"
     }
   },
-
   "scripts": {
     "start": "npm run watch",
     "build": "npx parcel build src/index.tsx --dist-dir ../../build/game --target game --no-cache",
     "build:lib": "parcel build src/library.ts --dist-dir build --target library",
     "watch": "npx parcel watch src/index.tsx --dist-dir ../../build/game --target game --no-cache",
     "spritesheet": "npx ts-node src/UserInterface/utils/generateSpritesheet.ts",
-    "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts"
+    "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build"
   },
   "dependencies": {
     "@types/js-cookie": "^3.0.6",
@@ -44,18 +43,25 @@
     "@eslint/js": "^9.39.2",
     "@parcel/validator-eslint": "^2.16.4",
     "@parcel/validator-typescript": "^2.16.4",
+    "@storybook/addon-docs": "^10.2.19",
+    "@storybook/react": "^10.2.19",
+    "@storybook/react-vite": "^10.2.19",
     "@types/node-sprite-generator": "^0.10.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.39.2",
+    "eslint-plugin-storybook": "10.2.19",
     "node-sprite-generator": "^0.10.2",
     "parcel": "^2.16.4",
+    "storybook": "^10.2.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.54.0",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "alias": {
     "@Client/*": "./src/Client/$1",
+    "@UserInterface/*": "./src/UserInterface/$1",
     "@Shared/*": "../shared/$1"
   }
 }

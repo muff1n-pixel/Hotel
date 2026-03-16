@@ -26,7 +26,7 @@ export default function DialogCurrencyPanel({ credits, diamonds, duckets }: Dial
 
                 padding: 4
             }}>
-                {(credits) && (
+                {(Boolean(credits)) && (
                     <Fragment>
                         <b>{credits}</b>
 
@@ -34,13 +34,13 @@ export default function DialogCurrencyPanel({ credits, diamonds, duckets }: Dial
                     </Fragment>
                 )}
 
-                {((credits && duckets) || (credits && diamonds)) && (
+                {((Boolean(credits) && Boolean(duckets)) || (Boolean(credits) && Boolean(diamonds))) && (
                     <div>
                         +
                     </div>
                 )}
 
-                {(duckets) && (
+                {(Boolean(duckets)) && (
                     <Fragment>
                         <b>{duckets}</b>
 
@@ -48,13 +48,13 @@ export default function DialogCurrencyPanel({ credits, diamonds, duckets }: Dial
                     </Fragment>
                 )}
 
-                {(duckets && diamonds) && (
+                {(Boolean(duckets) && Boolean(diamonds)) && (
                     <div>
                         +
                     </div>
                 )}
 
-                {(diamonds) && (
+                {(Boolean(diamonds)) && (
                     <Fragment>
                         <b>{diamonds}</b>
 

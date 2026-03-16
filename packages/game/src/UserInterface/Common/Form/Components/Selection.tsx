@@ -43,7 +43,9 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
     return (
         <div ref={elementRef} style={{
             borderBottom: "1px solid #FFFFFF",
-            borderRadius: 6
+            borderRadius: 6,
+
+            color: "#000000"
         }}>
             <div style={{
 
