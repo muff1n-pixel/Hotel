@@ -57,12 +57,12 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <b>{furniture.data.furniture?.name}</b>
+                    <b>{furniture.furnitureData.name}</b>
 
                     {(hasEditFurniturePermissions) && (
                         <div className="sprite_room_user_motto_pen" style={{
                             cursor: "pointer"
-                        }} onClick={() => dialogs.addUniqueDialog("edit-furniture", furniture.data.furniture)}/>
+                        }} onClick={() => dialogs.addUniqueDialog("edit-furniture", furniture.furnitureData)}/>
                     )}
                 </div>
 
@@ -77,10 +77,10 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <FurnitureImage furnitureData={furniture.data.furniture}/>
+                    <FurnitureImage furnitureData={furniture.furnitureData}/>
                 </div>
 
-                {(furniture.data.furniture?.description) && (
+                {(furniture.furnitureData.description) && (
                     <div style={{
                         width: "100%",
                         height: 1,
@@ -88,8 +88,8 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     }}/>
                 )}
 
-                {(furniture.data.furniture?.description) && (
-                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.data.furniture.description}</p>
+                {(furniture.furnitureData.description) && (
+                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.furnitureData.description}</p>
                 )}
             </div>
 

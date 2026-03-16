@@ -48,7 +48,7 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
 
             const furniture = room.getFurnitureByItem(event.otherEntity.item);
 
-            if(restrictedToFurnitureTypes && furniture.data.furniture && !restrictedToFurnitureTypes.includes(furniture.data.furniture.type)) {
+            if(restrictedToFurnitureTypes && furniture.furnitureData && !restrictedToFurnitureTypes.includes(furniture.furnitureData.type)) {
                 return;
             }
 

@@ -37,5 +37,5 @@
   "parcel-plugin-typescript": {
     "transpileOnly": false
   },
-  "exclude": ["*.stories.tsx"]
+  "exclude": ["**/*.stories.tsx"]
 }

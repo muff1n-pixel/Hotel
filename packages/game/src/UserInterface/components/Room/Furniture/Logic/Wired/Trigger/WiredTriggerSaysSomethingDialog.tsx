@@ -41,7 +41,7 @@ export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomF
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.data}/>
+            <WiredFurniture furniture={data.furnitureData}/>
 
             <WiredDivider/>
 

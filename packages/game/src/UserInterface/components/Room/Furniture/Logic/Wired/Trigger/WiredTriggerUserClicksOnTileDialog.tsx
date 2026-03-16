@@ -36,7 +36,7 @@ export default function WiredTriggerUserClicksOnTileDialog({ data, onClose }: Ro
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.data}/>
+            <WiredFurniture furniture={data.furnitureData}/>
 
             <WiredDivider/>
 

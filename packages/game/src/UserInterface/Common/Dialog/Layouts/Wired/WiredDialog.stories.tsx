@@ -21,11 +21,9 @@ export const Default = {
     args: {
         children: (
             <Fragment>
-                <WiredFurniture furniture={UserFurnitureData.create({
-                    furniture: FurnitureData.create({
-                        type: "wf_trg",
-                        name: "Wired Trigger: Lorem ipsum"
-                    })
+                <WiredFurniture furniture={FurnitureData.create({
+                    type: "wf_trg",
+                    name: "Wired Trigger: Lorem ipsum"
                 })}/>
 
                 <WiredDivider/>

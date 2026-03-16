@@ -30,9 +30,9 @@ export type RoomFurnitureLogicDialogData = {
 };
 
 export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
-    console.log(props.data.data.furniture?.interactionType);
+    console.log(props.data.furnitureData.interactionType);
 
-    switch(props.data.data.furniture?.interactionType) {
+    switch(props.data.furnitureData.interactionType) {
         case "dimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);
             
@@ -91,10 +91,10 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             return (<WiredSignalDialog {...props}/>);
     }
 
-    if(props.data.data.furniture?.type.startsWith("wf_")) {
+    if(props.data.furnitureData.type.startsWith("wf_")) {
         return (
             <WiredDialog onClose={props.onClose}>
-                <WiredFurniture furniture={props.data.data}/>
+                <WiredFurniture furniture={props.data.furnitureData}/>
             </WiredDialog>
         );
     }

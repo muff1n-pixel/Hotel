@@ -32,13 +32,13 @@ export default function DebugInformationPanel() {
 
         const exportData: RoomFurnitureImportData = RoomFurnitureImportData.create({
             furniture: room.furnitures.map<RoomFurnitureExportData>((furniture) => {
-                if(!furniture.data.furniture) {
+                if(!furniture.furnitureData) {
                     throw new Error();
                 }
 
                 return RoomFurnitureExportData.create({
-                    type: furniture.data.furniture.type,
-                    color: furniture.data.furniture.color,
+                    type: furniture.furnitureData.type,
+                    color: furniture.furnitureData.color,
                     
                     data: furniture.data.data,
 

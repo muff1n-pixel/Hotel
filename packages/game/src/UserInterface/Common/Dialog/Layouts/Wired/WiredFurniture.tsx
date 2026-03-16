@@ -1,8 +1,8 @@
-import { UserFurnitureData } from "@pixel63/events";
+import { FurnitureData } from "@pixel63/events";
 import WiredSection from "./WiredSection";
 
 export type WiredFurnitureProps = {
-    furniture: UserFurnitureData;
+    furniture: FurnitureData;
 }
 
 export default function WiredFurniture({ furniture }: WiredFurnitureProps) {
@@ -13,23 +13,23 @@ export default function WiredFurniture({ furniture }: WiredFurnitureProps) {
                 flexDirection: "row",
                 gap: 6
             }}>
-                {(furniture.furniture?.type.startsWith("wf_trg")) && (
+                {(furniture.type.startsWith("wf_trg")) && (
                     <div className="sprite_dialog_wired_trigger"/>
                 )}
                 
-                {(furniture.furniture?.type.startsWith("wf_act")) && (
+                {(furniture.type.startsWith("wf_act")) && (
                     <div className="sprite_dialog_wired_action"/>
                 )}
 
                 <div style={{
                     fontFamily: "Ubuntu Bold"
                 }}>
-                    {furniture.furniture?.name}
+                    {furniture.name}
                 </div>
             </div>
 
-            {(furniture.furniture?.description) && (
-                <div>{furniture.furniture.description}</div>
+            {(furniture.description) && (
+                <div>{furniture.description}</div>
             )}
         </WiredSection>
     )

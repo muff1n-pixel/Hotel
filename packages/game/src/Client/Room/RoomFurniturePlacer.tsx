@@ -222,7 +222,7 @@ export default class RoomFurniturePlacer {
                     (isFurniture)?(this.roomFurnitureItem.id):(undefined)
                 );
 
-                if(!furnitureAtPosition || furnitureAtPosition.data.furniture?.flags?.stackable) {
+                if(!furnitureAtPosition || furnitureAtPosition.furnitureData.flags?.stackable) {
                     if(isFurniture && entity.position.direction !== undefined) {
                         this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
                     }

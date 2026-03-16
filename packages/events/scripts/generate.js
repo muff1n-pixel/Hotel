@@ -45,10 +45,7 @@ const command = [
   ...relativeProtoFiles.map(f => `"${f}"`)
 ].join(" ");
 
-console.log("Running:", command);
-
 execSync(command, { stdio: "inherit" });
-
 
 function findTsFiles(dir) {
   const entries = readdirSync(dir);

@@ -33,7 +33,7 @@ export default function WiredTriggerPeriodicallyDialog({ data, onClose }: RoomFu
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.data}/>
+            <WiredFurniture furniture={data.furnitureData}/>
 
             <WiredDivider/>
 

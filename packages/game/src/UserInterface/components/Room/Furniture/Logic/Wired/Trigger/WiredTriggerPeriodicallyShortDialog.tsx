@@ -33,7 +33,7 @@ export default function WiredTriggerPeriodicallyShortDialog({ data, onClose }: R
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.data}/>
+            <WiredFurniture furniture={data.furnitureData}/>
 
             <WiredDivider/>
 

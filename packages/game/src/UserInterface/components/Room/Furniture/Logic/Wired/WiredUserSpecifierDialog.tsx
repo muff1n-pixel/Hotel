@@ -37,7 +37,7 @@ export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitur
 
     return (
         <WiredDialog onClose={onClose}>
-            <WiredFurniture furniture={data.data}/>
+            <WiredFurniture furniture={data.furnitureData}/>
 
             <WiredDivider/>
 

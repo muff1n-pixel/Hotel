@@ -9,6 +9,7 @@ import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
 import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -62,15 +63,27 @@ export default class RoomUser implements RoomActor {
             user: this.getRoomUserData()
         }));
 
+        const uniqueFurniture: FurnitureModel[] = [];
+
+        for(const userFurniture of this.room.furnitures) {
+            if(uniqueFurniture.some((uniqueFurniture) => uniqueFurniture.id === userFurniture.model.furniture.id)) {
+                continue;
+            }
+
+            uniqueFurniture.push(userFurniture.model.furniture);
+        }
+
         this.user.sendProtobuff(RoomLoadData, RoomLoadData.fromJSON({
             id: this.room.model.id,
             
             information: this.room.getInformationData(),
             
             structure: this.room.model.structure,
+
+            furniture: this.room.furnitures.map((furniture) => furniture.model),
+            furnitureData: uniqueFurniture,
             
             users: this.room.users.map((user) => user.getRoomUserData()),
-            furniture: this.room.furnitures.map((furniture) => furniture.model),
             bots: this.room.bots.map((bot) => bot.model),
             pets: this.room.pets.map((pet) => pet.model),
 

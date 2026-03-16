@@ -154,7 +154,7 @@ export default class RoomFloorPlanEditor {
             if(clientInstance.roomInstance.value) {
                 const upmostFurniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(coordinate);
 
-                if(upmostFurniture && !upmostFurniture.data.furniture?.flags?.walkable) {
+                if(upmostFurniture && !upmostFurniture.furnitureData.flags?.walkable) {
                     return;
                 }
             }

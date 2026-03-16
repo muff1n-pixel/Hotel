@@ -66,7 +66,17 @@ export default class RoomInstance {
         }
 
         for(const furniture of event.furniture) {
-            this.furnitures.push(new RoomFurniture(this, furniture));
+            const furnitureData = event.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
+
+            if(!furnitureData) {
+                console.error("Server did not send furniture data for user furniture!", {
+                    furniture
+                });
+
+                continue;
+            }
+
+            this.furnitures.push(new RoomFurniture(this, furnitureData, furniture));
         }
 
         for(const bot of event.bots) {
@@ -312,14 +322,10 @@ export default class RoomInstance {
     public removeFurniture(roomFurnitureId: string) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
-        if(!furniture.data.furniture) {
-            throw new Error();
-        }
-
         if(furniture.data.userId === this.clientInstance.user.value?.id) {
             this.clientInstance.flyingFurnitureIcons.value?.push({
                 id: roomFurnitureId,
-                furniture: furniture.data.furniture,
+                furniture: furniture.furnitureData,
                 targetElementId: "toolbar-inventory",
                 position: this.roomRenderer.getItemScreenPosition(furniture.item)
             });

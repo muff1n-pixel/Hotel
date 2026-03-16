@@ -18,7 +18,15 @@ export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitu
         }
 
         if(payload.furnitureAdded?.length) {
-            clientInstance.roomInstance.value.furnitures.push(...payload.furnitureAdded.map((roomFurnitureData) => new RoomFurniture(clientInstance.roomInstance.value!, roomFurnitureData)));
+            clientInstance.roomInstance.value.furnitures.push(...payload.furnitureAdded.map((roomFurnitureData) => {
+                const furnitureData = payload.furnitureData.find((furnitureData) => furnitureData.id === roomFurnitureData.furnitureId);
+
+                if(!furnitureData) {
+                    throw new Error("Server did not send furniture data for user furniture.");
+                }
+
+                return new RoomFurniture(clientInstance.roomInstance.value!, furnitureData, roomFurnitureData);
+            }));
         }
 
         if(payload.furnitureRemoved?.length) {
