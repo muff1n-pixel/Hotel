@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useHotel } from "../../Hooks/useHotel";
 import { useRoomInstance } from "../../Hooks/useRoomInstance";
-import { webSocketClient } from "../../..";
+import { clientInstance, webSocketClient } from "../../..";
 import { usePermissions } from "../../Hooks/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
 
@@ -110,6 +110,12 @@ export default function DebugInformationPanel() {
             {(hotel?.users !== undefined) && (
                 <div>
                     {hotel.users} {(hotel.users !== 1)?("guests"):("guest")} online
+                </div>
+            )}
+
+            {(room && clientInstance.roomInstance.value?.roomRenderer.frameRate) && (
+                <div>
+                    {Math.round(clientInstance.roomInstance.value?.roomRenderer.frameRate)} frames per second
                 </div>
             )}
 

@@ -36,6 +36,7 @@ export default class RoomRenderer extends EventTarget {
     private terminated = false;
 
     public frame: number = 0;
+    public frameRate: number = 0;
 
     public size: number = 64;
     private currentSize: number = 64;
@@ -113,6 +114,8 @@ export default class RoomRenderer extends EventTarget {
         
         this.lastCappedFrameTimestamp = performance.now();
 
+        const lastFrameTimestamp = this.lastFrameTimestamp;
+
         if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
             this.frame = ((this.frame + 1) % this.framesPerSecond);
             this.lastFrameTimestamp = performance.now();
@@ -150,6 +153,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         context.drawImage(image, 0, 0);
+
+        this.frameRate = 1000 / (performance.now() - lastFrameTimestamp);
 
         window.requestAnimationFrame(this.render.bind(this));
     }
