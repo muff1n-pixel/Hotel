@@ -4,7 +4,7 @@ import type { Migration } from "sequelize-cli";
 export default {
     up: (queryInterface: QueryInterface): Promise<void> => queryInterface.sequelize.transaction(
         async (transaction) => {
-            await queryInterface.addColumn("permissions", "description", {
+            await queryInterface.addColumn("permission_roles", "description", {
                 type: DataTypes.TEXT,
                 allowNull: true
             }, {
@@ -15,7 +15,7 @@ export default {
 
     down: (queryInterface: QueryInterface): Promise<void> => queryInterface.sequelize.transaction(
         async (transaction) => {
-            await queryInterface.removeColumn("permissions", "description", {
+            await queryInterface.removeColumn("permission_roles", "description", {
                 transaction
             });
         }
