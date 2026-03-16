@@ -36,7 +36,9 @@ export default class RoomRenderer extends EventTarget {
     private terminated = false;
 
     public frame: number = 0;
-    public frameRate: number = 0;
+
+    private frames: number[] = [];
+    public frameRate: ObservableProperty<number> = new ObservableProperty<number>(0);
 
     public size: number = 64;
     private currentSize: number = 64;
@@ -105,16 +107,6 @@ export default class RoomRenderer extends EventTarget {
         }
 
         const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
-        
-        if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
-            window.requestAnimationFrame(this.render.bind(this));
-
-            return;
-        }
-        
-        this.lastCappedFrameTimestamp = performance.now();
-
-        const lastFrameTimestamp = this.lastFrameTimestamp;
 
         if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
             this.frame = ((this.frame + 1) % this.framesPerSecond);
@@ -128,6 +120,13 @@ export default class RoomRenderer extends EventTarget {
 
             this.dispatchEvent(new RoomFrameEvent());
         }
+        else if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
+            window.requestAnimationFrame(this.render.bind(this));
+
+            return;
+        }
+        
+        this.lastCappedFrameTimestamp = performance.now();
 
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].processPositionPath();
@@ -154,7 +153,12 @@ export default class RoomRenderer extends EventTarget {
 
         context.drawImage(image, 0, 0);
 
-        this.frameRate = 1000 / (performance.now() - lastFrameTimestamp);
+        const timestamp = performance.now();
+
+        this.frames = this.frames.filter((frame) => frame >= timestamp - 1000);
+        this.frames.push(timestamp);
+
+        this.frameRate.value = this.frames.length;
 
         window.requestAnimationFrame(this.render.bind(this));
     }

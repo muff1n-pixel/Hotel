@@ -5,9 +5,12 @@ import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import { clientInstance, webSocketClient } from "../../..";
 import { usePermissions } from "../../Hooks/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
+import { useRoomFrameRate } from "@UserInterface/Hooks/useRoomFrameRate";
 
 export default function DebugInformationPanel() {
     const room = useRoomInstance();
+    const roomFrameRate = useRoomFrameRate();
+
     const hotel = useHotel();
     const dialogs = useDialogs();
 
@@ -113,9 +116,9 @@ export default function DebugInformationPanel() {
                 </div>
             )}
 
-            {(room && clientInstance.roomInstance.value?.roomRenderer.frameRate) && (
+            {(room) && (
                 <div>
-                    {Math.round(clientInstance.roomInstance.value?.roomRenderer.frameRate)} frames per second
+                    {Math.round(roomFrameRate ?? 0)} frames per second
                 </div>
             )}
 
