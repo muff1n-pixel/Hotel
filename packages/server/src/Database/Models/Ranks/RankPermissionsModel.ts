@@ -25,11 +25,13 @@ export function initializeRankPermissionModel(sequelize: Sequelize) {
 
     RankPermissionModel.belongsTo(RankModel, {
         as: "rank",
-        foreignKey: "rankId"
+        foreignKey: "rankId",
+        constraints: true
     });
 
     RankPermissionModel.belongsTo(PermissionModel, {
         as: "permissions",
-        foreignKey: "roleId"
+        foreignKey: "roleId",
+        constraints: true
     });
 }

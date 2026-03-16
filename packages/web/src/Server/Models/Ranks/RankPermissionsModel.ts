@@ -26,12 +26,13 @@ export function initialize(sequelize: Sequelize) {
 export function associate() {
     RankPermissionModel.belongsTo(RankModel, {
         as: "rank",
-        foreignKey: "rankId"
+        foreignKey: "rankId",
+        constraints: true
     });
 
-    RankPermissionModel.belongsToMany(PermissionModel, {
-        through: "role_permissions",
+    RankPermissionModel.belongsTo(PermissionModel, {
         as: "permissions",
-        foreignKey: "roleId"
+        foreignKey: "roleId",
+        constraints: true
     });
 }
