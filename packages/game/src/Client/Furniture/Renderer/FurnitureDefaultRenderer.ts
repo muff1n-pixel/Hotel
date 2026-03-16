@@ -10,6 +10,7 @@ import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalComposite
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
     private previousLayerFrames: string = "";
+    private hasImageData: boolean = false;
 
     private visualization?: FurnitureVisualization["visualizations"][0];
 
@@ -21,6 +22,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
     public shouldRender(options: FurnitureRenderOptions) {
         if(!this.options) {
+            return true;
+        }
+
+        if(!this.hasImageData) {
             return true;
         }
 
@@ -231,6 +236,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
 
             sprites.push(assetSprite);
+        }
+
+        if(!this.hasImageData) {
+            this.hasImageData = sprites.every((sprite) => !sprite.ignoreMouse && sprite.imageData);
         }
 
         return sprites;
