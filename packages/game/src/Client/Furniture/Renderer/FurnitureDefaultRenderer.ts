@@ -4,15 +4,37 @@ import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
-import { FurnitureAnimationLayerFrame, FurnitureAnimationLayerFrameOffset } from "@Client/Interfaces/Furniture/FurnitureVisualization";
+import { FurnitureAnimationLayerFrameOffset } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
+    private animated: boolean = false;
+
     constructor(public readonly type: string | undefined) {
 
     }
 
+    private options?: FurnitureRenderOptions;
+
+    public shouldRender(options: FurnitureRenderOptions) {
+        if(!this.options) {
+            return true;
+        }
+
+        if(this.animated) {
+            return true;
+        }
+
+        if(!Object.values(this.options).every((value, index) => value === Object.values(options)[index])) {
+            return true;
+        }
+        
+        return false;
+    }
+
     public async render(data: FurnitureData, options: FurnitureRenderOptions) {
+        this.options = options;
+
         if(!this.type) {
             throw new Error();
         }
@@ -29,6 +51,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const directionData = visualization.directions.find((visualizationDirection) => visualizationDirection.id === options.direction);
 
+        this.animated = false;
+
         for(let layer = 0; layer < visualization.layerCount; layer++) {
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
 
@@ -36,6 +60,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             let animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined = undefined;
 
             if(animationLayer?.frameSequence?.length) {
+                this.animated = true;
+                
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
                 const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
 

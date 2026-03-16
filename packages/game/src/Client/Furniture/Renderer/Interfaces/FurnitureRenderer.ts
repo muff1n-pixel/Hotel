@@ -14,4 +14,6 @@ export type FurnitureRenderOptions = {
 export default interface FurnitureRenderer {
     render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]>;
     renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap>;
+
+    shouldRender(options: FurnitureRenderOptions): boolean;
 }

@@ -33,11 +33,13 @@ export default class RoomPetItem extends RoomItem {
             this.sprites = [];
         }
 
-        this.pet.render().then((sprites) => {
-            if(sprites.length) {
-                this.sprites = sprites.map((sprite) => new RoomPetSprite(this, sprite));
-            }
-        });
+        if(this.pet.shouldRender()) {
+            this.pet.render().then((sprites) => {
+                if(sprites.length) {
+                    this.sprites = sprites.map((sprite) => new RoomPetSprite(this, sprite));
+                }
+            });
+        }
     }
 
     public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData, delay: number = 0, useAction: boolean = true): void {

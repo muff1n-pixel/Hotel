@@ -1,4 +1,3 @@
-import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";

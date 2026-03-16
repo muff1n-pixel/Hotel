@@ -76,6 +76,18 @@ export default class Furniture {
         }
     }
 
+    public shouldRender() {
+        return this.renderer.shouldRender({
+            direction: this.direction,
+            size: this.size, 
+            animation: this.animation,
+            color: this.color ?? 0, 
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: undefined
+        });
+    }
+
     public async getData() {
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);

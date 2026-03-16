@@ -17,6 +17,18 @@ export default class Pet {
     constructor(public readonly type: string, public readonly palettes: PetPaletteData[] | undefined, public posture: string = "std", public headonly: boolean = false) {
         this.renderer = new PetDefaultRenderer(this.type, this.palettes);
     }
+
+    public shouldRender() {
+        return this.renderer.shouldRender({
+            direction: this.direction,
+            size: this.size, 
+            animation: this.getAnimationId(), 
+            color: this.color ?? 0,
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: (this.headonly)?(["head", "hair"]):(undefined)
+        });
+    }
     
     public async render() {
         this.frame++;
