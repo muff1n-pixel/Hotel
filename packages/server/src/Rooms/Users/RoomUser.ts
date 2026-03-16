@@ -49,7 +49,7 @@ export default class RoomUser implements RoomActor {
             $type: "RoomPositionData",
             row: room.model.structure.door?.row ?? 0,
             column: room.model.structure.door?.column ?? 0,
-            depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
+            depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0] ?? '0')
         };
 
         this.user.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
