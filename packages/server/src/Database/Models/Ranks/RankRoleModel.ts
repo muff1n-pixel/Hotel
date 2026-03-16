@@ -1,7 +1,5 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { RankModel } from "./RankModel";
-import { PermissionModel } from "../Permissions/PermissionModel";
-import { UserModel } from "../Users/UserModel";
 import { PermissionRoleModel } from "../Permissions/PermissionRoleModel";
 
 export class RankRoleModel extends Model {

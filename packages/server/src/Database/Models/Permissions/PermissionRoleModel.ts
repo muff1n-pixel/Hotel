@@ -5,7 +5,7 @@ import { UserModel } from "../Users/UserModel.js";
 export class PermissionRoleModel extends Model {
     declare id: string;
     declare permissions: NonAttribute<PermissionModel[]>;
-        declare name: string;
+    declare name: string;
     declare description: string;
 }
 
