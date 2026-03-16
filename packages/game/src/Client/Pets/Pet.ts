@@ -5,7 +5,7 @@ import PetDefaultRenderer from "@Client/Pets/Renderer/PetDefaultRenderer";
 import { PetPaletteData } from "@pixel63/events";
 
 export default class Pet {
-    private frame: number = 0;
+    public frame: number = 0;
     public direction: number = 2;
     public size: number = 64;
     private color: number = 0;
@@ -31,8 +31,6 @@ export default class Pet {
     }
     
     public async render() {
-        this.frame++;
-
         if(!this.data) {
             this.data = await PetAssets.getData(this.type);
         }

@@ -7,6 +7,8 @@ import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFur
 import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Background/RoomFurnitureBackgroundSprite";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
+import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
+import { clientInstance } from "src";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -78,11 +80,19 @@ export default class RoomFurnitureItem extends RoomItem {
             ];
         }
 
-        this.furnitureRenderer.render().then((sprites) => {
-            if(sprites.length) {
-                this.sprites = sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
+        this.furnitureRenderer.frame++;
+
+        if(this.furnitureRenderer.shouldRender()) {
+            if(clientInstance.settings.value?.debugRoomRendering) {
+                this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
-        });
+
+            this.furnitureRenderer.render().then((sprites) => {
+                if(sprites.length) {
+                    this.sprites = sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
+                }
+            });
+        }
     }
 
     setData(data: UserFurnitureCustomData) {

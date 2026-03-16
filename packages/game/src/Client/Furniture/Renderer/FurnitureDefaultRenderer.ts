@@ -4,11 +4,14 @@ import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
-import { FurnitureAnimationLayerFrameOffset } from "@Client/Interfaces/Furniture/FurnitureVisualization";
+import { FurnitureAnimationLayerFrameOffset, FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
+    private previousLayerFrames: string = "";
+
+    private visualization?: FurnitureVisualization["visualizations"][0];
 
     constructor(public readonly type: string | undefined) {
 
@@ -22,46 +25,53 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         }
 
         if(this.animated) {
+            const layerFrames = this.getLayerFrames(options).map((frame) => frame.animationLayerId + '-' + frame.spriteFrame).join('_');
+
+            if(this.previousLayerFrames !== layerFrames) {
+                return true;
+            }
+        }
+
+        if(this.options.animation !== options.animation) {
             return true;
         }
 
-        if(!Object.values(this.options).every((value, index) => value === Object.values(options)[index])) {
+        if(this.options.direction !== options.direction) {
             return true;
         }
-        
+
+        if(this.options.color !== options.color) {
+            return true;
+        }
+
+        if(this.options.grayscaled !== options.grayscaled) {
+            return true;
+        }
+
+        if(this.options.size !== options.size) {
+            return true;
+        }
+
+        if(this.options.tags?.join('-') !== options.tags?.join('-')) {
+            return true;
+        }
+
         return false;
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions) {
-        this.options = options;
-
-        if(!this.type) {
-            throw new Error();
-        }
-        
-        const sprites: FurnitureRendererSprite[] = [];
-
-        const visualization = data.visualization.visualizations.find((visualization) => visualization.size == options.size);
-
-        if(!visualization) {
-            throw new Error("Visualization for " + this.type + " does not exist for size: " + options.size + ".");
+    private getLayerFrames(options: FurnitureRenderOptions) {
+        if(!this.visualization) {
+            return [];
         }
 
-        const animationData = visualization.animations?.find((animationData) => animationData.id === options.animation);
+        const animationData = this.visualization.animations?.find((animationData) => animationData.id === options!.animation);
 
-        const directionData = visualization.directions.find((visualizationDirection) => visualizationDirection.id === options.direction);
+        const result: { animationLayerId: number, frameSequenceIndex: number, animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
 
-        this.animated = false;
-
-        for(let layer = 0; layer < visualization.layerCount; layer++) {
+        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
 
-            let spriteFrame = 0;
-            let animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined = undefined;
-
             if(animationLayer?.frameSequence?.length) {
-                this.animated = true;
-                
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
                 const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
 
@@ -87,12 +97,50 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     console.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
                 }
                 else {
-                    animationFrameOffset = animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options.direction);
-                    spriteFrame = animationLayer?.frameSequence[frameSequenceIndex].id;
+                    result.push({
+                        animationLayerId: animationLayer.id,
+                        frameSequenceIndex,
+                        animationFrameOffset: animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options!.direction),
+                        spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id
+                    });
                 }
             }
+        }
 
-            let assetName = `${this.type}_${options.size}_${String.fromCharCode(97 + layer)}_${options.direction}_${spriteFrame}`;
+        return result;
+    }
+
+    public async render(data: FurnitureData, options: FurnitureRenderOptions) {
+        this.options = options;
+
+        if(!this.type) {
+            throw new Error();
+        }
+        
+        const sprites: FurnitureRendererSprite[] = [];
+
+        this.visualization = data.visualization.visualizations.find((visualization) => visualization.size == options.size);
+
+        if(!this.visualization) {
+            throw new Error("Visualization for " + this.type + " does not exist for size: " + options.size + ".");
+        }
+
+        const directionData = this.visualization.directions.find((visualizationDirection) => visualizationDirection.id === options.direction);
+
+        this.animated = false;
+
+        const animationFrames = this.getLayerFrames(options);
+
+        this.previousLayerFrames = animationFrames.map((frame) => frame.animationLayerId + '-' + frame.frameSequenceIndex).join('_');
+
+        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
+            const animationFrame = animationFrames.find((frame) => frame.animationLayerId === layer);
+
+            if(animationFrame) {
+                this.animated = true;
+            }
+
+            let assetName = `${this.type}_${options.size}_${String.fromCharCode(97 + layer)}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
 
             if(options.size === 1) {
                 assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
@@ -128,9 +176,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 continue;
             }
 
-            const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === options.color);
+            const colorData = this.visualization.colors?.find((visualizationColor) => visualizationColor.id === options.color);
 
-            const layerData = visualization.layers.find((layerData) => layerData.id === layer);
+            const layerData = this.visualization.layers.find((layerData) => layerData.id === layer);
 
             if(options.tags && (layerData?.tag && !options.tags.includes(layerData?.tag))) {
                 continue;
@@ -155,12 +203,12 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 y += directionLayerData.y;
             }
 
-            if(animationFrameOffset?.left !== undefined) {
-                x += animationFrameOffset?.left;
+            if(animationFrame?.animationFrameOffset?.left !== undefined) {
+                x += animationFrame.animationFrameOffset?.left;
             }
 
-            if(animationFrameOffset?.top !== undefined) {
-                y += animationFrameOffset?.top;
+            if(animationFrame?.animationFrameOffset?.top !== undefined) {
+                y += animationFrame.animationFrameOffset?.top;
             }
 
             const assetSprite: FurnitureRendererSprite = {

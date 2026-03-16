@@ -4,6 +4,8 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 import { RoomPositionData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetSprite from "@Client/Room/Items/Pets/RoomPetSprite";
+import { clientInstance } from "src";
+import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
 
 export default class RoomPetItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -33,7 +35,13 @@ export default class RoomPetItem extends RoomItem {
             this.sprites = [];
         }
 
+        this.pet.frame++;
+
         if(this.pet.shouldRender()) {
+            if(clientInstance.settings.value?.debugRoomRendering) {
+                this.sprites.push(new RoomTextSprite(this, "Rendering"));
+            }
+
             this.pet.render().then((sprites) => {
                 if(sprites.length) {
                     this.sprites = sprites.map((sprite) => new RoomPetSprite(this, sprite));

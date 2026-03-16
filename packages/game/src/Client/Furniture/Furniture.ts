@@ -97,8 +97,6 @@ export default class Furniture {
     }
 
     public async render() {
-        this.frame++;
-
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);

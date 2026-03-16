@@ -13,7 +13,7 @@ export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps)
     const settings = useSettings();
 
     return (
-        <Dialog title="Settings" hidden={hidden} onClose={onClose} width={300} height={70} initialPosition="center">
+        <Dialog title="Settings" hidden={hidden} onClose={onClose} width={300} height={120} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -25,6 +25,11 @@ export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps)
                         clientInstance.settings.value!.limitRoomFrames = !settings?.limitRoomFrames;
                         clientInstance.settings.update();
                     }} label="Limit frame rate to 60 fps"/>
+                    
+                    <Checkbox value={settings?.debugRoomRendering === true} onChange={() => {
+                        clientInstance.settings.value!.debugRoomRendering = !settings?.debugRoomRendering;
+                        clientInstance.settings.update();
+                    }} label="Debug room rendering"/>
                 </div>
             </DialogContent>
         </Dialog>
