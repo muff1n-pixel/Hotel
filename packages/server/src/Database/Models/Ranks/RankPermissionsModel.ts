@@ -1,6 +1,7 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { RankModel } from "./RankModel";
 import { PermissionModel } from "../Permissions/PermissionModel";
+import { UserModel } from "../Users/UserModel";
 
 export class RankPermissionModel extends Model {
     declare id: string;
@@ -27,8 +28,7 @@ export function initializeRankPermissionModel(sequelize: Sequelize) {
         foreignKey: "rankId"
     });
 
-    RankPermissionModel.belongsToMany(PermissionModel, {
-        through: "role_permissions",
+    RankPermissionModel.belongsTo(PermissionModel, {
         as: "permissions",
         foreignKey: "roleId"
     });
