@@ -7,7 +7,7 @@ export class PermissionModel extends Model {
     declare description: string;
 }
 
-export function intitializePermissionModel(sequelize: Sequelize) {
+export function initialize(sequelize: Sequelize) {
     PermissionModel.init({
         id: {
             type: DataTypes.STRING,

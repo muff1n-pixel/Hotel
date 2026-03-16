@@ -1,14 +1,14 @@
-import { PermissionAction } from "@shared/Interfaces/Permissions/PermissionMap";
 import { DataTypes, Model, Sequelize } from "sequelize";
 
-export class PermissionModel extends Model {
-    declare id: PermissionAction;
+export class RankModel extends Model {
+    declare id: string;
     declare name: string;
     declare description: string;
+    declare priorityOrder: number;
 }
 
-export function intitializePermissionModel(sequelize: Sequelize) {
-    PermissionModel.init({
+export function initialize(sequelize: Sequelize) {
+    RankModel.init({
         id: {
             type: DataTypes.STRING,
             primaryKey: true
@@ -20,9 +20,15 @@ export function intitializePermissionModel(sequelize: Sequelize) {
         description: {
             type: DataTypes.TEXT,
             allowNull: true,
+        },
+        priorityOrder: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
         }
-    }, {
-        sequelize,
-        tableName: "permissions"
-    });
+    },
+        {
+            tableName: 'ranks',
+            sequelize
+        });
 }
