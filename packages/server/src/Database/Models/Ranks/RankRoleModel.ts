@@ -1,15 +1,17 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { RankModel } from "./RankModel";
 import { PermissionModel } from "../Permissions/PermissionModel";
+import { UserModel } from "../Users/UserModel";
+import { PermissionRoleModel } from "../Permissions/PermissionRoleModel";
 
-export class RankPermissionModel extends Model {
+export class RankRoleModel extends Model {
     declare id: string;
     declare rank: NonAttribute<RankModel>;
-    declare role: NonAttribute<PermissionModel>;
+    declare role: NonAttribute<PermissionRoleModel>;
 }
 
-export function initialize(sequelize: Sequelize) {
-    RankPermissionModel.init(
+export function initializeRankRoleModel(sequelize: Sequelize) {
+    RankRoleModel.init(
         {
             id: {
                 type: DataTypes.UUID,
@@ -17,21 +19,19 @@ export function initialize(sequelize: Sequelize) {
             }
         },
         {
-            tableName: 'rank_permissions',
+            tableName: 'rank_roles',
             sequelize
         },
     );
-}
 
-export function associate() {
-    RankPermissionModel.belongsTo(RankModel, {
+    RankRoleModel.belongsTo(RankModel, {
         as: "rank",
         foreignKey: "rankId",
         constraints: true
     });
 
-    RankPermissionModel.belongsTo(PermissionModel, {
-        as: "permissions",
+    RankRoleModel.belongsTo(PermissionRoleModel, {
+        as: "role",
         foreignKey: "roleId",
         constraints: true
     });

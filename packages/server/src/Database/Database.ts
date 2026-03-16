@@ -30,7 +30,7 @@ import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/W
 import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
 import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
 import { initializeRankModel } from "./Models/Ranks/RankModel.js";
-import { initializeRankPermissionModel } from "./Models/Ranks/RankPermissionsModel.js";
+import { initializeRankRoleModel } from "./Models/Ranks/RankRoleModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -69,7 +69,7 @@ export async function initializeModels() {
   intitializePermissionRoleModel(sequelize);
 
   initializeRankModel(sequelize);
-  initializeRankPermissionModel(sequelize);
+  initializeRankRoleModel(sequelize);
 
   await sequelize.sync();
 }

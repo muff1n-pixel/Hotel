@@ -3,8 +3,6 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class PermissionModel extends Model {
     declare id: PermissionAction;
-    declare name: string;
-    declare description: string;
 }
 
 export function intitializePermissionModel(sequelize: Sequelize) {
@@ -12,14 +10,6 @@ export function intitializePermissionModel(sequelize: Sequelize) {
         id: {
             type: DataTypes.STRING,
             primaryKey: true
-        },
-        name: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: true,
         }
     }, {
         sequelize,
