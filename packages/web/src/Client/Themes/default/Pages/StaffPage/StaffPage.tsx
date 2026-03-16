@@ -2,76 +2,50 @@ import './StaffPage.css';
 import Leaders_Image from '../../Images/staff/leaders.png';
 import Admin_Badge from '../../Images/staff/ADM.gif';
 import Frank_Search from '../../Images/frank/frank_search.gif'
-import StaffUser from '../../Components/Staff/StaffUser';
+import StaffUser from '../../Components/Staff/StaffUser/StaffUser';
+import { useEffect, useState } from 'react';
+import Loading from '../../Components/Loading/Loading';
+import StaffSection, { StaffRankType } from '../../Components/Staff/StaffSection';
 
 const StaffPage = () => {
-    let figureConfig = {
-        "gender": "male",
-        "parts": [
-            {
-                "type": "hd",
-                "setId": "180",
-                "colors": [
-                    2
-                ]
+    const [loading, setLoading] = useState<boolean>(true);
+    const [ranks, setRanks] = useState<Array<StaffRankType>>([])
+
+    useEffect(() => {
+        fetch("/api/ranks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            {
-                "type": "hr",
-                "setId": "828",
-                "colors": [
-                    31
-                ]
-            },
-            {
-                "type": "ea",
-                "setId": "3196",
-                "colors": [
-                    62
-                ]
-            },
-            {
-                "type": "ch",
-                "setId": "255",
-                "colors": [
-                    1415
-                ]
-            },
-            {
-                "type": "lg",
-                "setId": "3216",
-                "colors": [
-                    110
-                ]
-            },
-            {
-                "type": "sh",
-                "setId": "305",
-                "colors": [
-                    62
-                ]
-            }
-        ]
-    }
+            body: JSON.stringify({
+            })
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                setRanks(result);
+                setLoading(false);
+            })
+            .catch((e) => {
+                console.log("(Error) Impossible to fetch staff sections:", e)
+            })
+    }, [])
 
     return (
         <div className="staffPage resize">
             <div className='grid'>
                 <div className='grid_row'>
-                    <div className='box'>
-                        <div className='title flex'>Administratation <span>Developers, Administrators</span></div>
-                        <div className='content'>
-                            <StaffUser id="userId" name="MyUsername" role="Developer" motto="This is my motto!" online={true} figureConfiguration={figureConfig} currentBadges={["ADM", "01GOTW", "14XR5", "20TH", "15H06"]} />
-
-                            <StaffUser id="userId" name="ItsMe" role="Administrator" motto="Wuuuut!" online={false} figureConfiguration={figureConfig} currentBadges={["ACH_BaseJumpMissile4", "ACH_BattleBallPlayer2", "ACH_CrystalCracker1", "ADM", "01GOTW"]} />
-                        </div>
-                    </div>
-
-                    <div className='box'>
-                        <div className='title flex'>Moderation <span>Moderators, Coordinators</span></div>
-                        <div className='content'>
-                            <StaffUser id="userId" name="ItsMe" role="Moderator" motto="Hey!!!" online={false} figureConfiguration={figureConfig} currentBadges={["UK902", "ADM", "UK862", "UK969", "UK970"]} />
-                        </div>
-                    </div>
+                    {
+                        loading ?
+                            <Loading />
+                            :
+                            <div>
+                                {ranks.map((rank) => {
+                                    return (
+                                        <StaffSection {...rank} key={rank.id} />
+                                    )
+                                })}
+                            </div>
+                    }
                 </div>
 
                 <div className='grid_row'>

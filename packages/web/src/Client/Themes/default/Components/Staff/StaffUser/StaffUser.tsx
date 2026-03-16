@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import './StaffUser.css';
-import Unknow_User from '../../Images/unknow_user.gif';
-import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
-import OnlineImage from '../../Images/state/online.gif';
-import OfflineImage from '../../Images/state/offline.gif';
+import Unknow_User from '../../../Images/unknow_user.gif';
+import AvatarImager from '../../../../../Utils/AvatarImager/AvatarImager';
+import OnlineImage from '../../../Images/state/online.gif';
+import OfflineImage from '../../../Images/state/offline.gif';
 
-type UserProps = {
+export type StaffUserType = {
     id: string;
     name: string;
     role: string;
@@ -15,7 +15,7 @@ type UserProps = {
     currentBadges: Array<string>
 }
 
-const StaffUser = (props: UserProps) => {
+const StaffUser = (props: StaffUserType) => {
     const [avatar, setAvatar] = useState<string>(Unknow_User);
 
     useEffect(() => {
