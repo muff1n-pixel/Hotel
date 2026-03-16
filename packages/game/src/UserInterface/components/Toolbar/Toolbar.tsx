@@ -5,7 +5,7 @@ import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
 import { useDialogs } from "../../Hooks/useDialogs";
 import ToolbarToggle from "./ToolbarToggle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../../Hooks/useUser";
 import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
 import ToolbarFriends from "src/UserInterface/Components/Toolbar/ToolbarFriends";
@@ -17,6 +17,23 @@ export default function Toolbar() {
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
+    const [chatFloating, setChatFloating] = useState(window.innerWidth < 1280);
+
+    useEffect(() => {
+        if(!room) {
+            return;
+        }
+
+        const listener = () => {
+            setChatFloating(window.innerWidth < 1280);
+        };
+
+        window.addEventListener("resize", listener);
+
+        return () => {
+            window.removeEventListener("resize", listener);
+        };
+    }, [room]);
 
     return (
         <div style={{
@@ -95,10 +112,21 @@ export default function Toolbar() {
                 <div style={{
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+
+                    position: "relative"
                 }}>
                     {(room) && (
-                        <ToolbarChatbar/>
+                        <ToolbarChatbar style={(chatFloating)?({
+                            position: "fixed",
+
+                            left: 0,
+                            right: 0,
+
+                            margin: "0 auto",
+
+                            bottom: 60
+                        }):(undefined)}/>
                     )}
                 </div>
 
