@@ -96,7 +96,9 @@ export default function DebugInformationPanel() {
             left: 0,
             top: 0,
 
-            padding: 32
+            padding: 32,
+
+            textShadow: "1px 1px #000000"
         }}>
             <div style={{
                 fontFamily: "Ubuntu Medium",

@@ -33,13 +33,13 @@ export default function InterfaceInstance() {
 
     return (
         <AppContext value={null}>
-            <DebugInformationPanel/>
-
             {(!room) && (
                 <Reception/>
             )}
 
             <RoomInterface/>
+
+            <DebugInformationPanel/>
 
             <DialogInstances/>
 
