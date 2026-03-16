@@ -34,7 +34,7 @@ export default class UpdateRoomStructureEvent implements ProtobuffListener<Updat
             structure.wall!.hidden = Boolean(payload.wallHidden);
         }
 
-        if(payload.grid) {
+        if(payload.grid && payload.grid.length) {
             structure.grid = payload.grid;
         }
 
