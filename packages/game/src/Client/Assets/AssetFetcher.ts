@@ -43,6 +43,10 @@ export default class AssetFetcher {
 
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
+    public static clearMemory() {
+        this.sprites = {};
+    }
+
     public static async fetchJson<T>(url: string): Promise<T> {
         if(this.json.has(url)) {
             return await this.json.get(url)! as T;

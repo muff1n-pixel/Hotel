@@ -11,6 +11,7 @@ import RoomBot from "@Client/Room/Bots/RoomBot";
 import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
+import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -108,6 +109,8 @@ export default class RoomInstance {
         this.removeEventListeners();
 
         this.roomRenderer.terminate();
+
+        AssetFetcher.clearMemory();
 
         this.clientInstance.roomInstance.value = undefined;
     }
