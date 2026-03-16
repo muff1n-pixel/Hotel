@@ -26,6 +26,11 @@ export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps)
                         clientInstance.settings.update();
                     }} label="Limit frame rate to 60 fps"/>
                     
+                    <Checkbox value={settings?.hideTooltips === true} onChange={() => {
+                        clientInstance.settings.value!.hideTooltips = !settings?.hideTooltips;
+                        clientInstance.settings.update();
+                    }} label="Hide tooltips"/>
+                    
                     <Checkbox value={settings?.debugRoomRendering === true} onChange={() => {
                         clientInstance.settings.value!.debugRoomRendering = !settings?.debugRoomRendering;
                         clientInstance.settings.update();

@@ -10,6 +10,6 @@ export default function BadgeImage({ badge }: BadgeImageProps) {
     }
     
     return (
-        <img src={`/assets/badges/${badge.image}`}/>
+        <img src={`/assets/badges/${badge.image}`} data-tooltip={badge.name}/>
     );
 }

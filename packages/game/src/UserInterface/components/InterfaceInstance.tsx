@@ -11,6 +11,7 @@ import { useUser } from "../Hooks/useUser";
 import DebugInformationPanel from "./Debug/DebugInformationPanel";
 import FlyingFurnitureInstances from "./Inventory/FlyingFurniture/FlyingFurnitureInstances";
 import { GetUserData } from "@pixel63/events";
+import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 
 export default function InterfaceInstance() {
     const room = useRoomInstance();
@@ -46,6 +47,8 @@ export default function InterfaceInstance() {
             <Widget/>
 
             <FlyingFurnitureInstances/>
+
+            <Tooltip/>
         </AppContext>
     );
 }

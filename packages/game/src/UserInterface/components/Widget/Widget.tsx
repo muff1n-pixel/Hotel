@@ -1,3 +1,4 @@
+import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useUser } from "../../Hooks/useUser";
 import WidgetButton from "./WidgetButton";
@@ -13,7 +14,9 @@ export default function Widget() {
         <div style={{
             position: "absolute",
             top: 0,
-            right: 14
+            right: 14,
+
+            pointerEvents: "auto",
         }}>
             <div style={{
                 border: "1px solid rgba(0, 0, 0, 0.64)",
@@ -54,15 +57,15 @@ export default function Widget() {
                         justifyContent: "space-around",
                         alignItems: "flex-end"
                     }}>
-                        <WidgetCurrency color="#37C8E9" value={user?.diamonds ?? 0}>
+                        <WidgetCurrency color="#37C8E9" value={user?.diamonds ?? 0} tooltip="Diamonds">
                             <div className="sprite_currencies_diamonds"/>
                         </WidgetCurrency>
 
-                        <WidgetCurrency color="#CCA822" value={user?.credits ?? 0}>
+                        <WidgetCurrency color="#CCA822" value={user?.credits ?? 0} tooltip="Credits">
                             <div className="sprite_currencies_credits"/>
                         </WidgetCurrency>
 
-                        <WidgetCurrency color="#CE82CC" value={user?.duckets ?? 0}>
+                        <WidgetCurrency color="#CE82CC" value={user?.duckets ?? 0} tooltip="Duckets">
                             <div className="sprite_currencies_duckets"/>
                         </WidgetCurrency>
                     </div>
@@ -94,19 +97,19 @@ export default function Widget() {
 
                         width: 50,
                     }}>
-                        <WidgetButton color="#4D5FF2" onClick={() => {
+                        <WidgetButton tooltip="Discord" color="#4D5FF2" onClick={() => {
                             window.open("/discord", "_blank")?.focus();
                         }}>
                             Discord
                         </WidgetButton>
 
-                        <WidgetButton color="#716A85" onClick={() => {
+                        <WidgetButton tooltip="Settings" color="#716A85" onClick={() => {
                             dialogs.addUniqueDialog("settings");
                         }}>
                             <div className="sprite_widget_settings"/>
                         </WidgetButton>
 
-                        <WidgetButton color="#DD5246" onClick={() => {
+                        <WidgetButton tooltip="Log out" color="#DD5246" onClick={() => {
                             window.location.href = "/logout";
                         }}>
                             <div className="sprite_widget_logout"/>

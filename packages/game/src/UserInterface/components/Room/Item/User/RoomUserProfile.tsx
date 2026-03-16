@@ -7,6 +7,7 @@ import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -88,7 +89,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                             width: 40,
                             height: 40
                         }}>
-                            <BadgeImage badge={badge}/>
+                            <BadgeImage key={badge.id} badge={badge}/>
                         </div>
                     ))}
                 </div>

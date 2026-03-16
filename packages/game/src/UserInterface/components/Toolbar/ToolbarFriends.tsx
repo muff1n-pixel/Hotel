@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FriendsPanel from "src/UserInterface/Common/Friends/Components/FriendsPanel";
+import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 import ToolbarItem from "src/UserInterface/Components/Toolbar/Items/ToolbarItem";
 import ToolbarToggle from "src/UserInterface/Components/Toolbar/ToolbarToggle";
 import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
@@ -27,11 +28,11 @@ export default function ToolbarFriends() {
 
             position: "relative"
         }}>
-            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends")}>
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends")} tooltip="My friends">
                 <div className="sprite_friends_list"/>
             </ToolbarItem>
             
-            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends", { tab: "search" })}>
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends", { tab: "search" })} tooltip="Find friends">
                 <div className="sprite_friends_search"/>
             </ToolbarItem>
 

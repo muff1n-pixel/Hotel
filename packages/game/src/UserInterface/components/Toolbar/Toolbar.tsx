@@ -74,12 +74,12 @@ export default function Toolbar() {
 
                     {(!minimized) && (
                         (room)?(
-                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))}>
+                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))} tooltip="Reception">
                                 <div className="sprite_toolbar_logo"/>
                             </ToolbarItem>
                         ):(
                             (user?.homeRoomId) && (
-                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))}>
+                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))} tooltip="Homeroom">
                                     <div className="sprite_toolbar_home"/>
                                 </ToolbarItem>
                             )
@@ -87,23 +87,23 @@ export default function Toolbar() {
                     )}
 
                     {(!minimized) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("navigator")} tooltip="Navigator">
                             <div className="sprite_toolbar_navigator"/>
                         </ToolbarItem>
                     )}
 
-                    <ToolbarItem onClick={() => addUniqueDialog("shop")}>
+                    <ToolbarItem onClick={() => addUniqueDialog("shop")} tooltip="Shop">
                         <div className="sprite_toolbar_shop"/>
                     </ToolbarItem>
 
                     {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip="Inventory">
                             <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
                         </ToolbarItem>
                     )}
 
                     {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")} tooltip="Wardrobe">
                             <ToolbarFigureItem/>
                         </ToolbarItem>
                     )}
