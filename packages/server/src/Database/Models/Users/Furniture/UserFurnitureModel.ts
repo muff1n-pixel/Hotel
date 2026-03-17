@@ -16,7 +16,9 @@ export class UserFurnitureModel extends Model {
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
+
     declare furniture: NonAttribute<FurnitureModel>;
+    declare furnitureId: NonAttribute<string>;
 }
 
 export function initializeUserFurnitureModel(sequelize: Sequelize) {

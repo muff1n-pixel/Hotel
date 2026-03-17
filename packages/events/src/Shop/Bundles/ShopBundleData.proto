@@ -3,6 +3,8 @@ syntax = "proto3";
 message ShopBundleData {
     string id = 1;
 
+    string room_id = 5;
+
     optional uint32 credits = 2;
     optional uint32 duckets = 3;
     optional uint32 diamonds = 4;

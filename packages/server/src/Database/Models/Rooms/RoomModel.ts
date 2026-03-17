@@ -13,7 +13,9 @@ export class RoomModel extends Model {
     
     declare name: string;
     declare description: string;
+
     declare category: NonAttribute<RoomCategoryModel>;
+    declare categoryId: NonAttribute<string>;
 
     declare owner: NonAttribute<UserModel>;
 

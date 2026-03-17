@@ -104,6 +104,10 @@ export default function RoomSettingsBasicTab() {
                             {
                                 value: "public",
                                 label: "Public"
+                            },
+                            {
+                                value: "bundle",
+                                label: "Bundle"
                             }
                         ]} onChange={(value) => handleTypeChange(value as string)}/>
                     </Fragment>

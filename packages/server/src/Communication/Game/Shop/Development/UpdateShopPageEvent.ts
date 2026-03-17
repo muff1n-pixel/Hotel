@@ -71,6 +71,8 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
                 credits: payload.bundle.credits,
                 duckets: payload.bundle.duckets,
                 diamonds: payload.bundle.diamonds,
+
+                roomId: payload.bundle.roomId
             });
 
             await ShopPageModel.update({

@@ -1,12 +1,11 @@
-import { randomUUID } from "node:crypto";
-import { PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurniturePurchaseData } from "@pixel63/events";
 import User from "../../../../Users/User";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel";
 import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel";
-import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
+import { randomUUID } from "node:crypto";
 
 export default class PurchaseShopBundleEvent implements ProtobuffListener<PurchaseShopBundleData> {
     async handle(user: User, payload: PurchaseShopBundleData) {
@@ -17,26 +16,23 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
             include: [
                 {
                     model: ShopPageModel,
-                    as: "page",
+                    as: "page"
+                },
+                {
+                    model: RoomModel,
+                    as: "room",
 
                     include: [
                         {
-                            model: ShopPageFurnitureModel,
-                            as: "furniture",
-
-                            include: [
-                                {
-                                    model: FurnitureModel,
-                                    as: "furniture"
-                                }
-                            ]
+                            model: UserFurnitureModel,
+                            as: "roomFurnitures"
                         }
                     ]
                 }
             ]
         });
 
-        if(!bundle) {
+        if(!bundle?.room) {
             user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
@@ -74,72 +70,35 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
 
         await user.model.save();
 
-        for(const shopFurniture of bundle.page.furniture) {
-            const userFurniture = await UserFurnitureModel.create({
+        const room = await RoomModel.create({
+            id: randomUUID(),
+
+            ownerId: user.model.id,
+
+            name: bundle.room.name,
+            description: bundle.room.description,
+
+            categoryId: bundle.room.categoryId,
+
+            structure: bundle.room.structure,
+            thumbnail: bundle.room.thumbnail,
+        });
+
+        await UserFurnitureModel.bulkCreate(bundle.room.roomFurnitures.map((userFurniture) => {
+            return {
                 id: randomUUID(),
-                position: null,
-                direction: null,
-                animation: 0,
-                color: null,
-                data: null,
                 
-                roomId: null,
+                position: userFurniture.position,
+                direction: userFurniture.direction,
+                animation: userFurniture.animation,
+                color: userFurniture.color,
+                data: userFurniture.data,
+
+                furnitureId: userFurniture.furnitureId,
                 userId: user.model.id,
-                furnitureId: shopFurniture.furniture.id
-            }, {
-                include: [
-                    {
-                        model: FurnitureModel,
-                        as: "furniture"
-                    }
-                ]
-            });
-
-            userFurniture.user = user.model;
-            userFurniture.furniture = shopFurniture.furniture;
-
-            if(userFurniture.furniture.interactionType === "teleport" || userFurniture.furniture.interactionType === "teleporttile") {
-                const secondUserFurniture = await UserFurnitureModel.create({
-                    id: randomUUID(),
-                    position: null,
-                    direction: null,
-                    animation: 0,
-                    data: UserFurnitureCustomData.create({
-                        teleport: {
-                            furnitureId: userFurniture.id
-                        }
-                    }),
-                    
-                    roomId: null,
-                    userId: user.model.id,
-                    furnitureId: shopFurniture.furniture.id
-                }, {
-                    include: [
-                        {
-                            model: FurnitureModel,
-                            as: "furniture"
-                        }
-                    ]
-                });
-
-                secondUserFurniture.user = user.model;
-                secondUserFurniture.furniture = shopFurniture.furniture;
-
-                await userFurniture.update({
-                    data: UserFurnitureCustomData.create({
-                        teleport: {
-                            furnitureId: secondUserFurniture.id
-                        }
-                    })
-                });
-
-                await user.getInventory().addFurniture(secondUserFurniture);
-            }
-
-            await userFurniture.save();
-
-            await user.getInventory().addFurniture(userFurniture);
-        }
+                roomId: room.id
+            };
+        }));
 
         user.sendProtobuff(ShopBundlePurchaseData, ShopBundlePurchaseData.create({
             success: true

@@ -7,6 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import Selection from "../../../Common/Form/Components/Selection";
 import { ShopPageData, UpdateShopPageData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type EditShopPageDialogProps = {
     data: ShopPageData & { shopPages?: ShopPageData[]; } | null;
@@ -15,6 +16,7 @@ export type EditShopPageDialogProps = {
 }
 
 export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPageDialogProps) {
+    const room = useRoomInstance();
     const dialogs = useDialogs();
 
     const [icon, setIcon] = useState(data?.icon ?? "");
@@ -29,6 +31,8 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [credits, setCredits] = useState(data?.bundle?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.bundle?.duckets ?? 0);
     const [diamonds, setDiamonds] = useState(data?.bundle?.diamonds ?? 0);
+
+    const [roomId, setRoomId] = useState(data?.bundle?.roomId ?? "");
 
     const handleUpdate = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateShopPageData, UpdateShopPageData.create({
@@ -54,12 +58,14 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
 
                 credits,
                 duckets,
-                diamonds
+                diamonds,
+
+                roomId
             }):(undefined)
         }));
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds]);
+    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds, roomId]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
@@ -188,6 +194,20 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                                     <Input type="number" placeholder="0" value={diamonds.toString()} onChange={(value) => setDiamonds(parseInt(value))}/>
                                 </div>
                             </div>
+
+                            <b>Room ID</b>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 5
+                            }}>
+                                <Input value={roomId} onChange={(value) => setRoomId(value)}/>
+
+                                <DialogButton disabled={!room || room.information?.type !== "bundle"} onClick={() => room && setRoomId(room.id)}>Use current room</DialogButton>
+                            </div>
+            
+                            <div>The selected room must have 'bundle' set as it's room type.</div>
                         </Fragment>
                     )}
                     

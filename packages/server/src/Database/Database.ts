@@ -52,7 +52,6 @@ export async function initializeModels() {
   initializeShopPageFeatureModel(sequelize);
   initializeShopPageBotModel(sequelize);
   initializeShopPagePetModel(sequelize);
-  initializeShopPageBundleModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);
@@ -71,6 +70,8 @@ export async function initializeModels() {
 
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
+
+  initializeShopPageBundleModel(sequelize);
 
   initializeUserPetModel(sequelize);
   initializeUserBotModel(sequelize);

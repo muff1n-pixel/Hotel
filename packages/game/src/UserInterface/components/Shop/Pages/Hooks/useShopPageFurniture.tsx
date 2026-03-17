@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "../../../../..";
-import { GetShopPageFurnitureData, ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
+import { GetShopPageBundleFurnitureData, GetShopPageFurnitureData, ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
 
-export default function useShopPageFurniture(pageId: string) {
+export default function useShopPageFurniture(pageId: string, pageType?: string) {
     const [shopFurnitures, setShopFurnitures] = useState<ShopFurnitureData[]>([]);
     const shopFurnituresRequested = useRef<string>("");
 
@@ -18,9 +18,16 @@ export default function useShopPageFurniture(pageId: string) {
         })
 
         if(shopFurnituresRequested.current !== pageId) {
-            webSocketClient.sendProtobuff(GetShopPageFurnitureData, GetShopPageFurnitureData.create({
-                pageId
-            }));
+            if(pageType === "bundle") {
+                webSocketClient.sendProtobuff(GetShopPageBundleFurnitureData, GetShopPageBundleFurnitureData.create({
+                    pageId
+                }));
+            }
+            else {
+                webSocketClient.sendProtobuff(GetShopPageFurnitureData, GetShopPageFurnitureData.create({
+                    pageId
+                }));
+            }
 
             shopFurnituresRequested.current = pageId;
         }
