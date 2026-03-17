@@ -10,7 +10,7 @@ import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData } from "@
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 
-export default function ShopBundlePage({ editMode, page }: ShopPageProps) {
+export default function ShopBundlePage({ page }: ShopPageProps) {
     const shopFurnitureRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const dialogs = useDialogs();
@@ -153,23 +153,6 @@ export default function ShopBundlePage({ editMode, page }: ShopPageProps) {
                                             </div>
                                         </div>
                                     ))}
-
-                                    {(editMode) && (
-                                        <div style={{
-                                            width: 36,
-                                            height: 36,
-
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-
-                                            cursor: "pointer"
-                                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-furniture", { page })}>
-                                            <div className="sprite_add" style={{
-                                                marginTop: -8
-                                            }}/>
-                                        </div>
-                                    )}
                                 </div>
                             </DialogScrollArea>
                         </DialogPanel>

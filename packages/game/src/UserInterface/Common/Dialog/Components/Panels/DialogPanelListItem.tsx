@@ -17,7 +17,7 @@ export default function DialogPanelListItem({ active, icon, title, onClick, chil
         <Fragment>
             <div className={`dialog-panel-list-item ${(active)?("active"):("")} ${(subItem)?("subitem"):("")}`} onClick={onClick}>
                 <div className="dialog-panel-list-item-content" style={{
-                    height: 16,
+                    minHeight: 16,
                     padding: "0 2px",
                     cursor: "pointer",
 
