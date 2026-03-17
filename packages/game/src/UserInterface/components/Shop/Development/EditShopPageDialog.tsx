@@ -2,7 +2,7 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import Selection from "../../../Common/Form/Components/Selection";
@@ -26,6 +26,10 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [index, setIndex] = useState(data?.index ?? 0);
     const [parentId, setParentId] = useState(data?.parentId);
 
+    const [credits, setCredits] = useState(data?.bundle?.credits ?? 0);
+    const [duckets, setDuckets] = useState(data?.bundle?.duckets ?? 0);
+    const [diamonds, setDiamonds] = useState(data?.bundle?.diamonds ?? 0);
+
     const handleUpdate = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateShopPageData, UpdateShopPageData.create({
             id: data?.id,
@@ -43,11 +47,19 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
             header,
             teaser,
 
-            index
+            index,
+
+            bundle: (type === "bundle")?({
+                id: data?.bundle?.id,
+
+                credits,
+                duckets,
+                diamonds
+            }):(undefined)
         }));
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index]);
+    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
@@ -116,6 +128,69 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     
                     <Input placeholder="default" value={type} onChange={setType}/>
 
+                    {(type === "bundle") && (
+                        <Fragment>
+                            <b>Bundle price</b>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 10
+                            }}>
+                                <div style={{
+                                    width: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <div className="sprite_currencies_credits"/>
+                                </div>
+
+                                <div style={{ flex: 1 }}>
+                                    <Input type="number" placeholder="0" value={credits.toString()} onChange={(value) => setCredits(parseInt(value))}/>
+                                </div>
+                            </div>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 10
+                            }}>
+                                <div style={{
+                                    width: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <div className="sprite_currencies_duckets"/>
+                                </div>
+
+                                <div style={{ flex: 1 }}>
+                                    <Input type="number" placeholder="0" value={duckets.toString()} onChange={(value) => setDuckets(parseInt(value))}/>
+                                </div>
+                            </div>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 10
+                            }}>
+                                <div style={{
+                                    width: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <div className="sprite_currencies_diamonds"/>
+                                </div>
+
+                                <div style={{ flex: 1 }}>
+                                    <Input type="number" placeholder="0" value={diamonds.toString()} onChange={(value) => setDiamonds(parseInt(value))}/>
+                                </div>
+                            </div>
+                        </Fragment>
+                    )}
+                    
                     <b>Page header</b>
 
                     {(header) && (

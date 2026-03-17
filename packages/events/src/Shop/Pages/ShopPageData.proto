@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Shop/Features/ShopFeatureData.proto";
+import "Shop/Bundles/ShopBundleData.proto";
 
 message ShopPageData {
     string id = 1;
@@ -20,4 +21,5 @@ message ShopPageData {
     uint32 index = 10;
 
     repeated ShopFeatureData features = 11;
+    optional ShopBundleData bundle = 12;
 }

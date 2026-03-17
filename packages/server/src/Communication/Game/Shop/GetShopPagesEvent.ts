@@ -5,6 +5,7 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
 import { GetShopPagesData, ShopPagesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { ShopPageBundleModel } from "../../../Database/Models/Shop/ShopPageBundleModel.js";
 
 export default class GetShopPagesEvent implements ProtobuffListener<GetShopPagesData> {
     public readonly name = "GetShopPagesEvent";
@@ -40,6 +41,10 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                         }
                     ]
                 },
+                {
+                    model: ShopPageBundleModel,
+                    as: "bundle"
+                }
             ],
             order: ["index"]
         });
@@ -75,7 +80,9 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                                 category: feature.featuredPage.category
                             }
                         };
-                    }) ?? []
+                    }) ?? [],
+
+                    bundle: shopPage.bundle
                 };
             })
         }));

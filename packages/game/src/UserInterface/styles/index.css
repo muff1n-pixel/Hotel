@@ -25,6 +25,11 @@ h2 {
   font-weight: 400;
 }
 
+h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
 b {
   font-family: "Ubuntu Bold";
   font-weight: 400;

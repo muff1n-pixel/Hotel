@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Shop/Bundles/ShopBundleData.proto";
+
 message UpdateShopPageData {
     optional string id = 1;
     optional string parent_id = 2;
@@ -16,4 +18,6 @@ message UpdateShopPageData {
     string teaser = 9;
 
     uint32 index = 10;
+
+    optional ShopBundleData bundle = 11;
 }

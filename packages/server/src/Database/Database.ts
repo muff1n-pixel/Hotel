@@ -35,6 +35,7 @@ import { initializeShopPagePetModel } from "./Models/Shop/ShopPagePetModel.js";
 import { initializePetBreedModel } from "./Models/Pets/PetBreedModel.js";
 import { initializeUserFriendModel } from "./Models/Users/Friends/UserFriendModel.js";
 import { initializeUserFriendRequestModel } from "./Models/Users/Friends/UserFriendRequestModel.js";
+import { initializeShopPageBundleModel } from "./Models/Shop/ShopPageBundleModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -51,6 +52,7 @@ export async function initializeModels() {
   initializeShopPageFeatureModel(sequelize);
   initializeShopPageBotModel(sequelize);
   initializeShopPagePetModel(sequelize);
+  initializeShopPageBundleModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);
