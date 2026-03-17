@@ -2,4 +2,8 @@ syntax = "proto3";
 
 message GetPetBrowserData {
     uint32 offset = 1;
+
+    string search_id = 2;
+    string search_type = 3;
+    string search_breed = 4;
 }

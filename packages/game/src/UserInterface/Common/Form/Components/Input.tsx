@@ -19,7 +19,7 @@ export default function Input({ style, readonly, step, type = "text", placeholde
     return (
         <div style={{
             borderBottom: "1px solid #FFFFFF",
-            borderRadius: 6
+            borderRadius: 6,
         }}>
             <div style={{
                 background: "#FFFFFF",

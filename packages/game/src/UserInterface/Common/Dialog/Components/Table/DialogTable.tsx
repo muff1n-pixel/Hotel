@@ -7,6 +7,7 @@ export type DialogTableProps = {
     columns: string[];
     items?: {
         id: any;
+        preview?: ReactNode;
         values: ReactNode[];
         tools?: ReactNode;
         onClick?: () => void;
@@ -70,28 +71,42 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                     <div key={item.id} style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: 5,
+                        gap: 10,
                         padding: 4,
-                        background: (item.id === (activeId ?? _activeId))?("#B8E2FC"):("transparent")
+                        background: (item.id === (activeId ?? _activeId))?("#B8E2FC"):("transparent"),
+                        cursor: "pointer"
+                    }} onClick={() => {
+                        setActiveId(item.id);
+                        item.onClick?.();
                     }}>
-                        {item.values.map((value, index) => (
-                            <div key={value?.toString()} style={{
-                                flex: flex?.[index] ?? 1,
-                                cursor: "pointer",
-                            }} onClick={() => {
-                                setActiveId(item.id);
-                                item.onClick?.();
-                            }}>
-                                <div style={{
-                                    color: "#000",
-                                    fontSize: 12
-                                }}>
-                                    {(value?.toString().length)?(value):(<i>Empty</i>)}
-                                </div>
+                        {(item.preview) && (
+                            <div>
+                                {item.preview}
                             </div>
-                        ))}
+                        )}
 
-                        {item.tools}
+                        <div style={{
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 5,
+                        }}>
+                            {item.values.map((value, index) => (
+                                <div key={value?.toString()} style={{
+                                    flex: flex?.[index] ?? 1,
+                                }}>
+                                    <div style={{
+                                        color: "#000",
+                                        fontSize: 12
+                                    }}>
+                                        {(value?.toString().length)?(value):(<i>Empty</i>)}
+                                    </div>
+                                </div>
+                            ))}
+
+                            {item.tools}
+                        </div>
                     </div>
                 ))}
             </div>

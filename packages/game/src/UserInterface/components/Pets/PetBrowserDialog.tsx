@@ -8,6 +8,8 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import PetPaletteItem from "./PetPaletteItem";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
+import Input from "@UserInterface/Common/Form/Components/Input";
+import PetImage from "@UserInterface/Components/Pets/PetImage";
 
 export type PetBrowserDialogProps = {
     hidden?: boolean;
@@ -26,6 +28,10 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
 
     const [activePet, setActivePet] = useState<PetData | null>(data?.activePet ?? null);
 
+    const [searchId, setSearchId] = useState("");
+    const [searchType, setSearchType] = useState("");
+    const [searchBreed, setSearchBreed] = useState("");
+
     const [pets, setPets] = useState<PetData[]>([]);
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
@@ -33,6 +39,10 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
     const handleRefresh = useCallback(() => {
         setState(performance.now());
     }, [page]);
+
+    useEffect(() => {
+        setPage(0);
+    }, [searchId, searchType, searchBreed]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(PetBrowserData, {
@@ -43,13 +53,17 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
         });
 
         webSocketClient.sendProtobuff(GetPetBrowserData, GetPetBrowserData.create({
-            offset: page * 20
+            offset: page * 20,
+
+            searchId,
+            searchType,
+            searchBreed
         }));
 
         return () => {
             webSocketClient.removeProtobuffListener(PetBrowserData, listener);
         };
-    }, [ page, state ]);
+    }, [ page, state, searchId, searchType, searchBreed ]);
 
     return (
         <Dialog title="Pet Browser" hidden={hidden} onClose={onClose} width={680} height={390} initialPosition="center">
@@ -61,13 +75,28 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
                     flexDirection: "column",
                     gap: 8,
                 }}>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 10
+                    }}>
+                        <Input style={{ width: "100%" }} placeholder="ID" value={searchId} onChange={setSearchId}/>
+                        <Input style={{ width: "100%" }} placeholder="Type" value={searchType} onChange={setSearchType}/>
+                        <Input style={{ width: "100%" }} placeholder="Breed" value={searchBreed} onChange={setSearchBreed}/>
+                    </div>
+
                     <DialogTable
                         activeId={activePet?.id}
                         columns={["ID", "Type", "Breed", "Palettes"]}
-                        flex={[3, 1, 1, 2]}
+                        flex={[4, 1, 1, 2]}
                         items={pets.map((pet) => {
                             return {
                                 id: pet.id,
+                                preview: (
+                                    <div style={{ width: 100, maxHeight: 100 }}>
+                                        <PetImage data={pet}/>
+                                    </div>
+                                ),
                                 values: [
                                     pet.id,
                                     pet.type,
@@ -121,8 +150,6 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
 
                         fontSize: 12
                     }}>
-                        <div>Showing {(page * 20) + pets.length} / {count} {(count === 1)?("result"):("results")}</div>
-
                         <div style={{
                             display: "flex",
                             flexDirection: "row",
