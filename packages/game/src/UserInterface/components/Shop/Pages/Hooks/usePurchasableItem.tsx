@@ -4,7 +4,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useCallback, useEffect, useState } from "react";
 
-export default function usePurchasableItem(purchaseItem: (position: RoomPositionData | undefined, direction: number | undefined) => void) {
+export default function usePurchasableItem(purchaseItem: (stopPlacing: () => void, position: RoomPositionData | undefined, direction: number | undefined) => void) {
     const room = useRoomInstance();
     const dialogs = useDialogs();
 
@@ -22,7 +22,7 @@ export default function usePurchasableItem(purchaseItem: (position: RoomPosition
         dialogs.setDialogHidden("shop", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            purchaseItem(position, direction);
+            purchaseItem(stopPlacing, position, direction);
             
             dialogs.setDialogHidden("shop", false);
         }, () => {

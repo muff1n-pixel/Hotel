@@ -28,7 +28,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
     const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
 
-    const handlePurchaseFurniture = useCallback((position?: RoomPositionData, direction?: number) => {
+    const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
             return;
         }
@@ -41,8 +41,12 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 }
 
                 if(purchasableItem.placing) {
+                    stopPlacing?.();
+
                     return;
                 }
+
+                stopPlacing?.();
 
                 if(activeFurnitureRef.current && activeFurniture.furniture) {
                     clientInstance.flyingFurnitureIcons.value!.push({
