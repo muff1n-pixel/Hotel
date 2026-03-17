@@ -48,7 +48,7 @@ export default class GetShopPageBundleFurnitureEvent implements ProtobuffListene
             const existingUniqueFurniture = uniqueFurniture.find((uniqueFurniture) => uniqueFurniture.furniture?.id === userFurniture.furnitureId);
 
             if(existingUniqueFurniture) {
-                existingUniqueFurniture.quantity = (existingUniqueFurniture.quantity ?? 0) + 1;
+                existingUniqueFurniture.quantity = (existingUniqueFurniture.quantity ?? 1) + 1;
 
                 continue;
             }
