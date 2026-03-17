@@ -82,7 +82,9 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
             case "public": {
                 const roomModels = await RoomModel.findAll({
                     where: {
-                        type: "public"
+                        type: {
+                            [Op.in]: ["public", "bundle"]
+                        }
                     },
                     order: [
                         [ "createdAt", "DESC" ]
