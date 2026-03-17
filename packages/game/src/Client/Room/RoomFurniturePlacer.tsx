@@ -326,7 +326,7 @@ export default class RoomFurniturePlacer {
         if(this.roomFurnitureItem instanceof RoomFurnitureItem && (this.roomFurnitureItem.furnitureRenderer.type === "wallpaper" || this.roomFurnitureItem.furnitureRenderer.type === "floor")) {
             return;
         }
-        
+
         this.onPlace = onPlace;
         this.onCancel = onCancel;
 
