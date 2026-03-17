@@ -90,6 +90,12 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                     
                     return;
                 }
+
+                case "modtools": {
+                    dialogs.addUniqueDialog("modtools");
+                    
+                    return;
+                }
             }
         }
 

@@ -26,10 +26,12 @@ import FigureDialog from "../../Components/Figure/FigureDialog";
 import RoomChatCommandsDialog from "../../Components/Room/Chat/Commands/RoomChatCommandsDialog";
 import SettingsDialog from "../../Components/Settings/SettingsDialog";
 import EditShopPetDialog from "../../Components/Shop/Development/EditShopPetDialog";
-import PetBrowserDialog from "../../Components/Pets/PetBrowserDialog";
+import PetBrowserDialog from "../../Components/Browsers/PetBrowserDialog";
 import EditPetDialog from "../../Components/Pets/EditPetDialog";
 import FriendsDialog from "src/UserInterface/Components/Friends/FriendsDialog";
 import MessengerDialog from "src/UserInterface/Components/Messenger/MessengerDialog";
+import ModToolsDialog from "@UserInterface/Components/Debug/Dialog/ModToolsDialog";
+import FurnitureBrowserDialog from "@UserInterface/Components/Browsers/FurnitureBrowserDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -45,6 +47,9 @@ export default function DialogInstances() {
                 };
 
                 switch(dialog.type) {
+                    case "modtools":
+                        return (<ModToolsDialog {...props} key={dialog.id}/>);
+
                     case "settings":
                         return (<SettingsDialog {...props} key={dialog.id}/>);
                         
@@ -125,6 +130,9 @@ export default function DialogInstances() {
 
                     case "pet-browser":
                         return (<PetBrowserDialog {...props} key={dialog.id}/>);
+
+                    case "furniture-browser":
+                        return (<FurnitureBrowserDialog {...props} key={dialog.id}/>);
 
                     case "edit-pet":
                         return (<EditPetDialog {...props} key={dialog.id}/>);
