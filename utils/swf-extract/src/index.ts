@@ -51,6 +51,12 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
         return;
     }
 
+    if(flags.some((flag) => flag === "--collection")) {
+        assetNames = readdirSync(path.join("assets", "furniture"), { withFileTypes: true })
+        .filter((file) => file.isFile() && path.basename(file.name).startsWith(process.argv[2]!))
+        .map((file) => path.basename(file.name, ".swf"));
+    }
+
     if(process.argv[2] === "regenerate-figures") {
         assetNames = readdirSync(path.join("..", "..", "assets", "figure", "clothing"), { withFileTypes: true })
         .filter((directory) => directory.isDirectory())

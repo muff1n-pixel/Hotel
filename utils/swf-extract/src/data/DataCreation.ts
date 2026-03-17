@@ -384,7 +384,7 @@ export async function createFurnitureData(assetName: string) {
         ignoreAttributes: false
     });
 
-    const document = parser.parse(readFileSync("furnidata.xml", { encoding: "utf-8" }), false);
+    const document = parser.parse(readFileSync("furnidata2.xml", { encoding: "utf-8" }), false);
 
     let furniTypes = document["furnidata"]["roomitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
     let isWallFurniture = false;
@@ -438,9 +438,9 @@ export async function createFurnitureData(assetName: string) {
 
             flags: {
                 stackable: (result?.allow_stack ?? 1) === 1,
-                sitable: (result?.allow_sit ?? 1) === 1,
-                layable: (result?.allow_lay ?? 1) === 1,
-                walkable: (result?.allow_walk ?? 1) === 1,
+                sitable: (result?.allow_sit ?? 0) === 1,
+                layable: (result?.allow_lay ?? 0) === 1,
+                walkable: (result?.allow_walk ?? 0) === 1,
                 giftable: (result?.allow_gift ?? 1) === 1,
                 tradable: (result?.allow_trade ?? 1) === 1,
                 recyclable: (result?.allow_recycle ?? 1) === 1,

@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
+import path, { join } from "node:path";
 import { FurnitureModel } from "../Models/Furniture/FurnitureModel.js";
 import { randomUUID } from "node:crypto";
 
@@ -30,12 +30,12 @@ export async function createMissingFurniture() {
 }
 
 export async function getExistingFurnitureAssets(filter: ((assetName: string) => boolean) = ((assetName: string) => true)) {
-    const assetNames = readdirSync(path.join("..", "..", "assets", "furniture"), { withFileTypes: true })
+    const assetNames = readdirSync(join("..", "..", "assets", "furniture"), { withFileTypes: true })
         .filter((directory) => directory.isDirectory())
         .map((directory) => directory.name)
         .filter(filter);
 
-    const necessaryData = assetNames.filter((assetName) => existsSync(path.join("..", "..", "assets", "furniture", assetName, `${assetName}_serverdata.json`))).map((assetName) => {
+    const necessaryData = assetNames.filter((assetName) => existsSync(join("..", "..", "assets", "furniture", assetName, `${assetName}_serverdata.json`))).map((assetName) => {
         const furnitureData = getFurnitureData(assetName);
 
         const furnitureServerDatas = getFurnitureServerData(assetName);
@@ -52,7 +52,7 @@ export async function getExistingFurnitureAssets(filter: ((assetName: string) =>
 }
 
 function getFurnitureData(assetName: string) {
-    const content = readFileSync(path.join("..", "..", "assets", "furniture", assetName, `${assetName}.json`), {
+    const content = readFileSync(join("..", "..", "assets", "furniture", assetName, `${assetName}.json`), {
         encoding: "utf-8"
     });
 
@@ -70,7 +70,7 @@ function getFurnitureData(assetName: string) {
 
 function getHabboRoomContentData() {
     try {
-        const content = readFileSync(path.join("..", "..", "assets", "room", "HabboRoomContent", `HabboRoomContent.json`), {
+        const content = readFileSync(join("..", "..", "assets", "room", "HabboRoomContent", `HabboRoomContent.json`), {
             encoding: "utf-8"
         });
 
@@ -101,7 +101,7 @@ export function getFloorIds(): number[] {
 }
 
 function getFurnitureServerData(assetName: string) {
-    const content = readFileSync(path.join("..", "..", "assets", "furniture", assetName, `${assetName}_serverdata.json`), {
+    const content = readFileSync(join("..", "..", "assets", "furniture", assetName, `${assetName}_serverdata.json`), {
         encoding: "utf-8"
     });
 
