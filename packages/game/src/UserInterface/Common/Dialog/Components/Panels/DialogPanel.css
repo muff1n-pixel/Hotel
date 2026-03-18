@@ -50,6 +50,36 @@
     border-color: #FFFFFF;
 }
 
+/* Gold, used for credits */
+.dialog-panel-gold {
+    border-color: #000000;
+}
+
+.dialog-panel-gold > div {
+    background-color: #A58D57;
+    border-color: #E3C47C;
+}
+
+/* Teal, used for diamonds */
+.dialog-panel-teal {
+    border-color: #000000;
+}
+
+.dialog-panel-teal > div {
+    background-color: #63978C;
+    border-color: #88D2C7;
+}
+
+/* Blue, used for duckets */
+.dialog-panel-blue {
+    border-color: #000000;
+}
+
+.dialog-panel-blue > div {
+    background-color: #7C8E97;
+    border-color: #AAC5D6;
+}
+
 .dialog-panel-arrow:after, .dialog-panel-arrow:before {
 	right: 100%;
 	top: 50%;

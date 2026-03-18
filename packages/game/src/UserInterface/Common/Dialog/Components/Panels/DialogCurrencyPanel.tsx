@@ -1,5 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
-import DialogPanel from "./DialogPanel";
+import DialogPanel, { DialogPanelProps } from "./DialogPanel";
+import { useEffect, useState } from "react";
 
 export type DialogCurrencyPanelProps = {
     credits?: number;
@@ -8,12 +9,29 @@ export type DialogCurrencyPanelProps = {
 }
 
 export default function DialogCurrencyPanel({ credits, diamonds, duckets }: DialogCurrencyPanelProps) {
+    const [color, setColor] = useState<DialogPanelProps["color"]>("silver");
+
+    useEffect(() => {
+        if(credits && !diamonds && !duckets) {
+            setColor("gold");
+        }
+        else if(!credits && diamonds && !duckets) {
+            setColor("teal");
+        }
+        else if(!credits && !diamonds && duckets) {
+            setColor("blue");
+        }
+        else {
+            setColor("silver");
+        }
+    }, [credits, diamonds, duckets]);
+
     if(!credits && !diamonds && !duckets) {
         return null;
     }
     
     return (
-        <DialogPanel>
+        <DialogPanel color={color}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

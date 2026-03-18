@@ -5,7 +5,7 @@ export type DialogPanelProps = PropsWithChildren & {
     ref?: RefObject<HTMLDivElement | null>;
     style?: CSSProperties;
     contentStyle?: CSSProperties;
-    color?: "silver" | "green" | "light-blue" | "beige";
+    color?: "silver" | "green" | "light-blue" | "beige" | "gold" | "teal" | "blue";
     onClick?: () => void;
     arrow?: boolean;
 }
