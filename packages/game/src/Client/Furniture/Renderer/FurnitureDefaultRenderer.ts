@@ -329,7 +329,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         }
 
         if(canvasOptions?.spritesWithoutInkModes) {
-            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light", "lighter" ].includes(sprite.ink));
+            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light" ].includes(sprite.ink));
 
             if(spritesWithoutInkModes.length > 0 && spritesWithoutInkModes.length !== sprites.length) {
                 const maskCanvas = new OffscreenCanvas(canvas.width, canvas.height);

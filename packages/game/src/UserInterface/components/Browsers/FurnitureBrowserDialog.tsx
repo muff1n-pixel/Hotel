@@ -71,13 +71,21 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
                 items: items.map((item) => {
                     return {
                         id: item.id,
-                        preview: (
-                            <div style={{ minWidth: 40 }}>
-                                <FurnitureIcon furnitureData={item}/>
-                            </div>
-                        ),
                         values: [
-                            item.type,
+                            (
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: 5
+                                }}>
+                                    <div style={{ minWidth: 40 }}>
+                                        <FurnitureIcon furnitureData={item}/>
+                                    </div>
+
+                                    {item.type}
+                                </div>
+                            ),
                             item.name ?? null,
                             item.color ?? null
                         ],

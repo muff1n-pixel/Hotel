@@ -3,7 +3,7 @@ syntax = "proto3";
 import "Furniture/FurnitureFlagsData.proto";
 
 message UpdateFurnitureData {
-    string id = 1;
+    optional string id = 1;
 
     string name = 2;
     string description = 3;
@@ -14,5 +14,10 @@ message UpdateFurnitureData {
     FurnitureFlagsData flags = 6;
 
     float depth = 7;
+
+    string type = 8;
+    optional uint32 color = 9;
+    
+    string placement = 10;
 }
 

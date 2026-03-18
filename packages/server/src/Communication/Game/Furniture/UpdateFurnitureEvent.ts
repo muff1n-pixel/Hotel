@@ -3,6 +3,7 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import { game } from "../../../index.js";
 import { RoomFurnitureData, UpdateFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { randomUUID } from "node:crypto";
 
 export default class UpdateFurnitureEvent implements ProtobuffListener<UpdateFurnitureData> {
     async handle(user: User, payload: UpdateFurnitureData) {
@@ -12,46 +13,90 @@ export default class UpdateFurnitureEvent implements ProtobuffListener<UpdateFur
             throw new Error("User does not have edit furniture privileges.");
         }
 
-        const furniture = await FurnitureModel.findOne({
-            where: {
-                id: payload.id
-            }
-        });
+        let updatedFurniture: FurnitureModel | undefined;
 
-        if(!furniture) {
-            throw new Error("Furniture does not exist.");
+        if(payload.id) {
+            const furniture = await FurnitureModel.findOne({
+                where: {
+                    id: payload.id
+                }
+            });
+
+            if(!furniture) {
+                throw new Error("Furniture does not exist.");
+            }
+
+            updatedFurniture = await furniture.update({
+                type: payload.type,
+                color: payload.color ?? null,
+
+                name: payload.name,
+                description: payload.description ?? null,
+
+                placement: payload.placement,
+                interactionType: payload.interactionType,
+                category: payload.category,
+                
+                flags: payload.flags,
+
+                dimensions: {
+                    ...furniture.dimensions,
+                    depth: payload.depth
+                }
+            });
+        }
+        else {
+            const existingFurniture = await FurnitureModel.findOne({
+                where: {
+                    type: payload.type,
+                    color: payload.color ?? null
+                }
+            });
+
+            if(existingFurniture) {
+                throw new Error("Furniture already exists.");
+            }
+
+            updatedFurniture = await FurnitureModel.create({
+                id: randomUUID(),
+
+                type: payload.type,
+                color: payload.color ?? null,
+
+                name: payload.name,
+                description: payload.description ?? null,
+
+                placement: payload.placement,
+                interactionType: payload.interactionType,
+                category: payload.category,
+                
+                flags: payload.flags,
+
+                dimensions: {
+                    row: 1,
+                    column: 1,
+                    depth: payload.depth
+                }
+            });
         }
 
-        await furniture.update({
-            name: payload.name,
-            description: payload.description ?? null,
+        if(updatedFurniture) {
+            for(const room of game.roomManager.instances) {
+                const affectedUserFurniture = room.furnitures.filter((userFurniture) => userFurniture.model.furniture.id === updatedFurniture.id);
 
-            interactionType: payload.interactionType,
-            category: payload.category,
-            
-            flags: payload.flags,
+                const furnitureRemoved: RoomFurnitureData[] = [];
 
-            dimensions: {
-                ...furniture.dimensions,
-                depth: payload.depth
-            }
-        });
+                for(const userFurniture of affectedUserFurniture) {
+                    userFurniture.model.furniture = updatedFurniture;
 
-        for(const room of game.roomManager.instances) {
-            const affectedUserFurniture = room.furnitures.filter((userFurniture) => userFurniture.model.furniture.id === furniture.id);
+                    furnitureRemoved.push(RoomFurnitureData.fromJSON(userFurniture.model));
+                }
 
-            const furnitureRemoved: RoomFurnitureData[] = [];
-
-            for(const userFurniture of affectedUserFurniture) {
-                userFurniture.model.furniture = furniture;
-
-                furnitureRemoved.push(RoomFurnitureData.fromJSON(userFurniture.model));
-            }
-
-            if(furnitureRemoved.length) {
-                room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
-                    furnitureRemoved
-                }));
+                if(furnitureRemoved.length) {
+                    room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+                        furnitureRemoved
+                    }));
+                }
             }
         }
     }

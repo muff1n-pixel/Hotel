@@ -66,18 +66,17 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
             page={page}
 
             table={{
-                flex: [4, 1, 1, 2],
-                columns: ["ID", "Type", "Breed", "Palettes"],
+                flex: [1, 1, 1, 2],
+                columns: ["Image", "Type", "Breed", "Palettes"],
                 items: pets.map((pet) => {
                     return {
                         id: pet.id,
-                        preview: (
-                            <div style={{ width: 100, maxHeight: 100 }}>
-                                <PetImage data={pet}/>
-                            </div>
-                        ),
                         values: [
-                            pet.id,
+                            (
+                                <div style={{ width: 100, maxHeight: 100 }}>
+                                    <PetImage data={pet}/>
+                                </div>
+                            ),
                             pet.type,
                             pet.breed?.name ?? null,
                             (
