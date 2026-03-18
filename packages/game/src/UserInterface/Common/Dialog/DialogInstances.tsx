@@ -32,6 +32,8 @@ import FriendsDialog from "src/UserInterface/Components/Friends/FriendsDialog";
 import MessengerDialog from "src/UserInterface/Components/Messenger/MessengerDialog";
 import ModToolsDialog from "@UserInterface/Components/Debug/Dialog/ModToolsDialog";
 import FurnitureBrowserDialog from "@UserInterface/Components/Browsers/FurnitureBrowserDialog";
+import BadgeBrowserDialog from "@UserInterface/Components/Browsers/BadgeBrowserDialog";
+import EditBadgeDialog from "@UserInterface/Components/Badges/EditBadgeDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -134,8 +136,14 @@ export default function DialogInstances() {
                     case "furniture-browser":
                         return (<FurnitureBrowserDialog {...props} key={dialog.id}/>);
 
+                    case "badge-browser":
+                        return (<BadgeBrowserDialog {...props} key={dialog.id}/>);
+
                     case "edit-pet":
                         return (<EditPetDialog {...props} key={dialog.id}/>);
+
+                    case "edit-badge":
+                        return (<EditBadgeDialog {...props} key={dialog.id}/>);
 
                     case "friends":
                         return (<FriendsDialog {...props} key={dialog.id}/>);

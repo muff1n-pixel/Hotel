@@ -1,3 +1,4 @@
+import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import { ReactNode, useState } from "react";
 
 export type DialogTableProps = {
@@ -63,10 +64,7 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                 height: 1
             }}/>
 
-            <div style={{
-                flex: "1 1 0",
-                overflow: "scroll"
-            }}>
+            <DialogScrollArea style={{ gap: 10 }}>
                 {items?.map((item) => (
                     <div key={item.id} style={{
                         display: "flex",
@@ -109,7 +107,7 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                         </div>
                     </div>
                 ))}
-            </div>
+            </DialogScrollArea>
         </div>
     );
 }
