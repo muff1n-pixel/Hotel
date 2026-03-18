@@ -1,4 +1,4 @@
-import { PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { BadgeData, PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurniturePurchaseData, WidgetNotificationData } from "@pixel63/events";
 import User from "../../../../Users/User";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel";
@@ -124,6 +124,12 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
 
             if(created) {
                 await user.getInventory().sendBadges();
+
+                user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You received the ${bundle.badge.name} badge as part of your purchase!`,
+                    badge: BadgeData.fromJSON(bundle.badge)
+                }));
             }
         }
 
