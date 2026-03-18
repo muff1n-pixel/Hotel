@@ -331,7 +331,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!name.length || !activePet || (
+                    <DialogButton color="green" disabled={!name.length || !activePet || (
                         (activePet.credits ?? 0) > user.credits
                         || (activePet.duckets ?? 0) > user.duckets
                         || (activePet.diamonds ?? 0) > user.diamonds

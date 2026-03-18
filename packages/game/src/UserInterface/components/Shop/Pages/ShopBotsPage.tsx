@@ -193,7 +193,7 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeBot || (
+                    <DialogButton color="green" disabled={!activeBot || (
                         (activeBot.credits ?? 0) > user.credits
                         || (activeBot.duckets ?? 0) > user.duckets
                         || (activeBot.diamonds ?? 0) > user.diamonds

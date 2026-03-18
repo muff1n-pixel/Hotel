@@ -316,7 +316,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture || (
+                    <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds

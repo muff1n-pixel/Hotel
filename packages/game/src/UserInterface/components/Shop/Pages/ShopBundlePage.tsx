@@ -215,7 +215,7 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
                         <div style={{ flex: 1 }}/>
                     )}
 
-                    <DialogButton style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
+                    <DialogButton color="green" style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
                 </div>
             </div>
         </div>

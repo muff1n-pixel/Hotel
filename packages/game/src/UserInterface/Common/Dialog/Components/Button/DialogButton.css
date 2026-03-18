@@ -57,3 +57,24 @@
 
     color: #A2A29E;
 }
+
+.dialog-button-green {
+    color: white;
+
+    font-family: "Ubuntu Bold";
+}
+
+.dialog-button-green .dialog-button-content {
+    background: linear-gradient(to bottom, #00A100 50%, #009000 50%);
+    border-color: #009000;
+}
+
+.dialog-button-green:hover .dialog-button-content {
+    background: linear-gradient(to bottom, #00A900 50%, #009C00 50%);
+    border-color: #00A900;
+}
+
+.dialog-button-green:active .dialog-button-content {
+    background: linear-gradient(to bottom, #009500 50%, #006C00 50%);
+    border-color: #006C00;
+}

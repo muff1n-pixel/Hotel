@@ -31,7 +31,9 @@ export default function DialogCurrencyPanel({ credits, diamonds, duckets }: Dial
     }
     
     return (
-        <DialogPanel color={color}>
+        <DialogPanel color={color} style={{
+            borderColor: "black"
+        }}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

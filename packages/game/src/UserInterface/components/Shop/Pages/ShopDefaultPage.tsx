@@ -13,6 +13,7 @@ import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
+import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -198,6 +199,18 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                     </div>
                 )}
 
+                {(activeFurniture) && (
+                    <div style={{
+                        position: "absolute",
+                        right: 0,
+                        bottom: 0,
+
+                        padding: 10,
+                    }}>
+                        <DialogCurrencyPanel credits={activeFurniture.credits} duckets={activeFurniture.duckets} diamonds={activeFurniture.diamonds}/>
+                    </div>
+                )}
+
                 {(!activeFurniture && page.teaser) && (
                     <div style={{
                         position: "absolute",
@@ -348,7 +361,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture || (
+                    <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds
