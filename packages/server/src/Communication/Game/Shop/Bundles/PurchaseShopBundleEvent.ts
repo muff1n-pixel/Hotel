@@ -7,6 +7,7 @@ import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/
 import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
 import { randomUUID } from "node:crypto";
 import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel";
+import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
 
 export default class PurchaseShopBundleEvent implements ProtobuffListener<PurchaseShopBundleData> {
     async handle(user: User, payload: PurchaseShopBundleData) {
@@ -29,6 +30,10 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
                             as: "roomFurnitures"
                         }
                     ]
+                },
+                {
+                    model: BadgeModel,
+                    as: "badge"
                 }
             ]
         });
