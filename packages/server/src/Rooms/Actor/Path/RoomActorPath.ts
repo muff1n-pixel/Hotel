@@ -32,9 +32,9 @@ export default class RoomActorPath {
         const blockingActor = this.actor.room.getActorAtPosition(nextPosition);
 
         if(blockingActor) {
-            const blockedByAnotherUser = (blockingActor instanceof RoomUser && this.actor instanceof RoomUser && blockingActor.user.model.id !== this.actor.user.model.id);
-            const blockedByAnotherBot = (blockingActor instanceof RoomBot && this.actor instanceof RoomBot && blockingActor.model.id !== this.actor.model.id);
-            const blockedByAnotherPet = (blockingActor instanceof RoomPet && this.actor instanceof RoomPet && blockingActor.model.id !== this.actor.model.id);
+            const blockedByAnotherUser = (blockingActor instanceof RoomUser && (!(this.actor instanceof RoomUser) || blockingActor.user.model.id !== this.actor.user.model.id));
+            const blockedByAnotherBot = (blockingActor instanceof RoomBot && (!(this.actor instanceof RoomBot) || blockingActor.model.id !== this.actor.model.id));
+            const blockedByAnotherPet = (blockingActor instanceof RoomPet && (!(this.actor instanceof RoomPet) || blockingActor.model.id !== this.actor.model.id));
 
             if(blockedByAnotherBot || blockedByAnotherUser || blockedByAnotherPet) {
                 console.log("User path cancelled, user is obstructing");
