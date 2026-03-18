@@ -97,7 +97,8 @@ export default class RoomPet implements RoomActor {
                 }
             },
             from: previousPosition,
-            to: this.position
+            to: this.position,
+            direction: this.direction
         }));
     }
 

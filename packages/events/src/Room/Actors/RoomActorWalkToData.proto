@@ -7,4 +7,5 @@ message RoomActorWalkToData {
     RoomActorIdentifierData actor = 1;
     RoomPositionData from = 2;
     RoomPositionData to = 3;
+    uint32 direction = 4;
 }

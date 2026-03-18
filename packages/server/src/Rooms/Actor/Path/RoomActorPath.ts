@@ -81,6 +81,14 @@ export default class RoomActorPath {
 
         this.actor.position = position;
         this.path!.splice(0, 1);
+        
+        const relativePosition: RoomPositionData = RoomPositionData.create({
+            row: position.row - previousPosition.row,
+            column: position.column - previousPosition.column,
+            depth: position.depth - previousPosition.depth
+        });
+
+        this.actor.direction = this.getDirectionFromRelativePosition(relativePosition);
 
         this.actor.sendWalkEvent(previousPosition);
 
@@ -210,5 +218,51 @@ export default class RoomActorPath {
 
         this.path = undefined;
         this.pathOnFinish?.();
+    }
+
+    public getDirectionFromRelativePosition(relativePosition: RoomPositionData): number {
+        if(relativePosition.row > 0) {
+            relativePosition.row = 1;
+        }
+
+        if(relativePosition.row < 0) {
+            relativePosition.row = -1;
+        }
+
+        if(relativePosition.column > 0) {
+            relativePosition.column = 1;
+        }
+
+        if(relativePosition.column < 0) {
+            relativePosition.column = -1;
+        }
+
+        switch(`${relativePosition.row}x${relativePosition.column}`) {
+            case "-1x0":
+                return 0;
+
+            case "-1x1":
+                return 1;
+
+            case "0x1":
+                return 2;
+
+            case "1x1":
+                return 3;
+
+            case "1x0":
+                return 4;
+
+            case "1x-1":
+                return 5;
+
+            case "0x-1":
+                return 6;
+
+            case "-1x-1":
+                return 7;
+        }
+
+        return 0;
     }
 }
