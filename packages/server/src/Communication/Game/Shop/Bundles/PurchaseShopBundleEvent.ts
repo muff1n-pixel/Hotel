@@ -123,7 +123,8 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         }
 
         user.sendProtobuff(ShopBundlePurchaseData, ShopBundlePurchaseData.create({
-            success: true
+            success: true,
+            roomId: room.id
         }));
 
         user.sendUserData();
