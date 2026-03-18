@@ -2,6 +2,7 @@ import { NonAttribute } from "@sequelize/core";
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { ShopPageModel } from "./ShopPageModel.js";
 import { RoomModel } from "../Rooms/RoomModel.js";
+import { BadgeModel } from "../Badges/BadgeModel.js";
 
 export class ShopPageBundleModel extends Model {
     declare id: string;
@@ -10,7 +11,11 @@ export class ShopPageBundleModel extends Model {
     declare duckets?: number;
     declare diamonds?: number;
 
+    declare badge?: NonAttribute<BadgeModel>;
+
+    declare roomId: string;
     declare room: NonAttribute<RoomModel>;
+    
     declare page: NonAttribute<ShopPageModel>;
 }
 
@@ -56,5 +61,10 @@ export function initializeShopPageBundleModel(sequelize: Sequelize) {
     ShopPageBundleModel.belongsTo(RoomModel, {
         as: "room",
         foreignKey: "roomId"
+    });
+
+    ShopPageBundleModel.belongsTo(BadgeModel, {
+        as: "badge",
+        foreignKey: "badgeId"
     });
 }

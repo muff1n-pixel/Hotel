@@ -33,6 +33,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     const [diamonds, setDiamonds] = useState(data?.bundle?.diamonds ?? 0);
 
     const [roomId, setRoomId] = useState(data?.bundle?.roomId ?? "");
+    const [badgeId, setBadgeId] = useState(data?.bundle?.badge?.id ?? "");
 
     const handleUpdate = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateShopPageData, UpdateShopPageData.create({
@@ -60,12 +61,15 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                 duckets,
                 diamonds,
 
-                roomId
+                roomId,
+                badge: (badgeId)?({
+                    id: badgeId
+                }):(undefined)
             }):(undefined)
         }));
 
         dialogs.closeDialog("edit-shop-page");
-    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds, roomId]);
+    }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds, roomId, badgeId]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
@@ -193,6 +197,16 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                                 <div style={{ flex: 1 }}>
                                     <Input type="number" placeholder="0" value={diamonds.toString()} onChange={(value) => setDiamonds(parseInt(value))}/>
                                 </div>
+                            </div>
+
+                            <b>Badge ID</b>
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 5
+                            }}>
+                                <Input value={badgeId} onChange={(value) => setBadgeId(value)}/>
                             </div>
 
                             <b>Room ID</b>

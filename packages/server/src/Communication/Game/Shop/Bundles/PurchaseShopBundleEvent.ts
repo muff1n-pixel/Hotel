@@ -6,6 +6,7 @@ import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBu
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
 import { randomUUID } from "node:crypto";
+import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel";
 
 export default class PurchaseShopBundleEvent implements ProtobuffListener<PurchaseShopBundleData> {
     async handle(user: User, payload: PurchaseShopBundleData) {
@@ -99,6 +100,27 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
                 roomId: room.id
             };
         }));
+
+        if(bundle.badge) {
+            const [badge, created] = await UserBadgeModel.findOrCreate({
+                where: {
+                    badgeId: bundle.badge.id,
+                    userId: user.model.id,
+                },
+                defaults: {
+                    id: randomUUID(),
+
+                    badgeId: bundle.badge.id,
+                    userId: user.model.id,
+
+                    equipped: false
+                }
+            });
+
+            if(created) {
+                await user.getInventory().sendBadges();
+            }
+        }
 
         user.sendProtobuff(ShopBundlePurchaseData, ShopBundlePurchaseData.create({
             success: true

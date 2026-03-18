@@ -89,7 +89,7 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
         <div ref={ref} style={{
             position: "fixed",
 
-            zIndex: 1,
+            zIndex: 1000000000,
 
             left: initialPosition?.left,
             top: initialPosition?.top,

@@ -9,6 +9,7 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
+import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 
 export default function ShopBundlePage({ page }: ShopPageProps) {
     const shopFurnitureRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -74,8 +75,20 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
 
                     gap: 10
                 }}>
-                    <div style={{ alignSelf: "flex-end" }}>
-                        <DialogCurrencyPanel credits={page.bundle?.credits} duckets={page.bundle?.duckets} diamonds={page.bundle?.diamonds}/>
+                    <div style={{
+                        width: "100%",
+
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                    }}>
+                        <div>
+                            {page.bundle?.badge && (
+                                <BadgeImage badge={page.bundle.badge}/>
+                            )}
+                        </div>
                     </div>
 
                     {(page.teaser) && (
@@ -93,10 +106,15 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
                     justifyContent: "center",
                     gap: 10
                 }}>
-                    <div>
-                        <h3 style={{ color: "#BB3834", fontFamily: "Ubuntu Bold Italic", paddingBottom: 5 }}>What's included:</h3>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
 
-                        <DialogPanel style={{ flex: "1 1 0", overflow: "hidden" }} contentStyle={{ display: "flex", flex: 1 }}>
+                        gap: 10
+                    }}>
+                        <h3 style={{ color: "#BB3834", fontFamily: "Ubuntu Bold Italic" }}>What's included:</h3>
+
+                        <DialogPanel contentStyle={{ display: "flex", flex: 1 }}>
                             <DialogScrollArea hideInactive>
                                 <div style={{
                                     display: "flex",
@@ -156,6 +174,10 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
                                 </div>
                             </DialogScrollArea>
                         </DialogPanel>
+
+                        <div style={{ alignSelf: "flex-end" }}>
+                            <DialogCurrencyPanel credits={page.bundle?.credits} duckets={page.bundle?.duckets} diamonds={page.bundle?.diamonds}/>
+                        </div>
                     </div>
                 </div>
             </div>
