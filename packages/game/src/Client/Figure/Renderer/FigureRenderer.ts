@@ -205,7 +205,9 @@ export default class FigureRenderer {
         let avatarActionsData = FigureAssets.avataractions.filter((action) => this.actions.some((id) => id.split('.')[0] === action.id)).sort((a, b) => a.precedence - b.precedence);
         
         avatarActionsData = avatarActionsData.filter((action) => {
-            return !avatarActionsData.some((secondAction) => secondAction.precedence > action.precedence && secondAction.prevents?.includes(action.id))
+            return !avatarActionsData.some((secondAction) => {
+                return secondAction.precedence < action.precedence && (secondAction.prevents?.includes(action.id.toLowerCase()))
+            })
         });
 
         return avatarActionsData;
@@ -979,6 +981,10 @@ export default class FigureRenderer {
         }
 
         return results;
+    }
+
+    private getFullAction(action: string) {
+        return this.actions.find((_action) => _action.startsWith(action));
     }
 
     private getActionParamId(actionId: string) {
