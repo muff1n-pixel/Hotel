@@ -8,7 +8,7 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 
 export default class RoomUser implements RoomActor {
@@ -95,6 +95,22 @@ export default class RoomUser implements RoomActor {
         }));
 
         this.path = new RoomActorPath(this);
+
+        if(this.user.roomBellQueue) {
+            const room = this.user.roomBellQueue;
+            user.roomBellQueue = undefined;
+            
+            for(const roomUserWithRights of room.users.filter((user) => user.hasRights())) {
+                roomUserWithRights.user.sendProtobuff(RoomBellQueueData, RoomBellQueueData.create({
+                    users: game.users.filter((user) => user.roomBellQueue?.model.id === roomUserWithRights.room.model.id).map((user) => {
+                        return RoomBellQueueUserData.create({
+                            id: user.model.id,
+                            name: user.model.name
+                        })
+                    })
+                }));
+            }
+        }
     }
     
     private getRoomUserData(): RoomUserData {
