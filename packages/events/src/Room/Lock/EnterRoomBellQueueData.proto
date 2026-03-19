@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message EnterRoomBellQueueData {
+    string room_id = 1;
+}

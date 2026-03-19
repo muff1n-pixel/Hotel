@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import NavigatorRoomProfile from "src/UserInterface/Components/Navigator/Rooms/NavigatorRoomProfile";
 import { NavigatorRoomData } from "@pixel63/events";
+import NavigatorRoomLock from "@UserInterface/Components/Navigator/Rooms/NavigatorRoomLock";
 
 export type NavigatorRoomListItemProps = {
     room: NavigatorRoomData;
@@ -32,6 +33,8 @@ export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomLi
             }}>
                 {room.name}
             </div>
+
+            <NavigatorRoomLock room={room}/>
 
             <div className="sprite_navigator_information" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}/>
 

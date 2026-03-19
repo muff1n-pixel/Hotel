@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { EnterRoomData } from "@pixel63/events";
+import { EnterRoomData, RoomLockData } from "@pixel63/events";
 
 export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> {
     public readonly name = "EnterRoomEvent";
@@ -19,6 +19,47 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
             console.error("Room does not exist.");
 
             return;
+        }
+
+        switch(roomInstance.model.lock) {
+            case "invisible": {
+                if(!roomInstance.hasUserVisibility(user.model)) {
+                    console.error("User tried to enter a room that is invisible and does not have permission to enter.");
+
+                    return;
+                }
+
+                break;
+            }
+
+            case "bell": {
+                if(roomInstance.model.owner.id === user.model.id) {
+                    break;
+                }
+
+                if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                    break;
+                }
+
+                user.sendProtobuff(RoomLockData, RoomLockData.create({
+                    room: roomInstance.getInformationData()
+                }));
+
+                return;
+            }
+
+            case "password": {
+                if(roomInstance.model.owner.id === user.model.id) {
+                    break;
+                }
+
+                if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                    break;
+                }
+
+                // TODO: verify password
+                return;
+            }
         }
 
         roomInstance.addUserClient(user);

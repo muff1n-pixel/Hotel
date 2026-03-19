@@ -5,6 +5,8 @@ message NavigatorRoomData {
 
     string name = 2;
     string description = 6;
+
+    string lock = 9;
    
     string owner_id = 7;
     string owner_name = 8;

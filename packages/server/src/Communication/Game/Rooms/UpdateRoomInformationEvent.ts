@@ -3,6 +3,7 @@ import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/Roo
 import sharp from "sharp";
 import { RoomInformationData, UpdateRoomInformationData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import bcrypt from "bcrypt";
 
 export default class UpdateRoomInformationEvent implements ProtobuffListener<UpdateRoomInformationData> {
     public readonly name = "UpdateRoomInformationEvent";
@@ -44,6 +45,14 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
 
         if(payload.thumbnail !== undefined) {
             user.room.model.thumbnail = await this.getValidatedThumbnailImage(payload.thumbnail);
+        }
+
+        if(payload.lock !== undefined) {
+            user.room.model.lock = payload.lock;
+        }
+
+        if(payload.password !== undefined) {
+            user.room.model.password = await bcrypt.hash(payload.password, 10);
         }
 
         const permissions = await user.getPermissions();

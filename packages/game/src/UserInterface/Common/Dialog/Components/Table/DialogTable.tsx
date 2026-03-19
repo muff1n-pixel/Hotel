@@ -1,11 +1,11 @@
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import { ReactNode, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 
 export type DialogTableProps = {
     activeId?: any;
 
     flex?: number[];
-    columns: string[];
+    columns?: string[];
     items?: {
         id: any;
         preview?: ReactNode;
@@ -35,36 +35,40 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
             padding: 4,
             gap: 4
         }}>
-            <div style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 5,
-                padding: 4
-            }}>
-                {columns.map((column, index) => (
-                    <div key={column} style={{
-                        flex: flex?.[index] ?? 1
+            {(columns) && (
+                <Fragment>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        padding: 4
                     }}>
-                        <div style={{
-                            color: "#000",
-                            fontFamily: "Ubuntu Bold",
-                            fontSize: 12
-                        }}>
-                            {column}
-                        </div>
+                        {columns.map((column, index) => (
+                            <div key={column} style={{
+                                flex: flex?.[index] ?? 1
+                            }}>
+                                <div style={{
+                                    color: "#000",
+                                    fontFamily: "Ubuntu Bold",
+                                    fontSize: 12
+                                }}>
+                                    {column}
+                                </div>
+                            </div>
+                        ))}
+
+                        {tools}
                     </div>
-                ))}
 
-                {tools}
-            </div>
+                    <div style={{
+                        background: "#AFAFAF",
 
-            <div style={{
-                background: "#AFAFAF",
+                        height: 1
+                    }}/>
+                </Fragment>
+            )}
 
-                height: 1
-            }}/>
-
-            <DialogScrollArea style={{ gap: 10 }}>
+            <DialogScrollArea style={{ gap: 10 }} hideInactive>
                 {items?.map((item) => (
                     <div key={item.id} style={{
                         display: "flex",

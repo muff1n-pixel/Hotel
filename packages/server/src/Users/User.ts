@@ -15,6 +15,7 @@ export default class User extends EventEmitter {
 
     private permissions?: UserPermissions;
     public room?: Room;
+    public roomBellQueue?: Room | undefined;
 
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();

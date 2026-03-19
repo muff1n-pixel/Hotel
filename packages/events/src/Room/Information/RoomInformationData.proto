@@ -3,6 +3,8 @@ syntax = "proto3";
 import "Room/Information/RoomInformationOwnerData.proto";
 
 message RoomInformationData {
+    string id = 9;
+    
     string type = 1;
 
     string name = 2;
@@ -13,4 +15,6 @@ message RoomInformationData {
     RoomInformationOwnerData owner = 6;
 
     uint32 max_users = 7;
+
+    string lock = 8;
 }

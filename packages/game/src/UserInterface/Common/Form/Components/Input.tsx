@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 
 export type InputProps = {
-    type?: "text" | "number";
+    type?: "text" | "password" | "number";
     placeholder?: string;
     style?: CSSProperties;
     value?: string;

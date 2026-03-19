@@ -9,8 +9,10 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage } from "@pixel63/events";
+import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
 import RoomPet from "./Pets/RoomPet.js";
+import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { game } from "../index.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -202,6 +204,15 @@ export default class Room {
         clearInterval(this.actionsInterval);
 
         delete this.actionsInterval;
+
+        for(const user of game.users.filter((user) => user.roomBellQueue?.model.id === this.model.id)) {
+            user.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
+                userId: user.model.id,
+                accept: false
+            }));
+
+            user.roomBellQueue = undefined;
+        }
     }
 
     private async handleActionsInterval() {
@@ -347,8 +358,11 @@ export default class Room {
     public getInformationData(): RoomInformationData {
         return {
             $type: "RoomInformationData",
+
+            id: this.model.id,
             
             type: this.model.type,
+            lock: this.model.lock,
 
             name: this.model.name,
             description: this.model.description,
@@ -395,5 +409,21 @@ export default class Room {
         for(const logic of wiredStateChangedLogic) {
             logic.handleUserUsesFurniture(roomUser, roomFurniture);
         }
+    }
+
+    public hasUserVisibility(user: UserModel) {
+        if(this.model.lock !== "invisible") {
+            return true;
+        }
+
+        if(this.model.owner.id === user.id) {
+            return true;
+        }
+
+        if(this.model.rights.some((rights) => rights.user.id === user.id)) {
+            return true;
+        }
+
+        return false;
     }
 }

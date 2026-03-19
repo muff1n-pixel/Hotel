@@ -34,6 +34,8 @@ import ModToolsDialog from "@UserInterface/Components/Debug/Dialog/ModToolsDialo
 import FurnitureBrowserDialog from "@UserInterface/Components/Browsers/FurnitureBrowserDialog";
 import BadgeBrowserDialog from "@UserInterface/Components/Browsers/BadgeBrowserDialog";
 import EditBadgeDialog from "@UserInterface/Components/Badges/EditBadgeDialog";
+import RoomDoorbellDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellDialog";
+import RoomDoorbellQueueDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellQueueDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -93,6 +95,12 @@ export default function DialogInstances() {
 
                     case "room-chat-commands":
                         return (<RoomChatCommandsDialog {...props} key={dialog.id}/>);
+
+                    case "room-doorbell":
+                        return (<RoomDoorbellDialog {...props} key={dialog.id}/>);
+
+                    case "room-doorbell-queue":
+                        return (<RoomDoorbellQueueDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

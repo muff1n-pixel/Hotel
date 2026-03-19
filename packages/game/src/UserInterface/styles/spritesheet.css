@@ -106,6 +106,9 @@
 .sprite_currencies_credits { background-image: url('./spritesheet.png'); background-position: -47px -486px; width: 15px; height: 15px; }
 .sprite_currencies_diamonds { background-image: url('./spritesheet.png'); background-position: -62px -486px; width: 15px; height: 15px; }
 .sprite_currencies_duckets { background-image: url('./spritesheet.png'); background-position: -77px -486px; width: 15px; height: 15px; }
+.sprite_room_lock_bell { background-image: url('./spritesheet.png'); background-position: -26px -508px; width: 13px; height: 16px; }
+.sprite_room_lock_invisible { background-image: url('./spritesheet.png'); background-position: -39px -508px; width: 13px; height: 16px; }
+.sprite_room_lock_password { background-image: url('./spritesheet.png'); background-position: -52px -508px; width: 13px; height: 16px; }
 .sprite_dialog_wired_action { background-image: url('./spritesheet.png'); background-position: -314px -386px; width: 13px; height: 14px; }
 .sprite_dialog_wired_trigger { background-image: url('./spritesheet.png'); background-position: -327px -386px; width: 13px; height: 14px; }
 .sprite_remove { background-image: url('./spritesheet.png'); background-position: -340px -386px; width: 13px; height: 13px; }

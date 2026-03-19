@@ -7,4 +7,6 @@ message UpdateRoomInformationData {
     optional string category = 4;
     optional uint32 max_users = 5;
     optional string thumbnail = 6;
+    optional string lock = 7;
+    optional string password = 8;
 }
