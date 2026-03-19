@@ -37,9 +37,9 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
 
             const [ floorImage, [wallImage, doorMaskImage] ] = await Promise.all([
                 (async () => {
-                    const floorImage = await floorRenderer.renderOffScreen();
+                    const { floor } = await floorRenderer.renderOffScreen();
 
-                    return floorImage;
+                    return floor;
                 })(),
                 
                 (async () => {
