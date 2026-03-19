@@ -1,7 +1,8 @@
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { EnterRoomData, RoomLockData } from "@pixel63/events";
+import { EnterRoomData, HotelAlertData, RoomLockData } from "@pixel63/events";
+import bcrypt from "bcrypt";
 
 export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> {
     public readonly name = "EnterRoomEvent";
@@ -58,7 +59,25 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
                 }
 
                 // TODO: verify password
-                return;
+                if(!payload.password) {
+                    user.sendProtobuff(RoomLockData, RoomLockData.create({
+                        room: roomInstance.getInformationData()
+                    }));
+
+                    return;
+                }
+
+                if(!roomInstance.model.password) {
+                    return;
+                }
+
+                if (!(await bcrypt.compare(payload.password, roomInstance.model.password))) {
+                    user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                        message: "That password is not correct!"
+                    }));
+                    
+                    return;
+                }
             }
         }
 

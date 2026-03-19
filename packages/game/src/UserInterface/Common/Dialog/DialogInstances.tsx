@@ -36,6 +36,7 @@ import BadgeBrowserDialog from "@UserInterface/Components/Browsers/BadgeBrowserD
 import EditBadgeDialog from "@UserInterface/Components/Badges/EditBadgeDialog";
 import RoomDoorbellDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellDialog";
 import RoomDoorbellQueueDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellQueueDialog";
+import RoomPasswordDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -95,6 +96,9 @@ export default function DialogInstances() {
 
                     case "room-chat-commands":
                         return (<RoomChatCommandsDialog {...props} key={dialog.id}/>);
+
+                    case "room-password":
+                        return (<RoomPasswordDialog {...props} key={dialog.id}/>);
 
                     case "room-doorbell":
                         return (<RoomDoorbellDialog {...props} key={dialog.id}/>);

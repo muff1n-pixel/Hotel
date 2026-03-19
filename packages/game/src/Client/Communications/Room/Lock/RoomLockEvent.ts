@@ -18,6 +18,20 @@ export default class RoomLockEvent implements ProtobuffListener<RoomLockData> {
 
                 return;
             }
+
+            case "password": {
+                clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => dialog.id !== payload.room?.id && dialog.type !== "room-password");
+
+                clientInstance.dialogs.value!.push({
+                    id: payload.room.id,
+                    type: "room-password",
+                    data: payload.room,
+                });
+
+                clientInstance.dialogs.update();
+
+                return;
+            }
         }
     }
 }
