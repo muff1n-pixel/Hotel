@@ -1,4 +1,5 @@
 import { RemoveUserFriendData, UserFriendData } from "@pixel63/events";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 import { Fragment, useEffect, useState } from "react";
 import { webSocketClient } from "src";
 import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
@@ -164,18 +165,7 @@ export default function FriendsDialogList() {
                                         display: "flex",
                                         flexDirection: "column"
                                     }}>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            gap: 5,
-                                            alignItems: "center"
-                                        }}>
-                                            <b>{friend.name}</b>
-
-                                            <div className="sprite_users_profile-small" style={{
-                                                cursor: "pointer"
-                                            }}/>
-                                        </div>
+                                        <b><UserLink id={friend.id} name={friend.name}/></b>
                                         
                                         <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
                                     </div>

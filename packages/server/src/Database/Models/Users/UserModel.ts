@@ -19,7 +19,7 @@ export class UserModel extends Model {
   declare online: boolean;
   declare roles: NonAttribute<PermissionRoleModel[]>;
 
-  declare createdAt: string;
+  declare createdAt: Date;
 
   declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;
   declare addRole: BelongsToManyAddAssociationMixin<PermissionRoleModel, string>;

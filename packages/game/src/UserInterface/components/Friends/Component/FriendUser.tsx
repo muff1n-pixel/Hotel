@@ -1,4 +1,5 @@
 import { SendUserFriendRequestData, UpdateUserFriendRequestData, UserFriendData } from "@pixel63/events";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 import { Fragment } from "react/jsx-runtime";
 import { webSocketClient } from "src";
 import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
@@ -53,18 +54,8 @@ export default function FriendUser({ active, onClick, friend }: FriendUserProps)
                     display: "flex",
                     flexDirection: "column"
                 }}>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 5,
-                        alignItems: "center"
-                    }}>
-                        <b>{friend.name}</b>
-
-                        <div className="sprite_users_profile-small" style={{
-                            cursor: "pointer"
-                        }}/>
-                    </div>
+                    
+                    <b><UserLink id={friend.id} name={friend.name}/></b>
                     
                     <div style={{ fontSize: 12 }}>
                         {(friend.online)?("Online right now"):(

@@ -94,7 +94,7 @@ export default class UserFriends {
             figureConfiguration: user.figureConfiguration,
 
             online: game.users.some((_user) => _user.model.id === user.id),
-            lastOnline: user.lastLogin?.toString()
+            lastOnline: user.lastLogin?.toISOString()
         });
     }
 }

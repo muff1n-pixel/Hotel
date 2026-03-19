@@ -38,7 +38,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                             <FlexLayout flex={3} gap={5}>
                                 <b>{profile.name}</b>
 
-                                {(profile.motto?.length) && (
+                                {(profile.motto && profile.motto.length > 0) && (
                                     <div style={{ fontSize: 12 }}><i>{profile.motto}</i></div>
                                 )}
 
@@ -71,15 +71,17 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                             </FlexLayout>
                         )}
 
-                        <FlexLayout flex={1} gap={5} align="center" justify="space-between" direction="row" style={{
-                            background: "#AEAEAE",
-                            borderRadius: 6,
-                            padding: 5
-                        }}>
-                            {profile.badges.slice(0, 5).map((badge) => (
-                                <BadgeImage badge={badge}/>
-                            ))}
-                        </FlexLayout>
+                        {(profile.badges.length > 0) && (
+                            <FlexLayout flex={1} gap={5} align="center" justify="space-between" direction="row" style={{
+                                background: "#AEAEAE",
+                                borderRadius: 6,
+                                padding: 5
+                            }}>
+                                {profile.badges.slice(0, 5).map((badge) => (
+                                    <BadgeImage badge={badge}/>
+                                ))}
+                            </FlexLayout>
+                        )}
                     </FlexLayout>
 
                     <div style={{ width: 1, background: "#AFAFAF" }}/>

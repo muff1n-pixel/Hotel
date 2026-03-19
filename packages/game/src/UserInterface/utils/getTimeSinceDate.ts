@@ -13,41 +13,27 @@ export default function getTimeSinceDate(date: Date) {
 }
 
 function getIntervalSinceDate(date: Date): [number, string] {
-    const seconds = Math.floor(new Date().getTime() - date.getTime());
+    const difference = new Date().getTime() - date.getTime();
 
-    let interval = seconds / 31536000;
+    const days = Math.floor(difference / 1000 / 60 / (60 * 24));
 
-    if (interval > 1) {
-        return [ Math.floor(interval), "years"];
-    }
-
-    interval = seconds / 2592000;
-    
-    if (interval > 1) {
-        return [ Math.floor(interval), "months"];
-    }
-    
-    interval = seconds / 86400;
-    
-    if (interval > 1) {
-        return [ Math.floor(interval), "days"];
-    }
-    
-    interval = seconds / 3600;
-    
-    if (interval > 1) {
-        return [ Math.floor(interval), "hours"];
-    }
-    
-    interval = seconds / 60;
-    
-    if (interval > 1) {
-        return [ Math.floor(interval), "minutes"];
+    if (days >= 1) {
+        return [ days, "days"];
     }
 
-    if(seconds < 5) {
-        return [0, "now"];
+    const hours = Math.floor(difference / (1000 * 60 * 60) - days * 24);
+
+    if (hours >= 1) {
+        return [ hours, "hours"];
     }
-    
-    return [ Math.floor(seconds), "seconds"];
+
+    const minutes = Math.floor(difference / (1000 * 60) - days * 24 * 60 - hours * (60));
+
+    if (minutes >= 1) {
+        return [ minutes, "minutes"];
+    }
+
+    const seconds = Math.floor(difference / 1000);
+
+    return [ seconds, "seconds"];
 }

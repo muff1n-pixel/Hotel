@@ -40,9 +40,9 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
             badges: badges.map((userBadge) => BadgeData.fromJSON(userBadge.badge)),
 
             online: game.users.some((user) => user.model.id === targetUser.id),
-            lastOnlineAt: targetUser.lastLogin?.toString(),
+            lastOnlineAt: targetUser.lastLogin?.toISOString(),
 
-            createdAt: targetUser.createdAt.toString(),
+            createdAt: targetUser.createdAt.toISOString(),
 
             friendsCount: await UserFriendModel.count({
                 where: {
