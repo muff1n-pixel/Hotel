@@ -12,6 +12,10 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
         if(!user.room) {
             throw new Error("User is not in a room.");
         }
+        
+        if(user.room.model.owner.id !== user.model.id) {
+            throw new Error("User is not owner of room.");
+        }
 
         if(payload.name !== undefined) {
             user.room.model.name = payload.name;
