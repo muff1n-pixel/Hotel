@@ -7,7 +7,7 @@ import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
-import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -43,8 +43,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             flexDirection: "column",
             gap: 10
         }}>
-
-            <b>{targetUser.name}</b>
+            <b><UserLink id={targetUser.id} name={targetUser.name!}/></b>
 
             <div style={{
                 width: "100%",

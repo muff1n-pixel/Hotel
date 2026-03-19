@@ -37,6 +37,7 @@ import EditBadgeDialog from "@UserInterface/Components/Badges/EditBadgeDialog";
 import RoomDoorbellDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellDialog";
 import RoomDoorbellQueueDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellQueueDialog";
 import RoomPasswordDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordDialog";
+import UserProfileDialog from "@UserInterface/Components/Users/UserProfileDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -162,6 +163,9 @@ export default function DialogInstances() {
 
                     case "messenger":
                         return (<MessengerDialog {...props} key={dialog.id}/>);
+
+                    case "user-profile":
+                        return (<UserProfileDialog {...props} key={dialog.id}/>);
                 }
             })}
         </Fragment>

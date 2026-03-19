@@ -6,14 +6,17 @@ import InventoryFurnitureTab from "./Tabs/InventoryFurnitureTab";
 import InventoryPetsTab from "./Tabs/InventoryPetsTab";
 
 export type InventoryDialogProps = {
+    data?: {
+        tab?: string;
+    };
     hidden?: boolean;
     onClose: () => void;
 };
 
-export default function InventoryDialog({ hidden, onClose }: InventoryDialogProps) {
+export default function InventoryDialog({ data, hidden, onClose }: InventoryDialogProps) {
     return (
         <Dialog title="Inventory" width={500} height={340} hidden={hidden} onClose={onClose}>
-            <DialogTabs withoutHeader tabs={[
+            <DialogTabs initialActiveIndex={["furniture", "pets", "badges", "bots"].indexOf(data?.tab ?? "furniture")} withoutHeader tabs={[
                 {
                     icon: "Furniture",
                     element: (<InventoryFurnitureTab/>)

@@ -13,7 +13,7 @@ export default function getTimeSinceDate(date: Date) {
 }
 
 function getIntervalSinceDate(date: Date): [number, string] {
-    const seconds = Math.floor(new Date().getMilliseconds() - date.getMilliseconds());
+    const seconds = Math.floor(new Date().getTime() - date.getTime());
 
     let interval = seconds / 31536000;
 

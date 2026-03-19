@@ -26,19 +26,19 @@ export function useDialogs() {
         clientInstance.dialogs.update();
     }, [dialogs]);
 
-    const addUniqueDialog = useCallback((type: string, data: unknown = null) => {
+    const addUniqueDialog = useCallback((type: string, data: unknown = null, id: string = type) => {
         if (!dialogs) {
             return;
         }
 
-        if (dialogs.some((dialog) => dialog.id === type)) {
+        if (dialogs.some((dialog) => dialog.id === id)) {
             closeDialog(type);
 
             return;
         }
 
         clientInstance.dialogs.value!.push({
-            id: type,
+            id,
             data,
             type
         });
