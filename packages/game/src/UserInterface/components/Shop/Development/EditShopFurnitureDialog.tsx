@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
-import { FurnitureData, FurnitureFlagsData, RoomPositionData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
+import { DeleteShopFurnitureData, FurnitureData, FurnitureFlagsData, RoomPositionData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {
@@ -26,6 +26,8 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
     const [diamonds, setDiamonds] = useState(data?.diamonds ?? 0);
 
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
     const handleUpdate = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateShopFurnitureData, UpdateShopFurnitureData.create({
             id: data?.id,
@@ -42,6 +44,20 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
 
         dialogs.closeDialog("edit-shop-furniture");
     }, [dialogs, data, type, color, credits, duckets, diamonds]);
+
+    const handleDelete = useCallback(() => {
+        if(!confirmDelete) {
+            setConfirmDelete(true);
+
+            return;
+        }
+
+        webSocketClient.sendProtobuff(DeleteShopFurnitureData, DeleteShopFurnitureData.create({
+            id: data.id,
+        }));
+
+        dialogs.closeDialog("edit-shop-furniture");
+    }, [data, confirmDelete]);
 
     return (
         <Dialog title={(data?.id)?("Edit shop furniture"):("Create shop furniture")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
@@ -173,9 +189,17 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
 
                     <div style={{
                         display: "flex",
-                        justifyContent: "flex-end"
+                        gap: 5
                     }}>
-                        <DialogButton onClick={handleUpdate}>
+                        {(data.id)?(
+                            <DialogButton style={{ flex: 1 }} color="red" onClick={handleDelete}>
+                               {(!confirmDelete)?("Delete furniture"):("Confirm deletion")}
+                            </DialogButton>
+                        ):(
+                            <div style={{ flex: 1 }}/>
+                        )}
+
+                        <DialogButton style={{ flex: 1 }} onClick={handleUpdate}>
                             {(data?.id)?("Update furniture"):("Create furniture")}
                         </DialogButton>
                     </div>

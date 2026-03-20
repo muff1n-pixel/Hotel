@@ -78,3 +78,21 @@
     background: linear-gradient(to bottom, #009500 50%, #006C00 50%);
     border-color: #006C00;
 }
+
+
+.dialog-button-red .dialog-button-content {
+    color: #FFFFFF;
+
+    background: linear-gradient(to bottom, #DE4537 50%, #91241A 50%);
+    border-color: #91241A;
+}
+
+.dialog-button-red:hover .dialog-button-content {
+    background: linear-gradient(to bottom, #D2392B 50%, #91241A 50%);
+    border-color: #91241A;
+}
+
+.dialog-button-red:active .dialog-button-content {
+    background: linear-gradient(to bottom, #91241A 50%, #7C0D09 50%);
+    border-color: #91241A;
+}

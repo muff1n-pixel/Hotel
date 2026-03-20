@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message DeleteShopFurnitureData {
+    string id = 1;
+}

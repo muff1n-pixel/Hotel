@@ -11,6 +11,8 @@ export class ShopPageFurnitureModel extends Model {
     declare diamonds?: number;
     
     declare furniture: NonAttribute<FurnitureModel>;
+
+    declare shopPageId: NonAttribute<string>;
 }
 
 export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
