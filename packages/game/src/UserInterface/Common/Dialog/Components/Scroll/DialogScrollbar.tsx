@@ -50,8 +50,6 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
 
             const fullContainerHeight = containerRef.current.scrollHeight;
 
-            console.log({ fullContainerHeight, scrollTop: containerRef.current.scrollTop });
-
             const scrollPercentage = (Math.abs(containerRef.current.scrollTop) / fullContainerHeight) * 100;
 
             setScrollPercentage(scrollPercentage);
@@ -63,8 +61,6 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
         containerRef.current.addEventListener("scroll", scrollListener);
 
         const observer = new MutationObserver(() => {
-            console.log("resize");
-
             resizeListener();
         });
 

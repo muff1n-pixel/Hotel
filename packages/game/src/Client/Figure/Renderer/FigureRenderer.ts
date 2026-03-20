@@ -137,9 +137,6 @@ export default class FigureRenderer {
 
                     return true;
                 }).map(async (sprite) => {
-
-                    console.log("Preparing " + sprite.name);
-
                     await FigureAssets.getFigureSprite(assetId, {
                         x: sprite.x,
                         y: sprite.y,
@@ -215,6 +212,7 @@ export default class FigureRenderer {
 
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
         const result: BodyPartAction[] = [];
+        const bodyPartsIgnored: string[] = [];
 
         for(const effect of effects) {
             const effectBodyParts = this.getEffectBodyParts(effect);
@@ -224,6 +222,12 @@ export default class FigureRenderer {
 
             if(effectBodyParts) {
                 for(const effectBodyPart of effectBodyParts) {
+                    if(effectBodyPart.frame === null) {
+                        bodyPartsIgnored.push(effectBodyPart.id);
+
+                        continue;
+                    }
+
                     const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
 
                     if(!action) {
@@ -271,7 +275,11 @@ export default class FigureRenderer {
             if(!geometry) {
                 throw new Error("Geometry is not found for action.");
             }
-            
+
+            if(geometry.bodyparts.some((bodypart) => bodyPartsIgnored.includes(bodypart.id))) {
+                continue;
+            }
+
             const figurePartSet = figurePartSets.find((figurePartSet) => figurePartSet.id === action.activePartSet);
 
             if(!figurePartSet) {
@@ -472,7 +480,7 @@ export default class FigureRenderer {
         for(const effect of effects) {
             // TODO: add effects without animations
             if(!effect.data.animation) {
-                return [];
+                continue;
             }
 
             const frame = this.getCurrentAnimationFrame(effect);
@@ -617,7 +625,7 @@ export default class FigureRenderer {
             if(!actionForSprite) {
                 //console.warn("Sprite " + spriteConfiguration.type + " has no action requesting it.");
 
-                return null
+                return null;
             }
             
             let spriteDirection = direction;
@@ -875,10 +883,6 @@ export default class FigureRenderer {
             }
 
             const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
-
-            if(!sprites.length) {
-                throw new Error("No sprites to render.");
-            }
 
             const context = canvas.getContext("2d");
 
