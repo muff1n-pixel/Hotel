@@ -73,9 +73,9 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
 }
 
 export function createFigureWorkerClient() {
-    if(typeof (Worker) !== "undefined") {
+    /*if(typeof (Worker) !== "undefined") {
         return new FigureWorkerClient();
-    }
+    }*/
 
     return new FigureWorkerMainThread();
 }
