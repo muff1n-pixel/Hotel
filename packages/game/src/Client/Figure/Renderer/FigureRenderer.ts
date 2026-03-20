@@ -479,9 +479,9 @@ export default class FigureRenderer {
 
             //console.log("Frame " + this.frame + " becomes " + frame + " (" + effect.data.animation.frames.length + ")");
 
-            const animationFrame = effect.data.animation.frames[frame];
+            const animationFrame = effect.data.animation.frames?.[frame];
 
-            const avatarBodypart = animationFrame.bodyParts.find((bodyPart) => bodyPart.id === "avatar");
+            const avatarBodypart = animationFrame?.bodyParts?.find((bodyPart) => bodyPart.id === "avatar");
 
             if(avatarBodypart) {
                 this.avatarEffect = avatarBodypart;

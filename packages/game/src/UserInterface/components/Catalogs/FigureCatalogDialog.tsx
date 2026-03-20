@@ -55,7 +55,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     }}/>
                             </div>
 
-                            <DialogTable columns={["ID", "Library"]} items={FigureAssets.effectmap.map((effect) => {
+                            <DialogTable columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
                                 return {
                                     id: effect.id.toString(),
                                     values: [effect.id.toString(), effect.library],
