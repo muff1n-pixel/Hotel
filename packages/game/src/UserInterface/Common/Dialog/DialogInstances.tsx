@@ -39,6 +39,7 @@ import RoomDoorbellQueueDialog from "@UserInterface/Components/Room/Doorbell/Roo
 import RoomPasswordDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordDialog";
 import UserProfileDialog from "@UserInterface/Components/Users/UserProfileDialog";
 import RoomPasswordErrorDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordErrorDialog";
+import EditFurnitureCrackableDialog from "@UserInterface/Components/Furniture/Dialogs/EditFurnitureCrackableDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -143,6 +144,9 @@ export default function DialogInstances() {
 
                     case "edit-furniture":
                         return (<EditFurnitureDialog {...props} key={dialog.id}/>);
+
+                    case "edit-furniture-crackable":
+                        return (<EditFurnitureCrackableDialog {...props} key={dialog.id}/>);
 
                     case "figure":
                         return (<FigureDialog {...props} key={dialog.id}/>);

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Furniture/Crackable/Rewards/FurnitureCrackableRewardData.proto";
+
+message FurnitureCrackableData {
+    uint32 required_clicks = 1;
+    repeated FurnitureCrackableRewardData rewards = 2;
+}

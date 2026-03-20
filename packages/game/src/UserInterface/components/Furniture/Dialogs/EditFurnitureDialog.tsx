@@ -9,6 +9,7 @@ import useFurnitureTypes from "../../../Hooks/Furniture/useFurnitureTypes";
 import Selection from "../../../Common/Form/Components/Selection";
 import { webSocketClient } from "../../../..";
 import { FurnitureData, FurnitureFlagsData, UpdateFurnitureData } from "@pixel63/events";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;
@@ -17,7 +18,9 @@ export type EditFurnitureDialogProps = {
 }
 
 export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurnitureDialogProps) {
-    const { categories, interactionTypes } = useFurnitureTypes();
+    const dialogs = useDialogs();
+
+    const { categories } = useFurnitureTypes();
 
     const [type, setType] = useState(data?.type);
     const [color, setColor] = useState(data?.color);
@@ -102,6 +105,29 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
 
                             <Input value={(color)?(color.toString()):(undefined)} onChange={(value) => setColor((value.length)?(parseInt(value)):(undefined))}/>
 
+                            {(interactionType === "crackable") && (
+                                <div>
+                                    {(data?.id)?(
+                                        <DialogButton onClick={() => {
+                                            dialogs.addUniqueDialog("edit-furniture-crackable", {
+                                                furniture: FurnitureData.create({
+                                                    id: data.id,
+
+                                                    name,
+                                                    description,
+                                                    
+                                                    type,
+                                                    color
+                                                })
+                                            });
+                                        }}>
+                                            Edit crackable data
+                                        </DialogButton>
+                                    ):(
+                                        <p><i>Furniture must be created before crackable data can be changed.</i></p>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -132,12 +158,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
 
                         <b>Interaction type (logic)</b>
 
-                        <Selection value={interactionType} items={interactionTypes.map((interactionType) => {
-                            return {
-                                label: interactionType,
-                                value: interactionType
-                            };
-                        })} onChange={(interactionType) => setInteractionType(interactionType as string)}/>
+                        <Input value={interactionType} onChange={setInteractionType}/>
 
                         <b>Depth {(flags.sitable)?(`(sit depth ${(depth - 0.5).toPrecision(3)})`):(null)}</b>
 

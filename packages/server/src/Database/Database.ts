@@ -36,6 +36,8 @@ import { initializePetBreedModel } from "./Models/Pets/PetBreedModel.js";
 import { initializeUserFriendModel } from "./Models/Users/Friends/UserFriendModel.js";
 import { initializeUserFriendRequestModel } from "./Models/Users/Friends/UserFriendRequestModel.js";
 import { initializeShopPageBundleModel } from "./Models/Shop/ShopPageBundleModel.js";
+import { initializeFurnitureCrackableModel } from "./Models/Furniture/Crackable/FurnitureCrackableModel.js";
+import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crackable/FurnitureCrackableRewardModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -43,6 +45,9 @@ export async function initializeModels() {
   initializeBadgeModel(sequelize);
 
   initializeFurnitureModel(sequelize);
+  
+  initializeFurnitureCrackableRewardModel(sequelize);
+  initializeFurnitureCrackableModel(sequelize);
 
   initializePetBreedModel(sequelize);
   initializePetModel(sequelize);
