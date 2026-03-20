@@ -54,10 +54,10 @@ export default class RoomFurniture {
                 return new RoomFurnitureTeleportLogic(this.instance, this);
 
             case "gate":
-                return new FurnitureMultistateLogic(this.instance, this);
-
             case "multiheight":
             case "default":
+            case "conf_invis_control":
+            case "crackable":
                 return new FurnitureMultistateLogic(this.instance, this);
                 
             case "ads_bg":
@@ -68,9 +68,6 @@ export default class RoomFurniture {
 
             case "trophy":
                 return new RoomFurnitureTrophyLogic(this.instance, this);
-
-            case "conf_invis_control":
-                return new FurnitureMultistateLogic(this.instance, this);
         }
 
         if(this.furnitureData.interactionType.startsWith("wf_trg") || this.furnitureData.interactionType.startsWith("wf_act")) {

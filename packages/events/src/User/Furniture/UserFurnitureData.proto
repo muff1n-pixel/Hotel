@@ -11,7 +11,7 @@ message UserFurnitureData {
     string furniture_id = 3;
 
     RoomPositionData position = 4;
-    uint32 direction = 5;
+    optional uint32 direction = 5;
 
     int32 animation = 6;
     optional uint32 color = 7;

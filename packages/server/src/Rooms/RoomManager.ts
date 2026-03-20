@@ -9,6 +9,7 @@ import { UserBotModel } from "../Database/Models/Users/Bots/UserBotModel.js";
 import { UserPetModel } from "../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../Database/Models/Pets/PetBreedModel.js";
+import { FurnitureCrackableModel } from "../Database/Models/Furniture/Crackable/FurnitureCrackableModel.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -58,7 +59,14 @@ export default class RoomManager {
                     include: [
                         {
                             model: FurnitureModel,
-                            as: "furniture"
+                            as: "furniture",
+
+                            include: [
+                                {
+                                    model: FurnitureCrackableModel,
+                                    as: "crackable"
+                                }
+                            ]
                         },
                         {
                             model: UserModel,

@@ -8,7 +8,7 @@ import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 export class UserFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
-    declare direction: number;
+    declare direction: number | null;
     declare animation: number;
     declare color: number | null;
     declare data?: UserFurnitureCustomData;

@@ -1,4 +1,4 @@
-import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
+import { DataTypes, HasOneGetAssociationMixin, Model, NonAttribute, Sequelize } from "sequelize";
 import { FurnitureCrackableRewardModel } from "./FurnitureCrackableRewardModel";
 import { FurnitureModel } from "../FurnitureModel";
 
@@ -7,6 +7,7 @@ export class FurnitureCrackableModel extends Model {
     declare requiredClicks: number;
 
     declare rewards: NonAttribute<FurnitureCrackableRewardModel[]>;
+    declare getRewards: HasOneGetAssociationMixin<FurnitureCrackableRewardModel[]>;
 }
 
 export function initializeFurnitureCrackableModel(sequelize: Sequelize) {

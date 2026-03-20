@@ -30,7 +30,7 @@ export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitu
         }
 
         if(payload.furnitureRemoved?.length) {
-            payload.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id));
+            payload.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id, payload.hideFlyingFurniture));
         }
 
         clientInstance.roomInstance.update();

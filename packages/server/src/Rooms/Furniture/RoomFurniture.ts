@@ -30,6 +30,7 @@ import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollis
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
 import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import RoomFurnitureCrackableLogic from "./Logic/RoomFurnitureCrackableLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -40,7 +41,7 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
-    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number) {
+    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number | null) {
         await userFurniture.update({
             position,
             direction,
@@ -179,6 +180,9 @@ export default class RoomFurniture<T = unknown> {
                 case "default":
                 case "multiheight":
                     return this.category = new RoomFurnitureLightingLogic(this);
+                    
+                case "crackable":
+                    return this.category = new RoomFurnitureCrackableLogic(this);
                 
                 case "vendingmachine":
                     return this.category = new RoomFurnitureVendingMachineLogic(this);
@@ -254,7 +258,7 @@ export default class RoomFurniture<T = unknown> {
         return this.category;
     }
 
-    public getOffsetPosition(offset: number, direction: number = this.model.direction): RoomPositionOffsetData {
+    public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
         const position = {...this.model.position};
 
         switch(direction) {

@@ -322,10 +322,10 @@ export default class RoomInstance {
         return furniture;
     }
 
-    public removeFurniture(roomFurnitureId: string) {
+    public removeFurniture(roomFurnitureId: string, hideFlyingFurniture?: boolean) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
-        if(furniture.data.userId === this.clientInstance.user.value?.id) {
+        if(furniture.data.userId === this.clientInstance.user.value?.id && !hideFlyingFurniture) {
             this.clientInstance.flyingFurnitureIcons.value?.push({
                 id: roomFurnitureId,
                 furniture: furniture.furnitureData,

@@ -1,5 +1,5 @@
 import { FurnitureFlagsData, RoomPositionData } from "@pixel63/events";
-import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
+import { DataTypes, HasOneGetAssociationMixin, Model, NonAttribute, Sequelize } from "sequelize";
 import { FurnitureCrackableModel } from "./Crackable/FurnitureCrackableModel";
 
 export class FurnitureModel extends Model {
@@ -16,6 +16,8 @@ export class FurnitureModel extends Model {
     declare customParams: string[] | null;
 
     declare crackable?: NonAttribute<FurnitureCrackableModel>;
+
+    declare getCrackable: HasOneGetAssociationMixin<FurnitureCrackableModel>;
 }
 
 export function initializeFurnitureModel(sequelize: Sequelize) {
