@@ -6,7 +6,8 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
-import { DeleteShopFurnitureData, FurnitureData, FurnitureFlagsData, RoomPositionData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
+import { DeleteShopFurnitureData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
+import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {
@@ -19,8 +20,7 @@ export type EditShopFurnitureDialogProps = {
 export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditShopFurnitureDialogProps) {
     const dialogs = useDialogs();
 
-    const [type, setType] = useState(data?.furniture?.type ?? "");
-    const [color, setColor] = useState(data?.furniture?.color ?? 0);
+    const [furniture, setFurniture] = useState(data?.furniture);
 
     const [credits, setCredits] = useState(data?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
@@ -34,8 +34,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
 
             pageId: data.page.id,
 
-            type,
-            color,
+            furnitureId: furniture?.id,
 
             credits,
             duckets,
@@ -43,7 +42,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
         }));
 
         dialogs.closeDialog("edit-shop-furniture");
-    }, [dialogs, data, type, color, credits, duckets, diamonds]);
+    }, [dialogs, data, furniture, credits, duckets, diamonds]);
 
     const handleDelete = useCallback(() => {
         if(!confirmDelete) {
@@ -85,42 +84,10 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <FurnitureImage furnitureData={FurnitureData.create({
-                            id: "unknown",
-                            category: "unknown",
-                            customParams: [],
-                            dimensions: RoomPositionData.create({
-                                row: 0,
-                                column: 0,
-                                depth: 0
-                            }),
-                            flags: FurnitureFlagsData.create({
-                                giftable: false,
-                                inventoryStackable: false,
-                                layable: false,
-                                recyclable: false,
-                                sellable: false,
-                                sitable: false,
-                                stackable: false,
-                                tradable: false,
-                                walkable: false,
-                            }),
-                            interactionType: "unknown",
-                            name: "unknown",
-
-                            placement: "floor",
-                            type,
-                            color
-                        })}/>
+                        <FurnitureImage furnitureData={furniture}/>
                     </div>
 
-                    <b>Furniture type</b>
-
-                    <Input placeholder="Furniture type" value={type} onChange={setType}/>
-
-                    <b>Furniture color</b>
-
-                    <Input type="number" placeholder="Furniture color" value={color.toString()} onChange={(value) => setColor(parseInt(value))}/>
+                    <FurnitureBrowserSelection furniture={furniture} onChange={setFurniture}/>
 
                     <b>Furniture price</b>
 
