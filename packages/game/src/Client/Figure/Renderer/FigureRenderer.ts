@@ -481,7 +481,7 @@ export default class FigureRenderer {
 
             const animationFrame = effect.data.animation.frames?.[frame];
 
-            const avatarBodypart = animationFrame?.bodyParts?.find((bodyPart) => bodyPart.id === "avatar");
+            const avatarBodypart = animationFrame?.effects?.find((bodyPart) => bodyPart.id === "avatar");
 
             if(avatarBodypart) {
                 this.avatarEffect = avatarBodypart;
@@ -531,15 +531,15 @@ export default class FigureRenderer {
                     useDirections: false
                 });*/
             }
-            
-            for(const sprite of animationSprites) {
-                const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
-                
-                if(sprite.id === "avatar") {
-                    this.avatarEffect = effectFrame;
 
+            this.avatarEffect = animationFrame?.effects.find((effect) => effect.id === "avatar");
+
+            for(const sprite of animationSprites) {
+                if(sprite.id === "avatar") {
                     continue;
                 }
+
+                const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
 
                 const direction = sprite.directions?.find((direction) => direction.id === this.direction);
 
@@ -581,9 +581,17 @@ export default class FigureRenderer {
                     continue;
                 }
 
-                const destinationY = (sprite.destinationY ?? 0) + (effectFrame?.destinationY ?? 0);
+                const destinationY = 0;
 
                 const result = await this.getEffectSprite(effect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
+
+                if(sprite.destinationY) {
+                    result.y += sprite.destinationY;
+                }
+
+                if(effectFrame?.destinationY) {
+                    result.y += effectFrame.destinationY;
+                }
 
                 if(direction?.destinationX) {
                     result.x += direction.destinationX;
@@ -603,7 +611,6 @@ export default class FigureRenderer {
     }
 
     private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number): Promise<FigureRendererSprite[]> {
-
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
         
