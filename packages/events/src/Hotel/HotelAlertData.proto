@@ -2,4 +2,5 @@ syntax = "proto3";
 
 message HotelAlertData {
     string message = 1;
+    optional string dialog_type = 2;
 }

@@ -38,6 +38,7 @@ import RoomDoorbellDialog from "@UserInterface/Components/Room/Doorbell/RoomDoor
 import RoomDoorbellQueueDialog from "@UserInterface/Components/Room/Doorbell/RoomDoorbellQueueDialog";
 import RoomPasswordDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordDialog";
 import UserProfileDialog from "@UserInterface/Components/Users/UserProfileDialog";
+import RoomPasswordErrorDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordErrorDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -100,6 +101,9 @@ export default function DialogInstances() {
 
                     case "room-password":
                         return (<RoomPasswordDialog {...props} key={dialog.id}/>);
+                        
+                    case "room-password-error":
+                        return (<RoomPasswordErrorDialog {...props} key={dialog.id}/>);
 
                     case "room-doorbell":
                         return (<RoomDoorbellDialog {...props} key={dialog.id}/>);

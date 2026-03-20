@@ -73,7 +73,8 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
 
                 if (!(await bcrypt.compare(payload.password, roomInstance.model.password))) {
                     user.sendProtobuff(HotelAlertData, HotelAlertData.create({
-                        message: "That password is not correct!"
+                        message: "That password is not correct!",
+                        dialogType: "room-password-error"
                     }));
                     
                     return;
