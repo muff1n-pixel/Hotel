@@ -214,6 +214,7 @@ export default class FigureRenderer {
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
         const result: BodyPartAction[] = [];
         const bodyPartsRemoved: string[] = [];
+        const bodyPartsOffsets: any[] = [];
 
         for(const effect of effects) {
             const effectFrame = this.getEffectFrame(effect);
@@ -229,13 +230,7 @@ export default class FigureRenderer {
                 for(const effectBodyPart of effectFrame.bodyParts) {
                     const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
 
-                    if(!action) {
-                        //console.warn("Action is not found for effect " + effectBodyPart.id + ", " + effectBodyPart.action + ".");
-
-                        continue;
-                    }
-
-                    const geometry = figureGeometryTypes.find((geometry) => geometry.id === action.geometryType);
+                    const geometry = figureGeometryTypes.find((geometry) => geometry.id === (action?.geometryType ?? "vertical"));
 
                     if(!geometry) {
                         throw new Error("Action does not have a geometry type.");
@@ -248,10 +243,10 @@ export default class FigureRenderer {
                     }
 
                     result.push({
-                        actionId: action.id,
+                        actionId: action?.id ?? "Default",
                         geometry,
-                        assetPartDefinition: action.assetPartDefinition,
-                        bodyParts: geometryBodyparts.parts,
+                        assetPartDefinition: action?.assetPartDefinition ?? "std",
+                        bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)),
                         frame: effectBodyPart.frame,
                         destinationX: effectBodyPart.destinationX,
                         destinationY: effectBodyPart.destinationY,
