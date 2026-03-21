@@ -186,7 +186,7 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    private getEffectBodyParts(effect: EffectData) {
+    private getEffectFrame(effect: EffectData) {
         if(!effect?.data.animation) {
             return null;
         }
@@ -197,7 +197,7 @@ export default class FigureRenderer {
             return null;
         }
 
-        return effect.data.animation.frames[frame].bodyParts;
+        return effect.data.animation.frames[frame];
     }
 
     private getAvatarActions() {
@@ -214,22 +214,20 @@ export default class FigureRenderer {
 
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
         const result: BodyPartAction[] = [];
-        const bodyPartsIgnored: string[] = [];
+        const bodyPartsRemoved: string[] = [];
 
         for(const effect of effects) {
-            const effectBodyParts = this.getEffectBodyParts(effect);
+            const effectFrame = this.getEffectFrame(effect);
+
+            if(effect.data.animation?.remove) {
+                bodyPartsRemoved.push(...effect.data.animation.remove.map((remove) => remove.id));
+            }
 
             // effect says bodypart id rightarm (geometry bodypart) is used for action CarryItem
             // CarryItem says handRight is used for activePartSet
 
-            if(effectBodyParts) {
-                for(const effectBodyPart of effectBodyParts) {
-                    if(effectBodyPart.frame === null) {
-                        bodyPartsIgnored.push(effectBodyPart.id);
-
-                        continue;
-                    }
-
+            if(effectFrame) {
+                for(const effectBodyPart of effectFrame.bodyParts) {
                     const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
 
                     if(!action) {
@@ -278,10 +276,6 @@ export default class FigureRenderer {
                 throw new Error("Geometry is not found for action.");
             }
 
-            if(geometry.bodyparts.some((bodypart) => bodyPartsIgnored.includes(bodypart.id))) {
-                continue;
-            }
-
             const figurePartSet = figurePartSets.find((figurePartSet) => figurePartSet.id === action.activePartSet);
 
             if(!figurePartSet) {
@@ -292,7 +286,7 @@ export default class FigureRenderer {
                 actionId: action.id,
                 geometry,
                 assetPartDefinition: action.assetPartDefinition,
-                bodyParts: figurePartSet.parts,
+                bodyParts: figurePartSet.parts.filter((part) => !bodyPartsRemoved.includes(part)),
                 destinationY: 0,//(action.assetPartDefinition === "sit")?(16):(0),
             });
 

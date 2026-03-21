@@ -33,6 +33,10 @@ export type FigureAnimationData = {
         base?: string;
     }[];
 
+    remove: {
+        id: string;
+    }[];
+
     direction: undefined | {
         offset: number;
     };

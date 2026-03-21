@@ -122,6 +122,12 @@ function getAnimationData(filePath: string) {
             };
         }),
 
+        remove: getValueAsArray(document.animation.remove).map((remove: any) => {
+            return {
+                id: remove["@_id"]
+            };
+        }),
+
         direction: (document.animation.direction)?(
             {
                 offset: parseInt(document.animation.direction["@_offset"])
