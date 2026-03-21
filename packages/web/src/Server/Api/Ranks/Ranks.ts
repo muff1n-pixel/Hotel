@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { RankModel } from "../../Models/Ranks/RankModel";
-import { RankRoleModel } from "../../Models/Ranks/RankRoleModel";
+import { RankRoleModel } from "../../Models/Ranks/Role/RankRoleModel";
 import { PermissionRoleModel } from "../../Models/Permissions/PermissionRoleModel";
 
 const router = Router();
@@ -19,6 +19,7 @@ router.post("/", async (req, res) => {
             where: {
                 rankId: rank.id
             },
+            order: [['priorityOrder', 'ASC']],
             include: [{ model: PermissionRoleModel, as: "role" }]
         });
 

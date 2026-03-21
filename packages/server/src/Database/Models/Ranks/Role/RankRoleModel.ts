@@ -1,6 +1,6 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
-import { RankModel } from "./RankModel";
-import { PermissionRoleModel } from "../Permissions/PermissionRoleModel";
+import { RankModel } from "../RankModel";
+import { PermissionRoleModel } from "../../Permissions/PermissionRoleModel";
 
 export class RankRoleModel extends Model {
     declare id: string;
@@ -14,6 +14,11 @@ export function initializeRankRoleModel(sequelize: Sequelize) {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
+            },
+            priorityOrder: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 1
             }
         },
         {
