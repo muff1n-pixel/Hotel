@@ -146,8 +146,6 @@ export default function RoomChat() {
 
                 moveMessagesUp(messages.current, newMessage);
 
-                newMessage.index = -1;
-
                 messages.current.push(newMessage);
 
                 setLatestMessage(performance.now());
