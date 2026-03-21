@@ -2,6 +2,7 @@ import { RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData } from "
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import RoomFurnitureBunnyRunPoleLogic from "./RoomFurnitureBunnyRunPoleLogic.js";
 
 export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -21,10 +22,13 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
 
             return;
         }
-        
-        const taggedRoomUser = this.getTaggedRoomUser();
 
-        if(!taggedRoomUser) {
+        const usersPlaying = this.getUsersPlaying();
+        const taggedRoomUsers = this.getTaggedRoomUsers();
+        const tagPoles = this.getTagPoles();
+
+        if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
+            roomUser.removeAction("AvatarEffect");
             roomUser.addAction("AvatarEffect.68");
         }
     }
@@ -37,17 +41,22 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
     
     async handleUserLeftRoom(roomUser: RoomUser): Promise<void> {
         if(roomUser.hasAction("AvatarEffect.68")) {
-            const taggedRoomUser = this.getTaggedRoomUser();
+            const taggedRoomUsers = this.getTaggedRoomUsers();
 
-            if(!taggedRoomUser) {
-                const usersPlaying = this.roomFurniture.room.users.filter((user) => user.position && user.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(user.position))?.logic instanceof RoomFurnitureBunnyRunFieldLogic);
-
+            if(!taggedRoomUsers.length) {
+                const usersPlaying = this.getUsersPlaying();
+                
                 if(usersPlaying.length) {
-                    const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
+                    const taggedRoomUsers = this.getTaggedRoomUsers();
+                    const tagPoles = this.getTagPoles();
 
-                    if(randomUser) {
-                        randomUser.removeAction("AvatarEffect");
-                        randomUser.addAction("AvatarEffect.68");
+                    if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
+                        const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
+
+                        if(randomUser) {
+                            randomUser.removeAction("AvatarEffect");
+                            randomUser.addAction("AvatarEffect.68");
+                        }
                     }
                 }
             }
@@ -62,7 +71,17 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
         
     }
 
-    private getTaggedRoomUser() {
-        return this.roomFurniture.room.users.find((user) => user.hasAction("AvatarEffect.68"));
+    private getUsersPlaying() {
+        return this.roomFurniture.room.users.filter((user) => (
+            user.position && user.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(user.position))?.logic instanceof RoomFurnitureBunnyRunFieldLogic
+        ));
+    }
+
+    private getTaggedRoomUsers() {
+        return this.roomFurniture.room.users.filter((user) => user.hasAction("AvatarEffect.68"));
+    }
+
+    private getTagPoles() {
+        return this.roomFurniture.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBunnyRunPoleLogic);
     }
 }

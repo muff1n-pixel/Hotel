@@ -2,6 +2,7 @@ import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import RoomFurnitureIceTagPoleLogic from "./RoomFurnitureIceTagPoleLogic.js";
 
 export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -42,22 +43,24 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
         roomUser.removeAction("AvatarEffect");
         roomUser.removeAction("CarryItem");
 
-        const taggedRoomUser = this.getTaggedRoomUser();
+        const usersPlaying = this.getUsersPlaying();
+        const taggedRoomUsers = this.getTaggedRoomUsers();
+        const tagPoles = this.getTagPoles();
 
-        if(taggedRoomUser) {
-            if(roomUser.user.model.figureConfiguration.gender === "male") {
-                roomUser.addAction("AvatarEffect.38");
-            }
-            else {
-                roomUser.addAction("AvatarEffect.39");
-            }
-        }
-        else {
+        if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
             if(roomUser.user.model.figureConfiguration.gender === "male") {
                 roomUser.addAction("AvatarEffect.45");
             }
             else {
                 roomUser.addAction("AvatarEffect.46");
+            }
+        }
+        else {
+            if(roomUser.user.model.figureConfiguration.gender === "male") {
+                roomUser.addAction("AvatarEffect.38");
+            }
+            else {
+                roomUser.addAction("AvatarEffect.39");
             }
         }
     }
@@ -74,22 +77,27 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
     
     async handleUserLeftRoom(roomUser: RoomUser): Promise<void> {
         if(roomUser.hasAction("AvatarEffect.45") || roomUser.hasAction("AvatarEffect.46")) {
-            const taggedRoomUser = this.getTaggedRoomUser();
+            const taggedRoomUsers = this.getTaggedRoomUsers();
 
-            if(!taggedRoomUser) {
-                const usersPlaying = this.roomFurniture.room.users.filter((user) => user.hasAction("AvatarEffect.38") || user.hasAction("AvatarEffect.39"));
-
+            if(!taggedRoomUsers.length) {
+                const usersPlaying = this.getUsersPlaying();
+                
                 if(usersPlaying.length) {
-                    const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
+                    const taggedRoomUsers = this.getTaggedRoomUsers();
+                    const tagPoles = this.getTagPoles();
 
-                    if(randomUser) {
-                        randomUser.removeAction("AvatarEffect");
+                    if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
+                        const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
 
-                        if(randomUser.user.model.figureConfiguration.gender === "male") {
-                            randomUser.addAction("AvatarEffect.45");
-                        }
-                        else {
-                            randomUser.addAction("AvatarEffect.46");
+                        if(randomUser) {
+                            randomUser.removeAction("AvatarEffect");
+
+                            if(randomUser.user.model.figureConfiguration.gender === "male") {
+                                randomUser.addAction("AvatarEffect.45");
+                            }
+                            else {
+                                randomUser.addAction("AvatarEffect.46");
+                            }
                         }
                     }
                 }
@@ -105,9 +113,20 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
         
     }
 
-    private getTaggedRoomUser() {
-        return this.roomFurniture.room.users.find((user) => (
+    private getUsersPlaying() {
+        return this.roomFurniture.room.users.filter((user) => (
+            (user.hasAction("AvatarEffect.38") || user.hasAction("AvatarEffect.39"))
+            || (user.hasAction("AvatarEffect.45") || user.hasAction("AvatarEffect.46"))
+        ));
+    }
+
+    private getTaggedRoomUsers() {
+        return this.roomFurniture.room.users.filter((user) => (
             (user.hasAction("AvatarEffect.45") || user.hasAction("AvatarEffect.46"))
         ));
+    }
+
+    private getTagPoles() {
+        return this.roomFurniture.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureIceTagPoleLogic);
     }
 }

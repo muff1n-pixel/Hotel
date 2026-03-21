@@ -29,6 +29,8 @@ import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerRe
 import RoomFurnitureCrackableLogic from "./Logic/RoomFurnitureCrackableLogic.js";
 import RoomFurnitureIceTagFieldLogic from "./Logic/RoomFurnitureIceTagFieldLogic.js";
 import RoomFurnitureBunnyRunFieldLogic from "./Logic/RoomFurnitureBunnyRunFieldLogic";
+import RoomFurnitureIceTagPoleLogic from "./Logic/RoomFurnitureIceTagPoleLogic";
+import RoomFurnitureBunnyRunPoleLogic from "./Logic/RoomFurnitureBunnyRunPoleLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -64,8 +66,14 @@ export default class RoomFurnitureLogicFactory {
             case "icetag_field":
                 return new RoomFurnitureIceTagFieldLogic(roomFurniture);
 
+            case "icetag_pole":
+                return new RoomFurnitureIceTagPoleLogic(roomFurniture);
+
             case "bunnyrun_field":
                 return new RoomFurnitureBunnyRunFieldLogic(roomFurniture);
+
+            case "bunnyrun_pole":
+                return new RoomFurnitureBunnyRunPoleLogic(roomFurniture);
             
             case "conf_invis_control":
                 return new RoomInvisibleFurnitureControlLogic(roomFurniture);
