@@ -1,5 +1,5 @@
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 
 export type DialogTableProps = {
     activeId?: any;
@@ -19,6 +19,45 @@ export type DialogTableProps = {
 
 export default function DialogTable({ activeId, flex, columns, items, tools }: DialogTableProps) {
     const [_activeId, setActiveId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if(!items) {
+            return;
+        }
+
+        const listener = (event: KeyboardEvent) => {
+            if(event.key === "ArrowDown") {
+                event.preventDefault();
+
+                const currentIndex = items.findIndex((item) => item.id === _activeId);
+
+                if(currentIndex !== -1 && currentIndex !== items?.length - 1) {
+                    const nextItem = items[currentIndex + 1];
+
+                    nextItem?.onClick?.();
+                    setActiveId(nextItem.id);
+                }
+            }
+            else if(event.key === "ArrowUp") {
+                event.preventDefault();
+
+                const currentIndex = items.findIndex((item) => item.id === _activeId);
+
+                if(currentIndex !== -1 && currentIndex !== 0) {
+                    const nextItem = items[currentIndex - 1];
+
+                    nextItem?.onClick?.();
+                    setActiveId(nextItem.id);
+                }
+            }
+        };
+
+        document.addEventListener("keydown", listener);
+
+        return () => {
+            document.removeEventListener("keydown", listener);
+        };
+    }, [items, _activeId]);
 
     return (
         <div style={{
