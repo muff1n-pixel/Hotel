@@ -227,7 +227,9 @@ export default class FigureRenderer {
             const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
 
             if(!geometryBodyparts) {
-                throw new Error("Action does not have a geometry bodyparts.");
+                console.warn("Action does not have a geometry bodyparts.", { effectBodyPart });
+
+                continue;
             }
 
             result.push({
@@ -638,14 +640,17 @@ export default class FigureRenderer {
 
                 let spriteEffect = effect;
 
-                const effectLibrary = sprite.member.split('_')[1];
+                const effectLibrary = sprite.member.split('_').find((part) => part.startsWith("fx"));
 
-                if(effectLibrary.startsWith("fx") && effectLibrary !== `fx${effect.id}`) {
+                console.log(effectLibrary, effect);
+
+                if(effectLibrary && effectLibrary !== `fx${effect.id}`) {
                     const libraryId = parseInt(effectLibrary.substring(2));
 
                     const library = this.getEffectLibrary(libraryId);
 
                     if(!library) {
+                        console.log("Library does not exist", libraryId);
                         continue;
                     }
 
