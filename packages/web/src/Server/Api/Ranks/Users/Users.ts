@@ -54,27 +54,28 @@ router.post("/", async (req, res) => {
                 include: {
                     model: BadgeModel,
                     as: "badge"
-                }
+                },
+                order: [['updatedAt', 'ASC']]
             });
 
-            for await (const badgeData of userBadgesData) {
-                userCurrentBadges.push(badgeData.badge.image)
-            }
+for await (const badgeData of userBadgesData) {
+    userCurrentBadges.push(badgeData.badge.image)
+}
 
-            // todo send active badges
-            userData.push({
-                id: user.id,
-                name: user.name,
-                role: roleData.name,
-                motto: user.motto,
-                figureConfiguration: user.figureConfiguration,
-                online: user.online,
-                currentBadges: userCurrentBadges
-            })
+// todo send active badges
+userData.push({
+    id: user.id,
+    name: user.name,
+    role: roleData.name,
+    motto: user.motto,
+    figureConfiguration: user.figureConfiguration,
+    online: user.online,
+    currentBadges: userCurrentBadges
+})
         }
     }
 
-    return res.json(userData);
+return res.json(userData);
 });
 
 export default router;
