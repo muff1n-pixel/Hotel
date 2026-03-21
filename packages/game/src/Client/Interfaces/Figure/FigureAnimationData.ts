@@ -7,6 +7,12 @@ export type FigureAnimationFrameEffectData = {
 };
 
 export type FigureAnimationData = {
+    avatar?: {
+        ink: number;
+        foreground: string;
+        background: string;
+    } | undefined;
+
     sprites: {
         id: string;
         member: string;

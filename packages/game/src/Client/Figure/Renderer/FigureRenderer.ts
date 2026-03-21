@@ -3,7 +3,7 @@ import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError"
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { figureRenderPriority } from "./Geometry/FigureRenderPriority";
 import { FigureData } from "@Client/Interfaces/Figure/FigureData";
-import { FigureAnimationFrameEffectData } from "@Client/Interfaces/Figure/FigureAnimationData";
+import { FigureAnimationData, FigureAnimationFrameEffectData } from "@Client/Interfaces/Figure/FigureAnimationData";
 import { figureGeometryTypes } from "@Client/Figure/Renderer/Geometry/FigureGeometry";
 import { figurePartSets } from "@Client/Figure/Renderer/Geometry/FigurePartSets";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
@@ -12,6 +12,7 @@ import { getGlobalCompositeModeFromInkNumber } from "@Client/Renderers/GlobalCom
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import Performance from "@Client/Utilities/Performance";
 import { FigureConfigurationData } from "@pixel63/events";
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -74,6 +75,7 @@ type EffectData = {
 
 export default class FigureRenderer {
     private avatarEffect?: FigureAnimationFrameEffectData;
+    private avatarInkEffect?: FigureAnimationData["avatar"];
 
     constructor(public readonly configuration: FigureConfigurationData, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
         
@@ -460,11 +462,19 @@ export default class FigureRenderer {
             });
         }
 
+        const effectAvatar = effects.find((effect) => effect.data.animation?.avatar);
+
+        const grayscaled: AssetSpriteGrayscaledProperties | undefined = (effectAvatar?.data.animation?.avatar)?({
+            ink: effectAvatar.data.animation.avatar.ink,
+            background: effectAvatar.data.animation.avatar.background,
+            foreground: effectAvatar.data.animation.avatar.foreground,
+        }):(undefined);
+
         Performance.startPerformanceCheck("getFigureSprites", 2);
-        const sprites = await this.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction);
+        const sprites = await this.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction, grayscaled);
         Performance.endPerformanceCheck("getFigureSprites");
 
-        const effectSprites = await this.getEffectSprites(effects);
+        const effectSprites = await this.getEffectSprites(effects, direction);
 
         return {
             sprites,
@@ -472,7 +482,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getEffectSprites(effects: EffectData[]): Promise<FigureRendererSprite[]> {
+    private async getEffectSprites(effects: EffectData[], direction: number): Promise<FigureRendererSprite[]> {
         const sprites: FigureRendererSprite[] = [];
 
         this.avatarEffect = undefined;
@@ -502,6 +512,14 @@ export default class FigureRenderer {
 
                     case "bottom":
                         return -1;
+
+                    case "behind": {
+                        if(direction > 1 && direction < 5) {
+                            return -1;
+                        }
+
+                        return 0;
+                    }
                 }
 
                 return 0;
@@ -618,7 +636,7 @@ export default class FigureRenderer {
         return sprites;
     }
 
-    private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number): Promise<FigureRendererSprite[]> {
+    private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite[]> {
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
         
@@ -724,7 +742,7 @@ export default class FigureRenderer {
             const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === spriteConfiguration.colorPaletteId);
             const paletteColor = palette?.colors.find((color) => color.id === spriteConfiguration.colors[spriteConfiguration.colorIndex - 1]);
 
-            const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped);
+            const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
 
             if(result) {
                 if(actionForSprite.destinationX) {
@@ -789,7 +807,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean) {
+    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined) {
         const sprite = await FigureAssets.getFigureSprite(spriteConfiguration.assetId, {
             x: spriteData.x,
             y: spriteData.y,
@@ -797,11 +815,14 @@ export default class FigureRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
+            grayscaled,
+
             flipHorizontal: (flipHorizontal)?(!assetData.flipHorizontal):(assetData.flipHorizontal),
 
             color: (spriteConfiguration.colorable && spriteConfiguration.colors[spriteConfiguration.colorIndex - 1] && type !== "ey")?(color):(undefined),
 
-            ignoreImageData: false
+            ignoreImageData: false,
+            requireImageData: (grayscaled !== undefined)
         });
 
         const priorityTypes: Partial<Record<string, string>> = {

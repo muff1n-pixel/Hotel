@@ -1,6 +1,13 @@
 import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
 import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageDataWorkerInterface";
 import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
+import { hexToRgb } from "@Client/Utilities/ColorUtilities";
+
+export type AssetSpriteGrayscaledProperties = {
+    ink?: number;
+    background: string;
+    foreground: string;
+}
 
 export type AssetSpriteProperties = {
     id?: number;
@@ -13,7 +20,7 @@ export type AssetSpriteProperties = {
 
     flipHorizontal?: boolean;
 
-    grayscaled?: boolean;
+    grayscaled?: AssetSpriteGrayscaledProperties;
 
     source?: string;
     color?: string | string[];
@@ -110,7 +117,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && properties.grayscaled === grayscaled && (!properties.requireImageData || imageData));
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink)) && (!properties.requireImageData || imageData));
 
         if(existingSprite) {
             const output = await existingSprite.result;
@@ -184,16 +191,15 @@ export default class AssetFetcher {
 
             let output = await result.result;
 
-            const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+            const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData, grayscaled }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData && !grayscaled);
 
             if(existingSpriteWithImageData?.imageData) {
                 result.imageData = existingSpriteWithImageData.imageData;
                 output.imageData = existingSpriteWithImageData.imageData;
 
                 if(properties.grayscaled) {
-                    const promise = this.drawGrayscaledImage(existingSpriteWithImageData.imageData);
-                    result.result = promise;
-                    output = await promise;
+                    output = this.drawGrayscaledImage(existingSpriteWithImageData.imageData, properties.grayscaled);
+                    result.result = Promise.resolve(output);
                 }
             }
             else {
@@ -202,7 +208,8 @@ export default class AssetFetcher {
                     output.imageData = imageData;
 
                     if(properties.grayscaled) {
-                        result.result = this.drawGrayscaledImage(imageData);
+                        output = this.drawGrayscaledImage(imageData, properties.grayscaled);
+                        result.result = Promise.resolve(output);
                     }
                 });
 
@@ -215,8 +222,9 @@ export default class AssetFetcher {
         })();
     }
 
-    private static async drawGrayscaledImage(imageData: ImageData): AssetSpriteResult["result"] {
-        const canvas = new OffscreenCanvas(imageData.width, imageData.height);
+    private static drawGrayscaledImage(imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
+        const mutatedImageData = new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
+        const canvas = new OffscreenCanvas(mutatedImageData.width, mutatedImageData.height);
 
         const context = canvas.getContext("2d");
 
@@ -224,25 +232,57 @@ export default class AssetFetcher {
             throw new ContextNotAvailableError();
         }
 
-        for(let index = 0; index < imageData.data.length; index += 4) {
-            const red = imageData.data[index];
-            const green = imageData.data[index + 1];
-            const blue = imageData.data[index + 2];
-            const alpha = imageData.data[index + 3];
+        const background = hexToRgb(grayscaled.background);
+        const foreground = hexToRgb(grayscaled.foreground);
 
-            if(alpha === 0) {
-                continue;
-            }
+        if(grayscaled.ink === 8) {
+            for(let index = 0; index < mutatedImageData.data.length; index += 4) {
+                const red = mutatedImageData.data[index];
+                const green = mutatedImageData.data[index + 1];
+                const blue = mutatedImageData.data[index + 2];
+                const alpha = mutatedImageData.data[index + 3];
 
-            if(red < 20 && green < 20 && blue < 20) {
-                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = 255;
+                if(alpha === 0) {
+                    continue;
+                }
+
+                if(red < 20 && green < 20 && blue < 20) {
+                    mutatedImageData.data[index] *= background.red / 255;
+                    mutatedImageData.data[index + 1] *= background.green / 255;
+                    mutatedImageData.data[index + 2] *= background.blue / 255;
+                }
+                else {
+                    mutatedImageData.data[index] *= foreground.red / 255;
+                    mutatedImageData.data[index + 1] *= foreground.green / 255;
+                    mutatedImageData.data[index + 2] *= foreground.blue / 255;
+                }
             }
-            else {
-                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = 153;
+        }
+        else {
+            for(let index = 0; index < mutatedImageData.data.length; index += 4) {
+                const red = mutatedImageData.data[index];
+                const green = mutatedImageData.data[index + 1];
+                const blue = mutatedImageData.data[index + 2];
+                const alpha = mutatedImageData.data[index + 3];
+
+                if(alpha === 0) {
+                    continue;
+                }
+
+                if(red < 20 && green < 20 && blue < 20) {
+                    mutatedImageData.data[index] = background.red;
+                    mutatedImageData.data[index + 1] = background.green;
+                    mutatedImageData.data[index + 2] = background.blue;
+                }
+                else {
+                    mutatedImageData.data[index] = foreground.red;
+                    mutatedImageData.data[index + 1] = foreground.green;
+                    mutatedImageData.data[index + 2] = foreground.blue;
+                }
             }
         }
 
-        context.putImageData(imageData, 0, 0);
+        context.putImageData(mutatedImageData, 0, 0);
 
         return {
             image: canvas.transferToImageBitmap(),

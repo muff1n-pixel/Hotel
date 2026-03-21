@@ -91,6 +91,12 @@ function getAnimationData(filePath: string) {
     const document = parser.parse(readFileSync(filePath, { encoding: "utf-8" }), true);
 
     return {
+        avatar: (document.animation.avatar)?({
+            ink: parseInt(document.animation.avatar["@_ink"]),
+            background: document.animation.avatar["@_background"],
+            foreground: document.animation.avatar["@_foreground"],
+        }):(undefined),
+
         sprites: getValueAsArray(document.animation.sprite).map((sprite: any) => {
             return {
                 id: sprite["@_id"],

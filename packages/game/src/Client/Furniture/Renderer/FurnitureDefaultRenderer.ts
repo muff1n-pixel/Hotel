@@ -255,7 +255,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             flipHorizontal: flipHorizontal,
 
-            grayscaled,
+            grayscaled: (grayscaled)?({
+                foreground: "#999999",
+                background: "#FFFFFF"
+            }):(undefined),
 
             color
         });

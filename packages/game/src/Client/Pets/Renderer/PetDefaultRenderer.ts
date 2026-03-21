@@ -51,7 +51,10 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
 
             flipHorizontal,
 
-            grayscaled,
+            grayscaled: (grayscaled)?({
+                foreground: "#FFFFFF",
+                background: "#999999"
+            }):(undefined),
 
             color,
 
