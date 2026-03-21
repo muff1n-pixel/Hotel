@@ -16,6 +16,7 @@ export type FigureAnimationData = {
 
     sprites: {
         id: string;
+        frame?: number;
         member: string;
         ink?: number;
         useDirections: boolean;
@@ -64,5 +65,12 @@ export type FigureAnimationData = {
         }[];
 
         effects: FigureAnimationFrameEffectData[];
+    }[];
+
+    overrides: {
+        name: string;
+        type: string;
+
+        frames: FigureAnimationData["frames"];
     }[];
 };

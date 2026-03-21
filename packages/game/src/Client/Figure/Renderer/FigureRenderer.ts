@@ -51,6 +51,7 @@ type SpriteConfiguration = {
 
 type BodyPartAction = {
     actionId: string;
+    part?: string;
     geometry: {
         bodyparts: {
             id: string;
@@ -190,7 +191,7 @@ export default class FigureRenderer {
             return null;
         }
 
-        const frame = this.getCurrentAnimationFrame(effect);
+        const frame = this.getCurrentAnimationFrame(effect.data.animation.frames);
 
         if(!effect.data.animation.frames[frame]) {
             return null;
@@ -211,51 +212,76 @@ export default class FigureRenderer {
         return avatarActionsData;
     }
 
+    private getActionsForBodyPartsFromFrames(effectFrame: FigureAnimationData["frames"][0], bodyPartsRemoved: string[]) {
+        const result: BodyPartAction[] = [];
+
+        for(const effectBodyPart of effectFrame.bodyParts) {
+            const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
+
+            const geometry = figureGeometryTypes.find((geometry) => geometry.id === (action?.geometryType ?? "vertical"));
+
+            if(!geometry) {
+                throw new Error("Action does not have a geometry type.");
+            }
+
+            const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
+
+            if(!geometryBodyparts) {
+                throw new Error("Action does not have a geometry bodyparts.");
+            }
+
+            result.push({
+                actionId: action?.id ?? "Default",
+                geometry,
+                assetPartDefinition: action?.assetPartDefinition ?? "std",
+                bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)),
+                frame: effectBodyPart.frame,
+                destinationX: effectBodyPart.destinationX,
+                destinationY: effectBodyPart.destinationY,
+                directionOffset: effectBodyPart.directionOffset
+            });
+
+            // now we know handRight is occupied by CarryItem to use `crr`
+            // handRight consists of figurePartSets->handRight->[ "rh", "rhs", "rs", "rc", "ri" ]
+        }
+
+        return result;
+    }
+
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
         const result: BodyPartAction[] = [];
         const bodyPartsRemoved: string[] = [];
-        const bodyPartsOffsets: any[] = [];
 
         for(const effect of effects) {
-            const effectFrame = this.getEffectFrame(effect);
-
             if(effect.data.animation?.remove) {
                 bodyPartsRemoved.push(...effect.data.animation.remove.map((remove) => remove.id));
             }
 
+            const effectFrame = this.getEffectFrame(effect);
+
             // effect says bodypart id rightarm (geometry bodypart) is used for action CarryItem
             // CarryItem says handRight is used for activePartSet
 
-            if(effectFrame) {
-                for(const effectBodyPart of effectFrame.bodyParts) {
-                    const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
-
-                    const geometry = figureGeometryTypes.find((geometry) => geometry.id === (action?.geometryType ?? "vertical"));
-
-                    if(!geometry) {
-                        throw new Error("Action does not have a geometry type.");
+            if(effect.data.animation?.overrides) {
+                for(const override of effect.data.animation.overrides) {
+                    if(!actions.some((action) => action.state === override.type)) {
+                        continue;
                     }
 
-                    const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
+                    const frame = this.getCurrentAnimationFrame(override.frames);
 
-                    if(!geometryBodyparts) {
-                        throw new Error("Action does not have a geometry bodyparts.");
+                    const overrideFrame = override.frames[frame];
+
+                    bodyPartsRemoved.push(...overrideFrame.bodyParts.flatMap((bodypart) => bodypart.items.map((item) => item.id)));
+
+                    if(overrideFrame) {
+                        result.push(...this.getActionsForBodyPartsFromFrames(overrideFrame, bodyPartsRemoved));
                     }
-
-                    result.push({
-                        actionId: action?.id ?? "Default",
-                        geometry,
-                        assetPartDefinition: action?.assetPartDefinition ?? "std",
-                        bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)),
-                        frame: effectBodyPart.frame,
-                        destinationX: effectBodyPart.destinationX,
-                        destinationY: effectBodyPart.destinationY,
-                        directionOffset: effectBodyPart.directionOffset
-                    });
-
-                    // now we know handRight is occupied by CarryItem to use `crr`
-                    // handRight consists of figurePartSets->handRight->[ "rh", "rhs", "rs", "rc", "ri" ]
                 }
+            }
+
+            if(effectFrame) {
+                result.push(...this.getActionsForBodyPartsFromFrames(effectFrame, bodyPartsRemoved));
             }
         }
 
@@ -462,7 +488,7 @@ export default class FigureRenderer {
         const sprites = await this.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction, grayscaled);
         Performance.endPerformanceCheck("getFigureSprites");
 
-        const effectSprites = await this.getEffectSprites(effects, direction);
+        const effectSprites = await this.getEffectSprites(actions, actionsForBodyParts, effects, direction);
 
         return {
             sprites,
@@ -470,7 +496,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getEffectSprites(effects: EffectData[], direction: number): Promise<FigureRendererSprite[]> {
+    private async getEffectSprites(actions: AvatarActionData[], actionsForBodyParts: BodyPartAction[], effects: EffectData[], direction: number): Promise<FigureRendererSprite[]> {
         const sprites: FigureRendererSprite[] = [];
 
         this.avatarEffect = undefined;
@@ -481,7 +507,7 @@ export default class FigureRenderer {
                 continue;
             }
 
-            const frame = this.getCurrentAnimationFrame(effect);
+            const frame = this.getCurrentAnimationFrame(effect.data.animation.frames);
 
             //console.log("Frame " + this.frame + " becomes " + frame + " (" + effect.data.animation.frames.length + ")");
 
@@ -558,6 +584,48 @@ export default class FigureRenderer {
                     }) ?? []
                 );
 
+            if(effect.data.animation?.overrides) {
+                for(const override of effect.data.animation.overrides) {
+                    const action = actions.find((action) => action.state === override.type);
+
+                    if(!action) {
+                        continue;
+                    }
+
+                    const frame = this.getCurrentAnimationFrame(override.frames);
+
+                    const overrideFrame = override.frames[frame];
+
+                    if(overrideFrame) {
+                        animationSprites.push(...(
+                            overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
+                                return bodypart.items.map((item) => {
+                                    const id = item.base ?? item.id;
+
+                                    return {
+                                        id,
+                                        frame: bodypart.frame,
+                                        member: `${action.assetPartDefinition}_${id}_1`, // TODO: what's the 1 for?
+                                        useDirections: true,
+                                        directions: Array(8).fill(null).map((_, index) => {
+                                            return {
+                                                id: index,
+                                                destinationX: undefined,
+                                                destinationY: undefined,
+                                                destinationZ: getIndexForAlignment(item.align)
+                                            };
+                                        }),
+                                        destinationY: (this.avatarEffect?.destinationY ?? 0),
+                                    }
+                                });
+                            }) ?? []
+                        ));
+                    }
+
+                    break;
+                }
+            }
+
             if(effect.data.animation.shadow) {
                 // TODO: there's no shadow sprite provided?
 
@@ -587,19 +655,19 @@ export default class FigureRenderer {
 
                 const index = (direction)?(direction.destinationZ):(0);
 
-                const flipHorizontal = false;
+                let flipHorizontal = false;
 
-                const assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+                let assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
-                const assetData = effect.data.assets.find((asset) => asset.name === assetName);
+                let assetData = effect.data.assets.find((asset) => asset.name === assetName);
 
-                /*if(!assetData && (this.direction > 3 && this.direction < 7)) {
-                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+                if(!assetData && (this.direction > 3 && this.direction < 7)) {
+                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
                     assetData = effect.data.assets.find((asset) => asset.name === assetName);
 
                     flipHorizontal = true;
-                }*/
+                }
 
                 if(!assetData) {
                     //console.error("Can't find asset for " + assetName);
@@ -870,12 +938,8 @@ export default class FigureRenderer {
         };
     }
 
-    private getCurrentAnimationFrame(effectData: EffectData) {
-        if(!effectData.data.animation) {
-            return 0;
-        }
-
-        const frameSequence = effectData.data.animation.frames.length;
+    private getCurrentAnimationFrame(frames: FigureAnimationData["frames"]) {
+        const frameSequence = frames.length;
         const frameRepeat = 2;
         const spriteFrame = Math.floor((this.frame % (frameSequence * frameRepeat)) / frameRepeat);
 

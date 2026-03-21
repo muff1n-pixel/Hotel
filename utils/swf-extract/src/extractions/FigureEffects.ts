@@ -140,37 +140,50 @@ function getAnimationData(filePath: string) {
             }
         ):(undefined),
 
-        frames: getValueAsArray(document.animation.frame).map((frame: any) => {
+        frames: getAnimationFrameData(document.animation.frame),
+
+        overrides: getValueAsArray(document.animation.override).map((override: any) => {
             return {
-                bodyParts: getValueAsArray(frame.bodypart).map((bodypart: any) => {
-                    return {
-                        id: bodypart["@_id"],
-                        action: bodypart["@_action"],
-                        frame: parseInt(bodypart["@_frame"]),
-                        destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
-                        destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
-                        directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
+                type: override["@_override"],
+                name: override["@_name"],
 
-                        items: getValueAsArray(bodypart.item).map((sprite: any) => {
-                            return {
-                                id: sprite["@_id"],
-                                base: sprite["@_base"],
-                                align: sprite["@_align"]
-                            };
-                        }),
-                    };
-                }),
-
-                effects: getValueAsArray(frame.fx).map((fx: any) => {
-                    return {
-                        id: fx["@_id"],
-                        action: fx["@_action"],
-                        frame: parseInt(fx["@_frame"]),
-                        destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
-                        destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
-                    };
-                })
-            };
+                frames: getAnimationFrameData(override["frame"])
+            }
         })
     } satisfies FigureAnimationData;
+}
+
+function getAnimationFrameData(frames: any) {
+    return getValueAsArray(frames).map((frame: any) => {
+        return {
+            bodyParts: getValueAsArray(frame.bodypart).map((bodypart: any) => {
+                return {
+                    id: bodypart["@_id"],
+                    action: bodypart["@_action"],
+                    frame: parseInt(bodypart["@_frame"]),
+                    destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
+                    destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
+                    directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
+
+                    items: getValueAsArray(bodypart.item).map((sprite: any) => {
+                        return {
+                            id: sprite["@_id"],
+                            base: sprite["@_base"],
+                            align: sprite["@_align"]
+                        };
+                    }),
+                };
+            }),
+
+            effects: getValueAsArray(frame.fx).map((fx: any) => {
+                return {
+                    id: fx["@_id"],
+                    action: fx["@_action"],
+                    frame: parseInt(fx["@_frame"]),
+                    destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
+                    destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
+                };
+            })
+        };
+    });
 }
