@@ -75,7 +75,6 @@ type EffectData = {
 
 export default class FigureRenderer {
     private avatarEffect?: FigureAnimationFrameEffectData;
-    private avatarInkEffect?: FigureAnimationData["avatar"];
 
     constructor(public readonly configuration: FigureConfigurationData, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
         
@@ -540,6 +539,28 @@ export default class FigureRenderer {
                             destinationY: (this.avatarEffect?.destinationY ?? 0)
                         }
                     })
+                )
+                .concat(
+                    animationFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
+                        return bodypart.items.map((item) => {
+                            const id = item.base ?? item.id;
+
+                            return {
+                                id,
+                                member: `std_${id}_1`, // TODO: what's the 1 for?
+                                useDirections: true,
+                                directions: Array(8).fill(null).map((_, index) => {
+                                    return {
+                                        id: index,
+                                        destinationX: undefined,
+                                        destinationY: undefined,
+                                        destinationZ: getIndexForAlignment(item.align)
+                                    };
+                                }),
+                                destinationY: (this.avatarEffect?.destinationY ?? 0)
+                            }
+                        });
+                    }) ?? []
                 );
 
             if(effect.data.animation.shadow) {

@@ -150,6 +150,14 @@ function getAnimationData(filePath: string) {
                         destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
                         destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
                         directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
+
+                        items: getValueAsArray(bodypart.item).map((sprite: any) => {
+                            return {
+                                id: sprite["@_id"],
+                                base: sprite["@_base"],
+                                align: sprite["@_align"]
+                            };
+                        }),
                     };
                 }),
 
