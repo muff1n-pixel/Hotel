@@ -38,7 +38,7 @@ const StaffUser = (props: StaffUserType) => {
                     {
                         props.currentBadges.map((badge) => {
                             return (
-                                <img src={`/assets/badges/${badge}.gif`} alt={badge} key={badge} />
+                                <img src={`/assets/badges/${badge}`} alt={badge} key={badge} />
                             )
                         })
                     }

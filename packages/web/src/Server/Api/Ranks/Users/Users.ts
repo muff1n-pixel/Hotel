@@ -2,6 +2,8 @@ import { Router } from "express";
 import { UserModel } from "../../../Models/Users/UserModel";
 import { PermissionRoleModel } from "../../../Models/Permissions/PermissionRoleModel";
 import { Op, Sequelize } from 'sequelize';
+import { UserBadgeModel } from "../../../Models/Users/Badges/UserBadgeModel";
+import { BadgeModel } from "../../../Models/Badges/BadgeModel";
 
 const router = Router();
 
@@ -42,6 +44,23 @@ router.post("/", async (req, res) => {
         });
 
         for await (const user of users) {
+
+            let userCurrentBadges: Array<string> = [];
+            const userBadgesData = await UserBadgeModel.findAll({
+                where: {
+                    userId: user.id,
+                    equipped: true
+                },
+                include: {
+                    model: BadgeModel,
+                    as: "badge"
+                }
+            });
+
+            for await (const badgeData of userBadgesData) {
+                userCurrentBadges.push(badgeData.badge.image)
+            }
+
             // todo send active badges
             userData.push({
                 id: user.id,
@@ -50,7 +69,7 @@ router.post("/", async (req, res) => {
                 motto: user.motto,
                 figureConfiguration: user.figureConfiguration,
                 online: user.online,
-                currentBadges: []
+                currentBadges: userCurrentBadges
             })
         }
     }
