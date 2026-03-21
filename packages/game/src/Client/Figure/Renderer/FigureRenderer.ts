@@ -643,6 +643,26 @@ export default class FigureRenderer {
                     continue;
                 }
 
+                let spriteEffect = effect;
+
+                const effectLibrary = sprite.member.split('_')[1];
+
+                if(effectLibrary.startsWith("fx") && effectLibrary !== `fx${effect.id}`) {
+                    const libraryId = parseInt(effectLibrary.substring(2));
+
+                    const library = this.getEffectLibrary(libraryId);
+
+                    if(!library) {
+                        continue;
+                    }
+
+                    spriteEffect = {
+                        id: library.id,
+                        library: library.library,
+                        data: await FigureAssets.getEffectData(library.library)
+                    };
+                }
+
                 const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
 
                 const direction = sprite.directions?.find((direction) => direction.id === this.direction);
@@ -659,12 +679,12 @@ export default class FigureRenderer {
 
                 let assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
-                let assetData = effect.data.assets.find((asset) => asset.name === assetName);
+                let assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
                 if(!assetData && (this.direction > 3 && this.direction < 7)) {
                     assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
-                    assetData = effect.data.assets.find((asset) => asset.name === assetName);
+                    assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
                     flipHorizontal = true;
                 }
@@ -677,7 +697,7 @@ export default class FigureRenderer {
 
                 const sourceAssetName = assetData.source ?? assetData.name;
 
-                const spriteData = effect.data.sprites.find((sprite) => sprite.name === sourceAssetName);
+                const spriteData = spriteEffect.data.sprites.find((sprite) => sprite.name === sourceAssetName);
 
                 if(!spriteData) {
                     //console.error("Can't find sprite for source asset " + sourceAssetName);
@@ -687,7 +707,7 @@ export default class FigureRenderer {
 
                 const destinationY = 0;
 
-                const result = await this.getEffectSprite(effect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
+                const result = await this.getEffectSprite(spriteEffect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
 
                 if(sprite.destinationY) {
                     result.y += sprite.destinationY;
