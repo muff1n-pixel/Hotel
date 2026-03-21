@@ -38,7 +38,7 @@ export default class RoomFurnitureItem extends RoomItem {
 
             return;
         }
-        
+
         return super.setPosition(position, index);
     }
 

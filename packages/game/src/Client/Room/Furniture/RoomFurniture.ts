@@ -133,6 +133,8 @@ export default class RoomFurniture {
         }
 
         if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
+            this.item.positionPathData = undefined;
+            
             this.item.setPosition(payload.position);
         }
 
