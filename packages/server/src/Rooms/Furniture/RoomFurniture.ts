@@ -291,7 +291,9 @@ export default class RoomFurniture<T = unknown> {
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
-                this.model
+                {
+                    furniture: this.model
+                }
             ]
         }));
 
@@ -321,7 +323,9 @@ export default class RoomFurniture<T = unknown> {
 
             this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model
+                    {
+                        furniture: this.model
+                    }
                 ]
             }));
         }
@@ -345,7 +349,9 @@ export default class RoomFurniture<T = unknown> {
 
             this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model
+                    {
+                        furniture: this.model
+                    }
                 ]
             }));
         }

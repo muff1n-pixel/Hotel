@@ -131,17 +131,6 @@ export default class RoomCursor extends EventTarget {
                             id: roomFurnitureItem.data.id,
                             direction: nextDirection
                         }));
-
-                        roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position, [
-                            {
-                                ...roomFurnitureItem.item.position,
-                                depth: roomFurnitureItem.item.position.depth + 0.25
-                            },
-                            {
-                                ...roomFurnitureItem.item.position,
-                            }
-                        ],
-                        100);
                     }
                     
                     return;

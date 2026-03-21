@@ -132,7 +132,7 @@ export default class RoomFurniture {
             this.item.furnitureRenderer.color = payload.color ?? this.furnitureData.color ?? undefined;
         }
 
-        if(payload.position) {
+        if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
             this.item.setPosition(payload.position);
         }
 

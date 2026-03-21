@@ -127,19 +127,6 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
 
                             direction: furniture.item.furnitureRenderer.getNextDirection()
                         }));
-                        
-                        if(furniture.item.position) {
-                            furniture.item.setPositionPath(furniture.item.position, [
-                                {
-                                    ...furniture.item.position,
-                                    depth: furniture.item.position.depth + 0.25
-                                },
-                                {
-                                    ...furniture.item.position,
-                                }
-                            ],
-                            100);
-                        }
                     }}>
                         Rotate
                     </div>

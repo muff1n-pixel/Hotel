@@ -75,7 +75,7 @@ export default class ClientInstance extends EventTarget {
         this.settings.subscribe((value) => localStorage.setItem("settings", JSON.stringify(value)));
 
         registerRoomEvents(this);
-
+        
         // User events
         webSocketClient.addProtobuffListener(UserData, new UserEvent());
         webSocketClient.addProtobuffListener(UserPermissionsData, new UserPermissionsEvent());

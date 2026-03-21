@@ -25,7 +25,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
             room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.roomFurniture.model
+                    {
+                        furniture: this.roomFurniture.model
+                    }
                 ]
             }));
         }
@@ -124,7 +126,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 
                 room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureUpdated: [
-                        this.roomFurniture.model
+                        {
+                            furniture: this.roomFurniture.model
+                        }
                     ]
                 }));
             }
