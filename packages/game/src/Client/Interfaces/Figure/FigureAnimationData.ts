@@ -3,6 +3,7 @@ export type FigureAnimationFrameEffectData = {
     action: string;
     frame: number;
 
+    destinationX?: number;
     destinationY?: number;
 };
 

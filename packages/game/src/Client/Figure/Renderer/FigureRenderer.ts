@@ -630,6 +630,10 @@ export default class FigureRenderer {
                     result.y += sprite.destinationY;
                 }
 
+                if(effectFrame?.destinationX) {
+                    result.x += effectFrame.destinationX;
+                }
+
                 if(effectFrame?.destinationY) {
                     result.y += effectFrame.destinationY;
                 }
