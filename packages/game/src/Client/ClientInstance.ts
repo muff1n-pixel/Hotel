@@ -11,7 +11,7 @@ import { RoomHistory } from "../UserInterface/Components/Room/Toolbar/ToolbarRoo
 import HotelEvent from "@Client/Communications/Hotel/HotelEvent";
 import NavigatorEvent from "@Client/Communications/Navigator/NavigatorEvent";
 import RoomFurnitureMovedEvent from "@Client/Communications/Room/Furniture/MoveRoomFurnitureEvent";
-import { PermissionAction } from "@Shared/Interfaces/Permissions/PermissionMap";
+import { PermissionAction } from "@pixel63/shared/Interfaces/Permissions/PermissionMap";
 import UserPermissionsEvent from "@Client/Communications/User/Permissions/UserPermissionsEvent";
 import { FlyingFurnitureIconData } from "../UserInterface/Components/Inventory/FlyingFurniture/FlyingFurnitureIcon";
 import RoomActorChatEvent from "@Client/Communications/Room/Actors/RoomActorChatEvent";

@@ -30,8 +30,6 @@ export type RoomFurnitureLogicDialogData = {
 };
 
 export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
-    console.log(props.data.furnitureData.interactionType);
-
     switch(props.data.furnitureData.interactionType) {
         case "dimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);

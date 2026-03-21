@@ -12,6 +12,7 @@ import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadDa
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
+import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -70,7 +71,7 @@ export default class RoomInstance {
             const furnitureData = event.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
 
             if(!furnitureData) {
-                console.error("Server did not send furniture data for user furniture!", {
+                RoomLogger.error("Server did not send furniture data for user furniture!", {
                     furniture
                 });
 
@@ -315,7 +316,6 @@ export default class RoomInstance {
         const furniture = this.furnitures.find((furniture) => furniture.item.id === item.id);
 
         if(!furniture) {
-            console.log(item, this.furnitures);
             throw new Error("Furniture does not exist in room.");
         }
 

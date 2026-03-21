@@ -37,7 +37,8 @@
     "js-cookie": "^3.0.5",
     "react": "^19.1.0",
     "react-color-palette": "^7.3.1",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "@pixel63/shared": "file:../shared"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -61,7 +62,6 @@
   },
   "alias": {
     "@Client/*": "./src/Client/$1",
-    "@UserInterface/*": "./src/UserInterface/$1",
-    "@Shared/*": "../shared/$1"
+    "@UserInterface/*": "./src/UserInterface/$1"
   }
 }

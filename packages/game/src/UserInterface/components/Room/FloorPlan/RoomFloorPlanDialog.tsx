@@ -10,7 +10,7 @@ import Checkbox from "../../../Common/Form/Components/Checkbox";
 import Selection from "../../../Common/Form/Components/Selection";
 import Input from "../../../Common/Form/Components/Input";
 import { UpdateRoomStructureData } from "@pixel63/events";
-import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
+import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 
 export type RoomFloorPlanDialogProps = {
     hidden?: boolean;

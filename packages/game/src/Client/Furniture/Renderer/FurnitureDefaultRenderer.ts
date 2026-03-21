@@ -6,6 +6,7 @@ import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { FurnitureAnimationLayerFrameOffset, FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
+import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
@@ -99,7 +100,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 }
 
                 if(!animationLayer?.frameSequence[frameSequenceIndex]) {
-                    console.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
+                    FigureLogger.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
                 }
                 else {
                     result.push({
@@ -174,7 +175,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             const spriteData = data.sprites.find((sprite) => sprite.name === (assetData?.source ?? assetName));
             
             if(!spriteData) {
-                console.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
+                FigureLogger.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
                 
                 FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 

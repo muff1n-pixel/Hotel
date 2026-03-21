@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { clientInstance } from "../..";
+import { Logger } from "@pixel63/shared/Logger/Logger";
 
 export function useDialogs() {
     const [_state, setState] = useState(clientInstance.dialogs.state);
@@ -77,7 +78,7 @@ export function useDialogs() {
         const index = dialogs.findIndex((dialog) => dialog.id === id);
 
         if (index === -1) {
-            console.warn("Dialog does not exist", id);
+            Logger.warn("Dialog does not exist", id);
 
             return;
         }
@@ -94,7 +95,7 @@ export function useDialogs() {
         const index = dialogs.findIndex((dialog) => dialog.id === id);
 
         if (index === -1) {
-            console.warn("Dialog does not exist", id);
+            Logger.warn("Dialog does not exist", id);
 
             return;
         }

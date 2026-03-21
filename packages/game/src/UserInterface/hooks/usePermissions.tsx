@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { clientInstance } from "../..";
-import { PermissionAction } from "@Shared/Interfaces/Permissions/PermissionMap";
+import { PermissionAction } from "@pixel63/shared/Interfaces/Permissions/PermissionMap";
 
 export function usePermissions(actions: PermissionAction[]) {
     const [values, setValues] = useState(actions.map(() => false));

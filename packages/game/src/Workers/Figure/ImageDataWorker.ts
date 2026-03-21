@@ -1,4 +1,5 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import { Logger } from "@pixel63/shared/Logger/Logger";
 
 export type ImageDataWorkerRequestEvent = {
     image: ImageBitmap;
@@ -24,6 +25,6 @@ onmessage = async (event: MessageEvent<ImageDataWorkerRequestEvent>) => {
         port.close();
     }
     catch(error) {
-        console.error(error);
+        Logger.error("Failed to get image data", error);
     }
 };

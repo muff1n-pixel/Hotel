@@ -48,8 +48,6 @@ export default class UserFriendUpdateEvent implements ProtobuffListener<UserFrie
             case "friend_removed": {
                 const existingFriendIndex = clientInstance.friends.value.findIndex((friend) => friend.id === payload.friend!.id);
 
-                console.log({ existingFriendIndex });
-
                 if(existingFriendIndex !== -1) {
                     clientInstance.friends.value.splice(existingFriendIndex, 1);
                     clientInstance.friends.update();

@@ -21,8 +21,6 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
 
             visualization.layerCount = 12;
 
-            console.log(visualization.layers);
-
             visualization.layers.find((layer) => layer.id === 1)!.ink = "difference";
             visualization.layers.find((layer) => layer.id === 2)!.ink = "subtract";
             visualization.layers.find((layer) => layer.id === 4)!.ink = "difference";

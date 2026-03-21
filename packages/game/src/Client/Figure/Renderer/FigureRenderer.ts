@@ -13,6 +13,7 @@ import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import Performance from "@Client/Utilities/Performance";
 import { FigureConfigurationData } from "@pixel63/events";
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
+import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -227,7 +228,7 @@ export default class FigureRenderer {
             const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
 
             if(!geometryBodyparts) {
-                console.warn("Action does not have a geometry bodyparts.", { effectBodyPart });
+                FigureLogger.warn("Action does not have a geometry bodyparts.", { effectBodyPart });
 
                 continue;
             }
@@ -642,15 +643,14 @@ export default class FigureRenderer {
 
                 const effectLibrary = sprite.member.split('_').find((part) => part.startsWith("fx"));
 
-                console.log(effectLibrary, effect);
-
                 if(effectLibrary && effectLibrary !== `fx${effect.id}`) {
                     const libraryId = parseInt(effectLibrary.substring(2));
 
                     const library = this.getEffectLibrary(libraryId);
 
                     if(!library) {
-                        console.log("Library does not exist", libraryId);
+                        FigureLogger.error("Library does not exist", libraryId);
+                        
                         continue;
                     }
 
@@ -829,7 +829,7 @@ export default class FigureRenderer {
             const sprite = figureData.sprites.find((sprite) => sprite.name === sourceAssetName);
 
             if(!sprite) {
-                console.error("Can't find sprite for source asset " + sourceAssetName);
+                FigureLogger.error("Can't find sprite for source asset " + sourceAssetName);
 
                 return null
             }
@@ -967,7 +967,7 @@ export default class FigureRenderer {
         
             if(cropped) {
                 if(effectSprites.length) {
-                    console.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
+                    FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
                 }
 
                 minimumX = 0;
