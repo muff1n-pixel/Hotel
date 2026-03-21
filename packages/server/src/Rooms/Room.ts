@@ -154,7 +154,7 @@ export default class Room {
                 actor.path.setPosition({
                     ...actor.position,
                     depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-                }, sitableFurniture.model.direction);
+                }, sitableFurniture.model.direction ?? undefined);
             }
             else {
                 actor.removeAction("Sit");
@@ -224,11 +224,11 @@ export default class Room {
             user.preoccupiedByActionHandler = false;
         }
 
-        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.getCategoryLogic()?.handleActionsInterval !== undefined);
+        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.logic?.handleActionsInterval !== undefined);
 
         for(let furniture of furnitureWithActions) {
             try {
-                await furniture.getCategoryLogic()?.handleActionsInterval?.();
+                await furniture.logic?.handleActionsInterval?.();
             }
             catch(error) {
                 console.error("Failed to handle furniture actions interval", error);
@@ -380,11 +380,11 @@ export default class Room {
     }
     
     public getFurnitureWithCategory<T>(category: (new (...args: any[]) => T)) {
-        return this.furnitures.filter((furniture) => furniture.getCategoryLogic() instanceof category).map((furniture) => furniture.getCategoryLogic() as T);
+        return this.furnitures.filter((furniture) => furniture.logic instanceof category).map((furniture) => furniture.logic as T);
     }
 
-    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
-        await roomFurniture.handleUserWalksOnFurniture(roomUser);
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture | undefined) {
+        await roomFurniture.handleUserWalksOnFurniture(roomUser, previousRoomFurniture);
 
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
@@ -393,8 +393,8 @@ export default class Room {
         }
     }
 
-    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
-        await roomFurniture.handleUserWalksOnFurniture(roomUser);
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture | undefined) {
+        await roomFurniture.handleUserWalksOffFurniture(roomUser, newRoomFurniture);
 
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 

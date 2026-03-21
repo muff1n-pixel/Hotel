@@ -11,10 +11,6 @@ export default class UseRoomFurnitureEvent implements ProtobuffListener<UseRoomF
         let roomUser = user.room.getRoomUser(user);
         const roomFurniture = user.room.getRoomFurniture(payload.id);
 
-        const logic = roomFurniture.getCategoryLogic();
-
-        if(logic) {
-            await logic.use?.(roomUser, payload);
-        }
+        await roomFurniture.logic?.use?.(roomUser, payload);
     }
 }

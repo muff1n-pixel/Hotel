@@ -166,10 +166,10 @@ export default class RoomUser implements RoomActor {
 
         this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
-        const wiredUserLeavesRoomLogics = this.room.getFurnitureWithCategory(WiredTriggerUserLeavesRoomLogic);
+        const furnitureWithUserLeftRoom = this.room.furnitures.filter((furniture) => furniture.logic?.handleUserLeftRoom);
 
-        for(const logic of wiredUserLeavesRoomLogics) {
-            logic.handleUserLeftRoom(this);
+        for(const furniture of furnitureWithUserLeftRoom) {
+            furniture.logic?.handleUserLeftRoom?.(this);
         }
 
         delete this.user.room;
@@ -310,23 +310,32 @@ export default class RoomUser implements RoomActor {
 
     public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
         const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
-
-        if(previousFurniture) {
-            await this.handleWalksOffFurniture?.(previousFurniture);
-        }
-
         const currentFurniture = this.room.getUpmostFurnitureAtPosition(newPosition);
 
+        if(previousFurniture) {
+            await this.handleWalksOffFurniture?.(previousFurniture, currentFurniture);
+        }
+
+
         if(currentFurniture) {
-            await this.handleWalksOnFurniture?.(currentFurniture);
+            await this.handleWalksOnFurniture?.(currentFurniture, previousFurniture);
         }
     }
 
-    public async handleWalksOnFurniture(roomFurniture: RoomFurniture): Promise<void> {
-        return this.room.handleUserWalksOnFurniture(this, roomFurniture);
+    public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture | undefined): Promise<void> {
+        return this.room.handleUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 
-    public async handleWalksOffFurniture(roomFurniture: RoomFurniture): Promise<void> {
-        return this.room.handleUserWalksOffFurniture(this, roomFurniture);
+    public async handleWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture | undefined): Promise<void> {
+        return this.room.handleUserWalksOffFurniture(this, roomFurniture, newRoomFurniture);
+    }
+
+    public isWithinRadius(center: RoomPositionData, radius: number) {
+        const distance = Math.max(
+            Math.abs(this.position.column - center.column),
+            Math.abs(this.position.row - center.row)
+        );
+
+        return distance <= radius;
     }
 }

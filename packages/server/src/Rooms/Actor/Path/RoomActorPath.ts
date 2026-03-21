@@ -151,7 +151,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction, true);
+            }), sitableFurniture.model.direction ?? undefined, true);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -173,7 +173,7 @@ export default class RoomActorPath {
         }
     }
 
-    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
+    public setPosition(position: RoomPositionData, direction?: number | undefined, usePath?: boolean) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
             return;
         }
@@ -213,7 +213,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition({
                 ...this.actor.position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction);
+            }, sitableFurniture.model.direction ?? undefined);
         }
 
         this.path = undefined;

@@ -13,10 +13,10 @@ export default class WiredTriggerLogic extends WiredLogic {
             && furniture.model.position.column === this.roomFurniture.model.position.column
         );
 
-        const wiredStackActionFurniture = wiredStackFurniture.filter((furniture) => furniture.getCategoryLogic() instanceof WiredActionLogic);
+        const wiredStackActionFurniture = wiredStackFurniture.filter((furniture) => furniture.logic instanceof WiredActionLogic);
 
         await Promise.all(wiredStackActionFurniture.map(async (furniture) => {
-            const logic = furniture.getCategoryLogic() as WiredActionLogic;
+            const logic = furniture.logic as WiredActionLogic;
 
             await logic.handleAction?.(options);
         }));

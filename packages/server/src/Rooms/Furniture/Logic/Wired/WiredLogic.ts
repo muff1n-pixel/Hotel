@@ -38,13 +38,11 @@ export default class WiredLogic implements RoomFurnitureLogic {
             return null;
         }
 
-        const category = furniture.getCategoryLogic();
-
-        if(!(category instanceof WiredLogic)) {
+        if(!(furniture.logic instanceof WiredLogic)) {
             return null;
         }
 
-        return category;
+        return furniture.logic;
     }
 
     public setActive() {
