@@ -16,6 +16,7 @@ export type FigureAnimationData = {
 
     sprites: {
         id: string;
+        part?: string;
         frame?: number;
         member: string;
         ink?: number;

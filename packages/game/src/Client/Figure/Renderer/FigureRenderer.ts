@@ -604,17 +604,10 @@ export default class FigureRenderer {
 
                                     return {
                                         id,
+                                        part: item.id,
                                         frame: bodypart.frame,
-                                        member: `${action.assetPartDefinition}_${id}_1`, // TODO: what's the 1 for?
+                                        member: `${action.assetPartDefinition}_${item.id}_${item.base}`, // TODO: what's the 1 for?
                                         useDirections: true,
-                                        directions: Array(8).fill(null).map((_, index) => {
-                                            return {
-                                                id: index,
-                                                destinationX: undefined,
-                                                destinationY: undefined,
-                                                destinationZ: getIndexForAlignment(item.align)
-                                            };
-                                        }),
                                         destinationY: (this.avatarEffect?.destinationY ?? 0),
                                     }
                                 });
@@ -665,24 +658,19 @@ export default class FigureRenderer {
 
                 const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
 
-                const direction = sprite.directions?.find((direction) => direction.id === this.direction);
+                const spriteDirectionData = sprite.directions?.find((_direction) => _direction.id === direction);
 
-                if(sprite.useDirections && !direction) {
-                    //console.warn("Effect has no direction specified for " + this.direction);
-
-                    continue;
-                }
-
-                const index = (direction)?(direction.destinationZ):(0);
+                const index = (spriteDirectionData)?(spriteDirectionData.destinationZ):(0);
 
                 let flipHorizontal = false;
-
-                let assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
+                const spriteDirection = (spriteDirectionData)?(this.direction):(direction);
+            
+                let assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
                 let assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
-                if(!assetData && (this.direction > 3 && this.direction < 7)) {
-                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
+                if(!assetData && (spriteDirection > 3 && spriteDirection < 7)) {
+                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
                     assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
@@ -721,12 +709,12 @@ export default class FigureRenderer {
                     result.y += effectFrame.destinationY;
                 }
 
-                if(direction?.destinationX) {
-                    result.x += direction.destinationX;
+                if(spriteDirectionData?.destinationX) {
+                    result.x += spriteDirectionData.destinationX;
                 }
 
-                if(direction?.destinationY) {
-                    result.y += direction.destinationY;
+                if(spriteDirectionData?.destinationY) {
+                    result.y += spriteDirectionData.destinationY;
                 }
 
                 if(result) {
