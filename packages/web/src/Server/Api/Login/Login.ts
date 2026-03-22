@@ -105,7 +105,7 @@ router.post("/", async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        lastLoggin: user.lastLogin,
+        lastLogin: user.lastLogin,
         credits: user.credits,
         diamonds: user.diamonds,
         duckets: user.duckets,
