@@ -14,6 +14,7 @@ import { ThemeContext } from '../../ThemeProvider'
 import ArticleComment from '../../Components/Article/Comment/Comment'
 import { Alert, AlertType } from '../../Components/Alert/Alert';
 import { useRef } from "react";
+import Box from '../../Components/Box/Box'
 
 const ArticlePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -264,33 +265,30 @@ const ArticlePage = () => {
                         <Loading />
                         :
                         <div>
-                            <div className='box articleContent'>
-                                {articleData &&
-                                    <div>
-                                        <div className='title'>{articleData.title}</div>
-                                        <div className='content' dangerouslySetInnerHTML={{ __html: articleData.content }}></div>
-                                        <div className='footer'>
-                                            {articleData.author &&
-                                                <div className='author'>
-                                                    <div className='avatar'>
-                                                        <img src={articleAuthorAvatar} alt="Avatar" />
-                                                    </div>
-
-                                                    <div className='data'>
-                                                        <div className='username'>{articleData.author.name}</div>
-                                                        <div className='date'>{new Date(articleData.createdAt).toLocaleString().replace(" ", " at ")}</div>
-                                                    </div>
+                            {articleData &&
+                                <Box title={articleData.title} className='articleContent'>
+                                    <div className='articleContentData' dangerouslySetInnerHTML={{ __html: articleData.content }}></div>
+                                    <div className='footer'>
+                                        {articleData.author &&
+                                            <div className='author'>
+                                                <div className='avatar'>
+                                                    <img src={articleAuthorAvatar} alt="Avatar" />
                                                 </div>
-                                            }
 
-                                            <div className='infos'>
-                                                <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !articleData.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon" /> {articleData.likes.length}</div>
-                                                <div className='row' onClick={scrollToComments}><img src={commentIcon} alt="Comment Icon" /> {articleData.totalComments}</div>
+                                                <div className='data'>
+                                                    <div className='username'>{articleData.author.name}</div>
+                                                    <div className='date'>{new Date(articleData.createdAt).toLocaleString().replace(" ", " at ")}</div>
+                                                </div>
                                             </div>
+                                        }
+
+                                        <div className='infos'>
+                                            <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !articleData.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon" /> {articleData.likes.length}</div>
+                                            <div className='row' onClick={scrollToComments}><img src={commentIcon} alt="Comment Icon" /> {articleData.totalComments}</div>
                                         </div>
                                     </div>
-                                }
-                            </div>
+                                </Box>
+                            }
 
                             <div className='comments' ref={commentsRef}>
                                 {currentUser &&

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Loading from "../Loading/Loading"
 import StaffUser, { StaffUserType } from "./StaffUser/StaffUser"
+import Box from "../Box/Box"
 
 type StaffRankRoleSection = {
     id: string,
@@ -63,23 +64,23 @@ const StaffSection = (props: StaffRankType) => {
     }
 
     return (
-        <div className='box'>
-            <div className='title flex'>{props.name} <span>{getRolesAsString()}</span></div>
-            <div className='content'>
-                {
-                    loading ?
-                        <Loading />
-                        :
-                        <div>
-                            {users.map((user) => {
-                                return (
-                                    <StaffUser {...user} key={user.id} />
-                                )
-                            })}
-                        </div>
-                }
-            </div>
-        </div>
+        <Box title={{
+            name: props.name,
+            subtitle: getRolesAsString()
+        }}>
+            {
+                loading ?
+                    <Loading />
+                    :
+                    <div>
+                        {users.map((user) => {
+                            return (
+                                <StaffUser {...user} key={user.id} />
+                            )
+                        })}
+                    </div>
+            }
+        </Box>
     )
 }
 

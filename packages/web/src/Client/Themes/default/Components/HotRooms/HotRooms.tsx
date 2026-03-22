@@ -3,6 +3,7 @@ import Loading from "../Loading/Loading";
 import { RoomInterface } from "@client/Logic/Room/RoomInterface";
 import './HotRooms.css';
 import goIcon from '../../Images/icons/medium/go_arrow.gif'
+import Box from "../Box/Box";
 
 const HotRooms = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -35,48 +36,45 @@ const HotRooms = () => {
     }, []);
 
     return (
-        <div className="box">
-            <div className="title red">Hot Rooms</div>
-            <div className="content">
-                {loading ?
-                    <Loading />
-                    :
-                    <div className="hot_rooms">
-                        {rooms.length === 0 ?
-                            <div style={{ textAlign: "center", marginBottom: "10px", fontSize: "12px" }}>No rooms available at the moment.</div>
-                            :
-                            rooms.map((room) => {
-                                let iconClass = "";
+        <Box title={"Hot Rooms"} color="red">
+            {loading ?
+                <Loading />
+                :
+                <div className="hot_rooms">
+                    {rooms.length === 0 ?
+                        <div style={{ textAlign: "center", marginBottom: "10px", fontSize: "12px" }}>No rooms available at the moment.</div>
+                        :
+                        rooms.map((room) => {
+                            let iconClass = "";
 
-                                const ratio = room.currentUsers / room.maxUsers;
+                            const ratio = room.currentUsers / room.maxUsers;
 
-                                if (room.currentUsers === 0) {
-                                    iconClass = "";
-                                } else if (ratio >= 0.8) {
-                                    iconClass = "red";
-                                } else if (ratio >= 0.5) {
-                                    iconClass = "orange";
-                                } else {
-                                    iconClass = "green";
-                                }
+                            if (room.currentUsers === 0) {
+                                iconClass = "";
+                            } else if (ratio >= 0.8) {
+                                iconClass = "red";
+                            } else if (ratio >= 0.5) {
+                                iconClass = "orange";
+                            } else {
+                                iconClass = "green";
+                            }
 
-                                return (
-                                    <div className='row' onClick={() => window.open(`/game?room=${room.id}`, "_blank", "noopener,noreferrer")} key={room.id}>
-                                        <div className={`icon ${iconClass}`}></div>
-                                        <div className="infos">
-                                            <div className="name">{room.name}</div>
-                                            <div className="owner">{room.owner ? room.owner.name : "Undefined"}</div>
-                                        </div>
-
-                                        <img src={goIcon} alt="goIcon" className="joinRoom" />
+                            return (
+                                <div className='row' onClick={() => window.open(`/game?room=${room.id}`, "_blank", "noopener,noreferrer")} key={room.id}>
+                                    <div className={`icon ${iconClass}`}></div>
+                                    <div className="infos">
+                                        <div className="name">{room.name}</div>
+                                        <div className="owner">{room.owner ? room.owner.name : "Undefined"}</div>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
-                }
-            </div>
-        </div>
+
+                                    <img src={goIcon} alt="goIcon" className="joinRoom" />
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            }
+        </Box>
     )
 }
 

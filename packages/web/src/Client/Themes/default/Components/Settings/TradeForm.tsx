@@ -2,6 +2,7 @@ import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
 import tradeIcon from '../../Images/icons/small/tools_edit.gif';
 import { Alert, AlertType } from "../Alert/Alert";
+import Box from "../Box/Box";
 
 
 const SettingsTradeForm = () => {
@@ -9,9 +10,9 @@ const SettingsTradeForm = () => {
 
     if (!currentUser)
         return (
-            <div className='box'>
+            <Box>
                 <div className='alert error noMargin'>Please reconnect on the website.</div>
-            </div>);
+            </Box>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
         const [allowTrade, setAllowTrade] = useState(currentUser.preferences.allowTrade);
@@ -53,8 +54,7 @@ const SettingsTradeForm = () => {
         }, [allowTrade]);
 
         return (
-            <div className="box">
-                <div className="title">Edit my trade settings</div>
+            <Box title={"Edit my trade settings"}>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
                     <div className="row">
@@ -66,7 +66,7 @@ const SettingsTradeForm = () => {
                     </div>
                     <button><img src={tradeIcon} alt="Trade Icon" /> Edit my trade settings</button>
                 </form>
-            </div>
+            </Box>
         )
     }
 }
