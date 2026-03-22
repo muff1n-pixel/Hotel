@@ -12,6 +12,7 @@
     
     "database": {
         "dialect": "mysql",
+        "logging": false,
         "database": "DATABASE",
         "username": "USERNAME",
         "password": "PASSWORD",
