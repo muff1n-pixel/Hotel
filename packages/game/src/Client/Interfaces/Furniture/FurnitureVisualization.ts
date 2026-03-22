@@ -8,6 +8,9 @@ export type FurnitureAnimationLayerFrameOffset = {
 export type FurnitureAnimationLayerFrame = {
     id: number;
 
+    left?: number;
+    top?: number;
+
     offsets?: FurnitureAnimationLayerFrameOffset[];
 };
 

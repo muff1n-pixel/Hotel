@@ -72,7 +72,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const animationData = this.visualization.animations?.find((animationData) => animationData.id === options!.animation);
 
-        const result: { animationLayerId: number, frameSequenceIndex: number, animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
+        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
 
         for(let layer = 0; layer < this.visualization.layerCount; layer++) {
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
@@ -106,6 +106,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     result.push({
                         animationLayerId: animationLayer.id,
                         frameSequenceIndex,
+                        left: animationLayer?.frameSequence[frameSequenceIndex].left,
+                        top: animationLayer?.frameSequence[frameSequenceIndex].top,
                         animationFrameOffset: animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options!.direction),
                         spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id
                     });
@@ -215,6 +217,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             if(animationFrame?.animationFrameOffset?.top !== undefined) {
                 y += animationFrame.animationFrameOffset?.top;
+            }
+
+            if(animationFrame?.left !== undefined) {
+                x += animationFrame.left;
+            }
+
+            if(animationFrame?.top !== undefined) {
+                y += animationFrame.top;
             }
 
             const assetSprite: FurnitureRendererSprite = {

@@ -249,6 +249,9 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                                     return {
                                         id: parseInt(frame["@_id"]),
 
+                                        left: (frame["@_x"])?(parseInt(frame["@_x"])):(undefined),
+                                        top: (frame["@_y"])?(parseInt(frame["@_y"])):(undefined),
+
                                         offsets: (frame["offsets"])?(
                                             getValueAsArray(frame["offsets"]["offset"]).map((offset: any) => {
                                                 return {
