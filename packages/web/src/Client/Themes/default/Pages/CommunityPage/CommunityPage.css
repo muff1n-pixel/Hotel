@@ -36,11 +36,14 @@
                     border: 1px solid #afafaf;
 
                     .username {
+                        word-break: break-all;
                         font-weight: bold;
                     }
 
                     .motto {
+                        word-break: break-all;
                         opacity: 0.7;
+                        font-family: 'Ubuntu-C';
                     }
                 }
 

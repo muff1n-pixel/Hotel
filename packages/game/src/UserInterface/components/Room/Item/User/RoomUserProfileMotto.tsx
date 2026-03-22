@@ -25,7 +25,7 @@ export default function RoomUserProfileMotto({ canEdit, value, onChange }: RoomU
 
             padding: "2px 4px",
             boxSizing: "border-box",
-
+            fontFamily: "Ubuntu C",
             alignItems: "center"
         }} onClick={() => (canEdit && !editting) && setEditting(true)}>
             {(canEdit) && (
@@ -33,7 +33,7 @@ export default function RoomUserProfileMotto({ canEdit, value, onChange }: RoomU
             )}
 
             {(editting)?(
-                <input className="room-user-profile-motto" autoFocus maxLength={40} value={motto ?? ""} onChange={(event) => setMotto((event.target as HTMLInputElement).value)} onKeyDown={(event) => {
+                <input className="room-user-profile-motto" autoFocus maxLength={40} value={motto ?? ""} onChange={(event) => setMotto((event.target as HTMLInputElement).value)} style={{fontFamily: "Ubuntu C"}} onKeyDown={(event) => {
                     if(event.key === "Enter") {
                         setEditting(false);
                         onChange(motto);
