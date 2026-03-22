@@ -95,11 +95,15 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                         }}>
                             <b>Room name</b>
 
-                            <Input placeholder="My room name" value={name} onChange={setName}/>
+                            <Input placeholder="My room name" value={name} onChange={setName} style={{
+                                fontFamily: 'Ubuntu C'
+                            }}/>
                             
                             <b>Room description</b>
 
-                            <Input placeholder="My room description" value={description} onChange={setDescription}/>
+                            <Input placeholder="My room description" value={description} onChange={setDescription} style={{
+                                fontFamily: 'Ubuntu C'
+                            }}/>
 
                             <b>Room category</b>
 

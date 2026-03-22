@@ -39,7 +39,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                 <b>{profile.name}</b>
 
                                 {(profile.motto && profile.motto.length > 0) && (
-                                    <div style={{ fontSize: 12 }}><i>{profile.motto}</i></div>
+                                    <div style={{ fontSize: 12, fontFamily: "Ubuntu C" }}><i>{profile.motto}</i></div>
                                 )}
 
                                 <div style={{ flex: 1 }}/>

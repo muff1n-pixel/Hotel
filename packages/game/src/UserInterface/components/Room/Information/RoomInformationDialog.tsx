@@ -51,9 +51,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                         flexDirection: "row",
                         justifyContent: "space-between"
                     }}>
-                        <div>
-                            <b>{room.information?.name}</b>
-                        </div>
+                        <div style={{fontFamily: "Ubuntu C", fontWeight: "bold"}}>{room.information?.name}</div>
 
                         <div style={{
                             cursor: "pointer"
@@ -66,7 +64,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
 
                     {(room.information?.description) && (
                         <div>
-                            <p>{room.information?.description}</p>
+                            <p style={{fontFamily: "Ubuntu C"}}>{room.information?.description}</p>
                         </div>
                     )}
 
