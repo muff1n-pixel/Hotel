@@ -7,6 +7,8 @@ export type RoomFurnitureHandleUserChatResult = { blockUserChat?: boolean; } | n
 export default interface RoomFurnitureLogic {
     use?(roomUser: RoomUser, event: UseRoomFurnitureData): Promise<void>;
 
+    isWalkable?(): boolean;
+
     handleUserEnteredRoom?(roomUser: RoomUser): Promise<void>;
     handleUserLeftRoom?(roomUser: RoomUser): Promise<void>;
     

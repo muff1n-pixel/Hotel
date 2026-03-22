@@ -27,11 +27,12 @@ import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollis
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
 import RoomFurnitureCrackableLogic from "./Logic/RoomFurnitureCrackableLogic.js";
-import RoomFurnitureIceTagFieldLogic from "./Logic/RoomFurnitureIceTagFieldLogic.js";
-import RoomFurnitureBunnyRunFieldLogic from "./Logic/RoomFurnitureBunnyRunFieldLogic";
-import RoomFurnitureIceTagPoleLogic from "./Logic/RoomFurnitureIceTagPoleLogic";
-import RoomFurnitureBunnyRunPoleLogic from "./Logic/RoomFurnitureBunnyRunPoleLogic";
-import RoomFurnitureFootballLogic from "./Logic/RoomFurnitureFootballLogic";
+import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeGateLogic";
+import RoomFurnitureIceTagFieldLogic from "./Logic/Games/IceTag/RoomFurnitureIceTagFieldLogic";
+import RoomFurnitureIceTagPoleLogic from "./Logic/Games/IceTag/RoomFurnitureIceTagPoleLogic";
+import RoomFurnitureFootballLogic from "./Logic/Games/RoomFurnitureFootballLogic";
+import RoomFurnitureBunnyRunFieldLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunFieldLogic";
+import RoomFurnitureBunnyRunPoleLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunPoleLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -64,21 +65,38 @@ export default class RoomFurnitureLogicFactory {
             case "fortuna":
                 return new RoomFurnitureFortunaLogic(roomFurniture);
 
+            // Ice Tag
             case "icetag_field":
                 return new RoomFurnitureIceTagFieldLogic(roomFurniture);
 
             case "icetag_pole":
                 return new RoomFurnitureIceTagPoleLogic(roomFurniture);
 
+            // Football
             case "football":
                 return new RoomFurnitureFootballLogic(roomFurniture);
 
+            // Bunny Run
             case "bunnyrun_field":
                 return new RoomFurnitureBunnyRunFieldLogic(roomFurniture);
 
             case "bunnyrun_pole":
                 return new RoomFurnitureBunnyRunPoleLogic(roomFurniture);
-            
+
+            // Freeze
+            case "freeze_gate_blue":
+                return new RoomFurnitureFreezeGateLogic(roomFurniture, "blue");
+
+            case "freeze_gate_green":
+                return new RoomFurnitureFreezeGateLogic(roomFurniture, "green");
+
+            case "freeze_gate_red":
+                return new RoomFurnitureFreezeGateLogic(roomFurniture, "red");
+
+            case "freeze_gate_yellow":
+                return new RoomFurnitureFreezeGateLogic(roomFurniture, "yellow");
+
+            // Wired
             case "conf_invis_control":
                 return new RoomInvisibleFurnitureControlLogic(roomFurniture);
 

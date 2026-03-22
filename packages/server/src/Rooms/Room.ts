@@ -13,12 +13,15 @@ import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetD
 import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
+import RoomFreezeGame from "./Games/Freeze/RoomFreezeGame.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
     public readonly bots: RoomBot[] = [];
     public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
+
+    public freezeGame: RoomFreezeGame = new RoomFreezeGame(this);
 
     public readonly floorplan: RoomFloorplan;
 

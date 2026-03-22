@@ -1,7 +1,7 @@
 import { RoomFurnitureMovedData, RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
-import RoomUser from "../../Users/RoomUser.js";
-import RoomFurniture from "../RoomFurniture.js";
-import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import RoomUser from "../../../Users/RoomUser.js";
+import RoomFurniture from "../../RoomFurniture.js";
+import RoomFurnitureLogic from "./../Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
     private travelingDirection: number | null = null;
@@ -14,7 +14,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
 
     }
 
-    async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture | undefined): Promise<void> {
+    async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
         this.travelingDirection = roomUser.direction;
         this.travelingPassing = Boolean(roomUser.path.path && roomUser.path.path.length > 0);
         this.travelingVelocity = (this.travelingPassing)?(2):(6);

@@ -6,6 +6,7 @@ import RoomUser from "../Users/RoomUser.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
 import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
+import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeGateLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -69,6 +70,10 @@ export default class RoomFurniture<T = unknown> {
     }
 
     public isWalkable(finalDestination: boolean) {
+        if(this.logic?.isWalkable && !this.logic.isWalkable()) {
+            return false;
+        }
+
         if(this.model.furniture.flags.walkable) {
             return true;
         }
@@ -260,13 +265,11 @@ export default class RoomFurniture<T = unknown> {
 
     /** Call this from the Room instance only. */
     public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
-        console.log("walk 0n");
         await this.logic?.handleUserWalksOn?.(roomUser, previousRoomFurniture);
     }
 
     /** Call this from the Room instance only. */
     public async handleUserWalksOffFurniture(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]) {
-        console.log("walk 0ff");
         await this.logic?.handleUserWalksOff?.(roomUser, newRoomFurniture);
     }
 

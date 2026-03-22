@@ -1,7 +1,7 @@
 import { RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
-import RoomUser from "../../Users/RoomUser.js";
-import RoomFurniture from "../RoomFurniture.js";
-import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import RoomUser from "../../../../Users/RoomUser.js";
+import RoomFurniture from "../../../RoomFurniture.js";
+import RoomFurnitureLogic from "./../../Interfaces/RoomFurnitureLogic.js";
 import RoomFurnitureIceTagPoleLogic from "./RoomFurnitureIceTagPoleLogic.js";
 
 export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic {
