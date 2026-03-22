@@ -13,14 +13,14 @@ import RoomFurnitureStickieLogic from "@Client/Room/Furniture/Logic/RoomFurnitur
 import RoomFurnitureTrophyLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTrophyLogic";
 import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitureFortunaLogic";
 import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurnitureWiredLogic";
-import { RoomPositionData, UserFurnitureData } from "@pixel63/events";
+import { FurnitureData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
     public readonly item: RoomFurnitureItem;
 
-    constructor(private readonly instance: RoomInstance, public data: UserFurnitureData) {
-        this.furniture = new Furniture(this.data.furniture?.type, 64, this.data.direction, this.data.animation, this.data.furniture?.color);
+    constructor(private readonly instance: RoomInstance, public furnitureData: FurnitureData, public data: UserFurnitureData) {
+        this.furniture = new Furniture(this.furnitureData.type, 64, this.data.direction, this.data.animation, this.furnitureData.color);
         this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, this.data.position, this.data.data as any);
 
         this.instance.roomRenderer.items.push(this.item);
@@ -33,7 +33,7 @@ export default class RoomFurniture {
             throw new Error("Furniture data is not available.");
         }
 
-        switch(this.data.furniture?.interactionType) {
+        switch(this.furnitureData.interactionType) {
             case "postit":
                 return new RoomFurnitureStickieLogic(this.instance, this);
 
@@ -54,10 +54,10 @@ export default class RoomFurniture {
                 return new RoomFurnitureTeleportLogic(this.instance, this);
 
             case "gate":
-                return new FurnitureMultistateLogic(this.instance, this);
-
             case "multiheight":
             case "default":
+            case "conf_invis_control":
+            case "crackable":
                 return new FurnitureMultistateLogic(this.instance, this);
                 
             case "ads_bg":
@@ -68,12 +68,9 @@ export default class RoomFurniture {
 
             case "trophy":
                 return new RoomFurnitureTrophyLogic(this.instance, this);
-
-            case "conf_invis_control":
-                return new FurnitureMultistateLogic(this.instance, this);
         }
 
-        if(this.data.furniture?.interactionType.startsWith("wf_trg") || this.data.furniture?.interactionType.startsWith("wf_act")) {
+        if(this.furnitureData.interactionType.startsWith("wf_trg") || this.furnitureData.interactionType.startsWith("wf_act")) {
             return new RoomFurnitureWiredLogic(this.instance, this);
         }
 
@@ -81,44 +78,40 @@ export default class RoomFurniture {
     }
 
     public getDimensionDepth() {
-        if(!this.data.furniture?.dimensions) {
+        if(!this.furnitureData.dimensions) {
             throw new Error();
         }
 
-        if(this.data.furniture?.interactionType === "multiheight" && this.data.furniture?.customParams?.[0]) {
-            return this.data.furniture?.dimensions?.depth + ((parseFloat(this.data.furniture?.customParams[0])) * this.data.animation);
+        if(this.furnitureData.interactionType === "multiheight" && this.furnitureData.customParams?.[0]) {
+            return this.furnitureData.dimensions?.depth + ((parseFloat(this.furnitureData.customParams[0])) * this.data.animation);
         }
 
-        return this.data.furniture?.dimensions?.depth;
+        return this.furnitureData.dimensions?.depth;
     }
 
     public updateData(payload: UserFurnitureData) {       
-        if(!payload.furniture) {
-            throw new Error();
-        } 
-
         if(payload.data) { 
-            if(payload.furniture?.interactionType === "dimmer" && payload.data.moodlight) {
+            if(this.furnitureData.interactionType === "dimmer" && payload.data.moodlight) {
                 if(payload.data.moodlight.enabled || this.data.data?.moodlight?.enabled) {
                     this.instance.setMoodlight(payload.data.moodlight);
                 }
             }
-            else if(this.data.furniture?.interactionType === "background_toner" && payload.data.toner) {
+            else if(this.furnitureData.interactionType === "background_toner" && payload.data.toner) {
                 if(payload.data.toner.enabled || this.data.data?.toner?.enabled) {
                     this.instance.setBackgroundToner(payload.data.toner);
                 }
             }
         }
 
-        if(this.data.furniture?.interactionType === "conf_invis_control") {
-            const invisibleTiles = this.instance.furnitures.filter((furniture) => furniture.data.furniture?.type.startsWith("room_invisible_"));
+        if(this.furnitureData.interactionType === "conf_invis_control") {
+            const invisibleTiles = this.instance.furnitures.filter((furniture) => furniture.furnitureData.type.startsWith("room_invisible_"));
 
             for(const invisibleFurniture of invisibleTiles) {
                 invisibleFurniture.item.disabled = (payload.animation === 1);
             }
         }
-        else if(this.data.furniture?.type.startsWith("room_invisible_")) {
-            const controllerFurniture = this.instance.furnitures.find((furniture) => furniture.data.furniture?.interactionType === "conf_invis_control");
+        else if(this.furnitureData.type.startsWith("room_invisible_")) {
+            const controllerFurniture = this.instance.furnitures.find((furniture) => furniture.furnitureData.interactionType === "conf_invis_control");
 
             if(controllerFurniture) {
                 this.item.disabled = (controllerFurniture.data.animation === 1);
@@ -136,10 +129,12 @@ export default class RoomFurniture {
         }
 
         if(payload.color !== undefined) {
-            this.item.furnitureRenderer.color = payload.color ?? this.data.furniture?.color ?? undefined;
+            this.item.furnitureRenderer.color = payload.color ?? this.furnitureData.color ?? undefined;
         }
 
-        if(payload.position) {
+        if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
+            this.item.positionPathData = undefined;
+            
             this.item.setPosition(payload.position);
         }
 

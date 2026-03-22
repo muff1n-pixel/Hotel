@@ -1,8 +1,8 @@
 import { clientInstance } from "../../..";
-import { useSettings } from "../../hooks/useSettings";
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
-import Checkbox from "../Form/Checkbox";
+import { useSettings } from "../../Hooks/useSettings";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
+import Checkbox from "../../Common/Form/Components/Checkbox";
 
 export type SettingsDialogProps = {
     hidden?: boolean;
@@ -13,7 +13,7 @@ export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps)
     const settings = useSettings();
 
     return (
-        <Dialog title="Settings" hidden={hidden} onClose={onClose} width={300} height={70} initialPosition="center">
+        <Dialog title="Settings" hidden={hidden} onClose={onClose} width={300} height={120} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -25,6 +25,16 @@ export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps)
                         clientInstance.settings.value!.limitRoomFrames = !settings?.limitRoomFrames;
                         clientInstance.settings.update();
                     }} label="Limit frame rate to 60 fps"/>
+                    
+                    <Checkbox value={settings?.hideTooltips === true} onChange={() => {
+                        clientInstance.settings.value!.hideTooltips = !settings?.hideTooltips;
+                        clientInstance.settings.update();
+                    }} label="Hide tooltips"/>
+                    
+                    <Checkbox value={settings?.debugRoomRendering === true} onChange={() => {
+                        clientInstance.settings.value!.debugRoomRendering = !settings?.debugRoomRendering;
+                        clientInstance.settings.update();
+                    }} label="Debug room rendering"/>
                 </div>
             </DialogContent>
         </Dialog>

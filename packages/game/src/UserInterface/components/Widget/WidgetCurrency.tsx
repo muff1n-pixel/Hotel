@@ -11,11 +11,12 @@ function getCurrencyAsString(value?: number) {
 }
 
 export type WidgetCurrencyProps = PropsWithChildren & {
+    tooltip?: string;
     color: string;
     value: number;
 }
 
-export default function WidgetCurrency({ color, value, children }: WidgetCurrencyProps) {
+export default function WidgetCurrency({ tooltip, color, value, children }: WidgetCurrencyProps) {
     return (
         <div style={{
             display: "flex",
@@ -24,7 +25,7 @@ export default function WidgetCurrency({ color, value, children }: WidgetCurrenc
             fontSize: 12,
             color,
             alignItems: "center"
-        }}>
+        }} data-tooltip={tooltip}>
             <b>{getCurrencyAsString(value)}</b>
 
             {children}

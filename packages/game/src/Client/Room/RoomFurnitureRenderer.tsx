@@ -1,5 +1,5 @@
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import RoomRenderer from "./Renderer";
+import RoomRenderer from "./RoomRenderer";
 import RoomWallItem from "./Items/Map/RoomWallItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";

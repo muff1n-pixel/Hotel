@@ -1,74 +1,158 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
-import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
+import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
+import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
+import { FurnitureAnimationLayerFrameOffset, FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
+import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
+    private animated: boolean = false;
+    private previousLayerFrames: string = "";
+    private hasImageData: boolean = false;
+
+    private visualization?: FurnitureVisualization["visualizations"][0];
+
     constructor(public readonly type: string | undefined) {
 
     }
 
-    public async render(data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number, grayscaled: boolean) {
+    private options?: FurnitureRenderOptions;
+
+    public shouldRender(options: FurnitureRenderOptions) {
+        if(!this.options) {
+            return true;
+        }
+
+        if(!this.hasImageData) {
+            return true;
+        }
+
+        if(this.animated) {
+            const layerFrames = this.getLayerFrames(options).map((frame) => frame.animationLayerId + '-' + frame.spriteFrame).join('_');
+
+            if(this.previousLayerFrames !== layerFrames) {
+                return true;
+            }
+        }
+
+        if(this.options.animation !== options.animation) {
+            return true;
+        }
+
+        if(this.options.direction !== options.direction) {
+            return true;
+        }
+
+        if(this.options.color !== options.color) {
+            return true;
+        }
+
+        if(this.options.grayscaled !== options.grayscaled) {
+            return true;
+        }
+
+        if(this.options.size !== options.size) {
+            return true;
+        }
+
+        if(this.options.tags?.join('-') !== options.tags?.join('-')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private getLayerFrames(options: FurnitureRenderOptions) {
+        if(!this.visualization) {
+            return [];
+        }
+
+        const animationData = this.visualization.animations?.find((animationData) => animationData.id === options!.animation);
+
+        const result: { animationLayerId: number, frameSequenceIndex: number, animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
+
+        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
+            const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
+
+            if(animationLayer?.frameSequence?.length) {
+                let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
+                const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
+
+                if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
+                    const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
+
+                    if(options.frame >= maxFrames && loopCount !== 0) {
+                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
+                    }
+                    else {
+                        frameSequenceIndex = Math.floor((options.frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
+                    }
+                }
+                else {
+                    const maxFrames = animationLayer.frameSequence.length * loopCount;
+
+                    if(options.frame >= maxFrames && loopCount !== 0) {
+                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
+                    }
+                }
+
+                if(!animationLayer?.frameSequence[frameSequenceIndex]) {
+                    FigureLogger.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
+                }
+                else {
+                    result.push({
+                        animationLayerId: animationLayer.id,
+                        frameSequenceIndex,
+                        animationFrameOffset: animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options!.direction),
+                        spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id
+                    });
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public async render(data: FurnitureData, options: FurnitureRenderOptions) {
+        this.options = options;
+
         if(!this.type) {
             throw new Error();
         }
         
         const sprites: FurnitureRendererSprite[] = [];
 
-        const visualization = data.visualization.visualizations.find((visualization) => visualization.size == size);
+        this.visualization = data.visualization.visualizations.find((visualization) => visualization.size == options.size);
 
-        if(!visualization) {
-            throw new Error("Visualization for " + this.type + " does not exist for size: " + size + ".");
+        if(!this.visualization) {
+            throw new Error("Visualization for " + this.type + " does not exist for size: " + options.size + ".");
         }
 
-        const animationData = visualization.animations?.find((animationData) => animationData.id === animation);
+        const directionData = this.visualization.directions.find((visualizationDirection) => visualizationDirection.id === options.direction);
 
-        const directionData = visualization.directions.find((visualizationDirection) => visualizationDirection.id === direction);
+        this.animated = false;
 
-        for(let layer = 0; layer < visualization.layerCount; layer++) {
-            const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
+        const animationFrames = this.getLayerFrames(options);
 
-            let spriteFrame = 0;
+        this.previousLayerFrames = animationFrames.map((frame) => frame.animationLayerId + '-' + frame.frameSequenceIndex).join('_');
 
-            if(animationLayer?.frameSequence?.length) {
-                let frameSequenceIndex = frame % animationLayer.frameSequence.length;
-                const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
+        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
+            const animationFrame = animationFrames.find((frame) => frame.animationLayerId === layer);
 
-                if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
-                    const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
-
-                    if(frame >= maxFrames && loopCount !== 0) {
-                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
-                    }
-                    else {
-                        frameSequenceIndex = Math.floor((frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
-                    }
-                }
-                else {
-                    const maxFrames = animationLayer.frameSequence.length * loopCount;
-
-                    if(frame >= maxFrames && loopCount !== 0) {
-                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
-                    }
-                }
-
-                if(!animationLayer?.frameSequence[frameSequenceIndex]) {
-                    console.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
-                }
-                else {
-                    spriteFrame = animationLayer?.frameSequence[frameSequenceIndex].id;
-                }
+            if(animationFrame) {
+                this.animated = true;
             }
 
-            let assetName = `${this.type}_${size}_${String.fromCharCode(97 + layer)}_${direction}_${spriteFrame}`;
+            let assetName = `${this.type}_${options.size}_${String.fromCharCode(97 + layer)}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
 
-            if(size === 1) {
+            if(options.size === 1) {
                 assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
             }
 
-            if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
+            /*if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
                 const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${color}_${grayscaled}`);
 
                 if(assetSprite) {
@@ -76,14 +160,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 }
 
                 continue;
-            }
+            }*/
 
             const assetData = data.assets.find((asset) => asset.name === assetName);
 
             if(!assetData) {
-                console.warn("Failed to find asset data for " + assetName);
+                //console.warn("Failed to find asset data for " + assetName);
     
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, null);
+                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
                 continue;
             }
@@ -91,29 +175,23 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             const spriteData = data.sprites.find((sprite) => sprite.name === (assetData?.source ?? assetName));
             
             if(!spriteData) {
-                console.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, null);
+                FigureLogger.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
+                
+                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
                 continue;
             }
 
-            const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === color);
+            const colorData = this.visualization.colors?.find((visualizationColor) => visualizationColor.id === options.color);
 
-            const { image, imageData } = await FurnitureAssets.getFurnitureSprite(this.type, {
-                x: spriteData.x,
-                y: spriteData.y,
+            const layerData = this.visualization.layers.find((layerData) => layerData.id === layer);
 
-                width: spriteData.width,
-                height: spriteData.height,
+            if(options.tags && (layerData?.tag && !options.tags.includes(layerData?.tag))) {
+                continue;
+            }
 
-                flipHorizontal: assetData.flipHorizontal,
+            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color, options.grayscaled, layerData?.tag, assetData.usesPalette);
 
-                grayscaled,
-
-                color: colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color
-            });
-
-            const layerData = visualization.layers.find((layerData) => layerData.id === layer);
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
             let x = assetData.x;
@@ -129,6 +207,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             
             if(directionLayerData?.y !== undefined) {
                 y += directionLayerData.y;
+            }
+
+            if(animationFrame?.animationFrameOffset?.left !== undefined) {
+                x += animationFrame.animationFrameOffset?.left;
+            }
+
+            if(animationFrame?.animationFrameOffset?.top !== undefined) {
+                y += animationFrame.animationFrameOffset?.top;
             }
 
             const assetSprite: FurnitureRendererSprite = {
@@ -147,23 +233,48 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             };
 
             if(imageData) {
-                FurnitureAssets.assetSprites.set(`${assetName}_${color}_${grayscaled}`, assetSprite);
+                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, assetSprite);
             }
 
             sprites.push(assetSprite);
         }
 
+        if(!this.hasImageData) {
+            this.hasImageData = sprites.every((sprite) => !sprite.ignoreMouse && sprite.imageData);
+        }
+
         return sprites;
     }
+
+    public async getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, _tag: string | undefined, _usesPalette: boolean) {
+        const { image, imageData } = await FurnitureAssets.getFurnitureSprite(type, {
+            x: spriteData.x,
+            y: spriteData.y,
+
+            width: spriteData.width,
+            height: spriteData.height,
+
+            flipHorizontal: flipHorizontal,
+
+            grayscaled: (grayscaled)?({
+                foreground: "#999999",
+                background: "#FFFFFF"
+            }):(undefined),
+
+            color
+        });
+
+        return { image, imageData };
+    }
     
-    public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number, frame: number) {
-        const immutableSprites = await this.render(data, direction, size, animation, color, frame, false);
+    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions) {
+        const immutableSprites = await this.render(data, options);
 
         const sprites = immutableSprites.map((sprite) => {
             return {...sprite}
         });
         
-        let minimumX = 0, minimumY = 0, maximumWidth = 0, maximumHeight = 0;
+        let minimumX = Infinity, minimumY = Infinity, maximumWidth = -Infinity, maximumHeight = -Infinity;
 
         if(sprites.length === 1) {
             minimumX = 0;
@@ -177,12 +288,12 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         }
         else {
             for(const sprite of sprites) {
-                if(minimumX < Math.abs(sprite.x)) {
-                    minimumX = Math.abs(sprite.x);
+                if(sprite.x < minimumX) {
+                    minimumX = sprite.x;
                 }
                 
-                if(minimumY < (sprite.y * -1)) {
-                    minimumY = sprite.y * -1;
+                if(sprite.y < minimumY) {
+                    minimumY = sprite.y;
                 }
 
                 if(sprite.x + sprite.image.width > maximumWidth) {
@@ -195,7 +306,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
-        const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
+        const canvas = new OffscreenCanvas(maximumWidth - minimumX, maximumHeight - minimumY);
         const context = canvas.getContext("2d")!;
 
         //context.fillStyle = "red";
@@ -216,13 +327,13 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 context.globalAlpha = sprite.alpha / 255;
             }
 
-            context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
+            context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
 
             context.restore();
         }
 
-        if(options?.spritesWithoutInkModes) {
-            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light", "lighter" ].includes(sprite.ink));
+        if(canvasOptions?.spritesWithoutInkModes) {
+            const spritesWithoutInkModes = sprites.filter((sprite) => !sprite.ink || ![ "multiply", "color-burn", "darken", "overlay", "hard-light" ].includes(sprite.ink));
 
             if(spritesWithoutInkModes.length > 0 && spritesWithoutInkModes.length !== sprites.length) {
                 const maskCanvas = new OffscreenCanvas(canvas.width, canvas.height);

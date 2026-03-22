@@ -91,6 +91,12 @@ function getAnimationData(filePath: string) {
     const document = parser.parse(readFileSync(filePath, { encoding: "utf-8" }), true);
 
     return {
+        avatar: (document.animation.avatar)?({
+            ink: parseInt(document.animation.avatar["@_ink"]),
+            background: document.animation.avatar["@_background"],
+            foreground: document.animation.avatar["@_foreground"],
+        }):(undefined),
+
         sprites: getValueAsArray(document.animation.sprite).map((sprite: any) => {
             return {
                 id: sprite["@_id"],
@@ -116,6 +122,12 @@ function getAnimationData(filePath: string) {
             };
         }),
 
+        remove: getValueAsArray(document.animation.remove).map((remove: any) => {
+            return {
+                id: remove["@_id"]
+            };
+        }),
+
         direction: (document.animation.direction)?(
             {
                 offset: parseInt(document.animation.direction["@_offset"])
@@ -128,29 +140,50 @@ function getAnimationData(filePath: string) {
             }
         ):(undefined),
 
-        frames: getValueAsArray(document.animation.frame).map((frame: any) => {
-            return {
-                bodyParts: getValueAsArray(frame.bodypart).map((bodypart: any) => {
-                    return {
-                        id: bodypart["@_id"],
-                        action: bodypart["@_action"],
-                        frame: parseInt(bodypart["@_frame"]),
-                        destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
-                        destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
-                        directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
-                    };
-                }),
+        frames: getAnimationFrameData(document.animation.frame),
 
-                effects: getValueAsArray(frame.fx).map((fx: any) => {
-                    return {
-                        id: fx["@_id"],
-                        action: fx["@_action"],
-                        frame: parseInt(fx["@_frame"]),
-                        destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
-                        destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
-                    };
-                })
-            };
+        overrides: getValueAsArray(document.animation.override).map((override: any) => {
+            return {
+                type: override["@_override"],
+                name: override["@_name"],
+
+                frames: getAnimationFrameData(override["frame"])
+            }
         })
     } satisfies FigureAnimationData;
+}
+
+function getAnimationFrameData(frames: any) {
+    return getValueAsArray(frames).map((frame: any) => {
+        return {
+            bodyParts: getValueAsArray(frame.bodypart).map((bodypart: any) => {
+                return {
+                    id: bodypart["@_id"],
+                    action: bodypart["@_action"],
+                    frame: parseInt(bodypart["@_frame"]),
+                    destinationY: (bodypart["@_dy"])?(parseInt(bodypart["@_dy"])):(undefined),
+                    destinationX: (bodypart["@_dx"])?(parseInt(bodypart["@_dx"])):(undefined),
+                    directionOffset: (bodypart["@_dd"])?(parseInt(bodypart["@_dd"])):(undefined),
+
+                    items: getValueAsArray(bodypart.item).map((sprite: any) => {
+                        return {
+                            id: sprite["@_id"],
+                            base: sprite["@_base"],
+                            align: sprite["@_align"]
+                        };
+                    }),
+                };
+            }),
+
+            effects: getValueAsArray(frame.fx).map((fx: any) => {
+                return {
+                    id: fx["@_id"],
+                    action: fx["@_action"],
+                    frame: parseInt(fx["@_frame"]),
+                    destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
+                    destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
+                };
+            })
+        };
+    });
 }

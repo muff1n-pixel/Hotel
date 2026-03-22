@@ -24,10 +24,6 @@ export default class RoomBotsEvent implements ProtobuffListener<RoomBotsData> {
         if(payload.botsRemoved?.length) {
             payload.botsRemoved.forEach((botData) => {
                 clientInstance.roomInstance.value!.removeBot(botData.id);
-
-                if(clientInstance.roomInstance.value?.focusedUser.value?.type === "bot" && clientInstance.roomInstance.value?.focusedUser.value?.bot.data.id === botData.id) {
-                    clientInstance.roomInstance.value.focusedUser.value = null;
-                }
             });
         }
 

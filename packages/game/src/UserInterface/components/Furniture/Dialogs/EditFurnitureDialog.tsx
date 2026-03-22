@@ -1,38 +1,50 @@
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import FurnitureImage from "../FurnitureImage";
 import { useCallback, useState } from "react";
-import Input from "../../Form/Input";
-import Checkbox from "../../Form/Checkbox";
-import DialogButton from "../../Dialog/Button/DialogButton";
-import useFurnitureTypes from "../../../hooks/Furniture/useFurnitureTypes";
-import Selection from "../../Form/Selection";
+import Input from "../../../Common/Form/Components/Input";
+import Checkbox from "../../../Common/Form/Components/Checkbox";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
+import useFurnitureTypes from "../../../Hooks/Furniture/useFurnitureTypes";
+import Selection from "../../../Common/Form/Components/Selection";
 import { webSocketClient } from "../../../..";
-import { FurnitureData, UpdateFurnitureData } from "@pixel63/events";
+import { FurnitureData, FurnitureFlagsData, UpdateFurnitureData } from "@pixel63/events";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;
-    data: FurnitureData;
+    data?: Partial<FurnitureData>;
     onClose?: () => void;
 }
 
 export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurnitureDialogProps) {
-    const { categories, interactionTypes } = useFurnitureTypes();
+    const dialogs = useDialogs();
 
-    const [name, setName] = useState(data.name);
-    const [description, setDescription] = useState(data.description ?? "");
-    const [category, setCategory] = useState(data.category);
-    const [interactionType, setInteractionType] = useState(data.interactionType);
-    const [depth, setDepth] = useState<number>(data.dimensions?.depth ?? 0);
+    const { categories } = useFurnitureTypes();
 
-    const [flags, setFlags] = useState(data.flags);
+    const [type, setType] = useState(data?.type);
+    const [color, setColor] = useState(data?.color);
+
+    const [name, setName] = useState(data?.name);
+    const [description, setDescription] = useState(data?.description ?? "");
+    const [category, setCategory] = useState(data?.category ?? "other");
+    const [placement, setPlacement] = useState(data?.placement ?? "floor");
+    const [interactionType, setInteractionType] = useState(data?.interactionType ?? "default");
+    const [depth, setDepth] = useState<number>(data?.dimensions?.depth ?? 0);
+
+    const [flags, setFlags] = useState(FurnitureFlagsData.create(data?.flags));
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateFurnitureData, UpdateFurnitureData.create({
-            id: data.id,
+            id: data?.id,
+
+            type,
+            color,
 
             name,
             description,
+
+            placement,
 
             category,
             interactionType,
@@ -41,14 +53,10 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
 
             depth
         }));
-    }, [ data, name, description, category, interactionType, depth, flags ]);
-
-    if(!flags) {
-        return null;
-    }
+    }, [ data, type, color, placement, name, description, category, interactionType, depth, flags ]);
 
     return (
-        <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={350} style={{
+        <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={420} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -61,13 +69,65 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                         flex: 2,
 
                         display: "flex",
+                        flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
 
                         overflow: "hidden"
                     }}>
-                        <div>
-                            <FurnitureImage furnitureData={data}/>
+                        <div style={{
+                            flex: 1,
+
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                            <FurnitureImage key={type} furnitureData={FurnitureData.create({
+                                type,
+                                color
+                            })}/>
+                        </div>
+
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 10,
+                            
+                            width: "100%"
+                        }}>
+                            <div style={{ fontSize: 12 }}><i>There can only be one furniture entity with a unique type and color.</i></div>
+
+                            <b>Furniture type</b>
+
+                            <Input value={type} onChange={setType}/>
+                            
+                            <b>Furniture color</b>
+
+                            <Input value={(color)?(color.toString()):(undefined)} onChange={(value) => setColor((value.length)?(parseInt(value)):(undefined))}/>
+
+                            {(interactionType === "crackable") && (
+                                <div>
+                                    {(data?.id)?(
+                                        <DialogButton onClick={() => {
+                                            dialogs.addUniqueDialog("edit-furniture-crackable", {
+                                                furniture: FurnitureData.create({
+                                                    id: data.id,
+
+                                                    name,
+                                                    description,
+                                                    
+                                                    type,
+                                                    color
+                                                })
+                                            });
+                                        }}>
+                                            Edit crackable data
+                                        </DialogButton>
+                                    ):(
+                                        <p><i>Furniture must be created before crackable data can be changed.</i></p>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -78,6 +138,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                         flexDirection: "column",
                         gap: 10
                     }}>
+
                         <b>Furniture name</b>
 
                         <Input value={name} onChange={setName}/>
@@ -97,16 +158,15 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
 
                         <b>Interaction type (logic)</b>
 
-                        <Selection value={interactionType} items={interactionTypes.map((interactionType) => {
-                            return {
-                                label: interactionType,
-                                value: interactionType
-                            };
-                        })} onChange={(interactionType) => setInteractionType(interactionType as string)}/>
+                        <Input value={interactionType} onChange={setInteractionType}/>
 
                         <b>Depth {(flags.sitable)?(`(sit depth ${(depth - 0.5).toPrecision(3)})`):(null)}</b>
 
                         <Input type="number" step={0.1} value={depth.toString()} onChange={(value) => setDepth(parseFloat(value))}/>
+
+                        <b>Furniture placement</b>
+
+                        <Input value={placement} onChange={setPlacement}/>
                     </div>
 
                     <div style={{
@@ -139,7 +199,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                         <div style={{ flex: 1 }}/>
 
                         <div>
-                            <DialogButton onClick={handleApply}>Apply</DialogButton>
+                            <DialogButton onClick={handleApply}>{(data?.id)?("Update furniture"):("Create new furniture")}</DialogButton>
                         </div>
                     </div>
                 </div>

@@ -7,11 +7,17 @@ import Room from "../Rooms/Room.js";
 import { debugTimestamps } from "../Database/Database.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
 import { MessageType, UnknownMessage, UserData, UserPermissionsData } from "@pixel63/events";
+import UserFriends from "./Friends/UserFriends.js";
+import UserAchievements from "./Achievements/UserAchievements.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
+    public friends: UserFriends;
+    public achievements: UserAchievements;
+
     private permissions?: UserPermissions;
     public room?: Room;
+    public roomBellQueue?: Room | undefined;
 
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();
@@ -21,6 +27,9 @@ export default class User extends EventEmitter {
                 permissions: permissions.getPermissionData()
             }));
         });
+
+        this.friends = new UserFriends(this);
+        this.achievements = new UserAchievements(this);
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

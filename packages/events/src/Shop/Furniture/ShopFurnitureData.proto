@@ -9,5 +9,7 @@ message ShopFurnitureData {
     optional uint32 duckets = 3;
     optional uint32 diamonds = 4;
 
+    optional uint32 quantity = 6;
+
     FurnitureData furniture = 5;
 }

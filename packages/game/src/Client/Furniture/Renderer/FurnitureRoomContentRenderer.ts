@@ -1,6 +1,7 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
+import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 
 export default class FurnitureRoomContentRenderer extends FurnitureDefaultRenderer {
@@ -8,9 +9,9 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
 
     public frame: number = 0;
 
-    public async renderToCanvas(options: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, direction: number | undefined, size: number, animation: number, color: number): Promise<ImageBitmap> {
-        if(FurnitureAssets.assetSprites.has(`${this.type}_${color}`)) {
-            const assetSprite = FurnitureAssets.assetSprites.get(`${this.type}_${color}`);
+    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, _data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap> {
+        if(FurnitureAssets.assetSprites.has(`${this.type}_${options.color}`)) {
+            const assetSprite = FurnitureAssets.assetSprites.get(`${this.type}_${options.color}`);
 
             if(assetSprite) {
                 return assetSprite.image;
@@ -29,18 +30,18 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
                     zIndex: 0
                 };
 
-                FurnitureAssets.assetSprites.set(`${this.type}_${color}`, sprite);
+                FurnitureAssets.assetSprites.set(`${this.type}_${options.color}`, sprite);
 
                 resolve(sprite.image);
             }
 
             switch(this.type) {
                 case "wallpaper":
-                    image.src = `/assets/shop/walls/th_wall_${color}.png`; 
+                    image.src = `/assets/shop/walls/th_wall_${options.color}.png`; 
                     break;
                     
                 case "floor":
-                    image.src = `/assets/shop/floors/th_floor_${color}.png`; 
+                    image.src = `/assets/shop/floors/th_floor_${options.color}.png`; 
                     break;
             }
         });

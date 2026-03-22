@@ -1,7 +1,8 @@
 import User from "../../../../Users/User.js";
 import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
-import { RoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, RoomPositionOffsetData, UpdateRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { randomUUID } from "node:crypto";
 
 export default class UpdateRoomFurnitureEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
     async handle(user: User, payload: UpdateRoomFurnitureData) {
@@ -22,8 +23,26 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
         }
         
         if(payload.direction !== undefined) {
+            if(payload.position === undefined && furniture.model.position && furniture.model.furniture.placement === "floor") {
+                const upmostFurniture = roomUser.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
+
+                if(upmostFurniture && upmostFurniture.model.id !== furniture.model.id) {
+                    if(!upmostFurniture.model.furniture.flags.stackable) {
+                        user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                            id: randomUUID(),
+                            text: `You can not place this furniture here!`
+                        }));
+
+                        return;
+                    }
+
+                    payload.position = furniture.model.position;
+                    payload.position.depth = upmostFurniture.model.position.depth + upmostFurniture.model.furniture.dimensions.depth + 0.0001;
+                }
+            }
+
             if(payload.position === undefined) {
-                furniture.setDirection(payload.direction);
+                furniture.setDirection(payload.direction, false);
             }
             else {
                 furniture.model.direction = payload.direction;
@@ -58,13 +77,18 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
             }
         }
 
-        await furniture.model.save();
+        if(furniture.model.changed()) {
+            await furniture.model.save();
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
-            furnitureUpdated: [
-                furniture.model
-            ]
-        }));
+            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+                furnitureUpdated: [
+                    {
+                        userId: user.model.id,
+                        furniture: furniture.model
+                    }
+                ]
+            }));
+        }
     }
 
     private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {

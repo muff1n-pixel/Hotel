@@ -15,12 +15,12 @@ export default interface RoomActor {
 
     sendPositionEvent(usePath: boolean): void;
     sendWalkEvent(previousPosition: RoomPositionData): void;
-    
+
     hasAction(actionId: string): boolean;
     addAction(actionId: string): void;
     removeAction(actionId: string): void;
 
     handleWalkEvent?(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData): Promise<void>;
-    handleWalksOnFurniture?(roomFurniture: RoomFurniture): Promise<void>;
+    handleWalksOnFurniture?(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void>;
 }
 

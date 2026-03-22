@@ -28,7 +28,7 @@ export default class GetShopPageFurnitureEvent implements ProtobuffListener<GetS
 
         user.sendProtobuff(ShopPageFurnitureData, ShopPageFurnitureData.fromJSON({
             pageId: shopPage.id,
-            furniture: shopPage.furniture.map((furniture) => {
+            furniture: shopPage.furniture.sort((a, b) => a.furniture.type.localeCompare(b.furniture.type)).map((furniture) => {
                 return {
                     id: furniture.id,
                     furniture: furniture.furniture,

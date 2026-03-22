@@ -6,6 +6,10 @@ import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { RoomRightsModel } from "../Database/Models/Rooms/Rights/RoomRightsModel.js";
 import { RoomCategoryModel } from "../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { UserBotModel } from "../Database/Models/Users/Bots/UserBotModel.js";
+import { UserPetModel } from "../Database/Models/Users/Pets/UserPetModel.js";
+import { PetModel } from "../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../Database/Models/Pets/PetBreedModel.js";
+import { FurnitureCrackableModel } from "../Database/Models/Furniture/Crackable/FurnitureCrackableModel.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -55,7 +59,14 @@ export default class RoomManager {
                     include: [
                         {
                             model: FurnitureModel,
-                            as: "furniture"
+                            as: "furniture",
+
+                            include: [
+                                {
+                                    model: FurnitureCrackableModel,
+                                    as: "crackable"
+                                }
+                            ]
                         },
                         {
                             model: UserModel,
@@ -70,6 +81,27 @@ export default class RoomManager {
                         {
                             model: UserModel,
                             as: "user"
+                        }
+                    ]
+                },
+                {
+                    model: UserPetModel,
+                    as: "roomPets",
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "user"
+                        },
+                        {
+                            model: PetModel,
+                            as: "pet",
+
+                            include: [
+                                {
+                                    model: PetBreedModel,
+                                    as: "breed"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -92,7 +124,9 @@ export default class RoomManager {
             return;
         }
 
-        room.cancelActionsFrame();
+        console.log("Unloading room " + room.model.id);
+
+        room.unload();
 
         this.instances.splice(this.instances.indexOf(room), 1);
     }

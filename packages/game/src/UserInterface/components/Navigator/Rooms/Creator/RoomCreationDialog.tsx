@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import Dialog from "../../../Dialog/Dialog";
-import DialogContent from "../../../Dialog/DialogContent";
-import Input from "../../../Form/Input";
-import DialogButton from "../../../Dialog/Button/DialogButton";
+import Dialog from "../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
+import Input from "../../../../Common/Form/Components/Input";
+import DialogButton from "../../../../Common/Dialog/Components/Button/DialogButton";
 import RoomMapImage from "../../../Room/Map/RoomMapImage";
 import { webSocketClient } from "../../../../..";
 import useRoomMaps from "./Hooks/useRoomMaps";
-import { useDialogs } from "../../../../hooks/useDialogs";
-import { useRoomCategories } from "../../../../hooks/useRoomCategories";
-import Selection from "../../../Form/Selection";
+import { useDialogs } from "../../../../Hooks/useDialogs";
+import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
+import Selection from "../../../../Common/Form/Components/Selection";
 import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
-import DialogScrollArea from "../../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;

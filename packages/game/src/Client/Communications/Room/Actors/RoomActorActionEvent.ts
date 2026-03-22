@@ -1,5 +1,6 @@
 import { clientInstance } from "../../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { RoomActorActionData } from "@pixel63/events";
 
 export default class RoomActorActionEvent implements ProtobuffListener<RoomActorActionData> {
@@ -10,18 +11,20 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
 
         const actor = clientInstance.roomInstance.value.getActor(payload.actor);
 
-        if(payload.actionsAdded.length) {
-            for(const action of payload.actionsAdded) {
-                actor.item.figureRenderer.addAction(action);
+        if(actor.item instanceof RoomFigureItem) {
+            if(payload.actionsAdded.length) {
+                for(const action of payload.actionsAdded) {
+                    actor.item.figureRenderer.addAction(action);
+                }
             }
-        }
 
-        if(payload.actionsRemoved.length) {
-            for(const action of payload.actionsRemoved) {
-                actor.item.figureRenderer.removeAction(action);
+            if(payload.actionsRemoved.length) {
+                for(const action of payload.actionsRemoved) {
+                    actor.item.figureRenderer.removeAction(action);
+                }
             }
-        }
 
-        clientInstance.roomInstance.value.focusedUser.update();
+            clientInstance.roomInstance.value.roomRenderer.focusedItem.update();
+        }
     }
 }

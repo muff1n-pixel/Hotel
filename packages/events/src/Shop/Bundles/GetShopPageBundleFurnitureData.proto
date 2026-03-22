@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message GetShopPageBundleFurnitureData {
+    string page_id = 1;
+}

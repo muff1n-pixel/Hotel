@@ -1,13 +1,13 @@
-import { useBotSpeech } from "../../hooks/Bots/useBotSpeech";
-import Dialog from "../Dialog/Dialog";
-import DialogContent from "../Dialog/DialogContent";
-import DialogTable from "../Dialog/Table/DialogTable";
+import { useBotSpeech } from "../../Hooks/Bots/useBotSpeech";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogContent from "../../Common/Dialog/Components/DialogContent";
+import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import { useCallback, useEffect, useState } from "react";
-import Input from "../Form/Input";
-import Checkbox from "../Form/Checkbox";
-import DialogButton from "../Dialog/Button/DialogButton";
+import Input from "../../Common/Form/Components/Input";
+import Checkbox from "../../Common/Form/Components/Checkbox";
+import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import { UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotSpeechDialogProps = {

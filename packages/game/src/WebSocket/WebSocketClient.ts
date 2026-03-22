@@ -1,6 +1,7 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
 import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
+import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 
 type ClientOptions = {
   userId: string;
@@ -26,10 +27,12 @@ export default class WebSocketClient extends EventTarget {
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
 
+                EventsLogger.log(`Received ${type}`, payload);
+
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
             }
             catch(error) {
-                console.error("Failed to decode message", error);
+                EventsLogger.error("Failed to decode message", error);
             }
         });
 
@@ -54,7 +57,7 @@ export default class WebSocketClient extends EventTarget {
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
-        console.log("Sending " + message.$type, payload);
+        EventsLogger.log(`Sending ${message.$type}`, payload);
 
         let encoded;
 
@@ -62,7 +65,7 @@ export default class WebSocketClient extends EventTarget {
             encoded = message.encode(payload).finish();
         }
         catch(error) {
-            console.error("Failed to encode Protobuff", error);
+            EventsLogger.error("Failed to encode Protobuff", error);
 
             return;
         }
@@ -82,7 +85,7 @@ export default class WebSocketClient extends EventTarget {
             this.socket.send(message);
         }
         catch(error) {
-            console.error("Failed to send encoded Protobuff", error);
+            EventsLogger.error("Failed to send encoded Protobuff", error);
         }
     }
 
@@ -95,12 +98,10 @@ export default class WebSocketClient extends EventTarget {
             try {
                 const payload = message.decode(event.data) as T;
 
-                console.log("Processing " + message.$type, payload);
-
                 protobuffListener.handle(payload);
             }
             catch(error) {
-                console.error("Failed to handle Protobuf", error);
+                EventsLogger.error("Failed to handle Protobuf", error);
             }
         };
 

@@ -9,4 +9,6 @@ export type FurnitureAsset = {
     flipHorizontal?: boolean;
 
     source?: string;
+
+    usesPalette: boolean;
 };

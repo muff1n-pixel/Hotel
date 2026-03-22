@@ -1,6 +1,6 @@
-import Dialog from "../../../Dialog/Dialog";
-import DialogContent from "../../../Dialog/DialogContent";
-import DialogTable from "../../../Dialog/Table/DialogTable";
+import Dialog from "../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
+import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable";
 
 export type RoomChatCommandsDialogProps = {
     hidden?: boolean;

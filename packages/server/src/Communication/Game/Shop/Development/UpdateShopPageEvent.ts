@@ -4,6 +4,7 @@ import GetShopPagesEvent from "../GetShopPagesEvent.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { GetShopPagesData, UpdateShopPageData } from "@pixel63/events";
+import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel.js";
 
 export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShopPageData> {
     public readonly name = "UpdateShopPageEvent";
@@ -14,6 +15,8 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
         if(!permissions.hasPermission("shop:edit")) {
             throw new Error("User is not privileged to edit the shope.");
         }
+
+        const pageId = payload.id ?? randomUUID();
         
         if(payload.id !== undefined) {
             await ShopPageModel.update({
@@ -39,7 +42,7 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
         }
         else {
             await ShopPageModel.create({
-                id: randomUUID(),
+                id: pageId,
                 parentId: payload.parentId ?? null,
 
                 title: payload.title,
@@ -57,8 +60,33 @@ export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShop
             });
         }
 
+        if(payload.bundle) {
+            const bundleId = payload.bundle.id || randomUUID();
+
+            await ShopPageBundleModel.upsert({
+                id: bundleId,
+                
+                pageId,
+
+                credits: payload.bundle.credits,
+                duckets: payload.bundle.duckets,
+                diamonds: payload.bundle.diamonds,
+
+                roomId: payload.bundle.roomId,
+                badgeId: payload.bundle.badge?.id
+            });
+
+            await ShopPageModel.update({
+                bundleId
+            }, {
+                where: {
+                    id: pageId
+                }
+            });
+        }
+
         await (new GetShopPagesEvent()).handle(user, GetShopPagesData.create({
-            category: "furniture"
+            category: payload.category
         }));
     }
 }

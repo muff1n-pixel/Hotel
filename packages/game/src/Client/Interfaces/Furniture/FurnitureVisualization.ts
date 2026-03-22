@@ -1,3 +1,16 @@
+export type FurnitureAnimationLayerFrameOffset = {
+    direction: number;
+
+    left?: number;
+    top?: number;
+};
+
+export type FurnitureAnimationLayerFrame = {
+    id: number;
+
+    offsets?: FurnitureAnimationLayerFrameOffset[];
+};
+
 export type FurnitureVisualization = {
     type: string;
 
@@ -45,10 +58,20 @@ export type FurnitureVisualization = {
                 loopCount?: number;
                 frameRepeat?: number;
 
-                frameSequence: {
-                    id: number;
-                }[];
+                frameSequence: FurnitureAnimationLayerFrame[];
             }[];
+        }[];
+
+        postures: {
+            id: string;
+
+            animationId: number;
+        }[];
+
+        gestures: {
+            id: string;
+
+            animationId: number;
         }[];
     }[];
 };

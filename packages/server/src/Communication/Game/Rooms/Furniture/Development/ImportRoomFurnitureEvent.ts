@@ -58,6 +58,9 @@ export default class ImportRoomFurnitureEvent implements ProtobuffListener<RoomF
             room.furnitures.push(roomFurniture);
 
             room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+                furnitureData: [
+                    roomFurniture.model.furniture
+                ],
                 furnitureAdded: [
                     roomFurniture.model
                 ]

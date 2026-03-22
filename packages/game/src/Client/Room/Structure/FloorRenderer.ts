@@ -164,7 +164,25 @@ export default class FloorRenderer {
             this.renderTiles(context, currentRectangles, tileImage.image);
         }
 
-        return canvas;
+        let shadowCanvas: OffscreenCanvas | undefined = undefined;
+
+        if(context.filter !== undefined) {
+            shadowCanvas = new OffscreenCanvas(canvas.width, canvas.height + 10);
+            
+            const shadowContext = shadowCanvas.getContext("2d");
+
+            if(!shadowContext) {
+                throw new ContextNotAvailableError();
+            }
+
+            shadowContext.filter = "blur(10px) brightness(0%) opacity(50%)";
+            shadowContext.drawImage(canvas, 0, 10);
+        }
+
+        return {
+            floor: canvas,
+            shadow: shadowCanvas
+        };
     }
 
     private renderLeftEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {

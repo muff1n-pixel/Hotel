@@ -1,12 +1,12 @@
-import BadgeImage from "../../../Badges/BadgeImage";
-import FigureImage from "../../../Figure/FigureImage";
+import BadgeImage from "../../../../Common/Badges/BadgeImage";
 import "../User/RoomUserProfile.css";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomUserProfileMotto from "../User/RoomUserProfileMotto";
-import { useUser } from "../../../../hooks/useUser";
+import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import { webSocketClient } from "../../../../..";
 import { UpdateRoomBotData } from "@pixel63/events";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;

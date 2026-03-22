@@ -1,46 +1,26 @@
 import Room from "../Room.js";
 import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { game } from "../../index.js";
-import RoomFurnitureTeleportLogic from "./Logic/RoomFurnitureTeleportLogic.js";
-import RoomFurnitureGateLogic from "./Logic/RoomFurnitureGateLogic.js";
-import RoomFurnitureLightingLogic from "./Logic/RoomFurnitureLightingLogic.js";
-import RoomFurnitureRollerLogic from "./Logic/RoomFurnitureRollerLogic.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
-import RoomFurnitureVendingMachineLogic from "./Logic/RoomFurnitureVendingMachineLogic.js";
-import RoomFurnitureDiceLogic from "./Logic/RoomFurnitureDiceLogic.js";
-import RoomFurnitureTeleportTileLogic from "./Logic/RoomFurnitureTeleportTileLogic.js";
 import RoomUser from "../Users/RoomUser.js";
-import RoomFurnitureFortunaLogic from "./Logic/RoomFurnitureFortunaLogic.js";
-import WiredTriggerUserSaysSomethingLogic from "./Logic/Wired/Trigger/WiredTriggerUserSaysSomethingLogic.js";
-import WiredActionShowMessageLogic from "./Logic/Wired/Action/WiredActionShowMessageLogic.js";
-import WiredActionTeleportToLogic from "./Logic/Wired/Action/WiredActionTeleportToLogic.js";
-import WiredTriggerUserEntersRoomLogic from "./Logic/Wired/Trigger/WiredTriggerUserEntersRoomLogic.js";
-import WiredTriggerUserWalksOnFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOnFurnitureLogic.js";
-import WiredTriggerUserWalksOffFurnitureLogic from "./Logic/Wired/Trigger/WiredTriggerUserWalksOffFurnitureLogic.js";
-import WiredTriggerStateChangedLogic from "./Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
-import WiredTriggerUserLeavesRoomLogic from "./Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
-import WiredTriggerUserClickFurniLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
-import WiredTriggerUserClickUserLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
-import WiredTriggerUserClickTileLogic from "./Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
-import RoomInvisibleFurnitureControlLogic from "./Logic/RoomInvisibleFurnitureControlLogic.js";
-import WiredTriggerPeriodicallyLogic from "./Logic/Wired/Trigger/WiredTriggerPeriodicallyLogic.js";
-import WiredTriggerUserPerformsActionLogic from "./Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollisionLogic.js";
-import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
-import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
 import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
+
+    public readonly logic: RoomFurnitureLogic | null = null;
 
     constructor(public readonly room: Room, public readonly model: UserFurnitureModel) {
         if(model.furniture.category === "teleport") {
             model.animation = 0;
         }
+
+        this.logic = RoomFurnitureLogicFactory.getLogic(this);
     }
 
-    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number) {
+    public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number | null) {
         await userFurniture.update({
             position,
             direction,
@@ -54,6 +34,9 @@ export default class RoomFurniture<T = unknown> {
         room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position), roomFurniture.getDimensions());
 
         room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+            furnitureData: [
+                roomFurniture.model.furniture
+            ],
             furnitureAdded: [
                 roomFurniture.model
             ]
@@ -156,102 +139,7 @@ export default class RoomFurniture<T = unknown> {
         return {...(this.model.data ?? {})} as T;
     }
 
-    private category: RoomFurnitureLogic | null = null;
-
-    public getCategoryLogic(): RoomFurnitureLogic | null {
-        if(!this.category) {
-            switch(this.model.furniture.interactionType) {
-                case "dice":
-                    return this.category = new RoomFurnitureDiceLogic(this);
-
-                case "teleport":
-                    return this.category = new RoomFurnitureTeleportLogic(this);
-
-                case "teleporttile":
-                    return this.category = new RoomFurnitureTeleportTileLogic(this);
-
-                case "gate":
-                    return this.category = new RoomFurnitureGateLogic(this);
-                
-                case "default":
-                case "multiheight":
-                    return this.category = new RoomFurnitureLightingLogic(this);
-                
-                case "vendingmachine":
-                    return this.category = new RoomFurnitureVendingMachineLogic(this);
-
-                case "roller":
-                    return this.category = new RoomFurnitureRollerLogic(this);
-
-                case "fortuna":
-                    return this.category = new RoomFurnitureFortunaLogic(this);
-                
-                case "conf_invis_control":
-                    return this.category = new RoomInvisibleFurnitureControlLogic(this);
-
-                case "wf_trg_says_something":
-                    return this.category = new WiredTriggerUserSaysSomethingLogic(this);
-
-                case "wf_trg_enter_room":
-                    return this.category = new WiredTriggerUserEntersRoomLogic(this);
-
-                case "wf_trg_leave_room":
-                    return this.category = new WiredTriggerUserLeavesRoomLogic(this);
-
-                case "wf_trg_walks_on_furni":
-                    return this.category = new WiredTriggerUserWalksOnFurnitureLogic(this);
-
-                case "wf_trg_walks_off_furni":
-                    return this.category = new WiredTriggerUserWalksOffFurnitureLogic(this);
-
-                case "wf_trg_state_changed":
-                    return this.category = new WiredTriggerStateChangedLogic(this);
-
-                case "wf_trg_stuff_state":
-                    return this.category = new WiredTriggerStuffStateLogic(this);
-
-                case "wf_trg_click_furni":
-                    return this.category = new WiredTriggerUserClickFurniLogic(this);
-
-                case "wf_trg_click_user":
-                    return this.category = new WiredTriggerUserClickUserLogic(this);
-
-                case "wf_trg_click_tile":
-                    return this.category = new WiredTriggerUserClickTileLogic(this);
-
-                case "wf_trg_periodically":
-                case "wf_trg_period_short":
-                case "wf_trg_period_long":
-                    return this.category = new WiredTriggerPeriodicallyLogic(this);
-
-                case "wf_trg_user_performs_action":
-                    return this.category = new WiredTriggerUserPerformsActionLogic(this);
-
-                case "wf_trg_collision":
-                    return this.category = new WiredTriggerCollisionLogic(this);
-                    
-                case "wf_act_show_message":
-                    return this.category = new WiredActionShowMessageLogic(this);
-
-                case "wf_act_teleport_to":
-                    return this.category = new WiredActionTeleportToLogic(this);
-
-                case "wf_act_send_signal":
-                    return this.category = new WiredActionSendSignalLogic(this);
-
-                case "wf_trg_recv_signal":
-                    return this.category = new WiredTriggerReceiveSignalLogic(this);
-            }
-
-            if(!this.category) {
-                //console.warn("Unhandled intercation logic type: " + this.model.furniture.interactionType);
-            }
-        }
-
-        return this.category;
-    }
-
-    public getOffsetPosition(offset: number, direction: number = this.model.direction): RoomPositionOffsetData {
+    public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
         const position = {...this.model.position};
 
         switch(direction) {
@@ -259,15 +147,35 @@ export default class RoomFurniture<T = unknown> {
                 position.row -= offset;
                 break;
 
+            case 1:
+                position.row -= offset;
+                position.column += offset;
+                break;
+
             case 2:
+                position.column += offset;
+                break;
+
+            case 3:
+                position.row += offset;
                 position.column += offset;
                 break;
             
             case 4:
                 position.row += offset;
                 break;
+
+            case 5:
+                position.row += offset;
+                position.column -= offset;
+                break;
             
             case 6:
+                position.column -= offset;
+                break;
+
+            case 7:
+                position.row -= offset;
                 position.column -= offset;
                 break;
         }
@@ -284,7 +192,9 @@ export default class RoomFurniture<T = unknown> {
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
-                this.model
+                {
+                    furniture: this.model
+                }
             ]
         }));
 
@@ -314,7 +224,9 @@ export default class RoomFurniture<T = unknown> {
 
             this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model
+                    {
+                        furniture: this.model
+                    }
                 ]
             }));
         }
@@ -338,29 +250,27 @@ export default class RoomFurniture<T = unknown> {
 
             this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.model
+                    {
+                        furniture: this.model
+                    }
                 ]
             }));
         }
     }
 
     /** Call this from the Room instance only. */
-    public async handleUserWalksOnFurniture(roomUser: RoomUser) {
-        const logic = this.getCategoryLogic();
-
-        await logic?.handleUserWalksOn?.(roomUser);
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
+        console.log("walk 0n");
+        await this.logic?.handleUserWalksOn?.(roomUser, previousRoomFurniture);
     }
 
     /** Call this from the Room instance only. */
-    public async handleUserWalksOffFurniture(roomUser: RoomUser) {
-        const logic = this.getCategoryLogic();
-
-        await logic?.handleUserWalksOff?.(roomUser);
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]) {
+        console.log("walk 0ff");
+        await this.logic?.handleUserWalksOff?.(roomUser, newRoomFurniture);
     }
 
     public async handleActionsInterval() {
-        const logic = this.getCategoryLogic();
-
-        await logic?.handleActionsInterval?.();
+        await this.logic?.handleActionsInterval?.();
     }
 }

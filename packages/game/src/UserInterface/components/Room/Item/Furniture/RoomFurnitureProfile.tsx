@@ -2,11 +2,11 @@ import FurnitureImage from "../../../Furniture/FurnitureImage";
 import { clientInstance, webSocketClient } from "../../../../..";
 import "./RoomFurnitureProfile.css"
 import { useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
-import { useUser } from "../../../../hooks/useUser";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
+import { useUser } from "../../../../Hooks/useUser";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { usePermissionAction } from "../../../../hooks/usePermissionAction";
-import { useDialogs } from "../../../../hooks/useDialogs";
+import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
+import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 
 export type RoomFurnitureProfileProps = {
@@ -57,12 +57,12 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <b>{furniture.data.furniture?.name}</b>
+                    <b>{furniture.furnitureData.name}</b>
 
                     {(hasEditFurniturePermissions) && (
                         <div className="sprite_room_user_motto_pen" style={{
                             cursor: "pointer"
-                        }} onClick={() => dialogs.addUniqueDialog("edit-furniture", furniture.data.furniture)}/>
+                        }} onClick={() => dialogs.addUniqueDialog("edit-furniture", furniture.furnitureData)}/>
                     )}
                 </div>
 
@@ -77,10 +77,10 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <FurnitureImage furnitureData={furniture.data.furniture}/>
+                    <FurnitureImage furnitureData={furniture.furnitureData}/>
                 </div>
 
-                {(furniture.data.furniture?.description) && (
+                {(furniture.furnitureData.description) && (
                     <div style={{
                         width: "100%",
                         height: 1,
@@ -88,8 +88,8 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     }}/>
                 )}
 
-                {(furniture.data.furniture?.description) && (
-                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.data.furniture.description}</p>
+                {(furniture.furnitureData.description) && (
+                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.furnitureData.description}</p>
                 )}
             </div>
 
@@ -127,19 +127,6 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
 
                             direction: furniture.item.furnitureRenderer.getNextDirection()
                         }));
-                        
-                        if(furniture.item.position) {
-                            furniture.item.setPositionPath(furniture.item.position, [
-                                {
-                                    ...furniture.item.position,
-                                    depth: furniture.item.position.depth + 0.25
-                                },
-                                {
-                                    ...furniture.item.position,
-                                }
-                            ],
-                            100);
-                        }
                     }}>
                         Rotate
                     </div>

@@ -2,25 +2,25 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start server",
+      "label": "Start game server",
       "type": "shell",
       "command": "npm run start",
       "options": { "cwd": "${workspaceFolder}/packages/server" },
       "presentation": { "panel": "new" }
     },
     {
-      "label": "Watch game",
+      "label": "Start web server",
+      "type": "shell",
+      "command": "npm run start",
+      "options": { "cwd": "${workspaceFolder}/packages/web" },
+      "presentation": { "panel": "new" }
+    },
+    {
+      "label": "Watch game client",
       "type": "shell",
       "command": "npm run watch",
       "options": { "cwd": "${workspaceFolder}/packages/game" },
       "presentation": { "panel": "new" }
-    },
-    {
-      "label": "Start all",
-      "dependsOn": ["Start server", "Watch game"],
-      "runOptions": {
-        "runOn": "folderOpen"
-      }
     }
   ]
 }

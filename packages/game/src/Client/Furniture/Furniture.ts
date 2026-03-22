@@ -76,6 +76,18 @@ export default class Furniture {
         }
     }
 
+    public shouldRender() {
+        return this.renderer.shouldRender({
+            direction: this.direction,
+            size: this.size, 
+            animation: this.animation,
+            color: this.color ?? 0, 
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: undefined
+        });
+    }
+
     public async getData() {
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
@@ -85,8 +97,6 @@ export default class Furniture {
     }
 
     public async render() {
-        this.frame++;
-
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
@@ -103,7 +113,15 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.render(this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame, this.grayscaled);
+        return await this.renderer.render(this.data, {
+            direction: this.direction,
+            size: this.size, 
+            animation: this.animation,
+            color: this.color ?? 0, 
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: undefined
+        });
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
@@ -123,7 +141,15 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.renderToCanvas(options, this.data, this.direction, this.size, this.animation, this.color ?? 0, this.frame);
+        return await this.renderer.renderToCanvas(options, this.data, {
+            direction: this.direction,
+            size: this.size, 
+            animation: this.animation,
+            color: this.color ?? 0, 
+            frame: this.frame,
+            grayscaled: this.grayscaled,
+            tags: undefined
+        });
     }
 
     public getVisualizationData(data: FurnitureData) {

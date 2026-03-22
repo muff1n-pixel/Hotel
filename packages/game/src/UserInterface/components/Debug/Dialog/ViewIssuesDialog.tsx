@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import { webSocketClient } from "../../../..";
 import { GetHotelFeedbackData, HotelFeedbackData } from "@pixel63/events";
 import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData";

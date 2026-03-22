@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Badge/BadgeData.proto";
+
+message BadgeBrowserData {
+    repeated BadgeData badges = 1;
+
+    uint32 count = 2;
+}

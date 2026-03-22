@@ -1,12 +1,11 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { game } from "../../../index.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { Op } from "sequelize";
-import { GetNavigatorData, NavigatorData } from "@pixel63/events";
+import { GetNavigatorData, NavigatorData, NavigatorRoomData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { UserModel } from "../../../Database/Models/Users/UserModel.js";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     public readonly name = "GetNavigatorRoomsEvent";
@@ -22,18 +21,30 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             [Op.like]: `%${payload.search}%`
                         },
                         ownerId: user.model.id
-                    }
+                    },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ]
                 });
                 (payload.category === "mine")?(user.model.id):(undefined)
             }
             else {
-                roomModels = await RoomModel.findAll({
+                roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
                     where: {
                         name: {
                             [Op.like]: `%${payload.search}%`
                         },
                         type: (payload.category === "public")?("public"):("private"),
                     },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ],
                     limit: 20
                 });
             }
@@ -42,19 +53,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                 categories: [
                     {
                         title: "Search result",
-                        rooms: roomModels.map((roomModel) => {
-                            const room = game.roomManager.getRoomInstance(roomModel.id);
-
-                            return {
-                                id: roomModel.id,
-                                name: roomModel.name,
-
-                                users: room?.users.length ?? 0,
-                                maxUsers: roomModel.maxUsers,
-
-                                thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
-                            };
-                        }).toSorted((a, b) => b.users - a.users)
+                        rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
                     }
                 ]
             }))
@@ -64,14 +63,21 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
         switch(payload.category) {
             case "public": {
-                const roomModels = await RoomModel.findAll({
+                const roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
                     where: {
-                        type: "public"
+                        type: {
+                            [Op.in]: ["public", "bundle"]
+                        }
                     },
                     order: [
                         [ "createdAt", "DESC" ]
                     ],
                     include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        },
+
                         {
                             model: RoomCategoryModel,
                             as: "category"
@@ -87,19 +93,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
                         return {
                             title: rooms[0]?.category.title ?? "",
-                            rooms: rooms.map((roomModel) => {
-                                const room = game.roomManager.getRoomInstance(roomModel.id);
-
-                                return {
-                                    id: roomModel.id,
-                                    name: roomModel.name,
-
-                                    users: room?.users.length ?? 0,
-                                    maxUsers: roomModel.maxUsers,
-
-                                    thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
-                                };
-                            }).toSorted((a, b) => b.users - a.users)
+                            rooms: rooms.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
                         }
                     })
                 }));
@@ -108,9 +102,15 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
             }
 
             case "all": {
-                const roomModels = await RoomModel.findAll({
+                const roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
                     order: [
                         [ "createdAt", "DESC" ]
+                    ],
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
                     ],
                     limit: 20
                 });
@@ -119,33 +119,11 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     categories: [
                         {
                             title: "Most popular rooms",
-                            rooms: game.roomManager.instances.toSorted((a, b) => b.users.length - a.users.length).slice(0, 20).map((room) => {
-                                return {
-                                    id: room.model.id,
-                                    name: room.model.name,
-
-                                    users: room.users.length ?? 0,
-                                    maxUsers: room.model.maxUsers,
-
-                                    thumbnail: (room.model.thumbnail)?(Buffer.from(room.model.thumbnail).toString('utf8')):(undefined)
-                                };
-                            })
+                            rooms: game.roomManager.instances.toSorted((a, b) => b.users.length - a.users.length).filter((room) => room.hasUserVisibility(user.model)).slice(0, 20).map((room) => this.getRoomNavigatorData(room.model))
                         },
                         {
                             title: "Recently created rooms",
-                            rooms: roomModels.map((roomModel) => {
-                                const room = game.roomManager.getRoomInstance(roomModel.id);
-
-                                return {
-                                    id: roomModel.id,
-                                    name: roomModel.name,
-
-                                    users: room?.users.length ?? 0,
-                                    maxUsers: roomModel.maxUsers,
-
-                                    thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
-                                };
-                            }).toSorted((a, b) => b.users - a.users)
+                            rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
                         }
                     ]
                 }));
@@ -158,6 +136,12 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     where: {
                         ownerId: user.model.id,
                     },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        }
+                    ],
                     order: [
                         [ "createdAt", "DESC" ]
                     ]
@@ -167,19 +151,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     categories: [
                         {
                             title: "My rooms",
-                            rooms: roomModels.map((roomModel) => {
-                                const room = game.roomManager.getRoomInstance(roomModel.id);
-
-                                return {
-                                    id: roomModel.id,
-                                    name: roomModel.name,
-
-                                    users: room?.users.length ?? 0,
-                                    maxUsers: roomModel.maxUsers,
-
-                                    thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
-                                };
-                            }).toSorted((a, b) => b.users - a.users)
+                            rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
                         }
                     ]
                 }));
@@ -191,5 +163,29 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                 console.warn("Unrecognized navigator tab " + payload.category);
                 break;
         }
+    }
+
+    private getRoomNavigatorData(roomModel: RoomModel) {
+        const room = game.roomManager.getRoomInstance(roomModel.id);
+
+        return NavigatorRoomData.create({
+            id: roomModel.id,
+            name: roomModel.name,
+            description: roomModel.description,
+
+            lock: roomModel.lock,
+
+            ownerId: roomModel.owner.id,
+            ownerName: roomModel.owner.name,
+
+            users: room?.users.length ?? 0,
+            maxUsers: roomModel.maxUsers,
+
+            thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
+        });
+    }
+
+    private getFilteredRooms() {
+
     }
 }

@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from "react";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 
 export type RoomCameraRendererProps = {

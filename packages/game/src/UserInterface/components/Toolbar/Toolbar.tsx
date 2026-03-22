@@ -1,13 +1,14 @@
 import ToolbarFigureItem from "./Items/ToolbarFigureItem";
 import ToolbarItem from "./Items/ToolbarItem";
-import { useRoomInstance } from "../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import ToolbarToggle from "./ToolbarToggle";
-import { useState } from "react";
-import { useUser } from "../../hooks/useUser";
+import { useEffect, useState } from "react";
+import { useUser } from "../../Hooks/useUser";
 import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
+import ToolbarFriends from "src/UserInterface/Components/Toolbar/ToolbarFriends";
 
 export default function Toolbar() {
     const user = useUser();
@@ -16,6 +17,23 @@ export default function Toolbar() {
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
+    const [chatFloating, setChatFloating] = useState(window.innerWidth < 1280);
+
+    useEffect(() => {
+        if(!room) {
+            return;
+        }
+
+        const listener = () => {
+            setChatFloating(window.innerWidth < 1280);
+        };
+
+        window.addEventListener("resize", listener);
+
+        return () => {
+            window.removeEventListener("resize", listener);
+        };
+    }, [room]);
 
     return (
         <div style={{
@@ -37,6 +55,7 @@ export default function Toolbar() {
             
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr",
+                gap: 10,
 
                 height: 47,
 
@@ -55,12 +74,12 @@ export default function Toolbar() {
 
                     {(!minimized) && (
                         (room)?(
-                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))}>
+                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))} tooltip="Reception">
                                 <div className="sprite_toolbar_logo"/>
                             </ToolbarItem>
                         ):(
                             (user?.homeRoomId) && (
-                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))}>
+                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))} tooltip="Homeroom">
                                     <div className="sprite_toolbar_home"/>
                                 </ToolbarItem>
                             )
@@ -68,23 +87,23 @@ export default function Toolbar() {
                     )}
 
                     {(!minimized) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("navigator")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("navigator")} tooltip="Navigator">
                             <div className="sprite_toolbar_navigator"/>
                         </ToolbarItem>
                     )}
 
-                    <ToolbarItem onClick={() => addUniqueDialog("shop")}>
+                    <ToolbarItem onClick={() => addUniqueDialog("shop")} tooltip="Shop">
                         <div className="sprite_toolbar_shop"/>
                     </ToolbarItem>
 
                     {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("inventory")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip="Inventory">
                             <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
                         </ToolbarItem>
                     )}
 
                     {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")}>
+                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")} tooltip="Wardrobe">
                             <ToolbarFigureItem/>
                         </ToolbarItem>
                     )}
@@ -93,12 +112,25 @@ export default function Toolbar() {
                 <div style={{
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+
+                    position: "relative"
                 }}>
                     {(room) && (
-                        <ToolbarChatbar/>
+                        <ToolbarChatbar style={(chatFloating)?({
+                            position: "fixed",
+
+                            left: 0,
+                            right: 0,
+
+                            margin: "0 auto",
+
+                            bottom: 60
+                        }):(undefined)}/>
                     )}
                 </div>
+
+                <ToolbarFriends/>
             </div>
         </div>
     );

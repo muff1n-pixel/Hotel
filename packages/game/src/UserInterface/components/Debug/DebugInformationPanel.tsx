@@ -1,13 +1,16 @@
 import { useCallback } from "react";
-import { useDialogs } from "../../hooks/useDialogs";
-import { useHotel } from "../../hooks/useHotel";
-import { useRoomInstance } from "../../hooks/useRoomInstance";
-import { webSocketClient } from "../../..";
-import { usePermissions } from "../../hooks/usePermissions";
+import { useDialogs } from "../../Hooks/useDialogs";
+import { useHotel } from "../../Hooks/useHotel";
+import { useRoomInstance } from "../../Hooks/useRoomInstance";
+import { clientInstance, webSocketClient } from "../../..";
+import { usePermissions } from "../../Hooks/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
+import { useRoomFrameRate } from "@UserInterface/Hooks/useRoomFrameRate";
 
 export default function DebugInformationPanel() {
     const room = useRoomInstance();
+    const roomFrameRate = useRoomFrameRate();
+
     const hotel = useHotel();
     const dialogs = useDialogs();
 
@@ -29,13 +32,13 @@ export default function DebugInformationPanel() {
 
         const exportData: RoomFurnitureImportData = RoomFurnitureImportData.create({
             furniture: room.furnitures.map<RoomFurnitureExportData>((furniture) => {
-                if(!furniture.data.furniture) {
+                if(!furniture.furnitureData) {
                     throw new Error();
                 }
 
                 return RoomFurnitureExportData.create({
-                    type: furniture.data.furniture.type,
-                    color: furniture.data.furniture.color,
+                    type: furniture.furnitureData.type,
+                    color: furniture.furnitureData.color,
                     
                     data: furniture.data.data,
 
@@ -96,7 +99,9 @@ export default function DebugInformationPanel() {
             left: 0,
             top: 0,
 
-            padding: 32
+            padding: 32,
+
+            textShadow: "1px 1px #000000"
         }}>
             <div style={{
                 fontFamily: "Ubuntu Medium",
@@ -108,6 +113,12 @@ export default function DebugInformationPanel() {
             {(hotel?.users !== undefined) && (
                 <div>
                     {hotel.users} {(hotel.users !== 1)?("guests"):("guest")} online
+                </div>
+            )}
+
+            {(room) && (
+                <div>
+                    {Math.round(roomFrameRate ?? 0)} frames per second
                 </div>
             )}
 

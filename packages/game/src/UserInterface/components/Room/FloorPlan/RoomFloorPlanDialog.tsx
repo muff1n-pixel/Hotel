@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
-import DialogItem from "../../Dialog/Item/DialogItem";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
+import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import RoomFloorPlanEditor, { RoomFloorPlanTool } from "./RoomFloorPlanEditor";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../../..";
-import Checkbox from "../../Form/Checkbox";
-import Selection from "../../Form/Selection";
-import Input from "../../Form/Input";
+import Checkbox from "../../../Common/Form/Components/Checkbox";
+import Selection from "../../../Common/Form/Components/Selection";
+import Input from "../../../Common/Form/Components/Input";
 import { UpdateRoomStructureData } from "@pixel63/events";
-import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
+import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 
 export type RoomFloorPlanDialogProps = {
     hidden?: boolean;

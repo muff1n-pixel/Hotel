@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message UserFriendData {
+    string id = 1;
+
+    string name = 2;
+    
+    FigureConfigurationData figure_configuration = 3;
+    
+    bool online = 4;
+    optional string last_online = 5;
+}

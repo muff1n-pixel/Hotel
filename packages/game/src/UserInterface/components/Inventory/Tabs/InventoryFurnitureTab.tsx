@@ -1,15 +1,15 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import RoomRenderer from "../../Room/Renderer/RoomRenderer";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
-import { useDialogs } from "../../../hooks/useDialogs";
-import DialogItem from "../../Dialog/Item/DialogItem";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
@@ -124,16 +124,16 @@ export default function InventoryFurnitureTab() {
 
     }, [activeFurniture, roomFurniturePlacer]);
 
-    const onPlaceInRoomClick = useCallback(() => {
-        if(!activeFurniture?.furniture) {
+    const onPlaceInRoomClick = useCallback((userFurniture: UserInventoryFurnitureData) => {
+        if(!userFurniture?.furniture) {
             return;
         }
 
-        if(activeFurniture.furniture?.type === "wallpaper" || activeFurniture.furniture?.type === "floor") {
+        if(userFurniture.furniture?.type === "wallpaper" || userFurniture.furniture?.type === "floor") {
             webSocketClient.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
-                id: activeFurniture.id,
-                furnitureId: activeFurniture.furniture?.id,
-                stackable: activeFurniture.furniture?.flags?.inventoryStackable ?? false
+                id: userFurniture.id,
+                furnitureId: userFurniture.furniture?.id,
+                stackable: userFurniture.furniture?.flags?.inventoryStackable ?? false
             }));
 
             return;
@@ -143,9 +143,36 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, activeFurniture.furniture));
-        roomFurniturePlacerId.current = (activeFurniture?.furniture.flags?.inventoryStackable)?(activeFurniture?.furniture.id):(activeFurniture?.id);
-    }, [roomFurniturePlacer, activeFurniture]);
+        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, userFurniture.furniture));
+        roomFurniturePlacerId.current = (userFurniture?.furniture.flags?.inventoryStackable)?(userFurniture?.furniture.id):(userFurniture?.id);
+    }, [roomFurniturePlacer]);
+
+    const handleMouseDown = useCallback((userFurniture: UserInventoryFurnitureData) => {
+        if(!clientInstance.roomInstance.value) {
+            return;
+        }
+
+        if(roomFurniturePlacer) {
+            roomFurniturePlacer.destroy();
+        }
+
+        const mousemove = () => {
+            document.body.removeEventListener("mousemove", mousemove);
+
+            if(room && userFurniture.furniture) {                
+                setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, userFurniture.furniture));
+                roomFurniturePlacerId.current = (userFurniture?.furniture.flags?.inventoryStackable)?(userFurniture?.furniture.id):(userFurniture?.id);
+            }
+        };
+
+        document.body.addEventListener("mousemove", mousemove);
+
+        document.body.addEventListener("mouseup", () => {
+            document.body.removeEventListener("mousemove", mousemove);
+        }, {
+            once: true
+        });
+    }, [ setDialogHidden, room, activeFurniture, roomFurniturePlacer ]);
 
     if(!userFurniture.length) {
         return (<InventoryEmptyTab/>);
@@ -176,7 +203,8 @@ export default function InventoryFurnitureTab() {
                         <DialogItem
                             key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
                             active={activeFurniture?.id === userFurniture.id}
-                            onClick={() => setActiveFurniture(userFurniture)}>
+                            onClick={() => setActiveFurniture(userFurniture)}
+                            onMouseDown={() => handleMouseDown(userFurniture)}>
                                 <FurnitureIcon furnitureData={userFurniture.furniture}/>
 
                                 {(userFurniture.quantity > 1) && (
@@ -221,7 +249,7 @@ export default function InventoryFurnitureTab() {
                             <p>{activeFurniture?.furniture?.description}</p>
                         </div>
 
-                        <DialogButton disabled={!room || !room.hasRights} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>
                     </Fragment>
                 )}
             </div>

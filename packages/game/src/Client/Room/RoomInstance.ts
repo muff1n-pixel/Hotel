@@ -1,15 +1,18 @@
 import ClientInstance from "@Client/ClientInstance";
-import RoomRenderer from "./Renderer";
+import RoomRenderer from "./RoomRenderer";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { webSocketClient } from "../..";
+import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import RoomPet from "@Client/Room/Pets/RoomPet";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
+import AssetFetcher from "@Client/Assets/AssetFetcher";
+import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -40,12 +43,10 @@ export default class RoomInstance {
     public readonly users: RoomUser[] = [];
     public furnitures: RoomFurniture[] = [];
     public bots: RoomBot[] = [];
+    public pets: RoomPet[] = [];
 
     public information?: RoomInformationData;
     public hasRights: boolean;
-
-    public focusedUser = new ObservableProperty<HoveredFigure | null>(null);
-    public hoveredUser = new ObservableProperty<HoveredFigure | null>(null);
 
     constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData) {
         this.id = event.id;
@@ -67,11 +68,25 @@ export default class RoomInstance {
         }
 
         for(const furniture of event.furniture) {
-            this.furnitures.push(new RoomFurniture(this, furniture));
+            const furnitureData = event.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
+
+            if(!furnitureData) {
+                RoomLogger.error("Server did not send furniture data for user furniture!", {
+                    furniture
+                });
+
+                continue;
+            }
+
+            this.furnitures.push(new RoomFurniture(this, furnitureData, furniture));
         }
 
         for(const bot of event.bots) {
             this.bots.push(new RoomBot(this, bot));
+        }
+
+        for(const pet of event.pets) {
+            this.pets.push(new RoomPet(this, pet));
         }
 
         this.registerEventListeners();
@@ -95,6 +110,8 @@ export default class RoomInstance {
         this.removeEventListeners();
 
         this.roomRenderer.terminate();
+
+        AssetFetcher.clearMemory();
 
         this.clientInstance.roomInstance.value = undefined;
     }
@@ -188,10 +205,12 @@ export default class RoomInstance {
 
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
-
-        if(this.focusedUser.value?.type === "user" && this.focusedUser.value?.user.data.id === userId) {
-            this.focusedUser.value = null;
+        
+        if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
+            this.roomRenderer.focusedItem.value = null;
         }
+        
+        clientInstance.roomInstance.update();
     }
 
     public getUserById(userId: string) {
@@ -225,12 +244,16 @@ export default class RoomInstance {
     }
 
     public getActor(data?: RoomActorIdentifierData) {
+        if(data?.user) {
+            return this.getUserById(data.user.userId);
+        }
+
         if(data?.bot) {
             return this.getBotById(data.bot.botId);
         }
 
-        if(data?.user) {
-            return this.getUserById(data.user.userId);
+        if(data?.pet) {
+            return this.getPetById(data.pet.petId);
         }
 
         throw new Error("Unhandled actor type.");
@@ -244,6 +267,39 @@ export default class RoomInstance {
         }
 
         return bot;
+    }
+
+    public getPetById(id: string) {
+        const pet = this.pets.find((pet) => pet.data.id === id);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
+    public getPetByItem(item: RoomPetItem) {
+        const pet = this.pets.find((pet) => pet.item.id === item.id);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
+    public removePet(petId: string) {
+        const pet = this.getPetById(petId);
+
+        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(pet.item), 1);
+        this.pets.splice(this.pets.indexOf(pet), 1);
+
+        if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
+            this.roomRenderer.focusedItem.value = null;
+        }
+        
+        clientInstance.roomInstance.update();
     }
 
     public getFurnitureById(id: string) {
@@ -260,24 +316,19 @@ export default class RoomInstance {
         const furniture = this.furnitures.find((furniture) => furniture.item.id === item.id);
 
         if(!furniture) {
-            console.log(item, this.furnitures);
             throw new Error("Furniture does not exist in room.");
         }
 
         return furniture;
     }
 
-    public removeFurniture(roomFurnitureId: string) {
+    public removeFurniture(roomFurnitureId: string, hideFlyingFurniture?: boolean) {
         const furniture = this.getFurnitureById(roomFurnitureId);
 
-        if(!furniture.data.furniture) {
-            throw new Error();
-        }
-
-        if(furniture.data.userId === this.clientInstance.user.value?.id) {
+        if(furniture.data.userId === this.clientInstance.user.value?.id && !hideFlyingFurniture) {
             this.clientInstance.flyingFurnitureIcons.value?.push({
                 id: roomFurnitureId,
-                furniture: furniture.data.furniture,
+                furniture: furniture.furnitureData,
                 targetElementId: "toolbar-inventory",
                 position: this.roomRenderer.getItemScreenPosition(furniture.item)
             });
@@ -297,7 +348,11 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(bot.item), 1);
         this.bots.splice(this.bots.indexOf(bot), 1);
 
-        this.clientInstance.roomInstance.update();
+        if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {
+            this.roomRenderer.focusedItem.value = null;
+        }
+
+        clientInstance.roomInstance.update();
     }
 
     public moveFurniture(roomFurnitureId: string) {

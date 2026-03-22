@@ -1,4 +1,6 @@
 {
+  "name": "@pixel63/shared",
+  "main": "build/index.js",
   "type": "module",
   "composite": true,
   "scripts": {

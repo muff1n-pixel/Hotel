@@ -2,6 +2,8 @@ import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { ShopPageFurnitureModel } from "./ShopPageFurnitureModel.js";
 import { ShopPageFeatureModel } from "./ShopPageFeatureModel.js";
 import { ShopPageBotModel } from "./ShopPageBotModel.js";
+import { ShopPagePetModel } from "./ShopPagePetModel.js";
+import { ShopPageBundleModel } from "./ShopPageBundleModel.js";
 
 export class ShopPageModel extends Model {
     declare id: string;
@@ -21,7 +23,10 @@ export class ShopPageModel extends Model {
     
     declare furniture: NonAttribute<ShopPageFurnitureModel[]>;
     declare bots: NonAttribute<ShopPageBotModel[]>;
+    declare pets: NonAttribute<ShopPagePetModel[]>;
     declare features?: NonAttribute<ShopPageFeatureModel[]>;
+
+    declare bundle?: NonAttribute<ShopPageBundleModel>;
 }
 
 export function initializeShopPageModel(sequelize: Sequelize) {

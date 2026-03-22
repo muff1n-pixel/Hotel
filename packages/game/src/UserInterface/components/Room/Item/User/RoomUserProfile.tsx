@@ -1,12 +1,13 @@
-import FigureImage from "../../../Figure/FigureImage";
-import { useUserBadges } from "../../../../hooks/useUserBadges";
-import BadgeImage from "../../../Badges/BadgeImage";
-import { useUser } from "../../../../hooks/useUser";
+import { useUserBadges } from "../../../../Hooks/useUserBadges";
+import BadgeImage from "../../../../Common/Badges/BadgeImage";
+import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -42,8 +43,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             flexDirection: "column",
             gap: 10
         }}>
-
-            <b>{targetUser.name}</b>
+            <b><UserLink id={targetUser.id} name={targetUser.name!}/></b>
 
             <div style={{
                 width: "100%",
@@ -88,7 +88,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                             width: 40,
                             height: 40
                         }}>
-                            <BadgeImage badge={badge}/>
+                            <BadgeImage key={badge.id} badge={badge}/>
                         </div>
                     ))}
                 </div>

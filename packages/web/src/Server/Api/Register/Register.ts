@@ -7,7 +7,7 @@ import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferen
 import { randomBytes, randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { sendLog } from "@shared/Logger/Logger";
+import { sendLog } from "@shared/Logger/LoggerEx";
 
 const router = Router();
 
@@ -127,6 +127,7 @@ router.post("/", async (req, res) => {
 
         return res.json({
             accessToken,
+            
             id: user.id,
             name: user.name,
             email: user.email,

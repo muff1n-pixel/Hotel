@@ -1,5 +1,6 @@
 import RoomFurniture from "../../../RoomFurniture";
-import WiredLogic, { WiredTriggerOptions } from "../WiredLogic";
+import WiredActionLogic from "../WiredActionLogic";
+import { WiredTriggerOptions } from "../WiredLogic";
 import { RoomActorChatData } from "@pixel63/events";
 
 export type DelayedMessageData = {
@@ -7,7 +8,7 @@ export type DelayedMessageData = {
     timestamp: number;
 };
 
-export default class WiredActionShowMessageLogic extends WiredLogic {
+export default class WiredActionShowMessageLogic extends WiredActionLogic {
     private messages: DelayedMessageData[] = [];
     
     constructor(roomFurniture: RoomFurniture) {
@@ -56,7 +57,7 @@ export default class WiredActionShowMessageLogic extends WiredLogic {
         }
     }
 
-    public async handleTrigger(options?: WiredTriggerOptions): Promise<void> {
+    public async handleAction(options?: WiredTriggerOptions): Promise<void> {
         if(options?.roomUser) {
             if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
                 this.messages.push({
@@ -65,7 +66,5 @@ export default class WiredActionShowMessageLogic extends WiredLogic {
                 });
             }
         }
-
-        return super.handleTrigger(options);
     }
 }

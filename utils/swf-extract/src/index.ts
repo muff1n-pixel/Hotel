@@ -11,6 +11,7 @@ import extractRoomChatStyles from "./extractions/RoomChatStylesExtractor.ts";
 import extractFigureEffects from "./extractions/FigureEffects.ts";
 import extractAvatarAnimations from "./extractions/AvatarAnimations.ts";
 import { PromisePool } from "@supercharge/promise-pool";
+import extractPets from "./extractions/Pets.ts";
 
 export const database = new sqlite3.Database(":memory:");
 export const flags = process.argv.slice(2).filter((argument) => argument.startsWith('-'));
@@ -42,6 +43,18 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
         await extractAvatarAnimations();
         
         return;
+    }
+
+    if(flags.some((flag) => flag === "--pet")) {
+        await extractPets(assetNames);
+
+        return;
+    }
+
+    if(flags.some((flag) => flag === "--collection")) {
+        assetNames = readdirSync(path.join("assets", "furniture"), { withFileTypes: true })
+        .filter((file) => file.isFile() && path.basename(file.name).startsWith(process.argv[2]!))
+        .map((file) => path.basename(file.name, ".swf"));
     }
 
     if(process.argv[2] === "regenerate-figures") {

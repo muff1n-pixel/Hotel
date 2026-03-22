@@ -3,6 +3,9 @@ import Game from "./Game";
 import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData";
 import { recreateShopPages } from "./Database/Development/ShopDevelopmentData";
 import InitializerManager from "./Initializer/InitializerManager";
+import { config } from "./Config/Config";
+import { PermissionModel } from "./Database/Models/Permissions/PermissionModel";
+import { PermissionRoleModel } from "./Database/Models/Permissions/PermissionRoleModel";
 
 let game: Game;
 

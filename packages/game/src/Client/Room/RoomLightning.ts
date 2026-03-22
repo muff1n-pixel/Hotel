@@ -1,6 +1,6 @@
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
-import RoomRenderer from "@Client/Room/Renderer";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 
 export default class RoomLighting {

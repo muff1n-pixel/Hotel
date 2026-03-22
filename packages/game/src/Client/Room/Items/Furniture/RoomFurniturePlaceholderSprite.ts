@@ -3,6 +3,7 @@ import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class RoomFurniturePlaceholderSprite extends RoomSprite {
     private readonly offset: MousePosition = {
@@ -24,7 +25,7 @@ export default class RoomFurniturePlaceholderSprite extends RoomSprite {
         const placeholder = (this.item.roomRenderer.size === 64)?(FurnitureAssets.placeholder):(FurnitureAssets.placeholder32);
 
         if(!placeholder) {
-            console.warn("Furniture placeholder is not loaded.");
+            RoomLogger.warn("Furniture placeholder is not loaded.");
 
             return;
         }

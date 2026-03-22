@@ -1,6 +1,7 @@
 import RoomFurnitureLogic, { RoomFurnitureHandleUserChatResult } from "../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../RoomFurniture";
 import RoomUser from "../../../Users/RoomUser";
+import WiredActionLogic from "./WiredActionLogic";
 
 export type WiredTriggerOptions = {
     roomUser?: RoomUser;
@@ -37,19 +38,11 @@ export default class WiredLogic implements RoomFurnitureLogic {
             return null;
         }
 
-        const category = furniture.getCategoryLogic();
-
-        if(!(category instanceof WiredLogic)) {
+        if(!(furniture.logic instanceof WiredLogic)) {
             return null;
         }
 
-        return category;
-    }
-
-    public async handleTrigger(options?: WiredTriggerOptions) {
-        const connectedWired = this.getConnectedWired();
-
-        connectedWired?.handleTrigger(options);
+        return furniture.logic;
     }
 
     public setActive() {

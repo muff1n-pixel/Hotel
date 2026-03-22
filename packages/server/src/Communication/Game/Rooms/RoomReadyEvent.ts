@@ -17,10 +17,10 @@ export default class RoomReadyEvent implements IncomingEvent {
 
         roomUser.ready = true;
 
-        const furnitureWithUserEntersLogic = roomUser.room.furnitures.filter((furniture) => furniture.getCategoryLogic()?.handleUserEnteredRoom);
+        const furnitureWithUserEntersLogic = roomUser.room.furnitures.filter((furniture) => furniture.logic?.handleUserEnteredRoom);
 
         for(const furniture of furnitureWithUserEntersLogic) {
-            await furniture.getCategoryLogic()?.handleUserEnteredRoom?.(roomUser);
+            await furniture.logic?.handleUserEnteredRoom?.(roomUser);
         }
     }
 }

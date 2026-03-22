@@ -8,15 +8,19 @@ import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 export class UserFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
-    declare direction: number;
+    declare direction: number | null;
     declare animation: number;
     declare color: number | null;
     declare data?: UserFurnitureCustomData;
     declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
+    
     declare user: NonAttribute<UserModel>;
+    declare userId: NonAttribute<string>;
+
     declare furniture: NonAttribute<FurnitureModel>;
+    declare furnitureId: NonAttribute<string>;
 }
 
 export function initializeUserFurnitureModel(sequelize: Sequelize) {

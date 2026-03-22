@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Pets/UserPetData.proto";
+
+message RoomPetsData {
+    repeated UserPetData pets_added = 1;
+    repeated UserPetData pets_updated = 2;
+    repeated UserPetData pets_removed = 3;
+}

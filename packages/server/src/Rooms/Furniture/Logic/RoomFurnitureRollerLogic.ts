@@ -3,6 +3,7 @@ import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
+import RoomFloorplanHelper from "../../RoomFloorplanHelper.js";
 
 export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -24,7 +25,9 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
             room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                 furnitureUpdated: [
-                    this.roomFurniture.model
+                    {
+                        furniture: this.roomFurniture.model
+                    }
                 ]
             }));
         }
@@ -56,7 +59,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     continue;
                 }
 
-                if(user.path) {
+                if(user.path.path) {
                     continue;
                 }
         
@@ -98,23 +101,19 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     continue;
                 }
 
-                const offset = furniture.getOffsetPosition(1, this.roomFurniture.model.direction);
-                const offsetPosition = RoomPositionData.fromJSON(offset);
+                const nextPosition = this.getNextPosition(furniture);
 
-                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
-
-                if(!nextRoller) {
-                    // remove the depth of the roller
-                    offsetPosition.depth -= this.roomFurniture.model.furniture.dimensions.depth;
+                if(!nextPosition) {
+                    continue;
                 }
 
-                furniture.setPosition(offsetPosition, false);
+                furniture.setPosition(nextPosition, false);
                 
                 await furniture.model.save();
 
                 this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
                     id: furniture.model.id,
-                    position: offsetPosition
+                    position: nextPosition
                 }));
                 
                 animate = true;
@@ -127,10 +126,42 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 
                 room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
                     furnitureUpdated: [
-                        this.roomFurniture.model
+                        {
+                            furniture: this.roomFurniture.model
+                        }
                     ]
                 }));
             }
         }
+    }
+
+    private getNextPosition(roomFurniture: RoomFurniture): RoomPositionData | null {
+        const offset = roomFurniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+
+        if(!this.roomFurniture.room.model.structure.grid[offset.row]?.[offset.column]) {
+            return null;
+        }
+
+        const rollerDepth = this.roomFurniture.model.furniture.dimensions.depth;
+
+        const currentRelativeDepth = roomFurniture.model.position.depth - rollerDepth;
+
+        const allNextFurniture = this.roomFurniture.room.getAllFurnitureAtPosition(offset);
+
+        if(allNextFurniture.some((furniture) => furniture.model.furniture.interactionType === "roller")) {
+            return RoomPositionData.create({
+                row: offset.row,
+                column: offset.column,
+                depth: roomFurniture.model.position.depth
+            });
+        }
+
+        const tileDepth = RoomFloorplanHelper.parseDepth(this.roomFurniture.room.model.structure.grid[offset.row]![offset.column]!);
+
+        return RoomPositionData.create({
+            row: offset.row,
+            column: offset.column,
+            depth: tileDepth + currentRelativeDepth
+        });
     }
 }

@@ -9,11 +9,15 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage } from "@pixel63/events";
+import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
+import RoomPet from "./Pets/RoomPet.js";
+import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { game } from "../index.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
     public readonly bots: RoomBot[] = [];
+    public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
 
     public readonly floorplan: RoomFloorplan;
@@ -24,6 +28,7 @@ export default class Room {
     constructor(public readonly model: RoomModel) {
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
         this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
+        this.pets = model.roomPets.map((userPet) => new RoomPet(this, userPet));
 
         this.floorplan = new RoomFloorplan(this);
 
@@ -67,6 +72,16 @@ export default class Room {
         return bot;
     }
 
+    public getPetById(userPetId: string) {
+        const pet = this.pets.find((pet) => pet.model.id === userPetId);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
     public getRoomUserAtPosition(position: RoomPositionOffsetData) {
         return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
     }
@@ -74,8 +89,9 @@ export default class Room {
     public getActorAtPosition(position: RoomPositionOffsetData) {
         const user = this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
         const bot = this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
+        const pet = this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
 
-        return user || bot;
+        return user || bot || pet;
     }
 
     public getActorsAtPosition(position: RoomPositionOffsetData, dimensions?: RoomPositionData): RoomActor[] {
@@ -139,7 +155,7 @@ export default class Room {
                 actor.path.setPosition({
                     ...actor.position,
                     depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-                }, sitableFurniture.model.direction);
+                }, sitableFurniture.model.direction ?? undefined);
             }
             else {
                 actor.removeAction("Sit");
@@ -153,6 +169,10 @@ export default class Room {
 
     public getBotAtPosition(position: RoomPositionOffsetData) {
         return this.bots.find((bot) => bot.model.position.row === position.row && bot.model.position.column === position.column);
+    }
+
+    public getPetAtPosition(position: RoomPositionOffsetData) {
+        return this.pets.find((pet) => pet.model.position.row === position.row && pet.model.position.column === position.column);
     }
 
     public getRoomUser(user: User) {
@@ -183,7 +203,7 @@ export default class Room {
         }
     }
 
-    public cancelActionsFrame() {
+    public unload() {
         if(this.actionsInterval === undefined) {
             return;
         }
@@ -191,9 +211,33 @@ export default class Room {
         clearInterval(this.actionsInterval);
 
         delete this.actionsInterval;
+
+        for(const user of game.users.filter((user) => user.roomBellQueue?.model.id === this.model.id)) {
+            user.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
+                userId: user.model.id,
+                accept: false
+            }));
+
+            user.roomBellQueue = undefined;
+        }
     }
 
+    private lastMinuteInterval = performance.now();
+
     private async handleActionsInterval() {
+        if(performance.now() - this.lastMinuteInterval > 60 * 1000) {
+            this.lastMinuteInterval = performance.now();
+
+            for(let furniture of this.furnitures.filter((furniture) => furniture.logic?.handleMinuteInterval !== undefined)) {
+                try {
+                    await furniture.logic?.handleMinuteInterval?.();
+                }
+                catch(error) {
+                    console.error("Failed to handle furniture minute interval", error);
+                }
+            }
+        }
+
         for(let furniture of this.furnitures) {
             furniture.preoccupiedByActionHandler = false;
         }
@@ -202,11 +246,11 @@ export default class Room {
             user.preoccupiedByActionHandler = false;
         }
 
-        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.getCategoryLogic()?.handleActionsInterval !== undefined);
+        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.logic?.handleActionsInterval !== undefined);
 
         for(let furniture of furnitureWithActions) {
             try {
-                await furniture.getCategoryLogic()?.handleActionsInterval?.();
+                await furniture.logic?.handleActionsInterval?.();
             }
             catch(error) {
                 console.error("Failed to handle furniture actions interval", error);
@@ -229,6 +273,15 @@ export default class Room {
             }
             catch(error) {
                 console.error("Failed to handle bot actions interval", error);
+            }
+        }
+
+        for(const pet of this.pets) {
+            try {
+                await pet.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle pet actions interval", error);
             }
         }
 
@@ -327,8 +380,11 @@ export default class Room {
     public getInformationData(): RoomInformationData {
         return {
             $type: "RoomInformationData",
+
+            id: this.model.id,
             
             type: this.model.type,
+            lock: this.model.lock,
 
             name: this.model.name,
             description: this.model.description,
@@ -346,11 +402,11 @@ export default class Room {
     }
     
     public getFurnitureWithCategory<T>(category: (new (...args: any[]) => T)) {
-        return this.furnitures.filter((furniture) => furniture.getCategoryLogic() instanceof category).map((furniture) => furniture.getCategoryLogic() as T);
+        return this.furnitures.filter((furniture) => furniture.logic instanceof category).map((furniture) => furniture.logic as T);
     }
 
-    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
-        await roomFurniture.handleUserWalksOnFurniture(roomUser);
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleUserWalksOnFurniture(roomUser, previousRoomFurniture);
 
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
@@ -359,8 +415,8 @@ export default class Room {
         }
     }
 
-    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
-        await roomFurniture.handleUserWalksOnFurniture(roomUser);
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleUserWalksOffFurniture(roomUser, newRoomFurniture);
 
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
@@ -375,5 +431,21 @@ export default class Room {
         for(const logic of wiredStateChangedLogic) {
             logic.handleUserUsesFurniture(roomUser, roomFurniture);
         }
+    }
+
+    public hasUserVisibility(user: UserModel) {
+        if(this.model.lock !== "invisible") {
+            return true;
+        }
+
+        if(this.model.owner.id === user.id) {
+            return true;
+        }
+
+        if(this.model.rights.some((rights) => rights.user.id === user.id)) {
+            return true;
+        }
+
+        return false;
     }
 }

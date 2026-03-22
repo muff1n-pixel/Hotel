@@ -8,7 +8,8 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -49,7 +50,7 @@ export default class RoomUser implements RoomActor {
             $type: "RoomPositionData",
             row: room.model.structure.door?.row ?? 0,
             column: room.model.structure.door?.column ?? 0,
-            depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0]!)
+            depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0] ?? '0')
         };
 
         this.user.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
@@ -62,6 +63,16 @@ export default class RoomUser implements RoomActor {
             user: this.getRoomUserData()
         }));
 
+        const uniqueFurniture: FurnitureModel[] = [];
+
+        for(const userFurniture of this.room.furnitures) {
+            if(uniqueFurniture.some((uniqueFurniture) => uniqueFurniture.id === userFurniture.model.furniture.id)) {
+                continue;
+            }
+
+            uniqueFurniture.push(userFurniture.model.furniture);
+        }
+
         this.user.sendProtobuff(RoomLoadData, RoomLoadData.fromJSON({
             id: this.room.model.id,
 
@@ -69,9 +80,12 @@ export default class RoomUser implements RoomActor {
 
             structure: this.room.model.structure,
 
-            users: this.room.users.map((user) => user.getRoomUserData()),
             furniture: this.room.furnitures.map((furniture) => furniture.model),
+            furnitureData: uniqueFurniture,
+            
+            users: this.room.users.map((user) => user.getRoomUserData()),
             bots: this.room.bots.map((bot) => bot.model),
+            pets: this.room.pets.map((pet) => pet.model),
 
             hasRights: this.hasRights()
         }))
@@ -81,6 +95,22 @@ export default class RoomUser implements RoomActor {
         }));
 
         this.path = new RoomActorPath(this);
+
+        if(this.user.roomBellQueue) {
+            const room = this.user.roomBellQueue;
+            user.roomBellQueue = undefined;
+            
+            for(const roomUserWithRights of room.users.filter((user) => user.hasRights())) {
+                roomUserWithRights.user.sendProtobuff(RoomBellQueueData, RoomBellQueueData.create({
+                    users: game.users.filter((user) => user.roomBellQueue?.model.id === roomUserWithRights.room.model.id).map((user) => {
+                        return RoomBellQueueUserData.create({
+                            id: user.model.id,
+                            name: user.model.name
+                        })
+                    })
+                }));
+            }
+        }
     }
 
     private getRoomUserData(): RoomUserData {
@@ -137,10 +167,10 @@ export default class RoomUser implements RoomActor {
 
         this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
-        const wiredUserLeavesRoomLogics = this.room.getFurnitureWithCategory(WiredTriggerUserLeavesRoomLogic);
+        const furnitureWithUserLeftRoom = this.room.furnitures.filter((furniture) => furniture.logic?.handleUserLeftRoom);
 
-        for (const logic of wiredUserLeavesRoomLogics) {
-            logic.handleUserLeftRoom(this);
+        for(const furniture of furnitureWithUserLeftRoom) {
+            furniture.logic?.handleUserLeftRoom?.(this);
         }
 
         delete this.user.room;
@@ -220,7 +250,8 @@ export default class RoomUser implements RoomActor {
                 }
             },
             from: previousPosition,
-            to: this.position
+            to: this.position,
+            direction: this.direction
         }));
     }
 
@@ -282,24 +313,32 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
-        const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
+        const previousFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(previousPosition));
+        const newFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(newPosition));
 
-        if (previousFurniture) {
-            await this.handleWalksOffFurniture?.(previousFurniture);
+        for(const furniture of previousFurniture) {
+            await this.handleWalksOffFurniture?.(furniture, newFurniture);
         }
 
-        const currentFurniture = this.room.getUpmostFurnitureAtPosition(newPosition);
-
-        if (currentFurniture) {
-            await this.handleWalksOnFurniture?.(currentFurniture);
+        for(const furniture of newFurniture) {
+            await this.handleWalksOnFurniture?.(furniture, previousFurniture);
         }
     }
 
-    public async handleWalksOnFurniture(roomFurniture: RoomFurniture): Promise<void> {
-        return this.room.handleUserWalksOnFurniture(this, roomFurniture);
+    public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        return this.room.handleUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 
-    public async handleWalksOffFurniture(roomFurniture: RoomFurniture): Promise<void> {
-        return this.room.handleUserWalksOffFurniture(this, roomFurniture);
+    public async handleWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]): Promise<void> {
+        return this.room.handleUserWalksOffFurniture(this, roomFurniture, newRoomFurniture);
+    }
+
+    public isWithinRadius(center: RoomPositionData, radius: number) {
+        const distance = Math.max(
+            Math.abs(this.position.column - center.column),
+            Math.abs(this.position.row - center.row)
+        );
+
+        return distance <= radius;
     }
 }

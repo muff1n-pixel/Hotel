@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message UpdateShopPetData {
+    optional string id = 1;
+
+    string page_id = 2;
+
+    string pet_id = 3;
+
+    uint32 credits = 4;
+    uint32 duckets = 5;
+    uint32 diamonds = 6;
+}

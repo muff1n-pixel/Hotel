@@ -1,13 +1,13 @@
-import DialogButton from "../../Dialog/Button/DialogButton";
-import Dialog from "../../Dialog/Dialog";
-import DialogContent from "../../Dialog/DialogContent";
-import Input from "../../Form/Input";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogContent from "../../../Common/Dialog/Components/DialogContent";
+import Input from "../../../Common/Form/Components/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../hooks/useDialogs";
-import FigureImage from "../../Figure/FigureImage";
-import { useUser } from "../../../hooks/useUser";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useUser } from "../../../Hooks/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
+import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 
 export type EditShopBotDialogProps = {
     data: Partial<ShopBotData> & {

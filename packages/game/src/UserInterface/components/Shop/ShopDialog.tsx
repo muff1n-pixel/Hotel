@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import Dialog from "../Dialog/Dialog";
-import DialogTabs, { DialogTabHeaderProps } from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogTabs, { DialogTabHeaderProps } from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import ShopDialogCategory from "./ShopDialogCategory";
-import { usePermissionAction } from "../../hooks/usePermissionAction";
+import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import { webSocketClient } from "../../..";
 import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 
@@ -84,13 +84,13 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 {
                     icon: "Frontpage",
                     element: (
-                        <ShopDialogCategory activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
                     ),
                 },
                 {
                     icon: "Furniture",
                     element: (
-                        <ShopDialogCategory activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
                     ),
                 },
                 {
@@ -99,7 +99,9 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 },
                 {
                     icon: "Pets",
-                    element: (<div/>),
+                    element: (
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                    ),
                 }
             ]}>
 

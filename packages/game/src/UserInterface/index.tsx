@@ -1,11 +1,11 @@
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
-import InterfaceInstance from './components/InterfaceInstance';
+import InterfaceInstance from './Components/InterfaceInstance';
 
-import "./styles/fonts.css";
-import "./styles/index.css";
-import "./styles/spritesheet.css";
-import "./styles/spritesheet.png";
+import "./Styles/fonts.css";
+import "./Styles/index.css";
+import "./Styles/spritesheet.css";
+import "./Styles/spritesheet.png";
 
 export default class UserInterfaceInstance {
   private root: Root;

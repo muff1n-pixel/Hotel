@@ -1,5 +1,5 @@
 import { clientInstance } from "../../../..";
-import { useFlyingFurnitureIcons } from "../../../hooks/useFlyingFurnitureIcons";
+import { useFlyingFurnitureIcons } from "../../../Hooks/useFlyingFurnitureIcons";
 import FlyingFurnitureIcon from "./FlyingFurnitureIcon";
 
 export default function FlyingFurnitureInstances() {

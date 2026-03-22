@@ -1,6 +1,7 @@
 import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { PermissionRoleModel } from "../Permissions/PermissionRoleModel.js";
 import { FigureConfigurationData } from "@pixel63/events";
+import { UserBadgeModel } from "./Badges/UserBadgeModel.js";
 
 export class UserModel extends Model {
   declare id: string;
@@ -17,6 +18,8 @@ export class UserModel extends Model {
   declare roomChatStyleId: string;
   declare online: boolean;
   declare roles: NonAttribute<PermissionRoleModel[]>;
+
+  declare createdAt: Date;
 
   declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;
   declare addRole: BelongsToManyAddAssociationMixin<PermissionRoleModel, string>;

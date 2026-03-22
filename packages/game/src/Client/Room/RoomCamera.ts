@@ -1,5 +1,5 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import RoomRenderer from "./Renderer";
+import RoomRenderer from "./RoomRenderer";
 
 export default class RoomCamera {
     private moving: boolean = false;

@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import DialogPanel from "../../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
-import { useDialogs } from "../../../hooks/useDialogs";
-import { useUser } from "../../../hooks/useUser";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useUser } from "../../../Hooks/useUser";
 import FurnitureImage from "../../Furniture/FurnitureImage";
-import TextArea from "../../Form/TextArea";
+import TextArea from "../../../Common/Form/Components/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
-import DialogCurrencyPanel from "../../Dialog/Panels/DialogCurrencyPanel";
+import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
@@ -62,7 +62,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
             .filter((furniture) => furniture.furniture?.type === activeFurniture.furniture?.type)
             .sort((a, b) => (a.furniture?.color ?? 0) - (b.furniture?.color ?? 0))
             .map(async (shopFurniture) => {
-                const furniture =  new Furniture(shopFurniture.furniture?.type, 64, undefined, undefined, undefined);
+                const furniture = new Furniture(shopFurniture.furniture?.type, 64, undefined, undefined, undefined);
 
                 await furniture.getData();
 
@@ -316,7 +316,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture || (
+                    <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds

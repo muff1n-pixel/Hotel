@@ -17,21 +17,7 @@ export default class UpdateShopFurnitureEvent implements ProtobuffListener<Updat
             throw new Error("User is not privileged to edit the shope.");
         }
 
-        let furniture = await FurnitureModel.findOne({
-            where: {
-                type: payload.type,
-                color: payload.color
-            }
-        });
-
-        if(!furniture) {
-            furniture = await FurnitureModel.findOne({
-                where: {
-                    type: payload.type,
-                    color: null
-                }
-            });
-        }
+        const furniture = await FurnitureModel.findByPk(payload.furnitureId);
 
         if(!furniture) {
             throw new Error("Furniture by type and color does not exist.");

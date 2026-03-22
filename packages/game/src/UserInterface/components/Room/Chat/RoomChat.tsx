@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../..";
-import OffscreenCanvasRender from "../../OffscreenCanvasRender";
-import { useUser } from "../../../hooks/useUser";
+import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
+import { useUser } from "../../../Hooks/useUser";
 import { RoomActorChatData } from "@pixel63/events";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 type RoomChatMessage = {
     id: number;
@@ -117,8 +118,12 @@ export default function RoomChat() {
 
                 const actor = room.getActor(payload.actor);
 
+                if(!(actor.item instanceof RoomFigureItem)) {
+                    return;
+                }
+
                 const name = actor.data.name;
-                const figureConfiguration = actor.data.figureConfiguration;
+                const figureConfiguration = (actor.data as any).figureConfiguration;
 
                 if(!actor.item.position || !figureConfiguration) {
                     return;
@@ -140,8 +145,6 @@ export default function RoomChat() {
                 };
 
                 moveMessagesUp(messages.current, newMessage);
-
-                newMessage.index = -1;
 
                 messages.current.push(newMessage);
 

@@ -1,11 +1,11 @@
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
-import Dialog from "../../../Dialog/Dialog";
-import DialogContent from "../../../Dialog/DialogContent";
-import DialogTable from "../../../Dialog/Table/DialogTable";
-import Input from "../../../Form/Input";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
+import Dialog from "../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
+import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable";
+import Input from "../../../../Common/Form/Components/Input";
 import { useState } from "react";
-import Selection from "../../../Form/Selection";
+import Selection from "../../../../Common/Form/Components/Selection";
 
 export type RoomFurnitureDialogProps = {
     hidden?: boolean;
@@ -53,13 +53,13 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                 <DialogTable columns={["Furniture", "Position"]} items={
                     room?.furnitures.filter((furniture) => {
                         if(search) {
-                            if(!furniture.data.furniture?.name.toLowerCase().includes(search.toLowerCase()) && (!furniture.data.furniture?.description || !furniture.data.furniture?.description?.toLowerCase().includes(search.toLowerCase()))) {
+                            if(!furniture.furnitureData.name.toLowerCase().includes(search.toLowerCase()) && (!furniture.furnitureData.description || !furniture.furnitureData.description?.toLowerCase().includes(search.toLowerCase()))) {
                                 return false;
                             }
                         }
 
                         if(placement !== "all") {
-                            if(furniture.data.furniture?.placement !== placement) {
+                            if(furniture.furnitureData.placement !== placement) {
                                 return false;
                             }
                         }
@@ -69,7 +69,7 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                         return {
                             id: furniture.data.id,
                             values: [
-                                furniture.data.furniture?.name,
+                                furniture.furnitureData.name,
                                 furniture.data.position && `X: ${Math.round(furniture.data.position.row)} Y: ${Math.round(furniture.data.position.column)} Z: ${Math.round(furniture.data.position.depth)}`
                             ],
                             onClick: () => {

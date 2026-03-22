@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { clientInstance } from "../..";
+import { Logger } from "@pixel63/shared/Logger/Logger";
 
 export function useDialogs() {
     const [_state, setState] = useState(clientInstance.dialogs.state);
@@ -26,22 +27,45 @@ export function useDialogs() {
         clientInstance.dialogs.update();
     }, [dialogs]);
 
-    const addUniqueDialog = useCallback((type: string, data: unknown = null) => {
+    const addUniqueDialog = useCallback((type: string, data: unknown = null, id: string = type) => {
         if (!dialogs) {
             return;
         }
 
-        if (dialogs.some((dialog) => dialog.id === type)) {
+        if (dialogs.some((dialog) => dialog.id === id)) {
             closeDialog(type);
 
             return;
         }
 
         clientInstance.dialogs.value!.push({
-            id: type,
+            id,
             data,
             type
         });
+
+        clientInstance.dialogs.update();
+    }, [dialogs]);
+
+    const openUniqueDialog = useCallback((type: string, data: unknown = null) => {
+        if (!dialogs) {
+            return;
+        }
+
+        const existingIndex = dialogs.findIndex((dialog) => dialog.id === type);
+
+        if (existingIndex !== -1) {
+            clientInstance.dialogs.value![existingIndex].data = data;
+            clientInstance.dialogs.value![existingIndex].hidden = false;
+        }
+        else {
+            clientInstance.dialogs.value!.push({
+                id: type,
+                data,
+                type
+            });
+        }
+
 
         clientInstance.dialogs.update();
     }, [dialogs]);
@@ -54,7 +78,7 @@ export function useDialogs() {
         const index = dialogs.findIndex((dialog) => dialog.id === id);
 
         if (index === -1) {
-            console.warn("Dialog does not exist", id);
+            Logger.warn("Dialog does not exist", id);
 
             return;
         }
@@ -71,7 +95,7 @@ export function useDialogs() {
         const index = dialogs.findIndex((dialog) => dialog.id === id);
 
         if (index === -1) {
-            console.warn("Dialog does not exist", id);
+            Logger.warn("Dialog does not exist", id);
 
             return;
         }
@@ -85,6 +109,8 @@ export function useDialogs() {
 
         addDialog,
         addUniqueDialog,
+
+        openUniqueDialog,
 
         setDialogHidden,
 

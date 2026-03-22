@@ -73,8 +73,10 @@ export function createAssetsData(collection: SwfExtractionCollection): Furniture
         x: parseFloat(asset["@_x"]) * -1,
         y: parseFloat(asset["@_y"]) * -1,
         flipHorizontal: asset["@_flipH"] === '1',
-        source: asset["@_source"]
-    }));
+        source: asset["@_source"],
+        
+        usesPalette: (asset["@_usesPalette"] === '1')
+    } satisfies FurnitureAsset));
 }
 
 export function createAssetsDataFromManifest(collection: SwfExtractionCollection): FigureAssets {
@@ -96,6 +98,8 @@ export function createAssetsDataFromManifest(collection: SwfExtractionCollection
 
             x: parseFloat(offset?.[0] ?? 0) * -1,
             y: parseFloat(offset?.[1] ?? 0) * -1,
+
+            usesPalette: (asset["@_usesPalette"] === '1')
         };
     }).concat(
         getValueAsArray(document.manifest.library.aliases?.alias).map((alias: any) => {
@@ -243,12 +247,37 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
 
                                 frameSequence: getValueAsArray(layer["frameSequence"]?.["frame"]).map((frame: any) => {
                                     return {
-                                        id: parseInt(frame["@_id"])
-                                    }
+                                        id: parseInt(frame["@_id"]),
+
+                                        offsets: (frame["offsets"])?(
+                                            getValueAsArray(frame["offsets"]["offset"]).map((offset: any) => {
+                                                return {
+                                                    direction: parseInt(offset["@_direction"]),
+
+                                                    left: (offset["@_x"])?(parseInt(offset["@_x"])):(undefined),
+                                                    top: (offset["@_y"])?(parseInt(offset["@_y"])):(undefined),
+                                                };
+                                            })
+                                        ):(undefined)
+                                    };
                                 })
                             }
                         })
                     }
+                }),
+
+                postures: getValueAsArray(visualization["postures"]?.["posture"]).map((posture: any) => {
+                    return {
+                        id: posture["@_id"],
+                        animationId: parseInt(posture["@_animationId"])
+                    };
+                }),
+
+                gestures: getValueAsArray(visualization["gestures"]?.["gesture"]).map((gesture: any) => {
+                    return {
+                        id: gesture["@_id"],
+                        animationId: parseInt(gesture["@_animationId"])
+                    };
                 })
             } satisfies FurnitureVisualization["visualizations"][0]
         })
@@ -355,7 +384,7 @@ export async function createFurnitureData(assetName: string) {
         ignoreAttributes: false
     });
 
-    const document = parser.parse(readFileSync("furnidata.xml", { encoding: "utf-8" }), false);
+    const document = parser.parse(readFileSync("furnidata2.xml", { encoding: "utf-8" }), false);
 
     let furniTypes = document["furnidata"]["roomitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
     let isWallFurniture = false;
@@ -409,9 +438,9 @@ export async function createFurnitureData(assetName: string) {
 
             flags: {
                 stackable: (result?.allow_stack ?? 1) === 1,
-                sitable: (result?.allow_sit ?? 1) === 1,
-                layable: (result?.allow_lay ?? 1) === 1,
-                walkable: (result?.allow_walk ?? 1) === 1,
+                sitable: (result?.allow_sit ?? 0) === 1,
+                layable: (result?.allow_lay ?? 0) === 1,
+                walkable: (result?.allow_walk ?? 0) === 1,
                 giftable: (result?.allow_gift ?? 1) === 1,
                 tradable: (result?.allow_trade ?? 1) === 1,
                 recyclable: (result?.allow_recycle ?? 1) === 1,

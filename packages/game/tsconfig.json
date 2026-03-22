@@ -10,6 +10,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
+    "baseUrl": "./",
+
     /* Emit */
     "noEmit": true,
 
@@ -28,10 +30,11 @@
     "skipLibCheck": true,
     "paths": {
       "@Client/*": ["./src/Client/*"],
-      "@Shared/*": ["../shared/*"]
+      "@UserInterface/*": ["./src/UserInterface/*"],
     },
   },
   "parcel-plugin-typescript": {
     "transpileOnly": false
-  }
+  },
+  "exclude": ["**/*.stories.tsx"]
 }

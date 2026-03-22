@@ -5,6 +5,8 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
 import { GetShopPagesData, ShopPagesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { ShopPageBundleModel } from "../../../Database/Models/Shop/ShopPageBundleModel.js";
+import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
 
 export default class GetShopPagesEvent implements ProtobuffListener<GetShopPagesData> {
     public readonly name = "GetShopPagesEvent";
@@ -15,6 +17,9 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                 return this.handleFurniture(user, payload);
 
             case "frontpage":
+                return this.handleFurniture(user, payload);
+
+            case "pets":
                 return this.handleFurniture(user, payload);
         }
     }
@@ -37,6 +42,17 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                         }
                     ]
                 },
+                {
+                    model: ShopPageBundleModel,
+                    as: "bundle",
+
+                    include: [
+                        {
+                            model: BadgeModel,
+                            as: "badge"
+                        }
+                    ]
+                }
             ],
             order: ["index"]
         });
@@ -72,7 +88,29 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                                 category: feature.featuredPage.category
                             }
                         };
-                    }) ?? []
+                    }) ?? [],
+
+                    ...(shopPage.bundle && {
+                        bundle: {
+                            id: shopPage.bundle.id,
+                            
+                            credits: shopPage.bundle.credits,
+                            duckets: shopPage.bundle.duckets,
+                            diamonds: shopPage.bundle.diamonds,
+
+                            roomId: shopPage.bundle.roomId,
+
+                            ...(shopPage.bundle.badge && {
+                                badge: {
+                                    id: shopPage.bundle.badge.id,
+                                    image: shopPage.bundle.badge.image,
+
+                                    name: shopPage.bundle.badge.name ?? undefined,
+                                    description: shopPage.bundle.badge.description ?? undefined,
+                                }
+                            })
+                        }
+                    })
                 };
             })
         }));

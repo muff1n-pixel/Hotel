@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+import "Badge/BadgeData.proto";
+
+message UserProfileData {
+    string id = 1;
+
+    string name = 2;
+    optional string motto = 3;
+    
+    FigureConfigurationData figure_configuration = 4;
+
+    repeated BadgeData badges = 5;
+
+    bool online = 6;
+    optional string last_online_at = 7;
+    string created_at = 8;
+
+    uint32 friends_count = 9;
+}

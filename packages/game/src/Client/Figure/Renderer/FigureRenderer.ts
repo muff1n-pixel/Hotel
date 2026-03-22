@@ -3,7 +3,7 @@ import ContextNotAvailableError from "../../Exceptions/ContextNotAvailableError"
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { figureRenderPriority } from "./Geometry/FigureRenderPriority";
 import { FigureData } from "@Client/Interfaces/Figure/FigureData";
-import { FigureAnimationFrameEffectData } from "@Client/Interfaces/Figure/FigureAnimationData";
+import { FigureAnimationData, FigureAnimationFrameEffectData } from "@Client/Interfaces/Figure/FigureAnimationData";
 import { figureGeometryTypes } from "@Client/Figure/Renderer/Geometry/FigureGeometry";
 import { figurePartSets } from "@Client/Figure/Renderer/Geometry/FigurePartSets";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
@@ -12,6 +12,8 @@ import { getGlobalCompositeModeFromInkNumber } from "@Client/Renderers/GlobalCom
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import Performance from "@Client/Utilities/Performance";
 import { FigureConfigurationData } from "@pixel63/events";
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
+import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -50,6 +52,7 @@ type SpriteConfiguration = {
 
 type BodyPartAction = {
     actionId: string;
+    part?: string;
     geometry: {
         bodyparts: {
             id: string;
@@ -137,9 +140,6 @@ export default class FigureRenderer {
 
                     return true;
                 }).map(async (sprite) => {
-
-                    console.log("Preparing " + sprite.name);
-
                     await FigureAssets.getFigureSprite(assetId, {
                         x: sprite.x,
                         y: sprite.y,
@@ -187,75 +187,104 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    private getEffectBodyParts(effect: EffectData) {
+    private getEffectFrame(effect: EffectData) {
         if(!effect?.data.animation) {
             return null;
         }
 
-        const frame = this.getCurrentAnimationFrame(effect);
+        const frame = this.getCurrentAnimationFrame(effect.data.animation.frames);
 
         if(!effect.data.animation.frames[frame]) {
             return null;
         }
 
-        return effect.data.animation.frames[frame].bodyParts;
+        return effect.data.animation.frames[frame];
     }
 
     private getAvatarActions() {
         let avatarActionsData = FigureAssets.avataractions.filter((action) => this.actions.some((id) => id.split('.')[0] === action.id)).sort((a, b) => a.precedence - b.precedence);
         
         avatarActionsData = avatarActionsData.filter((action) => {
-            return !avatarActionsData.some((secondAction) => secondAction.precedence > action.precedence && secondAction.prevents?.includes(action.id))
+            return !avatarActionsData.some((secondAction) => {
+                return secondAction.precedence < action.precedence && (secondAction.prevents?.includes(action.id.toLowerCase()))
+            })
         });
 
         return avatarActionsData;
     }
 
-    private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
+    private getActionsForBodyPartsFromFrames(effectFrame: FigureAnimationData["frames"][0], bodyPartsRemoved: string[]) {
         const result: BodyPartAction[] = [];
 
+        for(const effectBodyPart of effectFrame.bodyParts) {
+            const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
+
+            const geometry = figureGeometryTypes.find((geometry) => geometry.id === (action?.geometryType ?? "vertical"));
+
+            if(!geometry) {
+                throw new Error("Action does not have a geometry type.");
+            }
+
+            const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
+
+            if(!geometryBodyparts) {
+                FigureLogger.warn("Action does not have a geometry bodyparts.", { effectBodyPart });
+
+                continue;
+            }
+
+            result.push({
+                actionId: action?.id ?? "Default",
+                geometry,
+                assetPartDefinition: action?.assetPartDefinition ?? "std",
+                bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)),
+                frame: effectBodyPart.frame,
+                destinationX: effectBodyPart.destinationX,
+                destinationY: effectBodyPart.destinationY,
+                directionOffset: effectBodyPart.directionOffset
+            });
+
+            // now we know handRight is occupied by CarryItem to use `crr`
+            // handRight consists of figurePartSets->handRight->[ "rh", "rhs", "rs", "rc", "ri" ]
+        }
+
+        return result;
+    }
+
+    private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
+        const result: BodyPartAction[] = [];
+        const bodyPartsRemoved: string[] = [];
+
         for(const effect of effects) {
-            const effectBodyParts = this.getEffectBodyParts(effect);
+            if(effect.data.animation?.remove) {
+                bodyPartsRemoved.push(...effect.data.animation.remove.map((remove) => remove.id));
+            }
+
+            const effectFrame = this.getEffectFrame(effect);
 
             // effect says bodypart id rightarm (geometry bodypart) is used for action CarryItem
             // CarryItem says handRight is used for activePartSet
 
-            if(effectBodyParts) {
-                for(const effectBodyPart of effectBodyParts) {
-                    const action = FigureAssets.avataractions.find((avatarAction) => avatarAction.id === effectBodyPart.action);
-
-                    if(!action) {
-                        //console.warn("Action is not found for effect " + effectBodyPart.id + ", " + effectBodyPart.action + ".");
-
+            if(effect.data.animation?.overrides) {
+                for(const override of effect.data.animation.overrides) {
+                    if(!actions.some((action) => action.state === override.type)) {
                         continue;
                     }
 
-                    const geometry = figureGeometryTypes.find((geometry) => geometry.id === action.geometryType);
+                    const frame = this.getCurrentAnimationFrame(override.frames);
 
-                    if(!geometry) {
-                        throw new Error("Action does not have a geometry type.");
+                    const overrideFrame = override.frames[frame];
+
+                    bodyPartsRemoved.push(...overrideFrame.bodyParts.flatMap((bodypart) => bodypart.items.map((item) => item.id)));
+
+                    if(overrideFrame) {
+                        result.push(...this.getActionsForBodyPartsFromFrames(overrideFrame, bodyPartsRemoved));
                     }
-
-                    const geometryBodyparts = geometry.bodyparts.find((bodypart) => bodypart.id === effectBodyPart.id);
-
-                    if(!geometryBodyparts) {
-                        throw new Error("Action does not have a geometry bodyparts.");
-                    }
-
-                    result.push({
-                        actionId: action.id,
-                        geometry,
-                        assetPartDefinition: action.assetPartDefinition,
-                        bodyParts: geometryBodyparts.parts,
-                        frame: effectBodyPart.frame,
-                        destinationX: effectBodyPart.destinationX,
-                        destinationY: effectBodyPart.destinationY,
-                        directionOffset: effectBodyPart.directionOffset
-                    });
-
-                    // now we know handRight is occupied by CarryItem to use `crr`
-                    // handRight consists of figurePartSets->handRight->[ "rh", "rhs", "rs", "rc", "ri" ]
                 }
+            }
+
+            if(effectFrame) {
+                result.push(...this.getActionsForBodyPartsFromFrames(effectFrame, bodyPartsRemoved));
             }
         }
 
@@ -269,7 +298,7 @@ export default class FigureRenderer {
             if(!geometry) {
                 throw new Error("Geometry is not found for action.");
             }
-            
+
             const figurePartSet = figurePartSets.find((figurePartSet) => figurePartSet.id === action.activePartSet);
 
             if(!figurePartSet) {
@@ -280,7 +309,7 @@ export default class FigureRenderer {
                 actionId: action.id,
                 geometry,
                 assetPartDefinition: action.assetPartDefinition,
-                bodyParts: figurePartSet.parts,
+                bodyParts: figurePartSet.parts.filter((part) => !bodyPartsRemoved.includes(part)),
                 destinationY: 0,//(action.assetPartDefinition === "sit")?(16):(0),
             });
 
@@ -450,11 +479,19 @@ export default class FigureRenderer {
             });
         }
 
+        const effectAvatar = effects.find((effect) => effect.data.animation?.avatar);
+
+        const grayscaled: AssetSpriteGrayscaledProperties | undefined = (effectAvatar?.data.animation?.avatar)?({
+            ink: effectAvatar.data.animation.avatar.ink,
+            background: effectAvatar.data.animation.avatar.background,
+            foreground: effectAvatar.data.animation.avatar.foreground,
+        }):(undefined);
+
         Performance.startPerformanceCheck("getFigureSprites", 2);
-        const sprites = await this.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction);
+        const sprites = await this.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction, grayscaled);
         Performance.endPerformanceCheck("getFigureSprites");
 
-        const effectSprites = await this.getEffectSprites(effects);
+        const effectSprites = await this.getEffectSprites(actions, actionsForBodyParts, effects, direction);
 
         return {
             sprites,
@@ -462,7 +499,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getEffectSprites(effects: EffectData[]): Promise<FigureRendererSprite[]> {
+    private async getEffectSprites(actions: AvatarActionData[], actionsForBodyParts: BodyPartAction[], effects: EffectData[], direction: number): Promise<FigureRendererSprite[]> {
         const sprites: FigureRendererSprite[] = [];
 
         this.avatarEffect = undefined;
@@ -470,16 +507,16 @@ export default class FigureRenderer {
         for(const effect of effects) {
             // TODO: add effects without animations
             if(!effect.data.animation) {
-                return [];
+                continue;
             }
 
-            const frame = this.getCurrentAnimationFrame(effect);
+            const frame = this.getCurrentAnimationFrame(effect.data.animation.frames);
 
             //console.log("Frame " + this.frame + " becomes " + frame + " (" + effect.data.animation.frames.length + ")");
 
-            const animationFrame = effect.data.animation.frames[frame];
+            const animationFrame = effect.data.animation.frames?.[frame];
 
-            const avatarBodypart = animationFrame.bodyParts.find((bodyPart) => bodyPart.id === "avatar");
+            const avatarBodypart = animationFrame?.effects?.find((bodyPart) => bodyPart.id === "avatar");
 
             if(avatarBodypart) {
                 this.avatarEffect = avatarBodypart;
@@ -492,6 +529,14 @@ export default class FigureRenderer {
 
                     case "bottom":
                         return -1;
+
+                    case "behind": {
+                        if(direction > 1 && direction < 5) {
+                            return -1;
+                        }
+
+                        return 0;
+                    }
                 }
 
                 return 0;
@@ -518,7 +563,64 @@ export default class FigureRenderer {
                             destinationY: (this.avatarEffect?.destinationY ?? 0)
                         }
                     })
+                )
+                .concat(
+                    animationFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
+                        return bodypart.items.map((item) => {
+                            const id = item.base ?? item.id;
+
+                            return {
+                                id,
+                                member: `std_${id}_1`, // TODO: what's the 1 for?
+                                useDirections: true,
+                                directions: Array(8).fill(null).map((_, index) => {
+                                    return {
+                                        id: index,
+                                        destinationX: undefined,
+                                        destinationY: undefined,
+                                        destinationZ: getIndexForAlignment(item.align)
+                                    };
+                                }),
+                                destinationY: (this.avatarEffect?.destinationY ?? 0)
+                            }
+                        });
+                    }) ?? []
                 );
+
+            if(effect.data.animation?.overrides) {
+                for(const override of effect.data.animation.overrides) {
+                    const action = actions.find((action) => action.state === override.type);
+
+                    if(!action) {
+                        continue;
+                    }
+
+                    const frame = this.getCurrentAnimationFrame(override.frames);
+
+                    const overrideFrame = override.frames[frame];
+
+                    if(overrideFrame) {
+                        animationSprites.push(...(
+                            overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
+                                return bodypart.items.map((item) => {
+                                    const id = item.base ?? item.id;
+
+                                    return {
+                                        id,
+                                        part: item.id,
+                                        frame: bodypart.frame,
+                                        member: `${action.assetPartDefinition}_${item.id}_${item.base}`, // TODO: what's the 1 for?
+                                        useDirections: true,
+                                        destinationY: (this.avatarEffect?.destinationY ?? 0),
+                                    }
+                                });
+                            }) ?? []
+                        ));
+                    }
+
+                    break;
+                }
+            }
 
             if(effect.data.animation.shadow) {
                 // TODO: there's no shadow sprite provided?
@@ -529,39 +631,56 @@ export default class FigureRenderer {
                     useDirections: false
                 });*/
             }
-            
+
+            this.avatarEffect = animationFrame?.effects.find((effect) => effect.id === "avatar");
+
             for(const sprite of animationSprites) {
-                const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
-                
                 if(sprite.id === "avatar") {
-                    this.avatarEffect = effectFrame;
-
                     continue;
                 }
 
-                const direction = sprite.directions?.find((direction) => direction.id === this.direction);
+                let spriteEffect = effect;
 
-                if(sprite.useDirections && !direction) {
-                    //console.warn("Effect has no direction specified for " + this.direction);
+                const effectLibrary = sprite.member.split('_').find((part) => part.startsWith("fx"));
 
-                    continue;
+                if(effectLibrary && effectLibrary !== `fx${effect.id}`) {
+                    const libraryId = parseInt(effectLibrary.substring(2));
+
+                    const library = this.getEffectLibrary(libraryId);
+
+                    if(!library) {
+                        FigureLogger.error("Library does not exist", libraryId);
+                        
+                        continue;
+                    }
+
+                    spriteEffect = {
+                        id: library.id,
+                        library: library.library,
+                        data: await FigureAssets.getEffectData(library.library)
+                    };
                 }
 
-                const index = (direction)?(direction.destinationZ):(0);
+                const effectFrame = animationFrame?.effects.find((effect) => effect.id === sprite.id);
 
-                const flipHorizontal = false;
+                const spriteDirectionData = sprite.directions?.find((_direction) => _direction.id === direction);
 
-                const assetName = `h_${sprite.member}_${(sprite.useDirections)?(this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+                const index = (spriteDirectionData)?(spriteDirectionData.destinationZ):(0);
 
-                const assetData = effect.data.assets.find((asset) => asset.name === assetName);
+                let flipHorizontal = false;
+                const spriteDirection = (spriteDirectionData)?(this.direction):(direction);
+            
+                let assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
-                /*if(!assetData && (this.direction > 3 && this.direction < 7)) {
-                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - this.direction):(0)}_${effectFrame?.frame ?? 0}`;
+                let assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
-                    assetData = effect.data.assets.find((asset) => asset.name === assetName);
+                if(!assetData && (spriteDirection > 3 && spriteDirection < 7)) {
+                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
+
+                    assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
                     flipHorizontal = true;
-                }*/
+                }
 
                 if(!assetData) {
                     //console.error("Can't find asset for " + assetName);
@@ -571,7 +690,7 @@ export default class FigureRenderer {
 
                 const sourceAssetName = assetData.source ?? assetData.name;
 
-                const spriteData = effect.data.sprites.find((sprite) => sprite.name === sourceAssetName);
+                const spriteData = spriteEffect.data.sprites.find((sprite) => sprite.name === sourceAssetName);
 
                 if(!spriteData) {
                     //console.error("Can't find sprite for source asset " + sourceAssetName);
@@ -579,16 +698,28 @@ export default class FigureRenderer {
                     continue;
                 }
 
-                const destinationY = (sprite.destinationY ?? 0) + (effectFrame?.destinationY ?? 0);
+                const destinationY = 0;
 
-                const result = await this.getEffectSprite(effect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
+                const result = await this.getEffectSprite(spriteEffect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
 
-                if(direction?.destinationX) {
-                    result.x += direction.destinationX;
+                if(sprite.destinationY) {
+                    result.y += sprite.destinationY;
                 }
 
-                if(direction?.destinationY) {
-                    result.y += direction.destinationY;
+                if(effectFrame?.destinationX) {
+                    result.x += effectFrame.destinationX;
+                }
+
+                if(effectFrame?.destinationY) {
+                    result.y += effectFrame.destinationY;
+                }
+
+                if(spriteDirectionData?.destinationX) {
+                    result.x += spriteDirectionData.destinationX;
+                }
+
+                if(spriteDirectionData?.destinationY) {
+                    result.y += spriteDirectionData.destinationY;
                 }
 
                 if(result) {
@@ -600,15 +731,14 @@ export default class FigureRenderer {
         return sprites;
     }
 
-    private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number): Promise<FigureRendererSprite[]> {
-
+    private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite[]> {
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
         
             if(!actionForSprite) {
                 //console.warn("Sprite " + spriteConfiguration.type + " has no action requesting it.");
 
-                return null
+                return null;
             }
             
             let spriteDirection = direction;
@@ -699,7 +829,7 @@ export default class FigureRenderer {
             const sprite = figureData.sprites.find((sprite) => sprite.name === sourceAssetName);
 
             if(!sprite) {
-                console.error("Can't find sprite for source asset " + sourceAssetName);
+                FigureLogger.error("Can't find sprite for source asset " + sourceAssetName);
 
                 return null
             }
@@ -707,7 +837,7 @@ export default class FigureRenderer {
             const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === spriteConfiguration.colorPaletteId);
             const paletteColor = palette?.colors.find((color) => color.id === spriteConfiguration.colors[spriteConfiguration.colorIndex - 1]);
 
-            const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped);
+            const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
 
             if(result) {
                 if(actionForSprite.destinationX) {
@@ -772,7 +902,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean) {
+    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined) {
         const sprite = await FigureAssets.getFigureSprite(spriteConfiguration.assetId, {
             x: spriteData.x,
             y: spriteData.y,
@@ -780,11 +910,14 @@ export default class FigureRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
+            grayscaled,
+
             flipHorizontal: (flipHorizontal)?(!assetData.flipHorizontal):(assetData.flipHorizontal),
 
             color: (spriteConfiguration.colorable && spriteConfiguration.colors[spriteConfiguration.colorIndex - 1] && type !== "ey")?(color):(undefined),
 
-            ignoreImageData: false
+            ignoreImageData: false,
+            requireImageData: (grayscaled !== undefined)
         });
 
         const priorityTypes: Partial<Record<string, string>> = {
@@ -818,12 +951,8 @@ export default class FigureRenderer {
         };
     }
 
-    private getCurrentAnimationFrame(effectData: EffectData) {
-        if(!effectData.data.animation) {
-            return 0;
-        }
-
-        const frameSequence = effectData.data.animation.frames.length;
+    private getCurrentAnimationFrame(frames: FigureAnimationData["frames"]) {
+        const frameSequence = frames.length;
         const frameRepeat = 2;
         const spriteFrame = Math.floor((this.frame % (frameSequence * frameRepeat)) / frameRepeat);
 
@@ -838,7 +967,7 @@ export default class FigureRenderer {
         
             if(cropped) {
                 if(effectSprites.length) {
-                    console.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
+                    FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
                 }
 
                 minimumX = 0;
@@ -866,10 +995,6 @@ export default class FigureRenderer {
             }
 
             const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
-
-            if(!sprites.length) {
-                throw new Error("No sprites to render.");
-            }
 
             const context = canvas.getContext("2d");
 
@@ -979,6 +1104,10 @@ export default class FigureRenderer {
         }
 
         return results;
+    }
+
+    private getFullAction(action: string) {
+        return this.actions.find((_action) => _action.startsWith(action));
     }
 
     private getActionParamId(actionId: string) {

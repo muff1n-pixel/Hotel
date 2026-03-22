@@ -2,4 +2,6 @@ syntax = "proto3";
 
 message EnterRoomData {
     string id = 1;
+
+    optional string password = 2;
 }

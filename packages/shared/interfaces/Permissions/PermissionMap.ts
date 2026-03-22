@@ -1,5 +1,12 @@
+export type BadgePermissions =
+    "badges:edit";
+
 export type FurniturePermissions = 
     "furniture:edit";
+
+export type PetPermissions = 
+    "pets:view"
+    | "pets:edit";
 
 export type ShopPermissions = 
     "shop:edit";
@@ -16,8 +23,10 @@ export type CommandPermissions =
     "command:give";
 
 export type PermissionAction =
-    FurniturePermissions
+    BadgePermissions
+    | FurniturePermissions
     | ShopPermissions
     | FeedbackPermissions
     | RoomPermissions
-    | CommandPermissions;
+    | CommandPermissions
+    | PetPermissions;

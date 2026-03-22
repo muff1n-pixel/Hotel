@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message ShopBundlePurchaseData {
+    bool success = 1;
+
+    optional string room_id = 2;
+}

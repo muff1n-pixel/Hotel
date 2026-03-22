@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
-import { useDialogs } from "../../../hooks/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
 
-export default function ToolbarChatbar() {
+export type ToolbarChatbarProps = {
+    style?: CSSProperties;
+}
+
+export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
     const dialogs = useDialogs();
 
     const [value, setValue] = useState("");
@@ -54,6 +58,10 @@ export default function ToolbarChatbar() {
                 case "floor":
                     dialogs.addUniqueDialog("room-floorplan");
                     return;
+
+                case "modtools":
+                    dialogs.addUniqueDialog("modtools");
+                    return;
             }
         }
 
@@ -88,7 +96,9 @@ export default function ToolbarChatbar() {
             background: "#E4E4E4",
 
             display: "flex",
-            flexDirection: "row"
+            flexDirection: "row",
+
+            ...style
         }}>
             <div style={{
                 width: 54,

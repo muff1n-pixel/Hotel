@@ -1,10 +1,10 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import Dialog from "../Dialog/Dialog";
-import { useUser } from "../../hooks/useUser";
-import DialogTable from "../Dialog/Table/DialogTable";
+import Dialog from "../../Common/Dialog/Dialog";
+import { useUser } from "../../Hooks/useUser";
+import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import { RoomPositionData } from "@pixel63/events";
 
 export type FigureCatalogDialogProps = {
@@ -55,7 +55,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     }}/>
                             </div>
 
-                            <DialogTable columns={["ID", "Library"]} items={FigureAssets.effectmap.map((effect) => {
+                            <DialogTable columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
                                 return {
                                     id: effect.id.toString(),
                                     values: [effect.id.toString(), effect.library],

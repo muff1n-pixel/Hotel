@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Figure from "@Client/Figure/Figure";
-import { useUser } from "../../../hooks/useUser";
+import { useUser } from "../../../Hooks/useUser";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export default function ToolbarFigureItem() {

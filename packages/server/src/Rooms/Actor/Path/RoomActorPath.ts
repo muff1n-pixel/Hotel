@@ -2,6 +2,7 @@ import RoomActor from "../RoomActor";
 import RoomUser from "../../Users/RoomUser";
 import RoomBot from "../../Bots/RoomBot";
 import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import RoomPet from "../../Pets/RoomPet";
 
 export default class RoomActorPath {
     public path?: RoomPositionOffsetData[] | undefined;
@@ -31,10 +32,11 @@ export default class RoomActorPath {
         const blockingActor = this.actor.room.getActorAtPosition(nextPosition);
 
         if(blockingActor) {
-            const blockedByAnotherUser = (blockingActor instanceof RoomUser && this.actor instanceof RoomUser && blockingActor.user.model.id !== this.actor.user.model.id);
-            const blockedByAnotherBot = (blockingActor instanceof RoomBot && this.actor instanceof RoomBot && blockingActor.model.id !== this.actor.model.id);
+            const blockedByAnotherUser = (blockingActor instanceof RoomUser && (!(this.actor instanceof RoomUser) || blockingActor.user.model.id !== this.actor.user.model.id));
+            const blockedByAnotherBot = (blockingActor instanceof RoomBot && (!(this.actor instanceof RoomBot) || blockingActor.model.id !== this.actor.model.id));
+            const blockedByAnotherPet = (blockingActor instanceof RoomPet && (!(this.actor instanceof RoomPet) || blockingActor.model.id !== this.actor.model.id));
 
-            if(blockedByAnotherBot || blockedByAnotherUser) {
+            if(blockedByAnotherBot || blockedByAnotherUser || blockedByAnotherPet) {
                 console.log("User path cancelled, user is obstructing");
 
                 this.path = undefined;
@@ -79,6 +81,14 @@ export default class RoomActorPath {
 
         this.actor.position = position;
         this.path!.splice(0, 1);
+        
+        const relativePosition: RoomPositionData = RoomPositionData.create({
+            row: position.row - previousPosition.row,
+            column: position.column - previousPosition.column,
+            depth: position.depth - previousPosition.depth
+        });
+
+        this.actor.direction = this.getDirectionFromRelativePosition(relativePosition);
 
         this.actor.sendWalkEvent(previousPosition);
 
@@ -114,12 +124,16 @@ export default class RoomActorPath {
 
         path.splice(0, 1);
 
+        if(!path.length) {
+            onCancel?.();
+
+            return;
+        }
+
         this.path = path;
         this.walkThroughFurniture = walkThroughFurniture;
         this.pathOnFinish = onFinish;
         this.pathOnCancel = onCancel;
-
-        console.log("Result: " + JSON.stringify(path));
 
         this.actor.room.requestActionsFrame();
     }
@@ -137,7 +151,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction, true);
+            }), sitableFurniture.model.direction ?? undefined, true);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -159,7 +173,7 @@ export default class RoomActorPath {
         }
     }
 
-    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
+    public setPosition(position: RoomPositionData, direction?: number | undefined, usePath?: boolean) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
             return;
         }
@@ -190,6 +204,8 @@ export default class RoomActorPath {
             return;
         }
 
+        console.log("path finished")
+
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.actor.position));
 
         if(sitableFurniture) {
@@ -197,13 +213,114 @@ export default class RoomActorPath {
             this.actor.path.setPosition({
                 ...this.actor.position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction);
+            }, sitableFurniture.model.direction ?? undefined);
         }
-
-
-        console.log("User path finished");
 
         this.path = undefined;
         this.pathOnFinish?.();
+    }
+
+    public getDirectionFromRelativePosition(relativePosition: RoomPositionData): number {
+        if(relativePosition.row > 0) {
+            relativePosition.row = 1;
+        }
+
+        if(relativePosition.row < 0) {
+            relativePosition.row = -1;
+        }
+
+        if(relativePosition.column > 0) {
+            relativePosition.column = 1;
+        }
+
+        if(relativePosition.column < 0) {
+            relativePosition.column = -1;
+        }
+
+        switch(`${relativePosition.row}x${relativePosition.column}`) {
+            case "-1x0":
+                return 0;
+
+            case "-1x1":
+                return 1;
+
+            case "0x1":
+                return 2;
+
+            case "1x1":
+                return 3;
+
+            case "1x0":
+                return 4;
+
+            case "1x-1":
+                return 5;
+
+            case "0x-1":
+                return 6;
+
+            case "-1x-1":
+                return 7;
+        }
+
+        return 0;
+    }
+
+    public getRelativePositionFromDirection(): RoomPositionOffsetData {
+        switch(this.actor.direction) {
+            case 1: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: -1
+                });
+            }
+
+            case 2: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: 0
+                });
+            }
+
+            case 3: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: 1
+                });
+            }
+
+            case 4: {
+                return RoomPositionOffsetData.create({
+                    row: 0,
+                    column: 1
+                });
+            }
+
+            case 5: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: 1
+                });
+            }
+
+            case 6: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: 0
+                });
+            }
+
+            case 7: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: -1
+                });
+            }
+        }
+
+        return RoomPositionOffsetData.create({
+            row: 0,
+            column: 0
+        });
     }
 }

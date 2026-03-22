@@ -1,13 +1,32 @@
-import LogLevel from "./LogLevel.js";
+export class ConsoleLogger {
+    constructor(private label = "Default", private backgroundColor = "grey") {
 
-const sendLog = (logKey: keyof typeof LogLevel, message: string) => {
-    console.log(LogLevel[logKey].bgColor, LogLevel[logKey].name, "\x1b[0m", message);
+    }
+
+    public log(message: string, ...args: any[]) {
+        return console.log(`%c ${this.label} `, this.createStyle(), message, ...args);
+    }
+
+    public warn(message: string, ...args: any[]) {
+        return console.warn(`%c ${this.label} `, this.createStyle(), message, ...args);
+    }
+
+    public error(message: string, ...args: any[]) {
+        return console.error(`%c ${this.label} `, this.createStyle(), message, ...args);
+    }
+
+    private createStyle() {
+        return `
+            background: ${this.backgroundColor};
+            color: white;
+            font-weight: bold;
+            padding: 2px 0px;
+            border-radius: 2px;
+        `;
+    }
 }
 
-const sendCriticalError = (message: string) => {
-    sendLog("CRITICAL_ERROR", message);
-
-    process.exit();
-}
-
-export { sendLog, sendCriticalError };
+export const Logger = new ConsoleLogger();
+export const FigureLogger = new ConsoleLogger("Figure", "lightgreen");
+export const RoomLogger = new ConsoleLogger("Room", "lightblue");
+export const EventsLogger = new ConsoleLogger("Events", "orange");

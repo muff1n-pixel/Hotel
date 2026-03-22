@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import Input from "../../../Form/Input";
-import Selection from "../../../Form/Selection";
-import { useRoomCategories } from "../../../../hooks/useRoomCategories";
-import { usePermissionAction } from "../../../../hooks/usePermissionAction";
+import Input from "../../../../Common/Form/Components/Input";
+import Selection from "../../../../Common/Form/Components/Selection";
+import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
+import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { UpdateRoomInformationData } from "@pixel63/events";
 
 export default function RoomSettingsBasicTab() {
@@ -104,6 +104,10 @@ export default function RoomSettingsBasicTab() {
                             {
                                 value: "public",
                                 label: "Public"
+                            },
+                            {
+                                value: "bundle",
+                                label: "Bundle"
                             }
                         ]} onChange={(value) => handleTypeChange(value as string)}/>
                     </Fragment>

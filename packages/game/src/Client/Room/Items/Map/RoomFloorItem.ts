@@ -2,8 +2,9 @@ import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInter
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import RoomItem from "../RoomItem";
 import RoomFloorSprite from "../Floor/RoomFloorSprite";
-import RoomRenderer from "@Client/Room/Renderer";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import RoomFloorShadowSprite from "@Client/Room/Items/Floor/RoomFloorShadowSprite";
 
 export default class RoomFloorItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -18,10 +19,14 @@ export default class RoomFloorItem extends RoomItem {
     }
 
     render() {
-        this.floorRenderer.renderOffScreen().then((image) => {
+        this.floorRenderer.renderOffScreen().then(({ floor, shadow }) => {
             this.sprites = [];
 
-            this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(image)));
+            this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(floor)));
+
+            if(shadow) {
+                this.sprites.push(new RoomFloorShadowSprite(this, shadow));
+            }
         });
     }
         

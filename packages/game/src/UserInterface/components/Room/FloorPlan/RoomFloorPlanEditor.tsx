@@ -1,9 +1,10 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { RoomFloorplanEditData } from "@Shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
-import RoomFloorplanHelper from "@Shared/Helpers/RoomFloorplanHelper";
+import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
+import RoomFloorplanHelper from "@pixel63/shared/Helpers/RoomFloorplanHelper";
 import { clientInstance } from "../../../..";
 import { RoomPositionData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
+import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
 
@@ -154,7 +155,7 @@ export default class RoomFloorPlanEditor {
             if(clientInstance.roomInstance.value) {
                 const upmostFurniture = clientInstance.roomInstance.value.getFurnitureAtUpmostPosition(coordinate);
 
-                if(upmostFurniture && !upmostFurniture.data.furniture?.flags?.walkable) {
+                if(upmostFurniture && !upmostFurniture.furnitureData.flags?.walkable) {
                     return;
                 }
             }
@@ -331,7 +332,7 @@ export default class RoomFloorPlanEditor {
 
         // If row is beneath current grid, prepend new rows
         if(row < 0 && value !== 'X') {
-            console.log("Row is beneath current grid");
+            RoomLogger.log("Row is beneath current grid");
 
             this.tilesPrepended.row += Math.abs(row);
             this.data.offsets.row += Math.abs(row);
@@ -347,7 +348,7 @@ export default class RoomFloorPlanEditor {
 
         // If column is beneath current grid, prepend new columns
         if(column < 0 && value !== 'X') {
-            console.log("Column is beneath current grid");
+            RoomLogger.log("Column is beneath current grid");
             
             this.tilesPrepended.column += Math.abs(column);
             this.data.offsets.column += Math.abs(column);
@@ -363,7 +364,7 @@ export default class RoomFloorPlanEditor {
 
         // If row exceeds current grid, append new rows
         if(row >= rows.length && value !== 'X') {
-            console.log("Row exceeds current grid");
+            RoomLogger.log("Row exceeds current grid");
 
             const newRows = row - rows.length + 1;
 
@@ -374,7 +375,7 @@ export default class RoomFloorPlanEditor {
 
         // If column exceeds current grid, append new columns
         if(column >= rows[0].length && value !== 'X') {
-            console.log("Column exceeds current grid");
+            RoomLogger.log("Column exceeds current grid");
 
             rows.forEach((currentRow) => {
                 currentRow.push(
@@ -384,7 +385,7 @@ export default class RoomFloorPlanEditor {
         }
 
         if(row >= 0 && row < rows.length && column >= 0 && column < rows[0].length) {
-            console.log("Row and column is within current grid", { value });
+            RoomLogger.log("Row and column is within current grid", { value });
 
             rows[row][column] = value;
         }

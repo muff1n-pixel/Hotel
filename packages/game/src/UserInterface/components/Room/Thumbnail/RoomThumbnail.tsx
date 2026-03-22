@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { useDialogs } from "../../../hooks/useDialogs";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 
 export type RoomThumbnailProps = {
     roomId: string;

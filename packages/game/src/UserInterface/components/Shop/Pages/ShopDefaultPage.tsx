@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import DialogPanel from "../../Dialog/Panels/DialogPanel";
+import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
-import DialogButton from "../../Dialog/Button/DialogButton";
+import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { useDialogs } from "../../../hooks/useDialogs";
-import { useUser } from "../../../hooks/useUser";
-import { useRoomInstance } from "../../../hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useUser } from "../../../Hooks/useUser";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
-import DialogScrollArea from "../../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
+import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 
 export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -26,7 +28,51 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
 
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
     const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
-    const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
+
+    const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
+        if(!activeFurniture) {
+            return;
+        }
+
+        // TODO: disable dialog
+        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
+            async handle(payload: ShopFurniturePurchaseData) {
+                if(!payload.success) {
+                    return;
+                }
+
+                if(purchasableItem.placing) {
+                    stopPlacing?.();
+
+                    return;
+                }
+
+                stopPlacing?.();
+
+                if(activeFurnitureRef.current && activeFurniture.furniture) {
+                    clientInstance.flyingFurnitureIcons.value!.push({
+                        id: Math.random().toString(),
+                        furniture: activeFurniture.furniture,
+                        position: activeFurnitureRef.current.getBoundingClientRect(),
+                        targetElementId: "toolbar-inventory"
+                    });
+
+                    clientInstance.flyingFurnitureIcons.update();
+                }
+            },
+        }, {
+            once: true
+        });
+
+        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
+            id: activeFurniture.id,
+
+            position,
+            direction
+        }));
+    }, [activeFurniture, activeFurnitureRef]);
+
+    const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
 
     useEffect(() => {
         if(!page.teaser) {
@@ -55,14 +101,10 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        if(roomFurniturePlacer) {
-            roomFurniturePlacer.destroy();
-
-            setRoomFurniturePlacer(undefined);
-        }
+        //purchasableItem.stopPlacing();
 
         roomRenderer.setFurniture(activeFurniture.furniture.type, 64, undefined, 0, activeFurniture.furniture.color ?? 0);
-    }, [roomRenderer, activeFurniture]);
+    }, [roomRenderer, activeFurniture, purchasableItem]);
 
     useEffect(() => {
         if(!roomRenderer) {
@@ -74,96 +116,32 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         };
     }, [roomRenderer]);
 
-    useEffect(() => {
-        if(!roomFurniturePlacer) {
-            return;
-        }
-
-        if(!room?.hasRights) {
-            return;
-        }
-
-        dialogs.setDialogHidden("shop", true);
-
-        roomFurniturePlacer.startPlacing((position, direction) => {
-            handlePurchaseFurniture(position, direction);
-            
-            dialogs.setDialogHidden("shop", false);
-        }, () => {
-            roomFurniturePlacer.destroy();
-
-            setRoomFurniturePlacer(undefined);
-           
-            dialogs.setDialogHidden("shop", false);
-        });
-    }, [roomFurniturePlacer]);
-
     const onRoomRendererClick = useCallback(() => {
-        if(roomFurniturePlacer) {
-            roomFurniturePlacer.destroy();
-
-            setRoomFurniturePlacer(undefined);
-        }
+        purchasableItem.stopPlacing();
 
         roomRenderer?.progressFurnitureAnimation();
-    }, [roomRenderer, roomFurniturePlacer]);
-
-    const handlePurchaseFurniture = useCallback((position?: RoomPositionData, direction?: number) => {
-        if(!activeFurniture) {
-            return;
-        }
-
-        // TODO: disable dialog
-        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
-            async handle(payload: ShopFurniturePurchaseData) {
-                if(roomFurniturePlacer) {
-                    roomFurniturePlacer.destroy();
-
-                    setRoomFurniturePlacer(undefined);
-                }
-                else {
-                    if(!payload.success) {
-                        return;
-                    }
-
-                    if(activeFurnitureRef.current && activeFurniture.furniture) {
-                        clientInstance.flyingFurnitureIcons.value!.push({
-                            id: Math.random().toString(),
-                            furniture: activeFurniture.furniture,
-                            position: activeFurnitureRef.current.getBoundingClientRect(),
-                            targetElementId: "toolbar-inventory"
-                        });
-
-                        clientInstance.flyingFurnitureIcons.update();
-                    }
-                }
-            },
-        }, {
-            once: true
-        });
-
-        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
-            id: activeFurniture.id,
-
-            position,
-            direction
-        }));
-    }, [activeFurniture, activeFurnitureRef, roomFurniturePlacer]);
+    }, [roomRenderer, purchasableItem]);
 
     const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
         }
 
-        if(roomFurniturePlacer) {
-            roomFurniturePlacer.destroy();
+        if(activeFurniture?.id !== furniture.id) {
+            return;
         }
 
         const mousemove = () => {
             document.body.removeEventListener("mousemove", mousemove);
 
-            if(room && furniture.furniture) {                
-                setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture));
+            if(room && furniture.furniture) {
+                if((activeFurniture.credits ?? 0) > user.credits
+                        || (activeFurniture.duckets ?? 0) > user.duckets
+                        || (activeFurniture.diamonds ?? 0) > user.diamonds) {
+                    return;
+                }
+
+                purchasableItem.startPlacing(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture));                
             }
         };
 
@@ -174,7 +152,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
         }, {
             once: true
         });
-    }, [ dialogs, room, activeFurniture, roomFurniturePlacer ]);
+    }, [ dialogs, room, activeFurniture, purchasableItem ]);
 
     return (
         <div style={{
@@ -192,7 +170,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 height: 240,
                 width: "100%",
 
-                cursor: "pointer",
+                cursor: (activeFurniture)?("pointer"):("inherit"),
 
                 position: "relative"
             }}>
@@ -218,6 +196,18 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                         {(activeFurniture.furniture?.description) && (
                             <p style={{ fontSize: 12 }}>{activeFurniture.furniture.description}</p>
                         )}
+                    </div>
+                )}
+
+                {(activeFurniture) && (
+                    <div style={{
+                        position: "absolute",
+                        right: 0,
+                        bottom: 0,
+
+                        padding: 10,
+                    }}>
+                        <DialogCurrencyPanel credits={activeFurniture.credits} duckets={activeFurniture.duckets} diamonds={activeFurniture.diamonds}/>
                     </div>
                 )}
 
@@ -371,7 +361,7 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
                 }}>
                     <div style={{ flex: 1 }}/>
 
-                    <DialogButton disabled={!activeFurniture || (
+                    <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds

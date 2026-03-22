@@ -1,9 +1,9 @@
 import { RoomFurnitureHandleUserChatResult } from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
-import WiredLogic from "../WiredLogic";
+import WiredTriggerLogic from "../WiredTriggerLogic";
 
-export default class WiredTriggerUserSaysSomethingLogic extends WiredLogic {
+export default class WiredTriggerUserSaysSomethingLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }

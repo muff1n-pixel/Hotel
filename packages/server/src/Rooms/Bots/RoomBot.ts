@@ -97,7 +97,8 @@ export default class RoomBot implements RoomActor {
                 }
             },
             from: previousPosition,
-            to: this.position
+            to: this.position,
+            direction: this.direction
         }));
     }
 

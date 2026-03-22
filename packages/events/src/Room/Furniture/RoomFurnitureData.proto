@@ -1,9 +1,15 @@
 syntax = "proto3";
 
+import "Furniture/FurnitureData.proto";
 import "User/Furniture/UserFurnitureData.proto";
+import "Room/Furniture/RoomFurnitureUpdateData.proto";
 
 message RoomFurnitureData {
+    repeated FurnitureData furniture_data = 4;
+
     repeated UserFurnitureData furniture_added = 1;
-    repeated UserFurnitureData furniture_updated = 2;
+    repeated RoomFurnitureUpdateData furniture_updated = 2;
     repeated UserFurnitureData furniture_removed = 3;
+
+    optional bool hide_flying_furniture = 5;
 }

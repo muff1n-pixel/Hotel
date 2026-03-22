@@ -1,10 +1,12 @@
+import { Logger } from "@pixel63/shared/Logger/Logger";
+
 export function getGlobalCompositeModeFromInkNumber(ink: number): GlobalCompositeOperation | undefined {
     switch(ink) {
         case 33: // ADD
             return "lighter";
 
         default:
-            console.warn(`Ink number ${ink} is not recognized.`);
+            Logger.warn(`Ink number ${ink} is not recognized.`);
 
             return undefined;
     }
@@ -42,7 +44,7 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): GlobalCompos
             return "screen";
 
         default:
-            console.warn(`Ink mode ${ink} is not recognized.`);
+            Logger.warn(`Ink mode ${ink} is not recognized.`);
 
             return undefined;
     }

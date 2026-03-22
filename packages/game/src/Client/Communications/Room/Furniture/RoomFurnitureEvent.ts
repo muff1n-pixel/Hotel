@@ -10,19 +10,46 @@ export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitu
         }
 
         if(payload.furnitureUpdated?.length) {
-            for(const furniture of payload.furnitureUpdated) {
-                const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furniture.id);
+            for(const furnitureUpdate of payload.furnitureUpdated) {
+                if(!furnitureUpdate.furniture) {
+                    continue;
+                }
 
-                roomFurnitureItem.updateData(furniture);
+                const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furnitureUpdate.furniture.id);
+
+                if(furnitureUpdate.userId === clientInstance.user.value?.id) {
+                    if(furnitureUpdate.furniture.direction !== roomFurnitureItem.furniture.direction) {
+                        roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, [
+                            {
+                                ...roomFurnitureItem.item.position!,
+                                depth: roomFurnitureItem.item.position!.depth + 0.25
+                            },
+                            {
+                                ...roomFurnitureItem.item.position!,
+                            }
+                        ],
+                        100);
+                    }
+                }
+
+                roomFurnitureItem.updateData(furnitureUpdate.furniture);
             }
         }
 
         if(payload.furnitureAdded?.length) {
-            clientInstance.roomInstance.value.furnitures.push(...payload.furnitureAdded.map((roomFurnitureData) => new RoomFurniture(clientInstance.roomInstance.value!, roomFurnitureData)));
+            clientInstance.roomInstance.value.furnitures.push(...payload.furnitureAdded.map((roomFurnitureData) => {
+                const furnitureData = payload.furnitureData.find((furnitureData) => furnitureData.id === roomFurnitureData.furnitureId);
+
+                if(!furnitureData) {
+                    throw new Error("Server did not send furniture data for user furniture.");
+                }
+
+                return new RoomFurniture(clientInstance.roomInstance.value!, furnitureData, roomFurnitureData);
+            }));
         }
 
         if(payload.furnitureRemoved?.length) {
-            payload.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id));
+            payload.furnitureRemoved.map((roomFurnitureData) => clientInstance.roomInstance.value!.removeFurniture(roomFurnitureData.id, payload.hideFlyingFurniture));
         }
 
         clientInstance.roomInstance.update();

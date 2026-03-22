@@ -1,13 +1,13 @@
-import Dialog from "../Dialog/Dialog";
-import DialogTabs from "../Dialog/Tabs/DialogTabs";
+import Dialog from "../../Common/Dialog/Dialog";
+import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../hooks/useDialogs";
+import { useDialogs } from "../../Hooks/useDialogs";
 import { useState } from "react";
-import { useNavigator } from "../../hooks/useNavigator";
-import Input from "../Form/Input";
+import { useNavigator } from "../../Hooks/useNavigator";
+import Input from "../../Common/Form/Components/Input";
 import { EnterRoomData } from "@pixel63/events";
-import DialogScrollArea from "../Dialog/Scroll/DialogScrollArea";
+import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -23,7 +23,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
     const navigator = useNavigator(tab, search);
 
     return (
-        <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={420} height={530}>
+        <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={420} height={530} style={{
+            overflow: "visible"
+        }}>
             <DialogTabs initialActiveIndex={1} withoutHeader onChange={(index) => {
                 setTab(["public", "all", "events", "mine"][index]);
                 setSearch("");

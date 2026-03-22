@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import cookieParser from "cookie-parser";
 import type { Config } from './Interfaces/Config.ts';
-import { sendCriticalError, sendLog } from "@shared/Logger/Logger";
+import { sendCriticalError, sendLog } from "@shared/Logger/LoggerEx";
 import { ModelManager } from './Models/ModelManager.ts';
 import { ApiManager } from './Api/ApiManager.ts';
 

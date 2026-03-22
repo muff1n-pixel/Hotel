@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Badge/BadgeData.proto";
+
+message WidgetNotificationData {
+    string id = 1;
+
+    string text = 2;
+
+    optional BadgeData badge = 3;
+}

@@ -1,6 +1,6 @@
 import { NavigatorRoomData } from "@pixel63/events";
-import DialogList from "../../Dialog/List/DialogList";
-import DialogListContainer from "../../Dialog/List/DialogListContainer";
+import DialogList from "../../../Common/Dialog/Components/List/DialogList";
+import DialogListContainer from "../../../Common/Dialog/Components/List/DialogListContainer";
 import RoomThumbnail from "../../Room/Thumbnail/RoomThumbnail";
 import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
@@ -57,14 +57,14 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                                 </div>
                             </RoomThumbnail>
 
-                            <div style={{ fontSize: 12 }}>{room.name}</div>
+                            <div style={{ fontSize: 12, maxWidth: 112 }}>{room.name}</div>
                         </div>
                     ))}
                 </div>
             ):(
                 <DialogList>
                     {rooms.map((room) => (
-                        <NavigatorRoomListItem {...room} onClick={() => onClick(room)}/>
+                        <NavigatorRoomListItem room={room} onClick={() => onClick(room)}/>
                     ))}
                 </DialogList>
             )}

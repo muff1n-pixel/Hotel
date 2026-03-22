@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "User/Furniture/UserFurnitureData.proto";
+
+message RoomFurnitureUpdateData {
+    UserFurnitureData furniture = 1;
+
+    optional string user_id = 2;
+}

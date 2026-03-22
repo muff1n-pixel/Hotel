@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import useDialogMovement from "../../../../Dialog/Hooks/useDialogMovement";
+import useDialogMovement from "../../../../../Common/Dialog/Hooks/useDialogMovement";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import { useRoomInstance } from "../../../../../hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
 
 export type RoomFurnitureTrophyDialogData = {
     furniture: RoomInstanceFurniture;

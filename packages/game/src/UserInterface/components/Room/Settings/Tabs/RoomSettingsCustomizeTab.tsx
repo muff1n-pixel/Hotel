@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import Selection from "../../../Form/Selection";
-import { useRoomInstance } from "../../../../hooks/useRoomInstance";
+import Selection from "../../../../Common/Form/Components/Selection";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import Checkbox from "../../../Form/Checkbox";
+import Checkbox from "../../../../Common/Form/Components/Checkbox";
 import { UpdateRoomStructureData } from "@pixel63/events";
 
 export default function RoomSettingsCustomizeTab() {
