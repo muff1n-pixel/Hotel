@@ -49,4 +49,8 @@
     .title.green {
         background-color: var(--green);
     }
+
+    .title.grey {
+        background-color: var(--grey);
+    }
 }

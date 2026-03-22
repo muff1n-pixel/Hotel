@@ -1,0 +1,72 @@
+.maintenancePage {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        background-color: #FFF;
+        padding: 20px;
+        border: 1px solid #00000033;
+
+        .maintenanceContent {
+            display: grid;
+            grid-template-columns: 60% 40%;
+            gap: 10px;
+            min-height: 400px;
+
+            section.warning {
+                max-height: 400px;
+                color: #FFF;
+                background: var(--orange) url("../../Images/maintenance/maintenance.png") no-repeat bottom right;
+                padding: 20px;
+                border: 1px solid #00000033;
+
+                h1 {
+                    font-family: 'Ubuntu Bold';
+                    font-size: 35px;
+                    margin-bottom: 10px;
+                }
+
+                p {
+                    font-size: 18px;
+                }
+
+                p:last-child {
+                    margin-top: 20px;
+                }
+            }
+
+            .history {
+                max-height: 400px;
+                overflow-y: auto;
+
+                .row {
+                    padding: 5px 10px;
+
+                    span {
+                        display: block;
+                        opacity: 0.4;
+                        text-decoration: underline;
+                        font-size: 12px;
+                    }
+                }
+
+                .row:nth-child(even) {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+
+                a {
+                    color: var(--orange)
+                }
+
+                a:hover {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

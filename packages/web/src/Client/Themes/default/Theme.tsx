@@ -14,6 +14,14 @@ import SafetyPage from "./Pages/SafetyPage/SafetyPage";
 import './Theme.css';
 import './Fonts.css';
 import StaffPage from "./Pages/StaffPage/StaffPage";
+import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
+
+const FooterLayout = () => (
+  <>
+    <Outlet />
+    <Footer />
+  </>
+);
 
 const Layout = () => (
   <>
@@ -85,6 +93,10 @@ export const routes = [
   {
     path: "/logout",
     element: <LogoutPage />
+  },
+  {
+    path: "/maintenance",
+    element: <MaintenancePage />
   },
 ];
 
