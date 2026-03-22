@@ -38,6 +38,8 @@ import { initializeUserFriendRequestModel } from "./Models/Users/Friends/UserFri
 import { initializeShopPageBundleModel } from "./Models/Shop/ShopPageBundleModel.js";
 import { initializeFurnitureCrackableModel } from "./Models/Furniture/Crackable/FurnitureCrackableModel.js";
 import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crackable/FurnitureCrackableRewardModel.js";
+import { initializeAchievementModel, seedAchievements } from "./Models/Achievements/AchievementModel.js";
+import { initializeUserAchievementModel } from "./Models/Users/Achievements/UserAchievementModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -88,5 +90,10 @@ export async function initializeModels() {
   intitializePermissionModel(sequelize);
   intitializePermissionRoleModel(sequelize);
 
+  initializeAchievementModel(sequelize);
+  initializeUserAchievementModel(sequelize);
+
   await sequelize.sync();
+
+  await seedAchievements();
 }

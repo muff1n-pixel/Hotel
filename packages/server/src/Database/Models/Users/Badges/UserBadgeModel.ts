@@ -17,6 +17,7 @@ export function initializeUserBadgeModel(sequelize: Sequelize) {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
+                defaultValue: DataTypes.UUIDV4
             },
             equipped: {
                 type: DataTypes.BOOLEAN,
@@ -25,7 +26,13 @@ export function initializeUserBadgeModel(sequelize: Sequelize) {
         },
         {
             tableName: 'user_badges',
-            sequelize
+            sequelize,
+            indexes: [
+                {
+                    unique: true,
+                    fields: ["userId", "badgeId"],
+                },
+            ],
         },
     );
 

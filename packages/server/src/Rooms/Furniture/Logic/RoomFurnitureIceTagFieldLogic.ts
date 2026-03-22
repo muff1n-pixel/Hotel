@@ -31,6 +31,8 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
                 else {
                     userInRadius.addAction("AvatarEffect.46");
                 }
+
+                await userInRadius.user.achievements.addAchievementScore("BladesOfGlory", 1);
             }
 
             return;
