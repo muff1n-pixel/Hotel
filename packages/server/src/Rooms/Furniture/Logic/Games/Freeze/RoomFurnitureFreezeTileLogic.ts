@@ -43,7 +43,12 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
-        await this.roomFurniture.setAnimation(1);
+        if(player.megaSnowball) {
+            await this.roomFurniture.setAnimation(6);
+        }
+        else {
+            await this.roomFurniture.setAnimation(Math.max(1, Math.min(4, player.radius - 3)));
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 2500));
 
@@ -57,8 +62,8 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         await this.handleSnowball(player);
 
-        if(!player.megaSnowball) {
-            //player.megaSnowball = false;
+        if(player.megaSnowball) {
+            player.megaSnowball = false;
 
             for(let direction = 0; direction < 8; direction++) {
                 const radius = ((direction % 2) === 0)?(player.radius + 2):(0);
