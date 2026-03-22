@@ -7,6 +7,7 @@ import likeIcon from '../../../Images/icons/small/favorite.gif';
 import likeInactiveIcon from '../../../Images/icons/small/favorite_inactive.gif';
 import { ThemeContext } from '../../../ThemeProvider';
 import { ArticleInterface } from '@client/Logic/Article/ArticleInterface';
+import TimeAgo from '../../../../../Utils/DateFormatter/DateFormatter';
 
 interface ArticleCommentProps extends ArticleCommentInterface {
     setArticleData: React.Dispatch<React.SetStateAction<ArticleInterface | null>>;
@@ -77,7 +78,7 @@ const ArticleComment = (props: ArticleCommentProps) => {
                 <div className="content">
                     {props.content}
                     <div className="footer">
-                        <div className="date">{new Date(props.createdAt).toLocaleString().replace(" ", " at ")}</div>
+                        <div className="date">{TimeAgo(props.createdAt)}</div>
                         <div className="infos">
                             <div className='row' onClick={() => toggleLike()}><img src={currentUser === null || !props.likes.includes(currentUser.id) ? likeInactiveIcon : likeIcon} alt="Like Icon" /> {props.likes.length}</div>
                         </div>

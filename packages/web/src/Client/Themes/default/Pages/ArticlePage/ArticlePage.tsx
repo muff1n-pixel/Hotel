@@ -15,6 +15,7 @@ import ArticleComment from '../../Components/Article/Comment/Comment'
 import { Alert, AlertType } from '../../Components/Alert/Alert';
 import { useRef } from "react";
 import Box from '../../Components/Box/Box'
+import TimeAgo from '../../../../Utils/DateFormatter/DateFormatter'
 
 const ArticlePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -247,7 +248,7 @@ const ArticlePage = () => {
 
                                             <div className='author'>
                                                 <div className='username'>{article.author && article.author.name}</div>
-                                                <div className='date'>{new Date(article.createdAt).toLocaleString().replace(" ", " at ")}</div>
+                                                <div className='date'>{TimeAgo(article.createdAt)}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -277,7 +278,7 @@ const ArticlePage = () => {
 
                                                 <div className='data'>
                                                     <div className='username'>{articleData.author.name}</div>
-                                                    <div className='date'>{new Date(articleData.createdAt).toLocaleString().replace(" ", " at ")}</div>
+                                                    <div className='date'>{TimeAgo(articleData.createdAt)} </div>
                                                 </div>
                                             </div>
                                         }

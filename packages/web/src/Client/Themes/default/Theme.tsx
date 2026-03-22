@@ -16,13 +16,6 @@ import './Fonts.css';
 import StaffPage from "./Pages/StaffPage/StaffPage";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 
-const FooterLayout = () => (
-  <>
-    <Outlet />
-    <Footer />
-  </>
-);
-
 const Layout = () => (
   <>
     <Header />

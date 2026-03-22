@@ -16,6 +16,7 @@ import UnknowUserImage from '../../../Images/unknow_user.gif';
 import { ThemeContext } from "../../../ThemeProvider";
 import { NavLink } from "react-router";
 import MyUserFriends from "./Friends/MyUserFriends";
+import TimeAgo from '../../../../../Utils/DateFormatter/DateFormatter'
 
 const MyUser = () => {
     const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
@@ -99,7 +100,7 @@ const MyUser = () => {
             <div className='row small'>
                 <img src={clockIcon} alt="Clock Icon" />
                 <div className='description'>
-                    <p>Last signed in: {currentUser?.lastLogin ? (new Date(currentUser.lastLogin).toLocaleString()).replace(" ", " at ") : "Never"}</p>
+                    <p>Last signed in: {currentUser?.lastLogin ? TimeAgo(currentUser.lastLogin) : "Never"}</p>
                 </div>
             </div>
         </div>

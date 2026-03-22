@@ -3,6 +3,7 @@ import './ArticleContainer.css';
 import Loading from '../Loading/Loading';
 import { ArticleInterface } from '@client/Logic/Article/ArticleInterface';
 import { useNavigate } from 'react-router';
+import TimeAgo from '../../../../Utils/DateFormatter/DateFormatter';
 
 const ArticleContainer = () => {
     const navigate = useNavigate();
@@ -86,7 +87,7 @@ const ArticleContainer = () => {
                         return (
                             <div className='row' onClick={() => navigate(`/article/${new Date(article.createdAt).getTime()}/${encodeURI(article.title)}`)} key={article.id}>
                                 <div className='title'>{article.title}</div>
-                                <span>{new Date(article.createdAt).toLocaleString().replace(" ", " at ")}</span>
+                                <span>{TimeAgo(article.createdAt)}</span>
                             </div>
                         )
                     })
