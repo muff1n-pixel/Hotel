@@ -29,11 +29,13 @@ export default class Room {
     private actionsInterval?: NodeJS.Timeout;
 
     constructor(public readonly model: RoomModel) {
+        this.floorplan = new RoomFloorplan(this);
+
         this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
         this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
         this.pets = model.roomPets.map((userPet) => new RoomPet(this, userPet));
 
-        this.floorplan = new RoomFloorplan(this);
+        this.floorplan.regenerateStaticGrid();
 
         this.requestActionsFrame();
     }

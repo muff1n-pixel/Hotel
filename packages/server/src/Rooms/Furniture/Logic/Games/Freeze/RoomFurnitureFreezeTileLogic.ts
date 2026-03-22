@@ -35,11 +35,19 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
             });
         }
 
+        if(player.currentSnowballs >= player.maxSnowballs) {
+            return;
+        }
+
+        player.currentSnowballs++;
+
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
         await this.roomFurniture.setAnimation(1);
 
         await new Promise((resolve) => setTimeout(resolve, 2500));
+
+        player.currentSnowballs--;
 
         if(!this.roomFurniture.room.freezeGame.started || this.roomFurniture.room.freezeGame.paused) {
             await this.roomFurniture.setAnimation(0);
@@ -49,32 +57,90 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         await this.handleSnowball(player);
 
-        for(let direction = 0; direction <= 6; direction += 2) {
-            for(let offset = 1; offset <= 2; offset++) {
-                const offsetPosition = this.roomFurniture.getOffsetPosition(offset, direction);
+        if(!player.megaSnowball) {
+            //player.megaSnowball = false;
 
-                const upmostFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(offsetPosition);
+            for(let direction = 0; direction < 8; direction++) {
+                const radius = ((direction % 2) === 0)?(player.radius + 2):(0);
 
-                if(!upmostFurniture) {
-                    break;
-                }
+                for(let offset = 0; offset < radius + 1; offset++) {
+                    const offsetPosition = this.roomFurniture.getOffsetPosition(offset + 1, direction);
 
-                if(upmostFurniture.logic instanceof RoomFurnitureFreezeTileLogic) {
-                    if(await upmostFurniture.logic.handleSnowball(player)) {
+                    const allFurnitureOnPosition = this.roomFurniture.room.getAllFurnitureAtPosition(offsetPosition);
+                    
+                    if(!allFurnitureOnPosition) {
                         break;
                     }
 
-                    continue;
-                }
-                else if(upmostFurniture.logic instanceof RoomFurnitureFreezeBlockLogic) {
-                    upmostFurniture.logic.handleSnowball();
+                    let shouldBreak = false;
 
-                    break;
-                }
+                    for(const furniture of allFurnitureOnPosition) {
+                        if(furniture.logic instanceof RoomFurnitureFreezeTileLogic) {
+                            if(await furniture.logic.handleSnowball(player)) {
+                                shouldBreak = true;
 
-                break;
+                                break;
+                            }
+
+                            continue;
+                        }
+                        else if(furniture.logic instanceof RoomFurnitureFreezeBlockLogic && furniture.model.animation === 0) {
+                            furniture.logic.handleSnowball();
+
+                            shouldBreak = true;
+
+                            break;
+                        }
+                    }
+
+                    if(shouldBreak) {
+                        break;
+                    }
+                }
             }
         }
+        else {
+            const targetDirection = (player.crossBlast)?(1):(0);
+            player.crossBlast = false;
+
+            for(let direction = targetDirection; direction < 8; direction += 2) {
+                for(let offset = 0; offset < player.radius + 1; offset++) {
+                    const offsetPosition = this.roomFurniture.getOffsetPosition(offset + 1, direction);
+
+                    const allFurnitureOnPosition = this.roomFurniture.room.getAllFurnitureAtPosition(offsetPosition);
+
+                    if(!allFurnitureOnPosition) {
+                        break;
+                    }
+
+                    let shouldBreak = false;
+
+                    for(const furniture of allFurnitureOnPosition) {
+                        if(furniture.logic instanceof RoomFurnitureFreezeTileLogic) {
+                            if(await furniture.logic.handleSnowball(player)) {
+                                shouldBreak = true;
+
+                                break;
+                            }
+
+                            continue;
+                        }
+                        else if(furniture.logic instanceof RoomFurnitureFreezeBlockLogic && furniture.model.animation === 0) {
+                            furniture.logic.handleSnowball();
+
+                            shouldBreak = true;
+
+                            break;
+                        }
+                    }
+
+                    if(shouldBreak) {
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
     private lastSnowballed: number = 0;

@@ -72,8 +72,8 @@ export default class RoomFurniture<T = unknown> {
     }
 
     public isWalkable(finalDestination: boolean) {
-        if(this.logic?.isWalkable && !this.logic.isWalkable()) {
-            return false;
+        if(this.logic?.isWalkable) {
+            return this.logic.isWalkable();
         }
 
         if(this.model.furniture.flags.walkable) {
@@ -205,6 +205,8 @@ export default class RoomFurniture<T = unknown> {
                 }
             ]
         }));
+
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
 
         const wiredTriggerStuffStateLogics = this.room.getFurnitureWithCategory(WiredTriggerStuffStateLogic);
 

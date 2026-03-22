@@ -4,10 +4,9 @@ import RoomActor from "../Actor/RoomActor";
 import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFloorplan {
-    private grid: number[][];
+    private grid: number[][] = [];
 
     constructor(private readonly room: Room) {
-        this.grid = this.generateStaticGrid();
     }
 
     private generateStaticGrid() {

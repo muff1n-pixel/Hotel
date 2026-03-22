@@ -14,10 +14,31 @@ export type RoomFreezeGamePlayer = {
     team: RoomFreezeGameTeam;
     roomUser: RoomUser;
     health: number;
+    
+    radius: number;
+    
+    shield: boolean;
+    shieldAt: number;
+
+    crossBlast: boolean;
+
+    maxSnowballs: number;
+    currentSnowballs: number;
+    
+    megaSnowball: boolean;
 }
 
 export type RoomFreezeGameTeamData = {
     score: number;
+};
+
+export enum RoomFreezeGamePowerups {
+    BiggerBomb = 2,
+    MorePower = 3,
+    CrossBlast = 4,
+    MegaSnowball = 5,
+    ExtraLife = 6,
+    Shield = 7,
 };
 
 export default class RoomFreezeGame {
@@ -60,6 +81,14 @@ export default class RoomFreezeGame {
 
         for(const player of this.players) {
             player.health = 3;
+            player.radius = 3;
+            player.shield = false;
+            player.shieldAt = 0;
+            player.crossBlast = false;
+            player.megaSnowball = false;
+            
+            player.currentSnowballs = 0;
+            player.maxSnowballs = 1;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
                 id: player.roomUser.user.model.id,
@@ -71,7 +100,7 @@ export default class RoomFreezeGame {
             player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                 id: randomUUID(),
                 text: `The game of Freeze has started, eliminate the enemy teams to win!`,
-                imageUrl: "/assets/widgets/freeze/team_red.png"
+                imageUrl: `/assets/widgets/freeze/team_${player.team}.png`
             }));
         }
 
@@ -130,14 +159,14 @@ export default class RoomFreezeGame {
                 player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `The game of Freeze has ran out of time, ${(winnerTeam)?(`the ${winnerTeam} team won the game with ${this.teams[winnerTeam].score} score`):("no team managed to snatch the victory")}!`,
-                    imageUrl: "/assets/widgets/freeze/team_red.png"
+                    imageUrl: `/assets/widgets/freeze/team_${(winnerTeam)?(winnerTeam):("red")}.png`
                 }));
             }
             else if(reason === "eliminations") {
                 player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `${(winnerTeam)?(`The ${winnerTeam} team won the game of Freeze with ${this.teams[winnerTeam].score} score`):("No team managed to snatch the victory")}!`,
-                    imageUrl: "/assets/widgets/freeze/team_red.png"
+                    imageUrl: `/assets/widgets/freeze/team_${(winnerTeam)?(winnerTeam):("red")}.png`
                 }));
             }
         }
@@ -152,26 +181,35 @@ export default class RoomFreezeGame {
     }
 
     public async handleActionsInterval() {
-        for(const player of this.getFrozenPlayers()) {
-            if(performance.now() - player.roomUser.path.frozenAt > 5000) {
-                this.unfreezePlayer(player);
+        for(const player of this.players) {
+            if(player.shield && performance.now() - player.shieldAt >= 5000) {
+                player.shield = false;
+                
+                player.roomUser.removeAction("AvatarEffect");
+                player.roomUser.addAction(this.getTeamAvatarEffect(player));
+            }
 
-                if(player.health === 0) {
-                    const exitFurniture = this.getExitFurniture();
+            if(player.roomUser.path.frozen) {
+                if(performance.now() - player.roomUser.path.frozenAt >= 5000) {
+                    this.unfreezePlayer(player);
 
-                    if(exitFurniture) {
-                        this.removePlayer(player.roomUser);
+                    if(player.health === 0) {
+                        const exitFurniture = this.getExitFurniture();
 
-                        player.roomUser.removeAction("AvatarEffect");
-                        player.roomUser.addAction("AvatarEffect.4", 1000);
+                        if(exitFurniture) {
+                            this.removePlayer(player.roomUser);
 
-                        player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
-                        
-                        player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                            id: randomUUID(),
-                            text: `You lost all your lives and were eliminated from the round!`,
-                            imageUrl: "/assets/widgets/freeze/exit.png"
-                        }));
+                            player.roomUser.removeAction("AvatarEffect");
+                            player.roomUser.addAction("AvatarEffect.4", 1000);
+
+                            player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
+                            
+                            player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                                id: randomUUID(),
+                                text: `You lost all your lives and were eliminated from the round!`,
+                                imageUrl: "/assets/widgets/freeze/exit.png"
+                            }));
+                        }
                     }
                 }
             }
@@ -179,21 +217,87 @@ export default class RoomFreezeGame {
     }
 
     public addPlayer(roomUser: RoomUser, team: RoomFreezeGameTeam) {
-        this.players.push({
+        const player: RoomFreezeGamePlayer = {
             roomUser,
             team,
-            health: 3
-        });
+            health: 3,
+            
+            radius: 3,
+            
+            shield: false,
+            shieldAt: 0,
+
+            crossBlast: false,
+
+            maxSnowballs: 1,
+            currentSnowballs: 0,
+
+            megaSnowball: false
+        };
+
+        this.players.push(player);
 
         this.updateGateFurniture(team);
 
-        roomUser.addAction(this.getTeamAvatarEffect(team));
+        roomUser.addAction(this.getTeamAvatarEffect(player));
 
         roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
             id: randomUUID(),
             text: `You have joined the ${team} team!`,
-            imageUrl: "/assets/widgets/freeze/team_red.png"
+            imageUrl: `/assets/widgets/freeze/team_${team}.png`
         }));
+    }
+
+    public givePlayerPowerup(player: RoomFreezeGamePlayer, powerup: RoomFreezeGamePowerups) {
+        switch(powerup) {
+            case RoomFreezeGamePowerups.ExtraLife: {
+                if(player.health < 5) {
+                    player.health++;
+
+                    this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
+                        id: player.roomUser.user.model.id,
+
+                        updateHealth: true,
+                        health: player.health
+                    }));
+                }
+
+                break;
+            }
+
+            case RoomFreezeGamePowerups.BiggerBomb: {
+                player.radius++;
+
+                break;
+            }
+
+            case RoomFreezeGamePowerups.Shield: {
+                player.shield = true;
+                player.shieldAt = performance.now();
+                
+                player.roomUser.removeAction("AvatarEffect");
+                player.roomUser.addAction(this.getTeamAvatarEffect(player));
+
+                break;
+            }
+
+            case RoomFreezeGamePowerups.CrossBlast: {
+                player.crossBlast = true;
+
+                break;
+            }
+
+            case RoomFreezeGamePowerups.MorePower: {
+                player.maxSnowballs++;
+
+                break;
+            }
+
+            case RoomFreezeGamePowerups.MegaSnowball: {
+                player.megaSnowball = true;
+                break;
+            }
+        }
     }
 
     public getPlayer(roomUser: RoomUser) {
@@ -231,7 +335,11 @@ export default class RoomFreezeGame {
     }
 
     public freezePlayer(player: RoomFreezeGamePlayer, triggerPlayer: RoomFreezeGamePlayer) {
-        if(player.roomUser.hasAction("AvatarEffect.12")) {
+        if(player.roomUser.path.frozen) {
+            return;
+        }
+
+        if(player.shield) {
             return;
         }
 
@@ -271,8 +379,7 @@ export default class RoomFreezeGame {
 
     public unfreezePlayer(player: RoomFreezeGamePlayer) {
         player.roomUser.removeAction("AvatarEffect");
-
-        player.roomUser.addAction(this.getTeamAvatarEffect(player.team));
+        player.roomUser.addAction(this.getTeamAvatarEffect(player));
 
         player.roomUser.path.setFrozen(false);
     }
@@ -315,8 +422,24 @@ export default class RoomFreezeGame {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeCounterLogic && furniture.logic.team === team);
     }
 
-    private getTeamAvatarEffect(team: RoomFreezeGameTeam) {
-        switch(team) {
+    private getTeamAvatarEffect(player: RoomFreezeGamePlayer) {
+        if(player.shield) {
+            switch(player.team) {
+                case "red":
+                    return "AvatarEffect.49";
+                    
+                case "green":
+                    return "AvatarEffect.50";
+                    
+                case "blue":
+                    return "AvatarEffect.51";
+                    
+                case "yellow":
+                    return "AvatarEffect.52";
+            }
+        }
+
+        switch(player.team) {
             case "red":
                 return "AvatarEffect.40";
                 
