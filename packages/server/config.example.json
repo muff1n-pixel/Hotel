@@ -6,12 +6,13 @@
     },
 
     "assets": {
-        "externalUrl": "https://pixel63.muff1n-pixel.org/game/assets/assets-2026-02-21.zip",
+        "externalUrl": "https://pixel63.muff1n-pixel.org/assets/assets-2026-03-15.zip",
         "path": "../../assets"
     },
     
     "database": {
         "dialect": "mysql",
+        "logging": false,
         "database": "DATABASE",
         "username": "USERNAME",
         "password": "PASSWORD",

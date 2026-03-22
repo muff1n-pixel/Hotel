@@ -4,6 +4,8 @@ import { UserModel } from "../../Models/Users/UserModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
 import { randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
+import { sendLog } from "@shared/Logger/LoggerEx";
+import { UserFriendModel } from "../../Models/Users/Friends/UserFriendModel";
 
 const router = Router();
 
@@ -48,6 +50,31 @@ router.post("/", async (req, res) => {
             }
         });
 
+        const friendsData = await UserFriendModel.findAll({
+            where: {
+                userId: user.id
+            },
+            include: [
+                {
+                    model: UserModel,
+                    as: "friend"
+                }
+            ]
+        });
+
+        const friends: Array<any> = [];
+
+        for await (const userFriend of friendsData) {
+            friends.push({
+                id: userFriend.friend.id,
+                name: userFriend.friend.name,
+                figureConfiguration: userFriend.friend.figureConfiguration,
+                online: userFriend.friend.online
+            })
+        }
+
+        sendLog("VERBOSE", `${user.name} just logged in (Auth) from website.`);
+
         return res.json({
             id: user.id,
             name: user.name,
@@ -58,10 +85,12 @@ router.post("/", async (req, res) => {
             duckets: user.duckets,
             motto: user.motto,
             figureConfiguration: user.figureConfiguration,
+            friends: friends,
 
             preferences: {
                 allowFriendsFollow: userPreferences.allowFriendsFollow,
-                allowFriendsRequest: userPreferences.allowFriendsRequest
+                allowFriendsRequest: userPreferences.allowFriendsRequest,
+                allowTrade: userPreferences.allowTrade
             }
         });
     }

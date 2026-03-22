@@ -14,4 +14,8 @@
         font-weight: bold;
         color: rgba(0, 0, 0, 0.6);
     }
+
+    button {
+        margin: 0 auto;
+    }
 }

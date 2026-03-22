@@ -5,6 +5,7 @@ export class UserPreferenceModel extends Model {
     declare id: string;
     declare allowFriendsRequest: boolean;
     declare allowFriendsFollow: boolean;
+    declare allowTrade: boolean;
 }
 
 export function initialize(sequelize: Sequelize) {
@@ -20,6 +21,11 @@ export function initialize(sequelize: Sequelize) {
                 defaultValue: true
             },
             allowFriendsFollow: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
+            },
+            allowTrade: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: true

@@ -14,7 +14,7 @@
                 height: 110px;
                 width: 64px;
                 background-image: url('../../Images/community/habbo_skeleton.gif');
-                background-position: center;
+                background-position: bottom center;
                 background-repeat: no-repeat;
                 position: relative;
                 opacity: 0.9;
@@ -36,11 +36,14 @@
                     border: 1px solid #afafaf;
 
                     .username {
+                        word-break: break-all;
                         font-weight: bold;
                     }
 
                     .motto {
+                        word-break: break-all;
                         opacity: 0.7;
+                        font-family: 'Ubuntu-C';
                     }
                 }
 

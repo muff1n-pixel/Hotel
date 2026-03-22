@@ -41,7 +41,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
+                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch} style={{
+                                fontFamily: 'Ubuntu C'
+                            }}>
                                 <div className="sprite_room_user_motto_pen"/>
                             </Input>
 
@@ -70,7 +72,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
+                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch} style={{
+                                fontFamily: 'Ubuntu C'
+                            }}>
                                 <div className="sprite_room_user_motto_pen"/>
                             </Input>
 
@@ -103,7 +107,9 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
+                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch} style={{
+                                fontFamily: 'Ubuntu C'
+                            }}>
                                 <div className="sprite_room_user_motto_pen"/>
                             </Input>
                             

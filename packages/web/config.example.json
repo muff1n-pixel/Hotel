@@ -5,6 +5,7 @@
 
     "database": {
         "dialect": "mysql",
+        "logging": false,
         "database": "DATABASE",
         "username": "USER",
         "password": "PASSWORD",

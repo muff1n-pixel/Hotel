@@ -57,7 +57,7 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                                 </div>
                             </RoomThumbnail>
 
-                            <div style={{ fontSize: 12, maxWidth: 112 }}>{room.name}</div>
+                            <div style={{ fontSize: 12, maxWidth: 112, fontFamily: 'Ubuntu C' }}>{room.name}</div>
                         </div>
                     ))}
                 </div>

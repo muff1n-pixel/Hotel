@@ -1,0 +1,49 @@
+.staffPage {
+    .grid_row {
+        .box {
+            margin-bottom: 20px;
+
+            .title.flex {
+                text-align: start;
+                display: flex;
+                align-items: center;
+
+                span {
+                    font-weight: normal;
+                    margin-left: auto;
+                    font-size: 12px;
+                    letter-spacing: 0;
+                }
+            }
+
+            .content {
+
+                img.float_left {
+                    float: left;
+                    margin-right: 10px;
+                }
+
+                img.float_right {
+                    float: right;
+                    margin-left: 10px;
+                }
+
+                a {
+                    color: #e7570f;
+                    opacity: 0.8;
+                    text-decoration: none;
+                    transition-duration: 0.5s;
+                }
+
+                a:hover {
+                    opacity: 1;
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .box:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

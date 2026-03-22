@@ -29,7 +29,8 @@ export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomLi
             <NavigatorRoomUsersCount users={room.users} maxUsers={room.maxUsers}/>
 
             <div style={{
-                flex: 1
+                flex: 1,
+                fontFamily: 'Ubuntu C'
             }}>
                 {room.name}
             </div>

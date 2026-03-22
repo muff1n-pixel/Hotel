@@ -5,6 +5,8 @@ import { UserModel } from "../Users/UserModel.js";
 export class PermissionRoleModel extends Model {
     declare id: string;
     declare permissions: NonAttribute<PermissionModel[]>;
+    declare name: string;
+    declare description: string;
 }
 
 export function intitializePermissionRoleModel(sequelize: Sequelize) {
@@ -12,6 +14,14 @@ export function intitializePermissionRoleModel(sequelize: Sequelize) {
         id: {
             type: DataTypes.STRING,
             primaryKey: true
+        },
+        name: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         }
     }, {
         sequelize,

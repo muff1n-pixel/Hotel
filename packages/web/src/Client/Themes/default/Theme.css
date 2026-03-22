@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+}
+
+:root {
+    --red: #d64242;
+    --blue: #2767a7;
+    --light-blue: #53a5d6;
+    --green: #2bb500;
+    --orange: #ff6103;
+    --grey: #959595;
+}
+
+html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    background-image: url('./Images/bg.png');
+    background-repeat: repeat;
+    font-family: "Ubuntu";
+    display: flex;
+    font-size: 14px;
+}
+
+img, canvas {
+    image-rendering: pixelated;
+}
+
+
+b {
+    font-family: "Ubuntu Bold";
+}
+
+.resize {
+    width: 80%;
+    min-width: 765px;
+    max-width: 765px;
+    margin: 0 auto;
+}
+
+.minWidth {
+    min-width: 765px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 450px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.grid.first_small {
+    grid-template-columns: 1.5fr 3fr;
+}
+
+.grid.first_medium {
+    grid-template-columns: 1.7fr 3fr;
+}

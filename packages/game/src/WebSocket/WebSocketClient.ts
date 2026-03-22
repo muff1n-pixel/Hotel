@@ -3,13 +3,27 @@ import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
 import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
 import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 
+type ClientOptions = {
+    userId: string;
+    accessToken: string;
+    room?: string | null;
+};
+
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    constructor(secure: boolean, hostname: string, port: number, options: Record<"userId" | "accessToken", string>) {
+    constructor(secure: boolean, hostname: string, port: number, options: ClientOptions) {
         super();
 
-        this.socket = new WebSocket(`${(secure)?("wss"):("ws")}://${hostname}:${port}?${new URLSearchParams(options).toString()}`);
+        const params = new URLSearchParams(
+            Object.entries(options).reduce((acc, [key, value]) => {
+                if (value != null) {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {} as Record<string, string>)
+        );
+        this.socket = new WebSocket(`${secure ? 'wss' : 'ws'}://${hostname}:${port}?${params.toString()}`);
 
         this.socket.binaryType = "arraybuffer";
 
@@ -23,12 +37,12 @@ export default class WebSocketClient extends EventTarget {
 
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
             }
-            catch(error) {
+            catch (error) {
                 EventsLogger.error("Failed to decode message", error);
             }
         });
 
-        if(this.socket.readyState === this.socket.OPEN) {
+        if (this.socket.readyState === this.socket.OPEN) {
             this.dispatchEvent(new Event("open"));
         }
         else {
@@ -36,13 +50,13 @@ export default class WebSocketClient extends EventTarget {
                 this.dispatchEvent(new Event("open"));
             });
         }
-        
+
         this.socket.addEventListener("close", () => {
             this.dispatchEvent(new Event("close"));
         });
 
         setInterval(() => {
-            if(this.socket.readyState === this.socket.OPEN) {
+            if (this.socket.readyState === this.socket.OPEN) {
                 this.sendProtobuff(PingData, PingData.create({}));
             }
         }, 30 * 1000);
@@ -56,7 +70,7 @@ export default class WebSocketClient extends EventTarget {
         try {
             encoded = message.encode(payload).finish();
         }
-        catch(error) {
+        catch (error) {
             EventsLogger.error("Failed to encode Protobuff", error);
 
             return;
@@ -76,7 +90,7 @@ export default class WebSocketClient extends EventTarget {
 
             this.socket.send(message);
         }
-        catch(error) {
+        catch (error) {
             EventsLogger.error("Failed to send encoded Protobuff", error);
         }
     }
@@ -94,7 +108,7 @@ export default class WebSocketClient extends EventTarget {
 
                 protobuffListener.handle(payload);
             }
-            catch(error) {
+            catch (error) {
                 EventsLogger.error("Failed to handle Protobuf", error);
             }
         };

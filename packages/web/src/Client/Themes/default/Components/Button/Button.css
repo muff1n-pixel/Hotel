@@ -1,0 +1,101 @@
+.button {
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    color: #FFF;
+    background: linear-gradient(to bottom, #5aa600 45%, #007a00 45%);
+    border: 2px solid #000;
+    border-radius: 3px;
+    box-shadow: 3px 3px rgba(0, 0, 0, .25);
+    padding: 5px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Ubuntu Bold";
+
+    img {
+        margin-right: 10px;
+        transition-duration: 0.5s;
+    }
+}
+
+.button.no-shadow {
+    box-shadow: none;
+}
+
+.button:hover {
+    filter: brightness(115%);
+
+    img {
+        transform: rotate(360deg);
+    }
+}
+
+.button:active {
+    filter: brightness(80%);
+
+    transform: translate(1px, 1px);
+
+    box-shadow: none;
+}
+
+.button-small {
+    padding: 2px 30px;
+    font-family: "Ubuntu Medium";
+}
+
+.button-large {
+    min-width: 280px;
+
+    border: 1px solid #26464C;
+    border-radius: 5px;
+
+    font-size: 28px;
+    font-family: "Ubuntu Medium";
+    line-height: 1.3;
+}
+
+.button-medium {
+    border-width: 2px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Ubuntu Medium";
+    line-height: 1.3;
+}
+
+.button-large {
+    border-width: 4px;
+    border-radius: 5px;
+    font-size: 28px;
+    font-family: Ubuntu Medium;
+    line-height: 1.3;
+    padding: 16px 12px;
+}
+
+.button-large.button-orange {
+    outline: 1px solid #5f4416;
+}
+
+.button-medium {
+    padding: 8px 15px;
+}
+
+.button-blue {
+    background-color: rgb(0, 116, 152);
+    border-color: #437A86;
+    background: linear-gradient(to bottom, #4a9fb4 50%, #437a86 50%);
+}
+
+.button-orange {
+    border-color: #C78800;
+    background: linear-gradient(to bottom, #F0BB00 50%, #C78800 50%);
+}
+
+.button-grey {
+    background: linear-gradient(to bottom, #FFF 50%, #cccccc 50%);
+    color: #111;
+}
+
+.button-green {
+    background: linear-gradient(to bottom, #5aa600 50%, #007a00 50%);
+}

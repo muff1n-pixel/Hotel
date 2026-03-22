@@ -3,7 +3,9 @@ import { ThemeContext } from "../../ThemeProvider";
 import friendsIcon from '../../Images/settings/friends.gif';
 import addIcon from '../../Images/settings/add.gif';
 import friendsFollowIcon from '../../Images/settings/friends_follow.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
+import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 
 const SettingsFriendsForm = () => {
@@ -11,9 +13,9 @@ const SettingsFriendsForm = () => {
 
     if (!currentUser)
         return (
-            <div className='box'>
+            <Box>
                 <div className='alert error noMargin'>Please reconnect on the website.</div>
-            </div>);
+            </Box>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
 
@@ -46,8 +48,8 @@ const SettingsFriendsForm = () => {
                         Object.getOwnPropertyDescriptors(currentUser)
                     );
 
-                    newUser.allow_friends_request = allowFriendsRequest;
-                    newUser.allow_friends_follow = allowFriendsFollow;
+                    newUser.preferences.allowFriendsRequest = allowFriendsRequest;
+                    newUser.preferences.allowFriendsFollow = allowFriendsFollow;
 
                     dispatch({ currentUser: newUser });
                     setAlert({
@@ -59,8 +61,7 @@ const SettingsFriendsForm = () => {
         }, [allowFriendsRequest, allowFriendsFollow]);
 
         return (
-            <div className="box">
-                <div className="title">Edit my friends settings</div>
+            <Box title={"Edit my friends settings"}>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
                     <div className="row">
@@ -77,9 +78,10 @@ const SettingsFriendsForm = () => {
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <button><img src={friendsIcon} alt="Friends Icon" /> Edit my friends settings</button>
+
+                    <Button color="grey" shadow={false}><img src={friendsIcon} alt="Friends Icon" /> Edit my friends settings</Button>
                 </form>
-            </div>
+            </Box>
         )
     }
 }

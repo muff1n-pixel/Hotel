@@ -1,15 +1,17 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
 import mailIcon from '../../Images/settings/mail.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
+import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 const SettingsEmailForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     if (!currentUser)
         return (
-            <div className='box'>
+            <Box>
                 <div className='alert error noMargin'>Please reconnect on the website.</div>
-            </div>);
+            </Box>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
         const [email, setEmail] = useState<string | undefined>(undefined);
@@ -52,15 +54,14 @@ const SettingsEmailForm = () => {
         }, [email, setEmail]);
 
         return (
-            <div className="box">
-                <div className="title">Edit my email</div>
+            <Box title={"Edit my email"}>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
-                    <input type="text" value={currentUser?.email} disabled></input>
+                    <input type="text" value={currentUser?.email as string} disabled></input>
                     <input type="text" placeholder="New email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                    <button><img src={mailIcon} alt="Mail Icon" /> Edit my email</button>
+                    <Button color="grey" shadow={false}><img src={mailIcon} alt="Mail Icon" /> Edit my email</Button>
                 </form>
-            </div>
+            </Box>
         )
     }
 }

@@ -1,10 +1,11 @@
 import './Header.css'
 import Logo from '../../Images/logo.gif'
-import Button from '../Button';
+import Button from '../Button/Button';
 import { matchPath, NavLink, useLocation, useNavigate } from 'react-router';
-import { use, useContext, useEffect, useState } from 'react';
+import { use, useContext, useEffect, useRef, useState } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
 import { useCookies } from 'react-cookie';
+import HeaderPopUp from './PopUp/HeaderPopUp';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -12,6 +13,28 @@ const Header = () => {
     const [usersOnlines, setUsersOnlines] = useState<number>(0);
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+
+    const popUpNavigationRef = useRef<HTMLUListElement | null>(null);
+    const popUpNavigation = ['My Friends', 'My Groups', 'My Rooms'];
+    const [activeItem, setActiveItem] = useState(null);
+
+    const handleClick = (item) => {
+        setActiveItem(activeItem === item ? null : item);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popUpNavigationRef.current && !popUpNavigationRef.current.contains(event.target)) {
+                setActiveItem(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const fetchOnlines = () => {
         fetch("/api/hotel/information", {
@@ -29,13 +52,12 @@ const Header = () => {
             })
     }
 
-
     useEffect(() => {
-        fetchOnlines();
-
-        const intervalId = setInterval(() => {
-            fetchOnlines();
-        }, 60000);
+        switch (location.pathname.split("/")[1]) {
+            case "me":
+            case "settings":
+                return;
+        }
 
         if (!currentUser && cookies.accessToken) {
             fetch("/api/loginAuth", {
@@ -52,34 +74,54 @@ const Header = () => {
                     if (result.error) {
                         dispatch({ currentUser: null })
                         removeCookie("accessToken");
+
                         return;
                     }
 
                     dispatch({ currentUser: result });
                 });
         }
+    }, [currentUser])
+
+
+    useEffect(() => {
+        fetchOnlines();
+
+        const intervalId = setInterval(() => {
+            fetchOnlines();
+        }, 60000);
 
         return () => {
             clearInterval(intervalId);
         };
-    }, [fetchOnlines, setInterval, clearInterval, cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
+    }, [fetchOnlines, setInterval, clearInterval]);
 
     const generateSubMenu = () => {
         switch (location.pathname.split("/")[1]) {
             case "community":
-            case "article": 
+            case "article":
             case "staff":
             case "forums":
-            {
-                return (
-                    <nav className='submenu'>
-                        <NavLink to="/community">Community</NavLink>
-                        <NavLink to="/article">Articles</NavLink>
-                        <NavLink to="/staff">Staff</NavLink>
-                        <NavLink to="/forums">Forums</NavLink>
-                    </nav>
-                )
-            }
+                {
+                    return (
+                        <nav className='submenu'>
+                            <NavLink to="/community">Community</NavLink>
+                            <NavLink to="/article">Articles</NavLink>
+                            <NavLink to="/staff">Staff</NavLink>
+                            <NavLink to="/forums">Forums</NavLink>
+                        </nav>
+                    )
+                }
+
+            case "safety":
+                {
+                    return (
+                        <nav className='submenu'>
+                            <NavLink to="/safety/safety_tips">Safety Tips</NavLink>
+                            <NavLink to="/safety/pixel_way">Pixel Way</NavLink>
+                        </nav>
+                    )
+                }
 
             default: {
                 if (currentUser)
@@ -103,13 +145,33 @@ const Header = () => {
 
     return (
         <header>
-            <div className='top_content'>
+            <div className='top_content minWidth'>
                 <div className='resize'>
                     <div className='content'>
                         <div className='logo' onClick={() => navigate("/me")}><img src={Logo} alt="Logo" /></div>
 
-                        <div className='alert_message'>
-                            <div className='message'><span>Hey:</span> Welcome on Pixel63 project!</div>
+                        <div className='headerPopUp'>
+                            {currentUser ?
+                                <ul ref={popUpNavigationRef}>
+                                    {popUpNavigation.map((item) => {
+                                        return (
+                                            <li key={item}>
+                                                <div className={activeItem === item ? "item active" : "item"} onClick={() => handleClick(item)}>
+                                                    {item} <span></span>
+                                                </div>
+
+                                                {activeItem === item && (
+                                                    <div className="dropdown">
+                                                        <HeaderPopUp name={item} />
+                                                    </div>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                                :
+                                <div className='message'><span>Hey:</span> Welcome on Pixel63 project!</div>
+                            }
 
                             <div className='navigation'>
                                 {currentUser !== null ?
@@ -120,7 +182,7 @@ const Header = () => {
                             </div>
                         </div>
 
-                        {currentUser !== null && <Button color='green' onClick={() => window.location.href = "/game"}>Enter Pixel63</Button>}
+                        {currentUser !== null && <Button color='green' onClick={() => window.open("/game", "_blank", "noopener,noreferrer")}>Enter Pixel63</Button>}
                     </div>
 
                     <div className='onlines'>
@@ -128,8 +190,18 @@ const Header = () => {
                     </div>
 
                     <nav>
-                        {currentUser !== null ? <NavLink to="/me" className={({ isActive }) => isActive || matchPath("/settings/*", location.pathname) ? "active" : ""}>{currentUser.name}</NavLink> : <NavLink to="/">Login</NavLink>}
-                        <NavLink to="/community" className={({ isActive }) => isActive || matchPath("/article/*", location.pathname) ? "active" : ""}>Community</NavLink>
+                        {currentUser !== null ? <NavLink
+                            to="/me"
+                            className={({ isActive }) =>
+                                isActive || matchPath("/settings/*", location.pathname)
+                                    ? "active green"
+                                    : "green"
+                            }
+                        >{currentUser.name}</NavLink> : <NavLink to="/" className={'green'}>Register now!</NavLink>}
+                        <NavLink to="/community" className={({ isActive }) =>
+                            ((isActive || matchPath("/article/*", location.pathname) || matchPath("/staff", location.pathname)) && "active") || undefined
+                        }>Community</NavLink>
+                        <NavLink to="/safety/safety_tips" className={({ isActive }) => isActive || matchPath("/safety/*", location.pathname) ? "active" : ""}>Safety</NavLink>
                         {currentUser !== null && <NavLink to="/shop">Shop</NavLink>}
                     </nav>
                 </div>

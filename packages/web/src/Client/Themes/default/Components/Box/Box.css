@@ -1,0 +1,56 @@
+.box {
+    padding: 5px;
+    background-color: #FFF;
+    -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 0px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid #afafaf;
+
+    .title {
+        background-color: var(--blue);
+        text-align: center;
+        color: #FFF;
+        border-radius: 8px;
+        padding: 7px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        letter-spacing: 2px;
+    }
+
+    .title.flex {
+        text-align: start;
+        display: flex;
+        align-items: center;
+    }
+
+    .title.flex span {
+        font-weight: 400;
+        margin-left: auto;
+        font-size: 12px;
+        letter-spacing: 0;
+    }
+
+    .title.blue {
+        background-color: var(--blue);
+    }
+
+    .title.lightBlue {
+        background-color: var(--light-blue);
+    }
+
+    .title.red {
+        background-color: var(--red);
+    }
+
+    .title.orange {
+        background-color: var(--orange);
+    }
+
+    .title.green {
+        background-color: var(--green);
+    }
+
+    .title.grey {
+        background-color: var(--grey);
+    }
+}

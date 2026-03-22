@@ -6,6 +6,7 @@ import { UserTokenModel } from "../../Models/Users/UserTokens/UserTokenModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
 import { randomBytes, randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
+import { sendLog } from "@shared/Logger/LoggerEx";
 import bcrypt from "bcrypt";
 
 const router = Router();
@@ -122,6 +123,8 @@ router.post("/", async (req, res) => {
             userId: user.id
         });
 
+        sendLog("VERBOSE", `${user.name} just registered from website.`);
+
         return res.json({
             accessToken,
             
@@ -134,10 +137,12 @@ router.post("/", async (req, res) => {
             duckets: user.duckets,
             motto: user.motto,
             figureConfiguration: user.figureConfiguration,
+            friends: [],
 
             preferences: {
                 allowFriendsFollow: userPreferences.allowFriendsFollow,
-                allowFriendsRequest: userPreferences.allowFriendsRequest
+                allowFriendsRequest: userPreferences.allowFriendsRequest,
+                allowTrade: userPreferences.allowTrade
             }
         });
     }

@@ -10,7 +10,7 @@ import { UpdateRoomInformationData } from "@pixel63/events";
 export default function RoomSettingsBasicTab() {
     const room = useRoomInstance();
     const roomCategories = useRoomCategories();
-    
+
     const hasRoomTypePermissions = usePermissionAction("room:type");
 
     const [name, setName] = useState(room?.information?.name ?? "");
@@ -58,7 +58,7 @@ export default function RoomSettingsBasicTab() {
         }));
     }, []);
 
-    if(!room) {
+    if (!room) {
         return null;
     }
 
@@ -77,11 +77,15 @@ export default function RoomSettingsBasicTab() {
             }}>
                 <b>Room name</b>
 
-                <Input placeholder="My room name" value={name} onChange={setName}/>
-                
+                <Input placeholder="My room name" value={name} onChange={setName} style={{
+                    fontFamily: 'Ubuntu C'
+                }} />
+
                 <b>Room description</b>
 
-                <Input placeholder="My room description" value={description} onChange={setDescription}/>
+                <Input placeholder="My room description" value={description} onChange={setDescription} style={{
+                    fontFamily: 'Ubuntu C'
+                }}/>
 
                 <b>Room category</b>
 
@@ -90,7 +94,7 @@ export default function RoomSettingsBasicTab() {
                         value: category.id,
                         label: category.title
                     };
-                }) ?? []} onChange={(value) => handleCategoryChange(value as string)}/>
+                }) ?? []} onChange={(value) => handleCategoryChange(value as string)} />
 
                 {(hasRoomTypePermissions) && (
                     <Fragment>
@@ -109,7 +113,7 @@ export default function RoomSettingsBasicTab() {
                                 value: "bundle",
                                 label: "Bundle"
                             }
-                        ]} onChange={(value) => handleTypeChange(value as string)}/>
+                        ]} onChange={(value) => handleTypeChange(value as string)} />
                     </Fragment>
                 )}
 
@@ -120,7 +124,7 @@ export default function RoomSettingsBasicTab() {
                         value: maxUsers,
                         label: maxUsers.toString()
                     };
-                }) ?? []} onChange={(value) => handleMaxUsersChange(value as number)}/>
+                }) ?? []} onChange={(value) => handleMaxUsersChange(value as number)} />
             </div>
         </div>
     );

@@ -28,6 +28,12 @@ npm run init
 Close the server and then run `npm run migrate`.
 
 ### Starting
+#### Events
+```sh
+cd packages/events
+npm run generate
+```
+
 #### Shared
 ```sh
 cd packages/shared

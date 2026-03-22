@@ -1,19 +1,19 @@
-.me_page {
-    .my_user {
+.mePage {
+    .myUser {
         background-color: #a0a097;
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 20px;
         color: #FFF;
 
-        .hotel_view {
+        .hotelView {
             height: 145px;
             background-image: url('../../Images/me/me_bg.png');
             background-repeat: no-repeat;
             background-size: cover;
             position: relative;
 
-            .enter_button {
+            .enterButton {
                 position: absolute;
                 top: 20px;
                 right: 40px;
@@ -29,30 +29,24 @@
                 .button {
                     position: absolute;
                     right: -30px;
-                    top: 28px;
-                    width: 140px;
-                    border: 2px solid #FFF;
+                    top: 30px;
+                    width: 150px;
+                    outline: 2px solid #FFF;
+                    padding: 10px;
 
-                    .button-content {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 12px 5px;
-
-                        .arrow {
-                            width: 17px;
-                            height: 9px;
-                            background-image: url('../../Images/me/flashy_arrow.gif');
-                            background-repeat: no-repeat;
-                            background-size: cover;
-                            margin-left: 10px;
-                        }
+                    .arrow {
+                        width: 17px;
+                        height: 9px;
+                        background-image: url('../../Images/me/flashy_arrow.gif');
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        margin-left: 10px;
                     }
                 }
             }
         }
 
-        .my_data {
+        .myData {
             background-color: #7b7b71;
             padding: 10px;
 
@@ -80,14 +74,50 @@
 
                 .motto {
                     margin-left: 100px;
-                    background-color: #FFF;
+                    background-color: rgba(255, 255, 255, 0.8);
                     border-radius: 8px;
                     padding: 5px 10px;
                     color: #000;
-                    font-size: 12px;
+                    font-size: 13px;
+                    display: flex;
+                    align-items: center;
+                    transition-duration: 0.5s;
+                    font-family: "Ubuntu-C";
+
+                    img {
+                        margin-left: auto;
+                        transition-duration: 0.5s;
+                    }
 
                     span {
                         font-weight: bold;
+                        margin-right: 5px;
+                    }
+
+                    input {
+                        border: 0;
+                        padding: 0;
+                        background-color: transparent;
+                        font-size: 12px;
+                        font-family: "Ubuntu-C";
+                        width: 100%;
+                    }
+
+                    input:focus {
+                        outline: none;
+                    }
+                }
+
+                .motto.active {
+                    background-color: rgba(255, 255, 255, 1);
+                }
+
+                .motto:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 1);
+
+                    img {
+                        transform: rotate(360deg);
                     }
                 }
             }
@@ -137,15 +167,20 @@
 
             a {
                 color: #FFF;
+                text-decoration: none;
             }
 
             a:hover {
-                font-weight: bold;
+                text-decoration: underline;
             }
         }
 
         .row.small {
             font-size: 11px;
+        }
+
+        .row.medium {
+            font-size: 13px;
         }
 
         .row:last-child {

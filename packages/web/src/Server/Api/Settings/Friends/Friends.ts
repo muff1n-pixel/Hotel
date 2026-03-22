@@ -12,8 +12,6 @@ router.post("/", async (req, res) => {
         allowFriendsRequest = req.body.allowFriendsRequest,
         allowFriendsFollow = req.body.allowFriendsFollow;
 
-        console.log(req.body)
-
     if (!accessToken) {
         return res.json({
             error: "An error occured"

@@ -20,7 +20,7 @@ export default class WebSocket {
         });
 
         this.server.on("connection", async (webSocket, request) => {
-            if(!request.url) {
+            if (!request.url) {
                 console.warn("No url provided.");
 
                 return webSocket.close();
@@ -30,10 +30,10 @@ export default class WebSocket {
 
             let model: UserModel | null;
 
-            if(config.authentication.useAccessTokens) {
+            if (config.authentication.useAccessTokens) {
                 const accessToken = url.searchParams.get("accessToken");
 
-                if(!accessToken) {
+                if (!accessToken) {
                     console.warn("No access token provided.");
 
                     return webSocket.close();
@@ -51,13 +51,13 @@ export default class WebSocket {
                 try {
                     const payload = jsonWebToken.verify(accessToken, token.secretKey);
 
-                    if(typeof payload === "string") {
+                    if (typeof payload === "string") {
                         throw new Error("Payload is a string.");
                     }
 
                     model = await UserModel.findByPk(payload.userId);
                 }
-                catch(error) {
+                catch (error) {
                     console.warn("Invalid access token provided.", error);
 
                     return webSocket.close();
@@ -66,7 +66,7 @@ export default class WebSocket {
             else {
                 const userId = url.searchParams.get("userId");
 
-                if(!userId) {
+                if (!userId) {
                     console.warn("No user id provided.");
 
                     return webSocket.close();
@@ -75,7 +75,7 @@ export default class WebSocket {
                 model = await UserModel.findByPk(userId);
             }
 
-            if(!model) {
+            if (!model) {
                 console.warn("User does not exist.");
 
                 return webSocket.close();
@@ -88,10 +88,10 @@ export default class WebSocket {
 
             const existingUser = game.users.find((user) => user.model.id === model.id);
 
-            if(existingUser) {
+            if (existingUser) {
                 console.warn("User is already connected.");
 
-                existingUser.webSocket.close();
+                existingUser.webSocket.close(1000, "reload");
             }
 
             const user = new User(webSocket, model);
@@ -108,25 +108,36 @@ export default class WebSocket {
                 game.eventHandler.decodeAndDispatchMessages(user, rawData);
             });
 
-            webSocket.on("close", async () => {
+            webSocket.on("close", async (code, reason) => {
+                const reasonText = reason.toString();
+
                 const index = game.users.indexOf(user);
-                
-                if(index !== -1) {
+
+                if (index !== -1) {
                     game.users.splice(index, 1);
                 }
 
                 user.emit("close", user);
 
-                await model.update({
-                    online: false
-                });
+                if (reasonText !== "reload") {
+                    await model.update({
+                        online: false
+                    });
+                }
 
                 await game.hotelInformation.updateUsersCount();
 
                 user.friends.updateFriends();
             });
 
-            if(user.model.homeRoomId) {
+            const connectRoom = url.searchParams.get("room");
+
+            if (connectRoom) {
+                const room = await game.roomManager.getOrLoadRoomInstance(connectRoom);
+
+                room?.addUserClient(user);
+            }
+            else if (user.model.homeRoomId) {
                 const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
 
                 room?.addUserClient(user);
@@ -140,7 +151,7 @@ export default class WebSocket {
 
             const defaultBadges = ["CCF01", "CCF04", "CCF13", "CCF16", "CCF17", "CCF18", "CCF19", "CCF20", "CCF21", "CCF22", "CCF23", "CCF25"];
 
-            if(!userBadgesCount) {
+            if (!userBadgesCount) {
                 await UserBadgeModel.bulkCreate(defaultBadges.map((badgeId) => {
                     return {
                         id: randomUUID(),
@@ -150,8 +161,8 @@ export default class WebSocket {
                     };
                 }));
             }
-            
-            if(userBadgesCount === 0 || userBadgesCount === defaultBadges.length) {
+
+            if (userBadgesCount === 0 || userBadgesCount === defaultBadges.length) {
                 await UserBadgeModel.bulkCreate(["PX63B", "PX631", "PX632", "PX633", "PX634"].map((badgeId) => {
                     return {
                         id: randomUUID(),

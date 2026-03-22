@@ -6,6 +6,8 @@ export class WebArticleCommentModel extends Model {
     declare id: string;
     declare content: string;
 
+    declare createdAt: Date;
+    declare article: NonAttribute<WebArticleModel>;
     declare user: NonAttribute<UserModel>;
 }
 
@@ -29,7 +31,7 @@ export function initialize(sequelize: Sequelize) {
 }
 
 export function associate() {
-        WebArticleCommentModel.belongsTo(WebArticleModel, {
+    WebArticleCommentModel.belongsTo(WebArticleModel, {
         as: "article",
         foreignKey: "articleId",
         constraints: false

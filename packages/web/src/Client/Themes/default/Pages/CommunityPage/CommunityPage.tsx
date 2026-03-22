@@ -1,13 +1,14 @@
 import './CommunityPage.css';
-import NewsContainer from '../../Components/NewsContainer/NewsContainer';
+import ArticlesContainer from '../../Components/ArticleContainer/ArticleContainer';
 import { useEffect, useState } from 'react';
 import CommunityUser from '../../Components/Community/CommunityUser';
+import Box from '../../Components/Box/Box';
 
 type UserOnline = {
     id: string;
     name: string;
     motto: string;
-    figureConfiguration: string;
+    figureConfiguration: object;
 }
 
 const CommunityPage = () => {
@@ -18,7 +19,10 @@ const CommunityPage = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({
+                limit: 18,
+            })
         })
             .then((response) => response.json())
             .then((result) => {
@@ -33,19 +37,18 @@ const CommunityPage = () => {
         <div className="communityPage resize">
             <div className='grid'>
                 <div className='gridRow'>
-                    <div className='box randomUsers'>
-                        <div className='title lightBlue'>Random online users!</div>
+                    <Box title={'Random online users!'} className='randomUsers' color='lightBlue'>
                         <div className='onlines'>
 
                             {[...Array(18)].map((x, i) =>
                                 <CommunityUser key={i} name={usersOnline[i]?.name} motto={usersOnline[i]?.motto} figureConfiguration={usersOnline[i]?.figureConfiguration} />
                             )}
                         </div>
-                    </div>
+                    </Box>
                 </div>
 
                 <div className='gridRow'>
-                    <NewsContainer />
+                    <ArticlesContainer />
                 </div>
             </div>
         </div>

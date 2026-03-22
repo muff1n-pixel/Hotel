@@ -1,16 +1,18 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
 import passwordIcon from '../../Images/settings/password.gif';
-import { Alert, AlertType } from "./Alert";
+import { Alert, AlertType } from "../Alert/Alert";
+import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 const SettingsPasswordForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     if (!currentUser)
         return (
-            <div className='box'>
+            <Box>
                 <div className='alert error noMargin'>Please reconnect on the website.</div>
-            </div>);
+            </Box>);
     else {
         const [alert, setAlert] = useState<null | Alert>(null);
         const [oldPassword, setOldPassword] = useState<string | undefined>(undefined);
@@ -51,16 +53,15 @@ const SettingsPasswordForm = () => {
         }, [oldPassword, password, passwordConfirm, setOldPassword, setPassword, setPasswordConfirm]);
 
         return (
-            <div className="box">
-                <div className="title">Edit my password</div>
+            <Box title={"Edit my password"}>
                 {alert && <div className={`alert ${alert.type === AlertType.SUCCESS ? "success" : "error"}`}>{alert.message}</div>}
                 <form onSubmit={submitForm}>
                     <input type="password" placeholder="Current password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)}></input>
                     <input type="password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
                     <input type="password" placeholder="Confirm your new password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}></input>
-                    <button><img src={passwordIcon} alt="Password Icon" /> Edit my password</button>
+                    <Button color="grey" shadow={false}><img src={passwordIcon} alt="Password Icon" /> Edit my password</Button>
                 </form>
-            </div>
+            </Box>
         )
     }
 }

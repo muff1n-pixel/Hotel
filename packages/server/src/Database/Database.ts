@@ -29,6 +29,8 @@ import { initializeWebArticleLikeModel } from "./Models/Web/Article/Like/WebArti
 import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/WebArticleCommentModel.js";
 import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
 import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
+import { initializeRankModel } from "./Models/Ranks/RankModel.js";
+import { initializeRankRoleModel } from "./Models/Ranks/Role/RankRoleModel.js";
 import { initializePetModel } from "./Models/Pets/PetModel.js";
 import { initializeUserPetModel } from "./Models/Users/Pets/UserPetModel.js";
 import { initializeShopPagePetModel } from "./Models/Shop/ShopPagePetModel.js";
@@ -72,8 +74,8 @@ export async function initializeModels() {
   initializeUserFriendRequestModel(sequelize);
 
   initializeWebArticleModel(sequelize);
-  initializeWebArticleLikeModel(sequelize);
   initializeWebArticleCommentModel(sequelize);
+  initializeWebArticleLikeModel(sequelize);
 
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);
@@ -90,6 +92,8 @@ export async function initializeModels() {
   intitializePermissionModel(sequelize);
   intitializePermissionRoleModel(sequelize);
 
+  initializeRankModel(sequelize);
+  initializeRankRoleModel(sequelize);
   initializeAchievementModel(sequelize);
   initializeUserAchievementModel(sequelize);
 

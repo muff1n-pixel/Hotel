@@ -16,93 +16,75 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
     const [typing, setTyping] = useState(false);
 
     useEffect(() => {
-        if(value.length && !typing) {
+        if (value.length && !typing) {
             setTyping(true);
 
             return;
         }
 
-        if(!value.length && typing) {
+        if (!value.length && typing) {
             setTyping(false);
         }
     }, [value, typing]);
 
     useEffect(() => {
         webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
-            typing: (value.length)?(true):(false)
+            typing: (value.length) ? (true) : (false)
         }));
     }, [typing]);
 
-    const handleSubmit = useCallback(() => {
-        if(!value.length) {
-            return;
-        }
+    const handleSubmit = useCallback((shout: boolean) => {
+        if (!value.length) return;
 
         setTyping(false);
-        setValue("");
 
-        if(value[0] === ':' || value[0] === '/') {
+        if (value[0] === ':' || value[0] === '/') {
             const input = value.split(' ');
-
             const command = input[0].substring(1);
 
-            switch(command) {
-                case "commands": {
+            switch (command) {
+                case "commands":
                     dialogs.addUniqueDialog("room-chat-commands");
-                
                     return;
-                }
 
-                case "furni": {
+                case "furni":
                     dialogs.addUniqueDialog("room-furni");
-
                     return;
-                }
 
-                case "enable": {
-                    if(input.length === 1) {
-                        dialogs.addUniqueDialog("figure-catalog");
-
-                        return;
-                    }
-
-                    break;
-                }
-
-                case "carry": {
-                    if(input.length === 1) {
-                        dialogs.addUniqueDialog("figure-catalog");
-
-                        return;
-                    }
-
-                    break;
-                }
-
-                case "figure": {
+                case "figure":
                     dialogs.addUniqueDialog("figure");
-
                     return;
-                }
 
-                case "floor": {
+                case "floor":
                     dialogs.addUniqueDialog("room-floorplan");
-                    
                     return;
-                }
 
-                case "modtools": {
+                case "modtools":
                     dialogs.addUniqueDialog("modtools");
-                    
                     return;
-                }
             }
         }
 
-        webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
-            message: value
-        }));
+        webSocketClient.sendProtobuff(
+            SendRoomChatMessageData,
+            SendRoomChatMessageData.create({
+                message: value,
+                shout
+            })
+        );
     }, [dialogs, value]);
+
+    const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+
+                handleSubmit(event.shiftKey);
+                setValue("");
+            }
+        },
+        [handleSubmit, setValue]
+    );
 
     return (
         <div style={{
@@ -142,15 +124,15 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
 
                     cursor: "pointer"
                 }} onClick={() => setRoomChatStyles(!roomChatStyles)}>
-                    <div className="sprite_toolbar_chat_styles"/>
+                    <div className="sprite_toolbar_chat_styles" />
 
                     <div className="sprite_toolbar_chat_pointer" style={{
-                        transform: (roomChatStyles)?("rotateZ(-90deg)"):(undefined)
-                    }}/>
+                        transform: (roomChatStyles) ? ("rotateZ(-90deg)") : (undefined)
+                    }} />
                 </div>
 
                 {(roomChatStyles) && (
-                    <ToolbarChatbarStyles onClose={() => setRoomChatStyles(false)}/>
+                    <ToolbarChatbarStyles onClose={() => setRoomChatStyles(false)} />
                 )}
             </div>
 
@@ -158,17 +140,19 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                 type="text"
                 value={value}
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
-                onKeyUp={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyDown={(event) => handleKeyDown(event)}
                 placeholder="Click here to chat..."
                 style={{
+                    fontFamily: "Ubuntu C",
                     flex: 1,
                     border: "none",
                     borderTopRightRadius: 8,
+                    color: '#333',
                     borderBottomRightRadius: 8,
                     fontSize: 16,
                     background: "transparent",
-                    padding: "0 6px"
-                }}/>
+                    padding: "6px"
+                }} />
         </div>
     );
 }

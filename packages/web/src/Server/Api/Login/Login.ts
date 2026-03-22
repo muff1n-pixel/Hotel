@@ -5,6 +5,8 @@ import { randomBytes, randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
 import { UserTokenModel } from "../../Models/Users/UserTokens/UserTokenModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
+import { sendLog } from "@shared/Logger/LoggerEx";
+import { UserFriendModel } from "../../Models/Users/Friends/UserFriendModel";
 
 const router = Router();
 
@@ -73,21 +75,48 @@ router.post("/", async (req, res) => {
         }
     });
 
+    const friendsData = await UserFriendModel.findAll({
+        where: {
+            userId: user.id
+        },
+        include: [
+            {
+                model: UserModel,
+                as: "friend"
+            }
+        ]
+    });
+
+    const friends: Array<any> = [];
+
+    for await (const userFriend of friendsData) {
+        friends.push({
+            id: userFriend.friend.id,
+            name: userFriend.friend.name,
+            figureConfiguration: userFriend.friend.figureConfiguration,
+            online: userFriend.friend.online
+        })
+    }
+
+    sendLog("VERBOSE", `${user.name} just logged in from website.`);
+
     return res.json({
-        id: user.id,
         accessToken: accessToken,
+        id: user.id,
         name: user.name,
         email: user.email,
-        lastLoggin: user.lastLogin,
+        lastLogin: user.lastLogin,
         credits: user.credits,
         diamonds: user.diamonds,
         duckets: user.duckets,
         motto: user.motto,
         figureConfiguration: user.figureConfiguration,
+        friends: friends,
 
         preferences: {
             allowFriendsFollow: userPreferences.allowFriendsFollow,
-            allowFriendsRequest: userPreferences.allowFriendsRequest
+            allowFriendsRequest: userPreferences.allowFriendsRequest,
+            allowTrade: userPreferences.allowTrade
         }
     });
 });

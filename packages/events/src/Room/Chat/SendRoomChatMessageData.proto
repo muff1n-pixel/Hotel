@@ -2,4 +2,5 @@ syntax = "proto3";
 
 message SendRoomChatMessageData {
     string message = 1;
+    optional bool shout = 2;
 }

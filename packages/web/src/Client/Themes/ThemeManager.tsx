@@ -1,48 +1,36 @@
-import type { RouteObject } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { GeneralContext } from "../Context/Context";
-import { useContext, useEffect } from "react";
-import { useRoutes } from "react-router";
 
-type RouterModule = {
-    routes: RouteObject[];
-};
+const themes = import.meta.glob("/src/Client/Themes/*/Theme.tsx");
 
-type ProviderModule = {
-  ThemeProvider: React.ComponentType<{
-    children: React.ReactNode;
-  }>;
-};
+const DefaultTheme = () => null;
 
-const providersModules = import.meta.glob<ProviderModule>(
-    "/src/Client/Themes/*/ThemeProvider.tsx",
-    { eager: true }
-);
+export default function ThemeManager() {
+  const { state: { currentTheme } } = useContext(GeneralContext);
 
-const routersModules = import.meta.glob<RouterModule>(
-    "/src/Client/Themes/*/Router.tsx",
-    { eager: true }
-);
+  const [ThemeComponent, setThemeComponent] =
+    useState<React.ComponentType>(() => DefaultTheme);
 
-const ThemeManager = () => {
-    const { state: { currentTheme }, dispatch } = useContext(GeneralContext);
+  useEffect(() => {
+    const loadTheme = async () => {
+      const key = `/src/Client/Themes/${currentTheme}/Theme.tsx`;
 
-    const ThemesRouter = routersModules[`/src/Client/Themes/${currentTheme}/Router.tsx`],
-        ThemeProviderKey = `/src/Client/Themes/${currentTheme}/ThemeProvider.tsx`,
-        ThemeProvider = providersModules[ThemeProviderKey]?.ThemeProvider ?? (({ children }) => children);
+      const importer = themes[key];
 
-    if (ThemesRouter === undefined) {
-        return (
-            <div>Invalid theme provided or impossible to find the theme provider.</div>
-        )
-    }
-    else {
-        const element = useRoutes(ThemesRouter.routes);
-        return (
-            <ThemeProvider>
-                {element}
-            </ThemeProvider>
-        )
-    }
+      if (!importer) {
+        console.error("Theme not found:", currentTheme);
+        setThemeComponent(() => DefaultTheme);
+        return;
+      }
+
+      const module: any = await importer();
+      setThemeComponent(() => module.default);
+    };
+
+    loadTheme();
+  }, [currentTheme]);
+
+  const Theme = ThemeComponent;
+
+  return <Theme />;
 }
-
-export default ThemeManager;
