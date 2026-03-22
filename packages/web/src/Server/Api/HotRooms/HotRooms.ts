@@ -11,6 +11,9 @@ router.post("/", async (req, res) => {
         limit = 5;
 
     const hotRooms = await RoomModel.findAll({
+        where: {
+            lock: "open"
+        },
         order: [['currentUsers', 'DESC']],
         limit: parseInt(limit),
         include: [{ model: UserModel, as: "owner" }]
