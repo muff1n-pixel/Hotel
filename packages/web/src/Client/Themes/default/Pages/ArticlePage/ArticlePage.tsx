@@ -192,8 +192,6 @@ const ArticlePage = () => {
         })
             .then((response) => response.json())
             .then((result) => {
-                console.log(result)
-
                 if (result.error)
                     setNewCommentAlert({
                         type: AlertType.ERROR,
