@@ -67,8 +67,8 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
         }
     }
     
-    async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture | undefined): Promise<void> {
-        if(!(newRoomFurniture?.logic instanceof RoomFurnitureIceTagFieldLogic)) {
+    async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!newRoomFurniture.some((furniture) => (furniture.logic instanceof RoomFurnitureIceTagFieldLogic))) {
             roomUser.removeAction("AvatarEffect.38");
             roomUser.removeAction("AvatarEffect.39");
 

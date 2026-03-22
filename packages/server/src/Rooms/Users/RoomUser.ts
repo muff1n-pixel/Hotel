@@ -309,24 +309,23 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
-        const previousFurniture = this.room.getUpmostFurnitureAtPosition(previousPosition);
-        const currentFurniture = this.room.getUpmostFurnitureAtPosition(newPosition);
+        const previousFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(previousPosition));
+        const newFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(newPosition));
 
-        if(previousFurniture) {
-            await this.handleWalksOffFurniture?.(previousFurniture, currentFurniture);
+        for(const furniture of previousFurniture) {
+            await this.handleWalksOffFurniture?.(furniture, newFurniture);
         }
 
-
-        if(currentFurniture) {
-            await this.handleWalksOnFurniture?.(currentFurniture, previousFurniture);
+        for(const furniture of newFurniture) {
+            await this.handleWalksOnFurniture?.(furniture, previousFurniture);
         }
     }
 
-    public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture | undefined): Promise<void> {
+    public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
         return this.room.handleUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 
-    public async handleWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture | undefined): Promise<void> {
+    public async handleWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]): Promise<void> {
         return this.room.handleUserWalksOffFurniture(this, roomFurniture, newRoomFurniture);
     }
 

@@ -33,8 +33,8 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
         }
     }
     
-    async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture | undefined): Promise<void> {
-        if(!(newRoomFurniture?.logic instanceof RoomFurnitureBunnyRunFieldLogic)) {
+    async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!newRoomFurniture.some((furniture) => (furniture.logic instanceof RoomFurnitureBunnyRunFieldLogic))) {
             roomUser.removeAction("AvatarEffect.68");
         }
     }

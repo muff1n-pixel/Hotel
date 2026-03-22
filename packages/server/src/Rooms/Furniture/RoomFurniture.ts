@@ -259,12 +259,14 @@ export default class RoomFurniture<T = unknown> {
     }
 
     /** Call this from the Room instance only. */
-    public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture | undefined) {
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
+        console.log("walk 0n");
         await this.logic?.handleUserWalksOn?.(roomUser, previousRoomFurniture);
     }
 
     /** Call this from the Room instance only. */
-    public async handleUserWalksOffFurniture(roomUser: RoomUser, newRoomFurniture: RoomFurniture | undefined) {
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]) {
+        console.log("walk 0ff");
         await this.logic?.handleUserWalksOff?.(roomUser, newRoomFurniture);
     }
 
