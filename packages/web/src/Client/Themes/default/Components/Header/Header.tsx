@@ -147,8 +147,17 @@ const Header = () => {
                     </div>
 
                     <nav>
-                        {currentUser !== null ? <NavLink to="/me" className={({ isActive }) => isActive || matchPath("/settings/*", location.pathname) ? "active green" : "green"}>{currentUser.name}</NavLink> : <NavLink to="/" className={'green'}>Register now!</NavLink>}
-                        <NavLink to="/community" className={({ isActive }) => isActive || matchPath("/article/*", location.pathname) ? "active" : ""}>Community</NavLink>
+                        {currentUser !== null ? <NavLink
+                            to="/me"
+                            className={({ isActive }) =>
+                                isActive || matchPath("/settings/*", location.pathname)
+                                    ? "active green"
+                                    : "green"
+                            }
+                        >{currentUser.name}</NavLink> : <NavLink to="/" className={'green'}>Register now!</NavLink>}
+                        <NavLink to="/community" className={({ isActive }) =>
+                            ((isActive || matchPath("/article/*", location.pathname) || matchPath("/staff", location.pathname)) && "active") || undefined
+                        }>Community</NavLink>
                         <NavLink to="/safety/safety_tips" className={({ isActive }) => isActive || matchPath("/safety/*", location.pathname) ? "active" : ""}>Safety</NavLink>
                         {currentUser !== null && <NavLink to="/shop">Shop</NavLink>}
                     </nav>

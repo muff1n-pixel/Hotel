@@ -30,7 +30,7 @@ import { initializeWebArticleCommentModel } from "./Models/Web/Article/Comment/W
 import { initializeShopPageBotModel } from "./Models/Shop/ShopPageBotModel.js";
 import { initializeUserBotModel } from "./Models/Users/Bots/UserBotModel.js";
 import { initializeRankModel } from "./Models/Ranks/RankModel.js";
-import { initializeRankRoleModel } from "./Models/Ranks/RankRole/RankRoleModel.js";
+import { initializeRankRoleModel } from "./Models/Ranks/Role/RankRoleModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
