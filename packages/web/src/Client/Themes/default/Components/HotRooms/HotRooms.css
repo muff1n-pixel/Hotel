@@ -28,7 +28,6 @@
         .infos {
             .name {
                 font-weight: bold;
-                max-width: 170px;
                 word-break: break-all;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
@@ -45,6 +44,11 @@
             .owner {
                 font-size: 12px;
                 color: #e7570f;
+
+                span {
+                    opacity: 0.6;
+                    color: #333;
+                }
             }
         }
 

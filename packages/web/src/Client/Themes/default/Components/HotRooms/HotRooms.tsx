@@ -64,7 +64,7 @@ const HotRooms = () => {
                                     <div className={`icon ${iconClass}`}></div>
                                     <div className="infos">
                                         <div className="name">{room.name}</div>
-                                        <div className="owner">{room.owner ? room.owner.name : "Undefined"}</div>
+                                        <div className="owner">{room.owner ? room.owner.name : "Undefined"} <span>({room.currentUsers}/{room.maxUsers})</span></div>
                                     </div>
 
                                     <img src={goIcon} alt="goIcon" className="joinRoom" />
