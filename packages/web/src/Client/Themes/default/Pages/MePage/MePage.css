@@ -1,19 +1,19 @@
-.me_page {
-    .my_user {
+.mePage {
+    .myUser {
         background-color: #a0a097;
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 20px;
         color: #FFF;
 
-        .hotel_view {
+        .hotelView {
             height: 145px;
             background-image: url('../../Images/me/me_bg.png');
             background-repeat: no-repeat;
             background-size: cover;
             position: relative;
 
-            .enter_button {
+            .enterButton {
                 position: absolute;
                 top: 20px;
                 right: 40px;
@@ -52,7 +52,7 @@
             }
         }
 
-        .my_data {
+        .myData {
             background-color: #7b7b71;
             padding: 10px;
 

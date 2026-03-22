@@ -18,7 +18,7 @@ const MePage = () => {
     }, [currentUser, navigate]);
 
     return (
-        <div className='me_page resize'>
+        <div className='mePage resize'>
             <div className='grid'>
                 <div className='grid_row'>
                     <MyUser />

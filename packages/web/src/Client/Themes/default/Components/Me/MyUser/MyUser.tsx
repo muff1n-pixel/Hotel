@@ -33,14 +33,14 @@ const MyUser = () => {
     }, [currentUser]);
 
     return (
-        <div className='my_user'>
-            <div className='hotel_view'>
-                <div className='enter_button'>
+        <div className='myUser'>
+            <div className='hotelView'>
+                <div className='enterButton'>
                     <div className='bg'></div>
                     <Button color='green' size='medium' onClick={() => window.open("/game", "_blank", "noopener,noreferrer")}>Enter Hotel <div className='arrow'></div></Button>
                 </div>
             </div>
-            <div className='my_data'>
+            <div className='myData'>
                 <div className='my_avatar'>
                     <div className='avatar'>
                         <div className='avatar_img' style={{ backgroundImage: `url(${myAvatar})` }}></div>
