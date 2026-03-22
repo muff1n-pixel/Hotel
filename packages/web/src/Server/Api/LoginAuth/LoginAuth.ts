@@ -4,7 +4,7 @@ import { UserModel } from "../../Models/Users/UserModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
 import { randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
-import { sendLog } from "@shared/Logger/Logger";
+import { sendLog } from "@shared/Logger/LoggerEx";
 
 const router = Router();
 

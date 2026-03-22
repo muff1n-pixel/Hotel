@@ -6,8 +6,8 @@ import { UserTokenModel } from "../../Models/Users/UserTokens/UserTokenModel";
 import { UserPreferenceModel } from "../../Models/Users/Preferences/UserPreferences";
 import { randomBytes, randomUUID } from 'crypto';
 import jsonWebToken from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import { sendLog } from "@shared/Logger/LoggerEx";
+import bcrypt from "bcrypt";
 
 const router = Router();
 
