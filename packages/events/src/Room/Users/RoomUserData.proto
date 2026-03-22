@@ -20,4 +20,7 @@ message RoomUserData {
     optional bool has_rights = 9;
 
     repeated string actions = 10;
+
+    optional bool update_health = 11;
+    optional uint32 health = 12;
 }

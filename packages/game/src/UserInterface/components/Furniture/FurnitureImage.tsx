@@ -4,10 +4,12 @@ import Furniture from "@Client/Furniture/Furniture";
 import { FurnitureData } from "@pixel63/events";
 
 export type FurnitureImageProps = {
+    frame?: number;
+    animation?: number;
     furnitureData?: FurnitureData;
 }
 
-export default function FurnitureImage({ furnitureData }: FurnitureImageProps) {
+export default function FurnitureImage({ frame = 0, animation = 0, furnitureData }: FurnitureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -15,12 +17,13 @@ export default function FurnitureImage({ furnitureData }: FurnitureImageProps) {
             return;
         }
 
-        const furnitureRenderer = new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color);
+        const furnitureRenderer = new Furniture(furnitureData.type, 64, undefined, animation, furnitureData.color);
+        furnitureRenderer.frame = frame;
 
         furnitureRenderer.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
             setImage(image);
         });
-    }, [ furnitureData ]);
+    }, [ furnitureData, animation, frame ]);
 
     if(!image) {
         return;

@@ -46,6 +46,10 @@ export default class RoomUserEvent implements ProtobuffListener<RoomUserData> {
             roomUser.item.figureRenderer.setActions(payload.actions);
         }
 
+        if(payload.updateHealth) {
+            roomUser.item.health = (payload.health !== undefined)?(payload.health):(null);
+        }
+
         clientInstance.roomInstance.update();
     }
 }

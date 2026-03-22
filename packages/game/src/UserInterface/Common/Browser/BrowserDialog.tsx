@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/Components/DialogContent";
 import DialogTable, { DialogTableProps } from "../Dialog/Components/Table/DialogTable";
@@ -8,6 +8,7 @@ export type BrowserDialogProps = {
     activeId: string | null;
     count: number;
     page: number;
+    preview?: ReactNode;
 
     table: DialogTableProps
 
@@ -20,7 +21,7 @@ export type BrowserDialogProps = {
     children?: ReactNode;
 }
 
-export default function BrowserDialog({ count, table, page, activeId, hidden, children, onSelect, onPageChange, onClose }: BrowserDialogProps) {
+export default function BrowserDialog({ preview, count, table, page, activeId, hidden, children, onSelect, onPageChange, onClose }: BrowserDialogProps) {
     return (
         <Dialog title="Browser" hidden={hidden} onClose={onClose} width={780} height={440} initialPosition="center">
             <DialogContent>
@@ -31,6 +32,17 @@ export default function BrowserDialog({ count, table, page, activeId, hidden, ch
                     flexDirection: "column",
                     gap: 8,
                 }}>
+                    {(preview) && (
+                        <Fragment>
+                            {preview}
+
+                            <div style={{
+                                height: 1,
+                                background: "#CCCCCC"
+                            }}/>
+                        </Fragment>
+                    )}
+
                     <div style={{
                         display: "flex",
                         flexDirection: "row",

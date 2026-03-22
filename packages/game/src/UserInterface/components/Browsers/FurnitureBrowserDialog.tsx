@@ -7,6 +7,7 @@ import Input from "@UserInterface/Common/Form/Components/Input";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type FurnitureBrowserDialogProps = {
     hidden?: boolean;
@@ -33,9 +34,16 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
     const [searchType, setSearchType] = useState("");
     const [searchName, setSearchName] = useState("");
 
+    const [animationId, setAnimationId] = useState<number>(0);
+    const [frame, setFrame] = useState<number>(0);
+
     useEffect(() => {
         setPage(0);
     }, [searchId, searchType, searchName]);
+
+    useEffect(() => {
+        setAnimationId(0);
+    }, [activeItem]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(FurnitureBrowserData, {
@@ -64,6 +72,28 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
             count={count}
             page={page}
+
+            preview={(activeItem) && (
+                <FlexLayout direction="row" align="center">
+                    <FlexLayout align="center" justify="center" style={{ flex: 1 }}>
+                        <FurnitureImage animation={animationId} frame={frame} furnitureData={activeItem}/>
+                    </FlexLayout>
+
+                    <div style={{ flex: 3 }}/>
+
+                    <div style={{ flex: 2 }}>
+                        <div>
+                            <b>Animation:</b>
+                            <Input style={{ width: "100%" }} type="number" value={animationId.toString()} onChange={(value) => setAnimationId(parseInt(value))}/>
+                        </div>
+                        
+                        <div>
+                            <b>Frame:</b>
+                            <Input style={{ width: "100%" }} type="number" value={frame.toString()} onChange={(value) => setFrame(parseInt(value))}/>
+                        </div>
+                    </div>
+                </FlexLayout>
+            )}
 
             table={{
                 flex: [1, 1, 2],

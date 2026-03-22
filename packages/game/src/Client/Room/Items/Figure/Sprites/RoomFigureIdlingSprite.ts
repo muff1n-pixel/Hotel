@@ -1,6 +1,6 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import RoomSprite from "../RoomSprite";
-import RoomFigureItem from "./RoomFigureItem";
+import RoomSprite from "../../RoomSprite";
+import RoomFigureItem from "../RoomFigureItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 export default class RoomFigureIdlingSprite extends RoomSprite {

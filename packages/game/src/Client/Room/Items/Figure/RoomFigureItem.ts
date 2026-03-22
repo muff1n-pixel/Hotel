@@ -2,28 +2,27 @@ import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInter
 import RoomItem from "../RoomItem";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureSprite from "./RoomFigureSprite";
-import RoomFigureEffectSprite from "@Client/Room/Items/Figure/RoomFigureEffectSprite";
+import RoomFigureEffectSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureEffectSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
-import RoomFigureTypingSprite from "@Client/Room/Items/Figure/RoomFigureTypingSprite";
-import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/RoomFigureIdlingSprite";
+import RoomFigureTypingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureTypingSprite";
+import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureIdlingSprite";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { RoomPositionData } from "@pixel63/events";
+import RoomFigureHealthSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureHealthSprite";
 
 export default class RoomFigureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     private typingSprite: RoomFigureTypingSprite | null = null;
     private idlingSprite: RoomFigureIdlingSprite | null = null;
+    private healthSprite: RoomFigureHealthSprite | null = null;
 
     public readonly id = Math.random();
     private frame: number = 0;
-    private renderedFrame: number = 0;
 
     public typing: boolean = false;
     public idling: boolean = false;
-
-    private preloaded = false;
-    private preloading = false;
+    public health: number | null = null;
 
     constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPositionData | undefined) {
         super(roomRenderer, "figure");
@@ -40,16 +39,6 @@ export default class RoomFigureItem extends RoomItem {
     }
 
     render(_frame: number = 0) {
-        /*if(!this.preloaded) {
-            if(!this.preloading) {
-                this.preloading = true;
-
-                this.figureRenderer.preload(Figure.figureWorker).then(() => {
-                    this.preloaded = true;
-                });
-            }
-        }*/
-        
         this.frame++;
 
         const frame = this.frame;
@@ -59,12 +48,27 @@ export default class RoomFigureItem extends RoomItem {
                 return;
             }
 
-            this.renderedFrame = frame;
-
             this.sprites = [
                 new RoomFigureSprite(this, result.figure),
                 ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
             ];
+
+            if(this.health !== null) {
+                if(!this.healthSprite || this.healthSprite.health !== this.health) {
+                    this.healthSprite = new RoomFigureHealthSprite(this, {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    }, this.health);
+                }
+                else {
+                    this.healthSprite.figureOffsets = {
+                        left: result.figure.x,
+                        top: result.figure.y,
+                    };
+                }
+
+                this.sprites.push(this.healthSprite);
+            }
 
             if(this.typing) {
                 if(!this.typingSprite) {
@@ -79,7 +83,6 @@ export default class RoomFigureItem extends RoomItem {
                         top: result.figure.y,
                     };
                 }
-
 
                 this.sprites.push(this.typingSprite);
             }

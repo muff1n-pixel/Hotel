@@ -3,10 +3,11 @@ import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
 import { RoomFreezeGamePlayer } from "../../../../Games/Freeze/RoomFreezeGame";
+import RoomFurnitureFreezeBlockLogic from "./RoomFurnitureFreezeBlockLogic";
 
 export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-
+        this.roomFurniture.setAnimation(0);
     }
 
     async use(roomUser: RoomUser): Promise<void> {
@@ -61,17 +62,22 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
                     continue;
                 }
+                else if(upmostFurniture.logic instanceof RoomFurnitureFreezeBlockLogic) {
+                    upmostFurniture.logic.handleSnowball();
+
+                    break;
+                }
 
                 break;
             }
         }
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        await this.roomFurniture.setAnimation(0);
     }
 
+    private lastSnowballed: number = 0;
+
     public async handleSnowball(player: RoomFreezeGamePlayer) {
+        this.lastSnowballed = performance.now();
+
         await this.roomFurniture.setAnimation(101);
 
         const hitPlayer = this.roomFurniture.room.freezeGame.getPlayerAtPosition(this.roomFurniture.model.position);
@@ -86,6 +92,8 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
     }
 
     async handleActionsInterval(): Promise<void> {
-        
+        if(this.roomFurniture.model.animation === 101 && performance.now() - this.lastSnowballed >= 500) {
+            await this.roomFurniture.setAnimation(0);
+        }
     }
 }

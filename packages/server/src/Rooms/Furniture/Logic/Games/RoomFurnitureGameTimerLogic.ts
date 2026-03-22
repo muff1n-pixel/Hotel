@@ -53,6 +53,10 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         }
 
         if(!this.started) {
+            this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
+
+            this.updateAnimationTags();
+            
             this.started = true;
             this.paused = false;
 

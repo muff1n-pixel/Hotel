@@ -335,6 +335,10 @@ export default class Room {
             return furniture.model.position.depth;
         }
 
+        if(furniture.model.furniture.interactionType === "freeze_block" && furniture.model.animation !== 0) {
+            return furniture.model.position.depth;
+        }
+
         if(furniture.model.furniture.interactionType === "multiheight" && furniture.model.furniture.customParams?.[0]) {
             return furniture.model.position.depth + furniture.model.furniture.dimensions.depth + (parseFloat(furniture.model.furniture.customParams[0]) * furniture.model.animation);
         }
