@@ -16,7 +16,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
         return (this.roomFurniture.furniture.animation !== this.getNextState());
     }
 
-    use(): void {
+    use(tag?: string): void {
         if(!this.isAvailable()) {
             return;
         }
@@ -25,7 +25,8 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
 
         webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
             id: this.roomFurniture.data.id,
-            animation: nextState
+            animation: nextState,
+            tag
         }));
     }
 

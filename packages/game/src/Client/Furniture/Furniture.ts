@@ -5,7 +5,7 @@ import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRo
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -50,6 +50,17 @@ export default class Furniture {
         this.frame = 0;
     }
 
+    public _animationTags: UserFurnitureAnimationTag[] | undefined = undefined;
+
+    public get animationTags() {
+        return this._animationTags;
+    }
+
+    public set animationTags(animationTags: UserFurnitureAnimationTag[] | undefined) {
+        this._animationTags = animationTags;
+        this.frame = 0;
+    }
+
     public readonly type: string;
 
     constructor(type: string | undefined, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
@@ -81,6 +92,7 @@ export default class Furniture {
             direction: this.direction,
             size: this.size, 
             animation: this.animation,
+            animationTags: this.animationTags,
             color: this.color ?? 0, 
             frame: this.frame,
             grayscaled: this.grayscaled,
@@ -117,6 +129,7 @@ export default class Furniture {
             direction: this.direction,
             size: this.size, 
             animation: this.animation,
+            animationTags: this.animationTags,
             color: this.color ?? 0, 
             frame: this.frame,
             grayscaled: this.grayscaled,
@@ -145,6 +158,7 @@ export default class Furniture {
             direction: this.direction,
             size: this.size, 
             animation: this.animation,
+            animationTags: this.animationTags,
             color: this.color ?? 0, 
             frame: this.frame,
             grayscaled: this.grayscaled,

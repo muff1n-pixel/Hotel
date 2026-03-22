@@ -72,10 +72,29 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const animationData = this.visualization.animations?.find((animationData) => animationData.id === options!.animation);
 
-        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
+        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset?: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
+
+        if(options.animationTags) {
+            for(const animationTag of options.animationTags) {
+                const layers = this.visualization.layers?.filter((layer) => layer.tag === animationTag.tag);
+
+                for(const layer of layers) {
+                    result.push({
+                        animationLayerId: layer.id,
+                        frameSequenceIndex: 0,
+                        spriteFrame: animationTag.frame,
+                    });
+                }
+            }
+        }
 
         for(let layer = 0; layer < this.visualization.layerCount; layer++) {
+            if(result.some((result) => result.animationLayerId === layer)) {
+                continue;
+            }
+            
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
+            const layerData = this.visualization.layers?.find((layerData) => layerData.id === layer);
 
             if(animationLayer?.frameSequence?.length) {
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;

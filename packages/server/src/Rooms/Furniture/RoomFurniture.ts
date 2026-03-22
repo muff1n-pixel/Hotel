@@ -4,7 +4,7 @@ import { game } from "../../index.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 import RoomUser from "../Users/RoomUser.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
-import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeGateLogic.js";
 
@@ -190,6 +190,29 @@ export default class RoomFurniture<T = unknown> {
 
     public async setAnimation(animation: number) {
         this.model.animation = animation;
+        this.model.animationTags = null;
+
+        if(this.model.changed()) {
+            await this.model.save();
+        }
+
+        this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+            furnitureUpdated: [
+                {
+                    furniture: this.model
+                }
+            ]
+        }));
+
+        const wiredTriggerStuffStateLogics = this.room.getFurnitureWithCategory(WiredTriggerStuffStateLogic);
+
+        for(const logic of wiredTriggerStuffStateLogics) {
+            logic.handleFurnitureAnimationChange(this);
+        }
+    }
+
+    public async setAnimationTags(animationTags: UserFurnitureAnimationTag[]) {
+        this.model.animationTags = animationTags;
 
         if(this.model.changed()) {
             await this.model.save();

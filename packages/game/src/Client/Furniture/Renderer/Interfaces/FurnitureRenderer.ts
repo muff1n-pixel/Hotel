@@ -1,10 +1,12 @@
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
+import { UserFurnitureAnimationTag } from "@pixel63/events";
 
 export type FurnitureRenderOptions = {
     direction: number | undefined;
     size: number;
     animation: number;
+    animationTags?: UserFurnitureAnimationTag[] | undefined;
     color: number;
     frame: number;
     grayscaled: boolean;

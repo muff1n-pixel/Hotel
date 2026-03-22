@@ -18,6 +18,10 @@ export default class RoomFreezeGame {
     }
 
     public async startGame() {
+        if(this.started) {
+            return;
+        } 
+
         this.started = true;
     }
 
@@ -49,6 +53,10 @@ export default class RoomFreezeGame {
     }
 
     public async endGame() {
+        if(!this.started) {
+            return;
+        }
+        
         this.started = false;
     }
 

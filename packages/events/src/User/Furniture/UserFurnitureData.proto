@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "Room/RoomPositionData.proto";
 
+import "User/Furniture/UserFurnitureAnimationTag.proto";
 import "User/Furniture/UserFurnitureCustomData.proto";
 
 message UserFurnitureData {
@@ -14,6 +15,8 @@ message UserFurnitureData {
     optional uint32 direction = 5;
 
     int32 animation = 6;
+    repeated UserFurnitureAnimationTag animation_tags = 9;
+
     optional uint32 color = 7;
 
     UserFurnitureCustomData data = 8;

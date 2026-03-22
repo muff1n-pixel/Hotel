@@ -58,6 +58,8 @@ export default class RoomFurniture {
             case "default":
             case "conf_invis_control":
             case "crackable":
+            case "game_timer":
+            case "freeze_tile":
                 return new FurnitureMultistateLogic(this.instance, this);
                 
             case "ads_bg":
@@ -127,6 +129,8 @@ export default class RoomFurniture {
         if(payload.animation !== undefined) {
             this.item.furnitureRenderer.animation = this.data.animation = payload.animation;
         }
+
+        this.item.furnitureRenderer.animationTags = this.data.animationTags = payload.animationTags;
 
         if(payload.color !== undefined) {
             this.item.furnitureRenderer.color = payload.color ?? this.furnitureData.color ?? undefined;

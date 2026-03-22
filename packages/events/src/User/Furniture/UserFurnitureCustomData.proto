@@ -7,6 +7,7 @@ import "User/Furniture/Data/UserFurnitureStickyData.proto";
 import "User/Furniture/Data/UserFurnitureTrophyData.proto";
 import "User/Furniture/Data/UserFurnitureTeleportData.proto";
 import "User/Furniture/Data/UserFurnitureCrackableData.proto";
+import "User/Furniture/Data/UserFurnitureGameTimerData.proto";
 
 import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
@@ -39,7 +40,8 @@ message UserFurnitureCustomData {
         WiredUserSpecifierData wired_user_specifier = 13;
 
         UserFurnitureTeleportData teleport = 14;
-        
         UserFurnitureCrackableData crackable = 15;
+
+        UserFurnitureGameTimerData game_timer = 16;
     }
 }

@@ -3,19 +3,22 @@ import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
-import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 
 export class UserFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
     declare direction: number | null;
+
     declare animation: number;
+    declare animationTags?: UserFurnitureAnimationTag[] | null;
+
     declare color: number | null;
     declare data?: UserFurnitureCustomData;
     declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
-    
+
     declare user: NonAttribute<UserModel>;
     declare userId: NonAttribute<string>;
 
@@ -26,51 +29,64 @@ export class UserFurnitureModel extends Model {
 export function initializeUserFurnitureModel(sequelize: Sequelize) {
     UserFurnitureModel.init(
         {
-          id: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-          },
-          position: {
-              type: DataTypes.TEXT,
-              get: function () {
-                  return JSON.parse(this.getDataValue("position"));
-              },
-              set: function (value) {
-                  this.setDataValue("position", JSON.stringify(value));
-              },
-              allowNull: true,
-              defaultValue: null
-          },
-          direction: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            defaultValue: null
-          },
-          animation: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-          },
-          color: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-          },
-          data: {
-              type: DataTypes.TEXT,
-              get: function () {
-                  return JSON.parse(this.getDataValue("data"));
-              },
-              set: function (value) {
-                  this.setDataValue("data", JSON.stringify(value));
-              },
-              allowNull: true
-          }
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true,
+            },
+            position: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("position"));
+                },
+                set: function (value) {
+                    this.setDataValue("position", JSON.stringify(value));
+                },
+                allowNull: true,
+                defaultValue: null
+            },
+            direction: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue: null
+            },
+
+            animation: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            animationTags: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("animationTags"));
+                },
+                set: function (value) {
+                    this.setDataValue("animationTags", JSON.stringify(value));
+                },
+                allowNull: true,
+                defaultValue: null
+            },
+
+            color: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            data: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("data"));
+                },
+                set: function (value) {
+                    this.setDataValue("data", JSON.stringify(value));
+                },
+                allowNull: true
+            }
         },
         {
-          tableName: 'user_furnitures',
-          sequelize
+            tableName: 'user_furnitures',
+            sequelize
         },
-      );
-    
+    );
+
     UserFurnitureModel.belongsTo(FurnitureModel, {
         as: "furniture",
         foreignKey: "furnitureId"
@@ -86,7 +102,7 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
         foreignKey: "roomId",
         constraints: false
     });
-    
+
     RoomModel.hasMany(UserFurnitureModel, {
         as: "roomFurnitures",
         foreignKey: "roomId",
