@@ -192,6 +192,7 @@ const ArticlePage = () => {
         })
             .then((response) => response.json())
             .then((result) => {
+                console.log(result)
 
                 if (result.error)
                     setNewCommentAlert({
@@ -222,7 +223,7 @@ const ArticlePage = () => {
                     message: "Impossible to call API server."
                 })
             })
-    }, [commentContent, setCommentContent]);
+    }, [articleData, currentUser, commentContent, setCommentContent]);
 
     const scrollToComments = () => {
         commentsRef.current?.scrollIntoView({
