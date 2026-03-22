@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import Button from "../../Button/Button";
 import AvatarImager from "../../../../../Utils/AvatarImager/AvatarImager";
 
@@ -12,6 +12,7 @@ import clockIcon from '../../../Images/me/clock.gif'
 import discordIcon from '../../../Images/me/discord.png'
 import diamondsIcon from '../../../Images/me/diamonds.png';
 import UnknowUserImage from '../../../Images/unknow_user.gif';
+import mottoIcon from '../../../Images/icons/small/pen.png';
 
 import { ThemeContext } from "../../../ThemeProvider";
 import { NavLink } from "react-router";
@@ -20,10 +21,78 @@ import TimeAgo from '../../../../../Utils/DateFormatter/DateFormatter'
 
 const MyUser = () => {
     const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
+    const [newMotto, setNewMotto] = useState<string>("");
+    const [editMotto, setEditMotto] = useState<boolean>(false);
+    const mottoInputRef = useRef<HTMLInputElement>(null);
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
+    const startEditMotto = () => {
+        setEditMotto(true);
+
+        setTimeout(() => {
+            mottoInputRef.current?.focus();
+        }, 0);
+    }
+
+    const handleSubmitMotto = useCallback(() => {
+        if (!newMotto.trim()) {
+            setEditMotto(false);
+            setNewMotto("")
+            return
+        }
+
+        fetch("/api/settings/motto", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                newMotto
+            })
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                if (result.error) {
+                    setEditMotto(false);
+                    setNewMotto("")
+                    return;
+                }
+
+                const newUser = Object.create(
+                    Object.getPrototypeOf(currentUser),
+                    Object.getOwnPropertyDescriptors(currentUser)
+                );
+
+                newUser.motto = newMotto;
+
+                dispatch({ currentUser: newUser });
+                setEditMotto(false);
+                setNewMotto("")
+            });
+    }, [newMotto]);
+
     useEffect(() => {
-        if(!currentUser)
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                mottoInputRef.current &&
+                !mottoInputRef.current.contains(event.target as Node)
+            ) {
+                setEditMotto(false);
+                setNewMotto("")
+            }
+        };
+
+        if (editMotto) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [editMotto]);
+
+    useEffect(() => {
+        if (!currentUser)
             return;
 
         AvatarImager(currentUser.figureConfiguration).then((avatarData: Base64URLString) => {
@@ -47,7 +116,21 @@ const MyUser = () => {
                         <div className='avatar_img' style={{ backgroundImage: `url(${myAvatar})` }}></div>
                     </div>
 
-                    <div className='motto'><span>{currentUser?.name}: </span> {currentUser?.motto}</div>
+                    <div className={`motto ${editMotto ? "active" : ""}`} onClick={() => startEditMotto()}>
+                        <span>{currentUser?.name}: </span>
+                        {editMotto ?
+                            <input ref={mottoInputRef} type="text" placeholder="New motto..." value={newMotto} onChange={(e) => setNewMotto(e.target.value)} maxLength={40} onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSubmitMotto();
+                                }
+                            }}></input>
+                            :
+                            <>
+                                {currentUser?.motto}
+                                <img src={mottoIcon} alt="Motto Icon" />
+                            </>
+                        }
+                    </div>
                 </div>
 
                 <div className='bank'>

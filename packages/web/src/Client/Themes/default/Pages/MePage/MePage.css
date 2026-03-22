@@ -74,14 +74,49 @@
 
                 .motto {
                     margin-left: 100px;
-                    background-color: #FFF;
+                    background-color: rgba(255, 255, 255, 0.8);
                     border-radius: 8px;
                     padding: 5px 10px;
                     color: #000;
-                    font-size: 12px;
+                    font-size: 13px;
+                    display: flex;
+                    align-items: center;
+                    transition-duration: 0.5s;
+                    font-family: "Ubuntu-C";
+
+                    img {
+                        margin-left: auto;
+                        transition-duration: 0.5s;
+                    }
 
                     span {
                         font-weight: bold;
+                        margin-right: 5px;
+                    }
+
+                    input {
+                        border: 0;
+                        padding: 0;
+                        background-color: transparent;
+                        font-size: 12px;
+                        font-family: "Ubuntu-C";
+                    }
+
+                    input:focus {
+                        outline: none;
+                    }
+                }
+
+                .motto.active {
+                    background-color: rgba(255, 255, 255, 1);
+                }
+
+                .motto:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 1);
+
+                    img {
+                        transform: rotate(360deg);
                     }
                 }
             }
