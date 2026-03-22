@@ -15,4 +15,5 @@ export default interface RoomFurnitureLogic {
     handleUserWalksOff?(roomUser: RoomUser, newRoomFurniture: RoomFurniture | undefined): Promise<void>;
 
     handleActionsInterval?(): Promise<void>;
+    handleMinuteInterval?(): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { UseRoomFurnitureData } from "@pixel63/events";
+import { RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
@@ -113,6 +113,14 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
 
     async handleActionsInterval(): Promise<void> {
         
+    }
+
+    async handleMinuteInterval(): Promise<void> {
+        const users = this.roomFurniture.room.users.filter((user) => this.roomFurniture.isPositionInside(RoomPositionOffsetData.fromJSON(user.position)));
+
+        for(const roomUser of users) {
+            roomUser.user.achievements.addAchievementScore("IceIceBadge", 1);
+        } 
     }
 
     private getUsersPlaying() {

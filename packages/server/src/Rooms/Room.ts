@@ -196,7 +196,7 @@ export default class Room {
         }
     }
 
-    public cancelActionsFrame() {
+    public unload() {
         if(this.actionsInterval === undefined) {
             return;
         }
@@ -215,7 +215,22 @@ export default class Room {
         }
     }
 
+    private lastMinuteInterval = performance.now();
+
     private async handleActionsInterval() {
+        if(performance.now() - this.lastMinuteInterval > 60 * 1000) {
+            this.lastMinuteInterval = performance.now();
+
+            for(let furniture of this.furnitures.filter((furniture) => furniture.logic?.handleMinuteInterval !== undefined)) {
+                try {
+                    await furniture.logic?.handleMinuteInterval?.();
+                }
+                catch(error) {
+                    console.error("Failed to handle furniture minute interval", error);
+                }
+            }
+        }
+
         for(let furniture of this.furnitures) {
             furniture.preoccupiedByActionHandler = false;
         }

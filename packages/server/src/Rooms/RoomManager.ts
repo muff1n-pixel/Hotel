@@ -126,7 +126,7 @@ export default class RoomManager {
 
         console.log("Unloading room " + room.model.id);
 
-        room.cancelActionsFrame();
+        room.unload();
 
         this.instances.splice(this.instances.indexOf(room), 1);
     }

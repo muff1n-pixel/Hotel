@@ -15,7 +15,9 @@ export class UserFurnitureModel extends Model {
     declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
+    
     declare user: NonAttribute<UserModel>;
+    declare userId: NonAttribute<string>;
 
     declare furniture: NonAttribute<FurnitureModel>;
     declare furnitureId: NonAttribute<string>;
