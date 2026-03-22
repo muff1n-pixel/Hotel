@@ -4,8 +4,8 @@ import AvatarImager from "../../../../../Utils/AvatarImager/AvatarImager";
 
 import creditIcon from '../../../Images/me/creditIcon.png';
 import friendsIcon from '../../../Images/icons/medium/friends.gif';
-import tradeOnIcon from '../../../Images/icons/small/check.gif';
-import tradeOffIcon from '../../../Images/icons/small/cross.gif';
+import tradeOnIcon from '../../../Images/icons/small/trade_on.png';
+import tradeOffIcon from '../../../Images/icons/small/trade_off.png';
 import ducketsIcon from '../../../Images/me/duckets.png';
 import keyIcon from '../../../Images/me/key.gif'
 import clockIcon from '../../../Images/me/clock.gif'

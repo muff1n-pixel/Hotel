@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import passwordIcon from '../../Images/settings/password.gif';
 import mailIcon from '../../Images/settings/mail.gif';
 import friendsIcon from '../../Images/settings/friends.gif';
-import tradeIcon from '../../Images/icons/small/tools_edit.gif';
+import tradeIcon from '../../Images/icons/small/trade.png';
 import { ThemeContext } from '../../ThemeProvider';
 import SettingsEmailForm from '../../Components/Settings/EmailForm';
 import SettingsPasswordForm from '../../Components/Settings/PasswordForm';

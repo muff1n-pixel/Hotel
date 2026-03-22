@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../ThemeProvider";
-import tradeIcon from '../../Images/icons/small/tools_edit.gif';
+import tradeIcon from '../../Images/icons/small/trade.png';
 import { Alert, AlertType } from "../Alert/Alert";
 import Box from "../Box/Box";
 import Button from "../Button/Button";
