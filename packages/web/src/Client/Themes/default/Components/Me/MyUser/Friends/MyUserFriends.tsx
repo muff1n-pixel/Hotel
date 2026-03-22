@@ -12,26 +12,30 @@ const MyUserFriends = () => {
 
     return (
         <p>
-            You have <b>{onlineFriends.length}</b> {onlineFriends.length > 1 ? "friends" : "friend"} online:{" "}
-            {displayedFriends.map((f, index) => (
-                <span key={f.name}>
-                    <NavLink to={`/home/${f.name}`}>
-                        {f.name}
-                    </NavLink>
-                    {index < displayedFriends.length - 1 && ", "}
-                </span>
-            ))}
-
-            {!showAll && onlineFriends.length > 5 && (
+            {onlineFriends.length === 0 ? "You don't have any friends online." :
                 <>
-                    <a href="#" onClick={(e) => {
-                        e.preventDefault();
-                        setShowAll(true);
-                    }}>
-                        Show all
-                    </a>
+                    You have <b>{onlineFriends.length}</b> {onlineFriends.length > 1 ? "friends" : "friend"} online:{" "}
+                    {displayedFriends.map((f, index) => (
+                        <span key={f.name}>
+                            <NavLink to={`/home/${f.name}`}>
+                                {f.name}
+                            </NavLink>
+                            {index < displayedFriends.length - 1 && ", "}
+                        </span>
+                    ))}
+
+                    {!showAll && onlineFriends.length > 5 && (
+                        <>
+                            <a href="#" onClick={(e) => {
+                                e.preventDefault();
+                                setShowAll(true);
+                            }}>
+                                Show all
+                            </a>
+                        </>
+                    )}
                 </>
-            )}
+            }
         </p>
     );
 }
