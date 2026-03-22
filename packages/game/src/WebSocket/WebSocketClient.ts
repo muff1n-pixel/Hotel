@@ -21,8 +21,6 @@ export default class WebSocketClient extends EventTarget {
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
 
-                EventsLogger.log(`Received ${type}`, payload);
-
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
             }
             catch(error) {
@@ -91,6 +89,8 @@ export default class WebSocketClient extends EventTarget {
         const listener = (event: WebSocketEvent<Uint8Array>) => {
             try {
                 const payload = message.decode(event.data) as T;
+
+                EventsLogger.log(`Received ${message.$type}`, payload);
 
                 protobuffListener.handle(payload);
             }
