@@ -17,7 +17,7 @@ const HeaderPopUpFriendsUser = (user: UserProps) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        AvatarImager(user.figureConfiguration, 2).then((avatarData) => {
+        AvatarImager(user.figureConfiguration, 2, [], true).then((avatarData) => {
             setAvatar(avatarData);
         }).catch((e) => {
             console.log("Failed to load avatar image:", e);

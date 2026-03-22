@@ -48,7 +48,8 @@
                 width: 60px;
                 height: 40px;
                 margin-right: 10px;
-                background-position: center calc(100% + 50px);
+                background-repeat: no-repeat;
+                background-position: center calc(100% + 10px);
             }
 
             .userData {

@@ -4,10 +4,10 @@
 
 import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
 
-const AvatarImager = (figureConfiguration: object, direction: number = 2, actions: string[] = [], frame: number = 0, headOnly: boolean = false): Promise<Base64URLString> => {
+const AvatarImager = (figureConfiguration: object, direction: number = 2, actions: string[] = [], headOnly: boolean = false): Promise<Base64URLString> => {
     return new Promise((resolve, reject) => {
         FigureAssets.loadAssets().then(() => {
-            const figure = new Figure(figureConfiguration, direction, actions, frame, headOnly);
+            const figure = new Figure(figureConfiguration, direction, actions, headOnly);
 
             figure.renderToCanvas(new FigureWorkerMainThread(), 0, true).then(({ figure }: any) => {
                 const canvas = document.createElement("canvas"),
