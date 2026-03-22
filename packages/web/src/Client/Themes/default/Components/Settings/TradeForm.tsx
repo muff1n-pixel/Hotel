@@ -3,6 +3,7 @@ import { ThemeContext } from "../../ThemeProvider";
 import tradeIcon from '../../Images/icons/small/tools_edit.gif';
 import { Alert, AlertType } from "../Alert/Alert";
 import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 
 const SettingsTradeForm = () => {
@@ -64,7 +65,8 @@ const SettingsTradeForm = () => {
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <button><img src={tradeIcon} alt="Trade Icon" /> Edit my trade settings</button>
+
+                    <Button color="grey" shadow={false}><img src={tradeIcon} alt="Trade Icon" /> Edit my trade settings</Button>
                 </form>
             </Box>
         )

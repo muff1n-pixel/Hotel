@@ -16,6 +16,7 @@ import { Alert, AlertType } from '../../Components/Alert/Alert';
 import { useRef } from "react";
 import Box from '../../Components/Box/Box'
 import TimeAgo from '../../../../Utils/DateFormatter/DateFormatter'
+import Button from '../../Components/Button/Button'
 
 const ArticlePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -296,7 +297,7 @@ const ArticlePage = () => {
                                     <form onSubmit={sendNewComment}>
                                         {newCommentAlert && <div className={`alert ${newCommentAlert.type === AlertType.SUCCESS ? "success" : "error"}`}>{newCommentAlert.message}</div>}
                                         <textarea maxLength={1000} placeholder='Adding a new comment...' value={commentContent} onChange={(e) => setCommentContent(e.target.value)}></textarea>
-                                        <button><img src={commentIcon} alt="Comment Icon" /> Send my comment</button>
+                                        <Button color='grey' shadow={false}><img src={commentIcon} alt="Comment Icon" /> Send my comment</Button>
                                     </form>
                                 }
 

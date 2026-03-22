@@ -29,24 +29,18 @@
                 .button {
                     position: absolute;
                     right: -30px;
-                    top: 28px;
-                    width: 140px;
-                    border: 2px solid #FFF;
+                    top: 30px;
+                    width: 150px;
+                    outline: 2px solid #FFF;
+                    padding: 10px;
 
-                    .button-content {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 12px 5px;
-
-                        .arrow {
-                            width: 17px;
-                            height: 9px;
-                            background-image: url('../../Images/me/flashy_arrow.gif');
-                            background-repeat: no-repeat;
-                            background-size: cover;
-                            margin-left: 10px;
-                        }
+                    .arrow {
+                        width: 17px;
+                        height: 9px;
+                        background-image: url('../../Images/me/flashy_arrow.gif');
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        margin-left: 10px;
                     }
                 }
             }

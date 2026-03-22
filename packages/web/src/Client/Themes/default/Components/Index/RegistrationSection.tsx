@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { ThemeContext } from "../../ThemeProvider";
-import Button from "../Button";
+import Button from "../Button/Button";
 import Container from "../Container";
 import Input from "../Input";
 import { useCallback, useContext, useState } from "react";

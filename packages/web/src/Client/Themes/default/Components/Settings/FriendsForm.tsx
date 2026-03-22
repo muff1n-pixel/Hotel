@@ -5,6 +5,7 @@ import addIcon from '../../Images/settings/add.gif';
 import friendsFollowIcon from '../../Images/settings/friends_follow.gif';
 import { Alert, AlertType } from "../Alert/Alert";
 import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 
 const SettingsFriendsForm = () => {
@@ -77,7 +78,8 @@ const SettingsFriendsForm = () => {
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <button><img src={friendsIcon} alt="Friends Icon" /> Edit my friends settings</button>
+
+                    <Button color="grey" shadow={false}><img src={friendsIcon} alt="Friends Icon" /> Edit my friends settings</Button>
                 </form>
             </Box>
         )

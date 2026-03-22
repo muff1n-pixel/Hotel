@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import FrankImage from '../../Images/error/frank.gif';
-import Button from "../../Components/Button";
+import Button from "../../Components/Button/Button";
 import './ErrorPage.css'
 import { useContext } from "react";
 import { ThemeContext } from "../../ThemeProvider";

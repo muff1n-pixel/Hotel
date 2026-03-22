@@ -3,6 +3,7 @@ import { ThemeContext } from "../../ThemeProvider";
 import passwordIcon from '../../Images/settings/password.gif';
 import { Alert, AlertType } from "../Alert/Alert";
 import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 const SettingsPasswordForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -58,7 +59,7 @@ const SettingsPasswordForm = () => {
                     <input type="password" placeholder="Current password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)}></input>
                     <input type="password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
                     <input type="password" placeholder="Confirm your new password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}></input>
-                    <button><img src={passwordIcon} alt="Password Icon" /> Edit my password</button>
+                    <Button color="grey" shadow={false}><img src={passwordIcon} alt="Password Icon" /> Edit my password</Button>
                 </form>
             </Box>
         )

@@ -143,6 +143,7 @@
             text-decoration: underline;
             background: none;
             border: none;
+            font-size: 11px;
         }
 
         button:hover {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { ThemeContext } from "../../ThemeProvider";
-import Button from "../Button";
+import Button from "../Button/Button";
 import Container from "../Container";
 import Input from "../Input";
 import { useCallback, useContext, useState } from "react";
@@ -129,7 +129,7 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                                 </div>
 
                                 <div>
-                                    <Button onClick={handleSubmit}>Login</Button>
+                                    <Button onClick={handleSubmit} size="small">Login</Button>
                                 </div>
                             </div>
 
@@ -153,12 +153,14 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
                     gap: 32,
                     margin: "32px 0",
                 }}>
-                    <Button size="large" color="orange" onClick={() => showRegistration()}>
+                    <Button size="large" style={{maxWidth: '280px'}} color="orange" onClick={() => showRegistration()}>
+                        <div>
                         Register a new
 
                         <div style={{ height: 10 }}/>
 
                         guest user
+                        </div>
                     </Button>
 
                     <div style={{

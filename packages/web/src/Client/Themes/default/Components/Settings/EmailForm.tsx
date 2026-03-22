@@ -3,6 +3,7 @@ import { ThemeContext } from "../../ThemeProvider";
 import mailIcon from '../../Images/settings/mail.gif';
 import { Alert, AlertType } from "../Alert/Alert";
 import Box from "../Box/Box";
+import Button from "../Button/Button";
 
 const SettingsEmailForm = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
@@ -58,7 +59,7 @@ const SettingsEmailForm = () => {
                 <form onSubmit={submitForm}>
                     <input type="text" value={currentUser?.email as string} disabled></input>
                     <input type="text" placeholder="New email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                    <button><img src={mailIcon} alt="Mail Icon" /> Edit my email</button>
+                    <Button color="grey" shadow={false}><img src={mailIcon} alt="Mail Icon" /> Edit my email</Button>
                 </form>
             </Box>
         )

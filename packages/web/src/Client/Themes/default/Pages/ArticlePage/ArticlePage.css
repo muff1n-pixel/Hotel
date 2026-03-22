@@ -231,12 +231,12 @@
             background-color: var(--green);
         }
 
-        textarea {
-            font-family: "Ubuntu-C" !important;
+        button {
+            width: 100%;
         }
 
-        textarea,
-        button {
+        textarea {
+            font-family: "Ubuntu-C" !important;
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -244,31 +244,6 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 8px;
-        }
-
-        button {
-            transition-duration: .5s;
-            opacity: .8;
-            background-color: #c1c1c1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            margin-bottom: 0;
-
-            img {
-                margin-right: 10px;
-                transition-duration: 0.5s;
-            }
-        }
-
-        button:hover {
-            opacity: 1;
-            cursor: pointer;
-
-            img {
-                transform: rotate(360deg);
-            }
         }
 
         textarea {

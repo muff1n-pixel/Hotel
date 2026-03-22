@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Button from "../../Button";
+import Button from "../../Button/Button";
 import AvatarImager from "../../../../../Utils/AvatarImager/AvatarImager";
 
 import creditIcon from '../../../Images/me/creditIcon.png';

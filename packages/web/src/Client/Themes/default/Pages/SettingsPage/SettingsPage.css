@@ -80,8 +80,11 @@
         }
     }
 
+    button {
+        width: 100%;
+    }
+
     input,
-    button,
     select {
         width: 100%;
         border: 1px solid rgba(0, 0, 0, 0.1);
@@ -94,31 +97,5 @@
         outline: none;
         border-color: rgba(0, 0, 0, 0.8);
         background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    button {
-        margin-bottom: 0;
-        transition-duration: 0.5s;
-        opacity: 0.8;
-        color: #FFF;
-        background-color: var(--blue);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-
-        img {
-            margin-right: 10px;
-            transition-duration: 0.5s;
-        }
-    }
-
-    button:hover {
-        opacity: 1;
-        cursor: pointer;
-
-        img {
-            transform: rotate(360deg);
-        }
     }
 }

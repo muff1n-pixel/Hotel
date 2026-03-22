@@ -1,6 +1,6 @@
 import './Header.css'
 import Logo from '../../Images/logo.gif'
-import Button from '../Button';
+import Button from '../Button/Button';
 import { matchPath, NavLink, useLocation, useNavigate } from 'react-router';
 import { use, useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
