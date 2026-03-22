@@ -37,6 +37,7 @@ import RoomFurnitureGameTimerLogic from "./Logic/Games/RoomFurnitureGameTimerLog
 import RoomFurnitureFreezeTileLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 import RoomFurnitureFreezeBlockLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeBlockLogic";
 import RoomFurnitureFreezeExitLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
+import RoomFurnitureFreezeCounterLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -108,6 +109,18 @@ export default class RoomFurnitureLogicFactory {
 
             case "freeze_exit":
                 return new RoomFurnitureFreezeExitLogic(roomFurniture);
+
+            case "freeze_counter_blue":
+                return new RoomFurnitureFreezeCounterLogic(roomFurniture, "blue");
+
+            case "freeze_counter_green":
+                return new RoomFurnitureFreezeCounterLogic(roomFurniture, "green");
+
+            case "freeze_counter_red":
+                return new RoomFurnitureFreezeCounterLogic(roomFurniture, "red");
+
+            case "freeze_counter_yellow":
+                return new RoomFurnitureFreezeCounterLogic(roomFurniture, "yellow");
 
             // Game
             case "game_timer":

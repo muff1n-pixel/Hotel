@@ -4,12 +4,13 @@ import { useEffect, useRef } from "react";
 
 export type WidgetNotificationProps = {
     badge?: BadgeData;
+    imageUrl?: string;
     text: string;
     duration: number;
     onFinish?: () => void;
 };
 
-export default function WidgetNotification({ badge, text, duration, onFinish }: WidgetNotificationProps) {
+export default function WidgetNotification({ badge, imageUrl, text, duration, onFinish }: WidgetNotificationProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -17,9 +18,16 @@ export default function WidgetNotification({ badge, text, duration, onFinish }: 
             return;
         }
 
+        window.requestAnimationFrame(() => {
+            if(ref.current) {
+                ref.current.style.opacity = "1";
+            }
+        });
+
         const timeout = setTimeout(() => {
             if(ref.current) {
                 ref.current.style.opacity = "0";
+                ref.current.style.transform = "translateY(-100%)";
 
                 setTimeout(() => {
                     onFinish?.();
@@ -34,7 +42,7 @@ export default function WidgetNotification({ badge, text, duration, onFinish }: 
 
     return (
         <div ref={ref} style={{
-            padding: 16,
+            padding: "8px 16px 8px 8px",
             borderRadius: 6,
 
             background: "rgba(61, 61, 61, .95)",
@@ -49,24 +57,39 @@ export default function WidgetNotification({ badge, text, duration, onFinish }: 
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            gap: 16,
+            gap: 8,
 
-            transition: "opacity 1s"
+            opacity: 0,
+            transition: "opacity 1s, transform 1.5s"
         }}>
             {(badge) && (
-                <div style={{
-                }}>
+                <div>
                     <BadgeImage badge={badge}/>
                 </div>
             )}
 
-            <div style={{
-                alignSelf: "flex-start",
+            {(imageUrl) && (
+                <div style={{
+                    minWidth: 50,
+                    minHeight: 50,
 
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <img src={imageUrl}/>
+                </div>
+            )}
+
+            <div style={{
                 fontFamily: "Ubuntu Medium",
                 textShadow: "0px 0px 1px #FFFFFF"
             }}>
-                {text}
+                {text.split('\n').map((text) => (
+                    <div>
+                        {text}
+                    </div>
+                ))}
             </div>
         </div>
     );

@@ -14,6 +14,7 @@ import RoomFurnitureTrophyLogic from "@Client/Room/Furniture/Logic/RoomFurniture
 import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitureFortunaLogic";
 import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurnitureWiredLogic";
 import { FurnitureData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
+import FurnitureDefaultMultistateLogic from "@Client/Furniture/Logic/FurnitureDefaultMultistateLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -59,8 +60,10 @@ export default class RoomFurniture {
             case "conf_invis_control":
             case "crackable":
             case "game_timer":
-            case "freeze_tile":
                 return new FurnitureMultistateLogic(this.instance, this);
+
+            case "freeze_tile":
+                return new FurnitureDefaultMultistateLogic(this.instance, this);
                 
             case "ads_bg":
                 return new RoomFurnitureBackgroundLogic(this.instance, this);

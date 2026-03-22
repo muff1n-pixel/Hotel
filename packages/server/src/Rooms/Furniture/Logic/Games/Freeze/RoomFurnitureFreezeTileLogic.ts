@@ -25,6 +25,10 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
             return;
         }
 
+        if(roomUser.path.frozen) {
+            return;
+        }
+
         if(this.roomFurniture.model.position.row !== roomUser.position.row || this.roomFurniture.model.position.column !== roomUser.position.column) {
             await new Promise<void>((resolve, reject) => {
                 roomUser.path.walkTo(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position), undefined, resolve, reject);
@@ -83,7 +87,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
         const hitPlayer = this.roomFurniture.room.freezeGame.getPlayerAtPosition(this.roomFurniture.model.position);
 
         if(hitPlayer) {
-            this.roomFurniture.room.freezeGame.freezePlayer(hitPlayer);
+            this.roomFurniture.room.freezeGame.freezePlayer(hitPlayer, player);
 
             return true;
         }

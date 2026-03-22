@@ -8,4 +8,5 @@ message WidgetNotificationData {
     string text = 2;
 
     optional BadgeData badge = 3;
+    optional string image_url = 4;
 }

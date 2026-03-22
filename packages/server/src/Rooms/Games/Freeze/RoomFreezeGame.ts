@@ -1,10 +1,12 @@
-import { RoomPositionData, RoomPositionOffsetData, RoomUserData } from "@pixel63/events";
+import { RoomPositionData, RoomPositionOffsetData, RoomUserData, WidgetNotificationData } from "@pixel63/events";
 import RoomFurnitureFreezeGateLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeGateLogic";
 import RoomFurnitureFreezeTileLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 import Room from "../../Room";
 import RoomUser from "../../Users/RoomUser";
 import RoomFurnitureFreezeBlockLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeBlockLogic";
 import RoomFurnitureFreezeExitLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
+import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
+import { randomUUID } from "crypto";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -14,11 +16,30 @@ export type RoomFreezeGamePlayer = {
     health: number;
 }
 
+export type RoomFreezeGameTeamData = {
+    score: number;
+};
+
 export default class RoomFreezeGame {
     public started: boolean = false;
     public paused: boolean = false;
 
     public players: RoomFreezeGamePlayer[] = [];
+
+    public teams: Record<RoomFreezeGameTeam, RoomFreezeGameTeamData> = {
+        red: {
+            score: 0
+        },
+        green: {
+            score: 0
+        },
+        blue: {
+            score: 0
+        },
+        yellow: {
+            score: 0
+        }
+    };
    
     constructor(private readonly room: Room) {
 
@@ -32,6 +53,11 @@ export default class RoomFreezeGame {
         this.started = true;
         this.paused = false;
 
+        this.teams.red.score = 0;
+        this.teams.green.score = 0;
+        this.teams.blue.score = 0;
+        this.teams.yellow.score = 0;
+
         for(const player of this.players) {
             player.health = 3;
 
@@ -40,6 +66,12 @@ export default class RoomFreezeGame {
 
                 updateHealth: true,
                 health: player.health
+            }));
+
+            player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                id: randomUUID(),
+                text: `The game of Freeze has started, eliminate the enemy teams to win!`,
+                imageUrl: "/assets/widgets/freeze/team_red.png"
             }));
         }
 
@@ -53,6 +85,10 @@ export default class RoomFreezeGame {
 
         for(const furniture of this.getAllExitFurniture()) {
             await furniture.setAnimation(1);
+        }
+
+        for(const furniture of this.getAllCounterFurniture()) {
+            await (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(0);
         }
     }
 
@@ -72,13 +108,15 @@ export default class RoomFreezeGame {
         this.paused = false;
     }
 
-    public async endGame() {
+    public async endGame(reason: "counter" | "eliminations") {
         if(!this.started) {
             return;
         }
         
         this.started = false;
         this.paused = false;
+
+        const winnerTeam = this.getTeamWithMostScore();
 
         for(const player of this.players) {
             this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
@@ -87,6 +125,21 @@ export default class RoomFreezeGame {
                 updateHealth: true,
                 health: null
             }));
+
+            if(reason === "counter") {
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `The game of Freeze has ran out of time, ${(winnerTeam)?(`the ${winnerTeam} team won the game with ${this.teams[winnerTeam].score} score`):("no team managed to snatch the victory")}!`,
+                    imageUrl: "/assets/widgets/freeze/team_red.png"
+                }));
+            }
+            else if(reason === "eliminations") {
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `${(winnerTeam)?(`The ${winnerTeam} team won the game of Freeze with ${this.teams[winnerTeam].score} score`):("No team managed to snatch the victory")}!`,
+                    imageUrl: "/assets/widgets/freeze/team_red.png"
+                }));
+            }
         }
 
         for(const player of this.getFrozenPlayers()) {
@@ -112,7 +165,13 @@ export default class RoomFreezeGame {
                         player.roomUser.removeAction("AvatarEffect");
                         player.roomUser.addAction("AvatarEffect.4", 1000);
 
-                        player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position))
+                        player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
+                        
+                        player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                            id: randomUUID(),
+                            text: `You lost all your lives and were eliminated from the round!`,
+                            imageUrl: "/assets/widgets/freeze/exit.png"
+                        }));
                     }
                 }
             }
@@ -129,6 +188,12 @@ export default class RoomFreezeGame {
         this.updateGateFurniture(team);
 
         roomUser.addAction(this.getTeamAvatarEffect(team));
+
+        roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+            id: randomUUID(),
+            text: `You have joined the ${team} team!`,
+            imageUrl: "/assets/widgets/freeze/team_red.png"
+        }));
     }
 
     public getPlayer(roomUser: RoomUser) {
@@ -146,9 +211,15 @@ export default class RoomFreezeGame {
             this.players.splice(this.players.indexOf(player), 1);
 
             this.updateGateFurniture(player.team);
-        }
+            
+            roomUser.removeAction("AvatarEffect");
 
-        roomUser.removeAction("AvatarEffect");
+            const uniqueTeamsLeft = [...new Set(this.players.map((player) => player.team))];
+
+            if(uniqueTeamsLeft.length <= 1) {
+                this.endGame("eliminations");
+            }
+        }
     }
 
     public getTeamPlayers(team: RoomFreezeGameTeam) {
@@ -159,7 +230,7 @@ export default class RoomFreezeGame {
         return this.players.filter((player) => player.roomUser.path.frozen);
     }
 
-    public freezePlayer(player: RoomFreezeGamePlayer) {
+    public freezePlayer(player: RoomFreezeGamePlayer, triggerPlayer: RoomFreezeGamePlayer) {
         if(player.roomUser.hasAction("AvatarEffect.12")) {
             return;
         }
@@ -178,6 +249,23 @@ export default class RoomFreezeGame {
                 updateHealth: true,
                 health: (player.health > 0)?(player.health):(undefined)
             }));
+        }
+
+        player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+            id: randomUUID(),
+            text: `You got hit by ${(player.roomUser.user.model.id === triggerPlayer.roomUser.user.model.id)?("your own"):(triggerPlayer.roomUser.user.model.name + "'s")} snowball!`,
+            imageUrl: "/assets/widgets/freeze/team_red_frozen.png"
+        }));
+
+        if(player.team !== triggerPlayer.team) {
+            this.teams[triggerPlayer.team].score++;
+        }
+        else {
+            this.teams[triggerPlayer.team].score--;
+        }
+
+        for(const furniture of this.getCounterFurniture(triggerPlayer.team)) {
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[triggerPlayer.team].score);
         }
     }
 
@@ -219,6 +307,14 @@ export default class RoomFreezeGame {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeBlockLogic);
     }
 
+    private getAllCounterFurniture() {
+        return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeCounterLogic);
+    }
+
+    private getCounterFurniture(team: RoomFreezeGameTeam) {
+        return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeCounterLogic && furniture.logic.team === team);
+    }
+
     private getTeamAvatarEffect(team: RoomFreezeGameTeam) {
         switch(team) {
             case "red":
@@ -233,5 +329,31 @@ export default class RoomFreezeGame {
             case "yellow":
                 return "AvatarEffect.43";
         }
+    }
+
+    private getTeamWithMostScore() {
+        let leadingTeam: RoomFreezeGameTeam | null = null;
+
+        for(const team of Object.keys(this.teams)) {
+            if(leadingTeam === null) {
+                if(this.getTeamPlayers(team as RoomFreezeGameTeam).length > 0) {
+                    leadingTeam = team as RoomFreezeGameTeam;
+                }
+
+                continue;
+            }
+
+            if(this.teams[team as RoomFreezeGameTeam].score === this.teams[leadingTeam].score) {
+                if(this.getTeamPlayers(team as RoomFreezeGameTeam).length > this.getTeamPlayers(leadingTeam).length) {
+                    leadingTeam = team as RoomFreezeGameTeam;
+                }
+            }
+
+            if(this.teams[team as RoomFreezeGameTeam].score > this.teams[leadingTeam].score) {
+                leadingTeam = team as RoomFreezeGameTeam;
+            }
+        }
+
+        return leadingTeam;
     }
 }
