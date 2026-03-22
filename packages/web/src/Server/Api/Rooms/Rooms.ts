@@ -5,28 +5,30 @@ import { UserModel } from "../../Models/Users/UserModel";
 const router = Router();
 
 router.post("/", async (req, res) => {
-    let limit = req.body.limit;
+    let ownerId = req.body.ownerId;
 
-    if (!limit || isNaN(parseInt(limit)) || parseInt(limit) > 50)
-        limit = 5;
+    if (!ownerId || typeof ownerId !== "string") {
+        return res.json({
+            error: "Invalid ownerId"
+        })
+    }
 
-    const hotRooms = await RoomModel.findAll({
+    const roomsData = await RoomModel.findAll({
         where: {
-            lock: "open"
+            ownerId
         },
-        order: [['currentUsers', 'DESC']],
-        limit: parseInt(limit),
+        order: [['createdAt', 'DESC']],
         include: [{ model: UserModel, as: "owner" }]
     });
 
     let rooms: any = [];
 
-    hotRooms.forEach((room) => {
+    roomsData.forEach((room) => {
         rooms.push({
             id: room.id,
             type: room.type,
             name: room.name,
-            description: room.description,            
+            description: room.description,
             owner: room.owner ? {
                 id: room.owner.id,
                 name: room.owner.name

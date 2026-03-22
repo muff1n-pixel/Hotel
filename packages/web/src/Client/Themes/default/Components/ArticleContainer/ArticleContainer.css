@@ -138,7 +138,7 @@
             margin: 0;
             margin-left: auto;
             padding: 10px;
-            color: #e7570f;
+            color: var(--orange);
             opacity: 0.8;
             text-decoration: underline;
             background: none;

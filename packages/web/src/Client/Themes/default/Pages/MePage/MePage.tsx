@@ -23,10 +23,6 @@ const MePage = () => {
             <div className='grid'>
                 <div className='grid_row'>
                     <MyUser />
-
-                    <Box title={"Title Box"}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim sagittis malesuada. Morbi sapien nibh, placerat et tellus eget, vestibulum efficitur magna. Etiam est sem, congue sit amet egestas at, imperdiet ac ex. Pellentesque sit amet lectus ut nisl porttitor lobortis. Pellentesque sit amet pharetra erat.
-                    </Box>
                 </div>
 
                 <div className='grid_row'>

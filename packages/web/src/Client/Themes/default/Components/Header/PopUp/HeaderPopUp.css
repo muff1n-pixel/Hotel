@@ -1,0 +1,151 @@
+.headerPopUpContent {
+    .title {
+        padding: 5px;
+        text-align: center;
+        color: var(--orange);
+        border-bottom: 1px dashed #777;
+    }
+
+    .data {
+        .loading {
+            padding: 10px;
+        }
+
+        .row {
+            padding: 10px;
+            transition-duration: 0.5s;
+            display: flex;
+            align-items: center;
+        }
+
+        .row.room {
+            .joinRoom {
+                margin-left: auto;
+                transition-duration: 0.5s;
+                display: none;
+                height: 15px;
+            }
+
+            span {
+                width: calc(100% - 20px);
+                word-break: break-all;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -moz-box-orient: vertical;
+                -ms-box-orient: vertical;
+                box-orient: vertical;
+                -webkit-line-clamp: 1;
+                -moz-line-clamp: 1;
+                -ms-line-clamp: 1;
+                line-clamp: 1;
+                overflow: hidden;
+            }
+        }
+
+        .row.user {
+            .avatar {
+                width: 60px;
+                height: 40px;
+                margin-right: 10px;
+                background-position: center calc(100% + 50px);
+            }
+
+            .userData {
+                width: 100%;
+
+                .username {
+                    display: flex;
+                    align-items: center;
+                    font-weight: bold;
+
+                    span {
+                        word-break: break-all;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -moz-box-orient: vertical;
+                        -ms-box-orient: vertical;
+                        box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        -moz-line-clamp: 1;
+                        -ms-line-clamp: 1;
+                        line-clamp: 1;
+                        overflow: hidden;
+                    }
+
+                    img {
+                        margin-left: 5px;
+                        margin-bottom: 5px;
+                    }
+                }
+
+                .motto {
+                    opacity: 0.7;
+                    word-break: break-all;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -moz-box-orient: vertical;
+                    -ms-box-orient: vertical;
+                    box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    -moz-line-clamp: 1;
+                    -ms-line-clamp: 1;
+                    line-clamp: 1;
+                    overflow: hidden;
+                }
+            }
+        }
+
+        .row:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .row:hover {
+            background-color: rgba(0, 0, 0, 0.15) !important;
+            cursor: pointer;
+
+            .joinRoom {
+                display: block;
+            }
+        }
+
+        .pagination {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+
+            .count {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+
+                span {
+                    font-weight: bold;
+                }
+            }
+
+            .back {
+                margin-right: auto;
+                transform: scaleX(-1);
+            }
+
+            .next {
+                margin-left: auto;
+            }
+
+            button {
+                background: transparent;
+                width: 28px;
+                height: 28px;
+                border: none;
+                background-image: url('../../../Images/icons/medium/circle_arrow.gif');
+                transition-duration: 0.5s;
+            }
+
+            button:hover {
+                cursor: pointer;
+                background-image: url('../../../Images/icons/medium/circle_arrow_active.gif');
+            }
+        }
+    }
+}

@@ -2,9 +2,10 @@ import './Header.css'
 import Logo from '../../Images/logo.gif'
 import Button from '../Button/Button';
 import { matchPath, NavLink, useLocation, useNavigate } from 'react-router';
-import { use, useContext, useEffect, useState } from 'react';
+import { use, useContext, useEffect, useRef, useState } from 'react';
 import { ThemeContext } from '../../ThemeProvider';
 import { useCookies } from 'react-cookie';
+import HeaderPopUp from './PopUp/HeaderPopUp';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -12,6 +13,28 @@ const Header = () => {
     const [usersOnlines, setUsersOnlines] = useState<number>(0);
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+
+    const popUpNavigationRef = useRef<HTMLUListElement | null>(null);
+    const popUpNavigation = ['My Friends', 'My Groups', 'My Rooms'];
+    const [activeItem, setActiveItem] = useState(null);
+
+    const handleClick = (item) => {
+        setActiveItem(activeItem === item ? null : item);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popUpNavigationRef.current && !popUpNavigationRef.current.contains(event.target)) {
+                setActiveItem(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const fetchOnlines = () => {
         fetch("/api/hotel/information", {
@@ -127,8 +150,28 @@ const Header = () => {
                     <div className='content'>
                         <div className='logo' onClick={() => navigate("/me")}><img src={Logo} alt="Logo" /></div>
 
-                        <div className='alert_message'>
-                            <div className='message'><span>Hey:</span> Welcome on Pixel63 project!</div>
+                        <div className='headerPopUp'>
+                            {currentUser ?
+                                <ul ref={popUpNavigationRef}>
+                                    {popUpNavigation.map((item) => {
+                                        return (
+                                            <li key={item}>
+                                                <div className={activeItem === item ? "item active" : "item"} onClick={() => handleClick(item)}>
+                                                    {item} <span></span>
+                                                </div>
+
+                                                {activeItem === item && (
+                                                    <div className="dropdown">
+                                                        <HeaderPopUp name={item} />
+                                                    </div>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                                :
+                                <div className='message'><span>Hey:</span> Welcome on Pixel63 project!</div>
+                            }
 
                             <div className='navigation'>
                                 {currentUser !== null ?

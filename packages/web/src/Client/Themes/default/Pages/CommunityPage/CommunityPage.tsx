@@ -8,7 +8,7 @@ type UserOnline = {
     id: string;
     name: string;
     motto: string;
-    figureConfiguration: string;
+    figureConfiguration: object;
 }
 
 const CommunityPage = () => {

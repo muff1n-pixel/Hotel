@@ -43,9 +43,10 @@
 
             .owner {
                 font-size: 12px;
-                color: #e7570f;
+                color: var(--orange);
 
                 span {
+                    font-size: 11px;
                     opacity: 0.6;
                     color: #333;
                 }
