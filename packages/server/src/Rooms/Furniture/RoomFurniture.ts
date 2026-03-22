@@ -147,15 +147,35 @@ export default class RoomFurniture<T = unknown> {
                 position.row -= offset;
                 break;
 
+            case 1:
+                position.row -= offset;
+                position.column += offset;
+                break;
+
             case 2:
+                position.column += offset;
+                break;
+
+            case 3:
+                position.row += offset;
                 position.column += offset;
                 break;
             
             case 4:
                 position.row += offset;
                 break;
+
+            case 5:
+                position.row += offset;
+                position.column -= offset;
+                break;
             
             case 6:
+                position.column -= offset;
+                break;
+
+            case 7:
+                position.row -= offset;
                 position.column -= offset;
                 break;
         }

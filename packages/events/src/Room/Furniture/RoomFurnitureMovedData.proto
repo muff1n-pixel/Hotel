@@ -5,4 +5,5 @@ import "Room/RoomPositionData.proto";
 message RoomFurnitureMovedData {
     string id = 1;
     RoomPositionData position = 2;
+    optional uint32 duration = 3;
 }

@@ -31,6 +31,7 @@ import RoomFurnitureIceTagFieldLogic from "./Logic/RoomFurnitureIceTagFieldLogic
 import RoomFurnitureBunnyRunFieldLogic from "./Logic/RoomFurnitureBunnyRunFieldLogic";
 import RoomFurnitureIceTagPoleLogic from "./Logic/RoomFurnitureIceTagPoleLogic";
 import RoomFurnitureBunnyRunPoleLogic from "./Logic/RoomFurnitureBunnyRunPoleLogic";
+import RoomFurnitureFootballLogic from "./Logic/RoomFurnitureFootballLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -68,6 +69,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "icetag_pole":
                 return new RoomFurnitureIceTagPoleLogic(roomFurniture);
+
+            case "football":
+                return new RoomFurnitureFootballLogic(roomFurniture);
 
             case "bunnyrun_field":
                 return new RoomFurnitureBunnyRunFieldLogic(roomFurniture);

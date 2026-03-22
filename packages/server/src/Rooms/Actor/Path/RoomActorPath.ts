@@ -265,4 +265,62 @@ export default class RoomActorPath {
 
         return 0;
     }
+
+    public getRelativePositionFromDirection(): RoomPositionOffsetData {
+        switch(this.actor.direction) {
+            case 1: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: -1
+                });
+            }
+
+            case 2: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: 0
+                });
+            }
+
+            case 3: {
+                return RoomPositionOffsetData.create({
+                    row: -1,
+                    column: 1
+                });
+            }
+
+            case 4: {
+                return RoomPositionOffsetData.create({
+                    row: 0,
+                    column: 1
+                });
+            }
+
+            case 5: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: 1
+                });
+            }
+
+            case 6: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: 0
+                });
+            }
+
+            case 7: {
+                return RoomPositionOffsetData.create({
+                    row: 1,
+                    column: -1
+                });
+            }
+        }
+
+        return RoomPositionOffsetData.create({
+            row: 0,
+            column: 0
+        });
+    }
 }

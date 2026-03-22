@@ -8,7 +8,7 @@ import { initializeDevelopmentData } from '../Database/Development/DatabaseDevel
 import { startServer } from '..';
 import StreamZip from 'node-stream-zip';
 import { Readable } from 'stream';
-import {sendLog} from "@shared/Logger/Logger";
+import {sendLog} from "@shared/Logger/LoggerEx";
 
 export default class InitializerManager {
     progressCount: number;
