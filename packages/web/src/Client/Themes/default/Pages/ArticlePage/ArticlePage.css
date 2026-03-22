@@ -231,6 +231,10 @@
             background-color: var(--green);
         }
 
+        textarea {
+            font-family: "Ubuntu-C" !important;
+        }
+
         textarea,
         button {
             width: 100%;

@@ -54,6 +54,10 @@
             position: relative;
             white-space: pre-line;
 
+            .data {
+                font-family: "Ubuntu-C";
+            }
+
             .footer {
                 border-top: 1px solid rgba(0, 0, 0, .2);
                 margin-top: 10px;

@@ -76,7 +76,7 @@ const ArticleComment = (props: ArticleCommentProps) => {
 
             <div className='comment_container'>
                 <div className="content">
-                    {props.content}
+                    <div className='data'>{props.content}</div>
                     <div className="footer">
                         <div className="date">{TimeAgo(props.createdAt)}</div>
                         <div className="infos">
