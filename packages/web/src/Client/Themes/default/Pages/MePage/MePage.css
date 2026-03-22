@@ -137,15 +137,20 @@
 
             a {
                 color: #FFF;
+                text-decoration: none;
             }
 
             a:hover {
-                font-weight: bold;
+                text-decoration: underline;
             }
         }
 
         .row.small {
             font-size: 11px;
+        }
+
+        .row.medium {
+            font-size: 13px;
         }
 
         .row:last-child {

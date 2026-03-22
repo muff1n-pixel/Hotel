@@ -1,35 +1,19 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import './MePage.css';
 import { ThemeContext } from '../../ThemeProvider';
-import { useLocation, useNavigate } from 'react-router';
-import Button from '../../Components/Button';
-import creditIcon from '../../Images/me/creditIcon.png'
-import ducketsIcon from '../../Images/me/duckets.png';
-import keyIcon from '../../Images/me/key.gif'
-import clockIcon from '../../Images/me/clock.gif'
-import discordIcon from '../../Images/me/discord.png'
-import diamondsIcon from '../../Images/me/diamonds.png'
+import { useNavigate } from 'react-router';
 import ArticlesContainer from '../../Components/ArticleContainer/ArticleContainer';
-import UnknowUserImage from '../../Images/unknow_user.gif';
-import AvatarImager from '../../../../Utils/AvatarImager/AvatarImager';
 import HotRooms from '../../Components/HotRooms/HotRooms';
+import MyUser from '../../Components/Me/MyUser/MyUser';
 
 const MePage = () => {
     const navigate = useNavigate();
-
-    const [myAvatar, setMyAvatar] = useState<string>(UnknowUserImage);
 
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
 
     useEffect(() => {
         if (!currentUser) {
             navigate("/");
-        } else {
-            AvatarImager(currentUser.figureConfiguration).then((avatarData: Base64URLString) => {
-                setMyAvatar(avatarData);
-            }).catch((e: any) => {
-                console.log("Failed to load avatar image:", e);
-            });
         }
     }, [currentUser, navigate]);
 
@@ -37,50 +21,7 @@ const MePage = () => {
         <div className='me_page resize'>
             <div className='grid'>
                 <div className='grid_row'>
-                    <div className='my_user'>
-                        <div className='hotel_view'>
-                            <div className='enter_button'>
-                                <div className='bg'></div>
-                                <Button color='green' size='medium' onClick={() => window.open("/game", "_blank", "noopener,noreferrer")}>Enter Hotel <div className='arrow'></div></Button>
-                            </div>
-                        </div>
-                        <div className='my_data'>
-                            <div className='my_avatar'>
-                                <div className='avatar'>
-                                    <div className='avatar_img' style={{ backgroundImage: `url(${myAvatar})` }}></div>
-                                </div>
-
-                                <div className='motto'><span>{currentUser?.name}: </span> {currentUser?.motto}</div>
-                            </div>
-
-                            <div className='bank'>
-                                <div className='row'><img src={creditIcon} alt="Credits Icon" /> <span>{currentUser?.credits}</span> Credits</div>
-                                <div className='row'><img src={ducketsIcon} alt="Duckets Icon" /> <span>{currentUser?.duckets}</span> Duckets</div>
-                                <div className='row'><img src={diamondsIcon} alt="Diamonds Icon" /> <span>{currentUser?.diamonds}</span> Diamonds</div>
-                            </div>
-                        </div>
-
-                        <div className='row'>
-                            <img src={keyIcon} alt="Key Icon" />
-                            <div className='description'>
-                                <h2>Hey {currentUser?.name}, safety first!</h2>
-                                <p>Do not share any of your personal data with anyone on our game, you never know who you might encounter!</p>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <img src={discordIcon} alt="Discord Icon" />
-                            <div className='description'>
-                                <h2>Join our community!</h2>
-                                <p>Be part of the adventure and join us by clicking <a href="/discord" target='_blank'>here</a>!</p>
-                            </div>
-                        </div>
-                        <div className='row small'>
-                            <img src={clockIcon} alt="Clock Icon" />
-                            <div className='description'>
-                                <p>Last signed in: {currentUser?.lastLogin ? (new Date(currentUser.lastLogin).toLocaleString()).replace(" ", " at ") : "Never"}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <MyUser />
 
                     <div className='box'>
                         <div className='title'>Title Box</div>

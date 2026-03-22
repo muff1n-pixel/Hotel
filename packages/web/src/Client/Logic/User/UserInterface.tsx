@@ -1,14 +1,15 @@
 export interface UserInterface {
     id: string;
     name: string;
-    email: string;
+    email: string | null;
     lastLogin: Date | null;
-    credits: number,
-    diamonds: number,
-    duckets: number,
-    avatar: string;
+    credits: number;
+    diamonds: number;
+    duckets: number;
     motto: string;
-    figureConfiguration: string;
+    online: boolean;
+    figureConfiguration: object;
+    friends: Array<UserInterface>;
 
     preferences: {
         allowFriendsRequest: boolean;

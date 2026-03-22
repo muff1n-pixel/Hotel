@@ -20,11 +20,11 @@
             }
 
             .right {
-                background: transparent url('../../Images/safety/way/right.gif') center left no-repeat;
+                background: transparent url('../../Images/icons/small/check.gif') center left no-repeat;
             }
 
             .wrong {
-                background: transparent url('../../Images/safety/way/wrong.gif') center left no-repeat;
+                background: transparent url('../../Images/icons/small/cross.gif') center left no-repeat;
             }
         }
     }

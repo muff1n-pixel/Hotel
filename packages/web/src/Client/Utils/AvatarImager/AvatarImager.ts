@@ -4,7 +4,7 @@
 
 import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
 
-const AvatarImager = (figureConfiguration: string, direction: number = 2, actions: string[] = [], frame: number = 0, headOnly: boolean = false): Promise<Base64URLString> => {
+const AvatarImager = (figureConfiguration: object, direction: number = 2, actions: string[] = [], frame: number = 0, headOnly: boolean = false): Promise<Base64URLString> => {
     return new Promise((resolve, reject) => {
         FigureAssets.loadAssets().then(() => {
             const figure = new Figure(figureConfiguration, direction, actions, frame, headOnly);
