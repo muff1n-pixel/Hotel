@@ -5,6 +5,9 @@ import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomPet from "../../Pets/RoomPet";
 
 export default class RoomActorPath {
+    public frozen: boolean = false;
+    public frozenAt: number = 0;
+
     public path?: RoomPositionOffsetData[] | undefined;
     public walkThroughFurniture?: boolean | undefined;
     public pathOnFinish: (() => void) | undefined;
@@ -16,6 +19,12 @@ export default class RoomActorPath {
 
     public async handleActionsInterval() {
         if(this.path === undefined) {
+            return;
+        }
+
+        if(this.frozen) {
+            await this.finishPath();
+
             return;
         }
 
@@ -322,5 +331,17 @@ export default class RoomActorPath {
             row: 0,
             column: 0
         });
+    }
+
+    public setFrozen(frozen: boolean) {
+        if(this.frozen === frozen) {
+            return;
+        }
+
+        this.frozen = frozen;
+
+        if(frozen) {
+            this.frozenAt = performance.now();
+        }
     }
 }

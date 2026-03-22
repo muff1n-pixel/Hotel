@@ -62,10 +62,12 @@ export default class RoomFurniture<T = unknown> {
             roomId: null
         });
 
-        const user = game.getUserById(this.model.user.id);
+        if(this.model.user) {
+            const user = game.getUserById(this.model.user.id);
 
-        if(user) {
-            user.getInventory().addFurniture(this.model);
+            if(user) {
+                user.getInventory().addFurniture(this.model);
+            }
         }
     }
 

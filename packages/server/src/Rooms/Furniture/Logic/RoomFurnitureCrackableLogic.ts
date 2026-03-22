@@ -66,22 +66,24 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
             
             this.roomFurniture.room.furnitures.splice(this.roomFurniture.room.furnitures.indexOf(this.roomFurniture), 1);
 
-            const userFurniture = await UserFurnitureModel.create({
-                id: randomUUID(),
-                position: this.roomFurniture.model.position,
-                direction: null,
-                animation: 0,
-                color: null,
-                data: null,
-                furnitureId: reward.furniture.id,
-                userId: this.roomFurniture.model.user.id,
-                roomId: this.roomFurniture.room.model.id,
-            });
+            if(this.roomFurniture.model.user) {
+                const userFurniture = await UserFurnitureModel.create({
+                    id: randomUUID(),
+                    position: this.roomFurniture.model.position,
+                    direction: null,
+                    animation: 0,
+                    color: null,
+                    data: null,
+                    furnitureId: reward.furniture.id,
+                    userId: this.roomFurniture.model.user.id,
+                    roomId: this.roomFurniture.room.model.id,
+                });
 
-            userFurniture.user = this.roomFurniture.model.user;
-            userFurniture.furniture = reward.furniture;
+                userFurniture.user = this.roomFurniture.model.user;
+                userFurniture.furniture = reward.furniture;
 
-            RoomFurniture.place(this.roomFurniture.room, userFurniture, this.roomFurniture.model.position, null);
+                RoomFurniture.place(this.roomFurniture.room, userFurniture, this.roomFurniture.model.position, null);
+            }
 
             await new Promise((resolve) => {
                 setTimeout(resolve, 500);

@@ -59,7 +59,16 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             this.roomFurniture.room.freezeGame.startGame();
         }
         else {
-            this.paused = !this.paused;
+            if(this.paused) {
+                this.paused = false;
+
+                this.roomFurniture.room.freezeGame.resumeGame();
+            }
+            else {
+                this.paused = true;
+
+                this.roomFurniture.room.freezeGame.pauseGame();
+            }
         }
     }
 

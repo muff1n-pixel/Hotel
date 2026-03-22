@@ -19,8 +19,8 @@ export class UserFurnitureModel extends Model {
 
     declare room: NonAttribute<RoomModel | null>;
 
-    declare user: NonAttribute<UserModel>;
-    declare userId: NonAttribute<string>;
+    declare user?: NonAttribute<UserModel>;
+    declare userId?: NonAttribute<string>;
 
     declare furniture: NonAttribute<FurnitureModel>;
     declare furnitureId: NonAttribute<string>;
@@ -94,7 +94,8 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
 
     UserFurnitureModel.belongsTo(UserModel, {
         as: "user",
-        foreignKey: "userId"
+        foreignKey: "userId",
+        constraints: false
     });
 
     UserFurnitureModel.belongsTo(RoomModel, {

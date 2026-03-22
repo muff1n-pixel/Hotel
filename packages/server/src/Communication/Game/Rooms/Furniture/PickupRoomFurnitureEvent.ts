@@ -11,7 +11,11 @@ export default class PickupRoomFurnitureEvent implements ProtobuffListener<Picku
         const roomUser = user.room.getRoomUser(user);
         const roomFurniture = user.room.getRoomFurniture(payload.id);
 
-        if(roomFurniture.model.user.id !== user.model.id && !roomUser.hasRights()) {
+        if(!roomFurniture.model.user) {
+            return;
+        }
+
+        if(roomFurniture.model.user?.id !== user.model.id && !roomUser.hasRights()) {
             throw new Error("User is not owner of the furniture and does not have rights.");
         }
 

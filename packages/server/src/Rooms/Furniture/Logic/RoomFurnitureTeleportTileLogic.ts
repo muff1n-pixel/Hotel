@@ -74,6 +74,6 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
         roomUser.path.setPosition({
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
-        }, (targetFurniture.model.direction + 4) % 8);
+        }, ((targetFurniture.model.direction ?? 0) + 4) % 8);
     }
 }

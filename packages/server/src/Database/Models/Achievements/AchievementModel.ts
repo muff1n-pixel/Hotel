@@ -92,6 +92,10 @@ export async function seedAchievements() {
     });
 
     UserFurnitureModel.addHook("afterCreate", async (userFurniture: UserFurnitureModel) => {
+        if(!userFurniture.userId) {
+            return;
+        }
+        
         const furniture = await FurnitureModel.findByPk(userFurniture.furnitureId);
 
         if(furniture?.interactionType === "icetag_field") {

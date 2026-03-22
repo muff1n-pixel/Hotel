@@ -221,6 +221,8 @@ export default class Room {
     private lastMinuteInterval = performance.now();
 
     private async handleActionsInterval() {
+        await this.freezeGame.handleActionsInterval();
+
         if(performance.now() - this.lastMinuteInterval > 60 * 1000) {
             this.lastMinuteInterval = performance.now();
 

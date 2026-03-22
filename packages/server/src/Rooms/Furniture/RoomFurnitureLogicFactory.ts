@@ -34,6 +34,7 @@ import RoomFurnitureFootballLogic from "./Logic/Games/RoomFurnitureFootballLogic
 import RoomFurnitureBunnyRunFieldLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunFieldLogic";
 import RoomFurnitureBunnyRunPoleLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunPoleLogic";
 import RoomFurnitureGameTimerLogic from "./Logic/Games/RoomFurnitureGameTimerLogic";
+import RoomFurnitureFreezeTileLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -96,6 +97,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "freeze_gate_yellow":
                 return new RoomFurnitureFreezeGateLogic(roomFurniture, "yellow");
+
+            case "freeze_tile":
+                return new RoomFurnitureFreezeTileLogic(roomFurniture);
 
             // Game
             case "game_timer":
