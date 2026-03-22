@@ -27,6 +27,7 @@
 
         .infos {
             .name {
+                font-family: "Ubuntu-C";
                 font-weight: bold;
                 word-break: break-all;
                 display: -webkit-box;
