@@ -260,6 +260,12 @@ export default class RoomFreezeGame {
                         updateHealth: true,
                         health: player.health
                     }));
+
+                    player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                        id: randomUUID(),
+                        text: `You picked up an Extra Life power-up!`,
+                        imageUrl: `/assets/widgets/freeze/extra_life.png`
+                    }));
                 }
 
                 break;
@@ -267,6 +273,12 @@ export default class RoomFreezeGame {
 
             case RoomFreezeGamePowerups.BiggerBomb: {
                 player.radius++;
+
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You picked up a Bigger Bomb power-up! Your snowballs now reach 1 tile further!`,
+                    imageUrl: `/assets/widgets/freeze/bigger_bomb.png`
+                }));
 
                 break;
             }
@@ -278,11 +290,23 @@ export default class RoomFreezeGame {
                 player.roomUser.removeAction("AvatarEffect");
                 player.roomUser.addAction(this.getTeamAvatarEffect(player));
 
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You picked up a Shield power-up! You are invincible for 5 seconds!`,
+                    imageUrl: `/assets/widgets/freeze/shield.png`
+                }));
+
                 break;
             }
 
             case RoomFreezeGamePowerups.CrossBlast: {
                 player.crossBlast = true;
+
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You picked up a X-Blast power-up! Your next snowball will cross diagonally!`,
+                    imageUrl: `/assets/widgets/freeze/crossblast.png`
+                }));
 
                 break;
             }
@@ -290,11 +314,24 @@ export default class RoomFreezeGame {
             case RoomFreezeGamePowerups.MorePower: {
                 player.maxSnowballs++;
 
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You picked up a More Power power-up! You can now throw more snowballs simultaneously!`,
+                    imageUrl: `/assets/widgets/freeze/more_bombs.png`
+                }));
+
                 break;
             }
 
             case RoomFreezeGamePowerups.MegaSnowball: {
                 player.megaSnowball = true;
+
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You picked up a Mega Snowball power-up! Your next snowball will affect a larger area of tiles!`,
+                    imageUrl: `/assets/widgets/freeze/mega_bomb.png`
+                }));
+
                 break;
             }
         }
