@@ -362,7 +362,7 @@ export default class RoomFreezeGame {
         player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
             id: randomUUID(),
             text: `You got hit by ${(player.roomUser.user.model.id === triggerPlayer.roomUser.user.model.id)?("your own"):(triggerPlayer.roomUser.user.model.name + "'s")} snowball!`,
-            imageUrl: "/assets/widgets/freeze/team_red_frozen.png"
+            imageUrl: `/assets/widgets/freeze/team_${triggerPlayer.team}_frozen.png`
         }));
 
         if(player.team !== triggerPlayer.team) {
