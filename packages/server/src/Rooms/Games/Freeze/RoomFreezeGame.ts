@@ -487,6 +487,10 @@ export default class RoomFreezeGame {
         let leadingTeam: RoomFreezeGameTeam | null = null;
 
         for(const team of Object.keys(this.teams)) {
+            if(this.teams[team as RoomFreezeGameTeam].score === 0) {
+                continue;
+            }
+            
             if(leadingTeam === null) {
                 if(this.getTeamPlayers(team as RoomFreezeGameTeam).length > 0) {
                     leadingTeam = team as RoomFreezeGameTeam;
