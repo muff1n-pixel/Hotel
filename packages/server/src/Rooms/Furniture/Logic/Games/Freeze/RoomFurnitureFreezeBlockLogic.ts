@@ -20,6 +20,10 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
     }
 
     public async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!this.roomFurniture.room.freezeGame.started || this.roomFurniture.room.freezeGame.paused) {
+            return;
+        }
+        
         const player = this.roomFurniture.room.freezeGame.getPlayer(roomUser);
 
         if(!player) {
