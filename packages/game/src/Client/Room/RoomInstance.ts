@@ -8,11 +8,12 @@ import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomActorIdentifierData, RoomClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
+import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -119,11 +120,13 @@ export default class RoomInstance {
     private registerEventListeners() {
         webSocketClient.addEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.addEventListener("click", this.click.bind(this));
+        this.roomRenderer.cursor?.addEventListener("doubleclick", this.doubleclick.bind(this));
     }
 
     private removeEventListeners() {
         webSocketClient.removeEventListener("LeaveRoomEvent", this.leaveRoomListener);
         this.roomRenderer.cursor?.removeEventListener("click", this.click.bind(this));
+        this.roomRenderer.cursor?.removeEventListener("doubleclick", this.doubleclick.bind(this));
     }
 
     private leaveRoomListener = this.leaveRoom.bind(this);
@@ -177,6 +180,20 @@ export default class RoomInstance {
         if(event.floorEntity?.position && !(event.otherEntity?.item instanceof RoomFigureItem)) {
             webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
                 target: RoomPositionData.fromJSON(event.floorEntity.position)
+            }));
+        }
+    }
+
+    private doubleclick(event: Event) {
+        if(!(event instanceof RoomDoubleClickEvent)) {
+            return;
+        }
+
+        console.log("DOUBLE CLICK", event);
+
+        if(event.floorEntity?.position) {
+            webSocketClient.sendProtobuff(RoomDoubleClickData, RoomDoubleClickData.create({
+                position: RoomPositionData.fromJSON(event.floorEntity.position)
             }));
         }
     }

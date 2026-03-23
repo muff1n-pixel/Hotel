@@ -1,4 +1,4 @@
-import { RoomPositionOffsetData } from "@pixel63/events";
+import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
@@ -10,7 +10,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
         this.roomFurniture.setAnimation(0);
     }
 
-    async use(roomUser: RoomUser): Promise<void> {
+    async handleUserDoubleClickOnTile(roomUser: RoomUser, tile: RoomPositionData): Promise<void> {
         const player = this.roomFurniture.room.freezeGame.getPlayer(roomUser);
 
         if(!player) {
@@ -109,7 +109,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
             player.crossBlast = false;
 
             for(let direction = targetDirection; direction < 8; direction += 2) {
-                for(let offset = 0; offset < player.radius + 1; offset++) {
+                for(let offset = 0; offset < player.radius; offset++) {
                     const offsetPosition = this.roomFurniture.getOffsetPosition(offset + 1, direction);
 
                     const allFurnitureOnPosition = this.roomFurniture.room.getAllFurnitureAtPosition(offsetPosition);

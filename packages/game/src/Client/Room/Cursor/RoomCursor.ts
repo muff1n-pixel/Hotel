@@ -4,6 +4,7 @@ import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { clientInstance, webSocketClient } from "../../..";
 import { PickupRoomFurnitureData, RoomPositionData, UpdateRoomFurnitureData } from "@pixel63/events";
+import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
@@ -55,6 +56,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
+        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
@@ -68,6 +70,8 @@ export default class RoomCursor extends EventTarget {
                 }
             }
         }
+
+        this.dispatchEvent(new RoomDoubleClickEvent(floorEntity, otherEntity));
     }
 
     private render() {

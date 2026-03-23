@@ -1,4 +1,4 @@
-import { UseRoomFurnitureData } from "@pixel63/events";
+import { RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../../Users/RoomUser.js";
 import RoomFurniture from "../../RoomFurniture.js";
 
@@ -15,6 +15,7 @@ export default interface RoomFurnitureLogic {
     handleUserChat?(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult>;
     handleUserWalksOn?(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void>;
     handleUserWalksOff?(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void>;
+    handleUserDoubleClickOnTile?(roomUser: RoomUser, tile: RoomPositionData): Promise<void>;
 
     handleActionsInterval?(): Promise<void>;
     handleMinuteInterval?(): Promise<void>;
