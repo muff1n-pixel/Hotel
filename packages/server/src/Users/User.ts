@@ -9,11 +9,13 @@ import UserPermissions from "./Permissions/UserPermissions.js";
 import { MessageType, UnknownMessage, UserData, UserPermissionsData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
+import UserNotifications from "./Notifications/UserNotifications.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
     public friends: UserFriends;
     public achievements: UserAchievements;
+    public notifications: UserNotifications;
 
     private permissions?: UserPermissions;
     public room?: Room;
@@ -30,6 +32,7 @@ export default class User extends EventEmitter {
 
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this);
+        this.notifications = new UserNotifications(this);
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

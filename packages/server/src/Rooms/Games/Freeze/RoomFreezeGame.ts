@@ -7,6 +7,7 @@ import RoomFurnitureFreezeBlockLogic from "../../Furniture/Logic/Games/Freeze/Ro
 import RoomFurnitureFreezeExitLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
 import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
 import { randomUUID } from "crypto";
+import UserFreezeGameNotifications from "../../../Users/Notifications/Games/UserFreezeGameNotifications";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -175,20 +176,7 @@ export default class RoomFreezeGame {
                 health: null
             }));
 
-            if(reason === "counter") {
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `The game of Freeze has ran out of time, ${(winnerTeam)?(`the ${winnerTeam} team won the game with ${this.teams[winnerTeam].score} score`):("no team managed to snatch the victory")}!`,
-                    imageUrl: `/assets/widgets/freeze/team_${(winnerTeam)?(winnerTeam):("red")}.png`
-                }));
-            }
-            else if(reason === "eliminations") {
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `${(winnerTeam)?(`The ${winnerTeam} team won the game of Freeze with ${this.teams[winnerTeam].score} score`):("No team managed to snatch the victory")}!`,
-                    imageUrl: `/assets/widgets/freeze/team_${(winnerTeam)?(winnerTeam):("red")}.png`
-                }));
-            }
+            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
         }
 
         for(const player of this.getFrozenPlayers()) {
@@ -224,11 +212,7 @@ export default class RoomFreezeGame {
 
                             player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
                             
-                            player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                                id: randomUUID(),
-                                text: `You lost all your lives and were eliminated from the round!`,
-                                imageUrl: "/assets/widgets/freeze/exit.png"
-                            }));
+                            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerEliminated());
                         }
                     }
                 }
@@ -261,11 +245,7 @@ export default class RoomFreezeGame {
 
         roomUser.addAction(this.getTeamAvatarEffect(player));
 
-        roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-            id: randomUUID(),
-            text: `You have joined the ${team} team!`,
-            imageUrl: `/assets/widgets/freeze/team_${team}.png`
-        }));
+        roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
     }
 
     public givePlayerPowerup(player: RoomFreezeGamePlayer, powerup: RoomFreezeGamePowerups) {
@@ -281,11 +261,7 @@ export default class RoomFreezeGame {
                         health: player.health
                     }));
 
-                    player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                        id: randomUUID(),
-                        text: `You picked up an Extra Life power-up!`,
-                        imageUrl: `/assets/widgets/freeze/extra_life.png`
-                    }));
+                    player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
                 }
 
                 break;
@@ -294,11 +270,7 @@ export default class RoomFreezeGame {
             case RoomFreezeGamePowerups.BiggerBomb: {
                 player.radius++;
 
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You picked up a Bigger Bomb power-up! Your snowballs now reach 1 tile further!`,
-                    imageUrl: `/assets/widgets/freeze/bigger_bomb.png`
-                }));
+                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -310,11 +282,7 @@ export default class RoomFreezeGame {
                 player.roomUser.removeAction("AvatarEffect");
                 player.roomUser.addAction(this.getTeamAvatarEffect(player));
 
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You picked up a Shield power-up! You are invincible for 5 seconds!`,
-                    imageUrl: `/assets/widgets/freeze/shield.png`
-                }));
+                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -322,11 +290,7 @@ export default class RoomFreezeGame {
             case RoomFreezeGamePowerups.CrossBlast: {
                 player.crossBlast = true;
 
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You picked up a X-Blast power-up! Your next snowball will cross diagonally!`,
-                    imageUrl: `/assets/widgets/freeze/crossblast.png`
-                }));
+                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -334,11 +298,7 @@ export default class RoomFreezeGame {
             case RoomFreezeGamePowerups.MorePower: {
                 player.maxSnowballs++;
 
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You picked up a More Power power-up! You can now throw more snowballs simultaneously!`,
-                    imageUrl: `/assets/widgets/freeze/more_bombs.png`
-                }));
+                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -346,11 +306,7 @@ export default class RoomFreezeGame {
             case RoomFreezeGamePowerups.MegaSnowball: {
                 player.megaSnowball = true;
 
-                player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You picked up a Mega Snowball power-up! Your next snowball will affect a larger area of tiles!`,
-                    imageUrl: `/assets/widgets/freeze/mega_bomb.png`
-                }));
+                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -416,11 +372,7 @@ export default class RoomFreezeGame {
             }));
         }
 
-        player.roomUser.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-            id: randomUUID(),
-            text: `You got hit by ${(player.roomUser.user.model.id === triggerPlayer.roomUser.user.model.id)?("your own"):(triggerPlayer.roomUser.user.model.name + "'s")} snowball!`,
-            imageUrl: `/assets/widgets/freeze/team_${triggerPlayer.team}_frozen.png`
-        }));
+        player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
 
         if(player.team !== triggerPlayer.team) {
             this.teams[triggerPlayer.team].score++;
