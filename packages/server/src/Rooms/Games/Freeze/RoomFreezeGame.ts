@@ -107,39 +107,33 @@ export default class RoomFreezeGame {
 
         const exitFurniture = this.getExitFurniture();
 
-        for(const furniture of this.getTileFurniture()) {
-            await furniture.setAnimation(0);
+        await Promise.all([
+            ...this.getTileFurniture().map((furniture) => {
+                if(exitFurniture) {
+                    const actors = this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
 
-            if(exitFurniture) {
-                const actors = this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
+                    for(const actor of actors) {
+                        if(actor instanceof RoomUser && !this.getPlayer(actor)) {
+                            actor.removeAction("AvatarEffect");
+                            actor.addAction("AvatarEffect.4", 1000);
 
-                for(const actor of actors) {
-                    if(actor instanceof RoomUser && !this.getPlayer(actor)) {
-                        actor.removeAction("AvatarEffect");
-                        actor.addAction("AvatarEffect.4", 1000);
-
-                        actor.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
+                            actor.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
+                        }
                     }
                 }
-            }
-        }
 
-        for(const furniture of this.getBoxFurniture()) {
-            if(this.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position))) {
-                await (furniture.logic as RoomFurnitureFreezeBlockLogic).handleSnowball(true);
-            }
-            else {
-                await furniture.setAnimation(0);
-            }
-        }
-
-        for(const furniture of this.getAllExitFurniture()) {
-            await furniture.setAnimation(1);
-        }
-
-        for(const furniture of this.getAllCounterFurniture()) {
-            await (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(0);
-        }
+                return furniture.setAnimation(0);
+            }),
+            ...this.getAllExitFurniture().map((furniture) => furniture.setAnimation(1)),
+            ...this.getBoxFurniture().map((furniture) => {
+                if(this.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position))) {
+                    return (furniture.logic as RoomFurnitureFreezeBlockLogic).handleSnowball(true);
+                }
+                
+                return furniture.setAnimation(0);
+            }),
+            ...this.getAllCounterFurniture().map((furniture) => (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(0))
+        ]);
     }
 
     public async pauseGame() {
@@ -183,9 +177,7 @@ export default class RoomFreezeGame {
             this.unfreezePlayer(player);
         }
 
-        for(const furniture of this.getAllExitFurniture()) {
-            await furniture.setAnimation(0);
-        }
+        await Promise.all(this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0)));
     }
 
     public async handleActionsInterval() {

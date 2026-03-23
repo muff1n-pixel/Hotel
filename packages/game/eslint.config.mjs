@@ -11,6 +11,12 @@ export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+        projectService: true,
+      }
+    },
     rules: {
         "@typescript-eslint/no-explicit-any": "off",
         "no-unused-vars": "off",
