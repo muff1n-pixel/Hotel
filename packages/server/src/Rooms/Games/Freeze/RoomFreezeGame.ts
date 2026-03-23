@@ -104,8 +104,23 @@ export default class RoomFreezeGame {
             }));
         }
 
+        const exitFurniture = this.getExitFurniture();
+
         for(const furniture of this.getTileFurniture()) {
             await furniture.setAnimation(0);
+
+            if(exitFurniture) {
+                const actors = this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
+
+                for(const actor of actors) {
+                    if(actor instanceof RoomUser && !this.getPlayer(actor)) {
+                        actor.removeAction("AvatarEffect");
+                        actor.addAction("AvatarEffect.4", 1000);
+
+                        actor.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
+                    }
+                }
+            }
         }
 
         for(const furniture of this.getBoxFurniture()) {
