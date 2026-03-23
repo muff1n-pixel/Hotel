@@ -396,7 +396,7 @@ export default class RoomFreezeGame {
         player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
 
         if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
-            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
+            triggerPlayer.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
 
             triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1).catch(console.error);
         }
