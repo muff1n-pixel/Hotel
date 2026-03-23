@@ -4,10 +4,7 @@ import RoomFurniture from "../../RoomFurniture.js";
 import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
-    private started: boolean = false;
-    private paused: boolean = false;
-
-    private seconds: number = 0;
+    private seconds: number;
 
     constructor(private readonly roomFurniture: RoomFurniture) {
         this.seconds = roomFurniture.model.data?.gameTimer?.seconds ?? 30;
@@ -21,12 +18,11 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         }
 
         if(payload.tag === "reset") {
-            if(this.started && !this.paused) {
+            if(this.roomFurniture.room.freezeGame.started && !this.roomFurniture.room.freezeGame.paused) {
                 return;
             }
 
-            this.started = false;
-            this.paused = false;
+            await this.roomFurniture.room.freezeGame.endGame("counter");
 
             if(this.seconds !== (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30)) {
                 this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
@@ -52,57 +48,47 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(!this.started) {
+        if(!this.roomFurniture.room.freezeGame.started) {
             this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
 
             await this.updateAnimationTags();
-            
-            this.started = true;
-            this.paused = false;
 
-            await this.roomFurniture.room.freezeGame.startGame();
+            await this.roomFurniture.room.freezeGame.startGame(this.seconds);
         }
         else {
-            if(this.paused) {
-                this.paused = false;
-
+            if(this.roomFurniture.room.freezeGame.paused) {
                 await this.roomFurniture.room.freezeGame.resumeGame();
             }
             else {
-                this.paused = true;
-
                 await this.roomFurniture.room.freezeGame.pauseGame();
             }
         }
     }
 
-    private lastAcountsInterval: number = performance.now();
-
     async handleActionsInterval(): Promise<void> {
-        if(!this.started) {
+        if(!this.roomFurniture.room.freezeGame.started) {
+            if(this.seconds === 1) {
+                this.seconds = 0;
+                
+                await this.roomFurniture.setAnimation(0);
+            }
+
             return;
         }
 
-        if(this.paused) {
+        if(this.roomFurniture.room.freezeGame.paused) {
             return;
         }
+        
+        if(this.roomFurniture.room.freezeGame.seconds !== this.seconds) {
+            this.seconds = this.roomFurniture.room.freezeGame.seconds;
 
-        if(performance.now() - this.lastAcountsInterval < 1000) {
-            return;
-        }
-
-        this.lastAcountsInterval = performance.now();
-
-        this.seconds--;
-
-        if(this.seconds === 0) {
-            this.started = false;
-            await this.roomFurniture.setAnimation(0);
-
-            await this.roomFurniture.room.freezeGame.endGame("counter");
-        }
-        else {
-            await this.updateAnimationTags();
+            if(this.seconds === 0) {
+                await this.roomFurniture.setAnimation(0);
+            }
+            else {
+                await this.updateAnimationTags();
+            }
         }
     }
 

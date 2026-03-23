@@ -45,6 +45,7 @@ export enum RoomFreezeGamePowerups {
 export default class RoomFreezeGame {
     public started: boolean = false;
     public paused: boolean = false;
+    public seconds: number = 30;
 
     public players: RoomFreezeGamePlayer[] = [];
 
@@ -67,10 +68,12 @@ export default class RoomFreezeGame {
 
     }
 
-    public async startGame() {
+    public async startGame(seconds: number) {
         if(this.started) {
             return;
         } 
+
+        this.seconds = seconds;
 
         this.started = true;
         this.paused = false;
@@ -180,7 +183,13 @@ export default class RoomFreezeGame {
         await Promise.all(this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0)));
     }
 
+    private lastActionInterval: number = 0;
+
     public async handleActionsInterval() {
+        if(!this.started || this.paused) {
+            return;
+        }
+
         for(const player of this.players) {
             if(player.shield && performance.now() - player.shieldAt >= 5000) {
                 player.shield = false;
@@ -208,6 +217,16 @@ export default class RoomFreezeGame {
                         }
                     }
                 }
+            }
+        }
+
+        if(performance.now() - this.lastActionInterval >= 1000) {
+            this.lastActionInterval = performance.now();
+
+            this.seconds--;
+
+            if(this.seconds === 0) {
+                await this.endGame("counter");
             }
         }
     }
