@@ -23,9 +23,13 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
     }
 
     async handleUserWalksOn(roomUser: RoomUser): Promise<void> {
+        if(!this.roomFurniture.model.data?.teleport?.furnitureId) {
+            return;
+        }
+
         const targetUserFurniture = await UserFurnitureModel.findOne({
             where: {
-                id: this.roomFurniture.model.data
+                id: this.roomFurniture.model.data?.teleport?.furnitureId
             },
             include: [
                 {
