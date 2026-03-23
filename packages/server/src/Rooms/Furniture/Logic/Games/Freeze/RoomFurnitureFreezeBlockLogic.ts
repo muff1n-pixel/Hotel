@@ -11,11 +11,16 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
         return this.roomFurniture.model.animation !== 0;
     }
 
-    public async handleSnowball() {
+    public async handleSnowball(blockedByActor: boolean = false) {
         await this.roomFurniture.setAnimation(101);
 
         setTimeout(async () => {
-            await this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7));
+            if(blockedByActor) {
+                await this.roomFurniture.setAnimation(1);
+            }
+            else {
+                await this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7));
+            }
         }, 500);
     }
 

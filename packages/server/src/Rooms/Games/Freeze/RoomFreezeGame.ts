@@ -109,7 +109,12 @@ export default class RoomFreezeGame {
         }
 
         for(const furniture of this.getBoxFurniture()) {
-            await furniture.setAnimation(0);
+            if(this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position)).length > 0) {
+                await (furniture.logic as RoomFurnitureFreezeBlockLogic).handleSnowball(true);
+            }
+            else {
+                await furniture.setAnimation(0);
+            }
         }
 
         for(const furniture of this.getAllExitFurniture()) {
