@@ -125,7 +125,7 @@ export default class RoomFreezeGame {
         }
 
         for(const furniture of this.getBoxFurniture()) {
-            if(this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position)).length > 0) {
+            if(this.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position))) {
                 await (furniture.logic as RoomFurnitureFreezeBlockLogic).handleSnowball(true);
             }
             else {
