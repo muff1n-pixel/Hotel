@@ -28,7 +28,7 @@ export default class User extends EventEmitter {
             this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
                 permissions: permissions.getPermissionData()
             }));
-        });
+        }).catch(console.error);
 
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this);

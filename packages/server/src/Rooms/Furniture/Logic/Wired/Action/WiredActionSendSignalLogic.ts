@@ -13,7 +13,7 @@ export default class WiredActionSendSignalLogic extends WiredActionLogic {
             return;
         }
 
-        this.setActive();
+        await this.setActive();
 
         for(const logic of this.roomFurniture.room.getFurnitureWithCategory(WiredTriggerReceiveSignalLogic)) {
             await logic.handleWiredSignal(this.roomFurniture, options);

@@ -19,7 +19,7 @@ export default class RoomFurnitureLightingLogic implements RoomFurnitureLogic {
             return;
         }
         
-        this.roomFurniture.setAnimation(payload.animation);
+        await this.roomFurniture.setAnimation(payload.animation);
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
     }

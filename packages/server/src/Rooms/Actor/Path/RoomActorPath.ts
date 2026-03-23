@@ -89,7 +89,7 @@ export default class RoomActorPath {
         this.actor.removeAction("Sit");
 
         this.actor.position = position;
-        this.path!.splice(0, 1);
+        this.path.splice(0, 1);
         
         const relativePosition: RoomPositionData = RoomPositionData.create({
             row: position.row - previousPosition.row,
@@ -104,7 +104,7 @@ export default class RoomActorPath {
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
-        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position));
+        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
 
         this.actor.lastActivity = performance.now();
     }
@@ -182,7 +182,7 @@ export default class RoomActorPath {
         }
     }
 
-    public setPosition(position: RoomPositionData, direction?: number | undefined, usePath?: boolean) {
+    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
             return;
         }
@@ -205,7 +205,7 @@ export default class RoomActorPath {
 
         this.actor.sendPositionEvent(usePath === true);
 
-        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position));
+        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
     }
 
     public async finishPath() {

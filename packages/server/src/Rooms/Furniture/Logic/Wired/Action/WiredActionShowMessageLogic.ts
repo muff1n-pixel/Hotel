@@ -16,7 +16,7 @@ export default class WiredActionShowMessageLogic extends WiredActionLogic {
     }
 
     public async handleActionsInterval(): Promise<void> {
-        super.handleActionsInterval();
+        await super.handleActionsInterval();
         
         if(!this.roomFurniture.model.data?.wiredActionShowMessage) {
             return;
@@ -37,7 +37,7 @@ export default class WiredActionShowMessageLogic extends WiredActionLogic {
                 continue;
             }
 
-            this.setActive();
+            await this.setActive();
 
             roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
                 actor: {

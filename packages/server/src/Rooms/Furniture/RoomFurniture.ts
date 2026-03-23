@@ -66,7 +66,7 @@ export default class RoomFurniture<T = unknown> {
             const user = game.getUserById(this.model.user.id);
 
             if(user) {
-                user.getInventory().addFurniture(this.model);
+                user.getInventory().addFurniture(this.model).catch(console.error);
             }
         }
     }
@@ -211,7 +211,7 @@ export default class RoomFurniture<T = unknown> {
         const wiredTriggerStuffStateLogics = this.room.getFurnitureWithCategory(WiredTriggerStuffStateLogic);
 
         for(const logic of wiredTriggerStuffStateLogics) {
-            logic.handleFurnitureAnimationChange(this);
+            logic.handleFurnitureAnimationChange(this).catch(console.error);
         }
     }
 
@@ -233,7 +233,7 @@ export default class RoomFurniture<T = unknown> {
         const wiredTriggerStuffStateLogics = this.room.getFurnitureWithCategory(WiredTriggerStuffStateLogic);
 
         for(const logic of wiredTriggerStuffStateLogics) {
-            logic.handleFurnitureAnimationChange(this);
+            logic.handleFurnitureAnimationChange(this).catch(console.error);
         }
     }
 

@@ -14,11 +14,8 @@ export default class WiredTriggerReceiveSignalLogic extends WiredTriggerLogic {
             if(signalFurnitureId) {
                 const signalFurniture = this.roomFurniture.room.getRoomFurniture(signalFurnitureId);
 
-                this.setActive();
-                this.handleTrigger({
-                    ...options,
-                    signalFurniture
-                });
+                await this.setActive();
+                this.handleTrigger({ ...options, signalFurniture }).catch(console.error);
             }
         }
     }

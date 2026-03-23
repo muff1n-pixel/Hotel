@@ -45,7 +45,7 @@ export default class UpdateRoomStructureEvent implements ProtobuffListener<Updat
         if(payload.offset) {
             if(payload.offset.row > 0 || payload.offset.column > 0) {
                 for(const furniture of user.room.furnitures) {
-                    furniture.setPosition(RoomPositionData.create({
+                    await furniture.setPosition(RoomPositionData.create({
                         row: furniture.model.position.row + payload.offset.row,
                         column: furniture.model.position.column + payload.offset.column,
                         depth: furniture.model.position.depth

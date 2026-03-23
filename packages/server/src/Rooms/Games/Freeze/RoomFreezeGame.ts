@@ -334,7 +334,7 @@ export default class RoomFreezeGame {
             const uniqueTeamsLeft = [...new Set(this.players.map((player) => player.team))];
 
             if(uniqueTeamsLeft.length <= 1) {
-                this.endGame("eliminations");
+                this.endGame("eliminations").catch(console.error);
             }
         }
     }
@@ -382,7 +382,7 @@ export default class RoomFreezeGame {
         }
 
         for(const furniture of this.getCounterFurniture(triggerPlayer.team)) {
-            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[triggerPlayer.team].score);
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[triggerPlayer.team].score).catch(console.error);
         }
     }
 
@@ -397,7 +397,7 @@ export default class RoomFreezeGame {
         const teamPlayers = this.getTeamPlayers(team);
 
         for(const furniture of this.getGateFurniture(team)) {
-            furniture.setAnimation(teamPlayers.length);
+            furniture.setAnimation(teamPlayers.length).catch(console.error);
         }
     }
 

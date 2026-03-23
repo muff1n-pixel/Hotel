@@ -19,7 +19,7 @@ export default class UpdateRoomBotEvent implements ProtobuffListener<UpdateRoomB
         }
 
         if(payload.position !== undefined) {
-            bot.setPosition(payload.position, false);
+            await bot.setPosition(payload.position, false);
         }
 
         if(payload.figureConfiguration !== undefined) {

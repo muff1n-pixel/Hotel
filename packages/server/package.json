@@ -6,9 +6,11 @@
     "dev": "tsx --watch src/index.ts",
     "init": "tsx src/index.ts --init",
     "migrate": "npx sequelize-cli db:migrate",
-    "migrate:rollback": "npx sequelize-cli db:migrate:undo"
+    "migrate:rollback": "npx sequelize-cli db:migrate:undo",
+    "lint": "npx eslint src/"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/cli-progress": "^3.11.6",
     "@types/ini": "^4.1.1",
     "@types/jsonwebtoken": "^9.0.10",
@@ -16,11 +18,13 @@
     "@types/request": "^2.48.13",
     "@types/ws": "^8.18.1",
     "cli-progress": "^3.12.0",
+    "eslint": "^9.39.2",
     "sequelize-cli": "^6.6.5",
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
     "@pixel63/events": "file:../events",

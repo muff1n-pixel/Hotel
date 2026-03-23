@@ -21,7 +21,7 @@ export default class WiredActionTeleportToLogic extends WiredActionLogic {
                 const randomFurniture = availableFurnitures[Math.floor(Math.random() * availableFurnitures.length)];
 
                 if(randomFurniture) {
-                    this.setActive();
+                    await this.setActive();
                     
                     options.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(randomFurniture.model.position));
                 }

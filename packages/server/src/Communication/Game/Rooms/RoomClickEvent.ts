@@ -19,20 +19,20 @@ export default class RoomClickEvent implements ProtobuffListener<RoomClickData> 
             const targetUser = roomUser.room.getRoomUserById(payload.userId);
 
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickUserLogic)) {
-                logic.handleUserClickUser(roomUser, targetUser);
+                logic.handleUserClickUser(roomUser, targetUser).catch(console.error);
             }
         }
         else if(payload.furnitureId) {
             const roomFurniture = roomUser.room.getRoomFurniture(payload.furnitureId);
 
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickFurniLogic)) {
-                logic.handleUserClicksFurniture(roomUser, roomFurniture);
+                logic.handleUserClicksFurniture(roomUser, roomFurniture).catch(console.error);
             }
         }
         
         if(payload.position) {
             for(const logic of roomUser.room.getFurnitureWithCategory(WiredTriggerUserClickTileLogic)) {
-                logic.handleUserClicksTile(roomUser, payload.position);
+                logic.handleUserClicksTile(roomUser, payload.position).catch(console.error);
             }
         }
     }

@@ -134,7 +134,7 @@ export default class RoomBot implements RoomActor {
         const user = game.getUserById(this.model.user.id);
 
         if(user) {
-            user.getInventory().addBot(this.model);
+            await user.getInventory().addBot(this.model);
         }
     }
 
@@ -169,7 +169,7 @@ export default class RoomBot implements RoomActor {
             await this.handleRelaxed();
         }
 
-        this.path.handleActionsInterval();
+        await this.path.handleActionsInterval();
     }
 
     public async handleAutomaticChat() {

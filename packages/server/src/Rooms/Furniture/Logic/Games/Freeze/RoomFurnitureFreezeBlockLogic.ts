@@ -4,7 +4,7 @@ import RoomUser from "../../../../Users/RoomUser";
 
 export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(0);
+        this.roomFurniture.setAnimation(0).catch(console.error);
     }
 
     public isWalkable(): boolean {
@@ -14,12 +14,12 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
     public async handleSnowball(blockedByActor: boolean = false) {
         await this.roomFurniture.setAnimation(101);
 
-        setTimeout(async () => {
+        setTimeout(() => {
             if(blockedByActor) {
-                await this.roomFurniture.setAnimation(1);
+                this.roomFurniture.setAnimation(1).catch(console.error);
             }
             else {
-                await this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7));
+                this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7)).catch(console.error);
             }
         }, 500);
     }
@@ -40,8 +40,8 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
 
             await this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation);
 
-            setTimeout(async () => {
-                await this.roomFurniture.setAnimation(1);
+            setTimeout(() => {
+                this.roomFurniture.setAnimation(1).catch(console.error);
             }, 500);
         }
     }

@@ -151,7 +151,7 @@ export default class RoomUser implements RoomActor {
             }))
         }
 
-        this.path.handleActionsInterval();
+        await this.path.handleActionsInterval();
     }
 
     private readonly disconnectListener = this.disconnect.bind(this);
@@ -168,10 +168,10 @@ export default class RoomUser implements RoomActor {
 
         this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
-        const furnitureWithUserLeftRoom = this.room.furnitures.filter((furniture) => furniture.logic?.handleUserLeftRoom);
+        const furnitureWithUserLeftRoom = this.room.furnitures.filter((furniture) => furniture.logic?.handleUserLeftRoom !== undefined);
 
         for(const furniture of furnitureWithUserLeftRoom) {
-            furniture.logic?.handleUserLeftRoom?.(this);
+            furniture.logic?.handleUserLeftRoom?.(this).catch(console.error);
         }
 
         delete this.user.room;
@@ -205,7 +205,7 @@ export default class RoomUser implements RoomActor {
         }));
 
         for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
-            logic.handleUserAction(this, action);
+            logic.handleUserAction(this, action).catch(console.error);
         }
 
         // TODO: move this to the client?

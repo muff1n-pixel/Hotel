@@ -5,7 +5,7 @@ import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurnitureFreezeExitLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(0);
+        this.roomFurniture.setAnimation(0).catch(console.error);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {

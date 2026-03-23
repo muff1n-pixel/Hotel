@@ -66,7 +66,7 @@ export default class UserAchievements {
                 
                 this.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
-                    text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level)} achievement!`,
+                    text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
                     badge: BadgeData.fromJSON(badge)
                 }));
             }

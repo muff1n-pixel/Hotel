@@ -10,19 +10,15 @@ export default class WiredTriggerUserClickUserLogic extends WiredTriggerLogic {
     public async handleUserClickUser(roomUser: RoomUser, targetUser: RoomUser): Promise<void> {
         if(this.roomFurniture.model.data?.wiredUserSpecifier?.match === "user") {
             if(targetUser.user.model.name === this.roomFurniture.model.data.wiredUserSpecifier.matchUser) {
-                this.setActive();
+                await this.setActive();
                 
-                this.handleTrigger({
-                    roomUser
-                });
+                this.handleTrigger({ roomUser }).catch(console.error);
             }
         }
         else {
-            this.setActive();
+            await this.setActive();
             
-            this.handleTrigger({
-                roomUser
-            });
+            this.handleTrigger({ roomUser }).catch(console.error);
         }
     }
 }

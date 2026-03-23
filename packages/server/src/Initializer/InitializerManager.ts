@@ -45,17 +45,17 @@ export default class InitializerManager {
             .then(({ option }) => {
                 switch (option) {
                     case 'Download and extract assets': {
-                        this.downloadAndExtractAssets();
+                        this.downloadAndExtractAssets().catch(console.error);
                         break;
                     }
 
                     case 'Setup database': {
-                        this.setupDatabase();
+                        this.setupDatabase().catch(console.error);
                         break;
                     }
 
                     case 'Insert default values in database': {
-                        this.insertDefaultValues();
+                        this.insertDefaultValues().catch(console.error);
                         break;
                     }
 
@@ -67,11 +67,12 @@ export default class InitializerManager {
                     default:
                         break;
                 }
-            });
+            })
+            .catch(console.error);
     }
 
     private startServer(): void {
-        startServer();
+        startServer().catch(console.error);
     }
 
     private async setupDatabase(): Promise<any> {
@@ -80,8 +81,8 @@ export default class InitializerManager {
             sendLog("SUCCESS", "Database setup completed successfully.");
             this.setSelectOptions();
         }
-        catch (e: any) {
-            sendLog("ERROR", "An error occurred while setting up the database: " + e.toString());
+        catch {
+            sendLog("ERROR", "An error occurred while setting up the database");
             this.setSelectOptions();
             return;
         }
@@ -93,8 +94,8 @@ export default class InitializerManager {
             sendLog("SUCCESS", "Default values inserted successfully.");
             this.setSelectOptions();
         }
-        catch (e: any) {
-            sendLog("ERROR", "An error occurred while inserting default values: " + e.toString());
+        catch {
+            sendLog("ERROR", "An error occurred while inserting default values");
             this.setSelectOptions();
             return;
         }
@@ -142,8 +143,8 @@ export default class InitializerManager {
 
         totalBytes = parseInt(contentLength);
 
-        out.on('error', function (err: any) {
-            sendLog("ERROR", "An error occurred while downloading the assets: " + err.message);
+        out.on('error', function (error) {
+            sendLog("ERROR", "An error occurred while downloading the assets");
             instance.resetProgressBar();
             instance.setSelectOptions();
             return;
@@ -158,7 +159,7 @@ export default class InitializerManager {
 
         out.on('finish', function () {
             instance.resetProgressBar();
-            instance.unzipAssets();
+            instance.unzipAssets().catch(console.error);
         });
 
         readable.pipe(out);

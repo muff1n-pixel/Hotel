@@ -7,7 +7,7 @@ import RoomFurnitureFreezeBlockLogic from "./RoomFurnitureFreezeBlockLogic";
 
 export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(0);
+        this.roomFurniture.setAnimation(0).catch(console.error);
     }
 
     async handleUserDoubleClickOnTile(roomUser: RoomUser, tile: RoomPositionData): Promise<void> {
@@ -90,7 +90,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
                             continue;
                         }
                         else if(furniture.logic instanceof RoomFurnitureFreezeBlockLogic && furniture.model.animation === 0) {
-                            furniture.logic.handleSnowball();
+                            furniture.logic.handleSnowball().catch(console.error);
 
                             shouldBreak = true;
 
@@ -131,7 +131,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
                             continue;
                         }
                         else if(furniture.logic instanceof RoomFurnitureFreezeBlockLogic && furniture.model.animation === 0) {
-                            furniture.logic.handleSnowball();
+                            furniture.logic.handleSnowball().catch(console.error);
 
                             shouldBreak = true;
 

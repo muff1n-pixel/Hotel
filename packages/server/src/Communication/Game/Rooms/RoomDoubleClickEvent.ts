@@ -17,7 +17,7 @@ export default class RoomDoubleClickEvent implements ProtobuffListener<RoomDoubl
             const furnitureAtPosition = user.room.getAllFurnitureAtPosition(RoomPositionOffsetData.fromJSON(payload.position));
 
             for(const furniture of furnitureAtPosition) {
-                furniture.logic?.handleUserDoubleClickOnTile?.(roomUser, payload.position);
+                furniture.logic?.handleUserDoubleClickOnTile?.(roomUser, payload.position).catch(console.error);
             }
         }
     }

@@ -20,7 +20,7 @@ export default class RoomInvisibleFurnitureControlLogic implements RoomFurniture
 
         for(const furniture of allControllers) {
             if(furniture.model.animation !== animation) {
-                furniture.setAnimation(animation);
+                await furniture.setAnimation(animation);
             }
         }
 

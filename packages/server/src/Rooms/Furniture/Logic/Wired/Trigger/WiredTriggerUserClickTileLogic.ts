@@ -11,11 +11,9 @@ export default class WiredTriggerUserClickTileLogic extends WiredTriggerLogic {
     public async handleUserClicksTile(roomUser: RoomUser, position: RoomPositionData): Promise<void> {
         if(this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && this.roomFurniture.model.data?.wiredFurnitureSelection.furnitureIds.length) {
             if(this.roomFurniture.model.data.wiredFurnitureSelection.furnitureIds.some((furnitureId) => this.roomFurniture.room.furnitures.find((furniture) => furniture.model.id === furnitureId)?.isPositionInside(RoomPositionOffsetData.fromJSON(position)))) {
-                this.setActive();
+                await this.setActive();
                 
-                this.handleTrigger({
-                    roomUser
-                });
+                this.handleTrigger({ roomUser }).catch(console.error);
             }
         }
     }

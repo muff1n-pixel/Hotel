@@ -21,7 +21,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
             const elapsed = performance.now() - this.lastTriggered;
 
             if(elapsed >= 1500) {
-                this.roomFurniture.setAnimation(0);
+                await this.roomFurniture.setAnimation(0);
             }
         }
     }
@@ -45,8 +45,8 @@ export default class WiredLogic implements RoomFurnitureLogic {
         return furniture.logic;
     }
 
-    public setActive() {
+    public async setActive() {
         this.lastTriggered = performance.now();
-        this.roomFurniture.setAnimation(101);
+        await this.roomFurniture.setAnimation(101);
     }
 }

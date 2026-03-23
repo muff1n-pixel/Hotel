@@ -107,7 +107,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                     continue;
                 }
 
-                furniture.setPosition(nextPosition, false);
+                await furniture.setPosition(nextPosition, false);
                 
                 await furniture.model.save();
 

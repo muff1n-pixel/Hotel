@@ -195,9 +195,11 @@ export default class Room {
 
     public requestActionsFrame() {
         if(this.actionsInterval === undefined) {
-            this.actionsInterval = setInterval(this.handleActionsInterval.bind(this), 500);
+            this.actionsInterval = setInterval(() => {
+                this.handleActionsInterval().catch(console.error);
+            }, 500);
 
-            this.handleActionsInterval();
+            this.handleActionsInterval().catch(console.error);
         }
     }
 
@@ -415,7 +417,7 @@ export default class Room {
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
         for(const logic of wiredTriggerLogic) {
-            logic.handleUserWalksOnFurniture?.(roomUser, roomFurniture);
+            logic.handleUserWalksOnFurniture?.(roomUser, roomFurniture).catch(console.error);
         }
     }
 
@@ -425,7 +427,7 @@ export default class Room {
         const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
         for(const logic of wiredTriggerLogic) {
-            logic.handleUserWalksOffFurniture?.(roomUser, roomFurniture);
+            logic.handleUserWalksOffFurniture?.(roomUser, roomFurniture).catch(console.error);
         }
     }
 
@@ -433,7 +435,7 @@ export default class Room {
         const wiredStateChangedLogic = this.getFurnitureWithCategory(WiredTriggerStateChangedLogic);
 
         for(const logic of wiredStateChangedLogic) {
-            logic.handleUserUsesFurniture(roomUser, roomFurniture);
+            logic.handleUserUsesFurniture(roomUser, roomFurniture).catch(console.error);
         }
     }
 

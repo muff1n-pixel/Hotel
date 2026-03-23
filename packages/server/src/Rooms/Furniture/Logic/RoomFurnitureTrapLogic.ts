@@ -10,7 +10,7 @@ import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(1);
+        this.roomFurniture.setAnimation(1).catch(console.error);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
@@ -33,8 +33,8 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
 
             await this.roomFurniture.setAnimation(100);
 
-            setTimeout(async () => {
-                await this.roomFurniture.setAnimation(1);
+            setTimeout(() => {
+                this.roomFurniture.setAnimation(1).catch(console.error);
             }, 500);
         }
         else if(this.roomFurniture.model.animation === 1) {
@@ -50,8 +50,8 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
 
             await this.roomFurniture.setAnimation(101);
 
-            setTimeout(async () => {
-                await this.roomFurniture.setAnimation(0);
+            setTimeout(() => {
+                this.roomFurniture.setAnimation(0).catch(console.error);
             }, 1000);
         }
     }

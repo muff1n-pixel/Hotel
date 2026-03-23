@@ -22,13 +22,8 @@ export default class CommandHandler extends EventEmitter {
     }
 
     public addCommand<T>(incomingCommandHandler: IncomingCommandHandler): this {
-        return super.addListener(incomingCommandHandler.command, async (roomUser, inputs) => {
-            try {
-                await incomingCommandHandler.handle(roomUser, inputs);
-            }
-            catch(error) {
-                console.error(error);
-            }
+        return super.addListener(incomingCommandHandler.command, (roomUser, inputs) => {
+            incomingCommandHandler.handle(roomUser, inputs).catch(console.error);
         });
     }
 

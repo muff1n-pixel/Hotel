@@ -8,7 +8,7 @@ export default class RoomFurnitureFreezeGateLogic implements RoomFurnitureLogic 
     constructor(private readonly roomFurniture: RoomFurniture, public readonly team: RoomFreezeGameTeam) {
         this.roomFurniture.setAnimation(
             this.roomFurniture.room.freezeGame.getTeamPlayers(this.team).length
-        );
+        ).catch(console.error);
     }
 
     public isWalkable(): boolean {

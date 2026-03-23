@@ -11,17 +11,15 @@ export default class WiredTriggerUserLeavesRoomLogic extends WiredTriggerLogic {
     public async handleUserLeftRoom(roomUser: RoomUser): Promise<void> {
         if(this.roomFurniture.model.data?.wiredUserSpecifier?.match === "user") {
             if(roomUser.user.model.name === this.roomFurniture.model.data.wiredUserSpecifier.matchUser) {
-                this.setActive();
+                await this.setActive();
                 
-                this.handleTrigger({
-                    roomUser
-                });
+                await this.handleTrigger({ roomUser }).catch(console.error);
             }
         }
         else {
-            this.setActive();
+            await this.setActive();
             
-            this.handleTrigger({
+            await this.handleTrigger({
                 roomUser
             });
         }

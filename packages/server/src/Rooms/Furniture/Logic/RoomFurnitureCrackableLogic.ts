@@ -50,7 +50,7 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
         console.log("Clicked " + this.roomFurniture.model.data.crackable.clicks + " timed, required " + crackable.requiredClicks);
 
         if(this.roomFurniture.model.data.crackable.clicks === crackable.requiredClicks) {
-            this.roomFurniture.setAnimation(14);
+            await this.roomFurniture.setAnimation(14);
 
             const reward = await this.getRandomReward(crackable);
 
@@ -82,7 +82,7 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
                 userFurniture.user = this.roomFurniture.model.user;
                 userFurniture.furniture = reward.furniture;
 
-                RoomFurniture.place(this.roomFurniture.room, userFurniture, this.roomFurniture.model.position, null);
+                await RoomFurniture.place(this.roomFurniture.room, userFurniture, this.roomFurniture.model.position, null);
             }
 
             await new Promise((resolve) => {
@@ -100,7 +100,7 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
             const newAnimation = (this.roomFurniture.model.data.crackable.clicks / crackable.requiredClicks) * 13;
 
             if(newAnimation !== this.roomFurniture.model.animation) {
-                this.roomFurniture.setAnimation(newAnimation);
+                await this.roomFurniture.setAnimation(newAnimation);
             }
         }
     }

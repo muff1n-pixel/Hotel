@@ -61,6 +61,6 @@ export default class UpdatePetEvent implements ProtobuffListener<UpdatePetData> 
 
         new GetPetBrowserEvent().handle(user, GetPetBrowserData.create({
             offset: 0
-        }));
+        })).catch(console.error);
     }
 }

@@ -134,7 +134,7 @@ export default class RoomPet implements RoomActor {
         const user = game.getUserById(this.model.user.id);
 
         if(user) {
-            user.getInventory().addPet(this.model);
+            user.getInventory().addPet(this.model).catch(console.error);
         }
     }
 
@@ -162,7 +162,7 @@ export default class RoomPet implements RoomActor {
             await this.handleRelaxed();
         //}
 
-        this.path.handleActionsInterval();
+        this.path.handleActionsInterval().catch(console.error);
     }
 
     private lastMovement: number = 0;

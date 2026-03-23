@@ -119,7 +119,7 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
         const users = this.roomFurniture.room.users.filter((user) => this.roomFurniture.isPositionInside(RoomPositionOffsetData.fromJSON(user.position)));
 
         for(const roomUser of users) {
-            roomUser.user.achievements.addAchievementScore("IceIceBadge", 1);
+            await roomUser.user.achievements.addAchievementScore("IceIceBadge", 1);
         } 
     }
 

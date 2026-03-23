@@ -41,7 +41,7 @@ export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener
 
             await userFurniture.destroy();
 
-            inventory.deleteFurniture(userFurniture);
+            await inventory.deleteFurniture(userFurniture);
         }
         else if(userFurniture.furniture.type === "floor") {
             if(userFurniture.furniture.color === undefined) {
@@ -52,7 +52,7 @@ export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener
 
             await userFurniture.destroy();
 
-            inventory.deleteFurniture(userFurniture);
+            await inventory.deleteFurniture(userFurniture);
         }
         else {
             throw new Error("User furniture is not of room content type.");

@@ -19,7 +19,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
         this.travelingPassing = Boolean(roomUser.path.path && roomUser.path.path.length > 0);
         this.travelingVelocity = (this.travelingPassing)?(2):(6);
 
-        this.moveFurniture();
+        this.moveFurniture().catch(console.error);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
@@ -75,7 +75,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 depth: this.roomFurniture.room.getUpmostDepthAtPosition(nextOffsetPosition, nextFurniture) + 0.0001
             });
 
-            this.roomFurniture.setPosition(position, false);
+            await this.roomFurniture.setPosition(position, false);
                             
             await this.roomFurniture.model.save();
 
@@ -93,7 +93,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             }
             else {
                 this.travelingInterval = setTimeout(() => {
-                    this.moveFurniture();
+                    this.moveFurniture().catch(console.error);
                 }, duration);
             }
         }

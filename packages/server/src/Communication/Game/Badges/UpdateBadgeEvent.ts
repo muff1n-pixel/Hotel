@@ -23,6 +23,6 @@ export default class UpdateBadgeEvent implements ProtobuffListener<UpdateBadgeDa
 
         new GetBadgeBrowserEvent().handle(user, GetBadgeBrowserData.create({
             offset: 0
-        }));
+        })).catch(console.error);
     }
 }

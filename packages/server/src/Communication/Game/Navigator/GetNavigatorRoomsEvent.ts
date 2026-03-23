@@ -29,7 +29,6 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         }
                     ]
                 });
-                (payload.category === "mine")?(user.model.id):(undefined)
             }
             else {
                 roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
@@ -53,7 +52,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                 categories: [
                     {
                         title: "Search result",
-                        rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
+                        rooms: roomModels.map(this.getRoomNavigatorData.bind(this)).toSorted((a, b) => b.users - a.users)
                     }
                 ]
             }))
@@ -93,7 +92,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
                         return {
                             title: rooms[0]?.category.title ?? "",
-                            rooms: rooms.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
+                            rooms: rooms.map(this.getRoomNavigatorData.bind(this)).toSorted((a, b) => b.users - a.users)
                         }
                     })
                 }));
@@ -119,11 +118,11 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     categories: [
                         {
                             title: "Most popular rooms",
-                            rooms: game.roomManager.instances.toSorted((a, b) => b.users.length - a.users.length).filter((room) => room.hasUserVisibility(user.model)).slice(0, 20).map((room) => this.getRoomNavigatorData(room.model))
+                            rooms: game.roomManager.instances.toSorted((a, b) => b.users.length - a.users.length).filter((room) => room.hasUserVisibility(user.model)).slice(0, 20).map((room) => this.getRoomNavigatorData.bind(this)(room.model))
                         },
                         {
                             title: "Recently created rooms",
-                            rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
+                            rooms: roomModels.map(this.getRoomNavigatorData.bind(this)).toSorted((a, b) => b.users - a.users)
                         }
                     ]
                 }));
@@ -151,7 +150,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                     categories: [
                         {
                             title: "My rooms",
-                            rooms: roomModels.map(this.getRoomNavigatorData).toSorted((a, b) => b.users - a.users)
+                            rooms: roomModels.map(this.getRoomNavigatorData.bind(this)).toSorted((a, b) => b.users - a.users)
                         }
                     ]
                 }));

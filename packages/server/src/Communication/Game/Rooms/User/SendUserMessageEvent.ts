@@ -54,7 +54,7 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
 
         let userChatBlocked = false;
 
-        const furnitureWithUserChatLogic = roomUser.room.furnitures.filter(async (furniture) => {
+        const furnitureWithUserChatLogic = roomUser.room.furnitures.filter((furniture) => {
             return furniture.logic?.handleUserChat !== undefined;
         });
 

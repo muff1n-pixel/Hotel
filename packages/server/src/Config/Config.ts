@@ -17,7 +17,7 @@ export type Config = {
     database: Options;
 };
 
-export const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" })) satisfies Config;
+export const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" })) as Config;
 
 module.exports = {
     development: config.database,
