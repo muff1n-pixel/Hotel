@@ -29,13 +29,13 @@ export async function startServer() {
     console.log("Server started");
 }
 
-await (async () => {
+(async () => {
     if (process.argv.some((value) => value === "--init")) {
         const initializerManager = new InitializerManager();
         return initializerManager.init();
     }
 
     await startServer();
-})();
+})().catch(console.error);
 
 export { game };
