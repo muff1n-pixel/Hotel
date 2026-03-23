@@ -60,7 +60,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
             return;
         }
 
-        await this.handleSnowball(player);
+        this.handleSnowball(player);
 
         if(player.megaSnowball) {
             player.megaSnowball = false;
@@ -81,7 +81,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
                     for(const furniture of allFurnitureOnPosition) {
                         if(furniture.logic instanceof RoomFurnitureFreezeTileLogic) {
-                            if(await furniture.logic.handleSnowball(player)) {
+                            if(furniture.logic.handleSnowball(player)) {
                                 shouldBreak = true;
 
                                 break;
@@ -122,7 +122,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
                     for(const furniture of allFurnitureOnPosition) {
                         if(furniture.logic instanceof RoomFurnitureFreezeTileLogic) {
-                            if(await furniture.logic.handleSnowball(player)) {
+                            if(furniture.logic.handleSnowball(player)) {
                                 shouldBreak = true;
 
                                 break;
@@ -150,10 +150,10 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
     private lastSnowballed: number = 0;
 
-    public async handleSnowball(player: RoomFreezeGamePlayer) {
+    public handleSnowball(player: RoomFreezeGamePlayer) {
         this.lastSnowballed = performance.now();
 
-        await this.roomFurniture.setAnimation(101);
+        this.roomFurniture.setAnimation(101).catch(console.error);
 
         const hitPlayer = this.roomFurniture.room.freezeGame.getPlayerAtPosition(this.roomFurniture.model.position);
 

@@ -385,6 +385,10 @@ export default class RoomFreezeGame {
 
         player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
 
+        if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
+            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
+        }
+
         if(player.team !== triggerPlayer.team) {
             if(player.health === 0) {
                 this.teams[triggerPlayer.team].score += 10;

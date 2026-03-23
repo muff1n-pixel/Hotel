@@ -38,11 +38,12 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
         if(this.roomFurniture.model.animation > 1 && this.roomFurniture.model.animation < 8) {
             this.roomFurniture.room.freezeGame.givePlayerPowerup(player, this.roomFurniture.model.animation);
 
-            await this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation);
+            this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation).then(() => {
+                setTimeout(() => {
+                    this.roomFurniture.setAnimation(1).catch(console.error);
+                }, 500);
+            }).catch(console.error);
 
-            setTimeout(() => {
-                this.roomFurniture.setAnimation(1).catch(console.error);
-            }, 500);
         }
     }
 

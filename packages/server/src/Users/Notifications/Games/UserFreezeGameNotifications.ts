@@ -35,6 +35,14 @@ export default class UserFreezeGameNotifications {
             imageUrl: `/assets/widgets/freeze/team_${triggerPlayer.team}_frozen.png`
         });
     }
+
+    public static buildTriggerPlayerHit(triggerPlayer: RoomFreezeGamePlayer) {
+        return WidgetNotificationData.create({
+            id: randomUUID(),
+            text: `You hit ${triggerPlayer.roomUser.user.model.name} with a snowball, good job!`,
+            imageUrl: `/assets/widgets/freeze/team_${triggerPlayer.team}_frozen.png`
+        });
+    }
     
     public static buildPlayerEliminated() {
         return WidgetNotificationData.create({

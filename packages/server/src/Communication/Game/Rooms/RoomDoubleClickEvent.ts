@@ -1,9 +1,6 @@
 import User from "../../../Users/User.js";
-import WiredTriggerUserClickUserLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickUserLogic.js";
-import WiredTriggerUserClickFurniLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickFurniLogic.js";
-import WiredTriggerUserClickTileLogic from "../../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { RoomClickData, RoomDoubleClickData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomDoubleClickData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomDoubleClickEvent implements ProtobuffListener<RoomDoubleClickData> {
     async handle(user: User, payload: RoomDoubleClickData) {
