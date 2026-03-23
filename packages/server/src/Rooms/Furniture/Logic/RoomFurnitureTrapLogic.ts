@@ -16,6 +16,7 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
     }
 
+    private trapActivateAt: number = 0;
     private trapActivatedAt: number = 0;
     private trapDeactivatedAt: number = performance.now();
 
@@ -30,6 +31,7 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
             }
 
             this.trapDeactivatedAt = performance.now();
+            this.trapActivateAt = performance.now() + (Math.random() * 10) * 1000;
 
             await this.roomFurniture.setAnimation(100);
 
@@ -38,11 +40,11 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
             }, 500);
         }
         else if(this.roomFurniture.model.animation === 1) {
-            if(performance.now() - this.trapDeactivatedAt < 10000) {
+            if(performance.now() < this.trapActivateAt) {
                 return;
             }
 
-            if(this.roomFurniture.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position)).length > 0) {
+            if(this.roomFurniture.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position))) {
                 return;
             }
 
