@@ -13,6 +13,10 @@ export default class UserAchievements {
     }
 
     public async addAchievementScore(achievementId: AchievementId, score: number) {
+        if(score <= 0) {
+            return;
+        }
+        
         const achievement = await AchievementModel.findByPk(achievementId);
 
         if(!achievement) {

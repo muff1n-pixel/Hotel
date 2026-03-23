@@ -166,6 +166,12 @@ export default class RoomFreezeGame {
         const winnerTeam = this.getTeamWithMostScore();
 
         for(const player of this.players) {
+            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score).catch(console.error);
+
+            if(player.team === winnerTeam) {
+                player.roomUser.user.achievements.addAchievementScore("FreezeWinner", this.teams[player.team].score).catch(console.error);
+            }
+
             this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
                 id: player.roomUser.user.model.id,
 
@@ -260,6 +266,8 @@ export default class RoomFreezeGame {
     }
 
     public givePlayerPowerup(player: RoomFreezeGamePlayer, powerup: RoomFreezeGamePowerups) {
+        player.roomUser.user.achievements.addAchievementScore("FreezePowerUpper", 1).catch(console.error);
+        
         switch(powerup) {
             case RoomFreezeGamePowerups.ExtraLife: {
                 if(player.health < 5) {
@@ -342,6 +350,8 @@ export default class RoomFreezeGame {
             
             roomUser.removeAction("AvatarEffect");
 
+            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score).catch(console.error);
+
             const uniqueTeamsLeft = [...new Set(this.players.map((player) => player.team))];
 
             if(uniqueTeamsLeft.length <= 1) {
@@ -387,6 +397,8 @@ export default class RoomFreezeGame {
 
         if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
             player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
+
+            triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1).catch(console.error);
         }
 
         if(player.team !== triggerPlayer.team) {

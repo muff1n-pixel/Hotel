@@ -8,7 +8,12 @@ import { game } from "../../..";
 export type AchievementId =
     "BladesOfGlory"
     | "IceIceBadge"
-    | "IceRinkBuilder";
+    | "IceRinkBuilder"
+
+    | "FreezeFighter"
+    | "FreezeWinner"
+    | "FreezePlayer"
+    | "FreezePowerUpper";
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -88,6 +93,46 @@ export async function seedAchievements() {
         badgePrefix: "ACH_TagA",
         levels: [
             10, 20, 30, 45, 60, 80, 100, 125, 150, 170
+        ]
+    });
+    
+    await AchievementModel.upsert({
+        id: "FreezeFighter",
+        name: "Freeze Fighter",
+        description: "For freezing %score% players during games of Freeze.",
+        badgePrefix: "ACH_EsA",
+        levels: [
+            2, 5, 10, 18, 30, 50, 80, 125, 200, 300, 420, 600, 900, 1500, 2500, 3700, 5400, 8000, 12000, 20000
+        ]
+    });
+    
+    await AchievementModel.upsert({
+        id: "FreezeWinner",
+        name: "Freeze Winner",
+        description: "For gaining %score% winner points while playing Freeze.",
+        badgePrefix: "ACH_FreezeWinner",
+        levels: [
+            50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
+        ]
+    });
+    
+    await AchievementModel.upsert({
+        id: "FreezePlayer",
+        name: "Freeze Player",
+        description: "For gaining %score% points through playing Freeze.",
+        badgePrefix: "ACH_FreezePlayer",
+        levels: [
+            50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
+        ]
+    });
+    
+    await AchievementModel.upsert({
+        id: "FreezePowerUpper",
+        name: "Freeze Power-Upper",
+        description: "For collecting %score% power-ups while playing Freeze.",
+        badgePrefix: "ACH_FreezePowerUp",
+        levels: [
+            100, 300, 600, 1000, 1500, 2100, 2900, 3900, 5200, 6800, 8800, 11200, 14100, 17600, 22100, 28100, 36100, 48100, 66100, 96100
         ]
     });
 
