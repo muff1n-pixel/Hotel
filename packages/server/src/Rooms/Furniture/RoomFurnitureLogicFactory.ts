@@ -38,6 +38,7 @@ import RoomFurnitureFreezeTileLogic from "./Logic/Games/Freeze/RoomFurnitureFree
 import RoomFurnitureFreezeBlockLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeBlockLogic";
 import RoomFurnitureFreezeExitLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
 import RoomFurnitureFreezeCounterLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
+import RoomFurnitureTrapLogic from "./Logic/RoomFurnitureTrapLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -69,6 +70,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "fortuna":
                 return new RoomFurnitureFortunaLogic(roomFurniture);
+
+            case "trap":
+                return new RoomFurnitureTrapLogic(roomFurniture);
 
             // Ice Tag
             case "icetag_field":

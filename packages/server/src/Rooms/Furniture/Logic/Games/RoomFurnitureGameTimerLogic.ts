@@ -47,7 +47,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
                 this.updateAnimationTags();
             }
 
-            this.roomFurniture.room.freezeGame.endGame();
+            this.roomFurniture.room.freezeGame.endGame("counter");
 
             return;
         }
@@ -99,7 +99,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             this.started = false;
             this.roomFurniture.setAnimation(0);
 
-            this.roomFurniture.room.freezeGame.endGame();
+            this.roomFurniture.room.freezeGame.endGame("counter");
         }
         else {
             this.updateAnimationTags();
