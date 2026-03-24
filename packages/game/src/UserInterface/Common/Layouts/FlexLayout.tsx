@@ -1,6 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 
 export type FlexLayoutProps = {
+    className?: string;
     direction?: "row" | "column";
     gap?: number;
     align?: string;
@@ -11,9 +12,9 @@ export type FlexLayoutProps = {
     children?: ReactNode;
 }
 
-export default function FlexLayout({ style, flex, direction: flexDirection = "column", gap = 10, children, align: alignItems, justify: justifyContent }: FlexLayoutProps) {
+export default function FlexLayout({ className, style, flex, direction: flexDirection = "column", gap = 10, children, align: alignItems, justify: justifyContent }: FlexLayoutProps) {
     return (
-        <div style={{
+        <div className={className} style={{
             flex,
 
             display: "flex",

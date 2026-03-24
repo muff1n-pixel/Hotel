@@ -1,0 +1,9 @@
+.toolbar-tab-sprite {
+    cursor: pointer;
+    
+    filter: grayscale(100%);
+}
+
+.toolbar-tab-sprite:hover {
+    filter: grayscale(0%);
+}

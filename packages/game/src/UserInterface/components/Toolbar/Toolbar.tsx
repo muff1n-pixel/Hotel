@@ -1,22 +1,12 @@
-import ToolbarFigureItem from "./Items/ToolbarFigureItem";
-import ToolbarItem from "./Items/ToolbarItem";
 import { useRoomInstance } from "../../Hooks/useRoomInstance";
-import { webSocketClient } from "../../..";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
-import { useDialogs } from "../../Hooks/useDialogs";
-import ToolbarToggle from "./ToolbarToggle";
 import { useEffect, useState } from "react";
-import { useUser } from "../../Hooks/useUser";
-import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
 import ToolbarFriends from "src/UserInterface/Components/Toolbar/ToolbarFriends";
+import ToolbarLinks from "@UserInterface/Components/Toolbar/ToolbarLinks";
 
 export default function Toolbar() {
-    const user = useUser();
     const room = useRoomInstance();
 
-    const { addUniqueDialog } = useDialogs();
-
-    const [minimized, setMinimized] = useState(false);
     const [chatFloating, setChatFloating] = useState(window.innerWidth < 1280);
 
     useEffect(() => {
@@ -64,50 +54,7 @@ export default function Toolbar() {
                 borderTop: "2px solid rgba(102, 100, 94, 0.64)",
                 borderBottom: "1px solid rgba(102, 100, 94, 0.64)",
             }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 14,
-                    alignItems: "center"
-                }}>
-                    <ToolbarToggle toggled={minimized} onToggle={setMinimized}/>
-
-                    {(!minimized) && (
-                        (room)?(
-                            <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))} tooltip="Reception">
-                                <div className="sprite_toolbar_logo"/>
-                            </ToolbarItem>
-                        ):(
-                            (user?.homeRoomId) && (
-                                <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))} tooltip="Homeroom">
-                                    <div className="sprite_toolbar_home"/>
-                                </ToolbarItem>
-                            )
-                        )
-                    )}
-
-                    {(!minimized) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("navigator")} tooltip="Navigator">
-                            <div className="sprite_toolbar_navigator"/>
-                        </ToolbarItem>
-                    )}
-
-                    <ToolbarItem onClick={() => addUniqueDialog("shop")} tooltip="Shop">
-                        <div className="sprite_toolbar_shop"/>
-                    </ToolbarItem>
-
-                    {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip="Inventory">
-                            <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
-                        </ToolbarItem>
-                    )}
-
-                    {(room) && (
-                        <ToolbarItem onClick={() => addUniqueDialog("wardrobe")} tooltip="Wardrobe">
-                            <ToolbarFigureItem/>
-                        </ToolbarItem>
-                    )}
-                </div>
+                <ToolbarLinks/>
 
                 <div style={{
                     display: "flex",
