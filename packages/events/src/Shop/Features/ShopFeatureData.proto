@@ -10,5 +10,5 @@ message ShopFeatureData {
 
     string type = 4;
 
-    ShopFeaturePageData page = 5;
+    ShopFeaturePageData featured_page = 5;
 }

@@ -1,21 +1,13 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { ShopPageProps } from "./ShopPage";
-import ShopPageFeatureImage from "./Features/ShopPageFeatureImage";
-import ShopPageFeatureTitle from "./Features/ShopPageFeatureTitle";
 import { ShopFeatureData } from "@pixel63/events";
+import ShopPageHorizontalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageHorizontalFeature";
+import ShopPageVerticalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageVerticalFeature";
 
 export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPageProps) {
-    const [verticalFeature, setVerticalFeature] = useState(page.features?.find((feature) => feature.type === "vertical"));
-    const [horizontalFeatures, setHorizontalFeatures] = useState(page.features?.filter((feature) => feature.type === "horizontal"));
-
-    useEffect(() => {
-        setVerticalFeature(page.features?.find((feature) => feature.type === "vertical"));
-        setHorizontalFeatures(page.features?.filter((feature) => feature.type === "horizontal"));
-    }, [ page.features ]);
-
     const handleFeatureClick = useCallback((feature: ShopFeatureData) => {
-        if(feature.page) {
-            setActiveShopPage?.(feature.page);
+        if(feature.featuredPage) {
+            setActiveShopPage?.(feature.featuredPage);
         }
     }, [setActiveShopPage]);
 
@@ -28,27 +20,7 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
 
             gap: 7
         }}>
-            <div style={{
-                width: 184,
-
-                display: "flex",
-
-                position: "relative",
-
-                alignItems: "flex-end",
-
-                cursor: "pointer",
-                padding: 3,
-                boxSizing: "border-box"
-            }} onClick={() => verticalFeature && handleFeatureClick(verticalFeature)}>
-                {(verticalFeature) && (
-                    <Fragment>
-                        <ShopPageFeatureImage feature={verticalFeature}/>
-
-                        <ShopPageFeatureTitle feature={verticalFeature}/>
-                    </Fragment>
-                )}
-            </div>
+            <ShopPageVerticalFeature feature={page.featureVertical} onClick={handleFeatureClick}/>
 
             <div style={{
                 flex: 2,
@@ -57,26 +29,10 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
                 flexDirection: "column",
                 gap: 7
             }}>
-                {horizontalFeatures?.map((feature) => (
-                    <div key={feature.id} style={{
-                        height: 126,
-
-                        display: "flex",
-
-                        position: "relative",
-
-                        alignItems: "flex-end",
-
-                        cursor: "pointer",
-                        padding: 3,
-                        boxSizing: "border-box"
-                    }} onClick={() => handleFeatureClick(feature)}>
-                        <ShopPageFeatureImage feature={feature}/>
-
-                        <ShopPageFeatureTitle feature={feature}/>
-                    </div>
-                ))}
-
+                <ShopPageHorizontalFeature feature={page.featureHorizontalTop} onClick={handleFeatureClick}/>
+                <ShopPageHorizontalFeature feature={page.featureHorizontalMiddle} onClick={handleFeatureClick}/>
+                <ShopPageHorizontalFeature feature={page.featureHorizontalBottom} onClick={handleFeatureClick}/>
+                
                 <div style={{
                     flex: 1
                 }}/>

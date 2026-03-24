@@ -20,6 +20,10 @@ message ShopPageData {
 
     uint32 index = 10;
 
-    repeated ShopFeatureData features = 11;
     optional ShopBundleData bundle = 12;
+    
+    optional ShopFeatureData feature_vertical = 13;
+    optional ShopFeatureData feature_horizontal_top = 14;
+    optional ShopFeatureData feature_horizontal_middle = 15;
+    optional ShopFeatureData feature_horizontal_bottom = 16;
 }

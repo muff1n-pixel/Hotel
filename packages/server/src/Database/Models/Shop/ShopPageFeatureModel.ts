@@ -5,8 +5,6 @@ import { ShopPageModel } from "./ShopPageModel.js";
 export class ShopPageFeatureModel extends Model {
     declare id: string;
 
-    declare type: "horizontal" | "vertical";
-
     declare title: string;
     declare image: string;
 
@@ -34,11 +32,6 @@ export function initializeShopPageFeatureModel(sequelize: Sequelize) {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
-          },
-          type: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "horizontal"
           }
         },
         {
@@ -52,8 +45,23 @@ export function initializeShopPageFeatureModel(sequelize: Sequelize) {
         foreignKey: "featuredPageId"
     });
 
-    ShopPageModel.hasMany(ShopPageFeatureModel, {
-        as: "features",
-        foreignKey: "pageId"
+    ShopPageModel.hasOne(ShopPageFeatureModel, {
+        as: "featureVertical",
+        foreignKey: "featureVerticalId"
+    });
+
+    ShopPageModel.hasOne(ShopPageFeatureModel, {
+        as: "featureHorizontalTop",
+        foreignKey: "featureHorizontalTopId"
+    });
+
+    ShopPageModel.hasOne(ShopPageFeatureModel, {
+        as: "featureHorizontalMiddle",
+        foreignKey: "featureHorizontalMiddleId"
+    });
+
+    ShopPageModel.hasOne(ShopPageFeatureModel, {
+        as: "featureHorizontalBottom",
+        foreignKey: "featureHorizontalBottomId"
     });
 }

@@ -30,11 +30,19 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                 category: payload.category,
             },
             include: [
+                ...(["featureVertical", "featureHorizontalTop", "featureHorizontalMiddle", "featureHorizontalBottom"].map((as) => ({
+                    model: ShopPageFeatureModel,
+                    as,
+                    include: [
+                        {
+                            model: ShopPageModel,
+                            as: "featuredPage"
+                        }
+                    ]
+                }))),
                 {
                     model: ShopPageFeatureModel,
-                    as: "features",
-                    order: ["index"],
-
+                    as: "featureHorizontalTop",
                     include: [
                         {
                             model: ShopPageModel,
@@ -76,19 +84,11 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
 
                     index: shopPage.index,
 
-                    features: shopPage.features?.map((feature) => {
-                        return {
-                            id: feature.id,
-                            title: feature.title,
-                            image: feature.image,
-                            type: feature.type,
+                    featureVertical: shopPage.featureVertical,
 
-                            page: {
-                                id: feature.featuredPage.id,
-                                category: feature.featuredPage.category
-                            }
-                        };
-                    }) ?? [],
+                    featureHorizontalTop: shopPage.featureHorizontalTop,
+                    featureHorizontalMiddle: shopPage.featureHorizontalMiddle,
+                    featureHorizontalBottom: shopPage.featureHorizontalBottom,
 
                     ...(shopPage.bundle && {
                         bundle: {

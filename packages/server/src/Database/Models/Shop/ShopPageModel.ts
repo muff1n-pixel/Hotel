@@ -24,7 +24,11 @@ export class ShopPageModel extends Model {
     declare furniture: NonAttribute<ShopPageFurnitureModel[]>;
     declare bots: NonAttribute<ShopPageBotModel[]>;
     declare pets: NonAttribute<ShopPagePetModel[]>;
-    declare features?: NonAttribute<ShopPageFeatureModel[]>;
+
+    declare featureVertical?: NonAttribute<ShopPageFeatureModel>;
+    declare featureHorizontalTop?: NonAttribute<ShopPageFeatureModel>;
+    declare featureHorizontalMiddle?: NonAttribute<ShopPageFeatureModel>;
+    declare featureHorizontalBottom?: NonAttribute<ShopPageFeatureModel>;
 
     declare bundle?: NonAttribute<ShopPageBundleModel>;
 }
