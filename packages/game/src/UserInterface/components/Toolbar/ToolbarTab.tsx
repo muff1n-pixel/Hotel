@@ -11,7 +11,7 @@ export type ToolbarTabProps = {
 
 export default function ToolbarTab({ items }: ToolbarTabProps) {
     return (
-        <FlexLayout className="toolbar-tab" align="center" direction="row">
+        <FlexLayout className="toolbar-tab toolbar-tab-arrow" align="center" direction="row">
             {items.map((item) => (
                 <div key={item.spriteClass} className={`toolbar-tab-sprite ${item.spriteClass}`} data-tooltip={item.tooltip} onClick={item.onClick}>
 

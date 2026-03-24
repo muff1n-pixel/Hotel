@@ -7,3 +7,43 @@
 .toolbar-tab-sprite:hover {
     filter: grayscale(0%);
 }
+
+.toolbar-tab-arrow {
+    border: 1px solid #2A2928;
+    border-radius: 6px;
+
+    background: #1F1E1D;
+
+    padding: 3px 6px;
+
+    gap: 3px;
+
+    margin-left: -6px;
+
+	position: relative;
+}
+
+.toolbar-tab-arrow:after, .toolbar-tab-arrow:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.toolbar-tab-arrow:after {
+	border-color: transparent;
+	border-right-color: #1F1E1D;
+	border-width: 5px;
+	margin-top: -5px;
+}
+
+.toolbar-tab-arrow:before {
+	border-color: transparent;
+	border-right-color: #2A2928;
+	border-width: 6px;
+	margin-top: -6px;
+}
