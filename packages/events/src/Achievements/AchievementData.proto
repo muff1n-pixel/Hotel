@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "Badge/BadgeData.proto";
+
+message AchievementData {
+    string id = 1;
+
+    optional BadgeData current_badge = 2;
+
+    uint32 levels = 3;
+    uint32 user_level = 4;
+
+    uint32 current_user_score = 6;
+    uint32 current_level_score = 7;
+    
+    uint32 next_level_score = 8;
+}

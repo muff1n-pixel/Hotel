@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message AchievementsCategoryData {
+    string id = 1;
+    string name = 2;
+    string icon_image = 3;
+
+    uint32 total_levels = 4;
+    uint32 user_unlocked_levels = 5;
+    uint32 user_level_score = 6;
+}

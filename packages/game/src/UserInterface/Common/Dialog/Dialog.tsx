@@ -5,15 +5,20 @@ import useDialogMovement from "./Hooks/useDialogMovement";
 export type DialogProps = PropsWithChildren & {
     title: ReactNode;
     width: number;
-    height: number;
     hidden?: boolean;
     onClose?: () => void;
     onEditClick?: (() => void) | false;
     initialPosition?: "corner" | "center";
     style?: CSSProperties;
-};
+} & ({
+    height: "auto";
+    assumedHeight: number;
+} | {
+    height: number;
+    assumedHeight?: number;
+});
 
-export default function Dialog({ title, children, hidden, onEditClick, onClose, initialPosition = "corner", width, height, style }: DialogProps) {
+export default function Dialog({ title, children, hidden, onEditClick, onClose, initialPosition = "corner", width, height, assumedHeight, style }: DialogProps) {
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement((initialPosition === "corner")?(
         {
             left: 200,
@@ -22,7 +27,7 @@ export default function Dialog({ title, children, hidden, onEditClick, onClose, 
     ):(
         {
             left: Math.round((window.innerWidth - width) / 2),
-            top: Math.round((window.innerHeight - height) / 2)
+            top: Math.round((window.innerHeight - ((height === "auto")?(assumedHeight):(height))) / 2)
         }
     ));
 

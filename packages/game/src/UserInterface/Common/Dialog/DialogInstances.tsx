@@ -40,6 +40,7 @@ import RoomPasswordDialog from "@UserInterface/Components/Room/Doorbell/RoomPass
 import UserProfileDialog from "@UserInterface/Components/Users/UserProfileDialog";
 import RoomPasswordErrorDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordErrorDialog";
 import EditFurnitureCrackableDialog from "@UserInterface/Components/Furniture/Dialogs/EditFurnitureCrackableDialog";
+import AchievementsDialog from "@UserInterface/Components/Achievements/AchievementsDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -57,6 +58,9 @@ export default function DialogInstances() {
                 switch(dialog.type) {
                     case "modtools":
                         return (<ModToolsDialog {...props} key={dialog.id}/>);
+                    
+                    case "achievements":
+                        return (<AchievementsDialog {...props} key={dialog.id}/>);
 
                     case "settings":
                         return (<SettingsDialog {...props} key={dialog.id}/>);

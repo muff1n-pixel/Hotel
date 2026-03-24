@@ -10,6 +10,7 @@ export class UserAchievementModel extends Model {
 
     declare user: NonAttribute<UserModel>;
     declare achievement: NonAttribute<AchievementModel>;
+    declare achievementId: NonAttribute<string>;
 }
 
 export function initializeUserAchievementModel(sequelize: Sequelize) {

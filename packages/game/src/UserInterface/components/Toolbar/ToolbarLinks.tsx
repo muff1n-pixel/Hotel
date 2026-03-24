@@ -91,6 +91,14 @@ export default function ToolbarLinks() {
                                 setTab(undefined);
                             },
                             tooltip: "Wardrobe"
+                        },
+                        {
+                            spriteClass: "sprite_toolbar_me_achievements",
+                            onClick: () => {
+                                addUniqueDialog("achievements");
+                                setTab(undefined);
+                            },
+                            tooltip: "Achievements"
                         }
                     ]}/>
             )}

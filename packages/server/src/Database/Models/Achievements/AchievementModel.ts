@@ -1,19 +1,16 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { BadgeModel } from "../Badges/BadgeModel";
 import RomanNumerals from "../../../Helpers/RomanNumerals";
 import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../Furniture/FurnitureModel";
 import { game } from "../../..";
+import { AchievementCategoryModel } from "./AchievementCategoryModel";
+import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/IceTagAchievementsSeeder";
+import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/FreezeAchievementsSeeder";
 
 export type AchievementId =
-    "BladesOfGlory"
-    | "IceIceBadge"
-    | "IceRinkBuilder"
-
-    | "FreezeFighter"
-    | "FreezeWinner"
-    | "FreezePlayer"
-    | "FreezePowerUpper";
+    IceTagAchievements
+    | FreezeAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -21,6 +18,8 @@ export class AchievementModel extends Model {
     declare description: string;
     declare badgePrefix: string;
     declare levels: number[];
+    
+    declare category: NonAttribute<AchievementCategoryModel>;
 }
 
 export function initializeAchievementModel(sequelize: Sequelize) {
@@ -66,75 +65,44 @@ export function initializeAchievementModel(sequelize: Sequelize) {
 }
 
 export async function seedAchievements() {
-    await AchievementModel.upsert({
-        id: "BladesOfGlory",
-        name: "Blades Of Glory",
-        description: "For being caught %score% times while playing Ice Tag.",
-        badgePrefix: "ACH_TagB",
-        levels: [
-            1, 4, 9, 17, 29, 44, 62, 87, 114, 144, 186, 242, 314, 402, 498, 618, 754, 905, 1084, 1284
-        ]
+    await AchievementCategoryModel.upsert({
+        id: "profile",
+        name: "Your profile",
+        iconImage: "identity.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "IceIceBadge",
-        name: "Ice Ice baby",
-        description: "For spending %score% minutes on a skate rink.",
-        badgePrefix: "ACH_TagC",
-        levels: [
-            3, 8, 16, 31, 51, 81, 121, 171, 231, 301, 381, 471, 571, 681, 801, 931, 1071, 1221, 1381, 1551
-        ]
+
+    await AchievementCategoryModel.upsert({
+        id: "social",
+        name: "Make friends",
+        iconImage: "social.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "IceRinkBuilder",
-        name: "Ice Rink Builder",
-        description: "For creating an Ice Rink using %score% Skating Patches.",
-        badgePrefix: "ACH_TagA",
-        levels: [
-            10, 20, 30, 45, 60, 80, 100, 125, 150, 170
-        ]
+
+    await AchievementCategoryModel.upsert({
+        id: "explore",
+        name: "Explore Habbo",
+        iconImage: "explore.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "FreezeFighter",
-        name: "Freeze Fighter",
-        description: "For freezing %score% players during games of Freeze.",
-        badgePrefix: "ACH_EsA",
-        levels: [
-            2, 5, 10, 18, 30, 50, 80, 125, 200, 300, 420, 600, 900, 1500, 2500, 3700, 5400, 8000, 12000, 20000
-        ]
+
+    await AchievementCategoryModel.upsert({
+        id: "pets",
+        name: "Pets",
+        iconImage: "pets.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "FreezeWinner",
-        name: "Freeze Winner",
-        description: "For gaining %score% winner points while playing Freeze.",
-        badgePrefix: "ACH_FreezeWinner",
-        levels: [
-            50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
-        ]
+
+    await AchievementCategoryModel.upsert({
+        id: "games",
+        name: "Games",
+        iconImage: "games.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "FreezePlayer",
-        name: "Freeze Player",
-        description: "For gaining %score% points through playing Freeze.",
-        badgePrefix: "ACH_FreezePlayer",
-        levels: [
-            50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
-        ]
+
+    await AchievementCategoryModel.upsert({
+        id: "room_builder",
+        name: "Build your room",
+        iconImage: "room_builder.png"
     });
-    
-    await AchievementModel.upsert({
-        id: "FreezePowerUpper",
-        name: "Freeze Power-Upper",
-        description: "For collecting %score% power-ups while playing Freeze.",
-        badgePrefix: "ACH_FreezePowerUp",
-        levels: [
-            100, 300, 600, 1000, 1500, 2100, 2900, 3900, 5200, 6800, 8800, 11200, 14100, 17600, 22100, 28100, 36100, 48100, 66100, 96100
-        ]
-    });
+
+    await IceTagAchievementsSeeder.seedAchievements();
+    await FreezeAchievementsSeeder.seedAchievements();
 
     UserFurnitureModel.addHook("afterCreate", async (userFurniture: UserFurnitureModel) => {
         if(!userFurniture.userId) {

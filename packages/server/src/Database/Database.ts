@@ -40,6 +40,7 @@ import { initializeFurnitureCrackableModel } from "./Models/Furniture/Crackable/
 import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crackable/FurnitureCrackableRewardModel.js";
 import { initializeAchievementModel, seedAchievements } from "./Models/Achievements/AchievementModel.js";
 import { initializeUserAchievementModel } from "./Models/Users/Achievements/UserAchievementModel.js";
+import { initializeAchievementCategoryModel } from "./Models/Achievements/AchievementCategoryModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -91,6 +92,8 @@ export async function initializeModels() {
   intitializePermissionRoleModel(sequelize);
 
   initializeAchievementModel(sequelize);
+  initializeAchievementCategoryModel(sequelize);
+  
   initializeUserAchievementModel(sequelize);
 
   await sequelize.sync();
