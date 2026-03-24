@@ -10,8 +10,6 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
 
     const [label, setLabel] = useState<string>();
 
-    const [initialPosition, setInitialPosition] = useState<MousePosition>();
-
     useEffect(() => {
         let listener;
 
@@ -24,11 +22,6 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
 
                     if(label) {
                         setLabel(label);
-
-                        setInitialPosition({
-                            left: event.clientX,
-                            top: event.clientY
-                        });
                     }
                 }
             };
@@ -64,8 +57,13 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
                 return;
             }
 
-            ref.current.style.left = `${event.clientX}px`;
-            ref.current.style.top = `${event.clientY}px`;
+            const boundingClientRectangle = ref.current.getBoundingClientRect();
+
+            const maxLeft = window.innerWidth - boundingClientRectangle.width;
+            const maxTop = window.innerHeight - boundingClientRectangle.height;
+
+            ref.current.style.left = `${Math.min(event.clientX + 16, maxLeft)}px`;
+            ref.current.style.top = `${Math.min(event.clientY + 16, maxTop)}px`;
 
             ref.current.style.display = "block";
         };
@@ -91,15 +89,14 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
 
             zIndex: 1000000000,
 
-            left: initialPosition?.left,
-            top: initialPosition?.top,
+            // Put it outside of the screen until the effect can render the correct position
+            left: "100%",
+            top: "100%",
 
             padding: 6,
 
             background: "rgba(0, 0, 0, .7)",
             borderRadius: 6,
-
-            transform: "translate(16px, 16px)",
 
             textWrap: "nowrap",
 
