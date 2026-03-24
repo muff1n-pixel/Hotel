@@ -16,27 +16,37 @@ export class ShopPageFeatureModel extends Model {
 export function initializeShopPageFeatureModel(sequelize: Sequelize) {
     ShopPageFeatureModel.init(
         {
-          id: {
-            type: DataTypes.UUID,
-            primaryKey: true
-          },
-          title: {
-            type: DataTypes.STRING,
-            allowNull: false
-          },
-          image: {
-            type: DataTypes.STRING,
-            allowNull: false
-          },
-          index: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-          }
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true
+            },
+            title: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            image: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            index: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
+            configuration: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("configuration"));
+                },
+                set: function (value) {
+                    this.setDataValue("configuration", JSON.stringify(value));
+                },
+                allowNull: false
+            }
         },
         {
-          tableName: "shop_page_features",
-          sequelize
+            tableName: "shop_page_features",
+            sequelize
         }
     );
 

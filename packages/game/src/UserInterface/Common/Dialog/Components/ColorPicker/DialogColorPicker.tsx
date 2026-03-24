@@ -5,12 +5,12 @@ import "./DialogColorPicker.css";
 import Input from "../../../Form/Components/Input";
 
 export type DialogColorPickerProps = {
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
 }
 
 export default function DialogColorPicker({ value, onChange }: DialogColorPickerProps) {
-    const [color] = useColor(value);
+    const [color] = useColor(value ?? "#FFFFFF");
 
     return (
         <div style={{

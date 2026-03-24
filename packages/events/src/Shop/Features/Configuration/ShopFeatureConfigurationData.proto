@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "Furniture/FurnitureData.proto";
+
+message ShopFeatureConfigurationData {
+    string type = 1;
+
+    bool background_used = 2;
+
+    string primary_background_color = 3;
+    optional string secondary_background_color = 4;
+ 
+    bool background_stripes_used = 5;
+
+    bool use_feature_sprite = 6;
+    string feature_sprite_color = 7;
+
+    optional FurnitureData feature_furniture = 8;
+}

@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Shop/Features/ShopFeaturePageData.proto";
+import "Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
 
 message ShopFeatureData {
     string id = 1;
@@ -11,4 +12,6 @@ message ShopFeatureData {
     string type = 4;
 
     ShopFeaturePageData featured_page = 5;
+
+    optional ShopFeatureConfigurationData configuration = 6;
 }

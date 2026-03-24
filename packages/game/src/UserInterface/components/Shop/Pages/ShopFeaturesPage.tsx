@@ -4,7 +4,7 @@ import { ShopFeatureData } from "@pixel63/events";
 import ShopPageHorizontalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageHorizontalFeature";
 import ShopPageVerticalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageVerticalFeature";
 
-export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPageProps) {
+export default function ShopFeaturesPage({ page, setActiveShopPage, editMode }: ShopPageProps) {
     const handleFeatureClick = useCallback((feature: ShopFeatureData) => {
         if(feature.featuredPage) {
             setActiveShopPage?.(feature.featuredPage);
@@ -20,7 +20,7 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
 
             gap: 7
         }}>
-            <ShopPageVerticalFeature feature={page.featureVertical} onClick={handleFeatureClick}/>
+            <ShopPageVerticalFeature page={page} editMode={editMode} feature={page.featureVertical} onClick={handleFeatureClick}/>
 
             <div style={{
                 flex: 2,
@@ -29,9 +29,9 @@ export default function ShopFeaturesPage({ page, setActiveShopPage }: ShopPagePr
                 flexDirection: "column",
                 gap: 7
             }}>
-                <ShopPageHorizontalFeature feature={page.featureHorizontalTop} onClick={handleFeatureClick}/>
-                <ShopPageHorizontalFeature feature={page.featureHorizontalMiddle} onClick={handleFeatureClick}/>
-                <ShopPageHorizontalFeature feature={page.featureHorizontalBottom} onClick={handleFeatureClick}/>
+                <ShopPageHorizontalFeature alignment="top" page={page} editMode={editMode} feature={page.featureHorizontalTop} onClick={handleFeatureClick}/>
+                <ShopPageHorizontalFeature alignment="middle" page={page} editMode={editMode} feature={page.featureHorizontalMiddle} onClick={handleFeatureClick}/>
+                <ShopPageHorizontalFeature alignment="bottom" page={page} editMode={editMode} feature={page.featureHorizontalBottom} onClick={handleFeatureClick}/>
                 
                 <div style={{
                     flex: 1

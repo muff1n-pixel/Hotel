@@ -1,14 +1,22 @@
-import { ShopFeatureData } from "@pixel63/events";
+import { ShopFeatureData, ShopPageData } from "@pixel63/events";
 import ShopPageFeatureImage from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureImage";
 import ShopPageFeatureTitle from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureTitle";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment } from "react/jsx-runtime";
 
 export type ShopPageHorizontalFeatureProps = {
+    alignment: "top" | "middle" | "bottom";
+
+    page: ShopPageData;
+    editMode?: boolean;
+
     feature?: ShopFeatureData;
     onClick?: (feature: ShopFeatureData) => void;
 };
 
-export default function ShopPageHorizontalFeature({ feature, onClick }: ShopPageHorizontalFeatureProps) {
+export default function ShopPageHorizontalFeature({ alignment, feature, page, editMode, onClick }: ShopPageHorizontalFeatureProps) {
+    const dialogs = useDialogs();
+
     return (
         <div style={{
             height: 126,
@@ -32,6 +40,17 @@ export default function ShopPageHorizontalFeature({ feature, onClick }: ShopPage
 
                     <ShopPageFeatureTitle feature={feature}/>
                 </Fragment>
+            )}
+
+            {(editMode) && (
+                <div style={{
+                    position: "absolute",
+                    top: 6,
+                    right: 6,
+                    cursor: "pointer"
+                }} onClick={() => dialogs.addUniqueDialog("edit-shop-feature", { alignment, feature, page }, alignment)}>
+                    <div className="sprite_room_user_motto_pen"/>
+                </div>
             )}
         </div>
     );

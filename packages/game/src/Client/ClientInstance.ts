@@ -74,6 +74,14 @@ export default class ClientInstance extends EventTarget {
 
         this.settings.subscribe((value) => localStorage.setItem("settings", JSON.stringify(value)));
 
+        this.dialogs.value?.push({
+            id: "horizontal",
+            type: "edit-shop-feature",
+            data: {
+                alignment: "top",
+            }
+        });
+
         registerRoomEvents(this);
         
         // User events

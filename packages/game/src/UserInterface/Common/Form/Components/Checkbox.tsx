@@ -1,8 +1,10 @@
+import { ReactNode } from "react";
+
 export type CheckboxProps = {
-    value: boolean;
+    value?: boolean;
     onChange: (value: boolean) => void;
 
-    label: string;
+    label: ReactNode;
 };
 
 export default function Checkbox({ label, value, onChange }: CheckboxProps) {

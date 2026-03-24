@@ -41,6 +41,7 @@ import UserProfileDialog from "@UserInterface/Components/Users/UserProfileDialog
 import RoomPasswordErrorDialog from "@UserInterface/Components/Room/Doorbell/RoomPasswordErrorDialog";
 import EditFurnitureCrackableDialog from "@UserInterface/Components/Furniture/Dialogs/EditFurnitureCrackableDialog";
 import AchievementsDialog from "@UserInterface/Components/Achievements/AchievementsDialog";
+import EditShopFeatureDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -124,6 +125,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-page":
                         return (<EditShopPageDialog {...props} key={dialog.id}/>);
+
+                    case "edit-shop-feature":
+                        return (<EditShopFeatureDialog {...props} key={dialog.id}/>);
 
                     case "edit-shop-furniture":
                         return (<EditShopFurnitureDialog {...props} key={dialog.id}/>);

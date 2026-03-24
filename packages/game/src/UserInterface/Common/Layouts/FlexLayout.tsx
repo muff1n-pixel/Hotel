@@ -10,11 +10,12 @@ export type FlexLayoutProps = {
     style?: CSSProperties;
 
     children?: ReactNode;
+    onClick?: () => void;
 }
 
-export default function FlexLayout({ className, style, flex, direction: flexDirection = "column", gap = 10, children, align: alignItems, justify: justifyContent }: FlexLayoutProps) {
+export default function FlexLayout({ className, style, flex, direction: flexDirection = "column", gap = 10, children, align: alignItems, justify: justifyContent, onClick }: FlexLayoutProps) {
     return (
-        <div className={className} style={{
+        <div className={className} onClick={onClick} style={{
             flex,
 
             display: "flex",

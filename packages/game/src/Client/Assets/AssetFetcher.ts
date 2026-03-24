@@ -323,7 +323,7 @@ export default class AssetFetcher {
 
                 for(const color of colors) {
                     colorContext.globalCompositeOperation = "multiply";
-                    colorContext.fillStyle = '#' + color;
+                    colorContext.fillStyle = (color.startsWith('#'))?(color):('#' + color);
                     colorContext.fillRect(0, 0, canvas.width, canvas.height);
                 }
 
