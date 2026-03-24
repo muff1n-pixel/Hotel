@@ -86,7 +86,10 @@ export default function ToolbarLinks() {
                     items={[
                         {
                             spriteClass: "sprite_toolbar_me_clothing",
-                            onClick: () => addUniqueDialog("wardrobe"),
+                            onClick: () => {
+                                addUniqueDialog("wardrobe");
+                                setTab(undefined);
+                            },
                             tooltip: "Wardrobe"
                         }
                     ]}/>
