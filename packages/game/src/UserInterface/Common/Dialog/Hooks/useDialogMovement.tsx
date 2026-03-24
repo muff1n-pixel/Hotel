@@ -57,6 +57,7 @@ export default function useDialogMovement(initialPosition: MousePosition = { lef
     const { onMouseDown } = useDialogMouse({ onDialogMove });
 
     return {
+        initialPosition,
         elementRef,
 
         onDialogFocus,
