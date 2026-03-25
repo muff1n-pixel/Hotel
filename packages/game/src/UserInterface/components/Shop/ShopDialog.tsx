@@ -37,6 +37,12 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
     }, [editMode]);
 
     useEffect(() => {
+        if(data?.requestedPage) {
+            setRequestedShopPage(data.requestedPage);
+        }
+    }, [data?.requestedPage]);
+
+    useEffect(() => {
         const category = categories.at(activeIndex);
 
         if(!category) {
