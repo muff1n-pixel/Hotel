@@ -59,6 +59,9 @@ router.post("/", async (req, res) => {
             });
 
             for await (const badgeData of userBadgesData) {
+                if(!badgeData.badge)
+                    continue;
+                
                 userCurrentBadges.push(badgeData.badge.image)
             }
 

@@ -171,6 +171,9 @@ router.post("/", async (req, res) => {
     });
 
     for await (const badgeData of userBadgesData) {
+        if(!badgeData.badge)
+            continue;
+        
         if (badgeData.equipped)
             currentBadges.push(badgeData.badge.image);
 
