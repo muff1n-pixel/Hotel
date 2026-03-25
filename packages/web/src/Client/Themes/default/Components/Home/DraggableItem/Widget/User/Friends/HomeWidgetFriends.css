@@ -11,8 +11,6 @@
                 .row {
                     border-radius: 8px;
                     padding: 5px;
-                    padding-left: 0;
-                    padding-right: 0;
                     display: flex;
                     align-items: center;
 
@@ -26,8 +24,8 @@
 
 
                     .data {
-                        width: 170px;
-                        
+                        width: 160px;
+
                         .name span,
                         .motto {
                             word-break: break-all;
