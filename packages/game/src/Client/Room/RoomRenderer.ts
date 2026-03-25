@@ -307,12 +307,17 @@ export default class RoomRenderer extends EventTarget {
                 }
             }
 
-            priority += RoomRenderer.getPositionPriority(sprite.item.position);
-
             if(sprite.item instanceof RoomFurnitureItem) {
                 if(sprite.item.furnitureRenderer.placement === "wall") {
-                    priority -= 1000;
+                    priority = 0;
+                    priority += (sprite.item.position.depth * 100);
                 }
+                else {
+                    priority += RoomRenderer.getPositionPriority(sprite.item.position);
+                }
+            }
+            else {
+                priority += RoomRenderer.getPositionPriority(sprite.item.position);
             }
         }
 
