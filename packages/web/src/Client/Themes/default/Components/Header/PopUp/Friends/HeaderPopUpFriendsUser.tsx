@@ -12,7 +12,12 @@ type UserProps = {
     online: boolean;
 }
 
-const HeaderPopUpFriendsUser = (user: UserProps) => {
+type HeaderPopUpFriendsUserProps = {
+    user: UserProps;
+    setActiveItem: (id: string | null) => void;
+}
+
+const HeaderPopUpFriendsUser = ({user, setActiveItem}: HeaderPopUpFriendsUserProps) => {
     const [avatar, setAvatar] = useState<string>(Skeleton);
     const navigate = useNavigate();
 
@@ -25,7 +30,10 @@ const HeaderPopUpFriendsUser = (user: UserProps) => {
     })
 
     return (
-        <div className="row user" onClick={() => navigate(`/home/${user.name}`)}>
+        <div className="row user" onClick={() => {
+            navigate(`/home/${user.name}`);
+            setActiveItem(null);
+        }}>
             <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}></div>
             <div className="userData">
                 <div className="username"><span>{user.name}</span><img src={user.online ? OnlineImage : OfflineImage} alt='State' /></div>

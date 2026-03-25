@@ -1,0 +1,105 @@
+.playground {
+    .draggableItem {
+        position: absolute;
+
+        .sticker {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .buttons {
+            position: absolute;
+            right: -30px;
+            top: -30px;
+            z-index: 1;
+
+            button {
+                height: 22px;
+                width: 22px;
+                padding: 3px;
+                background: linear-gradient(to bottom, #ddd 50%, #b5b5b5 50%);
+                border: 1px solid #000;
+                border-radius: 4px;
+                margin-right: 5px;
+
+                img {
+                    max-height: 14px;
+                    cursor: pointer;
+                }
+            }
+
+            button:last-child {
+                margin-right: 0;
+            }
+
+            button:hover {
+                cursor: pointer;
+                filter: brightness(115%);
+            }
+        }
+
+        .widgets.buttons, .notes.buttons {
+            right: 0;
+        }
+
+        .borderSkinModal {
+            position: absolute;
+            width: 198px;
+            border-radius: 8px;
+            right: -195px;
+            top: -38px;
+            background-color: #e2e2e2;
+            padding: 10px;
+            border: 1px solid #000;
+            color: #333;
+
+            .borderSkinModalHeader {
+                border-bottom: 1px dotted #000;
+                font-family: Ubuntu Bold;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                padding-bottom: 10px;
+                padding-left: 20px;
+
+                .close_button {
+                    margin-left: auto;
+                    width: 14px;
+                    height: 13px;
+                    background-image: url('../../../Images/icons/small/cross.gif');
+                    filter: grayscale(1);
+                    transition-duration: 0.5s;
+                }
+
+                .close_button:hover {
+                    cursor: pointer;
+                    filter: grayscale(0);
+                }
+            }
+
+            .content {
+                select {
+                    width: 100%;
+                    padding: 5px;
+                }
+
+                select:focus {
+                    outline: var(--orange);
+                }
+            }
+        }
+    }
+
+    .draggableItem.edit {
+        cursor: grab;
+    }
+
+    .draggableItem.returning {
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .draggableItem.edit:active {
+        cursor: grabbing;
+    }
+}

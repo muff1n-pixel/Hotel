@@ -1,0 +1,63 @@
+.playground {
+    .roomsWidget {
+        .widgetContent {
+            width: 230px;
+
+            .noRooms {
+                text-align: center;
+            }
+
+            .rooms {
+                .row {
+                    display: flex;
+                    align-items: center;
+                    padding: 5px;
+                    border-radius: 8px;
+                    transition-duration: 0.5s;
+
+                    .icon {
+                        margin-right: 10px;
+                    }
+
+                    .data {
+                        .name {
+                            font-weight: bold;
+                            font-family: "Ubuntu-C";
+                            word-break: break-all;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -moz-box-orient: vertical;
+                            -ms-box-orient: vertical;
+                            box-orient: vertical;
+                            -webkit-line-clamp: 1;
+                            -moz-line-clamp: 1;
+                            -ms-line-clamp: 1;
+                            line-clamp: 1;
+                            overflow: hidden;
+                        }
+
+                        .users {
+                            font-size: 12px;
+                            opacity: 0.7;
+                        }
+                    }
+
+                    .joinRoom {
+                        margin-left: auto;
+                        transition-duration: 0.5s;
+                        display: none;
+                    }
+                }
+
+                .row:hover {
+                    cursor: pointer;
+                    background-color: rgba(0, 0, 0, 0.2);
+
+                    .joinRoom {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}

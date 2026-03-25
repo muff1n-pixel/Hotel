@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Loading from "../Loading/Loading";
-import { RoomInterface } from "@client/Logic/Room/RoomInterface";
+import { RoomInterface } from "../../../..//Logic/Room/RoomInterface";
 import './HotRooms.css';
 import goIcon from '../../Images/icons/medium/go_arrow.gif'
 import Box from "../Box/Box";

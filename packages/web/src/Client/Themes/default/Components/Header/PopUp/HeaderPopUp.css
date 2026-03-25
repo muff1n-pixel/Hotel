@@ -11,6 +11,11 @@
             padding: 10px;
         }
 
+        .noData {
+            padding: 10px;
+            text-align: center;
+        }
+
         .row {
             padding: 10px;
             transition-duration: 0.5s;

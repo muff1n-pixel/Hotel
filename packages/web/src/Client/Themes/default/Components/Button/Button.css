@@ -19,6 +19,15 @@
     }
 }
 
+.button[disabled=disabled], .button:disabled {
+    opacity: 0.5;
+}
+
+.button[disabled=disabled]:hover, .button:disabled:hover {
+    cursor: not-allowed;
+    filter: brightness(100%);
+}
+
 .button.no-shadow {
     box-shadow: none;
 }
@@ -98,4 +107,12 @@
 
 .button-green {
     background: linear-gradient(to bottom, #5aa600 50%, #007a00 50%);
+}
+
+.button-red {
+    background: linear-gradient(to bottom, #de0000 50%, #b50000 50%);
+}
+
+.button-black {
+    background: linear-gradient(to bottom, #888888 50%, #606060 50%);
 }

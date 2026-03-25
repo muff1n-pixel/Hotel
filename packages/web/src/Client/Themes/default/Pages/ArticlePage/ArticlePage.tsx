@@ -272,12 +272,12 @@ const ArticlePage = () => {
                                     <div className='footer'>
                                         {articleData.author &&
                                             <div className='author'>
-                                                <div className='avatar'>
+                                                <div className='avatar' onClick={() => navigate(`/home/${articleData.author?.name}`)}>
                                                     <img src={articleAuthorAvatar} alt="Avatar" />
                                                 </div>
 
                                                 <div className='data'>
-                                                    <div className='username'>{articleData.author.name}</div>
+                                                    <div className='username' onClick={() => navigate(`/home/${articleData.author?.name}`)}>{articleData.author.name}</div>
                                                     <div className='date'>{TimeAgo(articleData.createdAt)} </div>
                                                 </div>
                                             </div>

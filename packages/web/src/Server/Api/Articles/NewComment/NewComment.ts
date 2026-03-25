@@ -3,7 +3,6 @@ import { UserTokenModel } from "../../../Models/Users/UserTokens/UserTokenModel"
 import { UserModel } from "../../../Models/Users/UserModel";
 import jsonWebToken from "jsonwebtoken";
 import { WebArticleModel } from "../../../Models/Web/Article/WebArticleModel";
-import { WebArticleLikeModel } from "../../../Models/Web/Article/Like/WebArticleLikeModel";
 import { randomUUID } from 'crypto';
 import { WebArticleCommentModel } from "../../../Models/Web/Article/Comment/WebArticleCommentModel";
 

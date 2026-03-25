@@ -1,0 +1,56 @@
+.playground {
+    .widget {
+        .widgetContent {
+            .pagination {
+                position: relative;
+                display: flex;
+                align-items: center;
+                padding: 5px;
+                margin-top: 10px;
+
+                .count {
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+
+                    span {
+                        font-weight: bold;
+                    }
+                }
+
+                .back {
+                    margin-right: auto;
+                    transform: scaleX(-1);
+                }
+
+                .next {
+                    margin-left: auto;
+                }
+
+                .chevron {
+                    width: 10px;
+                    height: 10px;
+                    border-right: 2px solid black;
+                    border-bottom: 2px solid black;
+                    transform: rotate(-45deg);
+                }
+
+                button {
+                    transition-duration: 0.5s;
+                    background: transparent;
+                    border: none;
+                    opacity: 0.7;
+                }
+
+                button:hover {
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .widget.hc_scifi .pagination .chevron {
+        border-color: #FFF;
+    }
+}

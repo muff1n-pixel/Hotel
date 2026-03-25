@@ -1,0 +1,75 @@
+.playground {
+    .widget {
+        .widgetTitle {
+            font-family: 'Ubuntu Bold';
+            position: absolute;
+            left: 15px;
+            top: 9px;
+            color: #fff;
+            font-size: 13px;
+        }
+    }
+
+    .widget.none {
+        .widgetTitle {
+            top: 0;
+            left: 0;
+        }
+    }
+
+    .widget.golden {
+        .widgetTitle {
+            padding-left: 20px;
+            top: 8px;
+            color: #733A00;
+        }
+    }
+
+    .widget.metal {
+        .widgetTitle {
+            padding-left: 15px;
+            top: 4px;
+            color: #41404a;
+        }
+    }
+
+    .widget.notepad {
+        .widgetTitle {
+            padding-left: 15px;
+            top: 5px;
+            color: #4c3a41;
+            font-size: 16px;
+        }
+    }
+
+    .widget.speech_bubble {
+        .widgetTitle {
+            top: 5px;
+            color: #666;
+            font-size: 16px;
+        }
+    }
+
+    .widget.stickie_note {
+        .widgetTitle {
+            color: #202933;
+            font-size: 14px;
+        }
+    }
+
+    .widget.hc_bling {
+        .widgetTitle {
+            padding-left: 40px;
+            color: #510042;
+            font-size: 16px;
+        }
+    }
+
+    .widget.hc_scifi {
+        .widgetTitle {
+            padding-left: 50px;
+            top: 3px;
+        }
+    }
+
+}

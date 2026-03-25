@@ -7,6 +7,7 @@ import type { Config } from './Interfaces/Config.ts';
 import { sendCriticalError, sendLog } from "@shared/Logger/LoggerEx";
 import { ModelManager } from './Models/ModelManager.ts';
 import { ApiManager } from './Api/ApiManager.ts';
+import homeInitialize from './Utils/HomeInitializer/HomeInitializer.ts';
 
 class App {
     config: Config | null;
@@ -33,8 +34,16 @@ class App {
             return sendCriticalError("Failed to load config.json");
 
         this.sequelize = new Sequelize(this.config.database);
+
         const modelsLoaded = await this.modelManager.init(this.sequelize);
         sendLog("INFO", `${modelsLoaded} models loaded.`);
+
+        const initHome = process.argv.includes('--initHome');
+
+        if (initHome) {
+            sendLog("INFO", "Initializing Home Pages...");
+            await homeInitialize();
+        }
 
         this.expressApp.use(express.json());
         this.expressApp.use(cookieParser());
@@ -63,7 +72,7 @@ class App {
             root: path.join((this.config as Config).static, "web")
         }));
 
-        if(this.config.hostname) {
+        if (this.config.hostname) {
             this.expressApp.listen(this.config.port, this.config.hostname);
         }
         else {

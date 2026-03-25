@@ -5,7 +5,11 @@ import Pagination from '../Pagination/HeaderPopUpPagination';
 import { ThemeContext } from '../../../../ThemeProvider';
 import HeaderPopUpFriendsUser from './HeaderPopUpFriendsUser';
 
-const HeaderPopUpFriends = () => {
+type HeaderPopUpFriendsProps = {
+    setActiveItem: (id: string | null) => void;
+}
+
+const HeaderPopUpFriends = ({setActiveItem}: HeaderPopUpFriendsProps) => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [loading, setLoading] = useState<boolean>(true);
     const [friends, setFriends] = useState<Array<UserInterface>>([]);
@@ -46,9 +50,15 @@ const HeaderPopUpFriends = () => {
         <>
             {loading ? <Loading /> :
                 <>
-                    {currentFriends.map((user) => (
-                        <HeaderPopUpFriendsUser {...user} />
-                    ))}
+                    {friends.length === 0 ?
+                        <div className='noData'>Your friends list is empty.</div>
+                        :
+                        <>
+                            {currentFriends.map((user) => (
+                                <HeaderPopUpFriendsUser user={user} setActiveItem={setActiveItem} />
+                            ))}
+                        </>
+                    }
 
                     {totalPages > 1 &&
                         <Pagination

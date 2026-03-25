@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
         })
     });
 
-    return res.json(friends);
+    return res.json(friends.sort((a, b) => Number(b.online) - Number(a.online)));
 });
 
 export default router;

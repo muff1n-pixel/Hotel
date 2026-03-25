@@ -66,6 +66,8 @@ router.post("/", async (req, res) => {
             allowFriendsFollow
         })
 
+        // TODO --> Emit to main server with WebSockets
+
         return res.json({
             success: "Your friends settings has been edited."
         });

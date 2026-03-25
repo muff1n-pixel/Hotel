@@ -171,11 +171,6 @@ header {
                 }
             }
 
-            @media (max-width: 1024px) {
-                .onlines {
-                    display: none;
-                }
-            }
 
             nav {
                 position: absolute;
@@ -220,6 +215,22 @@ header {
 
                 a:last-child {
                     margin-right: 0;
+                }
+            }
+        }
+
+        .resize {
+            @media (max-width: 1024px) {
+                .onlines {
+                    display: none;
+                }
+            }
+        }
+
+        .homeResize {
+            @media (max-width: 1190px) {
+                .onlines {
+                    display: none;
                 }
             }
         }

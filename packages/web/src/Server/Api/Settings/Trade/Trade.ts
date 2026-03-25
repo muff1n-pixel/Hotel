@@ -64,6 +64,8 @@ router.post("/", async (req, res) => {
             allowTrade
         })
 
+        // TODO --> Emit to main server with WebSockets
+
         return res.json({
             success: "Your trade settings has been edited."
         });

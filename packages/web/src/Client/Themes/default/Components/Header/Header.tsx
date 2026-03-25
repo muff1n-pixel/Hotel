@@ -16,7 +16,9 @@ const Header = () => {
 
     const popUpNavigationRef = useRef<HTMLUListElement | null>(null);
     const popUpNavigation = ['My Friends', 'My Groups', 'My Rooms'];
-    const [activeItem, setActiveItem] = useState(null);
+    const [activeItem, setActiveItem] = useState<string | null>(null);
+
+    const isHomePage = location.pathname.split("/")[1] === "home";
 
     const handleClick = (item) => {
         setActiveItem(activeItem === item ? null : item);
@@ -128,6 +130,7 @@ const Header = () => {
                     return (
                         <nav className='submenu'>
                             <NavLink to="/me">{currentUser.name}</NavLink>
+                            <NavLink to={`/home/${currentUser.name}`}>My Page</NavLink>
                             <NavLink to="/settings">Account Settings</NavLink>
                         </nav>
                     )
@@ -145,8 +148,8 @@ const Header = () => {
 
     return (
         <header>
-            <div className='top_content minWidth'>
-                <div className='resize'>
+            <div className={`top_content ${isHomePage ? "minWidthHomePage" : "minWidth"}`}>
+                <div className={`resize ${isHomePage ? "homeResize" : ""}`}>
                     <div className='content'>
                         <div className='logo' onClick={() => navigate("/me")}><img src={Logo} alt="Logo" /></div>
 
@@ -162,7 +165,7 @@ const Header = () => {
 
                                                 {activeItem === item && (
                                                     <div className="dropdown">
-                                                        <HeaderPopUp name={item} />
+                                                        <HeaderPopUp name={item} setActiveItem={setActiveItem} />
                                                     </div>
                                                 )}
                                             </li>
@@ -193,7 +196,7 @@ const Header = () => {
                         {currentUser !== null ? <NavLink
                             to="/me"
                             className={({ isActive }) =>
-                                isActive || matchPath("/settings/*", location.pathname)
+                                isActive || matchPath("/settings/*", location.pathname) || matchPath("/home/*", location.pathname)
                                     ? "active green"
                                     : "green"
                             }
@@ -207,7 +210,7 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className='resize'>
+            <div className={`resize ${isHomePage ? "homeResize" : ""}`}>
                 {generateSubMenu()}
             </div>
         </header>

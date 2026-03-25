@@ -8,12 +8,14 @@ import likeInactiveIcon from '../../../Images/icons/small/favorite_inactive.gif'
 import { ThemeContext } from '../../../ThemeProvider';
 import { ArticleInterface } from '@client/Logic/Article/ArticleInterface';
 import TimeAgo from '../../../../../Utils/DateFormatter/DateFormatter';
+import { useNavigate } from 'react-router';
 
 interface ArticleCommentProps extends ArticleCommentInterface {
     setArticleData: React.Dispatch<React.SetStateAction<ArticleInterface | null>>;
 }
 
 const ArticleComment = (props: ArticleCommentProps) => {
+    const navigate = useNavigate();
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [userAvatar, setUserAvatar] = useState<string | Base64URLString>(UnknowUserImage);
 
@@ -67,7 +69,9 @@ const ArticleComment = (props: ArticleCommentProps) => {
 
     return (
         <div className="comment">
-            <div className="user">
+            <div className="user" onClick={() => {
+                props.user ? navigate(`/home/${props.user.name}`) : null
+            }}>
                 <div className='avatar'>
                     <img alt="Avatar" src={userAvatar} />
                 </div>

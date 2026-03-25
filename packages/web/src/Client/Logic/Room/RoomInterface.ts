@@ -8,5 +8,6 @@ export interface RoomInterface {
     owner: RoomOwnerInterface | null,
     thumbnail: string,
     currentUsers: number,
-    maxUsers: number
+    maxUsers: number,
+    lock: string
 }

@@ -1,0 +1,64 @@
+.playground {
+    .friendsWidget {
+        .widgetContent {
+            width: 230px;
+
+            .noFriends {
+                text-align: center;
+            }
+
+            .friends {
+                .row {
+                    border-radius: 8px;
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+
+                    .avatar {
+                        width: 60px;
+                        height: 40px;
+                        margin-right: 10px;
+                        background-repeat: no-repeat;
+                        background-position: center calc(100% + 10px);
+                    }
+
+                    .name span,
+                    .motto {
+                        word-break: break-all;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -moz-box-orient: vertical;
+                        -ms-box-orient: vertical;
+                        box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        -moz-line-clamp: 1;
+                        -ms-line-clamp: 1;
+                        line-clamp: 1;
+                        overflow: hidden;
+                    }
+
+                    .name {
+                        font-weight: bold;
+                        display: flex;
+                        align-items: center;
+
+                        img {
+                            margin-left: 5px;
+                        }
+                    }
+
+                    .motto {
+                        font-size: 12px;
+                        opacity: 0.7;
+                        font-family: "Ubuntu-C";
+                    }
+                }
+
+                .row:hover {
+                    cursor: pointer;
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+            }
+        }
+    }
+}

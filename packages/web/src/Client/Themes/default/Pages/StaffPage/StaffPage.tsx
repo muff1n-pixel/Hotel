@@ -1,7 +1,8 @@
 import './StaffPage.css';
 import Leaders_Image from '../../Images/staff/leaders.png';
 import Admin_Badge from '../../Images/staff/ADM.gif';
-import Frank_Search from '../../Images/frank/frank_search.gif'
+import Frank_Search from '../../Images/frank/frank_search.gif';
+import Frank_Search2 from '../../Images/frank/frank_search2.png'
 import StaffUser from '../../Components/Staff/StaffUser/StaffUser';
 import { useEffect, useState } from 'react';
 import Loading from '../../Components/Loading/Loading';
@@ -39,13 +40,21 @@ const StaffPage = () => {
                         loading ?
                             <Loading />
                             :
-                            <div>
-                                {ranks.map((rank) => {
-                                    return (
-                                        <StaffSection {...rank} key={rank.id} />
-                                    )
-                                })}
-                            </div>
+                            ranks.length === 0 ?
+                                <Box>
+                                    <div className='empty'>
+                                        <img src={Frank_Search2} alt="Frank Search" />
+                                        <div>Nothing to show at the moment.</div>
+                                    </div>
+                                </Box>
+                                :
+                                <>
+                                    {ranks.map((rank) => {
+                                        return (
+                                            <StaffSection {...rank} key={rank.id} />
+                                        )
+                                    })}
+                                </>
                     }
                 </div>
 

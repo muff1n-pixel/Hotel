@@ -5,6 +5,7 @@
 :root {
     --red: #d64242;
     --blue: #2767a7;
+    --title-blue: #009dff;
     --light-blue: #53a5d6;
     --green: #2bb500;
     --orange: #ff6103;
@@ -24,7 +25,7 @@ body {
     font-size: 14px;
 }
 
-img, canvas {
+canvas {
     image-rendering: pixelated;
 }
 
@@ -40,8 +41,17 @@ b {
     margin: 0 auto;
 }
 
+.resize.homeResize {
+    min-width: 930px;
+    max-width: 930px;
+}
+
 .minWidth {
     min-width: 765px;
+}
+
+.minWidthHomePage {
+    min-width: 930px;
 }
 
 .grid {

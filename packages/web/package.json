@@ -2,19 +2,21 @@
   "type": "module",
   "scripts": {
     "start": "npm run build && tsx src/server/index.ts",
+    "init_home": "npm run build && tsx src/server/index.ts --initHome",
     "server_dev": "tsx --watch src/server/index.ts",
     "dev": "vite dev",
     "build": "vite build"
   },
   "dependencies": {
+    "@pixel63/game": "file:../game",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
+    "image-size": "^2.0.2",
     "react": "^19.1.0",
     "react-cookie": "^8.0.1",
     "react-dom": "^19.1.0",
-    "react-router": "^7.13.0",
-    "@pixel63/game": "file:../game"
+    "react-router": "^7.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

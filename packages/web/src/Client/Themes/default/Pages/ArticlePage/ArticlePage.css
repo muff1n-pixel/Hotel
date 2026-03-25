@@ -112,19 +112,30 @@
             .author {
                 display: flex;
                 align-items: center;
+                position: relative;
 
                 .avatar {
                     position: relative;
-                    height: 60px;
+                    height: 70px;
                     width: 50px;
                     overflow: hidden;
                     margin-right: 5px;
+                    margin-bottom: -5px;
 
                     img {
                         position: absolute;
                         bottom: -30px;
                         left: 50%;
                         transform: translate(-50%);
+                        transition-duration: 0.5s;
+                    }
+                }
+
+                .avatar:hover {
+                    cursor: pointer;
+
+                    img {
+                        filter: brightness(105%)
                     }
                 }
 
@@ -132,6 +143,11 @@
                     .username {
                         font-weight: bold;
                         margin-bottom: 5px;
+                    }
+
+                    .username:hover {
+                        cursor: pointer;
+                        text-decoration: underline;
                     }
 
                     .date {

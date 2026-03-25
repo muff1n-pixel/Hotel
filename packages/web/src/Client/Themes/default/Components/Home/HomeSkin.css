@@ -1,0 +1,190 @@
+.playground {
+    .skin.default {
+        .widgetCorner {
+            background: url('$assets/home/skins/default/topLh.png') no-repeat top left;
+            padding-left: 41px;
+            height: 41px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/default/topRh.png') no-repeat top right;
+                height: 41px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/default/btmL.png') no-repeat bottom left;
+            padding-left: 14px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/default/btmR.png') no-repeat bottom right;
+                padding: 4px 16px 19px 4px;
+            }
+        }
+    }
+
+    .skin.golden {
+        .widgetCorner {
+            background: url('$assets/home/skins/golden/topL.png') no-repeat top left;
+            padding-left: 31px;
+            height: 31px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/golden/topR.png') no-repeat top right;
+                height: 31px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/golden/btmlL.png') no-repeat bottom left;
+            padding-left: 30px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/golden/btmlR.png') no-repeat bottom right;
+                padding: 4px 35px 35px 4px;
+            }
+        }
+    }
+
+    .skin.metal {
+        .widgetCorner {
+            background: url('$assets/home/skins/metal/topLh.png') no-repeat top left;
+            padding-left: 35px;
+            height: 33px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/metal/topRh.png') no-repeat top right;
+                height: 33px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/metal/btmL.png') no-repeat bottom left;
+            padding-left: 22px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/metal/btmR.png') no-repeat bottom right;
+                padding: 1px 26px 23px 7px;
+            }
+        }
+    }
+
+    .skin.notepad {
+        .widgetCorner {
+            background: url('$assets/home/skins/notepad/topLh.png') no-repeat top left;
+            padding-left: 27px;
+            height: 29px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/notepad/topRh.png') no-repeat top right;
+                height: 29px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/notepad/btmL.png') no-repeat bottom left;
+            padding-left: 27px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/notepad/btmR.png') no-repeat bottom right;
+                padding: 2px 7px 18px 2px;
+            }
+        }
+    }
+
+    .skin.speech_bubble {
+        .widgetCorner {
+            background: url('$assets/home/skins/speech_bubble/topL.png') no-repeat top left;
+            padding-left: 10px;
+            height: 10px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/speech_bubble/topR.png') no-repeat top right;
+                height: 10px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/speech_bubble/btmL.png') no-repeat bottom left;
+            padding-left: 10px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/speech_bubble/btmR.png') no-repeat bottom right;
+                padding: 17px 10px 22px 0;
+            }
+        }
+    }
+
+    .skin.stickie_note {
+        .widgetCorner {
+            background: url('$assets/home/skins/stickie_note/topL.png') no-repeat top left;
+            padding-left: 5px;
+            height: 30px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/stickie_note/topR.png') no-repeat top right;
+                height: 30px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/stickie_note/btmL.png') no-repeat bottom left;
+            padding-left: 1px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/stickie_note/btmR.png') no-repeat bottom right;
+                padding: 7px 9px 30px 9px;
+            }
+        }
+    }
+
+    .skin.hc_bling {
+        .widgetCorner {
+            background: url('$assets/home/skins/hc_bling/topLh.png') no-repeat top left;
+            padding-left: 41px;
+            height: 49px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/hc_bling/topRh.png') no-repeat top right;
+                height: 49px;
+                padding-left: 0px;
+                margin-left: 13px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/hc_bling/btmL.png') no-repeat bottom left;
+
+            .widgetContent {
+                background: url('$assets/home/skins/hc_bling/btmR.png') no-repeat bottom right;
+                padding: 0 41px 38px 0;
+                font-weight: normal;
+                margin-bottom: 1px;
+                margin-left: 44px;
+            }
+        }
+    }
+
+    .skin.hc_scifi {
+        .widgetCorner {
+            background: url('$assets/home/skins/hc_scifi/topLh.png') no-repeat top left;
+            padding-left: 61px;
+            height: 42px;
+
+            .widgetHeadline {
+                background: url('$assets/home/skins/hc_scifi/topRh.png') no-repeat top right;
+                height: 42px;
+            }
+        }
+
+        .widgetBody {
+            background: url('$assets/home/skins/hc_scifi/btmL.png') no-repeat bottom left;
+            padding-left: 49px;
+
+            .widgetContent {
+                background: url('$assets/home/skins/hc_scifi/btmR.png') no-repeat bottom right;
+                padding: 0 46px 31px 0;
+                color: #fff;
+            }
+        }
+    }
+}

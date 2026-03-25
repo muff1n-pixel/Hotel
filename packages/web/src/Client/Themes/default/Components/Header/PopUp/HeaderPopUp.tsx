@@ -3,11 +3,16 @@ import HeaderPopUpGroups from './Groups/HeaderPopUpGroups';
 import './HeaderPopUp.css'
 import HeaderPopUpRooms from './Rooms/HeaderPopUpRooms';
 
-const HeaderPopUp = ({ name }) => {
+type HomePopUpProps = {
+    name: string;
+    setActiveItem: (id: string | null) => void;
+}
+
+const HeaderPopUp = ({ name, setActiveItem }: HomePopUpProps) => {
     const renderByName = () => {
         switch(name) {
             case 'My Friends':
-                return <HeaderPopUpFriends />
+                return <HeaderPopUpFriends setActiveItem={setActiveItem} />
 
             case 'My Rooms':
                 return <HeaderPopUpRooms />

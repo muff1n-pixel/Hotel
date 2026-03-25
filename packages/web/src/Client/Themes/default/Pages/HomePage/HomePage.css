@@ -1,0 +1,35 @@
+.homePage {
+    .container {
+        background-color: #fff;
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, .2);
+        box-shadow: 0 2px 0 1px #0003;
+        border: 1px solid #afafaf;
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+
+            button {
+                margin-right: 15px;
+            }
+
+            .name {
+                font-size: 16px;
+                color: var(--title-blue);
+                font-family: 'Ubuntu Bold';
+            }
+
+            .dialogButtons {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+
+                img {
+                    height: 16px;
+                }
+            }
+        }
+    }
+}

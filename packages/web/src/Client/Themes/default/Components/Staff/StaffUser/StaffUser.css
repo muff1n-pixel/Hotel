@@ -12,6 +12,12 @@
                 height: 95px;
                 background-repeat: no-repeat;
                 background-position: bottom center;
+                transition-duration: 0.5s;
+            }
+
+            .avatar:hover {
+                cursor: pointer;
+                filter: brightness(105%);
             }
 
             .infos {
@@ -25,6 +31,10 @@
                     img {
                         margin-left: 10px;
                     }
+                }
+
+                .username:hover {
+                    text-decoration: underline;
                 }
 
                 .motto {

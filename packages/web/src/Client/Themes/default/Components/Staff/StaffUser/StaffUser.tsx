@@ -4,6 +4,7 @@ import Unknow_User from '../../../Images/unknow_user.gif';
 import AvatarImager from '../../../../../Utils/AvatarImager/AvatarImager';
 import OnlineImage from '../../../Images/state/online.gif';
 import OfflineImage from '../../../Images/state/offline.gif';
+import { useNavigate } from 'react-router';
 
 export type StaffUserType = {
     id: string;
@@ -16,6 +17,7 @@ export type StaffUserType = {
 }
 
 const StaffUser = (props: StaffUserType) => {
+    const navigate = useNavigate();
     const [avatar, setAvatar] = useState<string>(Unknow_User);
 
     useEffect(() => {
@@ -28,10 +30,10 @@ const StaffUser = (props: StaffUserType) => {
 
     return (
         <div className='staffUser'>
-            <div className='avatar' style={{ backgroundImage: `url(${avatar})` }}></div>
+            <div className='avatar' style={{ backgroundImage: `url(${avatar})` }} onClick={() => navigate(`/home/${props.name}`)}></div>
 
             <div className='infos'>
-                <div className='username'>{props.name} <img src={props.online ? OnlineImage : OfflineImage} alt='State' /></div>
+                <div className='username' onClick={() => navigate(`/home/${props.name}`)}>{props.name} <img src={props.online ? OnlineImage : OfflineImage} alt='State' /></div>
                 <div className='role'>{props.role}</div>
                 <div className='motto'>{props.motto}</div>
                 <div className='badges'>

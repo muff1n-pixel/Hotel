@@ -42,6 +42,11 @@ import { initializeFurnitureCrackableModel } from "./Models/Furniture/Crackable/
 import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crackable/FurnitureCrackableRewardModel.js";
 import { initializeAchievementModel, seedAchievements } from "./Models/Achievements/AchievementModel.js";
 import { initializeUserAchievementModel } from "./Models/Users/Achievements/UserAchievementModel.js";
+import { initializeWebHomeItemModel } from "./Models/Web/Home/Item/WebHomeItemModel.js";
+import { initializeWebHomeShopPageModel } from "./Models/Web/Home/Shop/Page/WebHomeShopPageModel.js";
+import { initializeWebHomeShopPageItem } from "./Models/Web/Home/Shop/Item/WebHomeShopPageItem.js";
+import { initializeWebHomeUserItemModel } from "./Models/Web/Home/UserItem/WebHomeUserItemModel.js";
+import { initializeWebHomeGuestBookMessage } from "./Models/Web/Home/Guestbook/WebHomeGuestBookMessage.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -73,9 +78,16 @@ export async function initializeModels() {
   initializeUserFriendModel(sequelize);
   initializeUserFriendRequestModel(sequelize);
 
+  // WEB
   initializeWebArticleModel(sequelize);
   initializeWebArticleCommentModel(sequelize);
   initializeWebArticleLikeModel(sequelize);
+
+  initializeWebHomeItemModel(sequelize);
+  initializeWebHomeShopPageModel(sequelize);
+  initializeWebHomeShopPageItem(sequelize);
+  initializeWebHomeUserItemModel(sequelize);
+  initializeWebHomeGuestBookMessage(sequelize);
 
   initializeRoomModel(sequelize);
   initializeRoomRightsModel(sequelize);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Loading from "../Loading/Loading"
 import StaffUser, { StaffUserType } from "./StaffUser/StaffUser"
 import Box from "../Box/Box"
+import Frank_Search2 from '../../Images/frank/frank_search2.png'
 
 type StaffRankRoleSection = {
     id: string,
@@ -72,13 +73,19 @@ const StaffSection = (props: StaffRankType) => {
                 loading ?
                     <Loading />
                     :
-                    <div>
-                        {users.map((user) => {
-                            return (
-                                <StaffUser {...user} key={user.id} />
-                            )
-                        })}
-                    </div>
+                    users.length === 0 ?
+                        <div className='empty'>
+                            <img src={Frank_Search2} alt="Frank Search" />
+                            <div>Nothing to show at the moment.</div>
+                        </div>
+                        :
+                        <>
+                            {users.map((user) => {
+                                return (
+                                    <StaffUser {...user} key={user.id} />
+                                )
+                            })}
+                        </>
             }
         </Box>
     )

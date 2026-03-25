@@ -15,6 +15,7 @@ export class UserModel extends Model {
     declare homeRoomId: string | null;
     declare roomChatStyleId: string;
     declare online: boolean;
+    declare createdAt: Date;
 
     declare roles: NonAttribute<PermissionRoleModel[]>;
     declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;

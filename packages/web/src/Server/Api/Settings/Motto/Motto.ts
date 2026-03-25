@@ -50,6 +50,8 @@ router.post("/", async (req, res) => {
             motto: newMotto.trim()
         })
 
+        // TODO --> Emit to main server with WebSockets
+
         return res.json({
             success: "Motto has been updated."
         });

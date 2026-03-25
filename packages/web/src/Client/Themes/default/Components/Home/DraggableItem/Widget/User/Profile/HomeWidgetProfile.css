@@ -1,0 +1,68 @@
+.playground {
+    .profileWidget {
+        .widgetContent {
+            display: flex;
+
+            .avatar {
+                background-repeat: no-repeat;
+                background-position: bottom center;
+                width: 60px;
+                height: 120px;
+                margin-right: 10px;
+            }
+
+            .data {
+                width: 220px;
+
+                .username {
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px dotted #000;
+                    padding-bottom: 5px;
+                    margin-bottom: 5px;
+
+                    img {
+                        margin-left: 10px;
+                    }
+                }
+
+                .motto {
+                    opacity: 0.6;
+                    margin-bottom: 5px;
+                    font-family: "Ubuntu-C";
+                    word-break: break-all;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -moz-box-orient: vertical;
+                    -ms-box-orient: vertical;
+                    box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    -moz-line-clamp: 1;
+                    -ms-line-clamp: 1;
+                    line-clamp: 1;
+                    overflow: hidden;
+                }
+
+                .date {
+                    opacity: 0.8;
+                    font-size: 10px;
+
+                    span {
+                        font-weight: bold;
+                    }
+                }
+
+                .badges {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+
+    .profileWidget.hc_scifi .widgetContent .data .username {
+        border-color: #FFF;
+    }
+}

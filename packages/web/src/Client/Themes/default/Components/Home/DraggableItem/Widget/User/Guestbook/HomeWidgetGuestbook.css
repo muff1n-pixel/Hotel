@@ -1,0 +1,121 @@
+.playground {
+    .guestbookWidget {
+        .widgetContent {
+            width: 300px;
+
+            .noMessages {
+                text-align: center;
+            }
+
+            .error {
+                text-align: center;
+                background-color: var(--red);
+                border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+                border-radius: 2px;
+                margin-bottom: 5px;
+                padding: 5px;
+                color: #FFF;
+            }
+
+            form {
+                margin-bottom: 10px;
+
+                textarea,
+                button {
+                    width: 100%;
+                }
+
+                textarea {
+                    font-family: 'Ubuntu-C';
+                    border: 1px solid #000;
+                    margin-bottom: 5px;
+                    height: 50px;
+                    padding: 5px;
+                    width: calc(100% - 12px);
+                    background-color: rgba(255, 255, 255, 0.7);
+                    transition-duration: 0.5s;
+                }
+
+                textarea:focus {
+                    background-color: rgba(255, 255, 255, 0.9);
+                }
+
+                button {
+                    margin-top: -2px;
+                }
+            }
+
+            .messages {
+                .row {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px dotted #000;
+                    padding-bottom: 5px;
+                    margin-bottom: 5px;
+
+                    .avatar {
+                        width: 50px;
+                        height: 40px;
+                        margin-right: 5px;
+                        background-repeat: no-repeat;
+                        background-position: center calc(100% + 10px);
+                    }
+
+                    .avatar:hover {
+                        cursor: pointer;
+                    }
+
+                    .data {
+                        width: calc(100% - 60px);
+
+                        .username {
+                            font-family: 'Ubuntu Bold';
+                            font-size: 12px;
+                            display: flex;
+                            align-items: center;
+
+                            .delete {
+                                margin-left: auto;
+                                filter: grayscale(1);
+                                transition-duration: 0.5s;
+                            }
+
+                            .delete:hover {
+                                filter: grayscale(0);
+                                cursor: pointer;
+                            }
+                        }
+
+                        .username span:hover {
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+
+                        .messageData {
+                            font-size: 11px;
+                            font-style: italic;
+                            font-family: 'Ubuntu-C';
+                            word-break: break-all;
+                        }
+
+                        .date {
+                            margin-top: 5px;
+                            font-size: 10px;
+                            opacity: 0.7;
+                        }
+                    }
+                }
+
+                .row:last-child {
+                    padding-bottom: 5px;
+                    margin-bottom: 0;
+                    border-bottom: 0;
+                }
+            }
+        }
+    }
+
+    .guestbookWidget.hc_scifi .messages .row {
+        border-color: #FFF;
+    }
+}

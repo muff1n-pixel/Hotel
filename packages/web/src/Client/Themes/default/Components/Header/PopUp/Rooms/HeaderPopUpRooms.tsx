@@ -46,12 +46,18 @@ const HeaderPopUpRooms = () => {
         <>
             {loading ? <Loading /> :
                 <>
-                    {currentRooms.map((room) => (
-                        <div className="row room" key={room.id} onClick={() => window.open(`/game?room=${room.id}`, "_blank", "noopener,noreferrer")}>
-                            <span>{room.name}</span>
-                            <img src={goIcon} alt="goIcon" className="joinRoom" />
-                        </div>
-                    ))}
+                    {rooms.length === 0 ?
+                        <div className='noData'>You have no room yet.</div>
+                        :
+                        <>
+                            {currentRooms.map((room) => (
+                                <div className="row room" key={room.id} onClick={() => window.open(`/game?room=${room.id}`, "_blank", "noopener,noreferrer")}>
+                                    <span>{room.name}</span>
+                                    <img src={goIcon} alt="goIcon" className="joinRoom" />
+                                </div>
+                            ))}
+                        </>
+                    }
 
                     {totalPages > 1 &&
                         <Pagination

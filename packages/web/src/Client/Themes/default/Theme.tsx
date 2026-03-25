@@ -15,6 +15,7 @@ import './Theme.css';
 import './Fonts.css';
 import StaffPage from "./Pages/StaffPage/StaffPage";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
+import HomePage from "./Pages/HomePage/HomePage";
 
 const Layout = () => (
   <>
@@ -46,6 +47,13 @@ export const routes = [
     element: <Layout />,
     children: [
       { index: true, element: <MePage /> },
+    ]
+  },
+  {
+    path: "/home/:name?",
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
     ]
   },
   {

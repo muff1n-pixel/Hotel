@@ -1,0 +1,17 @@
+.playground {
+    .badgesWidget {
+        .widgetContent {
+            width: 230px;
+            
+            .noBadges {
+                text-align: center;
+            }
+            
+            .badges {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+    }
+}
