@@ -1,4 +1,4 @@
-import { HomeItemType, HomeType } from '../../../../Pages/HomePage/HomePage';
+import { HomeItemType, HomeType, HomeLastModalOpenType } from '../../../../Pages/HomePage/HomePage';
 import creditsIcon from '../../../../Images/me/creditIcon.png';
 import ducketsIcon from '../../../../Images/me/duckets.png';
 import diamondsIcon from '../../../../Images/me/diamonds.png';
@@ -11,14 +11,16 @@ import Button from '../../../Button/Button';
 import Box from '../../../Box/Box';
 
 type HomeItemDialogProps = {
+    lastModalOpen: HomeLastModalOpenType,
     homeType: HomeType,
     activeTab: HomeItemDialogTab,
+    setLastModalOpen: (data: HomeLastModalOpenType) => void,
     setHomeItems: React.Dispatch<React.SetStateAction<HomeItemType[]>>,
     setBgPreview: (url: string | null) => void;
     setNewItems: (number) => void
 }
 
-const HomeItemDialogContent = ({ homeType, activeTab, setHomeItems, setBgPreview, setNewItems }: HomeItemDialogProps) => {
+const HomeItemDialogContent = ({ lastModalOpen, homeType, activeTab, setHomeItems, setBgPreview, setNewItems, setLastModalOpen }: HomeItemDialogProps) => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [loadItems, setLoadItems] = useState<boolean>(false);
     const [inventory, setInventory] = useState<HomeItemType[]>([]);
@@ -67,7 +69,7 @@ const HomeItemDialogContent = ({ homeType, activeTab, setHomeItems, setBgPreview
 
                 setError(null);
 
-                if(notesDialog) {
+                if (notesDialog) {
                     setNoteContent('');
                     setNotesDialog(false);
                 }
@@ -165,6 +167,12 @@ const HomeItemDialogContent = ({ homeType, activeTab, setHomeItems, setBgPreview
 
                     dispatch({ currentUser: newUser });
                     setNewItems(prev => prev + result.success.amount);
+                    setLastModalOpen({
+                        ...lastModalOpen,
+                        inventory: {
+                            ...lastModalOpen.webshop
+                        }
+                    });
                 }
             })
             .catch((e) => {
@@ -218,6 +226,7 @@ const HomeItemDialogContent = ({ homeType, activeTab, setHomeItems, setBgPreview
                 {currentUser ?
                     <>
                         <HomeItemDialogCategories
+                            lastModalOpen={lastModalOpen}
                             homeType={homeType}
                             activeTab={activeTab}
                             inventory={inventory}
@@ -228,6 +237,7 @@ const HomeItemDialogContent = ({ homeType, activeTab, setHomeItems, setBgPreview
                                 setActiveItem(items[0]);
 
                             }}
+                            setLastModalOpen={setLastModalOpen}
                             setLoadItems={setLoadItems}
                             setInventory={setInventory}
                             onCategoryChange={(category) => setActiveCategory(category)}

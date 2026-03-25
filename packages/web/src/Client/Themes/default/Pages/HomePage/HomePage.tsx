@@ -66,6 +66,27 @@ export type HomeUserType = {
     guestbookMessages: Array<GuestbookMessage>
 }
 
+export type HomeLastModalOpenType = {
+    inventory: {
+        tab: HomeItemDialogTab | null,
+        category: {
+            id: string;
+        } | null,
+        sub: {
+            id: string;
+        } | null;
+    },
+    webshop: {
+        tab: HomeItemDialogTab | null,
+        category: {
+            id: string;
+        } | null,
+        sub: {
+            id: string;
+        } | null;
+    }
+}
+
 const HomePage = () => {
     const { state: { currentUser }, dispatch } = useContext(ThemeContext);
     const [activeUser, setActiveUser] = useState<HomeUserType | null>(null);
@@ -75,6 +96,18 @@ const HomePage = () => {
     const parentRef = useRef<HTMLDivElement | null>(null);
     const [editMode, setEditMode] = useState<boolean>(false);
     const [homeItems, setHomeItems] = useState<HomeItemType[]>([]);
+    const [lastModalOpen, setLastModalOpen] = useState<HomeLastModalOpenType>({
+        inventory: {
+            tab: null,
+            category: null,
+            sub: null
+        },
+        webshop: {
+            tab: null,
+            category: null,
+            sub: null
+        }
+    });
     const { name } = useParams();
     const navigate = useNavigate();
     const inventoryRef = useRef<HTMLButtonElement | null>(null);
@@ -90,10 +123,10 @@ const HomePage = () => {
             return
         }
 
-        if(dialogItemOpen)
+        if (dialogItemOpen)
             setDialogItemOpen(false);
 
-        if(!loading)
+        if (!loading)
             setLoading(true);
 
         if (editMode)
@@ -122,7 +155,11 @@ const HomePage = () => {
             .catch((e) => {
                 console.error("(Error) Impossible to get home:", e)
             })
-    }, [name])
+    }, [name]);
+
+    const openDialogModal = (tab: HomeItemDialogTab) => {
+        openDialog(tab);
+    }
 
     return (
         <div className='homePage resize homeResize'>
@@ -145,13 +182,13 @@ const HomePage = () => {
 
                             {currentUser && currentUser.name === name && editMode &&
                                 <div className='dialogButtons'>
-                                    <Button ref={inventoryRef} color='grey' onClick={() => openDialog(HomeItemDialogTab.Inventory)}><img src={InventoryIcon} alt='Inventory Icon' />Inventory</Button>
-                                    <Button color='black' onClick={() => openDialog(HomeItemDialogTab.WebStore)}><img src={PurchaseIcon} alt='Purchase Icon' />Store</Button>
+                                    <Button ref={inventoryRef} color='grey' onClick={() => openDialogModal(HomeItemDialogTab.Inventory)}><img src={InventoryIcon} alt='Inventory Icon' />Inventory</Button>
+                                    <Button color='black' onClick={() => openDialogModal(HomeItemDialogTab.WebStore)}><img src={PurchaseIcon} alt='Purchase Icon' />Store</Button>
                                 </div>
                             }
                         </div>
 
-                        {editMode && dialogItemOpen && <HomeItemDialog playgroundRef={parentRef} defaultTab={dialogDefaultTab} setHomeItems={setHomeItems} homeType={HomeType.User} onClose={() => setDialogItemOpen(false)} />}
+                        {editMode && dialogItemOpen && <HomeItemDialog playgroundRef={parentRef} defaultTab={dialogDefaultTab} setHomeItems={setHomeItems} lastModalOpen={lastModalOpen} setLastModalOpen={setLastModalOpen} homeType={HomeType.User} onClose={() => setDialogItemOpen(false)} />}
                         <HomePlayground
                             playgroundRef={parentRef}
                             items={homeItems}

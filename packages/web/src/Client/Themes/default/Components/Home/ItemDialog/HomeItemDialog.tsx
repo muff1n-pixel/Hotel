@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { HomeItemType, HomeType } from '../../../Pages/HomePage/HomePage';
+import { HomeItemType, HomeType, HomeLastModalOpenType } from '../../../Pages/HomePage/HomePage';
 import './HomeItemDialog.css'; import HomeItemDialogContent from './DialogContent/HomeItemDialogContent';
 import animatedArrow from '../../../Images/icons/small/animated_arrow.gif'
 
@@ -12,11 +12,13 @@ type HomeItemDialogProps = {
     playgroundRef: React.RefObject<HTMLDivElement | null>,
     defaultTab?: HomeItemDialogTab,
     homeType: HomeType,
+    lastModalOpen: HomeLastModalOpenType,
+    setLastModalOpen: (data: HomeLastModalOpenType) => void,
     setHomeItems: React.Dispatch<React.SetStateAction<HomeItemType[]>>,
     onClose: () => void
 }
 
-const HomeItemDialog = ({ playgroundRef, defaultTab, homeType, setHomeItems, onClose }: HomeItemDialogProps) => {
+const HomeItemDialog = ({ lastModalOpen, playgroundRef, defaultTab, homeType, setLastModalOpen, setHomeItems, onClose }: HomeItemDialogProps) => {
     const tabs = [
         { label: "Inventory", value: HomeItemDialogTab.Inventory },
         { label: "Web Store", value: HomeItemDialogTab.WebStore },
@@ -111,7 +113,7 @@ const HomeItemDialog = ({ playgroundRef, defaultTab, homeType, setHomeItems, onC
                     <div className='close_button' onClick={closeModal}></div>
                 </div>
 
-                <HomeItemDialogContent setHomeItems={setHomeItems} setBgPreview={setPreview} homeType={homeType} activeTab={activeTab} setNewItems={setNewItems} />
+                <HomeItemDialogContent lastModalOpen={lastModalOpen} setHomeItems={setHomeItems} setBgPreview={setPreview} homeType={homeType} activeTab={activeTab} setNewItems={setNewItems} setLastModalOpen={setLastModalOpen} />
             </div>
         </div>
     )
