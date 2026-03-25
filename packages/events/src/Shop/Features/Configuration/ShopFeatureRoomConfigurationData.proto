@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Shop/Features/Configuration/ShopFeatureFurnitureConfigurationData.proto";
+
+message ShopFeatureRoomConfigurationData {
+    uint32 rendered_offset_left = 1;
+    uint32 rendered_offset_top = 2;
+
+    repeated ShopFeatureFurnitureConfigurationData room_furniture = 3;
+}

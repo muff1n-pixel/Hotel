@@ -42,6 +42,7 @@ import RoomPasswordErrorDialog from "@UserInterface/Components/Room/Doorbell/Roo
 import EditFurnitureCrackableDialog from "@UserInterface/Components/Furniture/Dialogs/EditFurnitureCrackableDialog";
 import AchievementsDialog from "@UserInterface/Components/Achievements/AchievementsDialog";
 import EditShopFeatureDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureDialog";
+import EditShopFeatureCameraDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureCameraDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -51,6 +52,7 @@ export default function DialogInstances() {
             {dialogs.map((dialog) => {
                 const props = {
                     key: dialog.id,
+                    id: dialog.id,
                     data: dialog.data as any,
                     hidden: dialog.hidden,
                     onClose: () => closeDialog(dialog.id)
@@ -128,6 +130,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-feature":
                         return (<EditShopFeatureDialog {...props} key={dialog.id}/>);
+
+                    case "edit-shop-feature-camera":
+                        return (<EditShopFeatureCameraDialog {...props} key={dialog.id}/>);
 
                     case "edit-shop-furniture":
                         return (<EditShopFurnitureDialog {...props} key={dialog.id}/>);

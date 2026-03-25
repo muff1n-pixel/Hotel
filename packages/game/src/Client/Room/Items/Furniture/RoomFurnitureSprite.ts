@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import Furniture, { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
@@ -10,34 +10,45 @@ export default class RoomFurnitureSprite extends RoomSprite {
         top: 0
     };
 
+    public static getDefaultOffsetPosition(furniture: Furniture, sprite: FurnitureRendererSprite, scale: number) {
+        const offset: MousePosition = {
+            left: 0,
+            top: 0
+        };
+
+        if(furniture.placement === "floor") {
+            offset.left += 64;
+            offset.top += 16;
+        }
+        else {
+            if(furniture.direction === 2) {
+                offset.left += 96;
+            }
+            else {
+                offset.left += 32;
+            }
+
+            offset.top -= 16;
+        }
+
+        if(furniture.type !== "tile_cursor") {
+            offset.left *= scale;
+            offset.top *= scale;
+        }
+
+        offset.left += sprite.x;
+        offset.top += sprite.y;
+
+        return offset;
+    }
+
     constructor(public readonly item: RoomFurnitureItem, public readonly sprite: FurnitureRendererSprite) {
         super(item);
 
         this.priority = this.sprite.zIndex;
         this.tag = sprite.tag;
 
-        if(item.furnitureRenderer.placement === "floor") {
-            this.offset.left += 64;
-            this.offset.top += 16;
-        }
-        else {
-            if(item.furnitureRenderer.direction === 2) {
-                this.offset.left += 96;
-            }
-            else {
-                this.offset.left += 32;
-            }
-
-            this.offset.top -= 16;
-        }
-
-        if(this.item.furnitureRenderer.type !== "tile_cursor") {
-            this.offset.left *= this.item.roomRenderer.getSizeScale();
-            this.offset.top *= this.item.roomRenderer.getSizeScale();
-        }
-
-        this.offset.left += this.sprite.x;
-        this.offset.top += this.sprite.y;
+        this.offset = RoomFurnitureSprite.getDefaultOffsetPosition(item.furnitureRenderer, sprite, this.item.roomRenderer.getSizeScale());
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
@@ -102,5 +113,39 @@ export default class RoomFurnitureSprite extends RoomSprite {
             column: this.item.position.column,
             depth: this.item.position.depth
         });
+    }
+
+    isPositionInsideBounds(startPosition: MousePosition, endPosition: MousePosition) {
+        if(this.item.disabled) {
+            return false;
+        }
+        
+        if(!this.item.position) {
+            return false;
+        }
+
+        if(!this.sprite.imageData) {
+            return false;
+        }
+        
+        const relativeStartPosition: MousePosition = {
+            left: startPosition.left - (this.offset.left),
+            top: startPosition.top - (this.offset.top)
+        };
+        
+        const relativeEndPosition: MousePosition = {
+            left: endPosition.left - (this.offset.left),
+            top: endPosition.top - (this.offset.top)
+        };
+
+        if(relativeEndPosition.left < 0 || relativeEndPosition.top < 0) {
+            return false;
+        }
+
+        if(relativeStartPosition.left > this.sprite.image.width || relativeStartPosition.top > this.sprite.image.height) {
+            return false;
+        }
+
+        return true;
     }
 }

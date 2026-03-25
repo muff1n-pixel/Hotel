@@ -2,14 +2,19 @@ import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import { useCallback, useEffect, useRef, useState } from "react";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { ShopFeatureData, ShopPageData } from "@pixel63/events";
+import { GetShopPagesData, ShopFeatureData, ShopFeatureRoomConfigurationData, ShopPageData, ShopPagesData, UpdateShopFeatureData } from "@pixel63/events";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import ShopFeatureImage from "@Client/Images/ShopFeatureImage";
 import DialogColorPicker from "@UserInterface/Common/Dialog/Components/ColorPicker/DialogColorPicker";
 import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { webSocketClient } from "src";
+import Selection from "@UserInterface/Common/Form/Components/Selection";
+import Input from "@UserInterface/Common/Form/Components/Input";
 
 export type EditShopFeatureDialogProps = {
+    id: string;
     hidden?: boolean;
     data: {
         alignment: "vertical" | "top" | "middle" | "bottom";
@@ -19,17 +24,45 @@ export type EditShopFeatureDialogProps = {
     onClose?: () => void;
 }
 
-export default function EditShopFeatureDialog({ hidden, data, onClose }: EditShopFeatureDialogProps) {
+export default function EditShopFeatureDialog({ id, hidden, data, onClose }: EditShopFeatureDialogProps) {
+    const dialogs = useDialogs();
+
     const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
+    const [pages, setPages] = useState<ShopPageData[]>([]);
 
     const [state, setState] = useState(0);
     const [configuration, setConfiguration] = useState(data.feature?.configuration);
     const [shopFeatureImage] = useState(new ShopFeatureImage(data.alignment, data.feature?.configuration));
 
-    const [backgroundColorsMinimized, setBackgroundColorsMinimized] = useState(true);
-    const [backgroundStripesMinimized, setBackgroundStripesMinimized] = useState(true);
-    const [featureSpriteMinimized, setFeatureSpriteMinimized] = useState(true);
-    const [featureFurnitureMinimized, setFeatureFurnitureMinimized] = useState(true);
+    const [title, setTitle] = useState(data.feature?.title);
+    const [featuredPageId, setFeaturedPageId] = useState<string | undefined>(data.feature?.featuredPage?.id);
+
+    const [tab, setTab] = useState<"backgroundColors" | "backgroundStripes" | "featureSprite" | "featureFurniture" | "room">("room");
+
+    useEffect(() => {
+        const listener = webSocketClient.addProtobuffListener(ShopPagesData, {
+            async handle(payload: ShopPagesData) {
+                if(payload.category === "all") {
+                    setPages(payload.pages.sort((a, b) => {
+                        if (a.index !== b.index) {
+                            return a.index - b.index;
+                        }
+
+                        return a.title.localeCompare(b.title);
+                    }));
+                }
+            },
+        });
+
+        webSocketClient.sendProtobuff(GetShopPagesData, GetShopPagesData.create({
+            category: "all"
+        }));
+
+        return () => {
+            webSocketClient.removeProtobuffListener(ShopPagesData, listener);
+        };
+    }, []);
 
     useEffect(() => {
         if(!previewCanvasRef.current) {
@@ -46,17 +79,50 @@ export default function EditShopFeatureDialog({ hidden, data, onClose }: EditSho
         });
     }, [previewCanvasRef]);
 
+    const handleRoomCapture = useCallback(() => {
+        dialogs.setDialogHidden(id, true);
+
+        dialogs.addUniqueDialog("edit-shop-feature-camera", {
+            alignment: data.alignment,
+
+            onClose: (data: ShopFeatureRoomConfigurationData) => {
+                shopFeatureImage.setRoom(data);
+
+                dialogs.setDialogHidden(id, false);
+            },
+
+            onCancel: () => {
+                dialogs.setDialogHidden(id, false);
+            }
+        });
+    }, [dialogs, data, shopFeatureImage]);
+
     const handleApply = useCallback(() => {
-    }, []);
+        webSocketClient.sendProtobuff(UpdateShopFeatureData, UpdateShopFeatureData.create({
+            id: data.feature?.id,
+            pageId: data.page.id,
+            featuredPageId: featuredPageId,
+
+            title,
+            configuration: shopFeatureImage.configuration.value,
+            image: shopFeatureImage.canvas?.toDataURL("image/png"),
+
+            alignment: data.alignment,
+        }));
+
+        onClose?.();
+    }, [ state, data, featuredPageId, title, onClose ]);
 
     return (
-        <Dialog title={(data?.feature)?("Edit Shop Feature"):("Create Shop Feature")} hidden={hidden} onClose={onClose} initialPosition="center" width={720} height="auto" assumedHeight={420} style={{
+        <Dialog title={(data?.feature)?("Edit Shop Feature"):("Create Shop Feature")} hidden={hidden} onClose={onClose} initialPosition="center" width={1280} height={600} style={{
             overflow: "visible"
         }}>
             <DialogContent>
                 <div style={{
+                    flex: 1,
+
                     display: "flex",
-                    flexDirection: (data.alignment === "vertical")?("row"):("column"),
+                    flexDirection: "row",
                     gap: 20
                 }}>
                     <div style={{
@@ -83,18 +149,17 @@ export default function EditShopFeatureDialog({ hidden, data, onClose }: EditSho
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <Checkbox label="Use background?" value={configuration?.backgroundUsed} onChange={() => shopFeatureImage.toggleBackgroundUsed()}/>
-
-                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setBackgroundColorsMinimized(!backgroundColorsMinimized)}>
+                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("backgroundColors")}>
                            <b>Background</b>
                             
                             <div className="sprite_forms_arrow" style={{
-                                transform: (backgroundColorsMinimized)?("rotateZ(-90deg)"):(undefined)
+                                transform: (tab !== "backgroundColors")?("rotateZ(-90deg)"):(undefined)
                             }}/>
                         </FlexLayout>
 
-                        {(!backgroundColorsMinimized) && (
+                        {(tab === "backgroundColors") && (
                             <FlexLayout>
+                                <Checkbox label="Use background?" value={configuration?.backgroundUsed} onChange={() => shopFeatureImage.toggleBackgroundUsed()}/>
 
                                 <FlexLayout direction="row">
                                     <FlexLayout flex={1} direction="column">
@@ -112,59 +177,103 @@ export default function EditShopFeatureDialog({ hidden, data, onClose }: EditSho
                             </FlexLayout>
                         )}
                         
-                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setBackgroundStripesMinimized(!backgroundStripesMinimized)}>
+                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("backgroundStripes")}>
                            <b>Background Stripes</b>
                             
                             <div className="sprite_forms_arrow" style={{
-                                transform: (backgroundStripesMinimized)?("rotateZ(-90deg)"):(undefined)
+                                transform: (tab !== "backgroundStripes")?("rotateZ(-90deg)"):(undefined)
                             }}/>
                         </FlexLayout>
 
-                        {(!backgroundStripesMinimized) && (
+                        {(tab === "backgroundStripes") && (
                             <FlexLayout>
                                 <Checkbox label="Use background stripes?" value={configuration?.backgroundStripesUsed} onChange={() => shopFeatureImage.toggleBackgroundStripesUsed()}/>
                             </FlexLayout>
                         )}
 
-                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setFeatureSpriteMinimized(!featureSpriteMinimized)}>
+                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("featureSprite")}>
                            <b>Feature Sprite</b>
                             
                             <div className="sprite_forms_arrow" style={{
-                                transform: (featureSpriteMinimized)?("rotateZ(-90deg)"):(undefined)
+                                transform: (tab !== "featureSprite")?("rotateZ(-90deg)"):(undefined)
                             }}/>
                         </FlexLayout>
 
-                        {(!featureSpriteMinimized) && (
+                        {(tab === "featureSprite") && (
                             <FlexLayout>
-                            <Checkbox label="Use feature sprite?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureSpriteUsed()}/>
+                                <Checkbox label="Use feature sprite?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureSpriteUsed()}/>
                                 
-                                <FlexLayout direction="row">
-                                    <FlexLayout flex={1} direction="column">
-                                        <b>Sprite Color</b>
-                                        
-                                        <DialogColorPicker value={configuration?.featureSpriteColor} onChange={(color) => shopFeatureImage.setFeatureSpriteColor(color)}/>
-                                    </FlexLayout>
-
-                                    <div style={{ flex: 1 }}/>
+                                <FlexLayout flex={1} direction="column">
+                                    <b>Sprite Color</b>
+                                    
+                                    <DialogColorPicker value={configuration?.featureSpriteColor} onChange={(color) => shopFeatureImage.setFeatureSpriteColor(color)}/>
                                 </FlexLayout>
                             </FlexLayout>
                         )}
 
-                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setFeatureFurnitureMinimized(!featureFurnitureMinimized)}>
+                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("featureFurniture")}>
                            <b>Feature Furniture</b>
                             
                             <div className="sprite_forms_arrow" style={{
-                                transform: (featureFurnitureMinimized)?("rotateZ(-90deg)"):(undefined)
+                                transform: (tab !== "featureFurniture")?("rotateZ(-90deg)"):(undefined)
                             }}/>
                         </FlexLayout>
 
-                        {(!featureFurnitureMinimized) && (
+                        {(tab === "featureFurniture") && (
                             <FlexLayout>
                                 <Checkbox label="Use feature furniture?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureFurnitureUsed()}/>
                                 
                                 <FurnitureBrowserSelection furniture={configuration?.featureFurniture} onChange={(furniture) => shopFeatureImage.setFeatureFurniture(furniture)}/>
                             </FlexLayout>
                         )}
+
+                        <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("room")}>
+                           <b>Room Furniture</b>
+                            
+                            <div className="sprite_forms_arrow" style={{
+                                transform: (tab !== "room")?("rotateZ(-90deg)"):(undefined)
+                            }}/>
+                        </FlexLayout>
+
+                        {(tab === "room") && (
+                            <FlexLayout>
+                                <Checkbox label="Use room furniture?" value={configuration?.roomUsed} onChange={() => shopFeatureImage.toggleRoomUsed()}/>
+                                
+                                <DialogButton onClick={handleRoomCapture}>Capture room items</DialogButton>
+                            </FlexLayout>
+                        )}
+                    </div>
+
+                    <div style={{
+                        flex: 2,
+
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10
+                    }}>
+                        <b>Title</b>
+
+                        <Input value={title} onChange={setTitle}/>
+
+                        <b>Featured Page</b>
+
+                        <Selection value={featuredPageId} items={([{value: undefined, label: "None"}] as any).concat(...(pages.map((shopPage) => {
+                            return {
+                                value: shopPage.id,
+                                label: (
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 5,
+                                        alignItems: "center"
+                                    }}>
+                                        {(shopPage.icon) && (<img src={`./assets/shop/icons/${shopPage.icon}`}/>)}
+                                        
+                                        <b>{shopPage.title}</b>
+                                    </div>
+                                )
+                            }
+                        }) ?? []))} onChange={(value: string) => setFeaturedPageId(value)}/>
 
                         <div style={{ flex: 1 }}/>
 

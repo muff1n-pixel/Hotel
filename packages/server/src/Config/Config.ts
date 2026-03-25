@@ -14,6 +14,12 @@ export type Config = {
         path: string;
     };
 
+    shop: {
+        features: {
+            path: string;
+        };
+    };
+
     database: Options;
 };
 

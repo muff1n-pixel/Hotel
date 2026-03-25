@@ -21,5 +21,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         return null;
     }
 
+    isPositionInsideBounds?(startPosition: MousePosition, endPosition: MousePosition): boolean;
+
     //
 }

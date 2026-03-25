@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Furniture/FurnitureData.proto";
+import "Shop/Features/Configuration/ShopFeatureRoomConfigurationData.proto";
 
 message ShopFeatureConfigurationData {
     string type = 1;
@@ -16,4 +17,8 @@ message ShopFeatureConfigurationData {
     string feature_sprite_color = 7;
 
     optional FurnitureData feature_furniture = 8;
+
+    bool room_used = 9;
+
+    ShopFeatureRoomConfigurationData room = 10;
 }

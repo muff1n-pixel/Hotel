@@ -28,7 +28,8 @@ export default defineConfig(
         "@typescript-eslint/no-unsafe-argument": "off",
         "@typescript-eslint/require-await": "off",
         "@types-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/no-floating-promises": "error"
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-unsafe-member-access": "off"
     }
   },
   {

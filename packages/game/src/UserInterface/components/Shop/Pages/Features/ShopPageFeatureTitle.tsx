@@ -5,6 +5,10 @@ export type ShopPageFeatureTitleProps = {
 }
 
 export default function ShopPageFeatureTitle({ feature }: ShopPageFeatureTitleProps) {
+    if(!feature.title) {
+        return null;
+    }
+    
     return (
         <div style={{
             position: "relative",

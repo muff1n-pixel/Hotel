@@ -1,15 +1,17 @@
 syntax = "proto3";
 
-import "Shop/Features/ShopFeaturePageData.proto";
 import "Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
 
-message ShopFeatureData {
-    string id = 1;
+message UpdateShopFeatureData {
+    optional string id = 1;
+    string page_id = 8;
+
+    string alignment = 7;
 
     string title = 2;
     string image = 3;
 
-    ShopFeaturePageData featured_page = 5;
+    optional string featured_page_id = 5;
 
     optional ShopFeatureConfigurationData configuration = 6;
 }

@@ -1,7 +1,9 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import Furniture from "@Client/Furniture/Furniture";
+import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
-import { FurnitureData, ShopFeatureConfigurationData } from "@pixel63/events";
+import { FurnitureData, ShopFeatureConfigurationData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 
 export default class ShopFeatureImage {
     public canvas: HTMLCanvasElement | undefined;
@@ -20,7 +22,9 @@ export default class ShopFeatureImage {
             backgroundStripesUsed: true,
 
             useFeatureSprite: true,
-            featureSpriteColor: "#57E832"
+            featureSpriteColor: "#57E832",
+            
+            roomUsed: false
         }));
 
         this.configuration.subscribe(() => this.render());
@@ -166,6 +170,52 @@ export default class ShopFeatureImage {
 
             context.drawImage(image, left, top);
         }
+
+        if(this.configuration.value.roomUsed && this.configuration.value.room) {
+            await ShopFeatureImage.renderRoom(context, this.configuration.value.room);
+        }
+    }
+
+    public static async renderRoom(context: CanvasRenderingContext2D, data: ShopFeatureRoomConfigurationData) {
+        const furnitureItems = data.roomFurniture.toSorted((a, b) => (a.priority + RoomRenderer.getPositionPriority(a.position!)) - (b.priority + RoomRenderer.getPositionPriority(b.position!)));
+        const furnitureSprites = await Promise.all(furnitureItems.flatMap(async (furnitureItem) => {
+            const furniture = new Furniture(furnitureItem.type, 64, furnitureItem.direction, furnitureItem.animation, furnitureItem.color);
+
+            const sprites = await furniture.render();
+
+            return sprites.map((sprite) => {
+                return {
+                    ...sprite,
+                    furniture,
+                    position: furnitureItem.position!,
+                    zIndex: furnitureItem.priority + RoomRenderer.getPositionPriority(furnitureItem.position!) + sprite.zIndex
+                }
+            });
+        }));
+
+        for(const sprite of furnitureSprites.flatMap((sprites) => sprites).sort((a, b) => a.zIndex - b.zIndex)) {
+            const translatePosition = RoomRenderer.getCoordinatePosition(sprite.position, 1);
+
+            context.save();
+
+            if(sprite.ink) {
+                context.globalCompositeOperation = sprite.ink;
+            }
+
+            if(sprite.alpha) {
+                context.globalAlpha = sprite.alpha / 255;
+            }
+
+            context.translate(data.renderedOffsetLeft, data.renderedOffsetTop);
+
+            context.translate(Math.floor(translatePosition.left), Math.floor(translatePosition.top));
+
+            const offset = RoomFurnitureSprite.getDefaultOffsetPosition(sprite.furniture, sprite, 1);
+
+            context.drawImage(sprite.image, Math.floor(offset.left), Math.floor(offset.top), sprite.image.width, sprite.image.height);
+
+            context.restore();
+        }
     }
 
     public toggleBackgroundUsed() {
@@ -208,6 +258,18 @@ export default class ShopFeatureImage {
 
     public setFeatureFurniture(furnitureData: FurnitureData) {
         this.configuration.value.featureFurniture = furnitureData;
+        this.configuration.update();
+    }
+
+    public toggleRoomUsed() {
+        this.configuration.value.roomUsed = !this.configuration.value.roomUsed;
+        
+        this.configuration.update();
+    }
+
+    public setRoom(data: ShopFeatureRoomConfigurationData) {
+        this.configuration.value.roomUsed = true;
+        this.configuration.value.room = data;
         this.configuration.update();
     }
 }

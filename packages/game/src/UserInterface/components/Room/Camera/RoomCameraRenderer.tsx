@@ -11,14 +11,12 @@ export type RoomCameraRendererProps = {
 export default function RoomCameraRenderer({ canvasRef, width, height }: RoomCameraRendererProps) {
     const room = useRoomInstance();
 
-
     useEffect(() => {
         if(!room || !canvasRef.current) {
             return;
         }
         
         const listener = () => {
-
             const context = canvasRef.current?.getContext("2d");
 
             if(!context) {

@@ -12,22 +12,15 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
     public readonly name = "GetShopPagesEvent";
     
     async handle(user: User, payload: GetShopPagesData) {
-        switch(payload.category) {
-            case "furniture":
-                return this.handleFurniture(user, payload);
-
-            case "frontpage":
-                return this.handleFurniture(user, payload);
-
-            case "pets":
-                return this.handleFurniture(user, payload);
-        }
+        return this.handleFurniture(user, payload);
     }
 
     async handleFurniture(user: User, payload: GetShopPagesData) {
         const shopPages: ShopPageModel[] = await ShopPageModel.findAll({
             where: {
-                category: payload.category,
+                ...((payload.category !== "all") && {
+                    category: payload.category,
+                })
             },
             include: [
                 ...(["featureVertical", "featureHorizontalTop", "featureHorizontalMiddle", "featureHorizontalBottom"].map((as) => ({

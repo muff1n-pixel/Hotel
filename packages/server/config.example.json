@@ -9,6 +9,12 @@
         "externalUrl": "https://pixel63.muff1n-pixel.org/game/assets/assets-2026-02-21.zip",
         "path": "../../assets"
     },
+
+    "shop": {
+        "features": {
+            "path": "../../assets/shop/features/generated/"
+        }
+    },
     
     "database": {
         "dialect": "mysql",

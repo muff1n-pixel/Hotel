@@ -18,7 +18,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
-import { RoomPositionData, RoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
@@ -279,12 +279,14 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public getCoordinatePosition(coordinate: RoomPositionData): MousePosition {
+        return RoomRenderer.getCoordinatePosition(coordinate, this.getSizeScale());
+    }
+
+    public static getCoordinatePosition(coordinate: RoomPositionData, scale: number) {
         const result = {
             left: Math.round(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
             top: Math.round((coordinate.column * 16) + (coordinate.row * 16) - ((Math.round(coordinate.depth * 1000) / 1000) * 32))
         };
-
-        const scale = this.getSizeScale();
 
         result.left *= scale;
         result.top *= scale;
@@ -431,6 +433,59 @@ export default class RoomRenderer extends EventTarget {
         );
 
         return canvas;
+    }
+
+    public captureItems(element: HTMLElement, width: number, height: number) {
+        const clientRectangle = element.getBoundingClientRect();
+
+        if(!clientRectangle) {
+            throw new Error("Bounding client rectangle is not available.");
+        }
+
+        const minimumLeft = Math.floor(clientRectangle.left);
+        const minimumTop = Math.floor(clientRectangle.top);
+
+        const offsetMousePosition = {
+            left: minimumLeft - this.renderedOffset.left,
+            top: minimumTop - this.renderedOffset.top
+        };
+
+        const scale = this.getSizeScale();
+
+        const filteredItems = this.items.filter((item) => {
+            return item.sprites.some((sprite) => {
+                const relativeMousePosition: MousePosition = {
+                    left: offsetMousePosition.left,
+                    top: offsetMousePosition.top
+                };
+
+                if(sprite.item.position) {
+                    relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
+                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
+                }
+
+                return sprite.isPositionInsideBounds?.(relativeMousePosition, {
+                    left: relativeMousePosition.left + width,
+                    top: relativeMousePosition.top + height
+                });
+            })
+        });
+
+        return ShopFeatureRoomConfigurationData.create({
+            renderedOffsetLeft: this.renderedOffset.left,
+            renderedOffsetTop: this.renderedOffset.top,
+
+            roomFurniture: filteredItems.filter((item) => item instanceof RoomFurnitureItem).map((item) => {
+                return {
+                    animation: item.furnitureRenderer.animation,
+                    color: item.furnitureRenderer.color,
+                    direction: item.furnitureRenderer.direction,
+                    type: item.furnitureRenderer.type,
+                    position: item.position,
+                    priority: item.priority
+                };
+            })
+        });
     }
 
     private floorItem?: RoomFloorItem;

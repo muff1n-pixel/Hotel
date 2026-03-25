@@ -8,4 +8,5 @@ export default interface RoomItemSpriteInterface {
 
     render(context: OffscreenCanvasRenderingContext2D): void;
     mouseover(position: MousePosition): RoomPositionWithDirectionData | null;
+    isPositionInsideBounds?(startPosition: MousePosition, endPosition: MousePosition): boolean;
 };

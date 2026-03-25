@@ -20,6 +20,6 @@ export default function ShopPageFeatureImage({ feature }: ShopPageFeatureImagePr
             boxShadow: "1px 1px rgba(0, 0, 0, .2)",
 
             objectFit: "cover",
-        }} src={`/assets/shop/features/${feature.image}`}/>
+        }} src={`/assets/shop/features/generated/${feature.image}`}/>
     );
 }

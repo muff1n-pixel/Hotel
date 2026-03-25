@@ -8,8 +8,6 @@ export class ShopPageFeatureModel extends Model {
     declare title: string;
     declare image: string;
 
-    declare index: number;
-
     declare featuredPage: NonAttribute<ShopPageModel>;
 }
 
@@ -27,11 +25,6 @@ export function initializeShopPageFeatureModel(sequelize: Sequelize) {
             image: {
                 type: DataTypes.STRING,
                 allowNull: false
-            },
-            index: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                defaultValue: 0
             },
             configuration: {
                 type: DataTypes.TEXT,
@@ -55,22 +48,22 @@ export function initializeShopPageFeatureModel(sequelize: Sequelize) {
         foreignKey: "featuredPageId"
     });
 
-    ShopPageModel.hasOne(ShopPageFeatureModel, {
+    ShopPageModel.belongsTo(ShopPageFeatureModel, {
         as: "featureVertical",
         foreignKey: "featureVerticalId"
     });
 
-    ShopPageModel.hasOne(ShopPageFeatureModel, {
+    ShopPageModel.belongsTo(ShopPageFeatureModel, {
         as: "featureHorizontalTop",
         foreignKey: "featureHorizontalTopId"
     });
 
-    ShopPageModel.hasOne(ShopPageFeatureModel, {
+    ShopPageModel.belongsTo(ShopPageFeatureModel, {
         as: "featureHorizontalMiddle",
         foreignKey: "featureHorizontalMiddleId"
     });
 
-    ShopPageModel.hasOne(ShopPageFeatureModel, {
+    ShopPageModel.belongsTo(ShopPageFeatureModel, {
         as: "featureHorizontalBottom",
         foreignKey: "featureHorizontalBottomId"
     });
