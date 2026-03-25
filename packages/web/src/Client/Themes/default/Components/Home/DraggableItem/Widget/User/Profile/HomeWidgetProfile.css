@@ -15,12 +15,26 @@
                 width: 220px;
 
                 .username {
-                    font-weight: bold;
                     display: flex;
                     align-items: center;
                     border-bottom: 1px dotted #000;
                     padding-bottom: 5px;
                     margin-bottom: 5px;
+
+                    span {
+                        font-weight: bold;
+                        word-break: break-all;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -moz-box-orient: vertical;
+                        -ms-box-orient: vertical;
+                        box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        -moz-line-clamp: 1;
+                        -ms-line-clamp: 1;
+                        line-clamp: 1;
+                        overflow: hidden;
+                    }
 
                     img {
                         margin-left: 10px;

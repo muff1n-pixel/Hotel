@@ -134,6 +134,7 @@
                         height: 75px;
                         width: calc(100% - 15px);
                         padding: 5px;
+                        font-family: 'Ubuntu-C';
                     }
 
                     button:last-child {

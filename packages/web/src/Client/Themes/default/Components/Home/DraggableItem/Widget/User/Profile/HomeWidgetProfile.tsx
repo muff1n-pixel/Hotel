@@ -36,7 +36,7 @@ export const HomeWidgetProfile = ({ activeUser, borderSkin }: HomeWidgetProfileP
                     <div className='avatar' style={{ backgroundImage: `url(${avatar})` }}></div>
 
                     <div className='data'>
-                        <div className='username'>{activeUser.name} <img src={activeUser.online ? OnlineImage : OfflineImage} alt='State' /></div>
+                        <div className='username'><span>{activeUser.name}</span> <img src={activeUser.online ? OnlineImage : OfflineImage} alt='State' /></div>
                         <div className='motto'>{activeUser.motto}</div>
                         <div className='date'>Registered: <span>{DateFormatter(activeUser.registered)}</span></div>
                         <div className='date'>Last login: <span>{!activeUser.lastLogin ? 'Never' : DateFormatter(activeUser.lastLogin)}</span></div>

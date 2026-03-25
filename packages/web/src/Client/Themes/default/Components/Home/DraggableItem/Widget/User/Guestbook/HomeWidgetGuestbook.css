@@ -73,6 +73,7 @@
                             font-size: 12px;
                             display: flex;
                             align-items: center;
+                            word-break: break-all;
 
                             .delete {
                                 margin-left: auto;

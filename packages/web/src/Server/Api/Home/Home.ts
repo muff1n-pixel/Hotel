@@ -219,6 +219,12 @@ router.post("/", async (req, res) => {
 
     const guestbookMessages: Array<any> = [];
     for await (const guestbookMessage of guestbookMessagesData) {
+        if(!guestbookMessage.user) {
+            // user not found -----> delete message
+            guestbookMessage.destroy();
+            continue;
+        }
+
         guestbookMessages.push({
             id: guestbookMessage.id,
             message: guestbookMessage.message,
