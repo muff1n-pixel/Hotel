@@ -125,6 +125,7 @@ const HomeDraggableItem = ({
 
             if (!item.contains(e.target as Node)) {
                 setActiveItem(false);
+                setShowBorderModal(false);
             }
         };
 
