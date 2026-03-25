@@ -76,6 +76,7 @@
                             word-break: break-all;
 
                             .delete {
+                                height: 10px;
                                 margin-left: auto;
                                 filter: grayscale(1);
                                 transition-duration: 0.5s;

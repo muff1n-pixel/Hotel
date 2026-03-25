@@ -7,6 +7,7 @@ export class UserBadgeModel extends Model {
     declare id: string;
     declare badge: NonAttribute<BadgeModel>;
     declare equipped: boolean;
+    declare updatedAt: Date;
 
     declare user: NonAttribute<UserModel>;
 }

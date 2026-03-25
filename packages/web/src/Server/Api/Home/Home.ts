@@ -195,6 +195,11 @@ router.post("/", async (req, res) => {
     const friends: Array<any> = [];
 
     for await (const userFriend of friendsData) {
+        if(!userFriend.friend) {
+            // error with friend
+            continue;
+        }
+        
         friends.push({
             id: userFriend.friend.id,
             name: userFriend.friend.name,
