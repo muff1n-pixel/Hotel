@@ -39,6 +39,7 @@ import RoomFurnitureFreezeBlockLogic from "./Logic/Games/Freeze/RoomFurnitureFre
 import RoomFurnitureFreezeExitLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
 import RoomFurnitureFreezeCounterLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
 import RoomFurnitureTrapLogic from "./Logic/RoomFurnitureTrapLogic";
+import RoomFurniturePhotostandLogic from "./Logic/RoomFurniturePhotostandLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -73,6 +74,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "trap":
                 return new RoomFurnitureTrapLogic(roomFurniture);
+
+            case "photostand":
+                return new RoomFurniturePhotostandLogic(roomFurniture);
 
             // Ice Tag
             case "icetag_field":
