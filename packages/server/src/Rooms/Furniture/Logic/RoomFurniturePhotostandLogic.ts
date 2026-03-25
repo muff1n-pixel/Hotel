@@ -16,10 +16,6 @@ export default class RoomFurniturePhotostandLogic implements RoomFurnitureLogic 
             return;
         }
 
-        if(roomUser.path.path) {
-            return;
-        }
-
         roomUser.path.setPosition(roomUser.position, this.roomFurniture.model.direction);
     }
 }
