@@ -63,11 +63,7 @@ export default class Furniture {
 
     public readonly type: string;
 
-    constructor(type: string | undefined, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
-        if(!type) {
-            throw new Error();
-        }
-
+    constructor(type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
         if(this.color === undefined) {
             this.color = 0;
         }
