@@ -8,20 +8,28 @@ import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 
 export type ShopDialogProps = {
     hidden?: boolean;
+    data?: {
+        requestedPage?: {
+            id: string;
+            category: string;
+        };
+
+        requestedFurnitureId?: string;
+    };
     onClose?: () => void;
 }
 
 const categories = ["frontpage", "furniture", "clothing", "pets"];
 
-export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
+export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
     const hasEditShopPermission = usePermissionAction("shop:edit");
 
     const [header, setHeader] = useState<DialogTabHeaderProps>();
     const [editMode, setEditMode] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(categories.indexOf(data?.requestedPage?.category ?? "frontpage"));
 
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
-    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: string; }>();
+    const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: string; } | undefined>(data?.requestedPage);
     const [shopPages, setShopPages] = useState<ShopPageData[]>([]);
 
     const onEditClick = useCallback(() => {
@@ -84,13 +92,13 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 {
                     icon: "Frontpage",
                     element: (
-                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode} requestedFurnitureId={data?.requestedFurnitureId}/>
                     ),
                 },
                 {
                     icon: "Furniture",
                     element: (
-                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode} requestedFurnitureId={data?.requestedFurnitureId}/>
                     ),
                 },
                 {
@@ -100,7 +108,7 @@ export default function ShopDialog({ hidden, onClose }: ShopDialogProps) {
                 {
                     icon: "Pets",
                     element: (
-                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode}/>
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode} requestedFurnitureId={data?.requestedFurnitureId}/>
                     ),
                 }
             ]}>

@@ -10,27 +10,29 @@ export type ShopPageProps = {
     editMode?: boolean;
     page: ShopPageData;
     setActiveShopPage?: (page: { id: string; category: string; }) => void;
+    
+    requestedFurnitureId?: string;
 }
 
-export default function ShopPage({ editMode, page, setActiveShopPage }: ShopPageProps) {
+export default function ShopPage({ editMode, page, setActiveShopPage, requestedFurnitureId }: ShopPageProps) {
     switch(page.type) {
         case "default":
-            return (<ShopDefaultPage key={page.id} editMode={editMode} page={page}/>);
+            return (<ShopDefaultPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
 
         case "bundle":
-            return (<ShopBundlePage key={page.id} editMode={editMode} page={page}/>);
+            return (<ShopBundlePage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
             
         case "trophies":
-            return (<ShopTrophiesPage key={page.id} editMode={editMode} page={page}/>);
+            return (<ShopTrophiesPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
             
         case "bots":
-            return (<ShopBotsPage key={page.id} editMode={editMode} page={page}/>);
+            return (<ShopBotsPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
             
         case "pets":
-            return (<ShopPetsPage key={page.id} editMode={editMode} page={page}/>);
+            return (<ShopPetsPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
 
         case "features":
-            return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} setActiveShopPage={setActiveShopPage}/>);
+            return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId} setActiveShopPage={setActiveShopPage}/>);
         
         default:
             return <div/>;

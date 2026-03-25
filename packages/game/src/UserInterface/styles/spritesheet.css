@@ -118,13 +118,14 @@
 .sprite_sub { background-image: url('./spritesheet.png'); background-position: -374px -496px; width: 15px; height: 16px; }
 .sprite_currencies_earnings { background-image: url('./spritesheet.png'); background-position: -389px -496px; width: 15px; height: 16px; }
 .sprite_friends_friend-follow { background-image: url('./spritesheet.png'); background-position: -448px -416px; width: 16px; height: 15px; }
+.sprite_shop-small { background-image: url('./spritesheet.png'); background-position: -65px -530px; width: 14px; height: 17px; }
 .sprite_currencies_club { background-image: url('./spritesheet.png'); background-position: -464px -416px; width: 15px; height: 15px; }
 .sprite_currencies_credits { background-image: url('./spritesheet.png'); background-position: -479px -416px; width: 15px; height: 15px; }
 .sprite_currencies_diamonds { background-image: url('./spritesheet.png'); background-position: -404px -496px; width: 15px; height: 15px; }
 .sprite_currencies_duckets { background-image: url('./spritesheet.png'); background-position: -419px -496px; width: 15px; height: 15px; }
-.sprite_room_lock_bell { background-image: url('./spritesheet.png'); background-position: -65px -530px; width: 13px; height: 16px; }
-.sprite_room_lock_invisible { background-image: url('./spritesheet.png'); background-position: -78px -530px; width: 13px; height: 16px; }
-.sprite_room_lock_password { background-image: url('./spritesheet.png'); background-position: -91px -530px; width: 13px; height: 16px; }
+.sprite_room_lock_bell { background-image: url('./spritesheet.png'); background-position: -79px -530px; width: 13px; height: 16px; }
+.sprite_room_lock_invisible { background-image: url('./spritesheet.png'); background-position: -92px -530px; width: 13px; height: 16px; }
+.sprite_room_lock_password { background-image: url('./spritesheet.png'); background-position: -105px -530px; width: 13px; height: 16px; }
 .sprite_users_profile_check { background-image: url('./spritesheet.png'); background-position: -415px -308px; width: 16px; height: 13px; }
 .sprite_dialog_wired_action { background-image: url('./spritesheet.png'); background-position: -67px -402px; width: 13px; height: 14px; }
 .sprite_dialog_wired_trigger { background-image: url('./spritesheet.png'); background-position: -80px -402px; width: 13px; height: 14px; }

@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message GetShopFurnitureLinkData {
+    string furniture_id = 1;
+}

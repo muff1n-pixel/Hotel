@@ -15,7 +15,7 @@ import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScr
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 
-export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
+export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const room = useRoomInstance();
@@ -75,6 +75,16 @@ export default function ShopDefaultPage({ editMode, page }: ShopPageProps) {
     const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
 
     useEffect(() => {
+        if(requestedFurnitureId) {
+            const requestedShopFurniture = shopFurniture.find((furniture) => furniture.furniture?.id === requestedFurnitureId);
+
+            if(requestedShopFurniture) {
+                setActiveFurniture(requestedShopFurniture);
+
+                return;
+            }
+        }
+
         if(!page.teaser) {
             setActiveFurniture(shopFurniture[0]);
         }

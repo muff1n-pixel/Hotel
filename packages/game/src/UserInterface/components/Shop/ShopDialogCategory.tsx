@@ -16,9 +16,11 @@ export type ShopDialogCategoryProps = {
     shopPages: ShopPageData[];
     activeShopPage?: ShopPageData;
     setActiveShopPage: (page: { id: string; category: string; }) => void;
+
+    requestedFurnitureId?: string;
 }
 
-export default function ShopDialogCategory({ category, editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage }: ShopDialogCategoryProps) {
+export default function ShopDialogCategory({ category, editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage, requestedFurnitureId }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
 
     useEffect(() => {
@@ -92,7 +94,7 @@ export default function ShopDialogCategory({ category, editMode, onHeaderChange,
                 </div>
             )}
 
-            {(activeShopPage) && (<ShopPage editMode={editMode} page={activeShopPage} setActiveShopPage={setActiveShopPage}/>)}
+            {(activeShopPage) && (<ShopPage editMode={editMode} page={activeShopPage} setActiveShopPage={setActiveShopPage} requestedFurnitureId={requestedFurnitureId}/>)}
         </div>
     );
 }

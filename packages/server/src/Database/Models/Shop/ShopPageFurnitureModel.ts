@@ -13,6 +13,7 @@ export class ShopPageFurnitureModel extends Model {
     declare furniture: NonAttribute<FurnitureModel>;
 
     declare shopPageId: NonAttribute<string>;
+    declare shopPage: NonAttribute<ShopPageModel>;
 }
 
 export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
@@ -47,6 +48,11 @@ export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
     ShopPageFurnitureModel.belongsTo(FurnitureModel, {
         as: "furniture",
         foreignKey: "furnitureId"
+    });
+    
+    ShopPageFurnitureModel.belongsTo(ShopPageModel, {
+        as: "shopPage",
+        foreignKey: "shopPageId"
     });
     
     ShopPageModel.hasMany(ShopPageFurnitureModel, {

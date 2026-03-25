@@ -8,6 +8,7 @@ import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
+import FurnitureShopLink from "@UserInterface/Components/Furniture/FurnitureShopLink";
 
 export type RoomFurnitureProfileProps = {
     furniture: RoomFurniture;
@@ -91,6 +92,8 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                 {(furniture.furnitureData.description) && (
                     <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.furnitureData.description}</p>
                 )}
+
+                <FurnitureShopLink furniture={furniture.furnitureData}/>
             </div>
 
             <div style={{
