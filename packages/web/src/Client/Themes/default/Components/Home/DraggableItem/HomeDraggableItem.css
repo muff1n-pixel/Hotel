@@ -39,7 +39,8 @@
             }
         }
 
-        .widgets.buttons, .notes.buttons {
+        .widgets.buttons,
+        .notes.buttons {
             right: 0;
         }
 
@@ -53,6 +54,7 @@
             padding: 10px;
             border: 1px solid #000;
             color: #333;
+            z-index: 1;
 
             .borderSkinModalHeader {
                 border-bottom: 1px dotted #000;
