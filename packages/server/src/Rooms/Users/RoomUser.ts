@@ -323,6 +323,14 @@ export default class RoomUser implements RoomActor {
         }
     }
 
+    public async handleWalkToEvent(position: RoomPositionOffsetData) {
+        const allFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(position));
+
+        for(const furniture of allFurniture) {
+            await furniture.logic?.handleUserWalksTo?.(this);
+        }
+    }
+
     public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
         return this.room.handleUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }

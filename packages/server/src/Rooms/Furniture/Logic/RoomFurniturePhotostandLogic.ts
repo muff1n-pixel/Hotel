@@ -11,7 +11,7 @@ export default class RoomFurniturePhotostandLogic implements RoomFurnitureLogic 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
     }
 
-    async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+    async handleUserWalksTo(roomUser: RoomUser): Promise<void> {
         if(this.roomFurniture.model.direction === null) {
             return;
         }

@@ -13,6 +13,7 @@ export default interface RoomFurnitureLogic {
     handleUserLeftRoom?(roomUser: RoomUser): Promise<void>;
     
     handleUserChat?(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult>;
+    handleUserWalksTo?(roomUser: RoomUser): Promise<void>;
     handleUserWalksOn?(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void>;
     handleUserWalksOff?(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void>;
     handleUserDoubleClickOnTile?(roomUser: RoomUser, tile: RoomPositionData): Promise<void>;

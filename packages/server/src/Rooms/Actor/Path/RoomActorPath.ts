@@ -18,6 +18,8 @@ export default class RoomActorPath {
     }
 
     public async handleActionsInterval() {
+        this.actor.handleWalkToEvent?.(RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
+        
         if(this.path === undefined) {
             return;
         }
