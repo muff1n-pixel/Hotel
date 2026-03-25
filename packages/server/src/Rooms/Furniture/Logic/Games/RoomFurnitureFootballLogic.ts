@@ -57,20 +57,35 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
 
             if(!floorplanDepth || floorplanDepth === 'X') {
                 if((this.travelingDirection % 2) !== 0) {
-                    if(this.travelingDirection > 3) {
-                        this.travelingDirection -= 2;
-                    }
-                    else {
-                        this.travelingDirection += 2;
+                    this.travelingDirection += 2;
+                    
+                    this.travelingDirection %= 8;
+            
+                    nextOffsetPosition = this.roomFurniture.getOffsetPosition(1, this.travelingDirection);
+
+                    const floorplanDepth = this.roomFurniture.room.model.structure.grid[nextOffsetPosition.row]?.[nextOffsetPosition.column];
+        
+                    if(!floorplanDepth || floorplanDepth === 'X') {
+                        this.travelingDirection -= 4;
+                        
+                        this.travelingDirection %= 8;
                     }
                 }
                 else {
                     this.travelingDirection += 4;
-                }
                 
-                this.travelingDirection %= 8;
+                    this.travelingDirection %= 8;
+                }
             
                 nextOffsetPosition = this.roomFurniture.getOffsetPosition(1, this.travelingDirection);
+
+                const floorplanDepth = this.roomFurniture.room.model.structure.grid[nextOffsetPosition.row]?.[nextOffsetPosition.column];
+    
+                if(!floorplanDepth || floorplanDepth === 'X') {
+                    this.travelingVelocity = 0;
+
+                    return;
+                }
             }
 
             const nextFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(nextOffsetPosition);
