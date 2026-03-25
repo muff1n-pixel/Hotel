@@ -3,10 +3,11 @@ import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
-import { GetShopPagesData, ShopPagesData } from "@pixel63/events";
+import { GetShopPagesData, ShopFeatureData, ShopPagesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPageBundleModel } from "../../../Database/Models/Shop/ShopPageBundleModel.js";
 import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
+import UserPermissions from "../../../Users/Permissions/UserPermissions.js";
 
 export default class GetShopPagesEvent implements ProtobuffListener<GetShopPagesData> {
     public readonly name = "GetShopPagesEvent";
@@ -58,6 +59,8 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
             order: ["index"]
         });
 
+        const permissions = await user.getPermissions();
+
         user.sendProtobuff(ShopPagesData, ShopPagesData.create({
             category: payload.category,
             pages: shopPages.sort((a, b) => a.index - b.index).map((shopPage) => {
@@ -77,11 +80,13 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
 
                     index: shopPage.index,
 
-                    featureVertical: shopPage.featureVertical,
+                    ...((shopPage.type === "features") && {
+                        featureVertical: this.getFeatureData(permissions, shopPage.featureVertical),
 
-                    featureHorizontalTop: shopPage.featureHorizontalTop,
-                    featureHorizontalMiddle: shopPage.featureHorizontalMiddle,
-                    featureHorizontalBottom: shopPage.featureHorizontalBottom,
+                        featureHorizontalTop: this.getFeatureData(permissions, shopPage.featureHorizontalTop),
+                        featureHorizontalMiddle: this.getFeatureData(permissions, shopPage.featureHorizontalMiddle),
+                        featureHorizontalBottom: this.getFeatureData(permissions, shopPage.featureHorizontalBottom),
+                    }),
 
                     ...(shopPage.bundle && {
                         bundle: {
@@ -107,5 +112,20 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
                 };
             })
         }));
+    }
+
+    private getFeatureData(permissions: UserPermissions, feature?: ShopPageFeatureModel): ShopFeatureData | undefined {
+        if(!feature) {
+            return undefined;
+        }
+
+        if(permissions.hasPermission("shop:edit")) {
+            return ShopFeatureData.fromJSON(feature);
+        }
+
+        return ShopFeatureData.fromJSON({
+            ...feature,
+            configuration: undefined
+        });
     }
 }

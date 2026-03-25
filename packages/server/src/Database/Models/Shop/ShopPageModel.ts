@@ -15,7 +15,7 @@ export class ShopPageModel extends Model {
     declare description: string;
 
     declare category: "frontpage" | "furniture" | "clothing" | "pets";
-    declare type: "default";
+    declare type: string;
 
     declare icon: string | null;
     declare header: string | null;
