@@ -183,7 +183,7 @@ export default class RoomActorPath {
     }
 
     public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
-        if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth) {
+        if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth && (direction !== undefined && direction === this.actor.direction)) {
             return;
         }
 
