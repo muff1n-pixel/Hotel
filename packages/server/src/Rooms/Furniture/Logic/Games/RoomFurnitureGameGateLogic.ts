@@ -7,7 +7,7 @@ import RoomUser from "../../../Users/RoomUser";
 export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic {
     constructor(public readonly roomFurniture: RoomFurniture, public readonly team: T) {
         this.roomFurniture.setAnimation(
-            this.getGame().getTeamPlayers(this.team).length
+            this.getGame().players.getTeamPlayers(this.team).length
         ).catch(console.error);
     }
 
@@ -20,7 +20,7 @@ export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic
             return false;
         }
 
-        if(this.getGame().getTeamPlayers(this.team).length >= 5) {
+        if(this.getGame().players.getTeamPlayers(this.team).length >= 5) {
             return false;
         }
 
@@ -36,17 +36,17 @@ export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic
     }
 
     async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        const isExistingPlayer = this.getGame().hasPlayer(roomUser);
+        const isExistingPlayer = this.getGame().players.hasPlayer(roomUser);
 
         if(isExistingPlayer) {
-            this.getGame().removePlayer(roomUser);
+            this.getGame().players.removePlayer(roomUser);
         }
         else {
-            if(this.getGame().getTeamPlayers(this.team).length >= 5) {
+            if(this.getGame().players.getTeamPlayers(this.team).length >= 5) {
                 return;
             }
 
-            this.getGame().addPlayer(roomUser, this.team);
+            this.getGame().players.addPlayer(roomUser, this.team);
         }
     }
 }

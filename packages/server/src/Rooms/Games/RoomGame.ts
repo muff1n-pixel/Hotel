@@ -17,7 +17,11 @@ export default interface RoomGame<T = unknown> {
 
     resumeGame(): Promise<void>;
     pauseGame(): Promise<void>;
-    
+
+    players: RoomGamePlayers<T>;
+}
+
+export interface RoomGamePlayers<T = unknown> {
     getTeamPlayers(team: T): RoomGamePlayer<T>[];
 
     hasPlayer(roomUser: RoomUser): boolean;

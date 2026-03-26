@@ -9,6 +9,7 @@ import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/
 import { randomUUID } from "crypto";
 import UserFreezeGameNotifications from "../../../Users/Notifications/Games/UserFreezeGameNotifications";
 import RoomGame from "../RoomGame";
+import RoomFreezeGamePlayers from "./RoomFreezeGamePlayers";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -48,7 +49,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
     public paused: boolean = false;
     public seconds: number = 30;
 
-    public players: RoomFreezeGamePlayer[] = [];
+    public players = new RoomFreezeGamePlayers(this);
 
     public teams: Record<RoomFreezeGameTeam, RoomFreezeGameTeamData> = {
         red: {
@@ -65,7 +66,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         }
     };
    
-    constructor(private readonly room: Room) {
+    constructor(public readonly room: Room) {
 
     }
 
@@ -84,7 +85,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         this.teams.blue.score = 0;
         this.teams.yellow.score = 0;
 
-        for(const player of this.players) {
+        for(const player of this.players.getAllPlayers()) {
             player.health = 3;
             player.radius = 3;
             player.shield = false;
@@ -117,7 +118,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                     const actors = this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
 
                     for(const actor of actors) {
-                        if(actor instanceof RoomUser && !this.getPlayer(actor)) {
+                        if(actor instanceof RoomUser && !this.players.getPlayer(actor)) {
                             actor.removeAction("AvatarEffect");
                             actor.addAction("AvatarEffect.4", 1000);
 
@@ -166,7 +167,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
         const winnerTeam = this.getTeamWithMostScore();
 
-        for(const player of this.players) {
+        for(const player of this.players.getAllPlayers()) {
             player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score).catch(console.error);
 
             if(player.team === winnerTeam) {
@@ -183,8 +184,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
         }
 
-        for(const player of this.getFrozenPlayers()) {
-            this.unfreezePlayer(player);
+        for(const player of this.players.getFrozenPlayers()) {
+            this.players.unfreezePlayer(player);
         }
 
         await Promise.all(this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0)));
@@ -197,7 +198,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             return;
         }
 
-        for(const player of this.players) {
+        for(const player of this.players.getAllPlayers()) {
             if(player.shield && performance.now() - player.shieldAt >= 5000) {
                 player.shield = false;
                 
@@ -207,13 +208,13 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
             if(player.roomUser.path.frozen) {
                 if(performance.now() - player.roomUser.path.frozenAt >= 5000) {
-                    this.unfreezePlayer(player);
+                    this.players.unfreezePlayer(player);
 
                     if(player.health === 0) {
                         const exitFurniture = this.getExitFurniture();
 
                         if(exitFurniture) {
-                            this.removePlayer(player.roomUser);
+                            this.players.removePlayer(player.roomUser);
 
                             player.roomUser.removeAction("AvatarEffect");
                             player.roomUser.addAction("AvatarEffect.4", 1000);
@@ -236,38 +237,6 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 await this.endGame("counter");
             }
         }
-    }
-
-    public hasPlayer(roomUser: RoomUser): boolean {
-        return this.players.some((player) => player.roomUser.user.model.id === roomUser.user.model.id);
-    }
-
-    public addPlayer(roomUser: RoomUser, team: RoomFreezeGameTeam) {
-        const player: RoomFreezeGamePlayer = {
-            roomUser,
-            team,
-            health: 3,
-            
-            radius: 3,
-            
-            shield: false,
-            shieldAt: 0,
-
-            crossBlast: false,
-
-            maxSnowballs: 1,
-            currentSnowballs: 0,
-
-            megaSnowball: false
-        };
-
-        this.players.push(player);
-
-        this.updateGateFurniture(team);
-
-        roomUser.addAction(this.getTeamAvatarEffect(player));
-
-        roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
     }
 
     public givePlayerPowerup(player: RoomFreezeGamePlayer, powerup: RoomFreezeGamePowerups) {
@@ -337,101 +306,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         }
     }
 
-    public getPlayer(roomUser: RoomUser) {
-        return this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
-    }
-
-    public getPlayerAtPosition(position: RoomPositionData) {
-        return this.players.find((player) => player.roomUser.position.row === position.row && player.roomUser.position.column === position.column);
-    }
-
-    public removePlayer(roomUser: RoomUser) {
-        const player = this.getPlayer(roomUser);
-        
-        if(player) {
-            this.players.splice(this.players.indexOf(player), 1);
-
-            this.updateGateFurniture(player.team);
-            
-            roomUser.removeAction("AvatarEffect");
-
-            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score).catch(console.error);
-
-            const uniqueTeamsLeft = [...new Set(this.players.map((player) => player.team))];
-
-            if(uniqueTeamsLeft.length <= 1) {
-                this.endGame("eliminations").catch(console.error);
-            }
-        }
-    }
-
-    public getTeamPlayers(team: RoomFreezeGameTeam) {
-        return this.players.filter((player) => player.team === team);
-    }
-
-    public getFrozenPlayers() {
-        return this.players.filter((player) => player.roomUser.path.frozen);
-    }
-
-    public freezePlayer(player: RoomFreezeGamePlayer, triggerPlayer: RoomFreezeGamePlayer) {
-        if(player.roomUser.path.frozen) {
-            return;
-        }
-
-        if(player.shield) {
-            return;
-        }
-
-        player.roomUser.removeAction("AvatarEffect");
-        player.roomUser.addAction("AvatarEffect.12");
-        
-        player.roomUser.path.setFrozen(true);
-
-        if(player.health > 0) {
-            player.health--;
-
-            this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
-                id: player.roomUser.user.model.id,
-
-                updateHealth: true,
-                health: (player.health > 0)?(player.health):(undefined)
-            }));
-        }
-
-        player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
-
-        if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
-            triggerPlayer.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
-
-            triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1).catch(console.error);
-        }
-
-        if(player.team !== triggerPlayer.team) {
-            if(player.health === 0) {
-                this.teams[triggerPlayer.team].score += 10;
-            }
-            else {
-                this.teams[triggerPlayer.team].score++;
-            }
-        }
-        else {
-            this.teams[triggerPlayer.team].score--;
-        }
-
-        for(const furniture of this.getCounterFurniture(triggerPlayer.team)) {
-            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[triggerPlayer.team].score).catch(console.error);
-        }
-    }
-
-    public unfreezePlayer(player: RoomFreezeGamePlayer) {
-        player.roomUser.removeAction("AvatarEffect");
-        player.roomUser.addAction(this.getTeamAvatarEffect(player));
-
-        player.roomUser.path.setFrozen(false);
-    }
-
-    private updateGateFurniture(team: RoomFreezeGameTeam) {
-        const teamPlayers = this.getTeamPlayers(team);
+    public updateGateFurniture(team: RoomFreezeGameTeam) {
+        const teamPlayers = this.players.getTeamPlayers(team);
 
         for(const furniture of this.getGateFurniture(team)) {
             furniture.setAnimation(teamPlayers.length).catch(console.error);
@@ -464,11 +340,11 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeCounterLogic);
     }
 
-    private getCounterFurniture(team: RoomFreezeGameTeam) {
+    public getCounterFurniture(team: RoomFreezeGameTeam) {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureFreezeCounterLogic && furniture.logic.team === team);
     }
 
-    private getTeamAvatarEffect(player: RoomFreezeGamePlayer) {
+    public getTeamAvatarEffect(player: RoomFreezeGamePlayer) {
         if(player.shield) {
             switch(player.team) {
                 case "red":
@@ -509,7 +385,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             }
             
             if(leadingTeam === null) {
-                if(this.getTeamPlayers(team as RoomFreezeGameTeam).length > 0) {
+                if(this.players.getTeamPlayers(team as RoomFreezeGameTeam).length > 0) {
                     leadingTeam = team as RoomFreezeGameTeam;
                 }
 
@@ -517,7 +393,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             }
 
             if(this.teams[team as RoomFreezeGameTeam].score === this.teams[leadingTeam].score) {
-                if(this.getTeamPlayers(team as RoomFreezeGameTeam).length > this.getTeamPlayers(leadingTeam).length) {
+                if(this.players.getTeamPlayers(team as RoomFreezeGameTeam).length > this.players.getTeamPlayers(leadingTeam).length) {
                     leadingTeam = team as RoomFreezeGameTeam;
                 }
             }

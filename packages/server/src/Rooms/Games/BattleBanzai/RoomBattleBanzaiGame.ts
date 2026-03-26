@@ -4,6 +4,7 @@ import RoomUser from "../../Users/RoomUser";
 import RoomGame, { RoomGamePlayer } from "../RoomGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
 import { RoomBattleBanzaiGameTeam } from "./Interfaces/RoomBattleBanzaiGameTeam";
+import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
@@ -13,6 +14,8 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
 
     public starting: boolean = false;
     public startingSeconds: number = 30;
+
+    public players = new RoomBattleBanzaiGamePlayers(this);
 
     public get seconds() {
         if(this.starting) {
@@ -31,7 +34,6 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         }
     }
 
-    private players: RoomBattleBanzaiGamePlayer[] = [];
 
     constructor(private readonly room: Room) {
         
@@ -83,46 +85,7 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         }
     }
 
-    public getTeamPlayers(team: RoomBattleBanzaiGameTeam): RoomGamePlayer<RoomBattleBanzaiGameTeam>[] {
-        return this.players.filter((player) => player.team === team);
-    }
-
-    public addPlayer(roomUser: RoomUser, team: RoomBattleBanzaiGameTeam): void {
-        const player: RoomBattleBanzaiGamePlayer = {
-            roomUser,
-            team
-        };
-
-        this.players.push(player);
-
-        roomUser.addAction(this.getTeamAvatarEffect(player));
-
-        for(const furniture of this.getGateFurniture(team)) {
-            furniture.setAnimation(this.getTeamPlayers(team).length).catch(console.error);
-        }
-    }
-
-    public hasPlayer(roomUser: RoomUser): boolean {
-        return this.players.some((player) => player.roomUser.user.model.id === roomUser.user.model.id);
-    }
-
-    public removePlayer(roomUser: RoomUser): void {
-        const player = this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
-
-        if(!player) {
-            return;
-        }
-
-        this.players.slice(this.players.indexOf(player), 1);
-
-        roomUser.removeAction("AvatarEffect");
-
-        for(const furniture of this.getGateFurniture(player.team)) {
-            furniture.setAnimation(this.getTeamPlayers(player.team).length).catch(console.error);
-        }
-    }
-    
-    private getTeamAvatarEffect(player: RoomBattleBanzaiGamePlayer) {
+    public getTeamAvatarEffect(player: RoomBattleBanzaiGamePlayer) {
         switch(player.team) {
             case "red":
                 return "AvatarEffect.33";
@@ -138,7 +101,7 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         }
     }
     
-    private getGateFurniture(team: RoomBattleBanzaiGameTeam) {
+    public getGateFurniture(team: RoomBattleBanzaiGameTeam) {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiGateLogic && furniture.logic.team === team);
     }
 }
