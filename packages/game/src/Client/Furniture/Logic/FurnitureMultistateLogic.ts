@@ -13,7 +13,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
             return false;
         }
         
-        return (this.roomFurniture.furniture.animation !== this.getNextState());
+        return true;
     }
 
     use(tag?: string): void {

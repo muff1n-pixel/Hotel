@@ -6,7 +6,7 @@ import RoomUser from "../Users/RoomUser.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
 import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
-import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeGateLogic.js";
+import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;

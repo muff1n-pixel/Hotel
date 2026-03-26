@@ -1,5 +1,5 @@
 import { RoomPositionData, RoomPositionOffsetData, RoomUserData, WidgetNotificationData } from "@pixel63/events";
-import RoomFurnitureFreezeGateLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeGateLogic";
+import RoomFurnitureFreezeGateLogic from "../../Furniture/Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic";
 import RoomFurnitureFreezeTileLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 import Room from "../../Room";
 import RoomUser from "../../Users/RoomUser";
@@ -8,6 +8,7 @@ import RoomFurnitureFreezeExitLogic from "../../Furniture/Logic/Games/Freeze/Roo
 import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
 import { randomUUID } from "crypto";
 import UserFreezeGameNotifications from "../../../Users/Notifications/Games/UserFreezeGameNotifications";
+import RoomGame from "../RoomGame";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -42,7 +43,7 @@ export enum RoomFreezeGamePowerups {
     Shield = 7,
 };
 
-export default class RoomFreezeGame {
+export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
     public started: boolean = false;
     public paused: boolean = false;
     public seconds: number = 30;
@@ -235,6 +236,10 @@ export default class RoomFreezeGame {
                 await this.endGame("counter");
             }
         }
+    }
+
+    public hasPlayer(roomUser: RoomUser): boolean {
+        return this.players.some((player) => player.roomUser.user.model.id === roomUser.user.model.id);
     }
 
     public addPlayer(roomUser: RoomUser, team: RoomFreezeGameTeam) {

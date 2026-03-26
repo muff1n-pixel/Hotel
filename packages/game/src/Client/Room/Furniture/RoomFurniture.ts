@@ -63,7 +63,10 @@ export default class RoomFurniture {
             case "default":
             case "conf_invis_control":
             case "crackable":
-            case "game_timer":
+                return new FurnitureMultistateLogic(this.instance, this);
+
+            case "freeze_timer":
+            case "battlebanzai_timer":
                 return new FurnitureMultistateLogic(this.instance, this);
 
             case "freeze_tile":

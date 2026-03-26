@@ -27,7 +27,7 @@ import WiredTriggerCollisionLogic from "./Logic/Wired/Trigger/WiredTriggerCollis
 import WiredActionSendSignalLogic from "./Logic/Wired/Action/WiredActionSendSignalLogic.js";
 import WiredTriggerReceiveSignalLogic from "./Logic/Wired/Trigger/WiredTriggerReceiveSignalLogic.js";
 import RoomFurnitureCrackableLogic from "./Logic/RoomFurnitureCrackableLogic.js";
-import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeGateLogic";
+import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic";
 import RoomFurnitureIceTagFieldLogic from "./Logic/Games/IceTag/RoomFurnitureIceTagFieldLogic";
 import RoomFurnitureIceTagPoleLogic from "./Logic/Games/IceTag/RoomFurnitureIceTagPoleLogic";
 import RoomFurnitureFootballLogic from "./Logic/Games/RoomFurnitureFootballLogic";
@@ -42,6 +42,9 @@ import RoomFurnitureTrapLogic from "./Logic/RoomFurnitureTrapLogic";
 import RoomFurniturePhotostandLogic from "./Logic/RoomFurniturePhotostandLogic";
 import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic";
 import RoomFurnitureBattleBanzaiRandomTeleportLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiRandomTeleportLogic";
+import RoomFurnitureFreezeTimerLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeTimerLogic";
+import RoomFurnitureBattleBanzaiTimerLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiTimerLogic";
+import RoomFurnitureBattleBanzaiGateLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -102,6 +105,9 @@ export default class RoomFurnitureLogicFactory {
                 return new RoomFurnitureBunnyRunPoleLogic(roomFurniture);
 
             // Freeze
+            case "freeze_timer":
+                return new RoomFurnitureFreezeTimerLogic(roomFurniture);
+
             case "freeze_gate_blue":
                 return new RoomFurnitureFreezeGateLogic(roomFurniture, "blue");
 
@@ -136,12 +142,23 @@ export default class RoomFurnitureLogicFactory {
                 return new RoomFurnitureFreezeCounterLogic(roomFurniture, "yellow");
 
             // Battle Banzai
+            case "battlebanzai_timer":
+                return new RoomFurnitureBattleBanzaiTimerLogic(roomFurniture);
+
             case "battlebanzai_random_teleport":
                 return new RoomFurnitureBattleBanzaiRandomTeleportLogic(roomFurniture);
 
-            // Game
-            case "game_timer":
-                return new RoomFurnitureGameTimerLogic(roomFurniture);
+            case "battlebanzai_gate_blue":
+                return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "blue");
+
+            case "battlebanzai_gate_green":
+                return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "green");
+
+            case "battlebanzai_gate_red":
+                return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "red");
+
+            case "battlebanzai_gate_yellow":
+                return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "yellow");
 
             // Wired
             case "conf_invis_control":

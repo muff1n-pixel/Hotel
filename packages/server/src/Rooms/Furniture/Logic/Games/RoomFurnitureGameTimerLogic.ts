@@ -2,14 +2,19 @@ import { UserFurnitureAnimationTag, UserFurnitureCustomData, UseRoomFurnitureDat
 import RoomUser from "../../../Users/RoomUser.js";
 import RoomFurniture from "../../RoomFurniture.js";
 import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic.js";
+import RoomGame from "../../../Games/RoomGame.js";
 
 export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
     private seconds: number;
 
-    constructor(private readonly roomFurniture: RoomFurniture) {
+    constructor(public readonly roomFurniture: RoomFurniture) {
         this.seconds = roomFurniture.model.data?.gameTimer?.seconds ?? 30;
 
         this.updateAnimationTags().catch(console.error);
+    }
+    
+    public getGame(): RoomGame {
+        throw new Error("Not implemented");
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
@@ -18,11 +23,11 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         }
 
         if(payload.tag === "reset") {
-            if(this.roomFurniture.room.freezeGame.started && !this.roomFurniture.room.freezeGame.paused) {
+            if(this.getGame().started && !this.getGame().paused) {
                 return;
             }
 
-            await this.roomFurniture.room.freezeGame.endGame("counter");
+            await this.getGame().endGame("counter");
 
             if(this.seconds !== (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30)) {
                 this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
@@ -43,30 +48,30 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
                 await this.updateAnimationTags();
             }
 
-            await this.roomFurniture.room.freezeGame.endGame("counter");
+            await this.getGame().endGame("counter");
 
             return;
         }
 
-        if(!this.roomFurniture.room.freezeGame.started) {
+        if(!this.getGame().started) {
             this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
 
             await this.updateAnimationTags();
 
-            await this.roomFurniture.room.freezeGame.startGame(this.seconds);
+            await this.getGame().startGame(this.seconds);
         }
         else {
-            if(this.roomFurniture.room.freezeGame.paused) {
-                await this.roomFurniture.room.freezeGame.resumeGame();
+            if(this.getGame().paused) {
+                await this.getGame().resumeGame();
             }
             else {
-                await this.roomFurniture.room.freezeGame.pauseGame();
+                await this.getGame().pauseGame();
             }
         }
     }
 
     async handleActionsInterval(): Promise<void> {
-        if(!this.roomFurniture.room.freezeGame.started) {
+        if(!this.getGame().started) {
             if(this.seconds === 1) {
                 this.seconds = 0;
                 
@@ -76,12 +81,12 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(this.roomFurniture.room.freezeGame.paused) {
+        if(this.getGame().paused) {
             return;
         }
         
-        if(this.roomFurniture.room.freezeGame.seconds !== this.seconds) {
-            this.seconds = this.roomFurniture.room.freezeGame.seconds;
+        if(this.getGame().seconds !== this.seconds) {
+            this.seconds = this.getGame().seconds;
 
             if(this.seconds === 0) {
                 await this.roomFurniture.setAnimation(0);

@@ -15,6 +15,7 @@ import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
 import RoomFreezeGame from "./Games/Freeze/RoomFreezeGame.js";
 import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
+import RoomBattleBanzaiGame from "./Games/BattleBanzai/RoomBattleBanzaiGame.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -23,6 +24,7 @@ export default class Room {
     public readonly furnitures: RoomFurniture[] = [];
 
     public freezeGame: RoomFreezeGame = new RoomFreezeGame(this);
+    public battleBanzaiGame: RoomBattleBanzaiGame = new RoomBattleBanzaiGame(this);
 
     public readonly floorplan: RoomFloorplan;
 
@@ -227,6 +229,7 @@ export default class Room {
 
     private async handleActionsInterval() {
         await this.freezeGame.handleActionsInterval();
+        await this.battleBanzaiGame.handleActionsInterval();
 
         if(performance.now() - this.lastMinuteInterval > 60 * 1000) {
             this.lastMinuteInterval = performance.now();
