@@ -21,6 +21,42 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
+
+        if(furniture.model.furniture.placement === "floor" && (payload.direction || payload.position)) {
+            const dimensions = furniture.getDimensions(payload.direction ?? furniture.model.direction);
+            const position = payload.position ?? furniture.model.position;
+
+            for(let row = position.row; row < position.row + dimensions.row; row++) {
+                for(let column = position.column; column < position.column + dimensions.column; column++) {
+                    if(!furniture.room.model.structure.grid[row]?.[column] || furniture.room.model.structure.grid[row]?.[column] === 'X') {
+                        user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                            id: randomUUID(),
+                            text: `You can not place this furniture here!`
+                        }));
+
+                        return;
+                    }
+
+                    const upmostFurniture = roomUser.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.create({
+                        row,
+                        column
+                    }));
+
+                    if(!upmostFurniture) {
+                        continue;
+                    }
+
+                    if(!upmostFurniture.model.furniture.flags.stackable) {
+                        user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                            id: randomUUID(),
+                            text: `You can not place this furniture here!`
+                        }));
+
+                        return;
+                    }
+                }
+            }
+        }
         
         if(payload.direction !== undefined) {
             if(payload.position === undefined && furniture.model.position && furniture.model.furniture.placement === "floor") {

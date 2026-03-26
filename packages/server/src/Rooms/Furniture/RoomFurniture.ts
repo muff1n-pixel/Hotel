@@ -104,8 +104,8 @@ export default class RoomFurniture<T = unknown> {
         return [];
     }
 
-    public getDimensions() {
-        return (this.model.direction === 0 || this.model.direction === 4)?(RoomPositionData.create({
+    public getDimensions(direction = this.model.direction) {
+        return (direction === 0 || direction === 4)?(RoomPositionData.create({
             row: this.model.furniture.dimensions.column,
             column: this.model.furniture.dimensions.row,
             depth: this.model.furniture.dimensions.depth,
