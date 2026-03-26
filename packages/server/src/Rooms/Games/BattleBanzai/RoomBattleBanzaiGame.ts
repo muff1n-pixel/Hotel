@@ -5,48 +5,35 @@ import RoomGame, { RoomGamePlayer } from "../RoomGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
 import { RoomBattleBanzaiGameTeam } from "./Interfaces/RoomBattleBanzaiGameTeam";
 import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
+import RoomBattleBanzaiGameTeams from "./RoomBattleBanzaiGameTeams";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
     public paused: boolean = false;
 
-    public gameSeconds: number = 30;
+    public seconds: number = 30;
 
     public starting: boolean = false;
-    public startingSeconds: number = 30;
+    public startingSeconds: number = 3;
 
     public players = new RoomBattleBanzaiGamePlayers(this);
-
-    public get seconds() {
-        if(this.starting) {
-            return this.startingSeconds;
-        }
-
-        return this.gameSeconds;
-    }
-
-    public set seconds(value: number) {
-        if(this.starting) {
-            this.startingSeconds = value;
-        }
-        else {
-            this.gameSeconds = value;
-        }
-    }
-
+    
+    public teams = new RoomBattleBanzaiGameTeams(this);
 
     constructor(private readonly room: Room) {
         
     }
 
     async startGame(seconds: number): Promise<void> {
-        this.gameSeconds = seconds;
+        this.seconds = seconds;
 
         this.started = true;
         this.paused = false;
 
         this.starting = true;
         this.startingSeconds = 4;
+
+        this.teams.resetTeams();
     }
 
     async endGame(reason: "eliminations" | "counter"): Promise<void> {
@@ -72,13 +59,17 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         if(performance.now() - this.lastActionInterval >= 1000) {
             this.lastActionInterval = performance.now();
 
-            this.seconds--;
+            if(this.starting) {
+                this.startingSeconds--;
 
-            if(this.seconds === 0) {
-                if(this.starting) {
+                if(this.startingSeconds === 0)  {
                     this.starting = false;
                 }
-                else {
+            }
+            else {
+                this.seconds--;
+
+                if(this.seconds === 0) {
                     await this.endGame("counter");
                 }
             }

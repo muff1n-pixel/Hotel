@@ -45,6 +45,7 @@ import RoomFurnitureBattleBanzaiRandomTeleportLogic from "./Logic/Games/BattleBa
 import RoomFurnitureFreezeTimerLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeTimerLogic";
 import RoomFurnitureBattleBanzaiTimerLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiTimerLogic";
 import RoomFurnitureBattleBanzaiGateLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
+import RoomFurnitureBattleBanzaiSphereLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiSphereLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -147,6 +148,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "battlebanzai_random_teleport":
                 return new RoomFurnitureBattleBanzaiRandomTeleportLogic(roomFurniture);
+
+            case "battlebanzai_sphere":
+                return new RoomFurnitureBattleBanzaiSphereLogic(roomFurniture);
 
             case "battlebanzai_gate_blue":
                 return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "blue");

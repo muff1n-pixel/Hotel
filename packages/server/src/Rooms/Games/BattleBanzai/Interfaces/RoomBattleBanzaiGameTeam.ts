@@ -3,3 +3,8 @@ export type RoomBattleBanzaiGameTeam =
     | "green"
     | "blue"
     | "yellow";
+
+export type RoomBattleBanzaiGameTeamData = {
+    team: RoomBattleBanzaiGameTeam;
+    score: number;
+};
