@@ -41,6 +41,7 @@ import RoomFurnitureFreezeCounterLogic from "./Logic/Games/Freeze/RoomFurnitureF
 import RoomFurnitureTrapLogic from "./Logic/RoomFurnitureTrapLogic";
 import RoomFurniturePhotostandLogic from "./Logic/RoomFurniturePhotostandLogic";
 import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic";
+import RoomFurnitureBattleBanzaiRandomTeleportLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiRandomTeleportLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -133,6 +134,10 @@ export default class RoomFurnitureLogicFactory {
 
             case "freeze_counter_yellow":
                 return new RoomFurnitureFreezeCounterLogic(roomFurniture, "yellow");
+
+            // Battle Banzai
+            case "battlebanzai_random_teleport":
+                return new RoomFurnitureBattleBanzaiRandomTeleportLogic(roomFurniture);
 
             // Game
             case "game_timer":
