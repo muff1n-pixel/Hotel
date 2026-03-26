@@ -12,7 +12,7 @@ export async function createMissingFurniture() {
             type: furniture.type,
 
             name: furniture.name,
-            description: furniture.description,
+            description: (furniture.description)?(furniture.description):(null),
 
             flags: furniture.flags,
 

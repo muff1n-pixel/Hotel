@@ -20,7 +20,7 @@ export default class GetShopFurnitureLinkEvent implements ProtobuffListener<GetS
         });
 
         user.sendProtobuff(ShopFurnitureLinkData, ShopFurnitureLinkData.create({
-            id: payload.furnitureId,
+            furnitureId: payload.furnitureId,
 
             category: shopFurniture?.shopPage.category,
             pageId: shopFurniture?.shopPage.id,
