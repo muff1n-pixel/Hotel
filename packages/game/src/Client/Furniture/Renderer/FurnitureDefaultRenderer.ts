@@ -256,7 +256,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 ink: getGlobalCompositeModeFromInk(layerData?.ink),
                 tag: layerData?.tag,
 
-                zIndex: directionLayerData?.zIndex ?? layerData?.zIndex ?? layer,
+                zIndex: (directionLayerData?.zIndex ?? layerData?.zIndex ?? 0) + layer,
                 alpha: layerData?.alpha,
                 ignoreMouse: layerData?.ignoreMouse
             };
