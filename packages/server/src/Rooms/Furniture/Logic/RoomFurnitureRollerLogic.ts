@@ -21,15 +21,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
         const room = this.roomFurniture.room;
 
         if(this.roomFurniture.model.animation !== 0) {
-            this.roomFurniture.model.animation = 0;
-
-            room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
-                furnitureUpdated: [
-                    {
-                        furniture: this.roomFurniture.model
-                    }
-                ]
-            }));
+            await this.roomFurniture.setAnimation(0);
         }
 
         if(room.model.speed === 0) {
@@ -46,78 +38,62 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
 
         let animate = false;
 
-        const offset = this.roomFurniture.getOffsetPosition(1);
+        const nextPosition = this.getNextPosition();
 
-        const blockingUser = room.getRoomUserAtPosition(offset);
+        if(this.isNextPositionBlocked(RoomPositionOffsetData.fromJSON(nextPosition))) {
+            return;
+        }
 
-        if(!blockingUser) {
-            const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
-            const furnitureInteractingWithRoller = room.getAllFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position)).filter((furniture) => furniture.model.position.depth >= (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
+        const usersInteractingWithRoller = room.users.filter((user) => user.position.row === this.roomFurniture.model.position.row && user.position.column === this.roomFurniture.model.position.column);
+        const furnitureInteractingWithRoller = room.furnitures.filter((furniture) => furniture.model.position.row === this.roomFurniture.model.position.row && furniture.model.position.column === this.roomFurniture.model.position.column && furniture.model.position.depth > (this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth));
 
-            for(const user of usersInteractingWithRoller) {
-                if(user.preoccupiedByActionHandler) {
-                    continue;
-                }
-
-                if(user.path.path) {
-                    continue;
-                }
-        
-                const offsetPosition = RoomPositionData.fromJSON(offset);
-
-                const nextFurniture = room.getUpmostFurnitureAtPosition(offset);
-                
-                if(nextFurniture && !nextFurniture.isWalkable(true)) {
-                    continue;
-                }
-
-                user.preoccupiedByActionHandler = true;
-
-                const nextRoller = room.getAllFurnitureAtPosition(offset).find((furniture) => furniture.model.furniture.category === "roller");
-
-                if(nextRoller) {
-                    offsetPosition.depth = nextRoller.model.position.depth + nextRoller.model.furniture.dimensions.depth;
-                }
-                else {
-                    offsetPosition.depth = parseInt(room.model.structure.grid[offsetPosition.row ?? 0]?.[offsetPosition.column ?? 0] ?? "0");
-                }
-
-                user.position = offsetPosition;
-
-                user.sendPositionEvent(true);
-                
-                animate = true;
+        for(const user of usersInteractingWithRoller) {
+            if(user.preoccupiedByActionHandler) {
+                continue;
             }
 
-            for(const furniture of furnitureInteractingWithRoller) {
-                if(furniture.preoccupiedByActionHandler) {
-                    continue;
-                }
-
-                furniture.preoccupiedByActionHandler = true;
-
-                // do not move the roller itself
-                if(furniture.model.id === this.roomFurniture.model.id) {
-                    continue;
-                }
-
-                const nextPosition = this.getNextPosition(furniture);
-
-                if(!nextPosition) {
-                    continue;
-                }
-
-                await furniture.setPosition(nextPosition, false);
-                
-                await furniture.model.save();
-
-                this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                    id: furniture.model.id,
-                    position: nextPosition
-                }));
-                
-                animate = true;
+            if(user.path.path) {
+                continue;
             }
+            
+            user.preoccupiedByActionHandler = true;
+            
+            const position = RoomPositionData.create({
+                row: nextPosition.row,
+                column: nextPosition.column,
+                depth: nextPosition.depth + (user.position.depth - this.roomFurniture.model.position.depth - this.roomFurniture.model.furniture.dimensions.depth)
+            });
+
+            user.position = position;
+
+            user.sendPositionEvent(true);
+            
+            animate = true;
+        }
+
+        for(const furniture of furnitureInteractingWithRoller) {
+            if(furniture.preoccupiedByActionHandler) {
+                continue;
+            }
+
+            furniture.preoccupiedByActionHandler = true;
+
+            const position = RoomPositionData.create({
+                row: nextPosition.row,
+                column: nextPosition.column,
+                depth: nextPosition.depth + (furniture.model.position.depth - this.roomFurniture.model.position.depth - this.roomFurniture.model.furniture.dimensions.depth)
+            });
+
+            await furniture.setPosition(position, false);
+            
+            await furniture.model.save();
+
+            this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
+                id: furniture.model.id,
+                position
+            }));
+            
+            animate = true;
         }
 
         if(animate) {
@@ -135,33 +111,49 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
         }
     }
 
-    private getNextPosition(roomFurniture: RoomFurniture): RoomPositionData | null {
-        const offset = roomFurniture.getOffsetPosition(1, this.roomFurniture.model.direction);
+    private getNextPosition() {
+        const nextPosition = this.roomFurniture.getOffsetPosition(1);
 
-        if(!this.roomFurniture.room.model.structure.grid[offset.row]?.[offset.column]) {
-            return null;
-        }
+        const nextRoller = this.getNextRoller(nextPosition);
 
-        const rollerDepth = this.roomFurniture.model.furniture.dimensions.depth;
-
-        const currentRelativeDepth = roomFurniture.model.position.depth - rollerDepth;
-
-        const allNextFurniture = this.roomFurniture.room.getAllFurnitureAtPosition(offset);
-
-        if(allNextFurniture.some((furniture) => furniture.model.furniture.interactionType === "roller")) {
+        if(nextRoller) {
             return RoomPositionData.create({
-                row: offset.row,
-                column: offset.column,
-                depth: roomFurniture.model.position.depth
+                row: nextRoller.model.position.row,
+                column: nextRoller.model.position.column,
+                depth: nextRoller.model.position.depth + nextRoller.model.furniture.dimensions.depth,
             });
         }
-
-        const tileDepth = RoomFloorplanHelper.parseDepth(this.roomFurniture.room.model.structure.grid[offset.row]![offset.column]!);
-
+        
         return RoomPositionData.create({
-            row: offset.row,
-            column: offset.column,
-            depth: tileDepth + currentRelativeDepth
+            row: nextPosition.row,
+            column: nextPosition.column,
+            depth: this.roomFurniture.model.position.depth,
         });
+    }
+
+    private getNextRoller(position: RoomPositionOffsetData) {
+        return this.roomFurniture.room.furnitures.find((furniture) => furniture.model.position.row === position.row && furniture.model.position.column === position.column && furniture.logic instanceof RoomFurnitureRollerLogic);
+    }
+
+    private isNextPositionBlocked(position: RoomPositionOffsetData) {
+        if(!this.roomFurniture.room.model.structure.grid[position.row]?.[position.column] || this.roomFurniture.room.model.structure.grid[position.row]?.[position.column] === 'X') {
+            return true;
+        }
+
+        const nextRoller = this.getNextRoller(position);
+
+        if(nextRoller) {
+            const furnitureAtopNextRoller = this.roomFurniture.room.furnitures.some((furniture) => furniture.model.position.row === position.row && furniture.model.position.column === position.column && furniture.model.position.depth > nextRoller.model.position.depth);
+
+            if(furnitureAtopNextRoller) {
+                return true;
+            }
+        }
+
+        if(this.roomFurniture.room.getActorAtPosition(position)) {
+            return true;
+        }
+
+        return false;
     }
 }
