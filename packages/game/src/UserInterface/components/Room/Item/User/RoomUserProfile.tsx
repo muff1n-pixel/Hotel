@@ -43,7 +43,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             flexDirection: "column",
             gap: 10
         }}>
-            <b><UserLink id={targetUser.id} name={targetUser.name!}/></b>
+            <b><UserLink id={targetUser.id} name={targetUser.name!} reversed/></b>
 
             <div style={{
                 width: "100%",

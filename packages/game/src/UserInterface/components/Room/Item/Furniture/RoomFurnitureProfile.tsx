@@ -9,6 +9,7 @@ import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 import FurnitureShopLink from "@UserInterface/Components/Furniture/FurnitureShopLink";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomFurnitureProfileProps = {
     furniture: RoomFurniture;
@@ -91,6 +92,10 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
 
                 {(furniture.furnitureData.description) && (
                     <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.furnitureData.description}</p>
+                )}
+
+                {(furniture.data.user) && (
+                    <UserLink id={furniture.data.user.id} name={furniture.data.user.name} reversed/>
                 )}
 
                 <FurnitureShopLink furniture={furniture.furnitureData}/>
