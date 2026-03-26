@@ -9,4 +9,6 @@ message PurchaseShopFurnitureData {
 
     optional RoomPositionData position = 3;
     optional uint32 direction = 4;
+
+    optional uint32 quantity = 5;
 }

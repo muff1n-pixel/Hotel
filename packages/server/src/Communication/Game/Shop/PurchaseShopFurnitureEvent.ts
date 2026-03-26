@@ -23,6 +23,12 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             }
         });
 
+        let quantity = Math.min(Math.max(payload.quantity ?? 1, 1), 100);
+
+        if(payload.position) {
+            quantity = 1;
+        }
+
         if(!shopFurniture) {
             user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
@@ -31,7 +37,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             return;
         }
 
-        if((shopFurniture.credits && user.model.credits < shopFurniture.credits)) {
+        if((shopFurniture.credits && user.model.credits < (shopFurniture.credits * quantity))) {
             user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
@@ -39,7 +45,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             return;
         }
 
-        if((shopFurniture.duckets && user.model.duckets < shopFurniture.duckets)) {
+        if((shopFurniture.duckets && user.model.duckets < (shopFurniture.duckets * quantity))) {
             user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
@@ -47,7 +53,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             return;
         }
 
-        if((shopFurniture.diamonds && user.model.diamonds < shopFurniture.diamonds)) {
+        if((shopFurniture.diamonds && user.model.diamonds < (shopFurniture.diamonds * quantity))) {
             user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
                 success: false
             }));
@@ -55,58 +61,22 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             return;
         }
 
-        user.model.credits -= shopFurniture.credits ?? 0;
-        user.model.duckets -= shopFurniture.duckets ?? 0;
-        user.model.diamonds -= shopFurniture.diamonds ?? 0;
+        user.model.credits -= (shopFurniture.credits ?? 0) * quantity;
+        user.model.duckets -= (shopFurniture.duckets ?? 0) * quantity;
+        user.model.diamonds -= (shopFurniture.diamonds ?? 0) * quantity;
+
+        user.sendUserData();
 
         await user.model.save();
 
-        const userFurniture = await UserFurnitureModel.create({
-            id: randomUUID(),
-            position: null,
-            direction: null,
-            animation: 0,
-            color: null,
-            data: null,
-            
-            roomId: null,
-            userId: user.model.id,
-            furnitureId: shopFurniture.furniture.id
-        }, {
-            include: [
-                {
-                    model: FurnitureModel,
-                    as: "furniture"
-                }
-            ]
-        });
-
-        userFurniture.user = user.model;
-        userFurniture.furniture = shopFurniture.furniture;
-
-        if(userFurniture.furniture.interactionType === "trophy" && payload.data?.trophy) {
-            userFurniture.data = UserFurnitureCustomData.create({
-                trophy: {
-                    engraving: payload.data.trophy.engraving ?? "",
-                    date: new Date().toISOString().split('T')[0]!.toString(),
-                    author: user.model.name
-                }
-            });
-
-            await userFurniture.save();
-        }
-
-        if(userFurniture.furniture.interactionType === "teleport" || userFurniture.furniture.interactionType === "teleporttile") {
-            const secondUserFurniture = await UserFurnitureModel.create({
+        for(let index = 0; index < quantity; index++) {
+            const userFurniture = await UserFurnitureModel.create({
                 id: randomUUID(),
                 position: null,
                 direction: null,
                 animation: 0,
-                data: UserFurnitureCustomData.create({
-                    teleport: {
-                        furnitureId: userFurniture.id
-                    }
-                }),
+                color: null,
+                data: null,
                 
                 roomId: null,
                 userId: user.model.id,
@@ -120,35 +90,74 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 ]
             });
 
-            secondUserFurniture.user = user.model;
-            secondUserFurniture.furniture = shopFurniture.furniture;
+            userFurniture.user = user.model;
+            userFurniture.furniture = shopFurniture.furniture;
 
-            await userFurniture.update({
-                data: UserFurnitureCustomData.create({
-                    teleport: {
-                        furnitureId: secondUserFurniture.id
+            if(userFurniture.furniture.interactionType === "trophy" && payload.data?.trophy) {
+                userFurniture.data = UserFurnitureCustomData.create({
+                    trophy: {
+                        engraving: payload.data.trophy.engraving ?? "",
+                        date: new Date().toISOString().split('T')[0]!.toString(),
+                        author: user.model.name
                     }
-                })
-            });
+                });
 
-            await user.getInventory().addFurniture(secondUserFurniture);
-        }
+                await userFurniture.save();
+            }
 
-        await userFurniture.save();
+            if(userFurniture.furniture.interactionType === "teleport" || userFurniture.furniture.interactionType === "teleporttile") {
+                const secondUserFurniture = await UserFurnitureModel.create({
+                    id: randomUUID(),
+                    position: null,
+                    direction: null,
+                    animation: 0,
+                    data: UserFurnitureCustomData.create({
+                        teleport: {
+                            furnitureId: userFurniture.id
+                        }
+                    }),
+                    
+                    roomId: null,
+                    userId: user.model.id,
+                    furnitureId: shopFurniture.furniture.id
+                }, {
+                    include: [
+                        {
+                            model: FurnitureModel,
+                            as: "furniture"
+                        }
+                    ]
+                });
 
-        const roomUser = user.room?.getRoomUser(user);
+                secondUserFurniture.user = user.model;
+                secondUserFurniture.furniture = shopFurniture.furniture;
 
-        if(roomUser?.hasRights() && payload.position && payload.direction !== undefined) {
-            await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
-        }
-        else {
-            await user.getInventory().addFurniture(userFurniture);
+                await userFurniture.update({
+                    data: UserFurnitureCustomData.create({
+                        teleport: {
+                            furnitureId: secondUserFurniture.id
+                        }
+                    })
+                });
+
+                await user.getInventory().addFurniture(secondUserFurniture);
+            }
+
+            await userFurniture.save();
+
+            const roomUser = user.room?.getRoomUser(user);
+
+            if(roomUser?.hasRights() && payload.position && payload.direction !== undefined) {
+                await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
+            }
+            else {
+                await user.getInventory().addFurniture(userFurniture);
+            }
         }
 
         user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
-            success: true
+            success: true,
+            quantity
         }));
-
-        user.sendUserData();
     }
 }

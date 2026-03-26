@@ -14,6 +14,8 @@ import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFur
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import Input from "@UserInterface/Common/Form/Components/Input";
 
 export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -28,6 +30,7 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
 
     const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
     const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
+    const [quantity, setQuantity] = useState(1);
 
     const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
@@ -47,17 +50,23 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
                     return;
                 }
 
-                stopPlacing?.();
+                if(position) {
+                    return;
+                }
 
                 if(activeFurnitureRef.current && activeFurniture.furniture) {
-                    clientInstance.flyingFurnitureIcons.value!.push({
-                        id: Math.random().toString(),
-                        furniture: activeFurniture.furniture,
-                        position: activeFurnitureRef.current.getBoundingClientRect(),
-                        targetElementId: "toolbar-inventory"
-                    });
+                    for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
+                        clientInstance.flyingFurnitureIcons.value!.push({
+                            id: Math.random().toString(),
+                            furniture: activeFurniture.furniture,
+                            position: activeFurnitureRef.current.getBoundingClientRect(),
+                            targetElementId: "toolbar-inventory"
+                        });
 
-                    clientInstance.flyingFurnitureIcons.update();
+                        clientInstance.flyingFurnitureIcons.update();
+
+                        await new Promise((resolve) => setTimeout(resolve, 50));
+                    }
                 }
             },
         }, {
@@ -68,9 +77,11 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
             id: activeFurniture.id,
 
             position,
-            direction
+            direction,
+
+            quantity: (purchasableItem.placing)?(1):(quantity)
         }));
-    }, [activeFurniture, activeFurnitureRef]);
+    }, [activeFurniture, activeFurnitureRef, quantity]);
 
     const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
 
@@ -369,7 +380,11 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
                     display: "flex",
                     flexDirection: "row"
                 }}>
-                    <div style={{ flex: 1 }}/>
+                    <FlexLayout flex={1} direction="row" align="center">
+                        <div style={{ color: "#6A6A69" }}>Quantity</div>
+
+                        <Input style={{ width: 30 }} value={quantity.toString()} min={1} max={100} onChange={(value) => setQuantity(window.isNaN(parseInt(value))?(1):(parseInt(value)))}/>
+                    </FlexLayout>
 
                     <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
