@@ -146,6 +146,10 @@ export default function RoomChat() {
 
                 moveMessagesUp(messages.current, newMessage);
 
+                if(newMessage.index === 0) {
+                    newMessage.index = -1;
+                }
+
                 messages.current.push(newMessage);
 
                 setLatestMessage(performance.now());
@@ -197,11 +201,9 @@ export default function RoomChat() {
         const timer = setInterval(() => {
             for(const message of messages.current) {
                 message.index++;
-
-                if(message.index > 30) {
-                    messages.current.splice(messages.current.indexOf(message), 1);
-                }
             }
+
+            messages.current = messages.current.filter((message) => message.index < 30);
 
             setLatestMessage(performance.now());
         }, 3000);
