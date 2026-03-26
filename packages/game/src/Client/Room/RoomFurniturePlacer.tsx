@@ -9,6 +9,7 @@ import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerCli
 import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
+import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -212,16 +213,16 @@ export default class RoomFurniturePlacer {
             const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(entity.position), dimensions)));
             const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(RoomPositionData.fromJSON(entity.position), dimensions, this.roomFurnitureItem)));
 
-            if(entity && isPositionInsideStructure && !isPositionInsideFigure) {
-                const furnitureAtPosition = (isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
+            const furnitureAtPosition = (isFloorPlacement)?(this.roomInstance.getFurnitureAtUpmostPosition(
                     RoomPositionData.create({
                         row: entity.position.row,
                         column: entity.position.column
                     }),
                     dimensions,
                     (isFurniture)?(this.roomFurnitureItem.id):(undefined)
-                );
+                )):(undefined);
 
+            if(entity && isPositionInsideStructure && (furnitureAtPosition?.getLogic() instanceof RoomFurnitureStackHelperLogic || !isPositionInsideFigure)) {
                 if(!furnitureAtPosition || furnitureAtPosition.furnitureData.flags?.stackable) {
                     if(isFurniture && entity.position.direction !== undefined) {
                         this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;

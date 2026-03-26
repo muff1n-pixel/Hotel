@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UserFurnitureStackHelperData {
+    double height = 1;
+}

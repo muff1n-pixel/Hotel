@@ -14,6 +14,7 @@ import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
 import RoomFreezeGame from "./Games/Freeze/RoomFreezeGame.js";
+import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -314,6 +315,12 @@ export default class Room {
 
         if(!furniture.length) {
             return undefined;
+        }
+
+        const stackHelperFurniture = furniture.find((furniture) => furniture.logic instanceof RoomFurnitureStackHelperLogic);
+
+        if(stackHelperFurniture) {
+            return stackHelperFurniture;
         }
 
         return furniture[0];

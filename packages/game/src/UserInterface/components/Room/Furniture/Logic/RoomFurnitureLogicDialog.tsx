@@ -18,6 +18,7 @@ import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog
 import WiredDialog from "../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import WiredFurniture from "../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import RoomFurnitureStackHelperDialog from "@UserInterface/Components/Room/Furniture/Logic/StackHelper/RoomFurnitureStackHelperDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -45,6 +46,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             
         case "trophy":
             return (<RoomFurnitureTrophyDialog {...props}/>);
+
+        case "stack_helper":
+            return (<RoomFurnitureStackHelperDialog {...props}/>);
 
         case "wf_trg_says_something":
             return (<WiredTriggerSaysSomethingDialog {...props}/>);

@@ -15,6 +15,7 @@ import RoomFurnitureFortunaLogic from "@Client/Room/Furniture/Logic/RoomFurnitur
 import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurnitureWiredLogic";
 import { FurnitureData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
 import FurnitureDefaultMultistateLogic from "@Client/Furniture/Logic/FurnitureDefaultMultistateLogic";
+import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -53,6 +54,9 @@ export default class RoomFurniture {
             case "teleport":
             case "teleporttile":
                 return new RoomFurnitureTeleportLogic(this.instance, this);
+
+            case "stack_helper":
+                return new RoomFurnitureStackHelperLogic(this.instance, this);
 
             case "gate":
             case "multiheight":

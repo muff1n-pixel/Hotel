@@ -11,6 +11,8 @@ export default interface RoomFurnitureLogic {
 
     handleUserEnteredRoom?(roomUser: RoomUser): Promise<void>;
     handleUserLeftRoom?(roomUser: RoomUser): Promise<void>;
+
+    handleDataChanged?(roomUser: RoomUser): void;
     
     handleUserChat?(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult>;
     handleUserWalksTo?(roomUser: RoomUser): Promise<void>;

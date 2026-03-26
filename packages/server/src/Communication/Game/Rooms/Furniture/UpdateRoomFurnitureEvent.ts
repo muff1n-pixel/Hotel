@@ -111,6 +111,8 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
             else {
                 furniture.model.data = payload.data
             }
+
+            furniture.logic?.handleDataChanged?.(roomUser);
         }
 
         if(furniture.model.changed()) {

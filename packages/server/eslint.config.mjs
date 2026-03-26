@@ -29,7 +29,8 @@ export default defineConfig(
         "@typescript-eslint/require-await": "off",
         "@types-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/no-floating-promises": "error",
-        "@typescript-eslint/no-unsafe-member-access": "off"
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off"
     }
   },
   {

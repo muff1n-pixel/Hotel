@@ -14,6 +14,7 @@ import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
+import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -398,9 +399,14 @@ export default class RoomInstance {
     public getFurnitureAtUpmostPosition(position: Omit<RoomPositionData, "depth">, dimensions: RoomPositionData = RoomPositionData.create({ row: 1, column: 1, depth: 0 }), ignoreRoomFurnitureItemId?: number) {
         const furniture = this.furnitures
             .filter((furniture) => furniture.item.id !== ignoreRoomFurnitureItemId)
-            .filter((furniture) => furniture.isPositionInside(position, dimensions))
-            .toSorted((a, b) => b.data.position!.depth - a.data.position!.depth);
+            .filter((furniture) => furniture.isPositionInside(position, dimensions));
 
-        return furniture[0];
+        const stackHelperFurniture = furniture.find((furniture) => furniture.getLogic() instanceof RoomFurnitureStackHelperLogic);
+
+        if(stackHelperFurniture) {
+            return stackHelperFurniture;
+        }
+
+        return furniture.toSorted((a, b) => b.data.position!.depth - a.data.position!.depth)[0];
     }
 }
