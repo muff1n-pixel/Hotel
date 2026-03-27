@@ -29,7 +29,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
             tag
         }));
     }
-    
+
     public getNextState() {
         if(!this.roomFurniture.furniture.data) {
             return this.roomFurniture.furniture.animation;
@@ -50,7 +50,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
         }
 
         if(!filteredAnimations[currentAnimationIndex + 1]) {
-            return 0;
+            return filteredAnimations[0]?.id ?? 0;
         }
 
         return filteredAnimations[currentAnimationIndex + 1].id;
