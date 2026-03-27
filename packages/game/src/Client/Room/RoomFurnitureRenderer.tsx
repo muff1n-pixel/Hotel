@@ -76,7 +76,11 @@ export default class RoomFurnitureRenderer {
 
     async setFigure(figureConfiguration: FigureConfigurationData, actions?: string[], position?: RoomPositionData) {
         if(this.roomItem) {
-            this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomItem), 1);
+            const index = this.roomRenderer.items.indexOf(this.roomItem);
+
+            if(index !== -1) {
+                this.roomRenderer.items.splice(index, 1);
+            }
         }
 
         const figureRenderer = new Figure(figureConfiguration, 2, actions);
@@ -94,7 +98,11 @@ export default class RoomFurnitureRenderer {
 
     async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: number = 0) {
         if(this.roomItem) {
-            this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(this.roomItem), 1);
+            const index = this.roomRenderer.items.indexOf(this.roomItem);
+
+            if(index !== -1) {
+                this.roomRenderer.items.splice(index, 1);
+            }
         }
 
         if(type === "wallpaper") {
