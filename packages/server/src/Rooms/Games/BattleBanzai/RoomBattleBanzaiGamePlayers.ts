@@ -45,7 +45,7 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
             return;
         }
 
-        this.players.slice(this.players.indexOf(player), 1);
+        this.players.splice(this.players.indexOf(player), 1);
 
         roomUser.removeAction("AvatarEffect");
 
