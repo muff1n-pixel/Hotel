@@ -23,7 +23,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
     const navigator = useNavigator(tab, search);
 
     return (
-        <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={420} height={530} style={{
+        <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={430} height={530} style={{
             overflow: "visible"
         }}>
             <DialogTabs initialActiveIndex={1} withoutHeader onChange={(index) => {

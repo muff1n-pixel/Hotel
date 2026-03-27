@@ -32,7 +32,7 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                             borderBottom: "2px solid #CCCCCC",
                             borderRadius: 6,
 
-                            padding: 7,
+                            padding: 5,
 
                             display: "flex",
                             flexDirection: "column",
