@@ -12,6 +12,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
     private previousLayerFrames: string = "";
     private hasImageData: boolean = false;
+    
+    public animationTransitioned?: number;
+    public animationTransitionedTo?: number;
 
     private visualization?: FurnitureVisualization["visualizations"][0];
 
@@ -70,8 +73,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             return [];
         }
 
-        const animationData = this.visualization.animations?.find((animationData) => animationData.id === options!.animation);
-
         const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset?: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
 
         if(options.animationTags) {
@@ -88,11 +89,13 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
+        const animationData = this.visualization.animations?.find((animationData) => animationData.id === ((this.animationTransitioned === options!.animation)?(this.animationTransitionedTo):(options!.animation)));
+
         for(let layer = 0; layer < this.visualization.layerCount; layer++) {
             if(result.some((result) => result.animationLayerId === layer)) {
                 continue;
             }
-            
+
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
 
             if(animationLayer?.frameSequence?.length) {
@@ -103,6 +106,11 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
 
                     if(options.frame >= maxFrames && loopCount !== 0) {
+                        if(animationData?.transitionTo !== undefined) {
+                            this.animationTransitioned = animationData.id;
+                            this.animationTransitionedTo = animationData.transitionTo;
+                        }
+
                         frameSequenceIndex = animationLayer.frameSequence.length - 1;
                     }
                     else {
@@ -113,6 +121,11 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     const maxFrames = animationLayer.frameSequence.length * loopCount;
 
                     if(options.frame >= maxFrames && loopCount !== 0) {
+                        if(animationData?.transitionTo !== undefined) {
+                            this.animationTransitioned = animationData.id;
+                            this.animationTransitionedTo = animationData.transitionTo;
+                        }
+
                         frameSequenceIndex = animationLayer.frameSequence.length - 1;
                     }
                 }

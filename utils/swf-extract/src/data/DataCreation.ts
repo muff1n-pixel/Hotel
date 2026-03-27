@@ -238,6 +238,7 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                 animations: getValueAsArray(visualization["animations"]?.["animation"]).map((animation: any) => {
                     return {
                         id: parseInt(animation["@_id"]),
+                        transitionTo: (animation["@_transitionTo"] !== undefined)?(parseInt(animation["@_transitionTo"])):(undefined),
 
                         layers: getValueAsArray(animation["animationLayer"]).map((layer: any) => {
                             return {

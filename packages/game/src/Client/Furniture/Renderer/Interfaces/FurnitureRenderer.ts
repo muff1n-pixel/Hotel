@@ -14,6 +14,9 @@ export type FurnitureRenderOptions = {
 }
 
 export default interface FurnitureRenderer {
+    animationTransitioned?: number;
+    animationTransitionedTo?: number;
+
     render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]>;
     renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap>;
 

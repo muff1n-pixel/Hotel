@@ -121,7 +121,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.render(this.data, {
+        const result = await this.renderer.render(this.data, {
             direction: this.direction,
             size: this.size, 
             animation: this.animation,
@@ -131,6 +131,8 @@ export default class Furniture {
             grayscaled: this.grayscaled,
             tags: undefined
         });
+
+        return result;
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
