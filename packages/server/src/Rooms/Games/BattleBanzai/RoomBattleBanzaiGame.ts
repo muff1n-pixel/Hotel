@@ -1,4 +1,6 @@
 import RoomFurnitureBattleBanzaiGateLogic from "../../Furniture/Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
+import RoomFurnitureBattleBanzaiCounterLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
+import RoomFurnitureBattleBanzaiTileLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiTileLogic";
 import Room from "../../Room";
 import RoomUser from "../../Users/RoomUser";
 import RoomGame, { RoomGamePlayer } from "../RoomGame";
@@ -20,12 +22,21 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     
     public teams = new RoomBattleBanzaiGameTeams(this);
 
-    constructor(private readonly room: Room) {
+    constructor(public readonly room: Room) {
         
+    }
+    
+    public isPlaying() {
+        return this.started && !this.paused && !this.starting;
     }
 
     async startGame(seconds: number): Promise<void> {
         this.seconds = seconds;
+
+        await Promise.all(
+            this.getAllTileFurniture().map((furniture) => furniture.setAnimation(1))
+            .concat(this.getAllCounterFurniture().map((furniture) => furniture.setAnimation(0)))
+        );
 
         this.started = true;
         this.paused = false;
@@ -39,6 +50,8 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     async endGame(reason: "eliminations" | "counter"): Promise<void> {
         this.started = false;
         this.paused = false;
+        
+        await Promise.all(this.getAllTileFurniture().filter((furniture) => furniture.model.animation === 1).map((furniture) => furniture.setAnimation(0)));
     }
 
     async pauseGame(): Promise<void> {
@@ -94,5 +107,13 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     
     public getGateFurniture(team: RoomBattleBanzaiGameTeam) {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiGateLogic && furniture.logic.team === team);
+    }
+    
+    public getAllTileFurniture() {
+        return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiTileLogic);
+    }
+    
+    public getAllCounterFurniture() {
+        return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiCounterLogic);
     }
 }

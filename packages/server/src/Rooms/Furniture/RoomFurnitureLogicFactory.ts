@@ -46,6 +46,8 @@ import RoomFurnitureFreezeTimerLogic from "./Logic/Games/Freeze/Common/RoomFurni
 import RoomFurnitureBattleBanzaiTimerLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiTimerLogic";
 import RoomFurnitureBattleBanzaiGateLogic from "./Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
 import RoomFurnitureBattleBanzaiSphereLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiSphereLogic";
+import RoomFurnitureBattleBanzaiTileLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiTileLogic";
+import RoomFurnitureBattleBanzaiCounterLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -152,6 +154,9 @@ export default class RoomFurnitureLogicFactory {
             case "battlebanzai_sphere":
                 return new RoomFurnitureBattleBanzaiSphereLogic(roomFurniture);
 
+            case "battlebanzai_tile":
+                return new RoomFurnitureBattleBanzaiTileLogic(roomFurniture);
+
             case "battlebanzai_gate_blue":
                 return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "blue");
 
@@ -163,6 +168,18 @@ export default class RoomFurnitureLogicFactory {
 
             case "battlebanzai_gate_yellow":
                 return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "yellow");
+
+            case "battlebanzai_counter_blue":
+                return new RoomFurnitureBattleBanzaiCounterLogic(roomFurniture, "blue");
+
+            case "battlebanzai_counter_green":
+                return new RoomFurnitureBattleBanzaiCounterLogic(roomFurniture, "green");
+
+            case "battlebanzai_counter_red":
+                return new RoomFurnitureBattleBanzaiCounterLogic(roomFurniture, "red");
+
+            case "battlebanzai_counter_yellow":
+                return new RoomFurnitureBattleBanzaiCounterLogic(roomFurniture, "yellow");
 
             // Wired
             case "conf_invis_control":

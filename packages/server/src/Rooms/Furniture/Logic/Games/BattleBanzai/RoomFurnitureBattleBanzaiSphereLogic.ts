@@ -33,10 +33,10 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        const leadingTeamAnimation = 101 + (["red", "green", "blue", "yellow"].indexOf(leadingTeam.team));
+        /*const leadingTeamAnimation = 101 + (["red", "green", "blue", "yellow"].indexOf(leadingTeam.team));
 
         if(this.roomFurniture.model.animation !== leadingTeamAnimation) {
             await this.roomFurniture.setAnimation(leadingTeamAnimation);
-        }
+        }*/
     }
 }

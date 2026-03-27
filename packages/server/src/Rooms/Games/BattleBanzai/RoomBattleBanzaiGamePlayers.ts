@@ -34,6 +34,10 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
         return this.players.some((player) => player.roomUser.user.model.id === roomUser.user.model.id);
     }
 
+    public getPlayer(roomUser: RoomUser) {
+        return this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
+    }
+
     public removePlayer(roomUser: RoomUser): void {
         const player = this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
 

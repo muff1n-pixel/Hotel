@@ -3,12 +3,31 @@ import RoomBattleBanzaiGame from "./RoomBattleBanzaiGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
 import { RoomBattleBanzaiGameTeam, RoomBattleBanzaiGameTeamData } from "./Interfaces/RoomBattleBanzaiGameTeam";
 import RoomUser from "../../Users/RoomUser";
+import RoomFurnitureBattleBanzaiCounterLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
 
 export default class RoomBattleBanzaiGameTeams {
     private teams: RoomBattleBanzaiGameTeamData[] = [];
 
     constructor(private readonly game: RoomBattleBanzaiGame) {
 
+    }
+
+    public addTeamScore(team: RoomBattleBanzaiGameTeam, score: number) {
+        const teamData = this.getTeam(team);
+
+        if(!teamData) {
+            return;
+        }
+
+        teamData.score += score;
+
+        for(const furniture of this.getTeamCounterFurniture(team)) {
+            (furniture.logic as RoomFurnitureBattleBanzaiCounterLogic).updateAnimationTags(teamData.score).catch(console.error);
+        }
+    }
+
+    public getTeam(team: RoomBattleBanzaiGameTeam) {
+        return this.teams.find((_team) => _team.team === team);
     }
 
     public resetTeams() {
@@ -50,5 +69,9 @@ export default class RoomBattleBanzaiGameTeams {
         }
 
         return leadingTeam;
+    }
+        
+    public getTeamCounterFurniture(team: RoomBattleBanzaiGameTeam) {
+        return this.game.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiCounterLogic && furniture.logic.team === team);
     }
 }
