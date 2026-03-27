@@ -22,6 +22,8 @@ export default function usePurchasableItem(purchaseItem: (stopPlacing: () => voi
         dialogs.setDialogHidden("shop", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
+            roomFurniturePlacer.destroy();
+            
             purchaseItem(stopPlacing, position, direction);
             
             dialogs.setDialogHidden("shop", false);

@@ -160,7 +160,8 @@ export default class RoomUser implements RoomActor {
         
         this.room.users.splice(this.room.users.indexOf(this), 1);
 
-        this.room.freezeGame.removePlayer(this);
+        this.room.freezeGame.players.removePlayer(this);
+        this.room.battleBanzaiGame.players.removePlayer(this);
 
         this.room.sendProtobuff(RoomUserLeftData, RoomUserLeftData.create({
             userId: this.user.model.id
@@ -323,12 +324,25 @@ export default class RoomUser implements RoomActor {
         }
     }
 
+    public async handleBeforeWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
+        const previousFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(previousPosition));
+        const newFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(newPosition));
+
+        for(const furniture of newFurniture) {
+            await this.handleBeforeWalksOnFurniture?.(furniture, previousFurniture);
+        }
+    }
+
     public async handleWalkToEvent(position: RoomPositionOffsetData) {
         const allFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(position));
 
         for(const furniture of allFurniture) {
             await furniture.logic?.handleUserWalksTo?.(this);
         }
+    }
+
+    public async handleBeforeWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        return this.room.handleBeforeUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 
     public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {

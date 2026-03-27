@@ -13,7 +13,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
             return false;
         }
         
-        return (this.roomFurniture.furniture.animation !== this.getNextState());
+        return true;
     }
 
     use(tag?: string): void {
@@ -37,16 +37,22 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
 
         const visualization = this.roomFurniture.furniture.getVisualizationData(this.roomFurniture.furniture.data);
 
-        const currentAnimationIndex = visualization.animations.findIndex((animation) => animation.id === this.roomFurniture.furniture.animation);
+        let filteredAnimations = visualization.animations;
+
+        if(filteredAnimations.some((animation) => animation.transitionTo !== undefined)) {
+            filteredAnimations = visualization.animations.filter((animation) => animation.transitionTo !== undefined);
+        }
+
+        const currentAnimationIndex = filteredAnimations.findIndex((animation) => animation.id === this.roomFurniture.furniture.animation);
 
         if(currentAnimationIndex === -1) {
-            return visualization.animations[0]?.id ?? 0;
+            return filteredAnimations[0]?.id ?? 0;
         }
 
-        if(!visualization.animations[currentAnimationIndex + 1]) {
-            return 0;
+        if(!filteredAnimations[currentAnimationIndex + 1]) {
+            return filteredAnimations[0]?.id ?? 0;
         }
 
-        return visualization.animations[currentAnimationIndex + 1].id;
+        return filteredAnimations[currentAnimationIndex + 1].id;
     }
 }

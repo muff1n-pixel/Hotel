@@ -7,17 +7,19 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
     private travelingDirection: number | null = null;
     private travelingVelocity: number | null = null;
     private travelingPassing: boolean | null = null;
+    private triggeringUser: RoomUser | null = null;
 
     private travelingInterval: NodeJS.Timeout | null = null;
 
-    constructor(private readonly roomFurniture: RoomFurniture) {
+    constructor(public readonly roomFurniture: RoomFurniture) {
 
     }
 
-    async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+    async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
         this.travelingDirection = roomUser.direction;
         this.travelingPassing = Boolean(roomUser.path.path && roomUser.path.path.length > 0);
         this.travelingVelocity = (this.travelingPassing)?(2):(6);
+        this.triggeringUser = roomUser;
 
         this.moveFurniture().catch(console.error);
     }
@@ -42,6 +44,8 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             if(this.travelingVelocity === 0) {
                 this.travelingVelocity = null;
                 this.travelingDirection = null;
+                
+                this.handleFootballStopped().catch(console.error);
 
                 if(this.travelingInterval !== null) {
                     clearTimeout(this.travelingInterval);
@@ -55,6 +59,8 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             let nextOffsetPosition = this.roomFurniture.getOffsetPosition(1, this.travelingDirection);
 
             if(!this.isPositionValid(nextOffsetPosition)) {
+                const originalTravelingDirection = this.travelingDirection;
+
                 if((this.travelingDirection % 2) !== 0) {
                     this.travelingDirection += 2;
                     
@@ -68,11 +74,18 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                     
                     this.travelingDirection %= 8;
                 }
+                
+                if(!this.isPositionValid(nextOffsetPosition)) {
+                    this.travelingDirection = originalTravelingDirection + 4;
+                    this.travelingDirection %= 8;
+                }
             
                 nextOffsetPosition = this.roomFurniture.getOffsetPosition(1, this.travelingDirection);
                 
                 if(!this.isPositionValid(nextOffsetPosition)) {
                     this.travelingVelocity = 0;
+                
+                    this.handleFootballStopped().catch(console.error);
 
                     return;
                 }
@@ -101,13 +114,26 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             if(this.travelingVelocity === 0) {
                 this.travelingVelocity = null;
                 this.travelingDirection = null;
+                this.triggeringUser = null;
+                
+                this.handleFootballStopped().catch(console.error);
             }
             else {
                 this.travelingInterval = setTimeout(() => {
                     this.moveFurniture().catch(console.error);
                 }, duration);
             }
+
+            this.handleFootballMoved(this.triggeringUser, position).catch(console.error);
         }
+    }
+
+    public async handleFootballMoved(user: RoomUser | null, position: RoomPositionData) {
+
+    }
+
+    public async handleFootballStopped() {
+
     }
 
     private isPositionValid(position: RoomPositionOffsetData) {
@@ -119,7 +145,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
 
         const nextFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(position);
 
-        if(nextFurniture && !nextFurniture.model.furniture.flags.walkable) {
+        if(nextFurniture && (!nextFurniture.model.furniture.flags.walkable || (nextFurniture.logic?.isWalkable && !nextFurniture.logic.isWalkable()))) {
             return false;
         }
 

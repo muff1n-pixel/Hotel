@@ -238,14 +238,16 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                 animations: getValueAsArray(visualization["animations"]?.["animation"]).map((animation: any) => {
                     return {
                         id: parseInt(animation["@_id"]),
+                        transitionTo: (animation["@_transitionTo"] !== undefined)?(parseInt(animation["@_transitionTo"])):(undefined),
 
                         layers: getValueAsArray(animation["animationLayer"]).map((layer: any) => {
                             return {
                                 id: parseInt(layer["@_id"]),
                                 loopCount: layer["@_loopCount"] ? parseInt(layer["@_loopCount"]) : undefined,
                                 frameRepeat: layer["@_frameRepeat"] ? parseInt(layer["@_frameRepeat"]) : undefined,
+                                random: layer["@_random"] === "1",
 
-                                frameSequence: getValueAsArray(layer["frameSequence"]?.["frame"]).map((frame: any) => {
+                                frameSequence: getValueAsArray(layer["frameSequence"]).flatMap((frameSequence: any) => getValueAsArray(frameSequence?.["frame"])).map((frame: any) => {
                                     return {
                                         id: parseInt(frame["@_id"]),
 

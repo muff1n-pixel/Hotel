@@ -63,7 +63,10 @@ export default class RoomFurniture {
             case "default":
             case "conf_invis_control":
             case "crackable":
-            case "game_timer":
+                return new FurnitureMultistateLogic(this.instance, this);
+
+            case "freeze_timer":
+            case "battlebanzai_timer":
                 return new FurnitureMultistateLogic(this.instance, this);
 
             case "freeze_tile":
@@ -127,8 +130,6 @@ export default class RoomFurniture {
             }
         }
 
-        this.data = payload;
-
         if(payload.direction !== undefined) {
             this.item.furnitureRenderer.direction = this.data.direction = payload.direction;
         }
@@ -140,13 +141,16 @@ export default class RoomFurniture {
         this.item.furnitureRenderer.animationTags = this.data.animationTags = payload.animationTags;
 
         if(payload.color !== undefined) {
-            this.item.furnitureRenderer.color = payload.color ?? this.furnitureData.color ?? undefined;
+            this.item.furnitureRenderer.color = this.data.color = payload.color ?? this.furnitureData.color ?? undefined;
         }
 
-        if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
-            this.item.positionPathData = undefined;
-            
-            this.item.setPosition(payload.position);
+        if(payload.position) {
+            if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
+                this.item.positionPathData = undefined;
+                this.data.position = payload.position;
+                
+                this.item.setPosition(payload.position);
+            }
         }
 
         if(payload.data) {

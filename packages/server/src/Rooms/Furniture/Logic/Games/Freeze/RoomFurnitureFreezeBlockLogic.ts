@@ -29,7 +29,7 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
             return;
         }
         
-        const player = this.roomFurniture.room.freezeGame.getPlayer(roomUser);
+        const player = this.roomFurniture.room.freezeGame.players.getPlayer(roomUser);
 
         if(!player) {
             return;

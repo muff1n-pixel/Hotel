@@ -8,6 +8,8 @@ export default class RoomActorPath {
     public frozen: boolean = false;
     public frozenAt: number = 0;
 
+    private previousPosition: RoomPositionData | undefined;
+
     public path?: RoomPositionOffsetData[] | undefined;
     public walkThroughFurniture?: boolean | undefined;
     public pathOnFinish: (() => void) | undefined;
@@ -18,8 +20,12 @@ export default class RoomActorPath {
     }
 
     public async handleActionsInterval() {
-        this.actor.handleWalkToEvent?.(RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
-        
+        if(this.previousPosition) {
+            this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(this.previousPosition), RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
+
+            this.previousPosition = undefined;
+        }
+
         if(this.path === undefined) {
             return;
         }
@@ -103,12 +109,14 @@ export default class RoomActorPath {
 
         this.actor.sendWalkEvent(previousPosition);
 
+        this.previousPosition = previousPosition;
+
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
-        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
-
         this.actor.lastActivity = performance.now();
+
+        this.actor.handleBeforeWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
     }
     
     public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {
@@ -149,7 +157,7 @@ export default class RoomActorPath {
         this.actor.room.requestActionsFrame();
     }
 
-    public teleportTo(position: RoomPositionOffsetData) {
+    public teleportTo(position: RoomPositionOffsetData, usePath: boolean = true) {
         if(this.actor.room.model.structure.grid[position.row]?.[position.column] === undefined || this.actor.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return;
         }
@@ -162,7 +170,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction ?? undefined, true);
+            }), sitableFurniture.model.direction ?? undefined, usePath);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -171,7 +179,7 @@ export default class RoomActorPath {
                 row: position.row,
                 column: position.column,
                 depth
-            }), undefined, true);
+            }), undefined, usePath);
         }
         else {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
@@ -180,7 +188,7 @@ export default class RoomActorPath {
                 row: position.row,
                 column: position.column,
                 depth
-            }), undefined, true);
+            }), undefined, usePath);
         }
     }
 

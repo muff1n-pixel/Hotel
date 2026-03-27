@@ -55,11 +55,13 @@ export type FurnitureVisualization = {
 
         animations: {
             id: number;
+            transitionTo?: number;
 
             layers: {
                 id: number;
                 loopCount?: number;
                 frameRepeat?: number;
+                random: boolean;
 
                 frameSequence: FurnitureAnimationLayerFrame[];
             }[];
