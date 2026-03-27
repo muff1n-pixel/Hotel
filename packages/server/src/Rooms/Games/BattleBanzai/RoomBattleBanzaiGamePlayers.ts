@@ -3,6 +3,8 @@ import RoomBattleBanzaiGame from "./RoomBattleBanzaiGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
 import { RoomBattleBanzaiGameTeam } from "./Interfaces/RoomBattleBanzaiGameTeam";
 import RoomUser from "../../Users/RoomUser";
+import { WidgetNotificationData } from "@pixel63/events";
+import BattleBanzaiGameNotifications from "../../../Users/Notifications/Games/BattleBanzaiGameNotifications";
 
 export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<RoomBattleBanzaiGameTeam> {
     private players: RoomBattleBanzaiGamePlayer[] = [];
@@ -28,6 +30,8 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
         for(const furniture of this.game.getGateFurniture(team)) {
             furniture.setAnimation(this.getTeamPlayers(team).length).catch(console.error);
         }
+        
+        player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildPlayerJoinedTeam(team));
     }
 
     public hasPlayer(roomUser: RoomUser): boolean {
@@ -36,6 +40,10 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
 
     public getPlayer(roomUser: RoomUser) {
         return this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
+    }
+
+    public getAllPlayers() {
+        return this.players;
     }
 
     public removePlayer(roomUser: RoomUser): void {

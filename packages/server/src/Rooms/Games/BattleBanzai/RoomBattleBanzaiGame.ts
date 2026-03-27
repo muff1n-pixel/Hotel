@@ -1,3 +1,4 @@
+import { WidgetNotificationData } from "@pixel63/events";
 import RoomFurnitureBattleBanzaiGateLogic from "../../Furniture/Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
 import RoomFurnitureBattleBanzaiCounterLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
 import RoomFurnitureBattleBanzaiTileLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiTileLogic";
@@ -5,13 +6,16 @@ import Room from "../../Room";
 import RoomUser from "../../Users/RoomUser";
 import RoomGame, { RoomGamePlayer } from "../RoomGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
-import { RoomBattleBanzaiGameTeam } from "./Interfaces/RoomBattleBanzaiGameTeam";
+import { RoomBattleBanzaiGameTeam, RoomBattleBanzaiGameTeamData } from "./Interfaces/RoomBattleBanzaiGameTeam";
 import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
 import RoomBattleBanzaiGameTeams from "./RoomBattleBanzaiGameTeams";
+import BattleBanzaiGameNotifications from "../../../Users/Notifications/Games/BattleBanzaiGameNotifications";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
     public paused: boolean = false;
+    public ending: boolean = false;
+    private endingWinningTeam?: RoomBattleBanzaiGameTeamData;
 
     public seconds: number = 30;
 
@@ -57,11 +61,26 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.startingSeconds = 4;
 
         this.teams.resetTeams();
+
+        for(const player of this.players.getAllPlayers()) {
+            player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildGameStarted());
+        }
     }
 
     async endGame(reason: "eliminations" | "counter"): Promise<void> {
         this.started = false;
         this.paused = false;
+
+        const winningTeam = this.teams.getTeamWithMostScore();
+
+        if(winningTeam) {
+            this.ending = true;
+            this.startingSeconds = 4;
+        }
+
+        for(const player of this.players.getAllPlayers()) {
+            player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildGameEnded(reason, winningTeam?.team ?? null, winningTeam?.score));
+        }
         
         await this.room.setBulkFurnitureAnimations(
             this.getAllTileFurniture().filter((furniture) => furniture.model.animation === 1).map((furniture) => {
@@ -86,6 +105,81 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     private lastActionInterval = 0;
 
     async handleActionsInterval() {
+        if(this.ending) {
+            const winningTeam = this.teams.getTeamWithMostScore();
+
+            if(!winningTeam) {
+                return;
+            }
+
+            const teamAnimationId = ["red", "green", "blue", "yellow"].indexOf(winningTeam.team);
+
+            const teamStartAnimationId = 3 + (teamAnimationId * 3);
+            const teamFinishAnimationId = teamStartAnimationId + 2;
+
+            switch(this.startingSeconds) {
+                case 4: {
+                    await this.room.setBulkFurnitureAnimations(
+                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
+                            return {
+                                furniture,
+                                animation: 0
+                            };
+                        })
+                    );
+
+                    break;
+                }
+
+                case 3: {
+                    await this.room.setBulkFurnitureAnimations(
+                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
+                            return {
+                                furniture,
+                                animation: teamFinishAnimationId
+                            };
+                        })
+                    );
+
+                    break;
+                }
+
+                case 2: {
+                    await this.room.setBulkFurnitureAnimations(
+                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
+                            return {
+                                furniture,
+                                animation: 0
+                            };
+                        })
+                    );
+
+                    break;
+                }
+
+                case 1: {
+                    await this.room.setBulkFurnitureAnimations(
+                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
+                            return {
+                                furniture,
+                                animation: teamFinishAnimationId
+                            };
+                        })
+                    );
+
+                    break;
+                }
+            }
+
+            this.startingSeconds--;
+
+            if(this.startingSeconds === 0) {
+                this.ending = false;
+            }
+
+            return;
+        }
+
         if(!this.started) {
             return;
         }

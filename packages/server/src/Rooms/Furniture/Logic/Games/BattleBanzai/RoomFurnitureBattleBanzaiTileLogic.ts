@@ -6,12 +6,13 @@ import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 
 export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurnitureLogic {
     public locked = false;
+    public lockedTeam: RoomBattleBanzaiGameTeam | null = null;
 
     constructor(private readonly roomFurniture: RoomFurniture) {
     }
 
     async handleActionsInterval(): Promise<void> {
-
+        
     }
 
     async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
@@ -41,6 +42,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
                 this.roomFurniture.room.battleBanzaiGame.teams.addTeamScore(player.team, 1);
 
                 this.locked = true;
+                this.lockedTeam = player.team;
 
                 const autoFillAreas = this.getAutoFillArea(teamFinishAnimationId);
 
@@ -53,6 +55,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
 
                             return autoFilledTiles.map((furniture) => {
                                 (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = true;
+                                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).lockedTeam = player.team;
 
                                 return {
                                     furniture,

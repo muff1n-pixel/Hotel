@@ -7,6 +7,20 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
     }
 
     async handleActionsInterval(): Promise<void> {
+        if(this.roomFurniture.room.battleBanzaiGame.ending) {
+            const winningTeam = this.roomFurniture.room.battleBanzaiGame.teams.getTeamWithMostScore();
+
+            if(winningTeam) {
+                const leadingTeamAnimation = 102 + (["red", "green", "blue", "yellow"].indexOf(winningTeam.team));
+
+                if(this.roomFurniture.model.animation !== leadingTeamAnimation) {
+                    await this.roomFurniture.setAnimation(leadingTeamAnimation);
+                }
+            }
+
+            return;
+        }
+
         if(!this.roomFurniture.room.battleBanzaiGame.started) {
             if(this.roomFurniture.model.animation !== 0) {
                 await this.roomFurniture.setAnimation(0);
