@@ -11,28 +11,33 @@ export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitu
 
         if(payload.furnitureUpdated?.length) {
             for(const furnitureUpdate of payload.furnitureUpdated) {
-                if(!furnitureUpdate.furniture) {
-                    continue;
-                }
-
-                const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furnitureUpdate.furniture.id);
-
-                if(furnitureUpdate.userId === clientInstance.user.value?.id) {
-                    if(furnitureUpdate.furniture.direction !== roomFurnitureItem.furniture.direction) {
-                        roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, [
-                            {
-                                ...roomFurnitureItem.item.position!,
-                                depth: roomFurnitureItem.item.position!.depth + 0.25
-                            },
-                            {
-                                ...roomFurnitureItem.item.position!,
-                            }
-                        ],
-                        100);
+                try {
+                    if(!furnitureUpdate.furniture) {
+                        continue;
                     }
-                }
 
-                roomFurnitureItem.updateData(furnitureUpdate.furniture);
+                    const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furnitureUpdate.furniture.id);
+
+                    if(furnitureUpdate.userId === clientInstance.user.value?.id) {
+                        if(furnitureUpdate.furniture.direction !== roomFurnitureItem.furniture.direction) {
+                            roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, [
+                                {
+                                    ...roomFurnitureItem.item.position!,
+                                    depth: roomFurnitureItem.item.position!.depth + 0.25
+                                },
+                                {
+                                    ...roomFurnitureItem.item.position!,
+                                }
+                            ],
+                            100);
+                        }
+                    }
+
+                    roomFurnitureItem.updateData(furnitureUpdate.furniture);
+                }
+                catch(error) {
+                    console.error(error);
+                }
             }
         }
 
