@@ -112,13 +112,13 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
         const exitFurniture = this.getExitFurniture();
 
-        await Promise.all([
-            ...this.getTileFurniture().map((furniture) => {
+        await this.room.setBulkFurnitureAnimations(
+            this.getTileFurniture().map((furniture) => {
                 if(exitFurniture) {
                     const actors = this.room.getActorsAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position));
 
                     for(const actor of actors) {
-                        if(actor instanceof RoomUser && !this.players.getPlayer(actor)) {
+                        if(actor instanceof RoomUser && !this.players.hasPlayer(actor)) {
                             actor.removeAction("AvatarEffect");
                             actor.addAction("AvatarEffect.4", 1000);
 
@@ -127,18 +127,39 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                     }
                 }
 
-                return furniture.setAnimation(0);
-            }),
-            ...this.getAllExitFurniture().map((furniture) => furniture.setAnimation(1)),
-            ...this.getBoxFurniture().map((furniture) => {
-                if(this.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position))) {
-                    return (furniture.logic as RoomFurnitureFreezeBlockLogic).handleSnowball(true);
-                }
-                
-                return furniture.setAnimation(0);
-            }),
-            ...this.getAllCounterFurniture().map((furniture) => (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(0))
-        ]);
+                return {
+                    furniture,
+                    animation: 0
+                };
+            })
+            .concat(
+                this.getAllExitFurniture().map((furniture) => {
+                    return {
+                        furniture,
+                        animation: 1
+                    }
+                })
+            )
+            .concat(
+                this.getBoxFurniture().map((furniture) => {
+                    if(this.room.getRoomUserAtPosition(RoomPositionOffsetData.fromJSON(furniture.model.position))) {
+                        return {
+                            furniture,
+                            animation: 1
+                        };
+                    }
+
+                    return {
+                        furniture,
+                        animation: 0
+                    };
+                })
+            )
+        );
+
+        await Promise.all(
+            this.getAllCounterFurniture().map((furniture) => (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(0))
+        );
     }
 
     public async pauseGame() {

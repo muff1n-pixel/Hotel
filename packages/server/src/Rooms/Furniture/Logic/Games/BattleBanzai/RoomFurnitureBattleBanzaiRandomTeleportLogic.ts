@@ -43,10 +43,6 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
                 case 0: {
                     await action.targetFurniture.setAnimation(1);
 
-                    break;
-                }
-
-                case 1: {
                     action.roomUser.path.teleportTo(
                         RoomPositionOffsetData.fromJSON(action.targetFurniture.model.position),
                         false
@@ -55,7 +51,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
                     break;
                 }
 
-                case 2: {
+                case 1: {
                     if (this.roomFurniture.model.animation === 1) {
                         await this.roomFurniture.setAnimation(0);
                     }
@@ -63,7 +59,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
                     break;
                 }
 
-                case 3: {
+                case 2: {
                     if (action.targetFurniture.model.animation === 1) {
                         await action.targetFurniture.setAnimation(0);
                     }
@@ -75,7 +71,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
             action.interval++;
         }
 
-        this.activeActions = this.activeActions.filter(a => a.interval < 4);
+        this.activeActions = this.activeActions.filter(a => a.interval < 3);
     }
 
     private getRandomTeleport() {

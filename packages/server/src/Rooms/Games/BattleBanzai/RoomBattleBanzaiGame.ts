@@ -33,13 +33,21 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     async startGame(seconds: number): Promise<void> {
         this.seconds = seconds;
 
-        await Promise.all(
+        await this.room.setBulkFurnitureAnimations(
             this.getAllTileFurniture().map((furniture) => {
                 (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = false;
 
-                return furniture.setAnimation(1);
+                return {
+                    furniture,
+                    animation: 1
+                };
             })
-            .concat(this.getAllCounterFurniture().map((furniture) => furniture.setAnimation(0)))
+            .concat(this.getAllCounterFurniture().map((furniture) => {
+                return {
+                    furniture,
+                    animation: 0
+                }
+            }))
         );
 
         this.started = true;
@@ -55,7 +63,16 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.started = false;
         this.paused = false;
         
-        await Promise.all(this.getAllTileFurniture().filter((furniture) => furniture.model.animation === 1).map((furniture) => furniture.setAnimation(0)));
+        await this.room.setBulkFurnitureAnimations(
+            this.getAllTileFurniture().filter((furniture) => furniture.model.animation === 1).map((furniture) => {
+                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = false;
+
+                return {
+                    furniture,
+                    animation: 0
+                };
+            })
+        );
     }
 
     async pauseGame(): Promise<void> {

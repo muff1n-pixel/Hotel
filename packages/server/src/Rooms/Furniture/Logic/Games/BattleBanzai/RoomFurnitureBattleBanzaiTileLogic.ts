@@ -42,20 +42,25 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
 
                 this.locked = true;
 
-                const autoFillArea = this.getAutoFillArea(teamFinishAnimationId);
+                const autoFillAreas = this.getAutoFillArea(teamFinishAnimationId);
 
-                if (autoFillArea.length) {
-                    for(const area of autoFillArea) {
-                        const autoFilledTiles = this.getTilesInsideConvex(area);
+                if (autoFillAreas.length) {
+                    await this.roomFurniture.room.setBulkFurnitureAnimations(
+                        autoFillAreas.flatMap((autoFillArea) => {
+                            const autoFilledTiles = this.getTilesInsideConvex(autoFillArea);
 
-                        this.roomFurniture.room.battleBanzaiGame.teams.addTeamScore(player.team, autoFilledTiles.length);
+                            this.roomFurniture.room.battleBanzaiGame.teams.addTeamScore(player.team, autoFilledTiles.length);
 
-                        autoFilledTiles.forEach((furniture) => {
-                            (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = true;
+                            return autoFilledTiles.map((furniture) => {
+                                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = true;
 
-                            furniture.setAnimation(teamFinishAnimationId).catch(console.error);
-                        });
-                    }
+                                return {
+                                    furniture,
+                                    animation: teamFinishAnimationId
+                                };
+                            });
+                        })
+                    );
                 }
             }
 

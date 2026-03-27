@@ -9,13 +9,15 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
+import { MessageType, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
 import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
 import RoomFreezeGame from "./Games/Freeze/RoomFreezeGame.js";
 import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
 import RoomBattleBanzaiGame from "./Games/BattleBanzai/RoomBattleBanzaiGame.js";
+import { FurnitureModel } from "../Database/Models/Furniture/FurnitureModel.js";
+import { sequelize } from "../Database/Database.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -463,5 +465,27 @@ export default class Room {
         }
 
         return false;
+    }
+
+    public async setBulkFurnitureAnimations(bulkFurniture: { furniture: RoomFurniture; animation: number }[]) {
+        console.log("Bulk update " + bulkFurniture.length);
+
+        const transaction = await sequelize.transaction();
+
+        for(const { furniture, animation } of bulkFurniture) {
+            await furniture.model.update({ animation }, {
+                transaction 
+            });
+        }
+
+        await transaction.commit();
+
+        this.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+            furnitureUpdated: bulkFurniture.map(({ furniture }) => {
+                return {
+                    furniture: furniture.model
+                };
+            })
+        }));
     }
 }
