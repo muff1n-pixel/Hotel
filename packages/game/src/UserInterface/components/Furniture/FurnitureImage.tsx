@@ -7,9 +7,10 @@ export type FurnitureImageProps = {
     frame?: number;
     animation?: number;
     furnitureData?: FurnitureData;
+    spritesWithoutInkModes?: boolean;
 }
 
-export default function FurnitureImage({ frame = 0, animation = 0, furnitureData }: FurnitureImageProps) {
+export default function FurnitureImage({ frame = 0, animation = 0, furnitureData, spritesWithoutInkModes = true }: FurnitureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -20,10 +21,10 @@ export default function FurnitureImage({ frame = 0, animation = 0, furnitureData
         const furnitureRenderer = new Furniture(furnitureData.type, 64, undefined, animation, furnitureData.color);
         furnitureRenderer.frame = frame;
 
-        furnitureRenderer.renderToCanvas({ spritesWithoutInkModes: true }).then((image) => {
+        furnitureRenderer.renderToCanvas({ spritesWithoutInkModes }).then((image) => {
             setImage(image);
         });
-    }, [ furnitureData, animation, frame ]);
+    }, [ furnitureData, animation, frame, spritesWithoutInkModes ]);
 
     if(!image) {
         return;

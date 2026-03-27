@@ -60,6 +60,7 @@ export type FurnitureVisualization = {
                 id: number;
                 loopCount?: number;
                 frameRepeat?: number;
+                random: boolean;
 
                 frameSequence: FurnitureAnimationLayerFrame[];
             }[];

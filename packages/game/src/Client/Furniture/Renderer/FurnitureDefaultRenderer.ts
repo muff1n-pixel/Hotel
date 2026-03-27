@@ -94,7 +94,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
             
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
-            const layerData = this.visualization.layers?.find((layerData) => layerData.id === layer);
 
             if(animationLayer?.frameSequence?.length) {
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;

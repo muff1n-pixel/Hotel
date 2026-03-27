@@ -244,8 +244,9 @@ export async function createVisualizationData(collection: SwfExtractionCollectio
                                 id: parseInt(layer["@_id"]),
                                 loopCount: layer["@_loopCount"] ? parseInt(layer["@_loopCount"]) : undefined,
                                 frameRepeat: layer["@_frameRepeat"] ? parseInt(layer["@_frameRepeat"]) : undefined,
+                                random: layer["@_random"] === "1",
 
-                                frameSequence: getValueAsArray(layer["frameSequence"]?.["frame"]).map((frame: any) => {
+                                frameSequence: getValueAsArray(layer["frameSequence"]).flatMap((frameSequence: any) => getValueAsArray(frameSequence?.["frame"])).map((frame: any) => {
                                     return {
                                         id: parseInt(frame["@_id"]),
 
