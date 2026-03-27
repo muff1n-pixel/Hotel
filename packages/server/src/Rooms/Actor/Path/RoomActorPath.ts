@@ -115,6 +115,8 @@ export default class RoomActorPath {
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position));
 
         this.actor.lastActivity = performance.now();
+
+        this.actor.handleBeforeWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
     }
     
     public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {

@@ -423,6 +423,10 @@ export default class Room {
         return this.furnitures.filter((furniture) => furniture.logic instanceof category).map((furniture) => furniture.logic as T);
     }
 
+    public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleBeforeUserWalksOnFurniture?.(roomUser, previousRoomFurniture);
+    }
+
     public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
         await roomFurniture.handleUserWalksOnFurniture(roomUser, previousRoomFurniture);
 
@@ -483,7 +487,10 @@ export default class Room {
         this.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: bulkFurniture.map(({ furniture }) => {
                 return {
-                    furniture: furniture.model
+                    furniture: {
+                        id: furniture.model.id,
+                        animation: furniture.model.animation
+                    }
                 };
             })
         }));

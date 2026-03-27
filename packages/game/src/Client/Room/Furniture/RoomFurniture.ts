@@ -130,8 +130,6 @@ export default class RoomFurniture {
             }
         }
 
-        this.data = payload;
-
         if(payload.direction !== undefined) {
             this.item.furnitureRenderer.direction = this.data.direction = payload.direction;
         }
@@ -143,13 +141,16 @@ export default class RoomFurniture {
         this.item.furnitureRenderer.animationTags = this.data.animationTags = payload.animationTags;
 
         if(payload.color !== undefined) {
-            this.item.furnitureRenderer.color = payload.color ?? this.furnitureData.color ?? undefined;
+            this.item.furnitureRenderer.color = this.data.color = payload.color ?? this.furnitureData.color ?? undefined;
         }
 
-        if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
-            this.item.positionPathData = undefined;
-            
-            this.item.setPosition(payload.position);
+        if(payload.position) {
+            if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
+                this.item.positionPathData = undefined;
+                this.data.position = payload.position;
+                
+                this.item.setPosition(payload.position);
+            }
         }
 
         if(payload.data) {

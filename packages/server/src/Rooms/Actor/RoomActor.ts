@@ -21,6 +21,8 @@ export default interface RoomActor {
     removeAction(actionId: string): void;
 
     handleWalkEvent?(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData): Promise<void>;
+    handleBeforeWalkEvent?(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData): Promise<void>;
+
     handleWalkToEvent?(position: RoomPositionOffsetData): Promise<void>;
     handleWalksOnFurniture?(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void>;
 }

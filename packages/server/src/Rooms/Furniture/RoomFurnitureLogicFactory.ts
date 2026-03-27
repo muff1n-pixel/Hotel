@@ -48,6 +48,7 @@ import RoomFurnitureBattleBanzaiGateLogic from "./Logic/Games/BattleBanzai/Commo
 import RoomFurnitureBattleBanzaiSphereLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiSphereLogic";
 import RoomFurnitureBattleBanzaiTileLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiTileLogic";
 import RoomFurnitureBattleBanzaiCounterLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
+import RoomFurnitureBattleBanzaiPuckLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiPuckLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -156,6 +157,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "battlebanzai_tile":
                 return new RoomFurnitureBattleBanzaiTileLogic(roomFurniture);
+
+            case "battlebanzai_puck":
+                return new RoomFurnitureBattleBanzaiPuckLogic(roomFurniture);
 
             case "battlebanzai_gate_blue":
                 return new RoomFurnitureBattleBanzaiGateLogic(roomFurniture, "blue");

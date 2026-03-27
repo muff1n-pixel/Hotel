@@ -201,7 +201,10 @@ export default class RoomFurniture<T = unknown> {
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    furniture: this.model
+                    furniture: {
+                        id: this.model.id,
+                        animation: this.model.animation
+                    }
                 }
             ]
         }));
@@ -225,7 +228,10 @@ export default class RoomFurniture<T = unknown> {
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    furniture: this.model
+                    furniture: {
+                        id: this.model.id,
+                        animationTags: this.model.animationTags
+                    }
                 }
             ]
         }));
@@ -293,6 +299,11 @@ export default class RoomFurniture<T = unknown> {
     /** Call this from the Room instance only. */
     public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
         await this.logic?.handleUserWalksOn?.(roomUser, previousRoomFurniture);
+    }
+
+    /** Call this from the Room instance only. */
+    public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
+        await this.logic?.handleBeforeUserWalksOn?.(roomUser, previousRoomFurniture);
     }
 
     /** Call this from the Room instance only. */
