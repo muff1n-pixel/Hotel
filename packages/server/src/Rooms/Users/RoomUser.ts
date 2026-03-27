@@ -285,6 +285,10 @@ export default class RoomUser implements RoomActor {
     }
 
     public hasRights() {
+        if(this.user.permissions.hasPermission("room:rights")) {
+            return true;
+        }
+        
         if(this.room.model.owner.id === this.user.model.id) {
             return true;
         }

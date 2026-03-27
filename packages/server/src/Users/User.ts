@@ -16,23 +16,26 @@ export default class User extends EventEmitter {
     public friends: UserFriends;
     public achievements: UserAchievements;
     public notifications: UserNotifications;
-
-    private permissions?: UserPermissions;
+    public permissions: UserPermissions;
+    
     public room?: Room;
     public roomBellQueue?: Room | undefined;
 
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();
-        
-        this.getPermissions().then((permissions) => {
-            this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
-                permissions: permissions.getPermissionData()
-            }));
-        }).catch(console.error);
 
+        
+
+        this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this);
         this.notifications = new UserNotifications(this);
+        
+        this.permissions.loadPermissions().then(() => {
+            this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
+                permissions: this.permissions.getPermissionData()
+            }));
+        }).catch(console.error);
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
@@ -75,12 +78,6 @@ export default class User extends EventEmitter {
     }
 
     public async getPermissions() {
-        if(!this.permissions) {
-            this.permissions = new UserPermissions(this);
-
-            await this.permissions.loadPermissions();
-        }
-
         return this.permissions;
     }
 
