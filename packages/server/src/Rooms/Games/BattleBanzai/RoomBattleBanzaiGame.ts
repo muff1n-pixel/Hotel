@@ -35,6 +35,10 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     }
 
     async startGame(seconds: number): Promise<void> {
+        if(this.started) {
+            return;
+        }
+
         this.seconds = seconds;
 
         await this.room.setBulkFurnitureAnimations(
@@ -61,13 +65,13 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.startingSeconds = 4;
 
         this.teams.resetTeams();
-
-        for(const player of this.players.getAllPlayers()) {
-            player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildGameStarted());
-        }
     }
 
     async endGame(reason: "eliminations" | "counter"): Promise<void> {
+        if(!this.started) {
+            return;
+        }
+
         this.started = false;
         this.paused = false;
 
@@ -75,7 +79,7 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
 
         if(winningTeam) {
             this.ending = true;
-            this.startingSeconds = 4;
+            this.startingSeconds = 8;
         }
 
         for(const player of this.players.getAllPlayers()) {
@@ -117,59 +121,16 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
             const teamStartAnimationId = 3 + (teamAnimationId * 3);
             const teamFinishAnimationId = teamStartAnimationId + 2;
 
-            switch(this.startingSeconds) {
-                case 4: {
-                    await this.room.setBulkFurnitureAnimations(
-                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
-                            return {
-                                furniture,
-                                animation: 0
-                            };
-                        })
-                    );
+            const lockedWinningTeamTiles = this.getAllTileFurniture().filter((furniture) => (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).lockedTeam === winningTeam.team);
 
-                    break;
-                }
-
-                case 3: {
-                    await this.room.setBulkFurnitureAnimations(
-                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
-                            return {
-                                furniture,
-                                animation: teamFinishAnimationId
-                            };
-                        })
-                    );
-
-                    break;
-                }
-
-                case 2: {
-                    await this.room.setBulkFurnitureAnimations(
-                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
-                            return {
-                                furniture,
-                                animation: 0
-                            };
-                        })
-                    );
-
-                    break;
-                }
-
-                case 1: {
-                    await this.room.setBulkFurnitureAnimations(
-                        this.getAllTileFurniture().filter((furniture) => furniture.model.animation === teamFinishAnimationId).map((furniture) => {
-                            return {
-                                furniture,
-                                animation: teamFinishAnimationId
-                            };
-                        })
-                    );
-
-                    break;
-                }
-            }
+            await this.room.setBulkFurnitureAnimations(
+                lockedWinningTeamTiles.map((furniture) => {
+                    return {
+                        furniture,
+                        animation: (((this.startingSeconds % 2) === 0))?(0):(teamFinishAnimationId)
+                    };
+                })
+            );
 
             this.startingSeconds--;
 
@@ -192,6 +153,10 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
 
                 if(this.startingSeconds === 0)  {
                     this.starting = false;
+
+                    for(const player of this.players.getAllPlayers()) {
+                        player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildGameStarted());
+                    }
                 }
             }
             else {
