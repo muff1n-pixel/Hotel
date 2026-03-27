@@ -23,6 +23,14 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
+        if(this.roomFurniture.room.battleBanzaiGame.paused) {
+            if(this.roomFurniture.model.animation !== 3) {
+                await this.roomFurniture.setAnimation(3);
+            }
+
+            return;
+        }
+
         const leadingTeam = this.roomFurniture.room.battleBanzaiGame.teams.getTeamWithMostScore();
 
         if(!leadingTeam) {
@@ -33,10 +41,10 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        /*const leadingTeamAnimation = 101 + (["red", "green", "blue", "yellow"].indexOf(leadingTeam.team));
+        const leadingTeamAnimation = 10 + (["red", "green", "blue", "yellow"].indexOf(leadingTeam.team));
 
         if(this.roomFurniture.model.animation !== leadingTeamAnimation) {
             await this.roomFurniture.setAnimation(leadingTeamAnimation);
-        }*/
+        }
     }
 }
