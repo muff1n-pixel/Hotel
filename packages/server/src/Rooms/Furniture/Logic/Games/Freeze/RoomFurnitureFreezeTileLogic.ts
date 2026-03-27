@@ -11,7 +11,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
     }
 
     async handleUserDoubleClickOnTile(roomUser: RoomUser, tile: RoomPositionData): Promise<void> {
-        const player = this.roomFurniture.room.freezeGame.getPlayer(roomUser);
+        const player = this.roomFurniture.room.freezeGame.players.getPlayer(roomUser);
 
         if(!player) {
             return;
@@ -155,10 +155,10 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         this.roomFurniture.setAnimation(101).catch(console.error);
 
-        const hitPlayer = this.roomFurniture.room.freezeGame.getPlayerAtPosition(this.roomFurniture.model.position);
+        const hitPlayer = this.roomFurniture.room.freezeGame.players.getPlayerAtPosition(this.roomFurniture.model.position);
 
         if(hitPlayer) {
-            this.roomFurniture.room.freezeGame.freezePlayer(hitPlayer, player);
+            this.roomFurniture.room.freezeGame.players.freezePlayer(hitPlayer, player);
 
             return true;
         }
