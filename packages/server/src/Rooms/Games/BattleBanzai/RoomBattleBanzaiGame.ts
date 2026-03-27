@@ -34,7 +34,11 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.seconds = seconds;
 
         await Promise.all(
-            this.getAllTileFurniture().map((furniture) => furniture.setAnimation(1))
+            this.getAllTileFurniture().map((furniture) => {
+                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = false;
+
+                return furniture.setAnimation(1);
+            })
             .concat(this.getAllCounterFurniture().map((furniture) => furniture.setAnimation(0)))
         );
 
