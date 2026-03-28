@@ -54,6 +54,7 @@ type BodyPartAction = {
     actionId: string;
     part?: string;
     geometry: {
+        id: string;
         bodyparts: {
             id: string;
             parts: string[];
@@ -252,7 +253,7 @@ export default class FigureRenderer {
     }
 
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
-        const result: BodyPartAction[] = [];
+        let result: BodyPartAction[] = [];
         const bodyPartsRemoved: string[] = [];
 
         for(const effect of effects) {
@@ -278,7 +279,9 @@ export default class FigureRenderer {
                     bodyPartsRemoved.push(...overrideFrame.bodyParts.flatMap((bodypart) => bodypart.items.map((item) => item.id)));
 
                     if(overrideFrame) {
-                        result.push(...this.getActionsForBodyPartsFromFrames(overrideFrame, bodyPartsRemoved));
+                        const additions = this.getActionsForBodyPartsFromFrames(overrideFrame, bodyPartsRemoved);
+
+                        result = result.filter((result) => !additions.some((addition) => addition.geometry.id === result.geometry.id)).concat(additions);
                     }
                 }
             }
@@ -542,7 +545,7 @@ export default class FigureRenderer {
                 return 0;
             }
 
-            const animationSprites =
+            let animationSprites =
                 effect.data.animation.sprites
                 .concat(
                     effect.data.animation.add.map((add) => {
@@ -600,8 +603,7 @@ export default class FigureRenderer {
                     const overrideFrame = override.frames[frame];
 
                     if(overrideFrame) {
-                        animationSprites.push(...(
-                            overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
+                        const results = overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
                                 return bodypart.items.map((item) => {
                                     const id = item.base ?? item.id;
 
@@ -609,16 +611,29 @@ export default class FigureRenderer {
                                         id,
                                         part: item.id,
                                         frame: bodypart.frame,
-                                        member: `${action.assetPartDefinition}_${item.id}_${item.base}`, // TODO: what's the 1 for?
+                                        member: `std_${item.id}_${item.base}`, // TODO: what's the 1 for?
                                         useDirections: true,
-                                        destinationY: (this.avatarEffect?.destinationY ?? 0),
+                                        destinationY: bodypart.destinationY ?? (this.avatarEffect?.destinationY ?? 0),
+                                        directionOffset: bodypart.directionOffset
                                     }
                                 });
-                            }) ?? []
-                        ));
-                    }
+                            }) ?? [];
 
-                    break;
+                        animationSprites = animationSprites.filter((animationSprite) => !results.some((result) => result.part === animationSprite.part)).concat(results);
+
+                        for(const overrideEffect of overrideFrame.effects) {
+                            if(overrideEffect.directionOffset === undefined) {
+                                continue;
+                            }
+
+                            const overrideAnimationSprites = animationSprites.filter((animationSprite) => animationSprite.id === overrideEffect.id);
+
+                            for(const overrideAnimationSprite of overrideAnimationSprites) {
+                                overrideAnimationSprite.frame = overrideEffect.frame;
+                                overrideAnimationSprite.directionOffset = overrideEffect.directionOffset;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -668,22 +683,47 @@ export default class FigureRenderer {
                 const index = (spriteDirectionData)?(spriteDirectionData.destinationZ):(0);
 
                 let flipHorizontal = false;
-                const spriteDirection = (spriteDirectionData)?(this.direction):(direction);
+                let spriteDirection = (spriteDirectionData)?(this.direction):(direction);
+
+                if(sprite.directionOffset !== undefined) {
+                    spriteDirection += sprite.directionOffset;
+                }
+
+                while(spriteDirection < 0) {
+                    spriteDirection += 8;
+                }
+
+                spriteDirection %= 8;
             
                 let assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
                 let assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
+                if(!assetData) {
+                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${0}`;
+
+                    assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
+                }
+
                 if(!assetData && (spriteDirection > 3 && spriteDirection < 7)) {
-                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(6 - spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
+                    spriteDirection += 4;
+                    spriteDirection %= 8;
+
+                    assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
 
                     assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
 
                     flipHorizontal = true;
+
+                    if(!assetData) {
+                        assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${0}`;
+
+                        assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
+                    }
                 }
 
                 if(!assetData) {
-                    //console.error("Can't find asset for " + assetName);
+                    //console.warn("Can't find asset for " + assetName + ", checked in " + effectLibrary);
 
                     continue;
                 }
@@ -743,15 +783,15 @@ export default class FigureRenderer {
             
             let spriteDirection = direction;
 
-            if(actionForSprite.directionOffset) {
+            if(actionForSprite.directionOffset !== undefined) {
                 spriteDirection += actionForSprite.directionOffset;
-
-                spriteDirection %= 8;
-
-                if(spriteDirection < 0) {
-                    spriteDirection += 7;
-                }
             }
+
+            while(spriteDirection < 0) {
+                spriteDirection += 8;
+            }
+
+            spriteDirection %= 8;
 
             const flipHorizontal = (spriteDirection > 3 && spriteDirection < 7);
             const flippedDirection = (flipHorizontal)?(6 - spriteDirection):(spriteDirection);

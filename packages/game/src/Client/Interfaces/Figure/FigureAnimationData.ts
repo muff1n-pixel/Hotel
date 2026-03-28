@@ -5,6 +5,7 @@ export type FigureAnimationFrameEffectData = {
 
     destinationX?: number;
     destinationY?: number;
+    directionOffset?: number;
 };
 
 export type FigureAnimationData = {
@@ -22,6 +23,7 @@ export type FigureAnimationData = {
         ink?: number;
         useDirections: boolean;
         destinationY?: number;
+        directionOffset?: number;
         directions?: {
             id: number;
             destinationX: number | undefined;

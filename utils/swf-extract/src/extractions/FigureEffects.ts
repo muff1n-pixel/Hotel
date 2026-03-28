@@ -182,6 +182,7 @@ function getAnimationFrameData(frames: any) {
                     frame: parseInt(fx["@_frame"]),
                     destinationY: (fx["@_dy"])?(parseInt(fx["@_dy"])):(undefined),
                     destinationX: (fx["@_dx"])?(parseInt(fx["@_dx"])):(undefined),
+                    directionOffset: (fx["@_dd"])?(parseInt(fx["@_dd"])):(undefined),
                 };
             })
         };
