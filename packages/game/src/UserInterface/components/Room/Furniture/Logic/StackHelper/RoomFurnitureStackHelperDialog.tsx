@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
-import { webSocketClient } from "../../../../../..";
+import { clientInstance, webSocketClient } from "../../../../../..";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import Dialog from "../../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../../Common/Dialog/Components/DialogContent";
@@ -131,7 +131,13 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
     }
 
     return (
-        <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center">
+        <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center" onClick={() => {
+            if(clientInstance.roomInstance.value) {
+                clientInstance.roomInstance.value.roomRenderer.focusedItem.value = data.item;
+                clientInstance.roomInstance.update();
+                console.log(clientInstance.roomInstance.value.roomRenderer.focusedItem.value);
+            }
+        }}>
             <DialogContent style={{ flex: 1, gap: 20 }}>
                 <FlexLayout gap={20} direction="row" align="center">
                     <FurnitureImage furnitureData={data.furnitureData}/>

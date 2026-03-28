@@ -10,6 +10,7 @@ export type DialogProps = PropsWithChildren & {
     onEditClick?: (() => void) | false;
     initialPosition?: "corner" | "center";
     style?: CSSProperties;
+    onClick?: () => void;
 } & ({
     height: "auto";
     assumedHeight: number;
@@ -18,7 +19,7 @@ export type DialogProps = PropsWithChildren & {
     assumedHeight?: number;
 });
 
-export default function Dialog({ title, children, hidden, onEditClick, onClose, initialPosition: initialPositionPlacement = "corner", width, height, assumedHeight, style }: DialogProps) {
+export default function Dialog({ title, children, hidden, onEditClick, onClick, onClose, initialPosition: initialPositionPlacement = "corner", width, height, assumedHeight, style }: DialogProps) {
     const { elementRef, onDialogFocus, onMouseDown, initialPosition } = useDialogMovement((initialPositionPlacement === "corner")?(
         {
             left: 200,
@@ -57,7 +58,7 @@ export default function Dialog({ title, children, hidden, onEditClick, onClose, 
             opacity: (!hidden)?(undefined):(0),
 
             ...style
-        }} onMouseDown={onDialogFocus}>
+        }} onMouseDown={onDialogFocus} onClick={onClick}>
             <DialogHeader title={title} onDialogMove={onMouseDown} onEditClick={onEditClick} onClose={onClose}/>
 
             <div style={{

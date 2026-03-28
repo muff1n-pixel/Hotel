@@ -153,6 +153,8 @@ export default class RoomCursor extends EventTarget {
 
         this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
 
+        console.log("click2");
+
         if(otherEntity?.item && this.roomRenderer.focusedItem.value?.id !== otherEntity.item.id) {
             this.roomRenderer.focusedItem.value = otherEntity.item;
             clientInstance.roomInstance.update();

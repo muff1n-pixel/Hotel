@@ -10,6 +10,7 @@ import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomBotProfile from "./Bot/RoomBotProfile";
 import { RoomBotsData, RoomFurnitureData, RoomUserData, RoomUserLeftData } from "@pixel63/events";
+import RoomItem from "@Client/Room/Items/RoomItem";
 
 export type RoomItemProfileItem = {
     type: "user";
@@ -36,41 +37,38 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
             return;
         }
 
-        room.roomRenderer.cursor?.addEventListener("click", (event) => {
-            if(!(event instanceof RoomClickEvent)) {
+        return room.roomRenderer.focusedItem.subscribe((roomItem?: RoomItem | null) => {
+            if(!roomItem) {
+                setFocusedItem(undefined);
+
                 return;
             }
 
-            if(event.otherEntity) {
-                if(event.otherEntity.item instanceof RoomFigureItem) {
-                    if(event.otherEntity.item.type === "figure") {
-                        const user = room.getUserByItem(event.otherEntity.item);
-
-                        setFocusedItem({
-                            type: "user",
-                            user: user.data
-                        });
-                    }
-                    else if(event.otherEntity.item.type === "bot") {
-                        const bot = room.getBotByItem(event.otherEntity.item);
-
-                        setFocusedItem({
-                            type: "bot",
-                            bot: bot
-                        });
-                    }
-                }
-                else if(event.otherEntity.item instanceof RoomFurnitureItem) {
-                    const furniture = room.getFurnitureByItem(event.otherEntity.item);
+            if(roomItem instanceof RoomFigureItem) {
+                if(roomItem.type === "figure") {
+                    const user = room.getUserByItem(roomItem);
 
                     setFocusedItem({
-                        type: "furniture",
-                        furniture
+                        type: "user",
+                        user: user.data
                     });
                 }
-                else {
-                    setFocusedItem(undefined);
+                else if(roomItem.type === "bot") {
+                    const bot = room.getBotByItem(roomItem);
+
+                    setFocusedItem({
+                        type: "bot",
+                        bot: bot
+                    });
                 }
+            }
+            else if(roomItem instanceof RoomFurnitureItem) {
+                const furniture = room.getFurnitureByItem(roomItem);
+
+                setFocusedItem({
+                    type: "furniture",
+                    furniture
+                });
             }
             else {
                 setFocusedItem(undefined);
