@@ -1,6 +1,7 @@
 import { ShopPageData } from "@pixel63/events";
 import DialogPanelListItem from "../../Common/Dialog/Components/Panels/DialogPanelListItem";
 import { Fragment } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
 
 export type ShopPagesListProps = {
     editMode?: boolean;
@@ -16,6 +17,12 @@ export type ShopPagesListProps = {
 };
 
 export default function ShopPagesList({ parentId, editMode, tabs, handleEditPage, handleCreatePage, activeShopPage, onPageChange, shopPages }: ShopPagesListProps) {
+    const [collapsed, setCollapsed] = useState(false);
+
+    useEffect(() => {
+        setCollapsed(false);
+    }, [activeShopPage]);
+
     return (
         <Fragment>
             {shopPages.filter((shopPage) => shopPage.parentId === parentId).map((shopPage) => (
@@ -24,10 +31,18 @@ export default function ShopPagesList({ parentId, editMode, tabs, handleEditPage
                     active={activeShopPage?.id === shopPage.id}
                     title={shopPage.title}
                     icon={(shopPage.icon)?(<img src={`./assets/shop/icons/${shopPage.icon}`}/>):(undefined)}
-                    onClick={() => onPageChange(shopPage)}
+                    onClick={() => {
+                        if(activeShopPage?.parentId === shopPage.id) {
+                            setCollapsed(!collapsed);
+                        }
+                        else {
+                            onPageChange(shopPage);
+                        }
+                    }}
                     editable={editMode}
                     onEditClick={() => handleEditPage(shopPage)}
                     subItem={tabs}
+                    collapsed={collapsed}
                     >
                     {(activeShopPage && (activeShopPage.id === shopPage.id || activeShopPage.parentId === shopPage.id || shopPages.some((_shopPage) => _shopPage.id === activeShopPage.parentId && _shopPage.parentId === shopPage.id)) && (
                         <Fragment>

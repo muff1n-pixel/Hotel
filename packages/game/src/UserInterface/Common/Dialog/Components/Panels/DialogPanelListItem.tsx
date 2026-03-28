@@ -10,9 +10,10 @@ export type DialogPanelListItemProps = {
     children?: ReactNode;
     editable?: boolean;
     onEditClick?: () => void;
+    collapsed?: boolean;
 };
 
-export default function DialogPanelListItem({ active, icon, title, onClick, children, subItem, editable, onEditClick }: DialogPanelListItemProps) {
+export default function DialogPanelListItem({ active, icon, title, onClick, children, subItem, editable, collapsed, onEditClick }: DialogPanelListItemProps) {
     return (
         <Fragment>
             <div className={`dialog-panel-list-item ${(active)?("active"):("")} ${(subItem)?("subitem"):("")}`} onClick={onClick}>
@@ -51,7 +52,9 @@ export default function DialogPanelListItem({ active, icon, title, onClick, chil
                 </div>
             </div>
 
-            {children}
+            {(!collapsed) && (
+                children
+            )}
         </Fragment>
     )
 }
