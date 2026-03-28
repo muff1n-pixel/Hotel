@@ -11,6 +11,15 @@ export default class RoomActorPositionEvent implements ProtobuffListener<RoomAct
         
         const actor = clientInstance.roomInstance.value.getActor(payload.actor);
 
+        if(payload.direction !== undefined) {
+            if(actor.item instanceof RoomFigureItem) {
+                actor.item.figureRenderer.direction = payload.direction;
+            }
+            else {
+                actor.item.pet.direction = payload.direction;
+            }
+        }
+
         if(!payload.position) {
             return;
         }
@@ -22,15 +31,6 @@ export default class RoomActorPositionEvent implements ProtobuffListener<RoomAct
             actor.item.finishPositionPath();
 
             actor.item.setPosition(payload.position);
-        }
-
-        if(payload.direction !== undefined) {
-            if(actor.item instanceof RoomFigureItem) {
-                actor.item.figureRenderer.direction = payload.direction;
-            }
-            else {
-                actor.item.pet.direction = payload.direction;
-            }
         }
     }
 }

@@ -16,7 +16,20 @@ export default class RoomActorWalkToEvent implements ProtobuffListener<RoomActor
             throw new Error("Validation error.");
         }
 
-        actor.item.setPositionPath(payload.from, payload.to);
+        if(payload.jump) {
+            actor.item.setPositionPath(payload.from, [
+                {
+                    "$type": "RoomPositionData",
+                    row: payload.from.row + ((payload.to.row - payload.from.row) / 2),
+                    column: payload.from.column + ((payload.to.column - payload.from.column) / 2),
+                    depth: payload.to.depth + 0.25
+                },
+                payload.to
+            ], 250);
+        }
+        else {
+            actor.item.setPositionPath(payload.from, payload.to);
+        }
         
         if(actor.item instanceof RoomFigureItem) {
             actor.item.figureRenderer.direction = payload.direction;

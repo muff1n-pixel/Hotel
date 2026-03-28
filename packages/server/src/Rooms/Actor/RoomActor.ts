@@ -14,7 +14,8 @@ export default interface RoomActor {
     path: RoomActorPath;
 
     sendPositionEvent(usePath: boolean): void;
-    sendWalkEvent(previousPosition: RoomPositionData): void;
+    sendDirectionEvent(): void;
+    sendWalkEvent(previousPosition: RoomPositionData, jump?: boolean): void;
 
     hasAction(actionId: string): boolean;
     addAction(actionId: string): void;

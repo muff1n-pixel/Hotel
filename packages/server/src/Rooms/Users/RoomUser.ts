@@ -245,7 +245,7 @@ export default class RoomUser implements RoomActor {
         }));
     }
 
-    public sendWalkEvent(previousPosition: RoomPositionData): void {
+    public sendWalkEvent(previousPosition: RoomPositionData, jump: boolean): void {
         this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
             actor: {
                 user: {
@@ -254,7 +254,20 @@ export default class RoomUser implements RoomActor {
             },
             from: previousPosition,
             to: this.position,
-            direction: this.direction
+            direction: this.direction,
+            jump
+        }));
+    }
+
+    public sendDirectionEvent(): void {
+        this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
+            actor: {
+                user: {
+                    userId: this.user.model.id
+                }
+            },
+            
+            direction: this.direction,
         }));
     }
 

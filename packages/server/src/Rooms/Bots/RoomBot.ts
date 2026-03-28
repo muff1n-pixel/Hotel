@@ -101,6 +101,18 @@ export default class RoomBot implements RoomActor {
             direction: this.direction
         }));
     }
+    
+    public sendDirectionEvent(): void {
+        this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
+            actor: {
+                bot: {
+                    botId: this.model.id
+                }
+            },
+            
+            direction: this.direction,
+        }));
+    }
 
     public sendPositionEvent(usePath: boolean) {
         this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({

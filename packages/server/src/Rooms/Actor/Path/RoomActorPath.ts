@@ -14,6 +14,7 @@ export default class RoomActorPath {
     public walkThroughFurniture?: boolean | undefined;
     public pathOnFinish: (() => void) | undefined;
     public pathOnCancel: (() => void) | undefined;
+    public pathJump: boolean = false;
 
     constructor(private readonly actor: RoomActor) {
 
@@ -21,7 +22,7 @@ export default class RoomActorPath {
 
     public async handleActionsInterval() {
         if(this.previousPosition) {
-            this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(this.previousPosition), RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
+            await this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(this.previousPosition), RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
 
             this.previousPosition = undefined;
         }
@@ -107,8 +108,6 @@ export default class RoomActorPath {
 
         this.actor.direction = this.getDirectionFromRelativePosition(relativePosition);
 
-        this.actor.sendWalkEvent(previousPosition);
-
         this.previousPosition = previousPosition;
 
         this.actor.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition));
@@ -116,10 +115,12 @@ export default class RoomActorPath {
 
         this.actor.lastActivity = performance.now();
 
-        this.actor.handleBeforeWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
+        await this.actor.handleBeforeWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position));
+        
+        this.actor.sendWalkEvent(previousPosition, this.pathJump);
     }
     
-    public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined) {
+    public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined, jump = false) {
         if(!this.actor.room.model.structure.grid[position.row]?.[position.column]) {
             return;
         }
@@ -153,6 +154,7 @@ export default class RoomActorPath {
         this.walkThroughFurniture = walkThroughFurniture;
         this.pathOnFinish = onFinish;
         this.pathOnCancel = onCancel;
+        this.pathJump = jump;
 
         this.actor.room.requestActionsFrame();
     }
@@ -216,6 +218,16 @@ export default class RoomActorPath {
         this.actor.sendPositionEvent(usePath === true);
 
         this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
+    }
+
+    public setDirection(direction: number) {
+        if(direction === this.actor.direction) {
+            return;
+        }
+
+        this.actor.direction = direction;
+
+        this.actor.sendDirectionEvent();
     }
 
     public async finishPath() {

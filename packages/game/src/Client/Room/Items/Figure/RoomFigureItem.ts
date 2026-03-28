@@ -107,7 +107,7 @@ export default class RoomFigureItem extends RoomItem {
         });
     }
 
-    public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData, delay: number = 0, useAction: boolean = true): void {
+    public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData | RoomPositionData[], delay: number = 0, useAction: boolean = true): void {
         super.setPositionPath(fromPosition, toPosition, 500 - delay);
 
         if(useAction) {

@@ -8,4 +8,5 @@ message RoomActorWalkToData {
     RoomPositionData from = 2;
     RoomPositionData to = 3;
     uint32 direction = 4;
+    optional bool jump = 5;
 }
