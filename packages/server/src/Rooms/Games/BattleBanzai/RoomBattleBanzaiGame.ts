@@ -89,6 +89,8 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
                 player.roomUser.user.achievements.addAchievementScore("BattleBanzaiPlayer", playerTeam.score).catch(console.error);
 
                 if(playerTeam.team === winningTeam?.team) {
+                    player.roomUser.addAction("Wave", 2000);
+                    
                     player.roomUser.user.achievements.addAchievementScore("BattleBanzaiStar", playerTeam.score).catch(console.error);
                     player.roomUser.user.achievements.addAchievementScore("Player", playerTeam.score).catch(console.error);
                 }
