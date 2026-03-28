@@ -706,7 +706,12 @@ export default class FigureRenderer {
                 }
 
                 if(!assetData && (spriteDirection > 3 && spriteDirection < 7)) {
-                    spriteDirection += 4;
+                    spriteDirection = 6 - spriteDirection;
+
+                    while(spriteDirection < 0){
+                        spriteDirection += 8;
+                    }
+
                     spriteDirection %= 8;
 
                     assetName = `h_${sprite.member}_${(sprite.useDirections)?(spriteDirection):(0)}_${sprite?.frame ?? effectFrame?.frame ?? 0}`;
