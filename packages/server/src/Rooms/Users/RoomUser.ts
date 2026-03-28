@@ -111,6 +111,8 @@ export default class RoomUser implements RoomActor {
                 }));
             }
         }
+
+        this.user.friends.updateFriends();
     }
     
     private getRoomUserData(): RoomUserData {
@@ -183,6 +185,8 @@ export default class RoomUser implements RoomActor {
         if(!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
         }
+
+        this.user.friends.updateFriends();
     }
 
     public hasAction(actionId: string): boolean {

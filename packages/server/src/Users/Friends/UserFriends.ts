@@ -86,6 +86,8 @@ export default class UserFriends {
     }
 
     public static getFriendData(user: UserModel): UserFriendData {
+        const gameUser = game.users.find((_user) => _user.model.id === user.id);
+
         return UserFriendData.create({
             id: user.id,
             
@@ -93,8 +95,9 @@ export default class UserFriends {
             
             figureConfiguration: user.figureConfiguration,
 
-            online: game.users.some((_user) => _user.model.id === user.id),
-            lastOnline: user.lastLogin?.toISOString()
+            online: Boolean(gameUser),
+            lastOnline: user.lastLogin?.toISOString(),
+            roomId: gameUser?.room?.model.id
         });
     }
 }

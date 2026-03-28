@@ -1,4 +1,6 @@
+import { EnterRoomData } from "@pixel63/events";
 import { useState } from "react";
+import { webSocketClient } from "src";
 import FriendsPanel from "src/UserInterface/Common/Friends/Components/FriendsPanel";
 import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 import ToolbarItem from "src/UserInterface/Components/Toolbar/Items/ToolbarItem";
@@ -54,6 +56,7 @@ export default function ToolbarFriends() {
                         <FriendsPanel
                             key={friend.id}
                             
+                            roomId={friend.roomId}
                             expanded={expandedFriendId === friend.id}
                             onExpand={(value) => setExpandedFriendId((value)?(friend.id):(null))}
 
@@ -62,6 +65,13 @@ export default function ToolbarFriends() {
                                     friendId: friend.id
                                 });
                             }}
+
+                            onRoomClick={() => {
+                                webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                    id: friend.roomId
+                                }));
+                            }}
+
                             name={friend.name}
                             figureConfiguration={friend.figureConfiguration}/>
                     ))}

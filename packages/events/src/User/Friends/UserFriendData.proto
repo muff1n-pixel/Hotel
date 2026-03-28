@@ -11,4 +11,6 @@ message UserFriendData {
     
     bool online = 4;
     optional string last_online = 5;
+
+    optional string room_id = 6;
 }

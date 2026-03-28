@@ -3,7 +3,6 @@ import DialogPanel from "src/UserInterface/Common/Dialog/Components/Panels/Dialo
 import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
 import "./FriendsPanel.css";
 import { useEffect, useRef } from "react";
-import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
 
 export type FriendsPanelProps = {
     figureConfiguration?: FigureConfigurationData;
@@ -14,11 +13,10 @@ export type FriendsPanelProps = {
     onExpand?: (expanded: boolean) => void;
 
     onChatClick?: () => void;
+    onRoomClick?: () => void;
 };
 
-export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand, onChatClick }: FriendsPanelProps) {
-    const dialogs = useDialogs();
-
+export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand, onChatClick, onRoomClick }: FriendsPanelProps) {
     const elementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -97,7 +95,7 @@ export default function FriendsPanel({ figureConfiguration, name, roomId, expand
                             <div className="sprite_friends_friend-chat"/>
                         </div>
 
-                        <div className="friends-panel-button">
+                        <div className="friends-panel-button" onClick={onRoomClick}>
                             {(roomId) && (
                                 <div className="sprite_friends_friend-follow"/>
                             )}
