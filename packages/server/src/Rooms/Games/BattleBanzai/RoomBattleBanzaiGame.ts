@@ -155,6 +155,15 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         if(!this.started) {
             return;
         }
+
+        const allTiles = this.getAllTileFurniture().length;
+        const allLockedTiles = this.teams.getAllTeams().reduce((score, team) => team.score + score, 0);
+
+        if(allLockedTiles === allTiles) {
+            await this.endGame("eliminations");
+
+            return;
+        }
         
         if(performance.now() - this.lastActionInterval >= 1000) {
             this.lastActionInterval = performance.now();

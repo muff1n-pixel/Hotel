@@ -30,6 +30,10 @@ export default class RoomBattleBanzaiGameTeams {
         return this.teams.find((_team) => _team.team === team);
     }
 
+    public getAllTeams() {
+        return this.teams;
+    }
+
     public resetTeams() {
         this.teams = [];
 

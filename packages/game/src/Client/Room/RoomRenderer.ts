@@ -334,7 +334,6 @@ export default class RoomRenderer extends EventTarget {
                 left: this.renderedOffset.left,
                 top: this.renderedOffset.top
             };
-
         }
 
         const translatePosition = this.getCoordinatePosition(item.position);
