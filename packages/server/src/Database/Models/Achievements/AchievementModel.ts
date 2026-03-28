@@ -8,7 +8,7 @@ import { AchievementCategoryModel } from "./AchievementCategoryModel";
 import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/Games/IceTagAchievementsSeeder";
 import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/Games/FreezeAchievementsSeeder";
 import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Seeders/Games/BattleBanzaiAchievementsSeeder";
-import GameAchievementsSeeder, { GameAchievements } from "./Seeders/Games/GameAchievementsSeeder";
+import GameAchievementsSeeder, { GameAchievements } from "./Seeders/GameAchievementsSeeder";
 
 export type AchievementId =
     GameAchievements;

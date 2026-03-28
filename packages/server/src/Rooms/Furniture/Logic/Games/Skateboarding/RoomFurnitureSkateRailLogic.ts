@@ -50,9 +50,13 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
                 if(nextSkateRail && nextSkateRail.logic instanceof RoomFurnitureSkateRailLogic) {
                     if(nextSkateRail.model.direction !== this.roomFurniture.model.direction) {
                         roomUser.path.walkTo(offsetPosition, undefined, undefined, undefined, true);
+
+                        roomUser.user.achievements.addAchievementScore("SkateboardJumper", 1).catch(console.error);
                     }
                     else {
                         roomUser.path.walkTo(offsetPosition);
+                    
+                        roomUser.user.achievements.addAchievementScore("SkateboardSlider", 1).catch(console.error);
                     }
 
                     break;
