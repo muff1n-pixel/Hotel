@@ -16,8 +16,8 @@ export default class RoomFurnitureBackgroundLogic implements FurnitureLogic {
             return;
         }
 
-        clientInstance.dialogs.value = clientInstance.dialogs.value?.concat({
-            id: Math.random().toString(),
+        clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => !(dialog.type === "room-furniture-logic" && dialog.id === this.roomFurniture.data.id)).concat({
+            id: this.roomFurniture.data.id,
             type: "room-furniture-logic",
             data: this.roomFurniture
         });
