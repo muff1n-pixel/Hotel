@@ -246,7 +246,7 @@ export default class AssetFetcher {
                     continue;
                 }
 
-                if(red < 20 && green < 20 && blue < 20) {
+                if(red < 32 && green < 32 && blue < 32) {
                     mutatedImageData.data[index] *= background.red / 255;
                     mutatedImageData.data[index + 1] *= background.green / 255;
                     mutatedImageData.data[index + 2] *= background.blue / 255;

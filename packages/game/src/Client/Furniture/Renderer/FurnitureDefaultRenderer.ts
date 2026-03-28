@@ -1,3 +1,4 @@
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
@@ -287,7 +288,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return sprites;
     }
 
-    public async getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, _tag: string | undefined, _usesPalette: boolean) {
+    public async getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, _tag: string | undefined, _usesPalette: boolean) {
         const { image, imageData } = await FurnitureAssets.getFurnitureSprite(type, {
             x: spriteData.x,
             y: spriteData.y,
@@ -297,10 +298,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             flipHorizontal: flipHorizontal,
 
-            grayscaled: (grayscaled)?({
-                foreground: "#999999",
-                background: "#FFFFFF"
-            }):(undefined),
+            grayscaled,
 
             color
         });

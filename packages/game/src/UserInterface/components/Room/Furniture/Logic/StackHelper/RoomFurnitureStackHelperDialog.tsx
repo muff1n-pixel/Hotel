@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { webSocketClient } from "../../../../../..";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
@@ -9,6 +9,10 @@ import { UpdateRoomFurnitureData } from "@pixel63/events";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
+import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import RoomItem from "@Client/Room/Items/RoomItem";
+import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 
 export type RoomFurnitureStackHelperDialogData = {
     furniture: RoomInstanceFurniture;
@@ -16,7 +20,10 @@ export type RoomFurnitureStackHelperDialogData = {
 };
 
 export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [height, setHeight] = useState(data.data.data?.stackHelper?.height ?? data.data.position?.depth ?? 0);
+    const [copyDepthFromFurniture, setCopyDepthFromFurniture] = useState(false);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -29,7 +36,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
                     }
                 }
             }));
-        }, 200);
+        }, 100);
 
         return () => {
             clearTimeout(timeout);
@@ -48,12 +55,83 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
         };
     }, [data.furniture.animation]);
 
+    useEffect(() => {
+        if(!copyDepthFromFurniture || !room) {
+            return;
+        }
+
+        if(!room.roomRenderer.cursor) {
+            return;
+        }
+
+        let currentHoveredItem: RoomFurnitureItem | null = null;
+
+        function resetPreviousHoveredItem() {
+            if(!currentHoveredItem) {
+                return;
+            }
+
+            currentHoveredItem.furnitureRenderer.grayscaled = undefined;
+            currentHoveredItem = null;
+        }
+
+        const unsubscribeHoveredItem = room.roomRenderer.hoveredItem.subscribe((hoveredItem?: RoomItem | null) => {
+            resetPreviousHoveredItem();
+
+            if(!hoveredItem) {
+                return;
+            }
+
+            if(!(hoveredItem instanceof RoomFurnitureItem)) {
+                return;
+            }
+
+            if(hoveredItem.id === data.item.id) {
+                return;
+            }
+
+            currentHoveredItem = hoveredItem;
+
+            currentHoveredItem.furnitureRenderer.grayscaled = {
+                foreground: "#785000",
+                background: "#F6C666"
+            };
+        });
+
+        const unsubscribeFocusedItem = room.roomRenderer.focusedItem.subscribe((focusedItem?: RoomItem | null) => {
+            if(!focusedItem) {
+                return;
+            }
+
+            if(!(focusedItem instanceof RoomFurnitureItem)) {
+                return;
+            }
+
+            if(focusedItem.id !== currentHoveredItem?.id) {
+                return;
+            }
+
+            if(!focusedItem.position) {
+                return;
+            }
+
+            setHeight(focusedItem.position.depth)
+            setCopyDepthFromFurniture(false);
+        });
+
+        return () => {
+            unsubscribeHoveredItem();
+            unsubscribeFocusedItem();
+            resetPreviousHoveredItem();
+        };
+    }, [copyDepthFromFurniture, room]);
+
     if(hidden) {
         return null;
     }
 
     return (
-        <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} height={180} initialPosition="center">
+        <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center">
             <DialogContent style={{ flex: 1, gap: 20 }}>
                 <FlexLayout gap={20} direction="row" align="center">
                     <FurnitureImage furnitureData={data.furnitureData}/>
@@ -64,16 +142,26 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
                     </div>
                 </FlexLayout>
 
-                <FlexLayout direction="row">
-                    <FlexLayout flex={1} align="center" justify="center">
-                        <DialogSlider value={height} onChange={setHeight} step={0.2} max={32} min={0}/>
+                <FlexLayout gap={10} direction="column">
+                    <FlexLayout direction="row">
+                        <FlexLayout flex={1} align="center" justify="center">
+                            <DialogSlider value={height} onChange={setHeight} step={0.2} max={32} min={0}/>
+                        </FlexLayout>
+
+                        <FlexLayout flex={1} direction="row" align="center" justify="center">
+                            <div style={{ color: "#6A6A69" }}>Height:</div>
+
+                            <Input style={{ width: 40 }} type="number" value={height.toString()} onChange={(value) => setHeight(window.isNaN(parseFloat(value))?(0):(parseFloat(value)))}/>
+                        </FlexLayout>
                     </FlexLayout>
 
-                    <FlexLayout flex={1} direction="row" align="center" justify="center">
-                        <div style={{ color: "#6A6A69" }}>Height:</div>
-
-                        <Input style={{ width: 40 }} type="number" value={height.toString()} onChange={(value) => setHeight(window.isNaN(parseFloat(value))?(0):(parseFloat(value)))}/>
-                    </FlexLayout>
+                    <DialogLink onClick={() => setCopyDepthFromFurniture(!copyDepthFromFurniture)}>
+                        {(copyDepthFromFurniture)?(
+                            "Stop copying depth from furniture"
+                        ):(
+                            "Copy depth from furniture"
+                        )}
+                    </DialogLink>
                 </FlexLayout>
             </DialogContent>
         </Dialog>

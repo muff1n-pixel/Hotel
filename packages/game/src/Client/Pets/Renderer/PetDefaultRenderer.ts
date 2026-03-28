@@ -1,3 +1,4 @@
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
@@ -41,7 +42,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return hexToRgb(palette.color);
     }
 
-    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: boolean, tag: string | undefined, usesPalette: boolean) {
+    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, tag: string | undefined, usesPalette: boolean) {
         const { image, imageData } = await PetAssets.getSprite(type, {
             x: spriteData.x,
             y: spriteData.y,

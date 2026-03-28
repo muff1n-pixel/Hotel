@@ -1,3 +1,4 @@
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
@@ -9,7 +10,7 @@ export default class Pet {
     public direction: number = 2;
     public size: number = 64;
     private color: number = 0;
-    private grayscaled: boolean = false;
+    private grayscaled: AssetSpriteGrayscaledProperties | undefined = undefined;
 
     private readonly renderer: PetDefaultRenderer;
     private data?: FurnitureData;

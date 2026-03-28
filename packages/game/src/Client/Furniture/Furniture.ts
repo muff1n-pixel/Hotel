@@ -6,6 +6,7 @@ import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaul
 import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
 import { RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -37,7 +38,7 @@ export default class Furniture {
 
     public readonly renderer: FurnitureRenderer;
 
-    public grayscaled: boolean = false;
+    public grayscaled: AssetSpriteGrayscaledProperties | undefined = undefined;
 
     public _animation: number = 0;
 

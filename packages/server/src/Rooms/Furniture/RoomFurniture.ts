@@ -4,10 +4,11 @@ import { game } from "../../index.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 import RoomUser from "../Users/RoomUser.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
-import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag } from "@pixel63/events";
+import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic.js";
 import Directions from "../../Helpers/Directions.js";
+import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -254,6 +255,14 @@ export default class RoomFurniture<T = unknown> {
         const previousDimensions = this.getDimensions();
 
         this.model.position = position;
+
+        if(this.logic instanceof RoomFurnitureStackHelperLogic) {
+            this.model.data = UserFurnitureCustomData.create({
+                stackHelper: {
+                    height: this.model.position.depth
+                }
+            });
+        }
 
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(position), this.getDimensions());
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(previousPosition), previousDimensions);

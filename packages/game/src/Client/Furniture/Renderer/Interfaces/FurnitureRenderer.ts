@@ -1,3 +1,4 @@
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { UserFurnitureAnimationTag } from "@pixel63/events";
@@ -9,7 +10,7 @@ export type FurnitureRenderOptions = {
     animationTags?: UserFurnitureAnimationTag[] | undefined;
     color: number;
     frame: number;
-    grayscaled: boolean;
+    grayscaled?: AssetSpriteGrayscaledProperties | undefined;
     tags: string[] | undefined;
 }
 

@@ -34,7 +34,10 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
         for(const furnitureId of furnitureIds.current) {
             const furniture = room.getFurnitureById(furnitureId);
 
-            furniture.furniture.grayscaled = true;
+            furniture.furniture.grayscaled = {
+                foreground: "#999999",
+                background: "#FFFFFF"
+            };
         }
 
         const listener = (event: Event) => {
@@ -53,14 +56,17 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
             }
 
             if(furnitureIds.current.includes(furniture.data.id)) {
-                furniture.furniture.grayscaled = false;
+                furniture.furniture.grayscaled = undefined;
 
                 furnitureIds.current = furnitureIds.current.filter((furnitureId) => furnitureId !== furniture.data.id);
                 onChange(furnitureIds.current);
             }
             else {
                 if(furnitureIds.current.length < maxFurniture) {
-                    furniture.furniture.grayscaled = true;
+                    furniture.furniture.grayscaled = {
+                        foreground: "#999999",
+                        background: "#FFFFFF"
+                    };
                     
                     furnitureIds.current = [...furnitureIds.current, furniture.data.id];
                     onChange(furnitureIds.current);
@@ -76,7 +82,7 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
             for(const furnitureId of furnitureIds.current) {
                 const furniture = room.getFurnitureById(furnitureId);
 
-                furniture.furniture.grayscaled = false;
+                furniture.furniture.grayscaled = undefined;
             }
         };
     }, [room, furnitureIds, maxFurniture, restrictedToFurnitureTypes, onChange]);
