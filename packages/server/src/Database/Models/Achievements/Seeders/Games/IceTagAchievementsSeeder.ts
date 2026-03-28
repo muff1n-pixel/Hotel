@@ -1,5 +1,4 @@
-import { AchievementCategoryModel } from "../AchievementCategoryModel";
-import { AchievementModel } from "../AchievementModel";
+import { AchievementModel } from "../../AchievementModel";
 
 export type IceTagAchievements = 
     "BladesOfGlory"

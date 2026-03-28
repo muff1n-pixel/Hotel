@@ -1,4 +1,4 @@
-import { AchievementModel } from "../AchievementModel";
+import { AchievementModel } from "../../AchievementModel";
 
 export type BattleBanzaiAchievements = 
     "LordOfTheTiles"

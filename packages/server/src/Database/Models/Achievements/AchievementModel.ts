@@ -5,14 +5,13 @@ import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../Furniture/FurnitureModel";
 import { game } from "../../..";
 import { AchievementCategoryModel } from "./AchievementCategoryModel";
-import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/IceTagAchievementsSeeder";
-import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/FreezeAchievementsSeeder";
-import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Seeders/BattleBanzaiAchievementsSeeder";
+import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/Games/IceTagAchievementsSeeder";
+import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/Games/FreezeAchievementsSeeder";
+import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Seeders/Games/BattleBanzaiAchievementsSeeder";
+import GameAchievementsSeeder, { GameAchievements } from "./Seeders/Games/GameAchievementsSeeder";
 
 export type AchievementId =
-    IceTagAchievements
-    | FreezeAchievements
-    | BattleBanzaiAchievements;
+    GameAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -103,9 +102,7 @@ export async function seedAchievements() {
         iconImage: "room_builder.png"
     });
 
-    await IceTagAchievementsSeeder.seedAchievements();
-    await FreezeAchievementsSeeder.seedAchievements();
-    await BattleBanzaiAchievementsSeeder.seedAchievements();
+    await GameAchievementsSeeder.seedAchievements();
 
     UserFurnitureModel.addHook("afterCreate", async (userFurniture: UserFurnitureModel) => {
         if(!userFurniture.userId) {

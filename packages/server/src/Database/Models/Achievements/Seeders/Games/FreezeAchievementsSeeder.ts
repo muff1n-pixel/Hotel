@@ -1,5 +1,5 @@
-import { AchievementCategoryModel } from "../AchievementCategoryModel";
-import { AchievementModel } from "../AchievementModel";
+import { AchievementCategoryModel } from "../../AchievementCategoryModel";
+import { AchievementModel } from "../../AchievementModel";
 
 export type FreezeAchievements = 
     "FreezeFighter"

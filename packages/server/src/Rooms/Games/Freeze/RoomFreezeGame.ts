@@ -193,6 +193,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
             if(player.team === winnerTeam) {
                 player.roomUser.user.achievements.addAchievementScore("FreezeWinner", this.teams[player.team].score).catch(console.error);
+                player.roomUser.user.achievements.addAchievementScore("Player", this.teams[player.team].score).catch(console.error);
             }
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
