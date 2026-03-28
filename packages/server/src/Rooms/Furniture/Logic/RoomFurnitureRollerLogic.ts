@@ -57,11 +57,16 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
             }
             
             user.preoccupiedByActionHandler = true;
+
+            const offsetPosition = RoomPositionOffsetData.fromJSON(nextPosition);
             
+            const furniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(offsetPosition);
+            const depth = this.roomFurniture.room.getUpmostDepthAtPosition(offsetPosition, furniture);
+
             const position = RoomPositionData.create({
                 row: nextPosition.row,
                 column: nextPosition.column,
-                depth: nextPosition.depth + (user.position.depth - this.roomFurniture.model.position.depth - this.roomFurniture.model.furniture.dimensions.depth)
+                depth
             });
 
             user.position = position;
