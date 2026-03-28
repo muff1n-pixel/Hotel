@@ -15,6 +15,7 @@ export type WardrobeSelectionProps = {
 };
 
 export default function WardrobeSelection({ part, figureConfiguration, onFigureConfigurationChange }: WardrobeSelectionProps) {
+    const requestedDataPart = useRef<string>(undefined);
     const requestedData = useRef<string>(undefined);
 
     const [activeConfiguration, setActiveConfiguration] = useState(figureConfiguration.parts.find((configuration) => configuration.type === part));
@@ -30,14 +31,15 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
     }, [part]);
 
     useEffect(() => {
-        if(requestedData.current === activeConfiguration?.colors.join(',')) {
+        if(requestedData.current === part && requestedData.current === activeConfiguration?.colors.join(',')) {
             return;
         }
 
+        requestedDataPart.current = part;
         requestedData.current = activeConfiguration?.colors.join(',');
 
         FigureWardrobe.getWardrobePartTypes(part, activeConfiguration?.colors, figureConfiguration.gender).then(async (data) => setFigureDataResponse(data));
-    }, [activeConfiguration, figureConfiguration]);
+    }, [activeConfiguration, figureConfiguration, part]);
 
     const activeFigureData = activeConfiguration && figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId);
 
