@@ -219,6 +219,7 @@ export default class RoomFurniture<T = unknown> {
     }
 
     public async setAnimationTags(animationTags: UserFurnitureAnimationTag[]) {
+        this.model.animation = 0;
         this.model.animationTags = animationTags;
 
         if(this.model.changed()) {

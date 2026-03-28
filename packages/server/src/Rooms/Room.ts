@@ -469,8 +469,6 @@ export default class Room {
     }
 
     public async setBulkFurnitureAnimations(bulkFurniture: { furniture: RoomFurniture; animation: number }[]) {
-        console.log("Bulk update " + bulkFurniture.length);
-
         const transaction = await sequelize.transaction();
 
         for(const { furniture, animation } of bulkFurniture) {
