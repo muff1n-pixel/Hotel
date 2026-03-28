@@ -16,7 +16,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
         
     }
 
-    async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+    async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
         if (!this.roomFurniture.room.games.isGamePlaying(RoomBattleBanzaiGame)) {
             return;
         }

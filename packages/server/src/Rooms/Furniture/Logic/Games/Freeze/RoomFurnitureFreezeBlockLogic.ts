@@ -1,6 +1,7 @@
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
+import RoomFreezeGame from "../../../../Games/Freeze/RoomFreezeGame";
 
 export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -24,19 +25,25 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
         }, 500);
     }
 
-    public async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        if(!this.roomFurniture.room.freezeGame.started || this.roomFurniture.room.freezeGame.paused) {
+    public async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomFreezeGame)) {
             return;
         }
-        
-        const player = this.roomFurniture.room.freezeGame.players.getPlayer(roomUser);
+
+        const game = this.roomFurniture.room.games.getGame(RoomFreezeGame);
+       
+        if(!game) {
+            return;
+        }
+
+        const player = game.players.getPlayer(roomUser);
 
         if(!player) {
             return;
         }
 
         if(this.roomFurniture.model.animation > 1 && this.roomFurniture.model.animation < 8) {
-            this.roomFurniture.room.freezeGame.givePlayerPowerup(player, this.roomFurniture.model.animation);
+            game.givePlayerPowerup(player, this.roomFurniture.model.animation);
 
             this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation).then(() => {
                 setTimeout(() => {

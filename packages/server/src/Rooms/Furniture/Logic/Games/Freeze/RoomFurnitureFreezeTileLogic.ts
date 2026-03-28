@@ -2,7 +2,7 @@ import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
-import { RoomFreezeGamePlayer } from "../../../../Games/Freeze/RoomFreezeGame";
+import RoomFreezeGame, { RoomFreezeGamePlayer } from "../../../../Games/Freeze/RoomFreezeGame";
 import RoomFurnitureFreezeBlockLogic from "./RoomFurnitureFreezeBlockLogic";
 
 export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic {
@@ -11,13 +11,19 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
     }
 
     async handleUserDoubleClickOnTile(roomUser: RoomUser, tile: RoomPositionData): Promise<void> {
-        const player = this.roomFurniture.room.freezeGame.players.getPlayer(roomUser);
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomFreezeGame)) {
+            return;
+        }
+        
+        const game = this.roomFurniture.room.games.getGame(RoomFreezeGame);
 
-        if(!player) {
+        if(!game) {
             return;
         }
 
-        if(!this.roomFurniture.room.freezeGame.started || this.roomFurniture.room.freezeGame.paused) {
+        const player = game.players.getPlayer(roomUser);
+
+        if(!player) {
             return;
         }
 
@@ -54,7 +60,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         player.currentSnowballs--;
 
-        if(!this.roomFurniture.room.freezeGame.started || this.roomFurniture.room.freezeGame.paused) {
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomFreezeGame)) {
             await this.roomFurniture.setAnimation(0);
 
             return;
@@ -151,14 +157,20 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
     private lastSnowballed: number = 0;
 
     public handleSnowball(player: RoomFreezeGamePlayer) {
+        const game = this.roomFurniture.room.games.getGame(RoomFreezeGame);
+
+        if(!game) {
+            return false;
+        }
+
         this.lastSnowballed = performance.now();
 
         this.roomFurniture.setAnimation(101).catch(console.error);
 
-        const hitPlayer = this.roomFurniture.room.freezeGame.players.getPlayerAtPosition(this.roomFurniture.model.position);
+        const hitPlayer = game.players.getPlayerAtPosition(this.roomFurniture.model.position);
 
         if(hitPlayer) {
-            this.roomFurniture.room.freezeGame.players.freezePlayer(hitPlayer, player);
+            game.players.freezePlayer(hitPlayer, player);
 
             return true;
         }

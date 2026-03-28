@@ -12,7 +12,6 @@ import { MessageType, RoomFurnitureData, RoomInformationData, RoomPositionData, 
 import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
-import RoomFreezeGame from "./Games/Freeze/RoomFreezeGame.js";
 import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
 import { sequelize } from "../Database/Database.js";
 import RoomGames from "./Games/RoomGames.js";
@@ -22,8 +21,6 @@ export default class Room {
     public readonly bots: RoomBot[] = [];
     public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
-
-    public freezeGame: RoomFreezeGame = new RoomFreezeGame(this);
 
     public games: RoomGames = new RoomGames(this);
 
@@ -229,8 +226,6 @@ export default class Room {
     private lastMinuteInterval = performance.now();
 
     private async handleActionsInterval() {
-        await this.freezeGame.handleActionsInterval();
-
         for(const game of this.games.getAllGames()) {
             await game.handleActionsInterval?.();
         }
