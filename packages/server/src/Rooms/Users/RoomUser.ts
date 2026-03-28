@@ -161,7 +161,10 @@ export default class RoomUser implements RoomActor {
         this.room.users.splice(this.room.users.indexOf(this), 1);
 
         this.room.freezeGame.players.removePlayer(this);
-        this.room.battleBanzaiGame.players.removePlayer(this);
+
+        for(const game of this.room.games.getAllGames()) {
+            game.players.removePlayer(this);
+        }
 
         this.room.sendProtobuff(RoomUserLeftData, RoomUserLeftData.create({
             userId: this.user.model.id

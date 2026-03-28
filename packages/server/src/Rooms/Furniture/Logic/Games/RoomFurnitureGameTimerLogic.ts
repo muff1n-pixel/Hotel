@@ -2,19 +2,18 @@ import { UserFurnitureAnimationTag, UserFurnitureCustomData, UseRoomFurnitureDat
 import RoomUser from "../../../Users/RoomUser.js";
 import RoomFurniture from "../../RoomFurniture.js";
 import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic.js";
-import RoomGame from "../../../Games/RoomGame.js";
+import RoomGame, { RoomGameConstructor } from "../../../Games/RoomGame.js";
+import Room from "../../../Room.js";
 
 export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
     private seconds: number;
+    private room: Room;
 
-    constructor(public readonly roomFurniture: RoomFurniture) {
+    constructor(public readonly roomFurniture: RoomFurniture, public readonly game: RoomGameConstructor) {
+        this.room = this.roomFurniture.room;
         this.seconds = roomFurniture.model.data?.gameTimer?.seconds ?? 30;
 
         this.updateAnimationTags().catch(console.error);
-    }
-    
-    public getGame(): RoomGame {
-        throw new Error("Not implemented");
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
@@ -22,12 +21,16 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             return;
         }
 
+        const game = this.room.games.getGame(this.game);
+
         if(payload.tag === "reset") {
-            if(this.getGame().started && !this.getGame().paused) {
+            if(this.room.games.isGamePlaying(this.game)) {
                 return;
             }
 
-            await this.getGame().endGame("counter");
+            if(game) {
+                await game.endGame("counter");
+            }
 
             if(this.seconds !== (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30)) {
                 this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
@@ -48,30 +51,33 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
                 await this.updateAnimationTags();
             }
 
-            await this.getGame().endGame("counter");
+            // TODO: was this a mistake?
+            //await this.getGame().endGame("counter");
 
             return;
         }
 
-        if(!this.getGame().started) {
+        if(!game?.started) {
             this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
 
             await this.updateAnimationTags();
 
-            await this.getGame().startGame(this.seconds);
+            await this.room.games.startGame(this.game, this.seconds);
         }
         else {
-            if(this.getGame().paused) {
-                await this.getGame().resumeGame();
+            if(game.paused) {
+                await game.resumeGame();
             }
             else {
-                await this.getGame().pauseGame();
+                await game.pauseGame();
             }
         }
     }
 
     async handleActionsInterval(): Promise<void> {
-        if(!this.getGame().started) {
+        const game = this.room.games.getGame(this.game);
+
+        if(!game?.started) {
             if(this.seconds === 1) {
                 this.seconds = 0;
                 
@@ -81,12 +87,12 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(this.getGame().paused) {
+        if(game.paused) {
             return;
         }
         
-        if(this.getGame().seconds !== this.seconds) {
-            this.seconds = this.getGame().seconds;
+        if(game.seconds !== this.seconds) {
+            this.seconds = game.seconds;
 
             if(this.seconds === 0) {
                 await this.roomFurniture.setAnimation(0);

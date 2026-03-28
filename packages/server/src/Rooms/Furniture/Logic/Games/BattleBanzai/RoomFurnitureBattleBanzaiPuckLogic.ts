@@ -3,6 +3,7 @@ import RoomUser from "../../../../Users/RoomUser";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomFurnitureFootballLogic from "../RoomFurnitureFootballLogic";
 import RoomFurnitureBattleBanzaiTileLogic from "./RoomFurnitureBattleBanzaiTileLogic";
+import RoomBattleBanzaiGame from "../../../../Games/BattleBanzai/RoomBattleBanzaiGame";
 
 export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFootballLogic {
     constructor(roomFurniture: RoomFurniture) {
@@ -10,7 +11,7 @@ export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFoo
     }
 
     public async handleFootballMoved(user: RoomUser | null, position: RoomPositionData): Promise<void> {
-        if(!this.roomFurniture.room.battleBanzaiGame.isPlaying()) {
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomBattleBanzaiGame)) {
             return;
         }
 
@@ -18,7 +19,9 @@ export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFoo
             return;
         }
 
-        const player = this.roomFurniture.room.battleBanzaiGame.players.getPlayer(user);
+        const game = this.roomFurniture.room.games.getGame(RoomBattleBanzaiGame);
+
+        const player = game?.players.getPlayer(user);
 
         if(!player) {
             return;

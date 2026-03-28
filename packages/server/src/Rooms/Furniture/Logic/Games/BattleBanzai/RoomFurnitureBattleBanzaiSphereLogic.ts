@@ -1,3 +1,4 @@
+import RoomBattleBanzaiGame from "../../../../Games/BattleBanzai/RoomBattleBanzaiGame";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 
@@ -7,8 +8,14 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
     }
 
     async handleActionsInterval(): Promise<void> {
-        if(this.roomFurniture.room.battleBanzaiGame.ending) {
-            const winningTeam = this.roomFurniture.room.battleBanzaiGame.teams.getTeamWithMostScore();
+        const game = this.roomFurniture.room.games.getGame(RoomBattleBanzaiGame);
+
+        if(!game) {
+            return;
+        }
+
+        if(game.ending) {
+            const winningTeam = game.teams.getTeamWithMostScore();
 
             if(winningTeam) {
                 const leadingTeamAnimation = 102 + (["red", "green", "blue", "yellow"].indexOf(winningTeam.team));
@@ -21,7 +28,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        if(!this.roomFurniture.room.battleBanzaiGame.started) {
+        if(!game.started) {
             if(this.roomFurniture.model.animation !== 0) {
                 await this.roomFurniture.setAnimation(0);
             }
@@ -29,7 +36,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        if(this.roomFurniture.room.battleBanzaiGame.starting) {
+        if(game.starting) {
             if(this.roomFurniture.model.animation !== 101) {
                 await this.roomFurniture.setAnimation(101);
             }
@@ -37,7 +44,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        if(this.roomFurniture.room.battleBanzaiGame.paused) {
+        if(game.paused) {
             if(this.roomFurniture.model.animation !== 3) {
                 await this.roomFurniture.setAnimation(3);
             }
@@ -45,7 +52,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
             return;
         }
 
-        const leadingTeam = this.roomFurniture.room.battleBanzaiGame.teams.getTeamWithMostScore();
+        const leadingTeam = game.teams.getTeamWithMostScore();
 
         if(!leadingTeam) {
             if(this.roomFurniture.model.animation !== 1) {

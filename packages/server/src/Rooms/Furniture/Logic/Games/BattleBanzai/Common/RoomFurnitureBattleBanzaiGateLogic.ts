@@ -1,14 +1,10 @@
 import { RoomBattleBanzaiGameTeam } from "../../../../../Games/BattleBanzai/Interfaces/RoomBattleBanzaiGameTeam";
-import RoomGame from "../../../../../Games/RoomGame";
+import RoomBattleBanzaiGame from "../../../../../Games/BattleBanzai/RoomBattleBanzaiGame";
 import RoomFurniture from "../../../../RoomFurniture";
 import RoomFurnitureGameGateLogic from "../../RoomFurnitureGameGateLogic";
 
 export default class RoomFurnitureBattleBanzaiGateLogic extends RoomFurnitureGameGateLogic<RoomBattleBanzaiGameTeam> {
     constructor(roomFurniture: RoomFurniture, team: RoomBattleBanzaiGameTeam) {
-        super(roomFurniture, team);
-    }
-
-    public getGame(): RoomGame<RoomBattleBanzaiGameTeam> {
-        return this.roomFurniture.room.battleBanzaiGame;
+        super(roomFurniture, team, RoomBattleBanzaiGame);
     }
 }

@@ -1,3 +1,4 @@
+import Room from "../Room";
 import RoomUser from "../Users/RoomUser";
 
 export interface RoomGamePlayer<T> {
@@ -6,11 +7,15 @@ export interface RoomGamePlayer<T> {
     roomUser: RoomUser;
 }
 
+export type RoomGameConstructor<T extends RoomGame = RoomGame> = new (room: Room) => T;
+
 export default interface RoomGame<T = unknown> {
     started: boolean;
     paused: boolean;
 
     seconds: number;
+
+    handleActionsInterval?(): Promise<void>;
 
     startGame(seconds: number): Promise<void>;
     endGame(reason: "eliminations" | "counter"): Promise<void>;

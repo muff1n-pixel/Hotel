@@ -1,26 +1,22 @@
 import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomFurniture from "../../RoomFurniture";
 import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic";
-import RoomGame from "../../../Games/RoomGame";
+import RoomGame, { RoomGameConstructor } from "../../../Games/RoomGame";
 import RoomUser from "../../../Users/RoomUser";
 
 export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic {
-    constructor(public readonly roomFurniture: RoomFurniture, public readonly team: T) {
-        this.roomFurniture.setAnimation(
-            this.getGame().players.getTeamPlayers(this.team).length
-        ).catch(console.error);
-    }
-
-    public getGame(): RoomGame<T> {
-        throw new Error("Not implemented");
+    constructor(public readonly roomFurniture: RoomFurniture, public readonly team: T, public readonly game: RoomGameConstructor) {
+        this.roomFurniture.setAnimation(0).catch(console.error);
     }
 
     public isWalkable(): boolean {
-        if(this.getGame().started) {
+        if(this.roomFurniture.room.games.isGamePlaying(this.game)) {
             return false;
         }
 
-        if(this.getGame().players.getTeamPlayers(this.team).length >= 5) {
+        const game = this.roomFurniture.room.games.getGame(this.game);
+
+        if(game && game.players.getTeamPlayers(this.team).length >= 5) {
             return false;
         }
 
@@ -36,17 +32,19 @@ export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic
     }
 
     async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        const isExistingPlayer = this.getGame().players.hasPlayer(roomUser);
+        const game = this.roomFurniture.room.games.getOrAddGame(this.game);
+
+        const isExistingPlayer = game.players.hasPlayer(roomUser);
 
         if(isExistingPlayer) {
-            this.getGame().players.removePlayer(roomUser);
+            game.players.removePlayer(roomUser);
         }
         else {
-            if(this.getGame().players.getTeamPlayers(this.team).length >= 5) {
+            if(game.players.getTeamPlayers(this.team).length >= 5) {
                 return;
             }
 
-            this.getGame().players.addPlayer(roomUser, this.team);
+            game.players.addPlayer(roomUser, this.team);
         }
     }
 }
