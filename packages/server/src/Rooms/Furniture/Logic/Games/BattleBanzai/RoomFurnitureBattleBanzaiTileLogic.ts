@@ -47,23 +47,28 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
                 const autoFillAreas = this.getAutoFillArea(teamFinishAnimationId);
 
                 if (autoFillAreas.length) {
-                    await this.roomFurniture.room.setBulkFurnitureAnimations(
-                        autoFillAreas.flatMap((autoFillArea) => {
-                            const autoFilledTiles = this.getTilesInsideConvex(autoFillArea);
+                    const autoFillFurnitureAnimations = autoFillAreas.flatMap((autoFillArea) => {
+                        const autoFilledTiles = this.getTilesInsideConvex(autoFillArea);
 
-                            this.roomFurniture.room.battleBanzaiGame.teams.addTeamScore(player.team, autoFilledTiles.length);
+                        return autoFilledTiles.map((furniture) => {
+                            (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = true;
+                            (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).lockedTeam = player.team;
 
-                            return autoFilledTiles.map((furniture) => {
-                                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).locked = true;
-                                (furniture.logic as RoomFurnitureBattleBanzaiTileLogic).lockedTeam = player.team;
+                            return {
+                                furniture,
+                                animation: teamFinishAnimationId
+                            };
+                        });
+                    });
 
-                                return {
-                                    furniture,
-                                    animation: teamFinishAnimationId
-                                };
-                            });
-                        })
-                    );
+                    await this.roomFurniture.room.setBulkFurnitureAnimations(autoFillFurnitureAnimations);
+
+                    this.roomFurniture.room.battleBanzaiGame.teams.addTeamScore(player.team, autoFillFurnitureAnimations.length);
+
+                    roomUser.user.achievements.addAchievementScore("LordOfTheTiles", autoFillAreas.length + 1).catch(console.error);
+                }
+                else {
+                    roomUser.user.achievements.addAchievementScore("LordOfTheTiles", 1).catch(console.error);
                 }
             }
 

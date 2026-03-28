@@ -7,10 +7,12 @@ import { game } from "../../..";
 import { AchievementCategoryModel } from "./AchievementCategoryModel";
 import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/IceTagAchievementsSeeder";
 import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/FreezeAchievementsSeeder";
+import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Seeders/BattleBanzaiAchievementsSeeder";
 
 export type AchievementId =
     IceTagAchievements
-    | FreezeAchievements;
+    | FreezeAchievements
+    | BattleBanzaiAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -103,6 +105,7 @@ export async function seedAchievements() {
 
     await IceTagAchievementsSeeder.seedAchievements();
     await FreezeAchievementsSeeder.seedAchievements();
+    await BattleBanzaiAchievementsSeeder.seedAchievements();
 
     UserFurnitureModel.addHook("afterCreate", async (userFurniture: UserFurnitureModel) => {
         if(!userFurniture.userId) {

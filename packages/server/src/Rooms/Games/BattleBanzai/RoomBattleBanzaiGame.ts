@@ -83,6 +83,16 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         }
 
         for(const player of this.players.getAllPlayers()) {
+            const playerTeam = this.teams.getTeam(player.team);
+            
+            if(playerTeam) {
+                player.roomUser.user.achievements.addAchievementScore("BattleBanzaiPlayer", playerTeam.score).catch(console.error);
+
+                if(playerTeam.team === winningTeam?.team) {
+                    player.roomUser.user.achievements.addAchievementScore("BattleBanzaiStar", playerTeam.score).catch(console.error);
+                }
+            }
+
             player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildGameEnded(reason, winningTeam?.team ?? null, winningTeam?.score));
         }
         
