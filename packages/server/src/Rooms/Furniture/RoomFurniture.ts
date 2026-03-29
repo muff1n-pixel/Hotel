@@ -49,21 +49,21 @@ export default class RoomFurniture<T = unknown> {
             const userAchievements = game.getUserAchievements(roomFurniture.model.userId);
 
             if(roomFurniture.model.furniture.interactionType === "icetag_field") {
-                userAchievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "icetag_field").length).catch(console.error);
+                userAchievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.interactionType === "icetag_field").length).catch(console.error);
             }
             else if(roomFurniture.model.furniture.type === "snowb_slope") {
-                userAchievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "snowb_slope").length).catch(console.error);
+                userAchievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.type === "snowb_slope").length).catch(console.error);
             }
             else if(roomFurniture.model.furniture.type === "val11_floor") {
-                userAchievements.addTotalAchievementScore("RollerRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "val11_floor").length).catch(console.error);
+                userAchievements.addTotalAchievementScore("RollerRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.type === "val11_floor").length).catch(console.error);
             }
             else if(roomFurniture.model.furniture.interactionType === "bunnyrun_field") {
-                userAchievements.addTotalAchievementScore("BunnyRunBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "bunnyrun_field").length).catch(console.error);
+                userAchievements.addTotalAchievementScore("BunnyRunBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.interactionType === "bunnyrun_field").length).catch(console.error);
             }
 
             userAchievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length).catch(console.error);
 
-            const uniqueFurniture = [...new Set(room.furnitures.map((roomFurniture) => roomFurniture.model.furniture.id))];
+            const uniqueFurniture = [...new Set(room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId).map((roomFurniture) => roomFurniture.model.furniture.id))];
             
             userAchievements.addTotalAchievementScore("FurniCollector", uniqueFurniture.length).catch(console.error);
         }
