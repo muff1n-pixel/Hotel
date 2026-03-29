@@ -33,11 +33,13 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
             });
 
             if(category) {
-                user.room.model.set({
-                    categoryId: category.id
-                });
+                if(!category.developer || user.permissions.hasPermission("room:type")) {
+                    user.room.model.set({
+                        categoryId: category.id
+                    });
 
-                user.room.model.category = category;
+                    user.room.model.category = category;
+                }
             }
         }
 

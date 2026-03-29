@@ -28,6 +28,10 @@ export default class CreateRoomEvent implements ProtobuffListener<CreateRoomData
             throw new Error("No category was found.");
         }
 
+        if(category.developer && !user.permissions.hasPermission("room:type")) {
+            throw new Error("User does not have room type permissions for category.");
+        }
+
         if(!(payload.maxUsers >= 5 && payload.maxUsers <= 50 && payload.maxUsers % 5 === 0)) {
             throw new Error("Max users is not an acceptable number.");
         }
