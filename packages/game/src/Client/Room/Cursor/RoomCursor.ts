@@ -14,7 +14,7 @@ export default class RoomCursor extends EventTarget {
     constructor(private readonly roomRenderer: RoomRenderer) {
         super();
 
-        const furnitureRenderer = new Furniture("tile_cursor", 64, 0);
+        const furnitureRenderer = new Furniture("tile_cursor", 64, 0, 6);
         
         this.furnitureItem = new RoomFurnitureItem(this.roomRenderer, furnitureRenderer, RoomPositionData.create({
             row: 1,

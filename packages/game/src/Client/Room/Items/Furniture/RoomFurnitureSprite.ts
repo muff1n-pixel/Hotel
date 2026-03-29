@@ -3,6 +3,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import { clientInstance } from "src";
 
 export default class RoomFurnitureSprite extends RoomSprite {
     private readonly offset: MousePosition = {
@@ -49,6 +50,22 @@ export default class RoomFurnitureSprite extends RoomSprite {
         this.tag = sprite.tag;
 
         this.offset = RoomFurnitureSprite.getDefaultOffsetPosition(item.furnitureRenderer, sprite, this.item.roomRenderer.getSizeScale());
+
+        
+        if(this.item.furnitureRenderer.type === "tile_cursor" && sprite.zIndex === 101) {
+            if(this.item.position) {
+                const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.item.position);
+
+                if(upmostFurniture?.item.position) {
+                    this.offset.top -= (upmostFurniture.item.position.depth + (upmostFurniture.furnitureData.dimensions?.depth ?? 0)) * 32;
+                    this.priority = 100000;
+                }
+                else {
+                    this.offset.top -= 32;
+                    this.priority = -1000000;
+                }
+            }
+        }
     }
 
     render(context: OffscreenCanvasRenderingContext2D) {
