@@ -6,6 +6,7 @@ export default class WiredTriggerUserWalksOnFurnitureLogic extends WiredTriggerL
     constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
+    
 
     public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void> {
         if(this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && this.roomFurniture.model.data?.wiredFurnitureSelection.furnitureIds.length) {

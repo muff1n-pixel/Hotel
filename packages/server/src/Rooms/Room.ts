@@ -424,6 +424,12 @@ export default class Room {
 
     public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
         await roomFurniture.handleBeforeUserWalksOnFurniture?.(roomUser, previousRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleBeforeUserWalksOnFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
     }
 
     public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
@@ -438,6 +444,12 @@ export default class Room {
 
     public async handleBeforeUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
         await roomFurniture.handleBeforeUserWalksOffFurniture(roomUser, newRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleUserWalksOffFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
     }
 
     public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {

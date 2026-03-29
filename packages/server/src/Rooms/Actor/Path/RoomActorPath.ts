@@ -174,7 +174,7 @@ export default class RoomActorPath {
         return true;
     }
 
-    public teleportTo(position: RoomPositionOffsetData, usePath: boolean = true) {
+    public teleportTo(position: RoomPositionOffsetData, usePath: boolean = true, walkEvent: boolean = true) {
         if(this.actor.room.model.structure.grid[position.row]?.[position.column] === undefined || this.actor.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return;
         }
@@ -187,7 +187,7 @@ export default class RoomActorPath {
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction ?? undefined, usePath);
+            }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -196,7 +196,7 @@ export default class RoomActorPath {
                 row: position.row,
                 column: position.column,
                 depth
-            }), undefined, usePath);
+            }), undefined, usePath, walkEvent);
         }
         else {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
@@ -205,11 +205,11 @@ export default class RoomActorPath {
                 row: position.row,
                 column: position.column,
                 depth
-            }), undefined, usePath);
+            }), undefined, usePath, walkEvent);
         }
     }
 
-    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean) {
+    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean, walkEvent: boolean = true) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth && (direction !== undefined && direction === this.actor.direction)) {
             return;
         }
@@ -232,7 +232,9 @@ export default class RoomActorPath {
 
         this.actor.sendPositionEvent(usePath === true);
 
-        this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
+        if(walkEvent) {
+            this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
+        }
     }
 
     public setDirection(direction: number) {

@@ -23,7 +23,7 @@ export default class WiredActionTeleportToLogic extends WiredActionLogic {
                 if(randomFurniture) {
                     await this.setActive();
                     
-                    options.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(randomFurniture.model.position));
+                    options.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(randomFurniture.model.position), undefined, false);
                 }
             }
         }

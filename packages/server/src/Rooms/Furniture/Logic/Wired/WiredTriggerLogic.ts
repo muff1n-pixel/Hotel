@@ -4,7 +4,10 @@ import WiredActionLogic from "./WiredActionLogic";
 import WiredLogic, { WiredTriggerOptions } from "./WiredLogic";
 
 export default class WiredTriggerLogic extends WiredLogic {
+    handleBeforeUserWalksOnFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
     handleUserWalksOnFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
+    
+    handleBeforeUserWalksOffFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
     handleUserWalksOffFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
     
     public async handleTrigger(options?: WiredTriggerOptions) {
