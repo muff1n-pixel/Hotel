@@ -54,6 +54,9 @@ export default class RoomFurniture<T = unknown> {
             else if(roomFurniture.model.furniture.type === "snowb_slope") {
                 userAchievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "snowb_slope").length).catch(console.error);
             }
+            else if(roomFurniture.model.furniture.type === "val11_floor") {
+                userAchievements.addTotalAchievementScore("RollerRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "val11_floor").length).catch(console.error);
+            }
 
             userAchievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length).catch(console.error);
 
