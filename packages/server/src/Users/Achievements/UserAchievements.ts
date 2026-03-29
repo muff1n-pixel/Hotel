@@ -21,14 +21,21 @@ export default class UserAchievements {
 
         const userAchievement = await this.getUserAchievement(achievementId);
 
-        const nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
+        
+        let nextLevel = userAchievement.level;
+        let nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
 
-        if(nextLevelScore && score > userAchievement.score && score >= nextLevelScore) {
+        while(nextLevelScore && score > userAchievement.score && score >= nextLevelScore) {
+            nextLevel++;
+            nextLevelScore = userAchievement.achievement.levels[nextLevel];
+        }
+
+        if(nextLevel !== userAchievement.level) {
             await userAchievement.update({
                 score: score
             });
 
-            await this.levelUpUserAchievement(userAchievement);
+            await this.setUserAchievementLevel(userAchievement, nextLevel);
         }
     }
 
@@ -39,14 +46,21 @@ export default class UserAchievements {
         
         const userAchievement = await this.getUserAchievement(achievementId);
 
-        const nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
 
         await userAchievement.update({
             score: userAchievement.score + score
         });
 
-        if(nextLevelScore && userAchievement.score >= nextLevelScore) {
-            await this.levelUpUserAchievement(userAchievement);
+        let nextLevel = userAchievement.level;
+        let nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
+
+        while(nextLevelScore && userAchievement.score >= nextLevelScore) {
+            nextLevel++;
+            nextLevelScore = userAchievement.achievement.levels[nextLevel];
+        }
+
+        if(nextLevel !== userAchievement.level) {
+            await this.setUserAchievementLevel(userAchievement, nextLevel);
         }
     }
 
@@ -69,9 +83,11 @@ export default class UserAchievements {
         return userAchievement;
     }
 
-    private async levelUpUserAchievement(userAchievement: UserAchievementModel) {
+    private async setUserAchievementLevel(userAchievement: UserAchievementModel, nextLevel: number) {
+        const lastLevel = userAchievement.level;
+
         await userAchievement.update({
-            level: userAchievement.level + 1
+            level: nextLevel
         });
 
         const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
@@ -102,11 +118,16 @@ export default class UserAchievements {
             if(user) {
                 await user.getInventory().sendBadges();
                 
-                user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                    id: randomUUID(),
-                    text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
-                    badge: BadgeData.fromJSON(badge)
-                }));
+                for(let level = lastLevel + 1; level <= nextLevel; level++) {
+                    user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                        id: randomUUID(),
+                        text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(level).toString()} achievement!`,
+                        badge: BadgeData.fromJSON({
+                            ...badge,
+                            image: `${userAchievement.achievement.badgePrefix}${level - 1}.gif`
+                        })
+                    }));
+                }
             }
         }
     }
