@@ -350,6 +350,10 @@ export default class RoomUser implements RoomActor {
         const previousFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(previousPosition));
         const newFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(newPosition));
 
+        for(const furniture of previousFurniture) {
+            await this.handleBeforeWalksOffFurniture?.(furniture, newFurniture);
+        }
+
         for(const furniture of newFurniture) {
             await this.handleBeforeWalksOnFurniture?.(furniture, previousFurniture);
         }
@@ -373,6 +377,10 @@ export default class RoomUser implements RoomActor {
 
     public async handleWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]): Promise<void> {
         return this.room.handleUserWalksOffFurniture(this, roomFurniture, newRoomFurniture);
+    }
+
+    public async handleBeforeWalksOffFurniture(roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]): Promise<void> {
+        return this.room.handleBeforeUserWalksOffFurniture(this, roomFurniture, newRoomFurniture);
     }
 
     public isWithinRadius(center: RoomPositionData, radius: number) {

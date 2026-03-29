@@ -50,6 +50,8 @@ import RoomFurnitureBattleBanzaiTileLogic from "./Logic/Games/BattleBanzai/RoomF
 import RoomFurnitureBattleBanzaiCounterLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
 import RoomFurnitureBattleBanzaiPuckLogic from "./Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiPuckLogic";
 import RoomFurnitureSkateRailLogic from "./Logic/Games/Skateboarding/RoomFurnitureSkateRailLogic";
+import RoomFurnitureSnowboardRailLogic from "./Logic/Games/Snowboarding/RoomFurnitureSnowboardRailLogic";
+import RoomFurnitureSnowboardRampLogic from "./Logic/Games/Snowboarding/RoomFurnitureSnowboardRampLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -94,6 +96,13 @@ export default class RoomFurnitureLogicFactory {
             // Skateboarding
             case "skate_rail":
                 return new RoomFurnitureSkateRailLogic(roomFurniture);
+
+            // Snowboarding
+            case "snowboard_rail":
+                return new RoomFurnitureSnowboardRailLogic(roomFurniture);
+
+            case "snowboard_ramp":
+                return new RoomFurnitureSnowboardRampLogic(roomFurniture);
 
             // Ice Tag
             case "icetag_field":

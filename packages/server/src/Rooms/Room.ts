@@ -434,6 +434,10 @@ export default class Room {
         }
     }
 
+    public async handleBeforeUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleBeforeUserWalksOffFurniture(roomUser, newRoomFurniture);
+    }
+
     public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
         await roomFurniture.handleUserWalksOffFurniture(roomUser, newRoomFurniture);
 

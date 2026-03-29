@@ -326,6 +326,11 @@ export default class RoomFurniture<T = unknown> {
         await this.logic?.handleUserWalksOff?.(roomUser, newRoomFurniture);
     }
 
+    /** Call this from the Room instance only. */
+    public async handleBeforeUserWalksOffFurniture(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]) {
+        await this.logic?.handleBeforeUserWalksOff?.(roomUser, newRoomFurniture);
+    }
+
     public async handleActionsInterval() {
         await this.logic?.handleActionsInterval?.();
     }

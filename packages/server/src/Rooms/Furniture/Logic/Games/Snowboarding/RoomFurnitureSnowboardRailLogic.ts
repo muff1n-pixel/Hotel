@@ -4,7 +4,7 @@ import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
 import Directions from "../../../../../Helpers/Directions";
 
-export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
+export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLogic {
 
     constructor(public readonly roomFurniture: RoomFurniture) {
 
@@ -17,7 +17,7 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
 
         let direction = roomUser.direction - (this.roomFurniture.model.direction ?? 0) - 2;
 
-        const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSkateRailLogic);
+        const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSnowboardRailLogic);
 
         if(previousSkateRail && previousSkateRail.model.direction === this.roomFurniture.model.direction && this.roomFurniture.model.direction === 2) {
             direction += 2;
@@ -34,7 +34,7 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
         if(roomUser.path.path && roomUser.path.path.length === 0) {
             let userDirection = roomUser.direction + (this.roomFurniture.model.direction ?? 0) + 2;
 
-            const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSkateRailLogic);
+            const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSnowboardRailLogic);
 
             if(previousSkateRail && previousSkateRail.model.direction === this.roomFurniture.model.direction && this.roomFurniture.model.direction === 2) {
                 userDirection -= 2;
@@ -47,16 +47,16 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
 
                 const nextSkateRail = this.roomFurniture.room.getUpmostFurnitureAtPosition(offsetPosition);
 
-                if(nextSkateRail && nextSkateRail.logic instanceof RoomFurnitureSkateRailLogic) {
+                if(nextSkateRail && nextSkateRail.logic instanceof RoomFurnitureSnowboardRailLogic) {
                     if(nextSkateRail.model.direction !== this.roomFurniture.model.direction) {
                         roomUser.path.walkTo(offsetPosition, undefined, undefined, undefined, true);
 
-                        roomUser.user.achievements.addAchievementScore("SkateboardJumper", 1).catch(console.error);
+                        //roomUser.user.achievements.addAchievementScore("SkateboardJumper", 1).catch(console.error);
                     }
                     else {
                         roomUser.path.walkTo(offsetPosition);
                     
-                        roomUser.user.achievements.addAchievementScore("SkateboardSlider", 1).catch(console.error);
+                        //roomUser.user.achievements.addAchievementScore("SkateboardSlider", 1).catch(console.error);
                     }
 
                     return;
@@ -77,6 +77,6 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
     }
 
     private isRoomUserSkating(roomUser: RoomUser) {
-        return roomUser.hasAction("AvatarEffect.71") || roomUser.hasAction("AvatarEffect.72");
+        return roomUser.hasAction("AvatarEffect.97");
     }
 }
