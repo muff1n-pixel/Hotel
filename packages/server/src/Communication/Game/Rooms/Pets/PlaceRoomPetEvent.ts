@@ -4,6 +4,8 @@ import { PlaceRoomPetData } from "@pixel63/events";
 import RoomPet from "../../../../Rooms/Pets/RoomPet.js";
 
 export default class PlaceRoomPetEvent implements ProtobuffListener<PlaceRoomPetData> {
+    minimumDurationBetweenEvents?: number = 500;
+
     async handle(user: User, payload: PlaceRoomPetData) {
         if(!user.room) {
             return;

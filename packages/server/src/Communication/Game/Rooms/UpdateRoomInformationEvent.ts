@@ -6,7 +6,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import bcrypt from "bcrypt";
 
 export default class UpdateRoomInformationEvent implements ProtobuffListener<UpdateRoomInformationData> {
-    public readonly name = "UpdateRoomInformationEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: UpdateRoomInformationData) {
         if(!user.room) {

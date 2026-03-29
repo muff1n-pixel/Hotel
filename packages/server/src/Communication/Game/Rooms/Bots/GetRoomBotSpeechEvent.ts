@@ -4,6 +4,8 @@ import { GetUserBotSpeechData, UserBotSpeechData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
 export default class GetRoomBotSpeechEvent implements ProtobuffListener<GetUserBotSpeechData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: GetUserBotSpeechData) {
         if(!user.room) {
             return;

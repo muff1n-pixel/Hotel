@@ -8,6 +8,8 @@ import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 
 export default class GetShopPageBundleFurnitureEvent implements ProtobuffListener<GetShopPageBundleFurnitureData> {
+    minimumDurationBetweenEvents?: number = 1000;
+
     async handle(user: User, payload: GetShopPageBundleFurnitureData) {
         const shopPage = await ShopPageModel.findByPk(payload.pageId, {
             include: {

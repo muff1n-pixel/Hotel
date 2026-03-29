@@ -9,6 +9,8 @@ import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel";
 import { randomUUID } from "crypto";
 
 export default class GetAchievementsEvent implements ProtobuffListener<GetAchievementsData> {
+    minimumDurationBetweenEvents?: number = 200;
+    
     async handle(user: User, payload: GetAchievementsData): Promise<void> {
         const category = await AchievementCategoryModel.findByPk(payload.categoryId, {
             include: [

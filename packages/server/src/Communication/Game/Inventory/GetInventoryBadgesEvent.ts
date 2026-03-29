@@ -4,7 +4,7 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetInventoryBadgesEvent implements ProtobuffListener<GetUserInventoryBadgesData> {
-    public readonly name = "GetInventoryBadgesEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User): Promise<void> {
         await user.getInventory().sendBadges();

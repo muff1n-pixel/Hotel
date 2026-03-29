@@ -4,6 +4,8 @@ import User from "../../../../Users/User";
 import { game } from "../../../..";
 
 export default class EnterRoomBellQueueEvent implements ProtobuffListener<EnterRoomBellQueueData> {
+    minimumDurationBetweenEvents?: number = 10_000;
+
     async handle(user: User, payload: EnterRoomBellQueueData) {
         if(user.roomBellQueue) {
             const room = user.roomBellQueue;

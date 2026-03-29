@@ -10,6 +10,8 @@ import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBad
 import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
 
 export default class PurchaseShopBundleEvent implements ProtobuffListener<PurchaseShopBundleData> {
+    minimumDurationBetweenEvents?: number = 10_000;
+
     async handle(user: User, payload: PurchaseShopBundleData) {
         const bundle = await ShopPageBundleModel.findOne({
             where: {

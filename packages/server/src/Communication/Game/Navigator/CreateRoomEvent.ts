@@ -7,6 +7,8 @@ import { CreateRoomData, RoomCreatedData, RoomStructureData } from "@pixel63/eve
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class CreateRoomEvent implements ProtobuffListener<CreateRoomData> {
+    minimumDurationBetweenEvents?: number = 10_000;
+
     async handle(user: User, payload: CreateRoomData): Promise<void> {
         const map = game.roomNavigatorManager.maps.find((map) => map.id === payload.mapId);
 

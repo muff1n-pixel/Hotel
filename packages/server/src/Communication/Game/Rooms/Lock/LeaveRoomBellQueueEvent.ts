@@ -4,6 +4,8 @@ import User from "../../../../Users/User";
 import { game } from "../../../..";
 
 export default class LeaveRoomBellQueueEvent implements ProtobuffListener<ExitRoomBellQueueData> {
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: ExitRoomBellQueueData) {
         if(!user.roomBellQueue) {
             return;

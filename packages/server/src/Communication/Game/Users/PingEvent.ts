@@ -5,7 +5,7 @@ import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class PingEvent implements ProtobuffListener<PingData> {
-    public readonly name = "PingEvent";
+    minimumDurationBetweenEvents?: number = 1000;
 
     async handle(user: User) {
         user.sendProtobuff(PingData, PingData.create({}));

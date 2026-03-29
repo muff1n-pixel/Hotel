@@ -15,6 +15,8 @@ import { config } from "../../../../Config/Config.js";
 import path from "node:path";
 
 export default class UpdateShopFeatureEvent implements ProtobuffListener<UpdateShopFeatureData> {
+    minimumDurationBetweenEvents?: number = 1000;
+    
     async handle(user: User, payload: UpdateShopFeatureData) {
         const permissions = await user.getPermissions();
 

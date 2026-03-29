@@ -10,7 +10,7 @@ import { PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCust
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
-    public readonly name = "PurchaseShopFurnitureEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: PurchaseShopFurnitureData) {
         const shopFurniture = await ShopPageFurnitureModel.findOne({

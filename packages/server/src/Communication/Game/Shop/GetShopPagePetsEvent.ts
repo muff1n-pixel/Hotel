@@ -7,6 +7,8 @@ import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class GetShopPagePetsEvent implements ProtobuffListener<GetShopPagePetsData> {
+    minimumDurationBetweenEvents?: number = 200;
+    
     async handle(user: User, payload: GetShopPagePetsData) {
         const shopPage = await ShopPageModel.findByPk(payload.pageId, {
             include: {

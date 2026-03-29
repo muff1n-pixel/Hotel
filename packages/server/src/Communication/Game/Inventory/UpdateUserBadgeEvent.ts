@@ -4,7 +4,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UpdateUserBadgeData } from "@pixel63/events";
 
 export default class UpdateUserBadgeEvent implements ProtobuffListener<UpdateUserBadgeData> {
-    public readonly name = "UpdateUserBadgeEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: UpdateUserBadgeData): Promise<void> {
         const userBadge = await UserBadgeModel.findOne({

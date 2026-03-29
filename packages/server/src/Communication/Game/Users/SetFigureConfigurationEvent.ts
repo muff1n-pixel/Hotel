@@ -3,7 +3,7 @@ import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class SetFigureConfigurationEvent implements ProtobuffListener<SetUserFigureConfigurationData> {
-    public readonly name = "SetFigureConfigurationEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: SetUserFigureConfigurationData) {
         if(!payload.figureConfiguration) {

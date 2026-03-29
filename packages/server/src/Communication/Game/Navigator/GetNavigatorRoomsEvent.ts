@@ -8,7 +8,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
-    public readonly name = "GetNavigatorRoomsEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: GetNavigatorData): Promise<void> {
         if(payload.search) {

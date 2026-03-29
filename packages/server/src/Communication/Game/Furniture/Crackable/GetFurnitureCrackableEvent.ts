@@ -6,6 +6,8 @@ import { FurnitureCrackableModel } from "../../../../Database/Models/Furniture/C
 import { FurnitureCrackableRewardModel } from "../../../../Database/Models/Furniture/Crackable/FurnitureCrackableRewardModel";
 
 export default class GetFurnitureCrackableEvent implements ProtobuffListener<GetFurnitureCrackableData> {
+    minimumDurationBetweenEvents?: number = 200;
+
     async handle(user: User, payload: GetFurnitureCrackableData) {
         const permissions = await user.getPermissions();
 

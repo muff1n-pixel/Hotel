@@ -9,6 +9,8 @@ import { game } from "../../../..";
 import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
 
 export default class GetUserProfileEvent implements ProtobuffListener<GetUserProfileData> {
+    minimumDurationBetweenEvents?: number = 500;
+
     async handle(user: User, payload: GetUserProfileData): Promise<void> {
         const targetUser = await UserModel.findByPk(payload.userId);
 

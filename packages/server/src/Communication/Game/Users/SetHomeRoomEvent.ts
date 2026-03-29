@@ -3,7 +3,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { SetUserHomeRoomData } from "@pixel63/events";
 
 export default class SetHomeRoomEvent implements ProtobuffListener<SetUserHomeRoomData> {
-    public readonly name = "SetHomeRoomEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: SetUserHomeRoomData) {
         user.model.homeRoomId = payload.roomId;

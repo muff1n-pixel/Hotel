@@ -1,8 +1,10 @@
 import { GetUserFriendsData, UserFriendData } from "@pixel63/events";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "src";
 
 export default function useFriends() {
+    const friendsRequested = useRef<boolean>(false);
+
     const [friends, setFriends] = useState<UserFriendData[] | undefined>(clientInstance.friends.value);
     const [offlineFriends, setOfflineFriends] = useState<UserFriendData[] | undefined>(clientInstance.friends.value);
 
@@ -10,7 +12,9 @@ export default function useFriends() {
     const [outgoingRequests, setOutgoingRequests] = useState<UserFriendData[] | undefined>(clientInstance.outgoingFriendRequests.value);
 
     useEffect(() => {
-        if (clientInstance.friends.value === undefined) {
+        if (clientInstance.friends.value === undefined && !friendsRequested.current) {
+            friendsRequested.current = true;
+
             webSocketClient.sendProtobuff(GetUserFriendsData, GetUserFriendsData.create({}));
         }
 

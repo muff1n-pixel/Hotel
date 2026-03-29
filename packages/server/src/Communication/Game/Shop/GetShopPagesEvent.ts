@@ -10,8 +10,8 @@ import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
 import UserPermissions from "../../../Users/Permissions/UserPermissions.js";
 
 export default class GetShopPagesEvent implements ProtobuffListener<GetShopPagesData> {
-    public readonly name = "GetShopPagesEvent";
-    
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: GetShopPagesData) {
         return this.handleFurniture(user, payload);
     }

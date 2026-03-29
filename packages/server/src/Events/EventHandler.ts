@@ -50,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { CreateRoomData, DeleteShopFurnitureData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserProfileData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopPetData, RemoveUserFriendData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UseRoomFurnitureData } from "@pixel63/events";
+import { CreateRoomData, DeleteShopFurnitureData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserProfileData, HotelAlertData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopPetData, RemoveUserFriendData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UseRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 import GetShopPagePetsEvent from "../Communication/Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "../Communication/Game/Shop/Development/UpdateShopPetEvent.js";
@@ -84,10 +84,13 @@ import GetAchievementsCategoriesEvent from "../Communication/Game/Achievements/G
 import GetAchievementsEvent from "../Communication/Game/Achievements/GetAchievementsEvent.js";
 import UpdateShopFeatureEvent from "../Communication/Game/Shop/Development/UpdateShopFeatureEvent.js";
 import GetShopFurnitureLinkEvent from "../Communication/Game/Shop/GetShopFurnitureLinkEvent.js";
+import { randomUUID } from "node:crypto";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
         super();
+
+        super.setMaxListeners(1);
 
         this.registerIncomingEvents();
     }
@@ -114,10 +117,10 @@ export default class EventHandler extends EventEmitter {
 
             console.log("Received " + type);
 
-            this.emit(type, user, payload);
+            this.emit(type, user, payload, user.spamProtection.getDurationSinceLastEvent(type));
 
             // TODO: remove the user event handler?
-            user.emit(type, user, payload);
+            user.emit(type, user, payload, user.spamProtection.getDurationSinceLastEvent(type));
         }
         catch(error) {
             console.error("Failed to process Protobuff", error);
@@ -125,8 +128,23 @@ export default class EventHandler extends EventEmitter {
     }
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>) {
-        super.addListener(message.$type, (user, event) => {
+        super.addListener(message.$type, (user: User, event, durationSinceLastEvent) => {
+            if(protobuffListener.minimumDurationBetweenEvents !== undefined) {
+                if(durationSinceLastEvent < protobuffListener.minimumDurationBetweenEvents) {
+                    console.warn("Ignoring event from user, duration since last event " + durationSinceLastEvent + " is less than allowed " + protobuffListener.minimumDurationBetweenEvents);
+                    
+                    /*user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                        id: randomUUID(),
+                        text: "You are doing that too quickly! Try again..."
+                    }));*/
+
+                    return;
+                }
+            }
+
             protobuffListener.handle(user, message.decode(event) as T).catch(console.error);
+
+            user.spamProtection.registerEventTimestamp(message.$type);
         });
 
         return this;

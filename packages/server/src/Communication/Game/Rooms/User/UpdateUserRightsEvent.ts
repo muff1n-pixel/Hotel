@@ -5,6 +5,8 @@ import { RoomUserData, SetRoomUserRightsData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
 export default class UpdateUserRightsEvent implements ProtobuffListener<SetRoomUserRightsData> {
+    minimumDurationBetweenEvents?: number = 10;
+    
     async handle(user: User, payload: SetRoomUserRightsData) {
         if(!user.room) {
             return;

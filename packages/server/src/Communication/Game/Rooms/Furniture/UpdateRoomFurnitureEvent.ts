@@ -5,6 +5,8 @@ import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { randomUUID } from "node:crypto";
 
 export default class UpdateRoomFurnitureEvent implements ProtobuffListener<UpdateRoomFurnitureData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: UpdateRoomFurnitureData) {
         if(!user.room) {
             return;

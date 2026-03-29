@@ -3,6 +3,8 @@ import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { UseRoomFurnitureData } from "@pixel63/events";
 
 export default class UseRoomFurnitureEvent implements ProtobuffListener<UseRoomFurnitureData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: UseRoomFurnitureData) {
         if(!user.room) {
             return;

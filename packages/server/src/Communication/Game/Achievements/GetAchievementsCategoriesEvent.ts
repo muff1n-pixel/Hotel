@@ -6,6 +6,8 @@ import { AchievementModel } from "../../../Database/Models/Achievements/Achievem
 import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel";
 
 export default class GetAchievementsCategoriesEvent implements ProtobuffListener<GetAchievementsCategoriesData> {
+    minimumDurationBetweenEvents?: number = 200;
+    
     async handle(user: User, payload: GetAchievementsCategoriesData): Promise<void> {
         const categories = await AchievementCategoryModel.findAll({
             include: [

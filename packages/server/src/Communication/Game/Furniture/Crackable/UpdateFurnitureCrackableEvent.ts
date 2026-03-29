@@ -7,6 +7,8 @@ import { FurnitureCrackableRewardModel } from "../../../../Database/Models/Furni
 import { randomUUID } from "node:crypto";
 
 export default class UpdateFurnitureCrackableEvent implements ProtobuffListener<UpdateFurnitureCrackableData> {
+    minimumDurationBetweenEvents?: number = 1000;
+
     async handle(user: User, payload: UpdateFurnitureCrackableData) {
         if(!payload.crackable) {
             throw new Error("Validation error.");

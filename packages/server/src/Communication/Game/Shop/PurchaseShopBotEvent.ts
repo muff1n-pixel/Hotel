@@ -8,7 +8,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { PurchaseShopBotData } from "@pixel63/events";
 
 export default class PurchaseShopBotEvent implements ProtobuffListener<PurchaseShopBotData> {
-    public readonly name = "PurchaseShopBotEvent";
+    minimumDurationBetweenEvents?: number = 200;
 
     async handle(user: User, payload: PurchaseShopBotData) {
         const shopBot = await ShopPageBotModel.findOne({

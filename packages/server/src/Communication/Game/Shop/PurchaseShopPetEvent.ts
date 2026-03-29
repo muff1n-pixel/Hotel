@@ -9,6 +9,8 @@ import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseShopPetData> {
+    minimumDurationBetweenEvents?: number = 200;
+    
     async handle(user: User, payload: PurchaseShopPetData) {
         const shopPet = await ShopPagePetModel.findOne({
             where: {

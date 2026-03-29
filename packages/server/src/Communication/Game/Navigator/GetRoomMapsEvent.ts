@@ -6,7 +6,7 @@ import { GetRoomMapsData, RoomMapsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetRoomMapsEvent implements ProtobuffListener<GetRoomMapsData> {
-    public readonly name = "GetRoomMapsEvent";
+    minimumDurationBetweenEvents?: number = 500;
 
     async handle(user: User): Promise<void> {
         user.sendProtobuff(RoomMapsData, RoomMapsData.fromJSON({

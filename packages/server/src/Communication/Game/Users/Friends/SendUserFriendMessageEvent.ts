@@ -4,6 +4,8 @@ import User from "../../../../Users/User";
 import { game } from "../../../..";
 
 export default class SendUserFriendMessageEvent implements ProtobuffListener<SendUserFriendMessageData> {
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: SendUserFriendMessageData): Promise<void> {
         const friend = user.friends.friends.find((friend) => friend.friend.id === payload.userId);
 

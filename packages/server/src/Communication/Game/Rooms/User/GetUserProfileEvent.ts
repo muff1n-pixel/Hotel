@@ -6,6 +6,8 @@ import { GetUserBadgesData, UserBadgesData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
 export default class GetUserBadgesEvent implements ProtobuffListener<GetUserBadgesData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: GetUserBadgesData) {
         const targetUser = await UserModel.findOne({
             where: {

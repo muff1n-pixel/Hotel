@@ -5,7 +5,7 @@ import { EnterRoomData, HotelAlertData, RoomLockData } from "@pixel63/events";
 import bcrypt from "bcrypt";
 
 export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> {
-    public readonly name = "EnterRoomEvent";
+    minimumDurationBetweenEvents?: number = 1000;
 
     async handle(user: User, payload: EnterRoomData) {
         if(user.room) {

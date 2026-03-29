@@ -4,8 +4,8 @@ import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PlaceRoomContentFurnitureData } from "@pixel63/events";
 
 export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener<PlaceRoomContentFurnitureData> {
-    public readonly name = "PlaceRoomContentFurnitureEvent";
-
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: PlaceRoomContentFurnitureData) {
         if(!user.room) {
             return;

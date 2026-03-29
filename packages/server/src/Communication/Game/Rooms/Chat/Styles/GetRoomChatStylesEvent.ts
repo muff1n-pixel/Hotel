@@ -5,7 +5,7 @@ import IncomingEvent from "../../../../Interfaces/IncomingEvent.js";
 import ProtobuffListener from "../../../../Interfaces/ProtobuffListener.js";
 
 export default class GetRoomChatStylesEvent implements ProtobuffListener<GetRoomChatStylesData> {
-    public readonly name = "GetRoomChatStylesEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User) {
         const roomChatStyles = await RoomChatStyleModel.findAll();

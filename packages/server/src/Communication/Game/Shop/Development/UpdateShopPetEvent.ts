@@ -7,6 +7,8 @@ import GetShopPagePetsEvent from "../GetShopPagePetsEvent.js";
 import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
 
 export default class UpdateShopPetEvent implements ProtobuffListener<UpdateShopPetData> {
+    minimumDurationBetweenEvents?: number = 1000;
+
     async handle(user: User, payload: UpdateShopPetData) {
         const permissions = await user.getPermissions();
 

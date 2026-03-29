@@ -7,7 +7,7 @@ import { GetShopPageBotsData, ShopPageBotsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetShopPageBotsEvent implements ProtobuffListener<GetShopPageBotsData> {
-    public readonly name = "GetShopPageBotsEvent";
+    minimumDurationBetweenEvents?: number = 200;
 
     async handle(user: User, payload: GetShopPageBotsData) {
         const shopPage = await ShopPageModel.findByPk(payload.pageId, {

@@ -5,6 +5,8 @@ import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
 import GetBadgeBrowserEvent from "./GetBadgeBrowserEvent.js";
 
 export default class UpdateBadgeEvent implements ProtobuffListener<UpdateBadgeData> {
+    minimumDurationBetweenEvents?: number = 1000;
+
     async handle(user: User, payload: UpdateBadgeData) {
         const permissions = await user.getPermissions();
 

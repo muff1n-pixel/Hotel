@@ -28,9 +28,15 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
     }, [value, typing]);
 
     useEffect(() => {
-        webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
-            typing: (value.length)?(true):(false)
-        }));
+        const timeout = setTimeout(() => {
+            webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
+                typing: (value.length)?(true):(false)
+            }));
+        }, 200);
+
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [typing]);
 
     const handleSubmit = useCallback(() => {

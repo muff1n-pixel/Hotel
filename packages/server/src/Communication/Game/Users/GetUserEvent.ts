@@ -4,7 +4,7 @@ import { GetUserData, UserData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetUserEvent implements ProtobuffListener<GetUserData> {
-    public readonly name = "GetUserEvent";
+    minimumDurationBetweenEvents?: number = 10;
 
     async handle(user: User) {
         user.sendUserData();

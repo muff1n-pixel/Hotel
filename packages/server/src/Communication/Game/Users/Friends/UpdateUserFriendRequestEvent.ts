@@ -8,6 +8,8 @@ import { game } from "../../../..";
 import UserFriends from "../../../../Users/Friends/UserFriends";
 
 export default class UpdateUserFriendRequestEvent implements ProtobuffListener<UpdateUserFriendRequestData> {
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: UpdateUserFriendRequestData): Promise<void> {
         const targetUser = await UserModel.findByPk(payload.userId);
 

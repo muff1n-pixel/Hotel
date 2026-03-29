@@ -7,6 +7,8 @@ import { UserModel } from "../../../../Database/Models/Users/UserModel";
 import { Op } from "sequelize";
 
 export default class SearchUserFriendsEvent implements ProtobuffListener<SearchUserFriendsData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: SearchUserFriendsData): Promise<void> {
         const users = await UserModel.findAll({
             where: {

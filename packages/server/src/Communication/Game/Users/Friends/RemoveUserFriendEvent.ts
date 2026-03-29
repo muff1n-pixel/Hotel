@@ -6,6 +6,8 @@ import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserF
 import UserFriends from "../../../../Users/Friends/UserFriends";
 
 export default class RemoveUserFriendEvent implements ProtobuffListener<RemoveUserFriendData> {
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: RemoveUserFriendData): Promise<void> {
         const friend = user.friends.friends.find((friend) => friend.friend.id === payload.userId);
 

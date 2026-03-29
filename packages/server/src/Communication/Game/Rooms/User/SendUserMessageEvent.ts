@@ -4,7 +4,7 @@ import { RoomActorChatData, RoomUserData, SendRoomChatMessageData } from "@pixel
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
 export default class SendUserMessageEvent implements ProtobuffListener<SendRoomChatMessageData> {
-    public readonly name = "SendUserMessageEvent";
+    minimumDurationBetweenEvents?: number = 10;
 
     async handle(user: User, payload: SendRoomChatMessageData) {
         if(!user.room) {

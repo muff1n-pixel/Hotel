@@ -5,6 +5,8 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { SendHotelFeedbackData } from "@pixel63/events";
 
 export default class SendHotelFeedbackEvent implements ProtobuffListener<SendHotelFeedbackData> {
+    minimumDurationBetweenEvents?: number = 5000;
+
     async handle(user: User, payload: SendHotelFeedbackData) {
         await HotelFeedbackModel.create({
             id: randomUUID(),

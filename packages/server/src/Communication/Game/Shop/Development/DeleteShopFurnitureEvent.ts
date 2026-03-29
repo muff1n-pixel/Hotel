@@ -8,6 +8,8 @@ import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { DeleteShopFurnitureData, GetShopPageFurnitureData, UpdateShopFurnitureData } from "@pixel63/events";
 
 export default class DeleteShopFurnitureEvent implements ProtobuffListener<DeleteShopFurnitureData> {
+    minimumDurationBetweenEvents?: number = 1000;
+
     async handle(user: User, payload: DeleteShopFurnitureData) {
         const permissions = await user.getPermissions();
 

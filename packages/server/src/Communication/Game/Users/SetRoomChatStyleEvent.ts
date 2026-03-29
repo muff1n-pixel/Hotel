@@ -3,7 +3,7 @@ import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class SetRoomChatStyleEvent implements ProtobuffListener<SetUserRoomChatStyleData> {
-    public readonly name = "SetRoomChatStyleEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: SetUserRoomChatStyleData) {
         user.model.roomChatStyleId = payload.id;

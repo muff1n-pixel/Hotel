@@ -6,7 +6,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { RoomClickData } from "@pixel63/events";
 
 export default class RoomClickEvent implements ProtobuffListener<RoomClickData> {
-    public readonly name = "RoomClickEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: RoomClickData) {
         if(!user.room) {

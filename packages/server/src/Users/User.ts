@@ -10,6 +10,7 @@ import { MessageType, UnknownMessage, UserData, UserPermissionsData } from "@pix
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
 import UserNotifications from "./Notifications/UserNotifications.js";
+import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -17,6 +18,8 @@ export default class User extends EventEmitter {
     public achievements: UserAchievements;
     public notifications: UserNotifications;
     public permissions: UserPermissions;
+
+    public spamProtection: UserSpamProtection;
     
     public room?: Room;
     public roomBellQueue?: Room | undefined;
@@ -24,8 +27,7 @@ export default class User extends EventEmitter {
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();
 
-        
-
+        this.spamProtection = new UserSpamProtection(this);
         this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this.model.id);

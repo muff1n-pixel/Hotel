@@ -3,6 +3,8 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { RoomDoubleClickData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomDoubleClickEvent implements ProtobuffListener<RoomDoubleClickData> {
+    minimumDurationBetweenEvents?: number = 100;
+
     async handle(user: User, payload: RoomDoubleClickData) {
         if(!user.room) {
             return;

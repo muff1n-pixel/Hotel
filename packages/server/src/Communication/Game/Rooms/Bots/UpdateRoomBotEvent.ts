@@ -3,6 +3,8 @@ import { RoomBotsData, UpdateRoomBotData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomBotEvent implements ProtobuffListener<UpdateRoomBotData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
     async handle(user: User, payload: UpdateRoomBotData) {
         if(!user.room) {
             return;

@@ -5,7 +5,7 @@ import { GetRoomCategoriesData, RoomCategoriesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetRoomCategoriesEvent implements ProtobuffListener<GetRoomCategoriesData> {
-    public readonly name = "GetRoomCategoriesEvent";
+    minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User): Promise<void> {
         const permissions = await user.getPermissions();

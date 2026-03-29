@@ -8,6 +8,8 @@ import { randomUUID } from "node:crypto";
 import GetPetBrowserEvent from "./GetPetBrowserEvent.js";
 
 export default class UpdatePetEvent implements ProtobuffListener<UpdatePetData> {
+    minimumDurationBetweenEvents?: number = 1000;
+    
     async handle(user: User, payload: UpdatePetData) {
         const permissions = await user.getPermissions();
 

@@ -5,6 +5,8 @@ import { GetShopFurnitureLinkData, ShopFurnitureLinkData } from "@pixel63/events
 import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
 
 export default class GetShopFurnitureLinkEvent implements ProtobuffListener<GetShopFurnitureLinkData> {
+    minimumDurationBetweenEvents?: number = 200;
+
     async handle(user: User, payload: GetShopFurnitureLinkData) {
         const shopFurniture = await ShopPageFurnitureModel.findOne({
             where: {

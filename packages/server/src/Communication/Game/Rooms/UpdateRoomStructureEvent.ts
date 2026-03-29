@@ -3,7 +3,7 @@ import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class UpdateRoomStructureEvent implements ProtobuffListener<UpdateRoomStructureData> {
-    public readonly name = "UpdateRoomStructureEvent";
+    minimumDurationBetweenEvents?: number = 1000;
 
     async handle(user: User, payload: UpdateRoomStructureData) {
         if(!user.room) {
