@@ -166,6 +166,10 @@ export default class WebSocket {
                 }
 
                 await game.hotelInformation.updateUsersCount();
+
+                const daysSinceRegistration = Math.floor((new Date().getTime() - user.model.createdAt.getTime()) / 86400000);
+
+                await user.achievements.addTotalAchievementScore("TrueHabbo", daysSinceRegistration);
             })().catch(console.error);
         });
     }

@@ -1,16 +1,15 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { BadgeModel } from "../Badges/BadgeModel";
 import RomanNumerals from "../../../Helpers/RomanNumerals";
-import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel";
-import { FurnitureModel } from "../Furniture/FurnitureModel";
-import { game } from "../../..";
 import { AchievementCategoryModel } from "./AchievementCategoryModel";
 import GameAchievementsSeeder, { GameAchievements } from "./Seeders/GameAchievementsSeeder";
 import RoomBuilderAchievementsSeeder, { RoomBuilderAchievements } from "./Seeders/RoomBuilderAchievementsSeeder";
+import ProfileAchievementsSeeder, { ProfileAchievements } from "./Seeders/ProfileAchievementsSeeder";
 
 export type AchievementId =
     GameAchievements
-    | RoomBuilderAchievements;
+    | RoomBuilderAchievements
+    | ProfileAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -103,6 +102,7 @@ export async function seedAchievements() {
 
     await RoomBuilderAchievementsSeeder.seedAchievements();
     await GameAchievementsSeeder.seedAchievements();
+    await ProfileAchievementsSeeder.seedAchievements();
 
     const achievements = await AchievementModel.findAll();
 
