@@ -15,6 +15,5 @@ export default class RoomFurnitureMovedEvent implements ProtobuffListener<RoomFu
         const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(payload.id);
 
         roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, payload.position, payload.duration);
-        roomFurnitureItem.data.position = payload.position;
     }
 }

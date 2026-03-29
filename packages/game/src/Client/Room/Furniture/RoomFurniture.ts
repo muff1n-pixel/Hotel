@@ -20,10 +20,13 @@ import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurn
 export default class RoomFurniture {
     public readonly furniture: Furniture;
     public readonly item: RoomFurnitureItem;
+    public data: Omit<UserFurnitureData, "position">;
 
-    constructor(private readonly instance: RoomInstance, public furnitureData: FurnitureData, public data: UserFurnitureData) {
+    constructor(private readonly instance: RoomInstance, public furnitureData: FurnitureData, data: UserFurnitureData) {
+        this.data = data;
+
         this.furniture = new Furniture(this.furnitureData.type, 64, this.data.direction, this.data.animation, this.furnitureData.color);
-        this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, this.data.position, this.data.data as any);
+        this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, data.position, this.data.data as any);
 
         this.instance.roomRenderer.items.push(this.item);
 
@@ -147,7 +150,6 @@ export default class RoomFurniture {
         if(payload.position) {
             if(payload.position?.row !== this.item.position?.row || payload.position?.column !== this.item.position?.column || payload.position?.depth !== this.item.position?.depth) {
                 this.item.positionPathData = undefined;
-                this.data.position = payload.position;
                 
                 this.item.setPosition(payload.position);
             }
@@ -163,25 +165,25 @@ export default class RoomFurniture {
             return false;
         }
 
-        if(!this.data.position) {
+        if(!this.item.position) {
             return false;
         }
 
-        if(this.data.position.row >= position.row + dimensions.row) {
+        if(this.item.position.row >= position.row + dimensions.row) {
             return false;
         }
 
-        if(this.data.position.column >= position.column + dimensions.column) {
+        if(this.item.position.column >= position.column + dimensions.column) {
             return false;
         }
 
         const furnitureDimensions = this.item.furnitureRenderer.getDimensions();
 
-        if(this.data.position.row + furnitureDimensions.row <= position.row) {
+        if(this.item.position.row + furnitureDimensions.row <= position.row) {
             return false;
         }
 
-        if(this.data.position.column + furnitureDimensions.column <= position.column) {
+        if(this.item.position.column + furnitureDimensions.column <= position.column) {
             return false;
         }
 

@@ -273,7 +273,7 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
-    public async setPosition(position: RoomPositionData, save: boolean = true) {
+    public async setPosition(position: RoomPositionData, save: boolean = true, previousDirection = this.model.direction) {
         const previousPosition = this.model.position;
         const previousDimensions = this.getDimensions();
 

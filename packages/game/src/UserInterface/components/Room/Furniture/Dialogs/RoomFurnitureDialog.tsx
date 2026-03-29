@@ -19,6 +19,10 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
     const [placement, setPlacement] = useState("all");
     const [search, setSearch] = useState("");
 
+    const [row, setRow] = useState("");
+    const [column, setColumn] = useState("");
+    const [depth, setDepth] = useState("");
+
     return (
         <Dialog title="Room Furniture" hidden={hidden} onClose={onClose} width={410} height={350} initialPosition="center">
             <DialogContent style={{
@@ -66,12 +70,36 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                         }
 
                         return true;
+                    }).filter((furniture) => {
+                        if(!furniture.item.position) {
+                            return true;
+                        }
+
+                        if(row.length && !window.isNaN(parseInt(row))) {
+                            if(furniture.item.position.row !== parseInt(row)) {
+                                return false;
+                            }
+                        }
+
+                        if(column.length && !window.isNaN(parseInt(column))) {
+                            if(furniture.item.position.column !== parseInt(column)) {
+                                return false;
+                            }
+                        }
+
+                        if(depth.length && !window.isNaN(parseInt(depth))) {
+                            if(furniture.item.position.depth !== parseInt(depth)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
                     }).map((furniture) => {
                         return {
                             id: furniture.data.id,
                             values: [
                                 furniture.furnitureData.name,
-                                furniture.data.position && `X: ${Math.round(furniture.data.position.row)} Y: ${Math.round(furniture.data.position.column)} Z: ${Math.round(furniture.data.position.depth)}`
+                                furniture.item.position && `X: ${Math.round(furniture.item.position.row)} Y: ${Math.round(furniture.item.position.column)} Z: ${Math.round(furniture.item.position.depth)}`
                             ],
                             onClick: () => {
                                 if(clientInstance.roomInstance.value) {
@@ -82,6 +110,20 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                         };
                     })
                 }/>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    fontSize: 13,
+                    gap: 10
+                }}>
+                    <div>Position</div>
+
+                    <Input style={{ width: 40 }} placeholder="0" value={row} onChange={setRow}/>
+                    <Input style={{ width: 40 }} placeholder="0" value={column} onChange={setColumn}/>
+                    <Input style={{ width: 40 }} placeholder="0" value={depth} onChange={setDepth}/>
+                </div>
             </DialogContent>
         </Dialog>
     );

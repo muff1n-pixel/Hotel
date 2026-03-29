@@ -407,6 +407,6 @@ export default class RoomInstance {
             return stackHelperFurniture;
         }
 
-        return furniture.toSorted((a, b) => b.data.position!.depth - a.data.position!.depth)[0];
+        return furniture.toSorted((a, b) => (b.item.position?.depth ?? 0) - (a.item.position?.depth ?? 0))[0];
     }
 }

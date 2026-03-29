@@ -231,7 +231,7 @@ export default class RoomFurniturePlacer {
                     this.roomFurnitureItem.setPosition(RoomPositionData.create({
                         row: entity.position.row,
                         column: entity.position.column,
-                        depth: (furnitureAtPosition && furnitureAtPosition.data.position)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+                        depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
                     }));
 
                     this.roomFurnitureItem.disabled = false;
@@ -294,7 +294,7 @@ export default class RoomFurniturePlacer {
         const position = (entity?.position)?(RoomPositionData.create({
             row: entity.position.row,
             column: entity.position.column,
-            depth: (furnitureAtPosition && furnitureAtPosition.data.position)?(furnitureAtPosition.data.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+            depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
         })):(null);
 
         if(!entity || !position || this.roomFurnitureItem.disabled) {

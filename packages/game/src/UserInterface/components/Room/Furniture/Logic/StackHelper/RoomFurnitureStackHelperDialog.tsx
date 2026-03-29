@@ -22,7 +22,7 @@ export type RoomFurnitureStackHelperDialogData = {
 export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const room = useRoomInstance();
 
-    const [height, setHeight] = useState(data.data.data?.stackHelper?.height ?? data.data.position?.depth ?? 0);
+    const [height, setHeight] = useState(data.data.data?.stackHelper?.height ?? data.item.position?.depth ?? 0);
     const [copyDepthFromFurniture, setCopyDepthFromFurniture] = useState(false);
 
     useEffect(() => {

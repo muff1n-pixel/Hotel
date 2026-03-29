@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useHotel } from "../../Hooks/useHotel";
 import { useRoomInstance } from "../../Hooks/useRoomInstance";
-import { clientInstance, webSocketClient } from "../../..";
+import { webSocketClient } from "../../..";
 import { usePermissions } from "../../Hooks/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
 import { useRoomFrameRate } from "@UserInterface/Hooks/useRoomFrameRate";
@@ -42,7 +42,7 @@ export default function DebugInformationPanel() {
                     
                     data: furniture.data.data,
 
-                    position: furniture.data.position,
+                    position: furniture.item.position,
                     direction: furniture.data.direction,
                     
                     animation: furniture.data.animation

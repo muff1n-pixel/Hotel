@@ -63,6 +63,8 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
                 }
             }
         }
+
+        let previousDirection = furniture.model.direction;
         
         if(payload.direction !== undefined) {
             if(payload.position === undefined && furniture.model.position && furniture.model.furniture.placement === "floor") {
@@ -92,7 +94,7 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
         }
 
         if(payload.position !== undefined) {
-            await furniture.setPosition(payload.position, false);
+            await furniture.setPosition(payload.position, false, previousDirection);
         }
 
         if(payload.color !== undefined && furniture.model.furniture.interactionType === "postit") {
