@@ -60,7 +60,7 @@ export default class RoomBuilderAchievementsSeeder {
             description: "For creating a slope using %score% Snowboard Patches.",
             badgePrefix: "ACH_snowBoardBuild",
             levels: [
-                10, 20, 30, 45, 60, 80, 100, 125, 150, 170
+                16, 36, 64, 100, 160
             ]
         });
     }
