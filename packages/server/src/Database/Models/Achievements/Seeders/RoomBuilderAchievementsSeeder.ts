@@ -7,6 +7,7 @@ export type RoomBuilderAchievements =
     | "IceRinkBuilder"
     | "RollerRinkBuilder"
     | "SnowBoardBuilder"
+    | "BunnyRunBuilder"
     | "GameArcadeOwner";
 
 export default class RoomBuilderAchievementsSeeder {
@@ -50,6 +51,17 @@ export default class RoomBuilderAchievementsSeeder {
             name: "Ice Rink Builder",
             description: "For creating an Ice Rink using %score% Skating Patches.",
             badgePrefix: "ACH_TagA",
+            levels: [
+                10, 20, 30, 45, 60, 80, 100, 125, 150, 170
+            ]
+        });
+
+        await AchievementModel.upsert({
+            id: "BunnyRunBuilder",
+            categoryId: "room_builder",
+            name: "Bunny Run Field Builder",
+            description: "For creating a Bunny Run Field using %score% Bunny Run Patches.",
+            badgePrefix: "ACH_RbBunnyTag",
             levels: [
                 10, 20, 30, 45, 60, 80, 100, 125, 150, 170
             ]
