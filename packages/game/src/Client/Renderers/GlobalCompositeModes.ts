@@ -6,7 +6,7 @@ export function getGlobalCompositeModeFromInkNumber(ink: number): GlobalComposit
             return "lighter";
 
         case 8:
-            return "lighten";
+            return undefined;
 
         default:
             Logger.warn(`Ink number ${ink} is not recognized.`);
