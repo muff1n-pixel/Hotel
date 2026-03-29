@@ -6,6 +6,7 @@ import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable"
 import Input from "../../../../Common/Form/Components/Input";
 import { useState } from "react";
 import Selection from "../../../../Common/Form/Components/Selection";
+import { clientInstance } from "src";
 
 export type RoomFurnitureDialogProps = {
     hidden?: boolean;
@@ -73,9 +74,10 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                                 furniture.data.position && `X: ${Math.round(furniture.data.position.row)} Y: ${Math.round(furniture.data.position.column)} Z: ${Math.round(furniture.data.position.depth)}`
                             ],
                             onClick: () => {
-                                room.roomRenderer.cursor?.dispatchEvent(new RoomClickEvent(null, {
-                                    item: furniture.item
-                                }))
+                                if(clientInstance.roomInstance.value) {
+                                    clientInstance.roomInstance.value.roomRenderer.focusedItem.value = furniture.item;
+                                    clientInstance.roomInstance.update();
+                                }
                             }
                         };
                     })
