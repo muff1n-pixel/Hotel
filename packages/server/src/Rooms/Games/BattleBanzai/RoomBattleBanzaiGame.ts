@@ -10,6 +10,7 @@ import { RoomBattleBanzaiGameTeam, RoomBattleBanzaiGameTeamData } from "./Interf
 import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
 import RoomBattleBanzaiGameTeams from "./RoomBattleBanzaiGameTeams";
 import BattleBanzaiGameNotifications from "../../../Users/Notifications/Games/BattleBanzaiGameNotifications";
+import { game } from "../../..";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
@@ -74,6 +75,8 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
 
         this.started = false;
         this.paused = false;
+
+        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
 
         const winningTeam = this.teams.getTeamWithMostScore();
 

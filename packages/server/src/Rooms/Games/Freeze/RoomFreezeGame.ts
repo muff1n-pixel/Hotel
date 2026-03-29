@@ -10,6 +10,7 @@ import { randomUUID } from "crypto";
 import UserFreezeGameNotifications from "../../../Users/Notifications/Games/UserFreezeGameNotifications";
 import RoomGame from "../RoomGame";
 import RoomFreezeGamePlayers from "./RoomFreezeGamePlayers";
+import { game } from "../../..";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -185,6 +186,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         
         this.started = false;
         this.paused = false;
+
+        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", Object.values(this.teams).reduce((score, team) => team.score + score, 0)).catch(console.error);
 
         const winnerTeam = this.getTeamWithMostScore();
 

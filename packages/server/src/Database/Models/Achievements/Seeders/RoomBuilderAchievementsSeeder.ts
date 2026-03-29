@@ -5,7 +5,8 @@ export type RoomBuilderAchievements =
     | "FurniCollector"
     | "RoomHost"
     | "IceRinkBuilder"
-    | "SnowBoardBuilder";
+    | "SnowBoardBuilder"
+    | "GameArcadeOwner";
 
 export default class RoomBuilderAchievementsSeeder {
     public static async seedAchievements() {
@@ -61,6 +62,17 @@ export default class RoomBuilderAchievementsSeeder {
             badgePrefix: "ACH_snowBoardBuild",
             levels: [
                 16, 36, 64, 100, 160
+            ]
+        });
+
+        await AchievementModel.upsert({
+            id: "GameArcadeOwner",
+            categoryId: "room_builder",
+            name: "Game Arcade Owner",
+            description: "For having users score %score% points in your game rooms.",
+            badgePrefix: "ACH_GameAuthorExperience",
+            levels: [
+                400, 1000, 2000, 3600, 6200, 10400, 17100, 27800, 45000, 77600, 139600, 257600, 481600, 906600, 1714600, 3250600, 6168600, 11712600, 22245600, 42258600
             ]
         });
     }
