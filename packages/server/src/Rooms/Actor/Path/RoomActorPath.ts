@@ -47,35 +47,14 @@ export default class RoomActorPath {
 
         // TODO: use room floor plan
 
-        const blockingActor = this.actor.room.getActorAtPosition(nextPosition);
+        if(!this.isNextPositionFree(nextPosition, this.path)) {
+            this.path = undefined;
+            this.pathOnCancel?.();
 
-        if(blockingActor) {
-            const blockedByAnotherUser = (blockingActor instanceof RoomUser && (!(this.actor instanceof RoomUser) || blockingActor.user.model.id !== this.actor.user.model.id));
-            const blockedByAnotherBot = (blockingActor instanceof RoomBot && (!(this.actor instanceof RoomBot) || blockingActor.model.id !== this.actor.model.id));
-            const blockedByAnotherPet = (blockingActor instanceof RoomPet && (!(this.actor instanceof RoomPet) || blockingActor.model.id !== this.actor.model.id));
-
-            if(blockedByAnotherBot || blockedByAnotherUser || blockedByAnotherPet) {
-                console.log("User path cancelled, user is obstructing");
-
-                this.path = undefined;
-                this.pathOnCancel?.();
-    
-                return;
-            }
+            return;
         }
 
         const furniture = this.actor.room.getUpmostFurnitureAtPosition(nextPosition);
-
-        if(furniture) {
-            if(!this.walkThroughFurniture && !furniture.isWalkable(this.path.length === 1)) {
-                console.log("User path cancelled");
-
-                this.path = undefined;
-                this.pathOnCancel?.();
-
-                return;
-            }
-        }
 
         const depth = this.actor.room.getUpmostDepthAtPosition(nextPosition, furniture);
 
@@ -119,10 +98,38 @@ export default class RoomActorPath {
         
         this.actor.sendWalkEvent(previousPosition, this.pathJump);
     }
+
+    private isNextPositionFree(nextPosition: RoomPositionOffsetData, path: RoomPositionOffsetData[]) {
+        const blockingActor = this.actor.room.getActorAtPosition(nextPosition);
+
+        if(blockingActor) {
+            const blockedByAnotherUser = (blockingActor instanceof RoomUser && (!(this.actor instanceof RoomUser) || blockingActor.user.model.id !== this.actor.user.model.id));
+            const blockedByAnotherBot = (blockingActor instanceof RoomBot && (!(this.actor instanceof RoomBot) || blockingActor.model.id !== this.actor.model.id));
+            const blockedByAnotherPet = (blockingActor instanceof RoomPet && (!(this.actor instanceof RoomPet) || blockingActor.model.id !== this.actor.model.id));
+
+            if(blockedByAnotherBot || blockedByAnotherUser || blockedByAnotherPet) {
+                console.log("User path cancelled, user is obstructing");
+
+                return false;
+            }
+        }
+
+        const furniture = this.actor.room.getUpmostFurnitureAtPosition(nextPosition);
+
+        if(furniture) {
+            if(!this.walkThroughFurniture && !furniture.isWalkable(path.length === 1)) {
+                console.log("User path cancelled");
+
+                return false;
+            }
+        }
+
+        return true;
+    }
     
     public walkTo(position: RoomPositionOffsetData, walkThroughFurniture: boolean = false, onFinish: ((() => void) | undefined) = undefined, onCancel: ((() => void) | undefined) = undefined, jump = false) {
         if(!this.actor.room.model.structure.grid[position.row]?.[position.column]) {
-            return;
+            return false;
         }
 
         const astarFinder = this.actor.room.floorplan.getAstarFinder(this.actor, position, walkThroughFurniture);
@@ -147,7 +154,13 @@ export default class RoomActorPath {
         if(!path.length) {
             onCancel?.();
 
-            return;
+            return false;
+        }
+
+        if(!this.isNextPositionFree(path[0]!, path)) {
+            onCancel?.();
+
+            return false;
         }
 
         this.path = path;
@@ -157,6 +170,8 @@ export default class RoomActorPath {
         this.pathJump = jump;
 
         this.actor.room.requestActionsFrame();
+
+        return true;
     }
 
     public teleportTo(position: RoomPositionOffsetData, usePath: boolean = true) {

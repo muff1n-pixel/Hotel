@@ -15,6 +15,10 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
             if(payload.actionsAdded.length) {
                 for(const action of payload.actionsAdded) {
                     actor.item.figureRenderer.addAction(action);
+
+                    if(action === "Snowboard360") {
+                        actor.item.frame = 10;
+                    }
                 }
             }
 

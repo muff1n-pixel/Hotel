@@ -15,6 +15,14 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
             return;
         }
 
+        if(roomUser.hasAction("SnowboardOllie") || roomUser.hasAction("Snowboard360")) {
+            return;
+        }
+
+        if(roomUser.direction !== this.roomFurniture.model.direction) {
+            return;
+        }
+
         const offsetPosition = RoomPositionOffsetData.fromJSON(roomUser.position);
 
         const upmostFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(offsetPosition);
@@ -27,11 +35,9 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
         }
 
         if(rampDepth - upmostDepth >= 2) {
-            roomUser.removeAction("SnowboardOllie");
             roomUser.addAction("Snowboard360", 2000);
         }
         else {
-            roomUser.removeAction("Snowboard360");
             roomUser.addAction("SnowboardOllie", 2000);
         }
     }

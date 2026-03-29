@@ -18,7 +18,7 @@ export default class RoomFigureItem extends RoomItem {
     private healthSprite: RoomFigureHealthSprite | null = null;
 
     public readonly id = Math.random();
-    private frame: number = 0;
+    public frame: number = 0;
 
     public typing: boolean = false;
     public idling: boolean = false;

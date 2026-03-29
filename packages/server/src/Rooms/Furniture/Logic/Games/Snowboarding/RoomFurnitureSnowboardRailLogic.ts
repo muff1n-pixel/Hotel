@@ -15,7 +15,7 @@ export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLog
             return;
         }
 
-        let direction = roomUser.direction - (this.roomFurniture.model.direction ?? 0) - 2;
+        let direction = roomUser.direction - (this.roomFurniture.model.direction ?? 0) + 2;
 
         const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSnowboardRailLogic);
 
@@ -32,7 +32,7 @@ export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLog
         }
 
         if(roomUser.path.path && roomUser.path.path.length === 0) {
-            let userDirection = roomUser.direction + (this.roomFurniture.model.direction ?? 0) + 2;
+            let userDirection = roomUser.direction + (this.roomFurniture.model.direction ?? 0) - 2;
 
             const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSnowboardRailLogic);
 
@@ -63,9 +63,13 @@ export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLog
                 }
             }
 
-            const offsetPosition = this.roomFurniture.getOffsetPosition(1, Directions.normalizeDirection(userDirection));
+            for(const direction of [0, 1, -1]) {
+                const offsetPosition = this.roomFurniture.getOffsetPosition(1, Directions.normalizeDirection(userDirection + direction));
 
-            roomUser.path.walkTo(offsetPosition);
+                if(roomUser.path.walkTo(offsetPosition)) {
+                    return;
+                }
+            }
         }
     }
 
