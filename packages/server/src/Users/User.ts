@@ -28,7 +28,7 @@ export default class User extends EventEmitter {
 
         this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
-        this.achievements = new UserAchievements(this);
+        this.achievements = new UserAchievements(this.model.id);
         this.notifications = new UserNotifications(this);
         
         this.permissions.loadPermissions().then(() => {

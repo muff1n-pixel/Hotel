@@ -6,9 +6,11 @@ import User from "../User";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel";
 import { BadgeData, WidgetNotificationData } from "@pixel63/events";
 import RomanNumerals from "../../Helpers/RomanNumerals";
+import { UserModel } from "../../Database/Models/Users/UserModel";
+import { game } from "../..";
 
 export default class UserAchievements {
-    constructor(private readonly user: User) {
+    constructor(private readonly userId: string) {
 
     }
 
@@ -57,7 +59,7 @@ export default class UserAchievements {
 
         const [userAchievement] = await UserAchievementModel.findOrCreate({
             where: {
-                userId: this.user.model.id,
+                userId: this.userId,
                 achievementId: achievement.id
             }
         });
@@ -77,7 +79,7 @@ export default class UserAchievements {
         if(badge) {
             const userBadge = await UserBadgeModel.findOne({
                 where: {
-                    userId: this.user.model.id,
+                    userId: this.userId,
                     badgeId: `${userAchievement.achievement.badgePrefix}${userAchievement.level - 1}`
                 }
             });
@@ -85,7 +87,7 @@ export default class UserAchievements {
             if(!userBadge) {
                 await UserBadgeModel.create({
                     id: randomUUID(),
-                    userId: this.user.model.id,
+                    userId: this.userId,
                     badgeId: badge.id,
                 });
             }
@@ -95,13 +97,17 @@ export default class UserAchievements {
                 });
             }
 
-            await this.user.getInventory().sendBadges();
-            
-            this.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
-                id: randomUUID(),
-                text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
-                badge: BadgeData.fromJSON(badge)
-            }));
+            const user = game.getUserById(this.userId);
+
+            if(user) {
+                await user.getInventory().sendBadges();
+                
+                user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
+                    badge: BadgeData.fromJSON(badge)
+                }));
+            }
         }
     }
 }

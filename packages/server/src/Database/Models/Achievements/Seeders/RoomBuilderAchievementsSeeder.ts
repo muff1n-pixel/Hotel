@@ -3,6 +3,7 @@ import { AchievementModel } from "../AchievementModel";
 export type RoomBuilderAchievements =
     "RoomBuilder"
     | "FurniCollector"
+    | "RoomHost"
     | "IceRinkBuilder"
     | "SnowBoardBuilder";
 
@@ -27,6 +28,17 @@ export default class RoomBuilderAchievementsSeeder {
             badgePrefix: "ACH_RoomDecoFurniTypeCount",
             levels: [
                 10, 12, 14, 19, 24, 29, 39, 49, 59, 74, 89, 104, 124, 144, 174, 204, 244, 284, 334, 384
+            ]
+        });
+
+        await AchievementModel.upsert({
+            id: "RoomHost",
+            categoryId: "room_builder",
+            name: "Room Host",
+            description: "For having other Habbos spend %score% minutes in a room.",
+            badgePrefix: "ACH_RoomDecoHosting",
+            levels: [
+                5, 15, 20, 40, 90, 190, 390, 790, 1790, 3790, 7790, 17790, 37790, 77790, 177790, 677790, 1677790, 6677790, 33355580
             ]
         });
 

@@ -6,6 +6,7 @@ import RoomManager from "./Rooms/RoomManager.js";
 import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
+import UserAchievements from "./Users/Achievements/UserAchievements.js";
 
 export default class Game {
     public readonly hotelInformation;
@@ -38,5 +39,11 @@ export default class Game {
 
     public getUserById(id: string) {
         return this.users.find((user) => user.model.id === id);
+    }
+
+    public getUserAchievements(userId: string) {
+        const user = this.getUserById(userId);
+
+        return user?.achievements ?? new UserAchievements(userId);
     }
 }

@@ -46,22 +46,20 @@ export default class RoomFurniture<T = unknown> {
         }));
 
         if(roomFurniture.model.userId) {
-            const user = game.getUserById(roomFurniture.model.userId);
+            const userAchievements = game.getUserAchievements(roomFurniture.model.id);
 
-            if(user) {
-                if(roomFurniture.model.furniture.interactionType === "icetag_field") {
-                    await user.achievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "icetag_field").length);
-                }
-                else if(roomFurniture.model.furniture.type === "snowb_slope") {
-                    await user.achievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "snowb_slope").length);
-                }
-
-                await user.achievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length);
-
-                const uniqueFurniture = [...new Set(room.furnitures.map((roomFurniture) => roomFurniture.model.furniture.id))];
-             
-                await user.achievements.addTotalAchievementScore("FurniCollector", uniqueFurniture.length);
+            if(roomFurniture.model.furniture.interactionType === "icetag_field") {
+                userAchievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "icetag_field").length).catch(console.error);
             }
+            else if(roomFurniture.model.furniture.type === "snowb_slope") {
+                userAchievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "snowb_slope").length).catch(console.error);
+            }
+
+            userAchievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length).catch(console.error);
+
+            const uniqueFurniture = [...new Set(room.furnitures.map((roomFurniture) => roomFurniture.model.furniture.id))];
+            
+            userAchievements.addTotalAchievementScore("FurniCollector", uniqueFurniture.length).catch(console.error);
         }
 
         return roomFurniture;

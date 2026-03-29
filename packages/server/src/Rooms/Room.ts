@@ -241,6 +241,8 @@ export default class Room {
                     console.error("Failed to handle furniture minute interval", error);
                 }
             }
+
+            game.getUserAchievements(this.model.owner.id).addAchievementScore("RoomHost", this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id).length).catch(console.error);
         }
 
         for(let furniture of this.furnitures) {
