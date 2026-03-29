@@ -40,6 +40,8 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
         else {
             roomUser.addAction("SnowboardOllie", 2000);
         }
+
+        roomUser.user.achievements.addAchievementScore("SnowboardJumps", 1).catch(console.error);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
