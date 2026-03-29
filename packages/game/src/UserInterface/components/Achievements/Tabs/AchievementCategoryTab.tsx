@@ -106,12 +106,15 @@ export default function AchievementCategoryTab({ category, onClose }: Achievemen
 
                             <div style={{ flex: 1 }}/>
 
-                            <div style={{
-                                width: "100%",
-                                justifySelf: "flex-end"
-                            }}>
-                                <ProgressBar value={activeAchievement.currentUserScore - activeAchievement.currentLevelScore} maxValue={activeAchievement.nextLevelScore - activeAchievement.currentLevelScore} label={`${activeAchievement.currentUserScore}/${activeAchievement.nextLevelScore}`}/>
-                            </div>
+                            {(activeAchievement.currentUserScore < activeAchievement.currentLevelScore) && (
+                                <div style={{
+                                    width: "100%",
+                                    justifySelf: "flex-end"
+                                }}>
+                                    <ProgressBar value={activeAchievement.currentUserScore - activeAchievement.currentLevelScore} maxValue={activeAchievement.nextLevelScore - activeAchievement.currentLevelScore} label={`${activeAchievement.currentUserScore}/${activeAchievement.nextLevelScore}`}/>
+                                </div>
+                            )}
+
                         </FlexLayout>
                     </FlexLayout>
                 )}
