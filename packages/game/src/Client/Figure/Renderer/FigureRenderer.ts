@@ -234,11 +234,17 @@ export default class FigureRenderer {
                 continue;
             }
 
+            for(const item of effectBodyPart.items) {
+                if(item.base) {
+                    this.effectTypeRemaps.set(item.id, item.base);
+                }
+            }
+
             result.push({
                 actionId: action?.id ?? "Default",
                 geometry,
                 assetPartDefinition: action?.assetPartDefinition ?? "std",
-                bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)),
+                bodyParts: geometryBodyparts.parts.filter((part) => !bodyPartsRemoved.includes(part)).concat(effectBodyPart.items.map((item) => item.id)),
                 frame: effectBodyPart.frame,
                 destinationX: effectBodyPart.destinationX,
                 destinationY: effectBodyPart.destinationY,
@@ -252,9 +258,12 @@ export default class FigureRenderer {
         return result;
     }
 
+    private effectTypeRemaps: Map<string, string> = new Map();
+
     private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
         let result: BodyPartAction[] = [];
         const bodyPartsRemoved: string[] = [];
+        this.effectTypeRemaps = new Map();
 
         for(const effect of effects) {
             if(effect.data.animation?.remove) {
@@ -447,6 +456,10 @@ export default class FigureRenderer {
 
             if(effect?.data.animation?.direction) {
                 direction += effect.data.animation.direction.offset;
+
+                while(direction < 0) {
+                    direction += 8;
+                }
             
                 direction %= 8;
             }
@@ -611,7 +624,7 @@ export default class FigureRenderer {
                                         id,
                                         part: item.id,
                                         frame: bodypart.frame,
-                                        member: `std_${item.id}_${item.base}`, // TODO: what's the 1 for?
+                                        member: `${action.assetPartDefinition}_${item.id}_${item.base}`, // TODO: what's the 1 for?
                                         useDirections: true,
                                         destinationY: bodypart.destinationY ?? (this.avatarEffect?.destinationY ?? 0),
                                         directionOffset: bodypart.directionOffset
@@ -622,10 +635,6 @@ export default class FigureRenderer {
                         animationSprites = animationSprites.filter((animationSprite) => !results.some((result) => result.part === animationSprite.part)).concat(results);
 
                         for(const overrideEffect of overrideFrame.effects) {
-                            if(overrideEffect.directionOffset === undefined) {
-                                continue;
-                            }
-
                             const overrideAnimationSprites = animationSprites.filter((animationSprite) => animationSprite.id === overrideEffect.id);
 
                             for(const overrideAnimationSprite of overrideAnimationSprites) {
@@ -683,7 +692,7 @@ export default class FigureRenderer {
                 const index = (spriteDirectionData)?(spriteDirectionData.destinationZ):(0);
 
                 let flipHorizontal = false;
-                let spriteDirection = (spriteDirectionData)?(this.direction):(direction);
+                let spriteDirection = direction;
 
                 if(sprite.directionOffset !== undefined) {
                     spriteDirection += sprite.directionOffset;
@@ -728,24 +737,30 @@ export default class FigureRenderer {
                 }
 
                 if(!assetData) {
-                    //console.warn("Can't find asset for " + assetName + ", checked in " + effectLibrary);
-
                     continue;
                 }
 
-                const sourceAssetName = assetData.source ?? assetData.name;
+                if(assetData.flipHorizontal === true) {
+                    flipHorizontal = true;
+                }
 
-                const spriteData = spriteEffect.data.sprites.find((sprite) => sprite.name === sourceAssetName);
+                let sourceAsset: FurnitureAsset = assetData;
+
+                if(sourceAsset.source) {
+                    sourceAsset = spriteEffect.data.assets.find((asset) => asset.name === assetData.source) ?? sourceAsset;
+                }
+
+                sourceAsset = spriteEffect.data.assets.find((asset) => asset.name === (assetData.source ?? sourceAsset.name)) ?? sourceAsset;
+
+                const spriteData = spriteEffect.data.sprites.find((sprite) => sprite.name === sourceAsset.name);
 
                 if(!spriteData) {
-                    //console.error("Can't find sprite for source asset " + sourceAssetName);
-
                     continue;
                 }
 
-                const destinationY = 0;
+                const destinationY = sourceAsset.y;
 
-                const result = await this.getEffectSprite(spriteEffect.library, assetData, spriteData, index, destinationY, sprite.ink, flipHorizontal);
+                const result = await this.getEffectSprite(spriteEffect.library, sourceAsset, spriteData, index, destinationY, sprite.ink, flipHorizontal);
 
                 if(sprite.destinationY) {
                     result.y += sprite.destinationY;
@@ -785,7 +800,7 @@ export default class FigureRenderer {
 
                 return null;
             }
-            
+
             let spriteDirection = direction;
 
             if(actionForSprite.directionOffset !== undefined) {
@@ -823,7 +838,9 @@ export default class FigureRenderer {
             let assetDirection = spriteDirection;
             let assetType = spriteConfiguration.type;
 
-            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfiguration.id}_${assetDirection}_${frame}`;
+            const spriteConfigurationId = this.effectTypeRemaps.get(spriteConfiguration.type) ?? spriteConfiguration.id;
+
+            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
 
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
@@ -842,7 +859,7 @@ export default class FigureRenderer {
                 assetFlipped = flipHorizontal;
                 assetDirection = flippedDirection;
 
-                assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfiguration.id}_${assetDirection}_${frame}`;
+                assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);
             }
@@ -850,7 +867,7 @@ export default class FigureRenderer {
             if(!asset) {
                 //console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
                 
-                assetName = `h_std_${assetType}_${spriteConfiguration.id}_${assetDirection}_${frame}`;
+                assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);
             }
@@ -858,7 +875,7 @@ export default class FigureRenderer {
             if(!asset) {
                 //console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
                 
-                assetName = `h_std_${assetType}_${spriteConfiguration.id}_${assetDirection}_${0}`;
+                assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${0}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);
             }
@@ -939,7 +956,7 @@ export default class FigureRenderer {
             image: sprite.image,
             
             x: x - 32,
-            y: destinationY + assetData.y + 32,
+            y: destinationY + 32,
 
             index,
 

@@ -210,6 +210,8 @@ export default class RoomInstance {
             item.figureRenderer.addAction("Sleep");
         }
 
+        item.figureRenderer.addAction("AvatarEffect.97");
+
         this.roomRenderer.items.push(item);
 
         return {

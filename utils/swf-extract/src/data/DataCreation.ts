@@ -113,9 +113,9 @@ export function createAssetsDataFromManifest(collection: SwfExtractionCollection
                 x: parseFloat(offset?.[0] ?? 0) * -1,
                 y: parseFloat(offset?.[1] ?? 0) * -1,
 
-                source: alias["@_link"],
+                source: alias["@_link"] ?? alias["@_like"],
 
-                flipHorizonal: alias["@_fliph"] === '1'
+                flipHorizontal: alias["@_fliph"] === '1'
             };
         })
     );
