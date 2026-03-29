@@ -108,13 +108,11 @@ export async function seedAchievements() {
 
     await Promise.all(achievements.flatMap((achievement) => {
         return achievement.levels.map(async (level, index) => {
-            return await BadgeModel.update({
+            return await BadgeModel.upsert({
+                id: `${achievement.badgePrefix}${index + 1}`,
                 name: `${achievement.name} ${new RomanNumerals(index + 1).toString()}`,
-                description: achievement.description.replace('%score%', new Intl.NumberFormat('en-US').format(level))
-            }, {
-                where: {
-                    id: `${achievement.badgePrefix}${index + 1}`,
-                }
+                description: achievement.description.replace('%score%', new Intl.NumberFormat('en-US').format(level)),
+                image: `${achievement.badgePrefix}${index + 1}.gif`
             })
         })
     }))

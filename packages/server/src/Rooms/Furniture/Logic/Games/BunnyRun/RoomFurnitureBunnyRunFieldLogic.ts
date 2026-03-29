@@ -18,6 +18,8 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
                 
                 userInRadius.removeAction("AvatarEffect");
                 userInRadius.addAction("AvatarEffect.68");
+
+                await userInRadius.user.achievements.addAchievementScore("BladesOfGlory", 1);
             }
 
             return;
