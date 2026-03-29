@@ -57,7 +57,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
                 const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.item.position);
 
                 if(upmostFurniture?.item.position) {
-                    this.offset.top -= (upmostFurniture.item.position.depth + (upmostFurniture.furnitureData.dimensions?.depth ?? 0)) * 32;
+                    this.offset.top -= (upmostFurniture.item.position.depth + upmostFurniture.getDimensionDepth()) * 32;
                     this.priority = 100000;
                 }
                 else {
