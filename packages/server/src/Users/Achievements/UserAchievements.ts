@@ -118,7 +118,7 @@ export default class UserAchievements {
             if(user) {
                 await user.getInventory().sendBadges();
                 
-                for(let level = lastLevel + 1; level < nextLevel; level++) {
+                for(let level = lastLevel + 1; level <= nextLevel; level++) {
                     user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                         id: randomUUID(),
                         text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(level).toString()} achievement!`,
