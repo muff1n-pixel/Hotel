@@ -34,7 +34,7 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
             return;
         }
 
-        if(rampDepth - upmostDepth >= 2) {
+        if(rampDepth - upmostDepth >= 3) {
             roomUser.addAction("Snowboard360", 2000);
         }
         else {
