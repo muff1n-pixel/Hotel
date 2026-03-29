@@ -106,7 +106,7 @@ export default function AchievementCategoryTab({ category, onClose }: Achievemen
 
                             <div style={{ flex: 1 }}/>
 
-                            {(activeAchievement.currentUserScore < activeAchievement.currentLevelScore) && (
+                            {(activeAchievement.currentUserScore < activeAchievement.nextLevelScore) && (
                                 <div style={{
                                     width: "100%",
                                     justifySelf: "flex-end"
