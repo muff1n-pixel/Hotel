@@ -5,13 +5,12 @@ import { UserFurnitureModel } from "../Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../Furniture/FurnitureModel";
 import { game } from "../../..";
 import { AchievementCategoryModel } from "./AchievementCategoryModel";
-import IceTagAchievementsSeeder, { IceTagAchievements } from "./Seeders/Games/IceTagAchievementsSeeder";
-import FreezeAchievementsSeeder, { FreezeAchievements } from "./Seeders/Games/FreezeAchievementsSeeder";
-import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Seeders/Games/BattleBanzaiAchievementsSeeder";
 import GameAchievementsSeeder, { GameAchievements } from "./Seeders/GameAchievementsSeeder";
+import RoomBuilderAchievementsSeeder, { RoomBuilderAchievements } from "./Seeders/RoomBuilderAchievementsSeeder";
 
 export type AchievementId =
-    GameAchievements;
+    GameAchievements
+    | RoomBuilderAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -102,23 +101,8 @@ export async function seedAchievements() {
         iconImage: "room_builder.png"
     });
 
+    await RoomBuilderAchievementsSeeder.seedAchievements();
     await GameAchievementsSeeder.seedAchievements();
-
-    UserFurnitureModel.addHook("afterCreate", async (userFurniture: UserFurnitureModel) => {
-        if(!userFurniture.userId) {
-            return;
-        }
-        
-        const furniture = await FurnitureModel.findByPk(userFurniture.furnitureId);
-
-        if(furniture?.interactionType === "icetag_field") {
-            const user = game.getUserById(userFurniture.userId);
-
-            if(user) {
-                await user.achievements.addAchievementScore("IceRinkBuilder", 1);
-            }
-        }
-    });
 
     const achievements = await AchievementModel.findAll();
 

@@ -45,6 +45,19 @@ export default class RoomFurniture<T = unknown> {
             ]
         }));
 
+        if(roomFurniture.model.userId) {
+            const user = game.getUserById(roomFurniture.model.userId);
+
+            if(user) {
+                if(roomFurniture.model.furniture.interactionType === "icetag_field") {
+                    await user.achievements.addAchievementScore("IceRinkBuilder", 1);
+                }
+                else if(roomFurniture.model.furniture.type === "snowb_slope") {
+                    await user.achievements.addAchievementScore("SnowBoardBuilder", 1);
+                }
+            }
+        }
+
         return roomFurniture;
     }
 

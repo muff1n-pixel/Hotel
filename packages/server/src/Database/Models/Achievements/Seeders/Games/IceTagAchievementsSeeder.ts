@@ -2,8 +2,7 @@ import { AchievementModel } from "../../AchievementModel";
 
 export type IceTagAchievements = 
     "BladesOfGlory"
-    | "IceIceBadge"
-    | "IceRinkBuilder";
+    | "IceIceBadge";
 
 export default class IceTagAchievementsSeeder {
     public static async seedAchievements() {
@@ -26,17 +25,6 @@ export default class IceTagAchievementsSeeder {
             badgePrefix: "ACH_TagC",
             levels: [
                 3, 8, 16, 31, 51, 81, 121, 171, 231, 301, 381, 471, 571, 681, 801, 931, 1071, 1221, 1381, 1551
-            ]
-        });
-        
-        await AchievementModel.upsert({
-            id: "IceRinkBuilder",
-            categoryId: "games",
-            name: "Ice Rink Builder",
-            description: "For creating an Ice Rink using %score% Skating Patches.",
-            badgePrefix: "ACH_TagA",
-            levels: [
-                10, 20, 30, 45, 60, 80, 100, 125, 150, 170
             ]
         });
     }
