@@ -46,7 +46,7 @@ export default class RoomFurniture<T = unknown> {
         }));
 
         if(roomFurniture.model.userId) {
-            const userAchievements = game.getUserAchievements(roomFurniture.model.id);
+            const userAchievements = game.getUserAchievements(roomFurniture.model.userId);
 
             if(roomFurniture.model.furniture.interactionType === "icetag_field") {
                 userAchievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "icetag_field").length).catch(console.error);
