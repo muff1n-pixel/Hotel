@@ -50,10 +50,10 @@ export default class RoomFurniture<T = unknown> {
 
             if(user) {
                 if(roomFurniture.model.furniture.interactionType === "icetag_field") {
-                    await user.achievements.addAchievementScore("IceRinkBuilder", 1);
+                    await user.achievements.addTotalAchievementScore("IceRinkBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.interactionType === "icetag_field").length);
                 }
                 else if(roomFurniture.model.furniture.type === "snowb_slope") {
-                    await user.achievements.addAchievementScore("SnowBoardBuilder", 1);
+                    await user.achievements.addTotalAchievementScore("SnowBoardBuilder", room.furnitures.filter((roomFurniture) => roomFurniture.model.furniture.type === "snowb_slope").length);
                 }
 
                 await user.achievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length);
