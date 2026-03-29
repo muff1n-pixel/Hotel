@@ -55,6 +55,8 @@ export default class RoomFurniture<T = unknown> {
                 else if(roomFurniture.model.furniture.type === "snowb_slope") {
                     await user.achievements.addAchievementScore("SnowBoardBuilder", 1);
                 }
+
+                await user.achievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length);
             }
         }
 

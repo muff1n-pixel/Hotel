@@ -12,11 +12,43 @@ export default class UserAchievements {
 
     }
 
+    public async addTotalAchievementScore(achievementId: AchievementId, score: number) {
+        if(score <= 0) {
+            return;
+        }
+
+        const userAchievement = await this.getUserAchievement(achievementId);
+
+        const nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
+
+        if(nextLevelScore && score > userAchievement.score && score >= nextLevelScore) {
+            await userAchievement.update({
+                score: score
+            });
+
+            await this.levelUpUserAchievement(userAchievement);
+        }
+    }
+
     public async addAchievementScore(achievementId: AchievementId, score: number) {
         if(score <= 0) {
             return;
         }
         
+        const userAchievement = await this.getUserAchievement(achievementId);
+
+        const nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
+
+        await userAchievement.update({
+            score: userAchievement.score + score
+        });
+
+        if(nextLevelScore && userAchievement.score >= nextLevelScore) {
+            await this.levelUpUserAchievement(userAchievement);
+        }
+    }
+
+    private async getUserAchievement(achievementId: AchievementId) {
         const achievement = await AchievementModel.findByPk(achievementId);
 
         if(!achievement) {
@@ -32,48 +64,44 @@ export default class UserAchievements {
 
         userAchievement.achievement = achievement;
 
-        const nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
+        return userAchievement;
+    }
 
+    private async levelUpUserAchievement(userAchievement: UserAchievementModel) {
         await userAchievement.update({
-            score: userAchievement.score + score
+            level: userAchievement.level + 1
         });
 
-        if(nextLevelScore && userAchievement.score >= nextLevelScore) {
-            await userAchievement.update({
-                level: userAchievement.level + 1
+        const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
+
+        if(badge) {
+            const userBadge = await UserBadgeModel.findOne({
+                where: {
+                    userId: this.user.model.id,
+                    badgeId: `${userAchievement.achievement.badgePrefix}${userAchievement.level - 1}`
+                }
             });
 
-            const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
-
-            if(badge) {
-                const userBadge = await UserBadgeModel.findOne({
-                    where: {
-                        userId: this.user.model.id,
-                        badgeId: `${userAchievement.achievement.badgePrefix}${userAchievement.level - 1}`
-                    }
-                });
-
-                if(!userBadge) {
-                    await UserBadgeModel.create({
-                        id: randomUUID(),
-                        userId: this.user.model.id,
-                        badgeId: badge.id,
-                    });
-                }
-                else {
-                    await userBadge.update({
-                        badgeId: badge.id
-                    });
-                }
-
-                await this.user.getInventory().sendBadges();
-                
-                this.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+            if(!userBadge) {
+                await UserBadgeModel.create({
                     id: randomUUID(),
-                    text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
-                    badge: BadgeData.fromJSON(badge)
-                }));
+                    userId: this.user.model.id,
+                    badgeId: badge.id,
+                });
             }
+            else {
+                await userBadge.update({
+                    badgeId: badge.id
+                });
+            }
+
+            await this.user.getInventory().sendBadges();
+            
+            this.user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                id: randomUUID(),
+                text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(userAchievement.level).toString()} achievement!`,
+                badge: BadgeData.fromJSON(badge)
+            }));
         }
     }
 }
