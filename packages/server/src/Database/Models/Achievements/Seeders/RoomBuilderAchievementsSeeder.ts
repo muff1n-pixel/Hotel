@@ -2,6 +2,7 @@ import { AchievementModel } from "../AchievementModel";
 
 export type RoomBuilderAchievements =
     "RoomBuilder"
+    | "FurniCollector"
     | "IceRinkBuilder"
     | "SnowBoardBuilder";
 
@@ -15,6 +16,17 @@ export default class RoomBuilderAchievementsSeeder {
             badgePrefix: "ACH_RoomDecoFurniCount",
             levels: [
                 15, 20, 25, 30, 35, 45, 55, 65, 80, 95, 110, 130, 150, 170, 200, 230, 270, 310, 360, 410
+            ]
+        });
+
+        await AchievementModel.upsert({
+            id: "FurniCollector",
+            categoryId: "room_builder",
+            name: "Furni Collector",
+            description: "For collecting %score% different items of furni.",
+            badgePrefix: "ACH_RoomDecoFurniTypeCount",
+            levels: [
+                10, 12, 14, 19, 24, 29, 39, 49, 59, 74, 89, 104, 124, 144, 174, 204, 244, 284, 334, 384
             ]
         });
 

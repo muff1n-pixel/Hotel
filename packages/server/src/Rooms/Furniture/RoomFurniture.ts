@@ -57,6 +57,10 @@ export default class RoomFurniture<T = unknown> {
                 }
 
                 await user.achievements.addTotalAchievementScore("RoomBuilder", room.furnitures.length);
+
+                const uniqueFurniture = [...new Set(room.furnitures.map((roomFurniture) => roomFurniture.model.furniture.id))];
+             
+                await user.achievements.addTotalAchievementScore("FurniCollector", uniqueFurniture.length);
             }
         }
 
