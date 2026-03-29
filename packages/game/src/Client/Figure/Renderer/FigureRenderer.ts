@@ -751,7 +751,7 @@ export default class FigureRenderer {
                 }
 
                 if(!assetData) {
-                    console.warn("Can't find asset data for " + assetName);
+                    //console.warn("Can't find asset data for " + assetName);
                     continue;
                 }
 
