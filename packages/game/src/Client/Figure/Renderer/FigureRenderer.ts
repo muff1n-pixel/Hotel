@@ -639,6 +639,7 @@ export default class FigureRenderer {
 
                             for(const overrideAnimationSprite of overrideAnimationSprites) {
                                 overrideAnimationSprite.frame = overrideEffect.frame;
+                                overrideAnimationSprite.destinationY = overrideEffect.destinationY;
                                 overrideAnimationSprite.directionOffset = overrideEffect.directionOffset;
                             }
                         }
@@ -734,9 +735,23 @@ export default class FigureRenderer {
 
                         assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
                     }
+
+                    if(!assetData) {
+                        assetName = `h_std_${sprite.member.split('_').slice(1).join('_')}_${(sprite.useDirections)?(spriteDirection):(0)}_${0}`;
+
+                        assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
+                    }
+                }
+                else {
+                    if(!assetData) {
+                        assetName = `h_std_${sprite.member.split('_').slice(1).join('_')}_${(sprite.useDirections)?(spriteDirection):(0)}_${0}`;
+
+                        assetData = spriteEffect.data.assets.find((asset) => asset.name === assetName);
+                    }
                 }
 
                 if(!assetData) {
+                    console.warn("Can't find asset data for " + assetName);
                     continue;
                 }
 
