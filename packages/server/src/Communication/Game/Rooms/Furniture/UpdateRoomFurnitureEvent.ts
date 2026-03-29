@@ -48,6 +48,10 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
                         continue;
                     }
 
+                    if(upmostFurniture.model.id === furniture.model.id) {
+                        continue;
+                    }
+
                     if(!upmostFurniture.model.furniture.flags.stackable) {
                         user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                             id: randomUUID(),

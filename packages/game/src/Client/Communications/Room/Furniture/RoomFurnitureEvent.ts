@@ -18,7 +18,7 @@ export default class RoomFurnitureEvent implements ProtobuffListener<RoomFurnitu
 
                     const roomFurnitureItem = clientInstance.roomInstance.value.getFurnitureById(furnitureUpdate.furniture.id);
 
-                    if(furnitureUpdate.userId === clientInstance.user.value?.id) {
+                    if(furnitureUpdate.furniture.direction !== undefined && furnitureUpdate.userId === clientInstance.user.value?.id) {
                         if(furnitureUpdate.furniture.direction !== roomFurnitureItem.furniture.direction) {
                             roomFurnitureItem.item.setPositionPath(roomFurnitureItem.item.position!, [
                                 {
