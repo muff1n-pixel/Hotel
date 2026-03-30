@@ -134,10 +134,6 @@ export default class RoomRenderer extends EventTarget {
         
         this.lastCappedFrameTimestamp = performance.now();
 
-        for(let index = 0; index < this.items.length; index++) {
-            this.items[index].processPositionPath();
-        }
-
         const boundingRectangle = this.parent.getBoundingClientRect();
 
         this.center = {
@@ -178,7 +174,15 @@ export default class RoomRenderer extends EventTarget {
             top: this.center.top + this.camera.cameraPosition.top
         };
 
-        const sprites = this.items.filter((item) => !item.disabled).flatMap((item) => item.sprites).sort((a, b) => {
+        const sprites = this.items.flatMap((item) => {
+            item.processPositionPath();
+
+            if(item.disabled) {
+                return [];
+            }
+
+            return item.sprites;
+        }).sort((a, b) => {
             return this.getSpritePriority(a) - this.getSpritePriority(b);
         });
 
