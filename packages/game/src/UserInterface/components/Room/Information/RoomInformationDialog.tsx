@@ -38,7 +38,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
     }
 
     return (
-        <Dialog title="Room information" hidden={hidden} onClose={onClose} width={230} height={280}>
+        <Dialog title="Room information" hidden={hidden} onClose={onClose} width={230} height={"auto"} assumedHeight={280}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -82,6 +82,10 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
 
                     {(room.hasRights) && (
                         <DialogButton onClick={() => dialogs.addUniqueDialog("room-settings")}>Room settings</DialogButton>
+                    )}
+
+                    {(room.hasRights) && (
+                        <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>Edit room floorplan</DialogButton>
                     )}
                 </div>
             </DialogContent>
