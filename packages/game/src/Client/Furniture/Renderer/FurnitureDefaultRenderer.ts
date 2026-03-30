@@ -1,4 +1,4 @@
-import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
+import AssetFetcher, { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
@@ -69,12 +69,27 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return false;
     }
 
+    private getRenderOptionsKey(options: FurnitureRenderOptions) {
+        const layerFramesData = this.getLayerFrames(options);
+        const layerFrames = Array(this.visualization?.layerCount ?? 0).fill(null).map((_, layer) => {
+            const data = layerFramesData.find((layerFrameData) => layerFrameData.animationLayerId === layer);
+
+
+            return layer + '-' + (data?.spriteFrame ?? 0);
+        }).join('_');
+
+        const grayscaled = (options.grayscaled)?([options.grayscaled?.background, options.grayscaled?.foreground, options.grayscaled?.ink].join('_')):(undefined);
+        const tags = options.tags?.join('_');
+
+        return `${this.type}_${options.animation}_[${layerFrames}]_${options.direction}_${options.color}_[${grayscaled}]_${options.size}_[${tags}]`;
+    }
+
     private getLayerFrames(options: FurnitureRenderOptions) {
         if(!this.visualization) {
             return [];
         }
 
-        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset?: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number }[] = [];
+        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset?: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number, maxLayerFrames: number | null }[] = [];
 
         if(options.animationTags) {
             for(const animationTag of options.animationTags) {
@@ -85,6 +100,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                         animationLayerId: layer.id,
                         frameSequenceIndex: 0,
                         spriteFrame: animationTag.frame,
+                        maxLayerFrames: null
                     });
                 }
             }
@@ -99,11 +115,15 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
 
+            let maxLayerFrames = null;
+
             if(animationLayer?.frameSequence?.length) {
                 let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
                 const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
 
                 if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
+                    maxLayerFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat);
+
                     const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
 
                     if(options.frame >= maxFrames && loopCount !== 0) {
@@ -119,6 +139,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                     }
                 }
                 else {
+                    maxLayerFrames = animationLayer.frameSequence.length;
+
                     const maxFrames = animationLayer.frameSequence.length * loopCount;
 
                     if(options.frame >= maxFrames && loopCount !== 0) {
@@ -141,7 +163,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                         left: animationLayer?.frameSequence[frameSequenceIndex].left,
                         top: animationLayer?.frameSequence[frameSequenceIndex].top,
                         animationFrameOffset: animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options!.direction),
-                        spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id
+                        spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id,
+                        maxLayerFrames
                     });
                 }
             }
@@ -150,11 +173,21 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return result;
     }
 
+    public static renderMap: Map<string, FurnitureRendererSprite[]> = new Map();
+
     public async render(data: FurnitureData, options: FurnitureRenderOptions) {
         this.options = options;
 
         if(!this.type) {
             throw new Error();
+        }
+
+        const renderOptions = this.getRenderOptionsKey(options);
+       
+        const existingSprites = FurnitureDefaultRenderer.renderMap.get(renderOptions);
+       
+        if(existingSprites) {
+            return existingSprites;
         }
         
         const sprites: FurnitureRendererSprite[] = [];
@@ -186,22 +219,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
             }
 
-            /*if(FurnitureAssets.assetSprites.has(`${assetName}_${color}_${grayscaled}`)) {
-                const assetSprite = FurnitureAssets.assetSprites.get(`${assetName}_${color}_${grayscaled}`);
-
-                if(assetSprite) {
-                    sprites.push(assetSprite);
-                }
-
-                continue;
-            }*/
-
             const assetData = data.assets.find((asset) => asset.name === assetName);
 
             if(!assetData) {
                 //console.warn("Failed to find asset data for " + assetName);
-    
-                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
                 continue;
             }
@@ -210,8 +231,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             
             if(!spriteData) {
                 FigureLogger.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
-                
-                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, null);
 
                 continue;
             }
@@ -274,15 +293,22 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 ignoreMouse: layerData?.ignoreMouse
             };
 
-            if(imageData) {
-                FurnitureAssets.assetSprites.set(`${assetName}_${options.color}_${options.grayscaled}`, assetSprite);
-            }
-
             sprites.push(assetSprite);
         }
 
         if(!this.hasImageData) {
-            this.hasImageData = sprites.every((sprite) => !sprite.ignoreMouse && sprite.imageData);
+            this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
+        }
+
+        if(this.hasImageData) {
+            const frameCounts = animationFrames.map((frame) => frame.maxLayerFrames ?? 0);
+            const maxFrames = Math.max(...frameCounts);
+
+            const canCacheAllSprites = frameCounts.every((frames) => maxFrames % frames === 0);
+
+            if(canCacheAllSprites) {
+                FurnitureDefaultRenderer.renderMap.set(renderOptions, sprites);
+            }
         }
 
         return sprites;
