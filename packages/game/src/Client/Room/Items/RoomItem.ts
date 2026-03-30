@@ -8,14 +8,63 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
     
-    position?: RoomPositionData;
+    _position?: RoomPositionData;
     priority: number = 0;
 
     disabled: boolean = false;
     alpha: number = 1;
 
+    public get position() {
+        return this._position;
+    }
+
+    public set position(position: RoomPositionData | undefined) {
+        const dimensions = this.getDimensions();
+
+        const maxDimensionUnit = Math.max(dimensions.row, dimensions.column);
+
+        if(this._position) {
+            for(let row = this._position.row; row < this._position.row + maxDimensionUnit; row++) {
+                for(let column = this._position.column; column < this._position.column + maxDimensionUnit; column++) {
+                    const existingPositionMap = this.roomRenderer.itemPositionMap.get(`${row}x${column}`) ?? [];
+
+                    const existingIndex = existingPositionMap.indexOf(this);
+
+                    if(existingIndex !== -1) {
+                        existingPositionMap.splice(existingIndex, 1);
+
+                        this.roomRenderer.itemPositionMap.set(`${row}x${column}`, existingPositionMap);
+                    }
+                }
+            }
+        }
+
+        if(position) {
+            for(let row = position.row; row < position.row + maxDimensionUnit; row++) {
+                for(let column = position.column; column < position.column + maxDimensionUnit; column++) {
+                    const existingPositionMap = this.roomRenderer.itemPositionMap.get(`${row}x${column}`) ?? [];
+
+                    existingPositionMap.push(this);
+
+                    // TODO: sort by depth immediately?
+                    this.roomRenderer.itemPositionMap.set(`${row}x${column}`, existingPositionMap);
+                }
+            }
+        }
+
+        this._position = position;
+    }
+
     constructor(public roomRenderer: RoomRenderer, public type: string, public sprites: RoomSprite[] = []) {
 
+    }
+
+    public getDimensions(): RoomPositionData {
+        return RoomPositionData.create({
+            row: 1,
+            column: 1,
+            depth: 1
+        });
     }
 
     process(frame: number): void {

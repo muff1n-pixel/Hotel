@@ -42,6 +42,10 @@ export default class RoomFurnitureItem extends RoomItem {
         return super.setPosition(position, index);
     }
 
+    public getDimensions(): RoomPositionData {
+        return this.furnitureRenderer.getDimensions();
+    }
+
     render() {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
             // TODO: don't update the sprite if we don't have to

@@ -18,7 +18,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
-import { RoomPositionData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
+import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
@@ -56,6 +56,8 @@ export default class RoomRenderer extends EventTarget {
     private lastCappedFrameTimestamp: number = performance.now();
 
     private lastAnimationFrame: number | null = null;
+
+    public itemPositionMap: Map<string, RoomItem[]> = new Map();
 
     private center: MousePosition = {
         left: 0,
@@ -523,5 +525,15 @@ export default class RoomRenderer extends EventTarget {
 
             this.items.push(this.wallItem);
         }
+    }
+
+    public getSortedFurnitureAtPosition(position: RoomPositionData) {
+        const items = this.itemPositionMap.get(`${position.row}x${position.column}`);
+
+        if(!items) {
+            return [];
+        }
+
+        return items.filter((item) => item instanceof RoomFurnitureItem).toSorted((a, b) => (b.position?.depth ?? 0) - (a.position?.depth ?? 0));
     }
 }
