@@ -55,6 +55,8 @@ export default class RoomRenderer extends EventTarget {
     private lastFrameTimestamp: number = performance.now();
     private lastCappedFrameTimestamp: number = performance.now();
 
+    private lastAnimationFrame: number | null = null;
+
     private center: MousePosition = {
         left: 0,
         top: 0
@@ -104,6 +106,10 @@ export default class RoomRenderer extends EventTarget {
     private render() {
         if(this.terminated) {
             return;
+        }
+
+        if(this.lastAnimationFrame !== null) {
+            window.cancelAnimationFrame(this.lastAnimationFrame);
         }
 
         const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
@@ -159,8 +165,8 @@ export default class RoomRenderer extends EventTarget {
         this.frames.push(timestamp);
 
         this.frameRate.value = this.frames.length;
-
-        window.requestAnimationFrame(this.render.bind(this));
+        
+        this.lastAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
     }
 
     private renderOffScreen(context: CanvasRenderingContext2D) {
