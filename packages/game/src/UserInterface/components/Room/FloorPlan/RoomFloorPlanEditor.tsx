@@ -34,6 +34,11 @@ export default class RoomFloorPlanEditor {
     });
 
     private mousePosition: MousePosition | null = null;
+    
+    private readonly cappedFramesPerSecond: number = 24;
+    private readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
+
+    private lastCappedFrameTimestamp: number = performance.now();
 
     constructor(private readonly canvas: HTMLCanvasElement, private updateDepth: (value: number) => void, private update: (data: RoomFloorplanEditData) => void) {
         canvas.addEventListener("mousedown", this.mousedown.bind(this));
@@ -46,6 +51,14 @@ export default class RoomFloorPlanEditor {
     }
 
     private process() {
+        if((performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
+            window.requestAnimationFrame(this.process.bind(this));
+
+            return;
+        }
+
+        this.lastCappedFrameTimestamp = performance.now();
+
         if(this.moving && !this.middleButton) {
             const coordinate = this.getMousePosition();
 
@@ -233,6 +246,24 @@ export default class RoomFloorPlanEditor {
             return;
         }
 
+        const roomMap: Map<string, boolean> = new Map();
+        
+        if(clientInstance.roomInstance.value) {
+            for(const furniture of clientInstance.roomInstance.value.furnitures) {
+                if(!furniture.item.position) {
+                    continue;
+                }
+
+                const dimensions = furniture.furniture.getDimensions();
+
+                for(let row = 0; row < dimensions.row; row++) {
+                    for(let column = 0; column < dimensions.column; column++) {
+                        roomMap.set(`${furniture.item.position.row + row}x${furniture.item.position.column + column}`, true);
+                    }
+                }
+            }
+        }
+
         this.canvas.width = this.canvas.parentElement!.getBoundingClientRect().width;
         this.canvas.height = this.canvas.parentElement!.getBoundingClientRect().height;
 
@@ -301,9 +332,7 @@ export default class RoomFloorPlanEditor {
                 context.fillRect(left + 1, top + 1, tileSize - 2, tileSize - 2);
 
                 if(clientInstance.roomInstance.value) {
-                    const anyFurnitureOnTile = clientInstance.roomInstance.value.furnitures.some((furniture) => furniture.isPositionInside(RoomPositionData.create({ row, column }), RoomPositionData.create({ row: 1, column: 1, depth: 1 })));
-
-                    if(anyFurnitureOnTile) {
+                    if(roomMap.has(`${row}x${column}`)) {
                         context.fillStyle = "rgba(255, 255, 255, .4)";
                         context.fillRect(left + 1, top + 1, tileSize - 2, tileSize - 2);
                     }
