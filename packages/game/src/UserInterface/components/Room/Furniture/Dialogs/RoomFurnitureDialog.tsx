@@ -104,7 +104,6 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                             onClick: () => {
                                 if(clientInstance.roomInstance.value) {
                                     clientInstance.roomInstance.value.roomRenderer.focusedItem.value = furniture.item;
-                                    clientInstance.roomInstance.update();
                                 }
                             }
                         };

@@ -99,11 +99,9 @@ export default class RoomCursor extends EventTarget {
 
         if(entity) {
             this.roomRenderer.hoveredItem.value = entity.item;
-            clientInstance.roomInstance.update();
         }
         else if(!entity && this.roomRenderer.hoveredItem.value) {
             this.roomRenderer.hoveredItem.value = null;
-            clientInstance.roomInstance.update();
         }
 
         if(!entity) {
@@ -155,11 +153,9 @@ export default class RoomCursor extends EventTarget {
 
         if(otherEntity?.item && this.roomRenderer.focusedItem.value?.id !== otherEntity.item.id) {
             this.roomRenderer.focusedItem.value = otherEntity.item;
-            clientInstance.roomInstance.update();
         }
         else if(this.roomRenderer.focusedItem.value && (!floorEntity || otherEntity)) {
             this.roomRenderer.focusedItem.value = null;
-            clientInstance.roomInstance.update();
         }
     }
 }

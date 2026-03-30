@@ -2,6 +2,7 @@ import ContextNotAvailableError from "../Exceptions/ContextNotAvailableError";
 import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageDataWorkerInterface";
 import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
+import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 
 export type AssetSpriteGrayscaledProperties = {
     ink?: number;
@@ -52,6 +53,8 @@ export default class AssetFetcher {
 
     public static clearMemory() {
         this.sprites = {};
+
+        FurnitureDefaultRenderer.renderMap.clear();
     }
 
     public static async fetchJson<T>(url: string): Promise<T> {

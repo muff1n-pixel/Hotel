@@ -134,8 +134,6 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
         <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center" onClick={() => {
             if(clientInstance.roomInstance.value) {
                 clientInstance.roomInstance.value.roomRenderer.focusedItem.value = data.item;
-                clientInstance.roomInstance.update();
-                console.log(clientInstance.roomInstance.value.roomRenderer.focusedItem.value);
             }
         }}>
             <DialogContent style={{ flex: 1, gap: 20 }}>
