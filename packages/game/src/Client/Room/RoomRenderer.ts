@@ -138,20 +138,20 @@ export default class RoomRenderer extends EventTarget {
             left: Math.floor(boundingRectangle.width / 2),
             top: Math.floor(boundingRectangle.height / 2)
         };
-        
-        const image = this.renderOffScreen(boundingRectangle.width, boundingRectangle.height);
 
         // Automatically clears the context
         this.element.width = boundingRectangle.width;
         this.element.height = boundingRectangle.height;
 
-        const context = this.element.getContext("2d");
+        const context = this.element.getContext("2d", {
+            alpha: false
+        });
 
         if(!context) {
             throw new ContextNotAvailableError();
         }
-
-        context.drawImage(image, 0, 0);
+        
+        this.renderOffScreen(context);
 
         const timestamp = performance.now();
 
@@ -163,17 +163,9 @@ export default class RoomRenderer extends EventTarget {
         window.requestAnimationFrame(this.render.bind(this));
     }
 
-    private renderOffScreen(width: number, height: number) {
-        const canvas = new OffscreenCanvas(width, height);
-
-        const context = canvas.getContext("2d");
-
-        if(!context) {
-            throw new ContextNotAvailableError();
-        }
-
+    private renderOffScreen(context: CanvasRenderingContext2D) {
         context.fillStyle = this.lighting.backgroundToner?.color ?? "#000000";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
         this.renderedOffset = {
             left: this.center.left + this.camera.cameraPosition.left,
@@ -199,7 +191,7 @@ export default class RoomRenderer extends EventTarget {
 
             context.globalAlpha = sprite.item.alpha;
 
-            sprite.render(context);
+            sprite.render(context as any as OffscreenCanvasRenderingContext2D);
 
             context.restore();
         }
@@ -211,8 +203,6 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.dispatchEvent(new RoomRenderEvent());
-
-        return canvas;
     }
 
     public getMouseOffsetPosition() {
