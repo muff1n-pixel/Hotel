@@ -109,7 +109,9 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
                 },
                 {
                     icon: "Clothing",
-                    element: (<div/>),
+                    element: (
+                        <ShopDialogCategory category={categories[activeIndex]} activeShopPage={activeShopPage} setActiveShopPage={handleActiveShopPage} shopPages={shopPages} onHeaderChange={setHeader} editMode={editMode} requestedFurnitureId={data?.requestedFurnitureId}/>
+                    ),
                 },
                 {
                     icon: "Pets",

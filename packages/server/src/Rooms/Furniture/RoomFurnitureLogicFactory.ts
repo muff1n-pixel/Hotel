@@ -52,6 +52,7 @@ import RoomFurnitureBattleBanzaiPuckLogic from "./Logic/Games/BattleBanzai/RoomF
 import RoomFurnitureSkateRailLogic from "./Logic/Games/Skateboarding/RoomFurnitureSkateRailLogic";
 import RoomFurnitureSnowboardRailLogic from "./Logic/Games/Snowboarding/RoomFurnitureSnowboardRailLogic";
 import RoomFurnitureSnowboardRampLogic from "./Logic/Games/Snowboarding/RoomFurnitureSnowboardRampLogic";
+import RoomFurnitureClothingLogic from "./Logic/RoomFurnitureClothingLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -92,6 +93,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "stack_helper":
                 return new RoomFurnitureStackHelperLogic(roomFurniture);
+
+            case "clothing":
+                return new RoomFurnitureClothingLogic(roomFurniture);
 
             // Skateboarding
             case "skate_rail":

@@ -66,6 +66,7 @@ export default class RoomFurniture {
             case "default":
             case "conf_invis_control":
             case "crackable":
+            case "clothing":
                 return new FurnitureMultistateLogic(this.instance, this);
 
             case "freeze_timer":
