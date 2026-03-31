@@ -6,4 +6,5 @@ message GetFurnitureBrowserData {
     string search_id = 2;
     string search_type = 3;
     string search_name = 4;
+    string search_custom_params = 5;
 }

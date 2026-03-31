@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Clothes/ClothingData.proto";
+import "User/Clothes/UserClothingData.proto";
+
+message UserClothesData {
+    string part = 1;
+
+    repeated ClothingData clothes = 2;
+    repeated UserClothingData user_clothes = 3;
+}

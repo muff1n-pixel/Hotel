@@ -23,6 +23,9 @@ export type RoomPermissions =
 export type CommandPermissions =
     "command:give";
 
+export type ClothingPermissions =
+    "clothing:edit";
+
 export type PermissionAction =
     BadgePermissions
     | FurniturePermissions
@@ -30,4 +33,5 @@ export type PermissionAction =
     | FeedbackPermissions
     | RoomPermissions
     | CommandPermissions
-    | PetPermissions;
+    | PetPermissions
+    | ClothingPermissions;

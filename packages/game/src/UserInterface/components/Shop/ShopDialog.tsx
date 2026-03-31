@@ -9,6 +9,8 @@ import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
 export type ShopDialogProps = {
     hidden?: boolean;
     data?: {
+        requestedCategory?: string;
+
         requestedPage?: {
             id: string;
             category: string;
@@ -26,7 +28,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
 
     const [header, setHeader] = useState<DialogTabHeaderProps>();
     const [editMode, setEditMode] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(categories.indexOf(data?.requestedPage?.category ?? "frontpage"));
+    const [activeIndex, setActiveIndex] = useState(categories.indexOf(data?.requestedPage?.category ?? data?.requestedCategory ?? "frontpage"));
 
     const [activeShopPage, setActiveShopPage] = useState<ShopPageData>();
     const [requestedShopPage, setRequestedShopPage] = useState<{ id: string; category: string; } | undefined>(data?.requestedPage);
@@ -78,6 +80,12 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
             webSocketClient.removeProtobuffListener(ShopPagesData, listener);
         };
     }, [activeIndex, requestedShopPage]);
+
+    useEffect(() => {
+        if(data?.requestedCategory) {
+            setActiveIndex(categories.indexOf(data.requestedCategory));
+        }
+    }, [data?.requestedCategory])
 
     // TODO: handle category and shop pages here
     const handleActiveShopPage = useCallback((shopPage: { id: string; category: string }) => {

@@ -40,7 +40,7 @@ export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFoo
                 continue;
             }
 
-            furniture.logic.handleUserWalksOn(user, []).catch(console.error);
+            furniture.logic.handleBeforeUserWalksOn(user, []).catch(console.error);
         }
     }
 

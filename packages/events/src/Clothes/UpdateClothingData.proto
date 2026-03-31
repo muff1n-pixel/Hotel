@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message UpdateClothingData {
+    string part = 1;
+    string set_id = 2;
+
+    bool available = 3;
+}

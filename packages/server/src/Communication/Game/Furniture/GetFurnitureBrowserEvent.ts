@@ -1,5 +1,5 @@
 import User from "../../../Users/User.js";
-import { FurnitureBrowserData, FurnitureData, GetFurnitureBrowserData, GetPetBrowserData, PetBrowserData, PetData } from "@pixel63/events";
+import { FurnitureBrowserData, FurnitureData, GetFurnitureBrowserData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { Op } from "sequelize";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
@@ -30,6 +30,12 @@ export default class GetFurnitureBrowserEvent implements ProtobuffListener<GetFu
                 ...(payload.searchName.length && {
                     name: {
                         [Op.like]: `%${payload.searchName}%`
+                    }
+                }),
+                
+                ...(payload.searchCustomParams.length && {
+                    customParams: {
+                        [Op.like]: `%${payload.searchCustomParams}%`
                     }
                 }),
             },

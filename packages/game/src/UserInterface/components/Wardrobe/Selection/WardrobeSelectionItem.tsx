@@ -1,13 +1,14 @@
-import { MouseEventHandler, PropsWithChildren } from "react";
+import { CSSProperties, MouseEventHandler, PropsWithChildren } from "react";
 
 import "./WardrobeSelectionItem.css";
 
 export type WardrobeSelectionItemProps = PropsWithChildren & {
     active: boolean;
     onClick: MouseEventHandler;
+    style?: CSSProperties;
 }
 
-export default function WardrobeSelectionItem({ active, children, onClick }: WardrobeSelectionItemProps) {
+export default function WardrobeSelectionItem({ active, children, style, onClick }: WardrobeSelectionItemProps) {
     return (
         <div className={(active)?("item active"):("item")} onClick={onClick} style={{
             width: 50,
@@ -15,7 +16,9 @@ export default function WardrobeSelectionItem({ active, children, onClick }: War
 
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+
+            ...style
         }}>
             {children}
         </div>

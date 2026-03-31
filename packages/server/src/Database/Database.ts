@@ -41,7 +41,8 @@ import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crac
 import { initializeAchievementModel, seedAchievements } from "./Models/Achievements/AchievementModel.js";
 import { initializeUserAchievementModel } from "./Models/Users/Achievements/UserAchievementModel.js";
 import { initializeAchievementCategoryModel } from "./Models/Achievements/AchievementCategoryModel.js";
-import { initializeUserClothesModel } from "./Models/Users/Clothes/UserClothesModel.js";
+import { initializeUserClothingModel } from "./Models/Users/Clothes/UserClothingModel.js";
+import { initializeClothingModel } from "./Models/Clothes/ClothesModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -96,7 +97,9 @@ export async function initializeModels() {
   initializeAchievementCategoryModel(sequelize);
   
   initializeUserAchievementModel(sequelize);
-  initializeUserClothesModel(sequelize);
+
+  initializeClothingModel(sequelize);
+  initializeUserClothingModel(sequelize);
 
   await sequelize.sync();
 

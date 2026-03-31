@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message UserClothingData {
+    string id = 1;
+    string set_id = 2;
+}

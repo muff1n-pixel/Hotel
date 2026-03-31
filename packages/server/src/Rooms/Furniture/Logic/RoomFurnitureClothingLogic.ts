@@ -1,46 +1,27 @@
 import { randomUUID } from "crypto";
-import { UserClothesModel } from "../../../Database/Models/Users/Clothes/UserClothesModel.js";
+import { UserClothingModel } from "../../../Database/Models/Users/Clothes/UserClothingModel.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { RoomFurnitureData, UseRoomFurnitureData } from "@pixel63/events";
+import { RefreshUserClothesData, RoomFurnitureData, UseRoomFurnitureData } from "@pixel63/events";
+import { game } from "../../../index.js";
 
 export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
-    private unboxingStartedAt: number | null = null;
-
     constructor(private readonly roomFurniture: RoomFurniture) {
 
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
-        if(this.unboxingStartedAt !== null) {
-            return;
-        }
-
         if(roomUser.user.model.id !== this.roomFurniture.model.userId) {
             return;
         }
 
-        this.unboxingStartedAt = performance.now();
-
-        await this.roomFurniture.setAnimation(1);
-    }
-
-    async handleActionsInterval(): Promise<void> {
-        if(this.unboxingStartedAt === null) {
-            return;
-        }
-
-        if(performance.now() - this.unboxingStartedAt < 500) {
-            return;
-        }
-
         if(this.roomFurniture.model.furniture.customParams) {
-            await UserClothesModel.bulkCreate(this.roomFurniture.model.furniture.customParams.map((part) => {
+            await UserClothingModel.bulkCreate(this.roomFurniture.model.furniture.customParams.map((setId) => {
                 return {
                     id: randomUUID(),
                     userId: this.roomFurniture.model.userId,
-                    part: parseInt(part)
+                    setId
                 };
             }), {
                 ignoreDuplicates: true
@@ -55,7 +36,18 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             furnitureRemoved: [
                 this.roomFurniture.model
             ],
-            hideFlyingFurniture: true
+            hideFlyingFurniture: false
         }));
+
+        if(this.roomFurniture.model.userId) {
+            const user = game.getUserById(this.roomFurniture.model.userId);
+
+            if(user) {
+                user.sendProtobuff(RefreshUserClothesData, RefreshUserClothesData.create({}));
+            }
+        }
+    }
+
+    async handleActionsInterval(): Promise<void> {
     }
 }

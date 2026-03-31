@@ -13,6 +13,8 @@ export type FurnitureBrowserDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
     data?: {
+        searchCustomParams?: string;
+
         activeFurniture?: FurnitureData;
         onSelect?: (furniture: FurnitureData) => void;
     }
@@ -30,16 +32,22 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
     
-    const [searchId, setSearchId] = useState("");
     const [searchType, setSearchType] = useState("");
     const [searchName, setSearchName] = useState("");
+    const [searchCustomParams, setSearchCustomParams] = useState(data?.searchCustomParams ?? "");
 
     const [animationId, setAnimationId] = useState<number>(0);
     const [frame, setFrame] = useState<number>(0);
 
     useEffect(() => {
         setPage(0);
-    }, [searchId, searchType, searchName]);
+    }, [searchType, searchName, searchCustomParams]);
+
+    useEffect(() => {
+        if(data?.searchCustomParams) {
+            setSearchCustomParams(data.searchCustomParams);
+        }
+    }, [data?.searchCustomParams]);
 
     useEffect(() => {
         setAnimationId(0);
@@ -56,15 +64,15 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
         webSocketClient.sendProtobuff(GetFurnitureBrowserData, GetFurnitureBrowserData.create({
             offset: page * 20,
 
-            searchId,
             searchType,
-            searchName
+            searchName,
+            searchCustomParams
         }));
 
         return () => {
             webSocketClient.removeProtobuffListener(FurnitureBrowserData, listener);
         };
-    }, [ page, state, searchId, searchType, searchName ]);
+    }, [ page, state, searchType, searchName, searchCustomParams ]);
 
     return (
         <BrowserDialog
@@ -145,9 +153,9 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
             hidden={hidden}
             onClose={onClose}>
-            <Input style={{ width: "100%" }} placeholder="ID" value={searchId} onChange={setSearchId}/>
             <Input style={{ width: "100%" }} placeholder="Type" value={searchType} onChange={setSearchType}/>
             <Input style={{ width: "100%" }} placeholder="Name" value={searchName} onChange={setSearchName}/>
+            <Input style={{ width: "100%" }} placeholder="Custom params" value={searchCustomParams} onChange={setSearchCustomParams}/>
         </BrowserDialog>
     );
 }

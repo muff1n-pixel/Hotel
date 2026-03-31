@@ -1,6 +1,7 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
 import { createFigureWorkerClient } from "../Worker/FigureWorkerClient";
 import Figure from "../Figure";
+import { UserClothesData, UserClothingData } from "@pixel63/events";
 
 export type FigureWardrobeItem = {
     image: Promise<ImageBitmap>;
@@ -17,8 +18,8 @@ export type FigureWardrobeColor = {
 export default class FigureWardrobe {
     public static figureWorker = createFigureWorkerClient();
 
-    public static async getWardrobePartTypes(part: string, colors: number[] | undefined, gender: string) {
-        const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === part);
+    public static async getWardrobePartTypes(data: UserClothesData, colors: number[] | undefined, gender: string, editMode: boolean) {
+        const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === data.part);
 
         if(!settype) {
             throw new Error("Set type does not exist for part.");
@@ -26,8 +27,29 @@ export default class FigureWardrobe {
 
         const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === settype.paletteId);
 
+        let sets;
+        
+        if(!editMode) {
+            sets =
+                data.clothes.map((clothing) => settype.sets.find((set) => set.id === clothing.setId))
+                .filter((set) => set !== undefined)
+                .sort((a, b) => parseInt(a.id) - parseInt(b.id))
+                .concat(
+                    data.userClothes.map((clothing) => settype.sets.find((set) => set.id === clothing.setId))
+                    .filter((set) => set !== undefined)
+                    .sort((a, b) => parseInt(a.id) - parseInt(b.id))
+                )
+                .filter((set) => (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female")));
+        }
+        else {
+            sets = settype.sets
+                .filter((set) => set.selectable && (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female")))
+                .filter((set) => set !== undefined)
+                .sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        }
+
         const imagePromises = await Promise.allSettled(
-            settype.sets.filter((set) => set.selectable && (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female"))).map(async (set) => {
+            sets.map(async (set) => {
                 const figureRenderer = new Figure({
                     $type: "FigureConfigurationData",
                     gender,
@@ -39,7 +61,7 @@ export default class FigureWardrobe {
                             colors: (set.colorable)?(colors ?? palette?.colors.map((color) => color.id) ?? []):([])
                         }
                     ]
-                }, 2, undefined, (part === "hd"));
+                }, 2, undefined, (data.part === "hd"));
 
                 const image = new Promise<ImageBitmap>((resolve, reject) => {
                     figureRenderer.renderToCanvas(this.figureWorker, 0, true).then(({ figure }) => resolve(figure.image)).catch(reject);

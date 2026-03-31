@@ -2,39 +2,39 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 import { NonAttribute } from "@sequelize/core";
 import { UserModel } from "../UserModel.js";
 
-export class UserClothesModel extends Model {
+export class UserClothingModel extends Model {
     declare id: string;
-    declare part: number;
+    declare setId: string;
 
     declare user: NonAttribute<UserModel>;
 }
 
-export function initializeUserClothesModel(sequelize: Sequelize) {
-    UserClothesModel.init(
+export function initializeUserClothingModel(sequelize: Sequelize) {
+    UserClothingModel.init(
         {
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
                 defaultValue: DataTypes.UUIDV4
             },
-            part: {
-                type: DataTypes.INTEGER,
+            setId: {
+                type: DataTypes.STRING,
                 allowNull: false
             },
         },
         {
-            tableName: 'user_clothes',
+            tableName: 'user_clothing',
             sequelize,
             indexes: [
                 {
                     unique: true,
-                    fields: ["userId", "part"],
+                    fields: ["userId", "setId"],
                 },
             ],
         },
     );
 
-    UserClothesModel.belongsTo(UserModel, {
+    UserClothingModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId"
     });

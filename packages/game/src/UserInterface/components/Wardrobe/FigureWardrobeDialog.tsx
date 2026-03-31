@@ -5,7 +5,9 @@ import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import WardrobeAvatar from "./WardrobeAvatar";
 import WardrobeSelection from "./Selection/WardrobeSelection";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
-import { FigureConfigurationData } from "@pixel63/events";
+import { FigureConfigurationData, GetUserClothesData, UserClothesData, UserClothingData } from "@pixel63/events";
+import { webSocketClient } from "src";
+import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 
 const wardrobeTabs = [
     {
@@ -85,6 +87,10 @@ export type FigureWardrobeDialogProps = {
 };
 
 export default function FigureWardrobeDialog({ title, header, initialFigureConfiguration, hidden, onApply, onClose }: FigureWardrobeDialogProps) {
+    const hasClothingEditPermissions = usePermissionAction("clothing:edit");
+
+    const [editMode, setEditMode] = useState(false);
+
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(initialFigureConfiguration);
 
     useEffect(() => {
@@ -96,7 +102,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
     }
     
     return (
-        <Dialog title={title} hidden={hidden} onClose={onClose} width={520} height={530}>
+        <Dialog title={title} hidden={hidden} onClose={onClose} width={520} height={530} onEditClick={(hasClothingEditPermissions) && (() => setEditMode(!editMode))}>
             <DialogTabs initialActiveIndex={0} header={{ title: header }} tabs={[
                 {
                     icon: (<div className="sprite_wardrobe_generic_tab"/>),
@@ -118,14 +124,14 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                     icon: (<div className="sprite_wardrobe_male"/>),
                                     activeIcon: (<div className="sprite_wardrobe_male_on"/>),
                                     element: (
-                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
+                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
                                     )
                                 },
                                 {
                                     icon: (<div className="sprite_wardrobe_female"/>),
                                     activeIcon: (<div className="sprite_wardrobe_female_on"/>),
                                     element: (
-                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>
+                                        <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
                                     )
                                 }
                             ]}/>
@@ -166,7 +172,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                     return {
                                         icon: (<div className={tab.spriteName}/>),
                                         activeIcon: (<div className={`${tab.spriteName}_on`}/>),
-                                        element: (<WardrobeSelection part={tab.part} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration}/>)
+                                        element: (<WardrobeSelection part={tab.part} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>)
                                     };
                                 })}/>
 
