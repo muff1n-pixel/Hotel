@@ -55,7 +55,10 @@ export function useDialogs() {
         const existingIndex = dialogs.findIndex((dialog) => dialog.id === type);
 
         if (existingIndex !== -1) {
-            clientInstance.dialogs.value![existingIndex].data = data;
+            clientInstance.dialogs.value![existingIndex].data = {
+                ...clientInstance.dialogs.value![existingIndex].data ?? {},
+                ...data ?? {}
+            };
             clientInstance.dialogs.value![existingIndex].hidden = false;
         }
         else {
