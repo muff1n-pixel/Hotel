@@ -3,19 +3,19 @@ import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import RoomFurnitureRenderer from "@Client/Room/RoomFurnitureRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
-import { PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";
+import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 
 export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -24,12 +24,10 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
 
     const shopFurniture = useShopPageFurniture(page.id);
 
-    const roomRef = useRef<HTMLDivElement>(null);
-    const roomRendererRequested = useRef<boolean>(false);
     const activeFurnitureRef = useRef<HTMLCanvasElement>(null);
 
-    const [roomRenderer, setRoomRenderer] = useState<RoomFurnitureRenderer>();
     const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
+
     const [quantity, setQuantity] = useState(1);
 
     const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
@@ -101,48 +99,6 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
         }
     }, [page, shopFurniture]);
 
-    useEffect(() => {
-        if(!roomRef.current) {
-            return;
-        }
-
-        if(roomRendererRequested.current) {
-            return;
-        }
-
-        roomRendererRequested.current = true;
-
-        setRoomRenderer(
-            new RoomFurnitureRenderer(roomRef.current, {})
-        );
-    }, [roomRef]);
-
-    useEffect(() => {
-        if(!roomRenderer || !activeFurniture?.furniture) {
-            return;
-        }
-
-        //purchasableItem.stopPlacing();
-
-        roomRenderer.setFurniture(activeFurniture.furniture.type, 64, undefined, 0, activeFurniture.furniture.color ?? 0);
-    }, [roomRenderer, activeFurniture, purchasableItem]);
-
-    useEffect(() => {
-        if(!roomRenderer) {
-            return;
-        }
-
-        return () => {
-            roomRenderer.terminate();
-        };
-    }, [roomRenderer]);
-
-    const onRoomRendererClick = useCallback(() => {
-        purchasableItem.stopPlacing();
-
-        roomRenderer?.progressFurnitureAnimation();
-    }, [roomRenderer, purchasableItem]);
-
     const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
@@ -186,7 +142,7 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
 
             overflow: "hidden"
         }}>
-            <div onClick={onRoomRendererClick} onMouseDown={() => activeFurniture && onMouseDown(activeFurniture)} style={{
+            <div onMouseDown={() => activeFurniture && onMouseDown(activeFurniture)} style={{
 
                 height: 240,
                 width: "100%",
@@ -195,12 +151,31 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
 
                 position: "relative"
             }}>
-                <div ref={roomRef} style={{
-                    height: "100%",
-                    width: "100%",
 
-                    opacity: (activeFurniture)?(1):(0)
-                }}/>
+                <RoomRenderer
+                    hidden={!activeFurniture}
+                    structure={RoomStructureData.create({
+                        grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
+                        floor: {
+                            id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                            thickness: 8
+                        },
+                        wall: {
+                            id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                            thickness: 8,
+                            hidden: false
+                        }
+                    })}
+                    furniture={
+                        (activeFurniture?.furniture)?([
+                            {
+                                id: activeFurniture.id,
+                                furniture: activeFurniture.furniture,
+                                panToItem: true
+                            }
+                        ]):([])
+                    }
+                    />
 
                 {(activeFurniture) && (
                     <div style={{

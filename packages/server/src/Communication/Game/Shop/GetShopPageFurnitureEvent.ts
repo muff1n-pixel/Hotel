@@ -6,7 +6,7 @@ import { GetShopPageFurnitureData, ShopPageFurnitureData } from "@pixel63/events
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class GetShopPageFurnitureEvent implements ProtobuffListener<GetShopPageFurnitureData> {
-    minimumDurationBetweenEvents?: number = 200;
+    minimumDurationBetweenEvents?: number = 20;
 
     async handle(user: User, payload: GetShopPageFurnitureData) {
         const shopPage = await ShopPageModel.findByPk(payload.pageId, {
