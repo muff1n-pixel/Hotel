@@ -22,11 +22,6 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
     const dialogs = useDialogs();
     const data = useClothes(part);
 
-    const requestedEditMode = useRef<boolean>(undefined);
-    const requestedGender = useRef<string>(undefined);
-    const requestedPart = useRef<string>(undefined);
-    const requestedColors = useRef<string>(undefined);
-
     const [activeConfiguration, setActiveConfiguration] = useState(figureConfiguration.parts.find((configuration) => configuration.type === part));
 
     const [figureDataResponse, setFigureDataResponse] = useState<{
@@ -45,7 +40,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
         }
 
         FigureWardrobe.getWardrobePartTypes(data, activeConfiguration?.colors, figureConfiguration.gender, editMode).then(async (data) => setFigureDataResponse(data));
-    }, [activeConfiguration, figureConfiguration.gender, data, editMode]);
+    }, [activeConfiguration?.colors[0], activeConfiguration?.colors[1], figureConfiguration.gender, data, editMode]);
 
     const activeFigureData = activeConfiguration && figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId);
 
