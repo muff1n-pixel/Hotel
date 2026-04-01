@@ -112,6 +112,15 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                 )
                             }}/>
 
+                            {(!editMode && data?.userClothes.some((clothing) => clothing.setId === setId)) && (
+                                <div className="sprite_wardrobe_hangar" style={{
+                                    position: "absolute",
+
+                                    top: 0,
+                                    left: 0
+                                }}/>
+                            )}
+
                             {(editMode) && (
                                 <div style={{
                                     fontSize: 10,
