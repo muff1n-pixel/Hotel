@@ -29,7 +29,7 @@ export default function ToolbarFigureItem() {
             context?.resetTransform();
 
             context?.translate(20, 22);
-            context?.drawImage(figureImage, -128, -96 - 12);
+            context?.drawImage(figureImage, -64, -32 - 12);
         }
     }, [canvasRef, figureImage]);
 

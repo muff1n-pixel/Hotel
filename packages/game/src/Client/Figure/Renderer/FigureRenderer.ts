@@ -1040,25 +1040,25 @@ export default class FigureRenderer {
         return await (async () => {
             const { sprites, effectSprites } = await this.render();
 
-            let minimumX = 128, minimumY = 128, maximumWidth = 128, maximumHeight = 128;
+            let minimumX = -64, minimumY = -64, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         
             if(cropped) {
                 if(effectSprites.length) {
                     FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
                 }
 
-                minimumX = 0;
-                minimumY = 0;
-                maximumWidth = 0;
-                maximumHeight = 0;
+                minimumX = Infinity;
+                minimumY = Infinity;
+                maximumWidth = -Infinity;
+                maximumHeight = -Infinity;
 
                 for(const sprite of sprites) {
-                    if(minimumX < sprite.x * -1) {
-                        minimumX = sprite.x * -1;
+                    if(sprite.x < minimumX) {
+                        minimumX = sprite.x;
                     }
                     
-                    if(minimumY < sprite.y * -1) {
-                        minimumY = sprite.y * -1;
+                    if(sprite.y < minimumY) {
+                        minimumY = sprite.y;
                     }
 
                     if(sprite.x + sprite.image.width > maximumWidth) {
@@ -1071,7 +1071,7 @@ export default class FigureRenderer {
                 }
             }
 
-            const canvas = new OffscreenCanvas(minimumX + maximumWidth, minimumY + maximumHeight);
+            const canvas = new OffscreenCanvas(maximumWidth - minimumX, maximumHeight - minimumY);
 
             const context = canvas.getContext("2d");
 
@@ -1088,7 +1088,7 @@ export default class FigureRenderer {
                     context.globalCompositeOperation = sprite.ink;
                 }
 
-                context.drawImage(sprite.image, minimumX + sprite.x, minimumY + sprite.y);
+                context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
 
                 context.restore();
             }
@@ -1112,10 +1112,10 @@ export default class FigureRenderer {
 
                             if(alpha > 0) {
                                 for(let index = 0; index < 4; index++) {
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
+                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
+                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
+                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
+                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
                                 }
                             }
                         }
@@ -1128,8 +1128,8 @@ export default class FigureRenderer {
                     image: canvas.transferToImageBitmap(),
                     imageData: imageDataArray,
 
-                    x: -minimumX,
-                    y: -minimumY,
+                    x: 0,
+                    y: 0,
 
                     index: 0
                 },

@@ -13,8 +13,8 @@ export default class RoomFigureSprite extends RoomSprite {
         this.priority = this.sprite.index;
 
         this.offset = {
-            left: this.sprite.x + 64,
-            top: this.sprite.y - 16
+            left: this.sprite.x,
+            top: this.sprite.y - 80
         };
     }
 
