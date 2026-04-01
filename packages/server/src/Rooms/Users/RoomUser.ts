@@ -10,6 +10,7 @@ import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/Wi
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
 import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
+import { RoomActorAction } from "../Actor/RoomActorAction.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -18,7 +19,7 @@ export default class RoomUser implements RoomActor {
     
     public position: RoomPositionData;
     public direction: number;
-    public actions: string[] = [];
+    public actions: RoomActorAction[] = [];
     public typing: boolean = false;
     public teleporting: boolean = false;
     public idling: boolean = false;
@@ -129,7 +130,7 @@ export default class RoomUser implements RoomActor {
             direction: this.direction,
             
             hasRights: this.hasRights(),
-            actions: this.actions,
+            actions: this.actions.map((action) => action.id),
             typing: this.typing,
             idling: this.idling
         };
@@ -151,6 +152,16 @@ export default class RoomUser implements RoomActor {
                 id: this.user.model.id,
                 idling: true
             }))
+        }
+
+        for(const action of this.actions) {
+            if(action.expiresAt === undefined) {
+                continue;
+            }
+
+            if(performance.now() > action.expiresAt) {
+                this.removeAction(action.id);
+            }
         }
 
         await this.path.handleActionsInterval();
@@ -190,15 +201,22 @@ export default class RoomUser implements RoomActor {
     }
 
     public hasAction(actionId: string): boolean {
-        return this.actions.includes(actionId);
+        return this.actions.some((action) => action.id === actionId);
     }
 
     public addAction(action: string, removeAfterMs?: number) {
-        if(this.actions.includes(action)) {
+        if(this.hasAction(action)) {
             return;
         }
 
-        this.actions.push(action);
+        if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
+            removeAfterMs = 2000;
+        }
+
+        this.actions.push({
+            id: action,
+            expiresAt: (removeAfterMs !== undefined)?(performance.now() + removeAfterMs):(undefined)
+        });
 
         this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
             actor: {
@@ -213,24 +231,12 @@ export default class RoomUser implements RoomActor {
         for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
             logic.handleUserAction(this, action).catch(console.error);
         }
-
-        // TODO: move this to the client?
-        if(removeAfterMs !== undefined) {
-            setTimeout(() => {
-                this.removeAction(action);
-            }, removeAfterMs);
-        }
-        else if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
-            setTimeout(() => {
-                this.removeAction(action);
-            }, 2000);
-        }
     }
 
     public removeAction(action: string) {
         const actionId = action.split('.')[0]!;
 
-        const existingActionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
+        const existingActionIndex = this.actions.findIndex((action) => action.id.split('.')[0] === actionId);
 
         if(existingActionIndex === -1) {
             return;

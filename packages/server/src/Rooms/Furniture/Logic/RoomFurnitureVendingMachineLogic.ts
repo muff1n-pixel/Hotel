@@ -44,7 +44,7 @@ export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLo
         }
 
         roomUser.removeAction("AvatarEffect");
-        roomUser.addAction(`CarryItem.${carryItem}`);
+        roomUser.addAction(`CarryItem.${carryItem}`, 2 * 60 * 1000);
     }
 
     async handleActionsInterval(): Promise<void> {
