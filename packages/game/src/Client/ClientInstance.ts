@@ -18,7 +18,7 @@ import RoomActorChatEvent from "@Client/Communications/Room/Actors/RoomActorChat
 import RoomBotsEvent from "@Client/Communications/Room/Bots/RoomBotsEvent";
 import RoomActorPositionEvent from "@Client/Communications/Room/Actors/RoomActorPositionEvent";
 import { LocalSettings } from "../UserInterface/Components/Settings/Interfaces/LocalSettings";
-import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData, UserFriendData, UserFriendsData, UserFriendUpdateData, UserFriendMessageData, WidgetNotificationData, RoomLockData, RoomBellQueueData, HotelAlertData } from "@pixel63/events";
+import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData, UserFriendData, UserFriendsData, UserFriendUpdateData, UserFriendMessageData, WidgetNotificationData, RoomLockData, RoomBellQueueData, HotelAlertData, UserClothingUnlockedData } from "@pixel63/events";
 import RoomActorWalkToEvent from "@Client/Communications/Room/Actors/RoomActorWalkToEvent";
 import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 import RoomCategoriesEvent from "@Client/Communications/Room/Categories/RoomCategoriesEvent";
@@ -36,11 +36,13 @@ import WidgetNotificationEvent from "@Client/Communications/Widget/WidgetNotific
 import RoomLockEvent from "@Client/Communications/Room/Lock/RoomLockEvent";
 import RoomBellQueueEvent from "@Client/Communications/Room/Lock/RoomBellQueueEvent";
 import HotelAlertEvent from "@Client/Communications/Hotel/HotelAlertEvent";
+import UserClothingUnlockedEvent from "@Client/Communications/User/Clothing/UserClothingUnlockedEvent";
+import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
     public roomChatStyles = new ObservableProperty<string[]>();
-    public dialogs = new ObservableProperty<Dialog[]>([]);
+    public dialogs = new ObservableRequiredProperty<Dialog[]>([]);
     public user = new ObservableProperty<UserData>();
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelData>();
@@ -125,6 +127,9 @@ export default class ClientInstance extends EventTarget {
 
         // User friend messages events
         webSocketClient.addProtobuffListener(UserFriendMessageData, new UserFriendMessageEvent());
+
+        // User clothing events
+        webSocketClient.addProtobuffListener(UserClothingUnlockedData, new UserClothingUnlockedEvent());
 
         // Widgets
         webSocketClient.addProtobuffListener(WidgetNotificationData, new WidgetNotificationEvent());

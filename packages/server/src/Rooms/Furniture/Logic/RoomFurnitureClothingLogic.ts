@@ -3,7 +3,7 @@ import { UserClothingModel } from "../../../Database/Models/Users/Clothes/UserCl
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { RefreshUserClothesData, RoomFurnitureData, UseRoomFurnitureData } from "@pixel63/events";
+import { FurnitureData, RefreshUserClothesData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
 import { game } from "../../../index.js";
 
 export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
@@ -16,7 +16,7 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             return;
         }
 
-        if(this.roomFurniture.model.furniture.customParams) {
+        if(this.roomFurniture.model.furniture.customParams?.length) {
             await UserClothingModel.bulkCreate(this.roomFurniture.model.furniture.customParams.map((setId) => {
                 return {
                     id: randomUUID(),
@@ -26,6 +26,17 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             }), {
                 ignoreDuplicates: true
             });
+
+            if(this.roomFurniture.model.userId) {
+                const user = game.getUserById(this.roomFurniture.model.userId);
+
+                if(user) {
+                    user.sendProtobuff(UserClothingUnlockedData, UserClothingUnlockedData.create({
+                        furniture: FurnitureData.fromJSON(this.roomFurniture.model.furniture),
+                        setIds: this.roomFurniture.model.furniture.customParams
+                    }));
+                }
+            }
         }
         
         await this.roomFurniture.model.destroy();
@@ -36,16 +47,8 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             furnitureRemoved: [
                 this.roomFurniture.model
             ],
-            hideFlyingFurniture: false
+            hideFlyingFurniture: true
         }));
-
-        if(this.roomFurniture.model.userId) {
-            const user = game.getUserById(this.roomFurniture.model.userId);
-
-            if(user) {
-                user.sendProtobuff(RefreshUserClothesData, RefreshUserClothesData.create({}));
-            }
-        }
     }
 
     async handleActionsInterval(): Promise<void> {

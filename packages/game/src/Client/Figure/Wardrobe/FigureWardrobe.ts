@@ -1,7 +1,8 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
 import { createFigureWorkerClient } from "../Worker/FigureWorkerClient";
 import Figure from "../Figure";
-import { UserClothesData, UserClothingData } from "@pixel63/events";
+import { FigureConfigurationData, UserClothesData, UserClothingData } from "@pixel63/events";
+import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 
 export type FigureWardrobeItem = {
     image: Promise<ImageBitmap>;
@@ -39,11 +40,11 @@ export default class FigureWardrobe {
                     .filter((set) => set !== undefined)
                     .sort((a, b) => parseInt(a.id) - parseInt(b.id))
                 )
-                .filter((set) => (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female")));
+                .filter((set) => this.filterSetGender(set, gender));
         }
         else {
             sets = settype.sets
-                .filter((set) => set.selectable && (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female")))
+                .filter((set) => set.selectable && this.filterSetGender(set, gender))
                 .filter((set) => set !== undefined)
                 .sort((a, b) => parseInt(a.id) - parseInt(b.id));
         }
@@ -90,5 +91,33 @@ export default class FigureWardrobe {
             colors: paletteColors,
             mandatory: settype.mandatoryGender[gender as "male" | "female"][0]
         };
+    }
+
+    public static addSetsToFigure(figureConfiguration: FigureConfigurationData, setIds: string[]) {
+        for(const setTypes of FigureAssets.figuredata.settypes) {
+            const applicableSets = setTypes.sets.filter((set) => setIds.includes(set.id) && this.filterSetGender(set, figureConfiguration.gender));
+
+            for(const set of applicableSets) {
+                const existingIndex = figureConfiguration.parts.findIndex((part) => part.type === setTypes.type);
+
+                if(existingIndex !== -1) {
+                    figureConfiguration.parts[existingIndex].setId = set.id;
+                }
+                else {
+                    figureConfiguration.parts.push({
+                        "$type": "FigurePartData",
+                        type: setTypes.type,
+                        setId: set.id,
+                        colors: []
+                    });
+                }
+            }
+        }
+
+        return figureConfiguration;
+    }
+
+    public static filterSetGender(set: FiguredataData["settypes"][0]["sets"][0], gender: string) {
+        return (set.gender === 'U' || (set.gender === 'M' && gender === "male") || (set.gender === 'F' && gender === "female"));
     }
 }

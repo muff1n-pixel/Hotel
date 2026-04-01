@@ -2,12 +2,15 @@ import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import DialogContent from "../DialogContent";
 
 export type DialogTabHeaderProps = {
+    icon?: ReactNode;
     iconImage?: string;
+
     backgroundImage?: string;
     backgroundImageOffset?: number;
+    backgroundColor?: string;
 
     title?: string;
-    description?: string;
+    description?: ReactNode;
 }
 
 export type DialogTabsProps = PropsWithChildren & {
@@ -137,7 +140,7 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
 
                                 {(currentHeader.description) && (
                                     <p style={{
-                                        fontSize: (currentHeader.description.length > 200)?(11):(13)
+                                        fontSize: (typeof currentHeader.description === "string" && currentHeader.description.length > 200)?(11):(13)
                                     }}>{currentHeader.description}</p>
                                 )}
                             </div>

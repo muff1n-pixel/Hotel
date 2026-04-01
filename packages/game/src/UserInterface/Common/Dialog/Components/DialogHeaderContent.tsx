@@ -11,6 +11,7 @@ export default function DialogHeaderContent({ header }: DialogHeaderContentProps
         <div style={{
             backgroundImage: `url(${header.backgroundImage})`,
             backgroundSize: "cover",
+            backgroundColor: header.backgroundColor,
 
             padding: 20,
 
@@ -21,6 +22,10 @@ export default function DialogHeaderContent({ header }: DialogHeaderContentProps
             fontSize: 14
         }}>
             <FlexLayout align="center" justify="center">
+                {(header.icon) && (
+                    header.icon
+                )}
+
                 {(header.iconImage) && (
                     <img src={header.iconImage}/>
                 )}

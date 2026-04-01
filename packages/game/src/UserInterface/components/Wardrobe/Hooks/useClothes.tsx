@@ -1,4 +1,4 @@
-import { GetUserClothesData, RefreshUserClothesData, UserClothesData } from "@pixel63/events";
+import { GetUserClothesData, RefreshUserClothesData, UserClothesData, UserClothingUnlockedData } from "@pixel63/events";
 import { useEffect, useRef, useState } from "react";
 import { webSocketClient } from "src";
 
@@ -36,7 +36,7 @@ export default function useClothes(part: string) {
     }, [part]);
 
     useEffect(() => {
-        const listener = webSocketClient.addProtobuffListener(RefreshUserClothesData, {
+        const listener = webSocketClient.addProtobuffListener(UserClothingUnlockedData, {
             async handle() {
                 webSocketClient.sendProtobuff(GetUserClothesData, GetUserClothesData.create({
                     part
@@ -45,7 +45,7 @@ export default function useClothes(part: string) {
         });
 
         return () => {
-            webSocketClient.removeProtobuffListener(RefreshUserClothesData, listener);
+            webSocketClient.removeProtobuffListener(UserClothingUnlockedData, listener);
         };
     }, [part]);
 

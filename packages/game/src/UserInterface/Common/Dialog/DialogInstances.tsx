@@ -43,6 +43,7 @@ import EditFurnitureCrackableDialog from "@UserInterface/Components/Furniture/Di
 import AchievementsDialog from "@UserInterface/Components/Achievements/AchievementsDialog";
 import EditShopFeatureDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureDialog";
 import EditShopFeatureCameraDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureCameraDialog";
+import ClothingUnlockedDialog from "@UserInterface/Components/Clothing/ClothingUnlockedDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -73,7 +74,10 @@ export default function DialogInstances() {
 
                     case "wardrobe":
                         return (<WardrobeDialog {...props} key={dialog.id}/>);
-                        
+                       
+                    case "clothing-unlocked":
+                        return (<ClothingUnlockedDialog {...props} key={dialog.id}/>);
+
                     case "shop":
                         return (<ShopDialog {...props} key={dialog.id}/>);
                         

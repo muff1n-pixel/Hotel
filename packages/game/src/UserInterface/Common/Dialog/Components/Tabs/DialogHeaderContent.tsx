@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import DialogContent from "../DialogContent";
 
 export type DialogTabHeaderProps = {
