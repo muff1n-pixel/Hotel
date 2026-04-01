@@ -16,6 +16,7 @@ import RoomFurnitureWiredLogic from "@Client/Room/Furniture/Logic/Wired/RoomFurn
 import { FurnitureData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
 import FurnitureDefaultMultistateLogic from "@Client/Furniture/Logic/FurnitureDefaultMultistateLogic";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
+import RoomFurnitureClothingLogic from "@Client/Room/Furniture/Logic/RoomFurnitureClothingLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -66,8 +67,10 @@ export default class RoomFurniture {
             case "default":
             case "conf_invis_control":
             case "crackable":
-            case "clothing":
                 return new FurnitureMultistateLogic(this.instance, this);
+
+            case "clothing":
+                return new RoomFurnitureClothingLogic(this.instance, this);
 
             case "freeze_timer":
             case "battlebanzai_timer":

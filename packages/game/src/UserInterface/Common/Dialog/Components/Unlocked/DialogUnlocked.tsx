@@ -6,7 +6,7 @@ export type DialogUnlockedProps = {
 
 export default function DialogUnlocked({ children }: DialogUnlockedProps) {
     return (
-        <div className="sprite_dialog_unlocked kakakak" style={{
+        <div className="sprite_dialog_unlocked" style={{
             overflow: "hidden",
 
             display: "flex",

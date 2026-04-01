@@ -6,6 +6,7 @@ import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogH
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import DialogUnlocked from "@UserInterface/Common/Dialog/Components/Unlocked/DialogUnlocked";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
@@ -29,7 +30,7 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
     }
 
     return (
-        <Dialog title="Wardrobe Clothing" hidden={hidden} onClose={onClose} initialPosition="center" width={420} height={"auto"} assumedHeight={270}>
+        <Dialog title={data.furniture.name} hidden={hidden} onClose={onClose} initialPosition="center" width={420} height={"auto"} assumedHeight={270}>
             <DialogHeaderContent header={{
                 backgroundColor: "#8899A2",
 
@@ -39,13 +40,13 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
                     </DialogUnlocked>
                 ),
 
-                title: "You bought it.",
+                title: "New wardrobe addition!",
                 description: (
-                    <div>
-                        <p>Now you have to wear it!</p>
-                        <br/>
+                    <FlexLayout direction="column">
                         <p>You have received the '{data.furniture.name}' clothing item!</p>
-                    </div>
+
+                        <p>Explore new looks with this item in your wardrobe.</p>
+                    </FlexLayout>
                 )
             }}/>
 
@@ -54,25 +55,16 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
                 justifyContent: "space-between",
                 alignItems: "center"
             }}>
-                <DialogLink onClick={() => {
+                <DialogLink onClick={onClose}>
+                    Cancel
+                </DialogLink>
+
+                <DialogButton onClick={() => {
                     onClose?.();
+
                     dialogs.openUniqueDialog("wardrobe");
                 }}>
                     Open wardrobe
-                </DialogLink>
-
-                <DialogButton color="green" onClick={() => {
-                    if(!user.figureConfiguration) {
-                        return;
-                    }
-
-                    onClose?.();
-
-                    webSocketClient.sendProtobuff(SetUserFigureConfigurationData, SetUserFigureConfigurationData.create({
-                        figureConfiguration: FigureWardrobe.addSetsToFigure(user.figureConfiguration, data.setIds)
-                    }));
-                }}>
-                    Equip clothing
                 </DialogButton>
             </DialogContent>
         </Dialog>
