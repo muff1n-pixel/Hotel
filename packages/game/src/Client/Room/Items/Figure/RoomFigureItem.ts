@@ -43,7 +43,7 @@ export default class RoomFigureItem extends RoomItem {
 
         const frame = this.frame;
 
-        this.figureRenderer.renderToCanvas(defaultFigureWorkerClient, this.frame).then((result) => {
+        this.figureRenderer.renderToCanvas(defaultFigureWorkerClient, this.frame, false, false, true).then((result) => {
             if(frame !== this.frame) {
                 return;
             }

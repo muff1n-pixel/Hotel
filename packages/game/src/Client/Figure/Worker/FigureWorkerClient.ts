@@ -37,7 +37,7 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
         });
     }
 
-    public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean, drawEffects: boolean): Promise<FigureRendererResult> {
+    public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean, drawEffects: boolean, useConfigurationEffect: boolean): Promise<FigureRendererResult> {
         if(!figureRenderer.configuration) {
             throw new Error();
         }
@@ -50,6 +50,7 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
             frame,
             cropped,
             drawEffects,
+            useConfigurationEffect,
 
             configuration: figureRenderer.configuration,
             direction: figureRenderer.direction,

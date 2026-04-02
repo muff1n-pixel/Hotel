@@ -16,7 +16,7 @@ onmessage = async (event: MessageEvent<FigureRenderEvent>) => {
     if(event.data.type === "render") {
         const figureRenderer = new FigureRenderer(event.data.configuration, event.data.direction, event.data.actions, event.data.frame, event.data.headOnly);
         
-        const { figure, effects } = await figureRenderer.renderToCanvas(event.data.cropped, event.data.drawEffects);
+        const { figure, effects } = await figureRenderer.renderToCanvas(event.data.cropped, event.data.drawEffects, event.data.useConfigurationEffect);
 
         const transferables: Transferable[] = [];
 

@@ -1077,9 +1077,9 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false) {
+    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false) {
         return await (async () => {
-            const { sprites, effectSprites } = await this.render(drawEffects);
+            const { sprites, effectSprites } = await this.render(useConfigurationEffect || drawEffects);
 
             let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         

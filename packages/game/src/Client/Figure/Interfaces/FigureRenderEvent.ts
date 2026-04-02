@@ -10,6 +10,7 @@ export type FigureRenderEvent = {
     cropped?: boolean;
     headOnly?: boolean;
     drawEffects?: boolean;
+    useConfigurationEffect?: boolean;
 } | {
     type: "preload";
     configuration: FigureConfigurationData;
