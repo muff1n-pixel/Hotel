@@ -7,6 +7,7 @@ export type OffscreenCanvasRenderProps = {
     scale?: number;
     style?: CSSProperties;
     offsets?: MousePosition;
+    imageSmoothingEnabled?: boolean;
 } & ({
     offscreenCanvas: ImageBitmap | Promise<ImageBitmap>;
     placeholderImage?: ImageBitmap;
@@ -16,7 +17,7 @@ export type OffscreenCanvasRenderProps = {
 });
 
 
-export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholderImage, style, scale = 1, offsets }: OffscreenCanvasRenderProps) {
+export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholderImage, style, scale = 1, offsets, imageSmoothingEnabled = false }: OffscreenCanvasRenderProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -55,7 +56,7 @@ export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholde
                 return;
             }
 
-            context.imageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = imageSmoothingEnabled;
 
             if(offsets) {
                 context.translate(offsets.left, offsets.top);
@@ -63,7 +64,7 @@ export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholde
 
             context.drawImage(image, 0, 0, image.width, image.height, 0, 0, actualRef.current.width, actualRef.current.height);
         })();
-    }, [ref, canvasRef, offscreenCanvas, placeholderImage]);
+    }, [ref, canvasRef, offscreenCanvas, placeholderImage, imageSmoothingEnabled]);
 
     return (
         <canvas ref={ref ?? canvasRef} style={style} width={0} height={0}/>

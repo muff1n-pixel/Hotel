@@ -13,9 +13,10 @@ export type FigureImageProps = {
     cropped?: boolean;
     headOnly?: boolean;
     style?: CSSProperties;
+    scale?: number;
 }
 
-export default function FigureImage({ actions, frame = 0, headOnly, cropped = true, figureConfiguration, direction, style }: FigureImageProps) {
+export default function FigureImage({ actions, frame = 0, headOnly, cropped = true, figureConfiguration, direction, style, scale }: FigureImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -27,6 +28,6 @@ export default function FigureImage({ actions, frame = 0, headOnly, cropped = tr
     }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image} style={style} placeholderImage={FurnitureAssets.placeholder32?.image}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style} placeholderImage={FurnitureAssets.placeholder32?.image} scale={scale} imageSmoothingEnabled={(scale && scale < 1)?(true):(false)}/>
     );
 }

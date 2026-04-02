@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message UserFigureData {
+    uint32 index = 1;
+    FigureConfigurationData figure_configuration = 2;
+}

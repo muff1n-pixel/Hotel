@@ -43,6 +43,7 @@ import { initializeUserAchievementModel } from "./Models/Users/Achievements/User
 import { initializeAchievementCategoryModel } from "./Models/Achievements/AchievementCategoryModel.js";
 import { initializeUserClothingModel } from "./Models/Users/Clothes/UserClothingModel.js";
 import { initializeClothingModel } from "./Models/Clothes/ClothesModel.js";
+import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -99,7 +100,9 @@ export async function initializeModels() {
   initializeUserAchievementModel(sequelize);
 
   initializeClothingModel(sequelize);
+  
   initializeUserClothingModel(sequelize);
+  initializeUserFigureModel(sequelize);
 
   await sequelize.sync();
 

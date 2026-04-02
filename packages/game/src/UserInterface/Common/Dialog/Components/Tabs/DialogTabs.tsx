@@ -28,6 +28,7 @@ export type DialogTabsProps = PropsWithChildren & {
         header?: DialogTabHeaderProps;
         transparent?: boolean;
         alignSelf?: string;
+        onClick?: () => void;
     }[];
 
     onChange?: (index: number) => void;
@@ -153,7 +154,7 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
                     flexDirection: "row",
                     transform: "translate(0px, 1px)",
                 }}>
-                    {tabs.map(({ icon, transparent, alignSelf }, index) => (
+                    {tabs.map(({ icon, transparent, alignSelf, element, onClick: onTabClick }, index) => (
                         (!transparent)?(
                             <div key={index} style={{
                                 display: "flex",
@@ -218,6 +219,12 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
 
                                 justifyContent: "center"
                             }} onClick={() => {
+                                onTabClick?.();
+                                
+                                if(!element) {
+                                    return;
+                                }
+
                                 onChange?.(index);
                                 setActiveIndex(index);
                             }}>
