@@ -657,7 +657,7 @@ export default class FigureRenderer {
                 });*/
             }
 
-            this.avatarEffect = animationFrame?.effects.find((effect) => effect.id === "avatar");
+            this.avatarEffect = animationFrame?.effects.find((effect) => effect.id === "avatar") ?? this.avatarEffect;
 
             for(const sprite of animationSprites) {
                 if(sprite.id === "avatar") {
@@ -1129,7 +1129,7 @@ export default class FigureRenderer {
                     imageData: imageDataArray,
 
                     x: 0,
-                    y: 0,
+                    y: this.avatarEffect?.destinationY ?? 0,
 
                     index: 0
                 },
