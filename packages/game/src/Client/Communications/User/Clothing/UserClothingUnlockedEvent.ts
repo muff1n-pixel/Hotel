@@ -9,7 +9,6 @@ export default class UserClothingUnlockedEvent implements ProtobuffListener<User
             type: "clothing-unlocked",
             data: {
                 furniture: payload.furniture,
-                setIds: payload.setIds
             }
         });
     }

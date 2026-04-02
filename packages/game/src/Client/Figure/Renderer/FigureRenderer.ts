@@ -469,6 +469,12 @@ export default class FigureRenderer {
     }
 
     public async render() {
+        const shouldAddConfigurationEffect = this.configuration.effect && !this.actions.some((actionId) => actionId.startsWith("AvatarEffect"));
+
+        if(shouldAddConfigurationEffect) {
+            this.actions.push(`AvatarEffect.${this.configuration.effect}`);
+        }
+
         const actions = this.getAvatarActions();
 
         const effects = await this.getEffects(actions);
@@ -508,6 +514,14 @@ export default class FigureRenderer {
         Performance.endPerformanceCheck("getFigureSprites");
 
         const effectSprites = await this.getEffectSprites(actions, actionsForBodyParts, effects, direction);
+
+        if(shouldAddConfigurationEffect) {
+            const index = this.actions.indexOf(`AvatarEffect.${this.configuration.effect}`);
+
+            if(index !== -1) {
+                this.actions.splice(index, 1);
+            }
+        }
 
         return {
             sprites,
@@ -1040,14 +1054,14 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    public async renderToCanvas(cropped: boolean = false) {
+    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false) {
         return await (async () => {
             const { sprites, effectSprites } = await this.render();
 
             let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         
             if(cropped) {
-                if(effectSprites.length) {
+                if(effectSprites.length && !drawEffects) {
                     FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
                 }
 
@@ -1083,9 +1097,18 @@ export default class FigureRenderer {
                 throw new ContextNotAvailableError();
             }
 
-            sprites.sort((a, b) => a.index - b.index);
+            const mutatedSprites = sprites;
 
-            for(const sprite of sprites) {
+            if(drawEffects) {
+                mutatedSprites.push(...effectSprites.map((sprite) => {
+                    return {
+                        ...sprite,
+                        index: sprite.index * 100
+                    };
+                }));
+            }
+
+            for(const sprite of mutatedSprites.toSorted((a, b) => a.index - b.index)) {
                 context.save();
 
                 if(sprite.ink) {

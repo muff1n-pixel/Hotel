@@ -13,7 +13,7 @@ export default class Figure {
         await worker.preload(this);
     }
 
-    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false): Promise<FigureRendererResult> {
+    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false, drawEffects: boolean = false): Promise<FigureRendererResult> {
         /*let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
 
         if(this.headOnly) {
@@ -28,7 +28,7 @@ export default class Figure {
             return await FigureAssets.figureImage.get(renderName)!;
         }*/
         
-        const result = worker.renderInWebWorker(this, frame, cropped);
+        const result = worker.renderInWebWorker(this, frame, cropped, drawEffects);
         
         //FigureAssets.figureImage.set(renderName, result);
 

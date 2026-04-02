@@ -4,6 +4,4 @@ import "Furniture/FurnitureData.proto";
 
 message UserClothingUnlockedData {
     FurnitureData furniture = 1;
-
-    repeated string set_ids = 2;
 }

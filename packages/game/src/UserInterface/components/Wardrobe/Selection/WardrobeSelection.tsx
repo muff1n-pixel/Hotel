@@ -47,8 +47,6 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
         });
     }, [editMode, activeConfiguration, colors]);
 
-    console.log({ sets });
-
     return (
         <div style={{
             display: "flex",

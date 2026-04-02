@@ -3,6 +3,7 @@ syntax = "proto3";
 message FigureConfigurationData {
     string gender = 1;
     repeated FigurePartData parts = 2;
+    optional uint32 effect = 3;
 }
 
 message FigurePartData {

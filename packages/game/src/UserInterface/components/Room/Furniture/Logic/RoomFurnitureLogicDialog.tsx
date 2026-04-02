@@ -55,6 +55,7 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             return (<WiredTriggerSaysSomethingDialog {...props}/>);
 
         case "clothing":
+        case "fx_box":
             return (<RoomFurnitureClothingDialog {...props}/>);
 
         case "wf_trg_enter_room":

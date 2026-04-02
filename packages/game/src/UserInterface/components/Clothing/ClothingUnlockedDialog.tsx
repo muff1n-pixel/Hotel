@@ -1,5 +1,4 @@
-import FigureWardrobe from "@Client/Figure/Wardrobe/FigureWardrobe";
-import { FurnitureData, SetUserFigureConfigurationData } from "@pixel63/events";
+import { FurnitureData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
 import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogHeaderContent";
@@ -10,13 +9,11 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
-import { webSocketClient } from "src";
 
 export type ClothingUnlockedDialogProps = {
     hidden?: boolean;
     data: {
         furniture: FurnitureData;
-        setIds: string[];
     };
     onClose?: () => void;
 }
@@ -36,7 +33,11 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
 
                 icon: (
                     <DialogUnlocked>
-                        <FurnitureImage furnitureData={data.furniture}/>
+                        {(data.furniture.interactionType === "fx_box" && data.furniture.customParams.length === 1)?(
+                            <img src={`/assets/figure/effect_icons/icon_${data.furniture.customParams[0]}.png`}/>
+                        ):(
+                            <FurnitureImage furnitureData={data.furniture}/>
+                        )}
                     </DialogUnlocked>
                 ),
 

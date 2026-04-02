@@ -70,6 +70,7 @@ export default class RoomFurniture {
                 return new FurnitureMultistateLogic(this.instance, this);
 
             case "clothing":
+            case "fx_box":
                 return new RoomFurnitureClothingLogic(this.instance, this);
 
             case "freeze_timer":

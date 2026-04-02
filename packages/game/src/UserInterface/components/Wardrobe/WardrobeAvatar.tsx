@@ -14,7 +14,7 @@ export default function WardrobeAvatar({ configuration }: WardrobeAvatarProps) {
     useEffect(() => {
         const figureRenderer = new Figure(configuration, 4);
         
-        figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false).then(({ figure }) => {
+        figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false, true).then(({ figure }) => {
             setFigureImage(figure.image);
         });
     }, [ configuration ]);

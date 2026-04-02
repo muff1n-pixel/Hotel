@@ -1,12 +1,14 @@
 import { randomUUID } from "crypto";
-import { UserClothingModel } from "../../../Database/Models/Users/Clothes/UserClothingModel.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { FurnitureData, RefreshUserClothesData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
+import { FurnitureData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
 import { game } from "../../../index.js";
+import { UserEffectModel } from "../../../Database/Models/Users/Effects/UserEffectModel.js";
 
-export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
+export default class RoomFurnitureEnableBoxLogic implements RoomFurnitureLogic {
+    private deleteAt?: number;
+
     constructor(private readonly roomFurniture: RoomFurniture) {
 
     }
@@ -16,12 +18,16 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             return;
         }
 
+        if(this.roomFurniture.model.animation !== 0) {
+            return;
+        }
+
         if(this.roomFurniture.model.furniture.customParams?.length) {
-            await UserClothingModel.bulkCreate(this.roomFurniture.model.furniture.customParams.map((setId) => {
+            await UserEffectModel.bulkCreate(this.roomFurniture.model.furniture.customParams.map((enable) => {
                 return {
                     id: randomUUID(),
                     userId: this.roomFurniture.model.userId,
-                    setId
+                    enable: parseInt(enable)
                 };
             }), {
                 ignoreDuplicates: true
@@ -37,7 +43,21 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
                 }
             }
         }
-        
+
+        await this.roomFurniture.setAnimation(1);
+
+        this.deleteAt = performance.now() + 1000;
+    }
+
+    async handleActionsInterval(): Promise<void> {
+        if(!this.deleteAt) {
+            return;
+        }
+
+        if(performance.now() < this.deleteAt) {
+            return;
+        }
+
         await this.roomFurniture.model.destroy();
         
         this.roomFurniture.room.furnitures.splice(this.roomFurniture.room.furnitures.indexOf(this.roomFurniture), 1);
@@ -48,8 +68,5 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
             ],
             hideFlyingFurniture: true
         }));
-    }
-
-    async handleActionsInterval(): Promise<void> {
     }
 }
