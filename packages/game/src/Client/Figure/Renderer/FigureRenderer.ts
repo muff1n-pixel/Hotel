@@ -699,6 +699,10 @@ export default class FigureRenderer {
                     spriteDirection += sprite.directionOffset;
                 }
 
+                if(effectFrame?.directionOffset !== undefined) {
+                    spriteDirection += effectFrame.directionOffset;
+                }
+
                 while(spriteDirection < 0) {
                     spriteDirection += 8;
                 }

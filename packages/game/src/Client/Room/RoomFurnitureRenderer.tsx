@@ -83,7 +83,7 @@ export default class RoomFurnitureRenderer {
             }
         }
 
-        const figureRenderer = new Figure(figureConfiguration, 2, actions);
+        const figureRenderer = new Figure(figureConfiguration, 4, actions);
         
         this.roomItem = new RoomFigureItem(this.roomRenderer, figureRenderer, RoomPositionData.create({
             row: position?.row ?? 1,
