@@ -20,9 +20,9 @@ export default function FurnitureBrowserSelection({ allowMultiple, furniture, on
             }}>
                 <b>Furniture</b>
 
-                {(furniture) && (
+                {(furniture?.length === 1) && (
                     <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
-                        dialogs.addUniqueDialog("edit-furniture", { ...furniture, onClose: onChange });
+                        dialogs.addUniqueDialog("edit-furniture", { ...furniture[0], onClose: onChange });
                     }}>
                         Edit furniture
                     </div>
