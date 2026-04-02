@@ -468,8 +468,8 @@ export default class FigureRenderer {
         return direction;
     }
 
-    public async render() {
-        const shouldAddConfigurationEffect = this.configuration.effect && !this.actions.some((actionId) => actionId.startsWith("AvatarEffect"));
+    public async render(useConfigurationEffect: boolean = false) {
+        const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !this.actions.some((actionId) => actionId.startsWith("AvatarEffect"));
 
         if(shouldAddConfigurationEffect) {
             this.actions.push(`AvatarEffect.${this.configuration.effect}`);
@@ -1056,7 +1056,7 @@ export default class FigureRenderer {
 
     public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false) {
         return await (async () => {
-            const { sprites, effectSprites } = await this.render();
+            const { sprites, effectSprites } = await this.render(drawEffects);
 
             let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         
@@ -1097,7 +1097,7 @@ export default class FigureRenderer {
                 throw new ContextNotAvailableError();
             }
 
-            const mutatedSprites = sprites;
+            const mutatedSprites = [...sprites];
 
             if(drawEffects) {
                 mutatedSprites.push(...effectSprites.map((sprite) => {
