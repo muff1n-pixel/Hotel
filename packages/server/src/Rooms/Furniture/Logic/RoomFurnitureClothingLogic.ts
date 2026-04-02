@@ -8,7 +8,9 @@ import { game } from "../../../index.js";
 
 export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-
+        if(roomFurniture.model.animation !== 0) {
+            roomFurniture.setAnimation(0).catch(console.error);
+        }
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
