@@ -29,10 +29,7 @@ export default function WardrobeAvatar({ configuration }: WardrobeAvatarProps) {
             position: "relative",
             overflow: "hidden"
         }}>
-            {(figureImage) && (<OffscreenCanvasRender offscreenCanvas={figureImage} scale={2} offsets={{
-                left: 128,
-                top: 128
-            }}/>)}
+            {(figureImage) && (<OffscreenCanvasRender offscreenCanvas={figureImage} scale={2}/>)}
         </div>
     );
 }

@@ -344,7 +344,7 @@ export default class RoomRenderer extends EventTarget {
             const figureSprite = item.sprites.find<RoomFigureSprite>((sprite) => sprite instanceof RoomFigureSprite);
 
             if(figureSprite) {
-                translatePosition.top += figureSprite.offset.top + 64;
+                translatePosition.top += figureSprite.offset.top + 128;
 
                 if(figureSprite.item.figureRenderer.hasAction("Sit")) {
                     translatePosition.top += 16;

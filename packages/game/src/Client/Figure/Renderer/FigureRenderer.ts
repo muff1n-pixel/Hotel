@@ -1044,7 +1044,7 @@ export default class FigureRenderer {
         return await (async () => {
             const { sprites, effectSprites } = await this.render();
 
-            let minimumX = -64, minimumY = -64, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
+            let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         
             if(cropped) {
                 if(effectSprites.length) {
@@ -1116,10 +1116,10 @@ export default class FigureRenderer {
 
                             if(alpha > 0) {
                                 for(let index = 0; index < 4; index++) {
-                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
-                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
-                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
-                                    imageDataArray[(((x + 64 + sprite.x) + (y + 64 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
+                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
+                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
+                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
+                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
                                 }
                             }
                         }
