@@ -160,7 +160,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                 </div>
 
                                 {(figuresExpanded) && (
-                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onApply}/>
+                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
                                 )}
                             </div>
                         )
@@ -204,7 +204,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                     </div>
 
                                     {(figuresExpanded) && (
-                                        <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onApply}/>
+                                        <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
                                     )}
                                 </div>
                             )
