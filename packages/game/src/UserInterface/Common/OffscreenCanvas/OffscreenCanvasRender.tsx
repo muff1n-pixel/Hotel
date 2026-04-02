@@ -1,3 +1,4 @@
+import { MousePosition } from "@Client/Interfaces/MousePosition";
 import { CSSProperties, RefObject, useEffect, useRef } from "react";
 
 export type OffscreenCanvasRenderProps = {
@@ -5,6 +6,7 @@ export type OffscreenCanvasRenderProps = {
 
     scale?: number;
     style?: CSSProperties;
+    offsets?: MousePosition;
 } & ({
     offscreenCanvas: ImageBitmap | Promise<ImageBitmap>;
     placeholderImage?: ImageBitmap;
@@ -14,7 +16,7 @@ export type OffscreenCanvasRenderProps = {
 });
 
 
-export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholderImage, style, scale = 1 }: OffscreenCanvasRenderProps) {
+export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholderImage, style, scale = 1, offsets }: OffscreenCanvasRenderProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -54,6 +56,10 @@ export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholde
             }
 
             context.imageSmoothingEnabled = false;
+
+            if(offsets) {
+                context.translate(offsets.left, offsets.top);
+            } 
 
             context.drawImage(image, 0, 0, image.width, image.height, 0, 0, actualRef.current.width, actualRef.current.height);
         })();

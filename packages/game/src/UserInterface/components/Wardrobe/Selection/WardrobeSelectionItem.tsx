@@ -3,8 +3,8 @@ import { CSSProperties, MouseEventHandler, PropsWithChildren } from "react";
 import "./WardrobeSelectionItem.css";
 
 export type WardrobeSelectionItemProps = PropsWithChildren & {
-    active: boolean;
-    onClick: MouseEventHandler;
+    active?: boolean;
+    onClick?: MouseEventHandler;
     style?: CSSProperties;
 }
 

@@ -3,6 +3,7 @@ import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasR
 import Figure from "@Client/Figure/Figure";
 import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FigureConfigurationData } from "@pixel63/events";
+import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 
 export type FigureImageProps = {
     actions?: string[];
@@ -25,11 +26,7 @@ export default function FigureImage({ actions, frame = 0, headOnly, cropped = tr
         });
     }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);
 
-    if(!image) {
-        return;
-    }
-
     return (
-        <OffscreenCanvasRender offscreenCanvas={image} style={style}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style} placeholderImage={FurnitureAssets.placeholder32?.image}/>
     );
 }

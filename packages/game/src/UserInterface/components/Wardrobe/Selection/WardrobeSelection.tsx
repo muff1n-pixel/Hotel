@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
-import FigureWardrobe, { FigureWardrobeColor, FigureWardrobeItem } from "@Client/Figure/Wardrobe/FigureWardrobe";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FigureConfigurationData, UpdateClothingData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import useClothes from "@UserInterface/Components/Wardrobe/Hooks/useClothes";
 import { webSocketClient } from "src";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export type WardrobeSelectionProps = {
     part: string;
@@ -20,29 +21,33 @@ export type WardrobeSelectionProps = {
 
 export default function WardrobeSelection({ part, figureConfiguration, onFigureConfigurationChange, editMode }: WardrobeSelectionProps) {
     const dialogs = useDialogs();
-    const data = useClothes(part);
 
-    const [activeConfiguration, setActiveConfiguration] = useState(figureConfiguration.parts.find((configuration) => configuration.type === part));
+    const { sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
 
-    const [figureDataResponse, setFigureDataResponse] = useState<{
-        items: FigureWardrobeItem[],
-        colors: FigureWardrobeColor[],
-        mandatory: boolean
-    }>();
+    const activeConfiguration = useMemo(() => figureConfiguration.parts.find((configuration) => configuration.type === part), [figureConfiguration.parts]);
+    const activeFigureData = useMemo(() => allSets.find((set) => set.id === activeConfiguration?.setId), [activeConfiguration]);
 
-    useEffect(() => {
-        setActiveConfiguration(figureConfiguration.parts.find((configuration) => configuration.type === part));
-    }, [part, figureConfiguration]);
-
-    useEffect(() => {
-        if(!data) {
+    const handleEquip = useCallback((set: FiguredataData["settypes"][0]["sets"][0]) => {
+        if(editMode) {
             return;
         }
 
-        FigureWardrobe.getWardrobePartTypes(data, activeConfiguration?.colors, figureConfiguration.gender, editMode).then(async (data) => setFigureDataResponse(data));
-    }, [activeConfiguration?.colors[0], activeConfiguration?.colors[1], figureConfiguration.gender, data, editMode]);
+        onFigureConfigurationChange({
+            ...figureConfiguration,
+            parts:
+                figureConfiguration.parts.filter((configuration) => configuration.type !== part)
+                .concat([
+                    {
+                        $type: "FigurePartData",
+                        type: part,
+                        setId: set.id,
+                        colors: (set.colorable) ? (activeConfiguration?.colors ?? colors.map((color) => color.id) ?? []) : ([])
+                    }
+                ])
+        });
+    }, [editMode, activeConfiguration, colors]);
 
-    const activeFigureData = activeConfiguration && figureDataResponse?.items.find((item) => item.setId === activeConfiguration.setId);
+    console.log({ sets });
 
     return (
         <div style={{
@@ -62,7 +67,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                     flexDirection: "row",
                     flexWrap: "wrap",
                 }}>
-                    {(figureDataResponse && !figureDataResponse.mandatory) && (
+                    {(!mandatory) && (
                         <WardrobeSelectionItem active={!activeConfiguration} onClick={() => {
                             if(editMode) {
                                 return;
@@ -77,51 +82,63 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                         </WardrobeSelectionItem>
                     )}
 
-                    {figureDataResponse?.items?.map(({ image, setId, colorable }) => (
-                        <WardrobeSelectionItem key={setId} active={Boolean(activeConfiguration) && (activeConfiguration?.setId === setId)} onClick={() => {
-                            if(editMode) {
-                                return;
-                            }
+                    {(!editMode)?(
+                        <Fragment>
+                            {sets.map((set) => (
+                                <WardrobeSelectionItem key={set.id} active={activeConfiguration?.setId === set.id} onClick={() => handleEquip(set)}>
+                                    <FigureImage figureConfiguration={FigureConfigurationData.create({
+                                        gender: figureConfiguration.gender,
+                                        parts: [
+                                            {
+                                                type: part,
+                                                setId: set.id,
+                                                colors: activeConfiguration?.colors,
+                                            }
+                                        ]
+                                    })} direction={2} cropped headOnly={part === 'hd'}/>
+                                </WardrobeSelectionItem>
+                            ))}
 
-                            onFigureConfigurationChange({
-                                ...figureConfiguration,
-                                parts:
-                                    figureConfiguration.parts.filter((configuration) => configuration.type !== part)
-                                    .concat([
+                            {userSets.map((set) => (
+                                <WardrobeSelectionItem key={set.id} active={activeConfiguration?.setId === set.id} onClick={() => handleEquip(set)}>
+                                    <FigureImage figureConfiguration={FigureConfigurationData.create({
+                                        gender: figureConfiguration.gender,
+                                        parts: [
+                                            {
+                                                type: part,
+                                                setId: set.id,
+                                                colors: activeConfiguration?.colors,
+                                            }
+                                        ]
+                                    })} direction={2} cropped headOnly={part === 'hd'}/>
+
+                                    {(!editMode) && (
+                                        <div className="sprite_wardrobe_hangar" style={{
+                                            position: "absolute",
+
+                                            top: 0,
+                                            left: 0
+                                        }}/>
+                                    )}
+                                </WardrobeSelectionItem>
+                            ))}
+                        </Fragment>
+                    ):(
+                        allSets.map((set) => (
+                            <WardrobeSelectionItem key={set.id}>
+                                <FigureImage figureConfiguration={FigureConfigurationData.create({
+                                    gender: figureConfiguration.gender,
+                                    parts: [
                                         {
-                                            $type: "FigurePartData",
                                             type: part,
-                                            setId,
-                                            colors: (colorable) ? (activeConfiguration?.colors ?? figureDataResponse.colors.map((color) => color.id) ?? []) : ([])
+                                            setId: set.id,
+                                            colors: activeConfiguration?.colors,
                                         }
-                                    ])
-                            });
-                        }} style={{
-                            position: "relative",
-
-                        }}>
-                            <OffscreenCanvasRender offscreenCanvas={image} placeholderImage={FurnitureAssets.placeholder32?.image} style={{
-                                opacity: (editMode)?(
-                                    (data?.clothes.some((clothing) => clothing.setId === setId))?(
-                                        1
-                                    ):(
-                                        0.5
-                                    )
-                                ):(
-                                    1
-                                )
-                            }}/>
-
-                            {(!editMode && data?.userClothes.some((clothing) => clothing.setId === setId)) && (
-                                <div className="sprite_wardrobe_hangar" style={{
-                                    position: "absolute",
-
-                                    top: 0,
-                                    left: 0
+                                    ]
+                                })} direction={2} cropped headOnly={part === 'hd'} style={{
+                                    opacity: (sets.includes(set))?(1):(0.5)
                                 }}/>
-                            )}
 
-                            {(editMode) && (
                                 <div style={{
                                     fontSize: 10,
                                     position: "absolute",
@@ -137,43 +154,39 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     
                                     zIndex: 1
                                 }}>
-                                    {part}-{setId}
+                                    {part}-{set.id}
                                 </div>
-                            )}
 
-                            {(editMode && data?.clothes.some((clothing) => clothing.setId === setId)) && (
-                                <div className="sprite_sub" style={{
-                                    position: "absolute",
+                                {(!sets.includes(set))?(
+                                    <div className="sprite_sub" style={{
+                                        position: "absolute",
 
-                                    top: 0,
-                                    right: 0
-                                }} onClick={() => {
-                                    webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
-                                        part,
-                                        setId,
-                                        available: false
-                                    }))
-                                }}/>
-                            )}
+                                        top: 0,
+                                        right: 0
+                                    }} onClick={() => {
+                                        webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
+                                            part,
+                                            setId: set.id,
+                                            available: false
+                                        }))
+                                    }}/>
+                                ):(
+                                    <div className="sprite_add" style={{
+                                        position: "absolute",
 
-                            {(editMode && !data?.clothes.some((clothing) => clothing.setId === setId)) && (
-                                <div className="sprite_add" style={{
-                                    position: "absolute",
+                                        top: 0,
+                                        right: 0,
 
-                                    top: 0,
-                                    right: 0,
+                                        cursor: "pointer"
+                                    }} onClick={() => {
+                                        webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
+                                            part,
+                                            setId: set.id,
+                                            available: true
+                                        }))
+                                    }}/>
+                                )}
 
-                                    cursor: "pointer"
-                                }} onClick={() => {
-                                    webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
-                                        part,
-                                        setId,
-                                        available: true
-                                    }))
-                                }}/>
-                            )}
-
-                            {(editMode) && (
                                 <div className="sprite_search" style={{
                                     position: "absolute",
 
@@ -183,12 +196,13 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     cursor: "pointer"
                                 }} onClick={() => {
                                     dialogs.openUniqueDialog("furniture-browser", {
-                                        searchCustomParams: setId
+                                        searchCustomParams: set.id
                                     });
                                 }}/>
-                            )}
-                        </WardrobeSelectionItem>
-                    ))}
+                            </WardrobeSelectionItem>
+                        ))
+                    )}
+
 
                     <WardrobeSelectionItem active={false} onClick={() => {
                         dialogs.openUniqueDialog("shop", {
@@ -205,11 +219,11 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                 flexDirection: "row",
                 gap: 6
             }}>
-                {Array(Math.max(1, activeFigureData?.colorIndexes ?? 1)).fill(null).map((_, index) => (
+                {Array(Math.max(...(activeFigureData?.parts.map((part) => part.colorIndex)) ?? [], 1)).fill(null).map((_, index) => (
                     <WardrobeSelectionColors
                         key={index}
                         disabled={!activeConfiguration || !activeFigureData?.colorable}
-                        colors={figureDataResponse?.colors}
+                        colors={colors}
                         activeColor={activeConfiguration?.colors[index]}
                         onColorChange={(color) => {
                             if(!activeConfiguration) {
