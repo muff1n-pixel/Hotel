@@ -124,7 +124,7 @@ export default class GetShopPagesEvent implements ProtobuffListener<GetShopPages
         }
 
         return ShopFeatureData.fromJSON({
-            ...feature,
+            ...feature.toJSON(),
             configuration: undefined
         });
     }
