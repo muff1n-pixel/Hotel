@@ -276,7 +276,16 @@ export default class FigureRenderer {
             // CarryItem says handRight is used for activePartSet
 
             if(effect.data.animation?.overrides) {
-                for(const override of effect.data.animation.overrides) {
+                const filteredOverrides = effect.data.animation.overrides.filter((override) => actions.some((action) => action.state === override.type));
+                
+                const sortedOverrides = filteredOverrides.sort((a, b) => {
+                    const actionA = actions.find((action) => action.state === a.type);
+                    const actionB = actions.find((action) => action.state === b.type);
+
+                    return (actionA?.precedence ?? 0) - (actionB?.precedence ?? 0);
+                });
+
+                for(const override of sortedOverrides) {
                     if(!actions.some((action) => action.state === override.type)) {
                         continue;
                     }
@@ -292,6 +301,8 @@ export default class FigureRenderer {
 
                         result = result.filter((result) => !additions.some((addition) => addition.geometry.id === result.geometry.id)).concat(additions);
                     }
+
+                    break;
                 }
             }
 
@@ -611,6 +622,7 @@ export default class FigureRenderer {
                                         destinationZ: getIndexForAlignment(item.align)
                                     };
                                 }),
+                                frame: bodypart.frame,
                                 destinationY: (this.avatarEffect?.destinationY ?? 0)
                             }
                         });
@@ -618,7 +630,16 @@ export default class FigureRenderer {
                 );
 
             if(effect.data.animation?.overrides) {
-                for(const override of effect.data.animation.overrides) {
+                const filteredOverrides = effect.data.animation.overrides.filter((override) => actions.some((action) => action.state === override.type));
+                
+                const sortedOverrides = filteredOverrides.sort((a, b) => {
+                    const actionA = actions.find((action) => action.state === a.type);
+                    const actionB = actions.find((action) => action.state === b.type);
+
+                    return (actionA?.precedence ?? 0) - (actionB?.precedence ?? 0);
+                });
+
+                for(const override of sortedOverrides) {
                     const action = actions.find((action) => action.state === override.type);
 
                     if(!action) {
@@ -658,6 +679,8 @@ export default class FigureRenderer {
                             }
                         }
                     }
+
+                    break;
                 }
             }
 
