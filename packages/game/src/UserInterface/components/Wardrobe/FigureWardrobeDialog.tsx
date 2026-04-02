@@ -11,6 +11,7 @@ import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WardrobeFigures from "@UserInterface/Components/Wardrobe/Components/WardrobeFigures";
 import WardrobeEffects from "@UserInterface/Components/Wardrobe/Selection/WardrobeEffects";
+import WardrobeHotlooks from "@UserInterface/Components/Wardrobe/Components/WardrobeHotlooks";
 
 const wardrobeTabs = [
     {
@@ -223,6 +224,44 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                 gap: 10
                             }}>
                                 <WardrobeEffects figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
+
+                                <div style={{
+                                    flex: 1,
+
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center"
+                                }}>
+                                    <div style={{
+                                        width: 130,
+                                        height: "100%"
+                                    }}>
+                                        <WardrobeAvatar configuration={figureConfiguration}/>
+                                    </div>
+
+                                    <div style={{ width: "100%" }}>
+                                        <DialogButton onClick={() => onApply(figureConfiguration)}>Save my looks</DialogButton>
+                                    </div>
+                                </div>
+
+                                {(figuresExpanded) && (
+                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
+                                )}
+                            </div>
+                        )
+                    },
+
+                    {
+                        icon: (<div className={"sprite_wardrobe_hotlooks_tab"}/>),
+                        element: (
+                            <div style={{
+                                flex: 1,
+
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 10
+                            }}>
+                                <WardrobeHotlooks figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
 
                                 <div style={{
                                     flex: 1,

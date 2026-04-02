@@ -8,12 +8,9 @@ export type WardrobeSelectionItemProps = PropsWithChildren & {
     style?: CSSProperties;
 }
 
-export default function WardrobeSelectionItem({ active, children, style, onClick }: WardrobeSelectionItemProps) {
+export default function WardrobeSelectionSquareItem({ active, children, style, onClick }: WardrobeSelectionItemProps) {
     return (
-        <div className={(active)?("wardrobe-selection-item active"):("wardrobe-selection-item")} onClick={onClick} style={{
-            width: 50,
-            height: 50,
-
+        <div className={(active)?("wardrobe-selection-square-item active"):("wardrobe-selection-square-item")} onClick={onClick} style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
