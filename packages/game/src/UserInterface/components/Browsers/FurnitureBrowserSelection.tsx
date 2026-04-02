@@ -4,11 +4,12 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment } from "react/jsx-runtime";
 
 export type FurnitureBrowserSelectionProps = {
-    furniture?: FurnitureData;
-    onChange?: (furniture: FurnitureData) => void;
+    furniture?: FurnitureData[];
+    onChange?: (furniture: FurnitureData[]) => void;
+    allowMultiple?: boolean;
 }
 
-export default function FurnitureBrowserSelection({ furniture, onChange }: FurnitureBrowserSelectionProps) {
+export default function FurnitureBrowserSelection({ allowMultiple, furniture, onChange }: FurnitureBrowserSelectionProps) {
     const dialogs = useDialogs();
 
     return (
@@ -28,7 +29,7 @@ export default function FurnitureBrowserSelection({ furniture, onChange }: Furni
                 )}
             </div>
 
-            <Input readonly placeholder="Furniture" value={(furniture)?(`${furniture.type}${(furniture.color)?(`*${furniture.color}`):("")}`):("")}/>
+            <Input readonly placeholder="Furniture" value={(furniture?.length === 1)?(`${furniture[0].type}${(furniture[0].color)?(`*${furniture[0].color}`):("")}`):(`${furniture?.length} items`)}/>
                 
             <div style={{
                 display: "flex",
@@ -37,6 +38,7 @@ export default function FurnitureBrowserSelection({ furniture, onChange }: Furni
                 <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                     dialogs.addUniqueDialog("furniture-browser", {
                         activeFurniture: furniture,
+                        allowMultipleItems: allowMultiple,
                         onSelect: onChange
                     });
                 }}>

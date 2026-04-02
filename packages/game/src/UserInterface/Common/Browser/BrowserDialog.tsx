@@ -5,7 +5,7 @@ import DialogTable, { DialogTableProps } from "../Dialog/Components/Table/Dialog
 import DialogButton from "../Dialog/Components/Button/DialogButton";
 
 export type BrowserDialogProps = {
-    activeId: string | null;
+    activeId: string | string[] | null;
     count: number;
     page: number;
     preview?: ReactNode;
@@ -14,7 +14,7 @@ export type BrowserDialogProps = {
 
     hidden?: boolean;
 
-    onSelect?: (id: string) => void;
+    onSelect?: (ids: string | string[]) => void;
     onPageChange?: (page: number) => void;
     onClose?: () => void;
 

@@ -20,7 +20,7 @@ export type EditShopFurnitureDialogProps = {
 export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditShopFurnitureDialogProps) {
     const dialogs = useDialogs();
 
-    const [furniture, setFurniture] = useState(data?.furniture);
+    const [furniture, setFurniture] = useState((data.furniture)?([data.furniture]):([]));
 
     const [credits, setCredits] = useState(data?.credits ?? 0);
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
@@ -34,7 +34,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
 
             pageId: data.page.id,
 
-            furnitureId: furniture?.id,
+            furnitureIds: furniture.map((furniture) => furniture.id),
 
             credits,
             duckets,
@@ -82,12 +82,15 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                     <div style={{
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
+                        overflowX: "scroll"
                     }}>
-                        <FurnitureImage furnitureData={furniture}/>
+                        {furniture?.map((furniture) => (
+                            <FurnitureImage key={furniture.id} furnitureData={furniture}/>
+                        ))}
                     </div>
 
-                    <FurnitureBrowserSelection furniture={furniture} onChange={setFurniture}/>
+                    <FurnitureBrowserSelection allowMultiple={!data.id} furniture={furniture} onChange={setFurniture}/>
 
                     <b>Furniture price</b>
 

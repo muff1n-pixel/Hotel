@@ -114,11 +114,15 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                         flexDirection: "row",
                         gap: 10,
                         padding: 4,
-                        background: (item.id === (activeId ?? _activeId))?("#B8E2FC"):("transparent"),
+                        background: (item.id === _activeId || (Array.isArray(activeId)?(activeId.includes(item.id)):(activeId === item.id)))?("#B8E2FC"):("transparent"),
                         cursor: "pointer"
                     }} onClick={() => {
-                        setActiveId(item.id);
-                        item.onClick?.();
+                        if(!item.onClick && activeId === undefined) {
+                            setActiveId(item.id);
+                        }
+                        else {
+                            item.onClick?.();
+                        }
                     }}>
                         {(item.preview) && (
                             <div>

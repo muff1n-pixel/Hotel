@@ -223,7 +223,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                             <FlexLayout>
                                 <Checkbox label="Use feature furniture?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureFurnitureUsed()}/>
                                 
-                                <FurnitureBrowserSelection furniture={configuration?.featureFurniture} onChange={(furniture) => shopFeatureImage.setFeatureFurniture(furniture)}/>
+                                <FurnitureBrowserSelection furniture={(configuration?.featureFurniture)?([configuration.featureFurniture]):([])} onChange={(furniture) => shopFeatureImage.setFeatureFurniture(furniture[0])}/>
                             </FlexLayout>
                         )}
 

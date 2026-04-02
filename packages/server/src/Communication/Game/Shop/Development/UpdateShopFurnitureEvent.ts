@@ -17,36 +17,46 @@ export default class UpdateShopFurnitureEvent implements ProtobuffListener<Updat
             throw new Error("User is not privileged to edit the shope.");
         }
 
-        const furniture = await FurnitureModel.findByPk(payload.furnitureId);
-
-        if(!furniture) {
-            throw new Error("Furniture by type and color does not exist.");
+        if(payload.furnitureIds.length === 0) {
+            throw new Error("No furniture id was provided.");
         }
-        
-        if(payload.id !== undefined) {
-            await ShopPageFurnitureModel.update({
-                furnitureId: furniture.id,
 
-                credits: (payload.credits > 0)?(payload.credits):(null),
-                duckets: (payload.duckets > 0)?(payload.duckets):(null),
-                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
-            }, {
-                where: {
-                    id: payload.id
-                }
-            });
+        if(payload.furnitureIds.length > 1 && payload.id) {
+            throw new Error("Multiple furniture was provided for existing furniture.");
         }
-        else {
-            await ShopPageFurnitureModel.create({
-                id: randomUUID(),
-                
-                shopPageId: payload.pageId,
-                furnitureId: furniture.id,
 
-                credits: (payload.credits > 0)?(payload.credits):(null),
-                duckets: (payload.duckets > 0)?(payload.duckets):(null),
-                diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
-            });
+        for(const furnitureId of payload.furnitureIds) {
+            const furniture = await FurnitureModel.findByPk(furnitureId);
+
+            if(!furniture) {
+                throw new Error("Furniture does not exist.");
+            }
+            
+            if(payload.id !== undefined) {
+                await ShopPageFurnitureModel.update({
+                    furnitureId: furniture.id,
+
+                    credits: (payload.credits > 0)?(payload.credits):(null),
+                    duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                    diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+                }, {
+                    where: {
+                        id: payload.id
+                    }
+                });
+            }
+            else {
+                await ShopPageFurnitureModel.create({
+                    id: randomUUID(),
+                    
+                    shopPageId: payload.pageId,
+                    furnitureId: furniture.id,
+
+                    credits: (payload.credits > 0)?(payload.credits):(null),
+                    duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                    diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+                });
+            }
         }
 
         await (new GetShopPageFurnitureEvent()).handle(user, GetShopPageFurnitureData.create({

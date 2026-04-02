@@ -13,10 +13,11 @@ export type FurnitureBrowserDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
     data?: {
+        allowMultipleItems?: boolean;
         searchCustomParams?: string;
 
-        activeFurniture?: FurnitureData;
-        onSelect?: (furniture: FurnitureData) => void;
+        activeFurniture?: FurnitureData[];
+        onSelect?: (furniture: FurnitureData[]) => void;
     }
 }
 
@@ -25,7 +26,7 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
     const hasEditPermissions = usePermissionAction("furniture:edit");
     
     const [items, setItems] = useState<FurnitureData[]>([]);
-    const [activeItem, setActiveItem] = useState<FurnitureData | null>(data?.activeFurniture ?? null);
+    const [activeItems, setActiveItems] = useState<FurnitureData[]>(data?.activeFurniture ?? []);
     
     const [state, setState] = useState(performance.now());
     
@@ -51,7 +52,7 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
     useEffect(() => {
         setAnimationId(0);
-    }, [activeItem]);
+    }, [activeItems]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(FurnitureBrowserData, {
@@ -76,15 +77,15 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
     return (
         <BrowserDialog
-            activeId={activeItem?.id ?? null}
+            activeId={activeItems.map((item) => item.id)}
 
             count={count}
             page={page}
 
-            preview={(activeItem) && (
+            preview={(activeItems.length === 1) && (
                 <FlexLayout direction="row" align="center">
                     <FlexLayout align="center" justify="center" style={{ flex: 1 }}>
-                        <FurnitureImage animation={animationId} frame={frame} furnitureData={activeItem} spritesWithoutInkModes={false}/>
+                        <FurnitureImage animation={animationId} frame={frame} furnitureData={activeItems[0]} spritesWithoutInkModes={false}/>
                     </FlexLayout>
 
                     <div style={{ flex: 3 }}/>
@@ -138,7 +139,19 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
                                 }} onClick={() => dialogs.addUniqueDialog("edit-furniture", { ...item, id: undefined, onClose: setState(performance.now()) })}/>
                             </Fragment>
                         ),
-                        onClick: () => setActiveItem(item)
+                        onClick: () => {
+                            if(data?.allowMultipleItems) {
+                                if(activeItems.includes(item)) {
+                                    setActiveItems(activeItems.filter((activeItem) => activeItem.id !== item.id));
+                                }
+                                else {
+                                    setActiveItems(activeItems.concat(item));
+                                }
+                            }
+                            else {
+                                setActiveItems((activeItems.includes(item)?([]):([item])));
+                            }
+                        }
                     };
                 }),
                 tools: (hasEditPermissions) && (
@@ -148,7 +161,7 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
                 )
             }}
 
-            onSelect={(data?.onSelect) && ((id) => data?.onSelect?.(items.find((pet) => pet.id === id)!))}
+            onSelect={(data?.onSelect) && ((id) => data?.onSelect?.(activeItems))}
             onPageChange={setPage}
 
             hidden={hidden}

@@ -5,7 +5,7 @@ message UpdateShopFurnitureData {
 
     string page_id = 2;
 
-    string furniture_id = 3;
+    repeated string furniture_ids = 3;
 
     uint32 credits = 7;
     uint32 duckets = 8;
