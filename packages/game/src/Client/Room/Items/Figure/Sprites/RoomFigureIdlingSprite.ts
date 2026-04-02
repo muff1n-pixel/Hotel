@@ -32,12 +32,12 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
 
         if(this.currentAssetName !== assetName) {
             this.offset = {
-                left: this.figureOffsets.left + 128 + 64 + 16,
-                top: this.figureOffsets.top + 64
+                left: this.figureOffsets.left + 64 + 16 + 10,
+                top: this.figureOffsets.top - 64
             };
 
             if(this.item.figureRenderer.direction > 3 && this.item.figureRenderer.direction < 7) {
-                this.offset.left -= 32 + 16;
+                this.offset.left -= 64;
             }
 
             AssetFetcher.fetchImage(`/assets/figure/sprites/${this.getAssetName()}.png`).then((image) => this.image = image);

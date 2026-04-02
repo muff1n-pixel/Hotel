@@ -11,8 +11,8 @@ export default class RoomFigureTypingSprite extends RoomSprite {
         super(item);
 
         this.offset = {
-            left: 128 + 64 + 16,
-            top: 64
+            left: 64 + 16,
+            top: -80 + 16
         };
 
         AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => this.image = image);

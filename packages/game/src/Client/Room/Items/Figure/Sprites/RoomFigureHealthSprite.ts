@@ -16,8 +16,8 @@ export default class RoomFigureHealthSprite extends RoomSprite {
 
         AssetFetcher.fetchImage(`/assets/figure/sprites/health/number_${this.health}.png`).then((image) => {
             this.offset = {
-                left: 128 + 64 - (Math.floor(image.width / 2)),
-                top: 64 - image.height
+                left: 64 - (Math.floor(image.width / 2)),
+                top: -64 - image.height
             };
 
             this.image = image;
