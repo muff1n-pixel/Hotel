@@ -15,6 +15,7 @@ packages/*/build/
 
 packages/*/node_modules/
 utils/*/node_modules/
+utils/swf-extract/sounds/
 
 assets/*/
 !assets/reception/

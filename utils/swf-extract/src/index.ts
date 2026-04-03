@@ -12,6 +12,7 @@ import extractFigureEffects from "./extractions/FigureEffects.ts";
 import extractAvatarAnimations from "./extractions/AvatarAnimations.ts";
 import { PromisePool } from "@supercharge/promise-pool";
 import extractPets from "./extractions/Pets.ts";
+import SoundSets from "./extractions/SoundSets.ts";
 
 export const database = new sqlite3.Database(":memory:");
 export const flags = process.argv.slice(2).filter((argument) => argument.startsWith('-'));
@@ -253,12 +254,19 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
                         visualization.defaultDirection = furnitureData[0].defaultDirection;
                     }
 
+                    let sounds: string[] | undefined = undefined;
+
+                    if(assetName.startsWith("sound_set_")) {
+                        sounds = await SoundSets.extract(assetName);
+                    }
+
                     const data: FurnitureData = {
                         index,
                         visualization,
                         logic,
                         assets,
-                        sprites: spritesheet
+                        sprites: spritesheet,
+                        sounds
                     };
 
                     writeFileSync(path.join(outputPath, `${assetName}.json`), JSON.stringify(data, undefined, 2), {

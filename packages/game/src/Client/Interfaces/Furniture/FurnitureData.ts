@@ -14,4 +14,5 @@ export type FurnitureData = {
     sprites: FurnitureSprites;
     palettes?: FurniturePalette[];
     customParts?: FurnitureCustomParts[];
+    sounds?: string[] | undefined;
 };
