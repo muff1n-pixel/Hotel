@@ -41,11 +41,11 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
 
         const avatarImageSprite = result.find((sprite) => sprite.tag === "avatar_image");
 
-        if(options.figureConfiguration && avatarImageSprite) {
+        if(avatarImageSprite) {
             const figureConfiguration = FigureConfigurationData.create({
-                effect: options.figureConfiguration.effect,
-                gender: options.figureConfiguration.gender,
-                parts: options.figureConfiguration.parts.concat([
+                effect: options.figureConfiguration?.effect,
+                gender: options.figureConfiguration?.gender ?? "male",
+                parts: (options.figureConfiguration?.parts ?? []).concat([
                     {
                         "$type": "FigurePartData",
                         type: "hd",
