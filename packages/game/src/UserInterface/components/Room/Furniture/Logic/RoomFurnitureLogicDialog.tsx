@@ -20,6 +20,7 @@ import WiredFurniture from "../../../../Common/Dialog/Layouts/Wired/WiredFurnitu
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomFurnitureStackHelperDialog from "@UserInterface/Components/Room/Furniture/Logic/StackHelper/RoomFurnitureStackHelperDialog";
 import RoomFurnitureClothingDialog from "@UserInterface/Components/Room/Furniture/Logic/Clothing/RoomFurnitureClothingDialog";
+import RoomFurnitureMannequinDialog from "@UserInterface/Components/Room/Furniture/Logic/Mannequin/RoomFurnitureMannequinDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -57,6 +58,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         case "clothing":
         case "fx_box":
             return (<RoomFurnitureClothingDialog {...props}/>);
+            
+        case "mannequin":
+            return (<RoomFurnitureMannequinDialog {...props}/>);
 
         case "wf_trg_enter_room":
         case "wf_trg_leave_room":

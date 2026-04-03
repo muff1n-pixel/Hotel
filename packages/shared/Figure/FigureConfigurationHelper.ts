@@ -28,4 +28,12 @@ export default class FigureConfigurationHelper {
     public static getStringFromConfiguration(figureConfiguration: FigureConfigurationData): string {
         return figureConfiguration.parts.map((part) => [part.type, part.setId].concat(part.colors.map((color) => color.toString()).join('-'))).join('-');
     }
+
+    public static replacePartsFromConfiguration(originalFigureConfiguration: FigureConfigurationData, replacingFigureConfiguration: FigureConfigurationData) {
+        return FigureConfigurationData.create({
+            gender: originalFigureConfiguration.gender,
+            effect: originalFigureConfiguration.effect,
+            parts: originalFigureConfiguration.parts.filter((part) => !replacingFigureConfiguration.parts.some((_part) => _part.type === part.type)).concat(replacingFigureConfiguration.parts)
+        });
+    }
 }
