@@ -5,6 +5,7 @@ import { FurnitureLogic } from "./FurnitureLogic";
 import { FurnitureSprites } from "./FurnitureSprites";
 import { FurnitureVisualization } from "./FurnitureVisualization";
 import { FurnitureCustomParts } from "@Client/Interfaces/Furniture/FurnitureCustomParts";
+import { FurnitureSound } from "@Client/Interfaces/Furniture/FurnitureSound";
 
 export type FurnitureData = {
     index: FurnitureIndex;
@@ -14,5 +15,5 @@ export type FurnitureData = {
     sprites: FurnitureSprites;
     palettes?: FurniturePalette[];
     customParts?: FurnitureCustomParts[];
-    sounds?: string[] | undefined;
+    sounds?: FurnitureSound[] | undefined;
 };

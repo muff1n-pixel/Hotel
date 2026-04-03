@@ -1,8 +1,10 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync } from "fs";
 import path from "path";
+import type { FurnitureSound } from "../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureSound.ts"
+import { parseFile } from 'music-metadata';
 
 export default class SoundSets {
-    public static async extract(assetName: string) {
+    public static async extract(assetName: string): Promise<FurnitureSound[] | undefined> {
         const manifest = this.getManifest(assetName);
 
         if(!manifest) {
@@ -35,6 +37,8 @@ export default class SoundSets {
 
         mkdirSync(soundOutputPath);
 
+        const result: FurnitureSound[] = [];
+
         for(const soundFile of soundFilesFromManifest) {
             const soundPath = path.join("sounds", "files", soundFile);
 
@@ -45,9 +49,19 @@ export default class SoundSets {
             }
 
             copyFileSync(soundPath, path.join(soundOutputPath, soundFile));
+
+            const metadata = await parseFile(soundPath, {
+                duration: true
+            });
+
+            result.push({
+                index: parseInt(soundFile.substring(0, soundFile.indexOf('.')).split('_').toReversed()[0] ?? "0"),
+                duration: Math.round(metadata.format.duration ?? 0),
+                file: soundFile
+            });
         }
 
-        return soundFilesFromManifest.toSorted();
+        return result.toSorted((a, b) => a.index - b.index);
     }
 
     private static getManifest(assetName: string): string | undefined {

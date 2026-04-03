@@ -13,6 +13,7 @@ import extractAvatarAnimations from "./extractions/AvatarAnimations.ts";
 import { PromisePool } from "@supercharge/promise-pool";
 import extractPets from "./extractions/Pets.ts";
 import SoundSets from "./extractions/SoundSets.ts";
+import type { FurnitureSound } from "../../../packages/game/src/Client/Interfaces/Furniture/FurnitureSound.ts";
 
 export const database = new sqlite3.Database(":memory:");
 export const flags = process.argv.slice(2).filter((argument) => argument.startsWith('-'));
@@ -254,7 +255,7 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
                         visualization.defaultDirection = furnitureData[0].defaultDirection;
                     }
 
-                    let sounds: string[] | undefined = undefined;
+                    let sounds: FurnitureSound[] | undefined = undefined;
 
                     if(assetName.startsWith("sound_set_")) {
                         sounds = await SoundSets.extract(assetName);
