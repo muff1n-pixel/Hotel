@@ -1,9 +1,9 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
-import { FurnitureData } from "@pixel63/events";
-import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FurnitureTraxSetData } from "@pixel63/events";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-export default function useTraxSlot(containerRef: React.RefObject<HTMLDivElement | null>, slotRef: React.RefObject<HTMLDivElement | null>, handleSetSlot: (set: FurnitureData, slot: number, length: number, row: number, column: number) => void) {
-    const [set, setSet] = useState<FurnitureData | null>(null);
+export default function useTraxSlot(containerRef: React.RefObject<HTMLDivElement | null>, slotRef: React.RefObject<HTMLDivElement | null>, handleSetSlot: (set: FurnitureTraxSetData, slot: number, length: number, row: number, column: number) => void) {
+    const [set, setSet] = useState<FurnitureTraxSetData | null>(null);
     const [slot, setSlot] = useState<number | null>(null);
     const [length, setLength] = useState<number | null>(null);
 
@@ -76,8 +76,12 @@ export default function useTraxSlot(containerRef: React.RefObject<HTMLDivElement
         };
     }, [dragging, slotRef.current]);
 
-    const handleDragging = useCallback((set: FurnitureData, slot: number) => {
-        FurnitureAssets.getFurnitureData(set.type).then((data) => {
+    const handleDragging = useCallback((set: FurnitureTraxSetData, slot: number) => {
+        if(!set.furniture?.type) {
+            return;
+        }
+
+        FurnitureAssets.getFurnitureData(set.furniture.type).then((data) => {
             const sound = data.sounds?.[slot];
 
             if(!sound) {

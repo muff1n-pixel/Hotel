@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message FurnitureTraxSlotData {
+    uint32 row = 1;
+    uint32 column = 2;
+
+    uint32 duration = 3;
+
+    uint32 set = 4;
+    uint32 slot = 5;
+}

@@ -1,4 +1,4 @@
-import { FurnitureData } from "@pixel63/events";
+import { FurnitureData, FurnitureTraxEditorData, FurnitureTraxSetData } from "@pixel63/events";
 import TraxDialogList from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogList";
 import TraxDialogSet from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSet";
 import TraxDialogSets from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSets";
@@ -6,56 +6,72 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useCallback, useMemo, useState } from "react";
 
 export type TraxPlaylistSetsProps = {
-    sets: (FurnitureData | null)[];
-    onSetsChange: (sets: (FurnitureData | null)[]) => void;
-    onDragSlot: (set: FurnitureData, slot: number) => void;
+    trax: FurnitureTraxEditorData;
+    onTraxChange: (trax: FurnitureTraxEditorData) => void;
+    onDragSlot: (set: FurnitureTraxSetData, slot: number) => void;
 };
 
-export default function TraxPlaylistSets({ sets, onSetsChange, onDragSlot }: TraxPlaylistSetsProps) {
+export default function TraxPlaylistSets({ trax, onTraxChange, onDragSlot }: TraxPlaylistSetsProps) {
     const [userSets] = useState<FurnitureData[]>(
-        Array(10).fill(null).map((_, index) => FurnitureData.create({ type: `sound_set_${index + 1}`, name: `Sound set ${index + 1}`}))
+        Array(10).fill(null).map((_, index) => FurnitureData.create({ id: `sound_set_${index + 1}`, type: `sound_set_${index + 1}`, name: `Sound set ${index + 1}`}))
     );
 
+    const mappedSets = useMemo(() => {
+        return Array(4).fill(null).map((_, index) => trax.sets.find((set) => set.index === index));
+    }, [trax.sets]);
 
     const availableSets = useMemo(() => {
-        return userSets.filter((set) => !sets.includes(set))
-    }, [userSets, sets]);
+        return userSets.filter((set) => !trax.sets.some((traxSet) => traxSet.furniture?.id === set.id))
+    }, [userSets, trax.sets]);
 
     const handleAddSet = useCallback((set: FurnitureData) => {
-        const index = sets.findIndex((set) => set === null);
+        let nextIndex = -1;
 
-        if(index === -1) {
+        for(let index = 0; index < 4; index++) {
+            if(trax.sets.some((set) => set.index === index)) {
+                continue;
+            }
+
+            nextIndex = index;
+
+            break;
+        }
+
+        if(nextIndex === -1) {
             return;
         }
 
-        const mutatedSets = [...sets];
-        mutatedSets[index] = set;
-        onSetsChange(mutatedSets);
-    }, [sets]);
+        const mutatedTrax = FurnitureTraxEditorData.fromJSON(trax);
+        mutatedTrax.sets.push(FurnitureTraxSetData.create({
+            furniture: set,
+            index: nextIndex
+        }));
+        onTraxChange(mutatedTrax);
+    }, [trax]);
 
-    const handleEjectSet = useCallback((set: FurnitureData | null) => {
+    const handleEjectSet = useCallback((set: FurnitureTraxSetData | null) => {
         if(set === null) {
             return;
         }
 
-        const index = sets.indexOf(set);
+        const index = trax.sets.findIndex((traxSet) => traxSet.furniture?.id === set.furniture?.id);
 
         if(index === -1) {
             return;
         }
 
-        const mutatedSets = [...sets];
-        mutatedSets[index] = null;
-        onSetsChange(mutatedSets);
-    }, [sets]);
+        const mutatedTrax = FurnitureTraxEditorData.fromJSON(trax);
+        mutatedTrax.sets.splice(index, 1);
+        onTraxChange(mutatedTrax);
+    }, [trax]);
 
     return (
         <FlexLayout direction="row">
             <TraxDialogList sets={availableSets} onClick={handleAddSet}/>
             
             <TraxDialogSets>
-                {sets.map((set, index) => (
-                    <TraxDialogSet slot={index} set={set ?? undefined} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => handleEjectSet(set)}/>
+                {mappedSets.map((set, index) => (
+                    <TraxDialogSet slot={index} set={set} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => set && handleEjectSet(set)}/>
                 ))}
             </TraxDialogSets>
         </FlexLayout>

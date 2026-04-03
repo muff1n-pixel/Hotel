@@ -1,4 +1,4 @@
-import { FurnitureData } from "@pixel63/events";
+import { FurnitureTraxSetData } from "@pixel63/events";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
@@ -6,7 +6,7 @@ import "./TraxDialogSet.css";
 
 export type TraxDialogSetProps = {
     slot: number;
-    set?: FurnitureData;
+    set?: FurnitureTraxSetData;
 
     onEjectClick?: () => void;
     onDragSlot?: (slot: number) => void;
@@ -23,7 +23,7 @@ export default function TraxDialogSet({ slot, set, onEjectClick, onDragSlot }: T
             }}>
                 {(set) && (
                     <div>
-                        <div className="trax-dialog-set-name">{set.name}</div>
+                        <div className="trax-dialog-set-name">{set.furniture?.name}</div>
                         <div className="trax-dialog-set-eject">Eject</div>
                     </div>
                 )}

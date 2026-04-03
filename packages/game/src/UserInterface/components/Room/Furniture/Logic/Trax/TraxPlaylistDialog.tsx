@@ -1,8 +1,7 @@
-import { FurnitureData } from "@pixel63/events";
+import { FurnitureData, FurnitureTraxEditorData, FurnitureTraxSetData } from "@pixel63/events";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import TraxPlaylistSets from "@UserInterface/Components/Room/Furniture/Logic/Trax/Components/TraxPlaylistSets";
 import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
@@ -28,11 +27,11 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
     const slotRef = useRef<HTMLDivElement>(null);
 
     const [slots, setSlots] = useState<TraxSlot[]>([]);
-    const [sets, setSets] = useState<(FurnitureData | null)[]>(Array(4).fill(null));
+    const [trax, setTrax] = useState<FurnitureTraxEditorData>(FurnitureTraxEditorData.create({}));
 
     useEffect(() => {
-        setSlots(slots.filter((slot) => sets[slot.set]));
-    }, [sets]);
+        setSlots(slots.filter((slot) => trax.channels[slot.set]));
+    }, [trax]);
 
     const mappedSlots = useMemo(() => {
         console.log({ slots });
@@ -45,7 +44,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
         });
     }, [slots]);
 
-    const handleSetSlot = useCallback((set: FurnitureData, slot: number, length: number, row: number, column: number) => {
+    const handleSetSlot = useCallback((set: FurnitureTraxSetData, slot: number, length: number, row: number, column: number) => {
         const mutatedSlot = slots.filter((slot) => {
             if(slot.row !== row) {
                 return true;
@@ -67,12 +66,12 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
             column,
             length,
             
-            set: sets.indexOf(set),
+            set: set.index,
             slot
         });
 
         setSlots(mutatedSlot);
-    }, [slots, sets]);
+    }, [slots, trax]);
 
     const handleRemoveSlot = useCallback((length: number, row: number, column: number) => {
         const mutatedSlot = slots.filter((slot) => {
@@ -92,7 +91,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
         });
 
         setSlots(mutatedSlot);
-    }, [slots, sets]);
+    }, [slots, trax]);
 
     const slider = useTraxSlider();
     const slot = useTraxSlot(containerRef, slotRef, handleSetSlot);
@@ -104,7 +103,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                 flexDirection: "column",
                 gap: 10
             }}>
-                <TraxPlaylistSets sets={sets} onSetsChange={setSets} onDragSlot={slot.handleDragging}/>
+                <TraxPlaylistSets trax={trax} onTraxChange={setTrax} onDragSlot={slot.handleDragging}/>
 
                 <TraxDialogPanel style={{
                     padding: "8px 8px 8px 4px"
@@ -219,12 +218,12 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                     flexDirection: "row",
                     gap: 1
                 }}>
-                    {Array(slot.length).fill(null).map((_, index) => (
-                        <div className={`sprite_dialog_trax_samples_set_${sets.indexOf(slot.set) + 1}_sample_${(slot.slot ?? 0) + 1}`} style={{
+                    {Array(slot.length).fill(null).map((_, index) => slot.set && (
+                        <div className={`sprite_dialog_trax_samples_set_${slot.set.index + 1}_sample_${(slot.slot ?? 0) + 1}`} style={{
                             position: "relative"
                         }}>
                             {(index !== (slot.length ?? 1) - 1) && (
-                                <div className={`sprite_dialog_trax_samples_set_${sets.indexOf(slot.set) + 1}_connector`} style={{
+                                <div className={`sprite_dialog_trax_samples_set_${slot.set.index + 1}_connector`} style={{
                                     position: "absolute",
 
                                     right: -3,
