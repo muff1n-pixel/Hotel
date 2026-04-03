@@ -356,9 +356,13 @@ export default class RoomRenderer extends EventTarget {
             translatePosition.top -= 16;
         }
         else if(item instanceof RoomFurnitureItem) {
-            const minOffset = Math.min(item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite)[0].sprite.y, 0);
+            const furnitureSprites = item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite);
 
-            translatePosition.top += minOffset;
+            if(furnitureSprites.length) {
+                const minOffset = Math.min(furnitureSprites[0].sprite.y, 0);
+
+                translatePosition.top += minOffset;
+            }
         }
 
         return {
