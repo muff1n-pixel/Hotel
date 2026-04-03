@@ -1,0 +1,19 @@
+.trax-dialog-set-header {
+    cursor: pointer;
+}
+
+.trax-dialog-set-header .trax-dialog-set-name {
+    display: block;
+}
+
+.trax-dialog-set-header .trax-dialog-set-eject {
+    display: none;
+}
+
+.trax-dialog-set-header:hover .trax-dialog-set-name {
+    display: none;
+}
+
+.trax-dialog-set-header:hover .trax-dialog-set-eject {
+    display: block;
+}

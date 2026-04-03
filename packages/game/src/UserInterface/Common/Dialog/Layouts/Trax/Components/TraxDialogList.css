@@ -1,0 +1,33 @@
+.trax-dialog-list {
+    display: flex;
+}
+
+.trax-dialog-list-container {
+    flex: 1;
+
+    padding: 10px 0px 0px 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.trax-dialog-list-item {
+    display: flex;
+    
+    flex-direction: row;
+    gap: 5px;
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+.trax-dialog-list-item-use {
+    opacity: 0;
+
+    color: #81E478;
+}
+
+.trax-dialog-list-item:hover .trax-dialog-list-item-use {
+    opacity: 1;
+}

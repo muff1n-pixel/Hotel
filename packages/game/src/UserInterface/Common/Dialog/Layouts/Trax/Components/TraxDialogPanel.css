@@ -1,0 +1,34 @@
+.trax-dialog-panel {
+    border: 1px solid #3A4D54;
+    border-radius: 6px;
+
+    background: #7097A6;
+
+    display: flex;
+
+    padding: 1px;
+}
+
+.trax-dialog-panel-content {
+    flex: 1;
+
+    padding: 2px;
+
+    background: #5F7E89;
+
+    border-radius: 6px;
+}
+
+.trax-dialog-panel-top-off {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    padding-top: 0;
+
+    border-top: none;
+}
+
+.trax-dialog-panel-top-off .trax-dialog-panel-content {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

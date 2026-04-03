@@ -42,7 +42,13 @@ import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProp
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
     public roomChatStyles = new ObservableProperty<string[]>();
-    public dialogs = new ObservableRequiredProperty<Dialog[]>([]);
+    public dialogs = new ObservableRequiredProperty<Dialog[]>([
+        {
+            id: "trax-playlist",
+            type: "trax-playlist",
+            data: null
+        }
+    ]);
     public user = new ObservableProperty<UserData>();
     public roomHistory = new ObservableProperty<RoomHistory[]>([]);
     public hotel = new ObservableProperty<HotelData>();
