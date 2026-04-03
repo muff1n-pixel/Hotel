@@ -148,7 +148,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                                                     position: "relative",
                                                     cursor: "pointer"
                                                 }} onClick={() => mappedSlots[row][column] && handleRemoveSlot(mappedSlots[row][column].length, mappedSlots[row][column].row, mappedSlots[row][column].column)}>
-                                                    {(mappedSlots[row][column].slot === mappedSlots[row][column + 1]?.slot) && (
+                                                    {(mappedSlots[row][column].set === mappedSlots[row][column + 1]?.set && mappedSlots[row][column].slot === mappedSlots[row][column + 1]?.slot) && (
                                                         <div className={`sprite_dialog_trax_samples_set_${mappedSlots[row][column].set + 1}_connector`} style={{
                                                             position: "absolute",
 
