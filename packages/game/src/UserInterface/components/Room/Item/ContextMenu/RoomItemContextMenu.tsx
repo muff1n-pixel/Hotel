@@ -6,7 +6,7 @@ import RoomUserContextMenu from "./Users/RoomUserContextMenu";
 import RoomBotContextMenu from "./Bots/RoomBotContextMenu";
 import RoomPetContextMenu from "./Pets/RoomPetContextMenu";
 import RoomItemContextMenuHover from "./RoomItemContextMenuHover";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 
 export type RoomItemContextMenuProps = {
@@ -18,6 +18,26 @@ export default function RoomItemContextMenu() {
 
     const [focusedItem, setFocusedItem] = useState<RoomItem | null>();
     const [hoveredItem, setHoveredItem] = useState<RoomItem | null>();
+
+    const focusedFurniture = useMemo(() => {
+        if(!room) {
+            return null;
+        }
+
+        if(!focusedItem) {
+            return null;
+        }
+
+        if(focusedItem instanceof RoomFurnitureItem) {
+            const roomFurniture = room.furnitures.find((furniture) => furniture.item.id === focusedItem.id);
+
+            if(!roomFurniture) {
+                return null;
+            }
+
+            return roomFurniture;
+        }
+    }, [focusedItem, room]);
 
     useEffect(() => {
         if(!room) {
@@ -48,11 +68,9 @@ export default function RoomItemContextMenu() {
         else if(focusedItem instanceof RoomPetItem) {
             return (<RoomPetContextMenu item={focusedItem}/>);
         }
-        else if(focusedItem instanceof RoomFurnitureItem) {
-            const roomFurniture = focusedItem.roomRenderer.roomInstance?.getFurnitureByItem(focusedItem);
-
-            if(roomFurniture?.getLogic()?.isContextMenuAvailable?.()) {
-                return roomFurniture.getLogic()?.getContextMenu?.();
+        else if(focusedFurniture) {
+            if(focusedFurniture?.getLogic()?.isContextMenuAvailable?.()) {
+                return focusedFurniture.getLogic()?.getContextMenu?.();
             }
         }
     }
