@@ -27,7 +27,7 @@ export default function RoomFurnitureMannequinDialog({ data, hidden, onClose }: 
         }
 
         return FigureConfigurationHelper.replacePartsFromConfiguration(user.figureConfiguration, data.data.data?.mannequin?.figureConfiguration);
-    }, [data.data.data?.mannequin?.figureConfiguration, user.figureConfiguration]);
+    }, [data, user.figureConfiguration]);
 
     const handleBind = useCallback(() => {
         if(!figureConfiguration) {

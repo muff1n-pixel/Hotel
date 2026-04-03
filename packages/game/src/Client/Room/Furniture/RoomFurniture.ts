@@ -166,6 +166,8 @@ export default class RoomFurniture {
 
         if(payload.data) {
             this.item.setData(payload.data);
+
+            this.data.data = payload.data;
         }
     }
 

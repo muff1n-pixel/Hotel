@@ -18,7 +18,7 @@ export default class RoomFurnitureMannequinLogic implements FurnitureLogic {
     }
 
     isAvailable() {
-        return this.roomFurniture.data.userId === clientInstance.user.value?.id;
+        return this.roomFurniture.data.data?.mannequin?.figureConfiguration !== undefined;
     }
 
     use(): void {
