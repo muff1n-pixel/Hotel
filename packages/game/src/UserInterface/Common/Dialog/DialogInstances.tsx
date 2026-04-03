@@ -44,6 +44,7 @@ import AchievementsDialog from "@UserInterface/Components/Achievements/Achieveme
 import EditShopFeatureDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureDialog";
 import EditShopFeatureCameraDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureCameraDialog";
 import ClothingUnlockedDialog from "@UserInterface/Components/Clothing/ClothingUnlockedDialog";
+import WardrobeMannequinDialog from "@UserInterface/Components/Wardrobe/WardrobeMannequinDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -74,6 +75,9 @@ export default function DialogInstances() {
 
                     case "wardrobe":
                         return (<WardrobeDialog {...props} key={dialog.id}/>);
+
+                    case "wardrobe-mannequin":
+                        return (<WardrobeMannequinDialog {...props} key={dialog.id}/>);
                        
                     case "clothing-unlocked":
                         return (<ClothingUnlockedDialog {...props} key={dialog.id}/>);

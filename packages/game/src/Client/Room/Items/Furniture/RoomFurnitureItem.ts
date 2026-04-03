@@ -9,6 +9,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
 import { clientInstance } from "src";
+import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
@@ -101,5 +102,9 @@ export default class RoomFurnitureItem extends RoomItem {
 
     setData(data: UserFurnitureCustomData) {
         this.data = data;
+
+        if(this.furnitureRenderer.renderer instanceof FurnitureMannequinRenderer) {
+            this.furnitureRenderer.figureConfiguration = this.data.mannequin?.figureConfiguration;
+        }
     }
 }

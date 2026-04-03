@@ -21,6 +21,7 @@ import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
 import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
+import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -353,6 +354,11 @@ export default class RoomRenderer extends EventTarget {
         }
         else if(item instanceof RoomPetItem) {
             translatePosition.top -= 16;
+        }
+        else if(item instanceof RoomFurnitureItem) {
+            const minOffset = Math.min(item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite)[0].sprite.y, 0);
+
+            translatePosition.top += minOffset;
         }
 
         return {

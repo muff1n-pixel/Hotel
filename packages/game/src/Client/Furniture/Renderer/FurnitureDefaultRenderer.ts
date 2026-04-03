@@ -19,11 +19,13 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
     private visualization?: FurnitureVisualization["visualizations"][0];
 
+    public shouldCacheResults: boolean = true;
+
     constructor(public readonly type: string | undefined) {
 
     }
 
-    private options?: FurnitureRenderOptions;
+    public options?: FurnitureRenderOptions;
 
     public shouldRender(options: FurnitureRenderOptions) {
         if(!this.options) {
@@ -300,7 +302,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
         }
 
-        if(this.hasImageData) {
+        if(this.hasImageData && this.shouldCacheResults) {
             const frameCounts = animationFrames.map((frame) => frame.maxLayerFrames ?? 0);
             const maxFrames = Math.max(...frameCounts);
 

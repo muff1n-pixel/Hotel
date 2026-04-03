@@ -11,6 +11,7 @@ export type FigureRenderEvent = {
     headOnly?: boolean;
     drawEffects?: boolean;
     useConfigurationEffect?: boolean;
+    ignoreBodyparts: string[];
 } | {
     type: "preload";
     configuration: FigureConfigurationData;

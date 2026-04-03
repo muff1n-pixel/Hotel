@@ -17,6 +17,7 @@ import { FurnitureData, RoomPositionData, UserFurnitureData } from "@pixel63/eve
 import FurnitureDefaultMultistateLogic from "@Client/Furniture/Logic/FurnitureDefaultMultistateLogic";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import RoomFurnitureClothingLogic from "@Client/Room/Furniture/Logic/RoomFurnitureClothingLogic";
+import RoomFurnitureMannequinLogic from "@Client/Room/Furniture/Logic/RoomFurnitureMannequinLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -72,6 +73,9 @@ export default class RoomFurniture {
             case "clothing":
             case "fx_box":
                 return new RoomFurnitureClothingLogic(this.instance, this);
+
+            case "mannequin":
+                return new RoomFurnitureMannequinLogic(this.instance, this);
 
             case "freeze_timer":
             case "battlebanzai_timer":

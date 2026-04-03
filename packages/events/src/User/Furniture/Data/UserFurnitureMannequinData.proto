@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message UserFurnitureMannequinData {
+    FigureConfigurationData figure_configuration = 1;
+}

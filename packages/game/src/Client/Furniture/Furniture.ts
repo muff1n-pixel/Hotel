@@ -3,10 +3,11 @@ import { FurnitureData } from "../Interfaces/Furniture/FurnitureData";
 import { FurnitureVisualization } from "@Client/Interfaces/Furniture/FurnitureVisualization";
 import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRoomContentRenderer";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
-import FurnitureRenderer from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
+import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
-import { RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
+import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -64,6 +65,8 @@ export default class Furniture {
 
     public readonly type: string;
 
+    public figureConfiguration?: FigureConfigurationData;
+
     constructor(type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
         if(this.color === undefined) {
             this.color = 0;
@@ -73,19 +76,41 @@ export default class Furniture {
 
         this.animation = animation;
 
-        if((this.type === "wallpaper" || this.type === "floor") && color !== 0) {
-            this.renderer = new FurnitureRoomContentRenderer(this.type);
-        }
-        else if(this.type === "hc_rntgn") {
-            this.renderer = new FurnitureXRayRenderer(this.type);
-        }
-        else {
-            this.renderer = new FurnitureDefaultRenderer(this.type);
+        switch(this.type) {
+            case "wallpaper":
+            case "floor": {
+                if(color !== 0) {
+                    this.renderer = new FurnitureRoomContentRenderer(this.type);
+                }
+                else {
+                    this.renderer = new FurnitureDefaultRenderer(this.type);
+                }
+
+                break;
+            }
+
+            case "hc_rntgn": {
+                this.renderer = new FurnitureXRayRenderer(this.type);
+
+                break;
+            }
+
+            case "boutique_mannequin1": {
+                this.renderer = new FurnitureMannequinRenderer(this.type);
+                
+                break;
+            }
+
+            default: {
+                this.renderer = new FurnitureDefaultRenderer(this.type);
+
+                break;
+            }
         }
     }
 
-    public shouldRender() {
-        return this.renderer.shouldRender({
+    private getOptions(): FurnitureRenderOptions {
+        return {
             direction: this.direction,
             size: this.size, 
             animation: this.animation,
@@ -93,8 +118,13 @@ export default class Furniture {
             color: this.color ?? 0, 
             frame: this.frame,
             grayscaled: this.grayscaled,
-            tags: undefined
-        });
+            tags: undefined,
+            figureConfiguration: this.figureConfiguration
+        };
+    }
+
+    public shouldRender() {
+        return this.renderer.shouldRender(this.getOptions());
     }
 
     public async getData() {
@@ -122,16 +152,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        const result = await this.renderer.render(this.data, {
-            direction: this.direction,
-            size: this.size, 
-            animation: this.animation,
-            animationTags: this.animationTags,
-            color: this.color ?? 0, 
-            frame: this.frame,
-            grayscaled: this.grayscaled,
-            tags: undefined
-        });
+        const result = await this.renderer.render(this.data, this.getOptions());
 
         return result;
     }
@@ -153,16 +174,7 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        return await this.renderer.renderToCanvas(options, this.data, {
-            direction: this.direction,
-            size: this.size, 
-            animation: this.animation,
-            animationTags: this.animationTags,
-            color: this.color ?? 0, 
-            frame: this.frame,
-            grayscaled: this.grayscaled,
-            tags: undefined
-        });
+        return await this.renderer.renderToCanvas(options, this.data, this.getOptions());
     }
 
     public getVisualizationData(data: FurnitureData) {

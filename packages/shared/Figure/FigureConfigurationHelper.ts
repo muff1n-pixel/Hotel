@@ -24,4 +24,8 @@ export default class FigureConfigurationHelper {
 
         return configuration;
     }
+
+    public static getStringFromConfiguration(figureConfiguration: FigureConfigurationData): string {
+        return figureConfiguration.parts.map((part) => [part.type, part.setId].concat(part.colors.map((color) => color.toString()).join('-'))).join('-');
+    }
 }

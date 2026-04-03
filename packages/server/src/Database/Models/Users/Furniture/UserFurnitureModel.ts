@@ -3,7 +3,7 @@ import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
-import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 
 export class UserFurnitureModel extends Model {
     declare id: string;

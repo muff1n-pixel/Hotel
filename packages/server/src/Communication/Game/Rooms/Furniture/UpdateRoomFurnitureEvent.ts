@@ -123,18 +123,16 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
             furniture.logic?.handleDataChanged?.(roomUser);
         }
 
-        if(furniture.model.changed()) {
-            await furniture.model.save();
+        await furniture.model.save();
 
-            user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
-                furnitureUpdated: [
-                    {
-                        userId: user.model.id,
-                        furniture: furniture.model
-                    }
-                ]
-            }));
-        }
+        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+            furnitureUpdated: [
+                {
+                    userId: user.model.id,
+                    furniture: furniture.model
+                }
+            ]
+        }));
     }
 
     private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {

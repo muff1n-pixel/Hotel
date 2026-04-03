@@ -37,7 +37,7 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
         });
     }
 
-    public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean, drawEffects: boolean, useConfigurationEffect: boolean): Promise<FigureRendererResult> {
+    public renderInWebWorker(figureRenderer: Figure, frame: number, cropped: boolean, drawEffects: boolean, useConfigurationEffect: boolean, ignoreBodyparts: string[]): Promise<FigureRendererResult> {
         if(!figureRenderer.configuration) {
             throw new Error();
         }
@@ -51,11 +51,12 @@ export default class FigureWorkerClient implements FigureWorkerInterface {
             cropped,
             drawEffects,
             useConfigurationEffect,
+            ignoreBodyparts,
 
             configuration: figureRenderer.configuration,
             direction: figureRenderer.direction,
             actions: figureRenderer.actions,
-            headOnly: figureRenderer.headOnly,
+            headOnly: figureRenderer.headOnly
         } satisfies FigureRenderEvent, [channel.port1]);
 
         return new Promise((resolve, reject) => {

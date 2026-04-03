@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Dialog from "../../Common/Dialog/Dialog";
 import DialogSubTabs from "../../Common/Dialog/Components/Tabs/DialogSubTabs";
 import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
@@ -82,29 +82,21 @@ const wardrobeTabs = [
 export type FigureWardrobeDialogProps = {
     title: string;
     header: string;
-    initialFigureConfiguration?: FigureConfigurationData;
+    
+    figureConfiguration: FigureConfigurationData;
+    onFigureConfigurationChange: (figureConfiguration: FigureConfigurationData) => void;
 
     hidden?: boolean;
     onClose?: () => void;
 
-    onApply: (figureConfiguration: FigureConfigurationData) => void;
+    children: ReactNode;
 };
 
-export default function FigureWardrobeDialog({ title, header, initialFigureConfiguration, hidden, onApply, onClose }: FigureWardrobeDialogProps) {
+export default function FigureWardrobeDialog({ title, header, figureConfiguration, onFigureConfigurationChange, hidden, onClose, children }: FigureWardrobeDialogProps) {
     const hasClothingEditPermissions = usePermissionAction("clothing:edit");
 
     const [editMode, setEditMode] = useState(false);
     const [figuresExpanded, setFiguresExpanded] = useState(false);
-
-    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(initialFigureConfiguration);
-
-    useEffect(() => {
-        setFigureConfiguration(initialFigureConfiguration);
-    }, [initialFigureConfiguration]);
-
-    if(!figureConfiguration) {
-        return null;
-    }
     
     return (
         <Dialog title={title} hidden={hidden} onClose={onClose} width={520 + ((figuresExpanded)?(166):(0))} height={530} onEditClick={(hasClothingEditPermissions) && (() => setEditMode(!editMode))}>
@@ -121,7 +113,7 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                 gap: 10
                             }}>
                                 <DialogSubTabs activeIndex={(figureConfiguration.gender === "male")?(0):(1)} onTabChange={(index) => {
-                                    setFigureConfiguration({
+                                    onFigureConfigurationChange({
                                         ...figureConfiguration,
                                         gender: (index === 0)?("male"):("female")
                                     });
@@ -130,39 +122,22 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                         icon: (<div className="sprite_wardrobe_male"/>),
                                         activeIcon: (<div className="sprite_wardrobe_male_on"/>),
                                         element: (
-                                            <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
+                                            <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={onFigureConfigurationChange} editMode={editMode}/>
                                         )
                                     },
                                     {
                                         icon: (<div className="sprite_wardrobe_female"/>),
                                         activeIcon: (<div className="sprite_wardrobe_female_on"/>),
                                         element: (
-                                            <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
+                                            <WardrobeSelection part={"hd"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={onFigureConfigurationChange} editMode={editMode}/>
                                         )
                                     }
                                 ]}/>
 
-                                <div style={{
-                                    flex: 1,
-
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center"
-                                }}>
-                                    <div style={{
-                                        width: 130,
-                                        height: "100%"
-                                    }}>
-                                        <WardrobeAvatar configuration={figureConfiguration}/>
-                                    </div>
-
-                                    <div style={{ width: "100%" }}>
-                                        <DialogButton onClick={() => onApply(figureConfiguration)}>Save my looks</DialogButton>
-                                    </div>
-                                </div>
+                                {children}
 
                                 {(figuresExpanded) && (
-                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
+                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onFigureConfigurationChange}/>
                                 )}
                             </div>
                         )
@@ -182,31 +157,14 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                         return {
                                             icon: (<div className={tab.spriteName}/>),
                                             activeIcon: (<div className={`${tab.spriteName}_on`}/>),
-                                            element: (<WardrobeSelection part={tab.part} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>)
+                                            element: (<WardrobeSelection part={tab.part} figureConfiguration={figureConfiguration} onFigureConfigurationChange={onFigureConfigurationChange} editMode={editMode}/>)
                                         };
                                     })}/>
 
-                                    <div style={{
-                                        flex: 1,
-
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center"
-                                    }}>
-                                        <div style={{
-                                            width: 130,
-                                            height: "100%"
-                                        }}>
-                                            <WardrobeAvatar configuration={figureConfiguration}/>
-                                        </div>
-
-                                        <div style={{ width: "100%" }}>
-                                            <DialogButton onClick={() => onApply(figureConfiguration)}>Save my looks</DialogButton>
-                                        </div>
-                                    </div>
+                                    {children}
 
                                     {(figuresExpanded) && (
-                                        <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
+                                        <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onFigureConfigurationChange}/>
                                     )}
                                 </div>
                             )
@@ -223,29 +181,12 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                 flexDirection: "row",
                                 gap: 10
                             }}>
-                                <WardrobeEffects figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
+                                <WardrobeEffects figureConfiguration={figureConfiguration} onFigureConfigurationChange={onFigureConfigurationChange} editMode={editMode}/>
 
-                                <div style={{
-                                    flex: 1,
-
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center"
-                                }}>
-                                    <div style={{
-                                        width: 130,
-                                        height: "100%"
-                                    }}>
-                                        <WardrobeAvatar configuration={figureConfiguration}/>
-                                    </div>
-
-                                    <div style={{ width: "100%" }}>
-                                        <DialogButton onClick={() => onApply(figureConfiguration)}>Save my looks</DialogButton>
-                                    </div>
-                                </div>
+                                {children}
 
                                 {(figuresExpanded) && (
-                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
+                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onFigureConfigurationChange}/>
                                 )}
                             </div>
                         )
@@ -261,29 +202,12 @@ export default function FigureWardrobeDialog({ title, header, initialFigureConfi
                                 flexDirection: "row",
                                 gap: 10
                             }}>
-                                <WardrobeHotlooks figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} editMode={editMode}/>
+                                <WardrobeHotlooks figureConfiguration={figureConfiguration} onFigureConfigurationChange={onFigureConfigurationChange} editMode={editMode}/>
 
-                                <div style={{
-                                    flex: 1,
-
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center"
-                                }}>
-                                    <div style={{
-                                        width: 130,
-                                        height: "100%"
-                                    }}>
-                                        <WardrobeAvatar configuration={figureConfiguration}/>
-                                    </div>
-
-                                    <div style={{ width: "100%" }}>
-                                        <DialogButton onClick={() => onApply(figureConfiguration)}>Save my looks</DialogButton>
-                                    </div>
-                                </div>
+                                {children}
 
                                 {(figuresExpanded) && (
-                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={setFigureConfiguration}/>
+                                    <WardrobeFigures figureConfiguration={figureConfiguration} onFigureChange={onFigureConfigurationChange}/>
                                 )}
                             </div>
                         )

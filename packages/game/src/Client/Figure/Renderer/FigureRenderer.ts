@@ -260,9 +260,9 @@ export default class FigureRenderer {
 
     private effectTypeRemaps: Map<string, string> = new Map();
 
-    private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[]) {
+    private async getActionsForBodyParts(actions: AvatarActionData[], effects: EffectData[], ignoreBodyparts: string[]) {
         let result: BodyPartAction[] = [];
-        const bodyPartsRemoved: string[] = [];
+        const bodyPartsRemoved: string[] = ignoreBodyparts;
         this.effectTypeRemaps = new Map();
 
         for(const effect of effects) {
@@ -479,7 +479,7 @@ export default class FigureRenderer {
         return direction;
     }
 
-    public async render(useConfigurationEffect: boolean = false) {
+    public async render(useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
         const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !this.actions.some((actionId) => actionId.startsWith("AvatarEffect"));
 
         if(shouldAddConfigurationEffect) {
@@ -492,7 +492,7 @@ export default class FigureRenderer {
 
         const direction = this.getDirectionFromEffect(effects);
 
-        const actionsForBodyParts = await this.getActionsForBodyParts(actions, effects);
+        const actionsForBodyParts = await this.getActionsForBodyParts(actions, effects, ignoreBodyparts);
 
         // TODO: already here filter out parts that will not be rendered to minimize the overhead
         const spritesFromConfiguration = this.getSpritesFromConfiguration();
@@ -1077,9 +1077,9 @@ export default class FigureRenderer {
         return spriteFrame;
     }
 
-    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false) {
+    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
         return await (async () => {
-            const { sprites, effectSprites } = await this.render(useConfigurationEffect || drawEffects);
+            const { sprites, effectSprites } = await this.render(useConfigurationEffect || drawEffects, ignoreBodyparts);
 
             let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         
