@@ -9,9 +9,10 @@ export type TraxDialogSetProps = {
     set?: FurnitureData;
 
     onEjectClick?: () => void;
+    onDragSlot?: (slot: number) => void;
 }
 
-export default function TraxDialogSet({ slot, set, onEjectClick }: TraxDialogSetProps) {
+export default function TraxDialogSet({ slot, set, onEjectClick, onDragSlot }: TraxDialogSetProps) {
     return (
         <FlexLayout direction="column" gap={0}>
             <FlexLayout align="center" justify="center" className={`trax-dialog-set-header ${(set)?("sprite_dialog_trax_set_header"):("sprite_dialog_trax_set_header_inactive")}`} onClick={onEjectClick} style={{
@@ -44,7 +45,7 @@ export default function TraxDialogSet({ slot, set, onEjectClick }: TraxDialogSet
                                 left: 2 + ((index - (Math.floor(index / 3) * 3)) * 24),
 
                                 cursor: "grab"
-                            }}>
+                            }} onMouseDown={() => onDragSlot?.(index)}>
                                 <div className={`sprite_dialog_trax_samples_set_${slot + 1}_sample_${index + 1}`}/>
                             </div>
                         ))}

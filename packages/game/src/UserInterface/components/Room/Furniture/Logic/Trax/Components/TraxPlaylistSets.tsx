@@ -8,9 +8,10 @@ import { useCallback, useMemo, useState } from "react";
 export type TraxPlaylistSetsProps = {
     sets: (FurnitureData | null)[];
     onSetsChange: (sets: (FurnitureData | null)[]) => void;
+    onDragSlot: (set: FurnitureData, slot: number) => void;
 };
 
-export default function TraxPlaylistSets({ sets, onSetsChange }: TraxPlaylistSetsProps) {
+export default function TraxPlaylistSets({ sets, onSetsChange, onDragSlot }: TraxPlaylistSetsProps) {
     const [userSets] = useState<FurnitureData[]>(
         Array(10).fill(null).map((_, index) => FurnitureData.create({ type: `sound_set_${index + 1}`, name: `Sound set ${index + 1}`}))
     );
@@ -54,7 +55,7 @@ export default function TraxPlaylistSets({ sets, onSetsChange }: TraxPlaylistSet
             
             <TraxDialogSets>
                 {sets.map((set, index) => (
-                    <TraxDialogSet slot={index} set={set ?? undefined} onEjectClick={() => handleEjectSet(set)}/>
+                    <TraxDialogSet slot={index} set={set ?? undefined} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => handleEjectSet(set)}/>
                 ))}
             </TraxDialogSets>
         </FlexLayout>
