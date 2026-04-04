@@ -166,7 +166,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                                     </FlexLayout>
                                 )))}
 
-                                <div style={{ height: 15 }}/>
+                                <div style={{ height: 10 }}/>
                             </FlexLayout>
 
                             <FlexLayout ref={containerRef} direction="column" gap={2}>
@@ -211,40 +211,70 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                                     </FlexLayout>
                                 )))}
 
-                                <div ref={slider.sliderContainerRef} style={{
-                                    height: 15,
-
+                                <div style={{
                                     position: "relative"
                                 }}>
-                                    <div style={{
-                                        width: 25,
-                                        position: "absolute",
+                                    <div ref={slider.sliderContainerRef} style={{
+                                        height: 15,
 
-                                        display: "flex",
-
-                                        top: -5,
-                                        left: slider.sliderIndex * 22,
-
-                                        zIndex: 1
+                                        position: "absolute"
                                     }}>
-                                        <div className="sprite_dialog_trax_slider" style={{
+                                        <div style={{
+                                            width: 25,
                                             position: "absolute",
 
-                                            bottom: 0
-                                        }}/>
+                                            display: "flex",
 
-                                        <div onMouseDown={slider.handleSliderMouseDown} style={{
-                                            flex: 1,
+                                            top: -5,
+                                            left: slider.sliderIndex * 22,
 
-                                            height: 14,
-                                            width: 25,
-
-                                            cursor: "pointer",
-
-                                            position: "relative"
+                                            zIndex: 1
                                         }}>
+                                            <div className="sprite_dialog_trax_slider" style={{
+                                                position: "absolute",
 
+                                                bottom: 0,
+
+                                                pointerEvents: "none"
+                                            }}/>
+
+                                            <div onMouseDown={slider.handleSliderMouseDown} style={{
+                                                flex: 1,
+
+                                                height: 14,
+                                                width: 25,
+
+                                                cursor: "pointer",
+
+                                                position: "relative"
+                                            }}>
+
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    <div style={{
+                                        position: "relative",
+                                        width: "100%",
+                                        height: 15,
+                                        overflow: "hidden",
+                                        fontSize: 9,
+                                        color: "#97D5CE"
+                                    }}>
+                                        {Array(5).fill(null).map((_, index) => (
+                                            <div key={index} style={{
+                                                position: "absolute",
+
+                                                left: (5 * 22) + (index * 5 * 22) - ((offset % 5) * 22),
+                                                top: 3,
+
+                                                transform: "translateX(-50%)",
+                                                textAlign: "center",
+                                                textWrap: "nowrap"
+                                            }}>
+                                                {new Date((Math.floor(offset / 5) + index + 1) * 10 * 1000).toISOString().slice(14, 19)}min
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </FlexLayout>
