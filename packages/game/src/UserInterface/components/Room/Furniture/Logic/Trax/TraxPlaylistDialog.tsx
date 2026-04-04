@@ -129,21 +129,36 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                             <div className="sprite_dialog_trax_stop"/>
                         </TraxButton>
 
-                        <TraxButton type="bottom-off" onClick={() => {
-                            if(offset > 0) {
-                                setOffset(offset - 1);
-                                slider.setSliderIndex(Math.min(23, slider.sliderIndex + 1));
-                            }
-                        }} style={{ padding: "0 4px" }}>
-                            <div className="sprite_dialog_trax_arrow-left-small"/>
+                        <TraxButton type="bottom-off" style={{ width: 54 }}>
+                            <div className="sprite_dialog_trax_save"/>
                         </TraxButton>
 
                         <TraxButton type="bottom-off" onClick={() => {
-                            setOffset(offset + 1);
-                            slider.setSliderIndex(Math.max(0, slider.sliderIndex - 1));
+                            setTrax({
+                                ...trax,
+                                slots: []
+                            });
                         }} style={{ padding: "0 4px" }}>
-                            <div className="sprite_dialog_trax_arrow-right-small"/>
+                            <div className="sprite_dialog_trax_trash"/>
                         </TraxButton>
+
+                        <FlexLayout direction="row" gap={0}>
+                            <TraxButton type="bottom-off" onClick={() => {
+                                if(offset > 0) {
+                                    setOffset(offset - 1);
+                                    slider.setSliderIndex(Math.min(23, slider.sliderIndex + 1));
+                                }
+                            }} style={{ padding: "0 4px" }}>
+                                <div className="sprite_dialog_trax_arrow-left-small"/>
+                            </TraxButton>
+
+                            <TraxButton type="bottom-off" onClick={() => {
+                                setOffset(offset + 1);
+                                slider.setSliderIndex(Math.max(0, slider.sliderIndex - 1));
+                            }} style={{ padding: "0 4px" }}>
+                                <div className="sprite_dialog_trax_arrow-right-small"/>
+                            </TraxButton>
+                        </FlexLayout>
                     </FlexLayout>
 
                     <TraxDialogPanel style={{
