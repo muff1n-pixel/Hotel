@@ -35,7 +35,7 @@ export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
     }, [page]);
 
     return (
-        <FlexLayout direction="column" align="center" gap={0}>
+        <div style={{ position: "relative" }}>
             <div className="sprite_dialog_trax_list trax-dialog-list">
                 <div className="trax-dialog-list-container">
                     {Array(3).fill(null).map((_, index) => {
@@ -62,25 +62,33 @@ export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
                 </div>
             </div>
 
-            <TraxDialogPanel type="top-off">
-                <FlexLayout direction="row" align="center" gap={5} style={{
-                    padding: "0px 5px"
-                }}>
-                    <div className="sprite_dialog_trax_arrow-left" onClick={handlePreviousPage} style={{
-                        cursor: "pointer"
-                    }}/>
+            <FlexLayout direction="column" align="center" gap={0} style={{
+                position: "absolute",
 
-                    <div style={{
-                        fontSize: 10
+                top: "100%",
+                left: 0,
+                right: 0
+            }}>
+                <TraxDialogPanel type="top-off">
+                    <FlexLayout direction="row" align="center" gap={5} style={{
+                        padding: "0px 5px"
                     }}>
-                        {page + 1}/{maxPages}
-                    </div>
+                        <div className="sprite_dialog_trax_arrow-left" onClick={handlePreviousPage} style={{
+                            cursor: "pointer"
+                        }}/>
 
-                    <div className="sprite_dialog_trax_arrow-right" onClick={handleNextPage} style={{
-                        cursor: "pointer"
-                    }}/>
-                </FlexLayout>
-            </TraxDialogPanel>
-        </FlexLayout>
+                        <div style={{
+                            fontSize: 10
+                        }}>
+                            {page + 1}/{maxPages}
+                        </div>
+
+                        <div className="sprite_dialog_trax_arrow-right" onClick={handleNextPage} style={{
+                            cursor: "pointer"
+                        }}/>
+                    </FlexLayout>
+                </TraxDialogPanel>
+            </FlexLayout>
+        </div>
     );
 }

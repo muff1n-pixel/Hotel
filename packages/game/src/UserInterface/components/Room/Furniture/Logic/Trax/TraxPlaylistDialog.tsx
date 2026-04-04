@@ -103,7 +103,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
 
     return (
         <Fragment>
-            <TraxDialog title="Trax Editor" hidden={hidden} onClose={onClose} width={590} height={350} initialPosition="center" style={{
+            <TraxDialog title="Trax Editor" hidden={hidden} onClose={onClose} width={590} height={340} initialPosition="center" style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10
