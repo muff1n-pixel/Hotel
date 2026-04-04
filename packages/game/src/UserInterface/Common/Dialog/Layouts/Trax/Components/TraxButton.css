@@ -1,0 +1,47 @@
+.trax-button {
+    border: 1px solid #000000;
+ 
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.trax-button-disabled {
+    pointer-events: none;
+
+    opacity: 0.5;
+}
+
+.trax-button-content {
+    background: #85A5A9;
+
+    border-radius: 6px;
+
+    border-top: 2px solid #A1B7BA;
+    border-left: 2px solid #A1B7BA;
+
+    border-right: 2px solid #6A8285;
+    border-bottom: 2px solid #6A8285;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    min-height: 20px;
+    min-width: 54px;
+
+    box-sizing: border-box;
+}
+
+.trax-button-bottom-off {
+    border-bottom: none;
+
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.trax-button-bottom-off .trax-button-content {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}

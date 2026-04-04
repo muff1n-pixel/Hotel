@@ -41,6 +41,8 @@ export default function useTraxSlider() {
         sliderIndex,
 
         setMovingSlider,
-        handleSliderMouseDown: () => setMovingSlider(true)
+        handleSliderMouseDown: () => setMovingSlider(true),
+        
+        setSliderIndex
     };
 }

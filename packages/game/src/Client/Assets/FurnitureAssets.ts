@@ -1,6 +1,7 @@
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult } from "./AssetFetcher";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
+import AudioFetcher from "@Client/Assets/AudioFetcher";
 
 export default class FurnitureAssets {
     public static placeholder: Awaited<AssetSpriteResult["result"]>;
@@ -36,6 +37,10 @@ export default class FurnitureAssets {
 
     public static async getFurnitureSprite(furnitureName: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/furniture/${furnitureName}/${furnitureName}.png`, properties);
+    }
+
+    public static async getFurnitureAudioBuffer(context: AudioContext, furnitureName: string, soundFile: string) {
+        return await AudioFetcher.getAudioBuffer(context, `/assets/furniture/${furnitureName}/sounds/${soundFile}`);
     }
 
     public static readonly assetSprites: Map<string, FurnitureRendererSprite | null> = new Map();

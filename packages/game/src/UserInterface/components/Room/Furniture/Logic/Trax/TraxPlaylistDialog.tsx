@@ -1,21 +1,14 @@
 import { FurnitureData, FurnitureTraxEditorData, FurnitureTraxSetData } from "@pixel63/events";
+import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxButton";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import TraxPlaylistSets from "@UserInterface/Components/Room/Furniture/Logic/Trax/Components/TraxPlaylistSets";
+import useTrax from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTrax";
 import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
+import TraxPlaylist from "@UserInterface/Components/Room/Furniture/Logic/Trax/Logic/TraxPlaylist";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-type TraxSlot = {
-    row: number;
-    column: number;
-
-    length: number;
-
-    set: number;
-    slot: number;
-};
 
 export type TraxPlaylistDialogProps = {
     hidden?: boolean;
@@ -26,31 +19,35 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
     const containerRef = useRef<HTMLDivElement>(null);
     const slotRef = useRef<HTMLDivElement>(null);
 
-    const [slots, setSlots] = useState<TraxSlot[]>([]);
     const [trax, setTrax] = useState<FurnitureTraxEditorData>(FurnitureTraxEditorData.create({}));
 
+    const slider = useTraxSlider();
+    const player = useTrax(trax, slider.setSliderIndex);
+
     useEffect(() => {
-        setSlots(slots.filter((slot) => trax.channels[slot.set]));
-    }, [trax]);
+        setTrax({
+            ...trax,
+            slots: trax.slots.filter((slot) => trax.sets.some((set) => set.index === slot.set))
+        })
+    }, [trax.sets]);
 
     const mappedSlots = useMemo(() => {
-        console.log({ slots });
         return Array(4).fill(null).map((_, row) => {
-            const rowSlots = slots.filter((slot) => slot.row === row);
+            const rowSlots = trax.slots.filter((slot) => slot.row === row);
 
             return Array(24).fill(null).map((_, column) => {
-                return rowSlots.find((slot) => column >= slot.column && column < slot.column + slot.length);
+                return rowSlots.find((slot) => column >= slot.column && column < slot.column + slot.duration);
             });
         });
-    }, [slots]);
+    }, [trax.slots]);
 
-    const handleSetSlot = useCallback((set: FurnitureTraxSetData, slot: number, length: number, row: number, column: number) => {
-        const mutatedSlot = slots.filter((slot) => {
+    const handleSetSlot = useCallback((set: FurnitureTraxSetData, slot: number, duration: number, row: number, column: number) => {
+        const mutatedSlot = trax.slots.filter((slot) => {
             if(slot.row !== row) {
                 return true;
             }
 
-            if(slot.column + slot.length - 1 < column) {
+            if(slot.column + slot.duration - 1 < column) {
                 return true;
             }
 
@@ -62,38 +59,45 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
         });
 
         mutatedSlot.push({
+            "$type": "FurnitureTraxSlotData",
+
             row,
             column,
-            length,
+            duration,
             
             set: set.index,
             slot
         });
 
-        setSlots(mutatedSlot);
-    }, [slots, trax]);
+        setTrax({
+            ...trax,
+            slots: mutatedSlot
+        });
+    }, [trax]);
 
-    const handleRemoveSlot = useCallback((length: number, row: number, column: number) => {
-        const mutatedSlot = slots.filter((slot) => {
+    const handleRemoveSlot = useCallback((duration: number, row: number, column: number) => {
+        const mutatedSlot = trax.slots.filter((slot) => {
             if(slot.row !== row) {
                 return true;
             }
 
-            if(slot.column + slot.length - 1 < column) {
+            if(slot.column + slot.duration - 1 < column) {
                 return true;
             }
 
-            if(slot.column > column + length - 1) {
+            if(slot.column > column + duration - 1) {
                 return true;
             }
 
             return false;
         });
 
-        setSlots(mutatedSlot);
-    }, [slots, trax]);
+        setTrax({
+            ...trax,
+            slots: mutatedSlot
+        });
+    }, [trax]);
 
-    const slider = useTraxSlider();
     const slot = useTraxSlot(containerRef, slotRef, handleSetSlot);
 
     return (
@@ -105,104 +109,125 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
             }}>
                 <TraxPlaylistSets trax={trax} onTraxChange={setTrax} onDragSlot={slot.handleDragging}/>
 
-                <TraxDialogPanel style={{
-                    padding: "8px 8px 8px 4px"
-                }}>
-                    <FlexLayout gap={2} direction="row">
-                        <FlexLayout direction="column" gap={2}>
-                            {(Array(4).fill(null).map((_, row) => (
-                                <FlexLayout key={row} justify="center" align="center" style={{
-                                    width: 16,
-                                    height: 25,
+                <FlexLayout direction="column" gap={0}>
+                    <FlexLayout direction="row" gap={5} style={{
+                        alignSelf: "flex-end",
+                        paddingRight: 6
+                    }}>
+                        {(!player.playing)?(
+                            <TraxButton type="bottom-off" onClick={player.handleStart}>
+                                <div className="sprite_dialog_trax_play"/>
+                            </TraxButton>
+                        ):(
+                            <TraxButton type="bottom-off" onClick={player.handlePause}>
+                                <div className={(player.paused)?("sprite_dialog_trax_play"):("sprite_dialog_trax_pause")}/>
+                            </TraxButton>
+                        )}
 
-                                    textAlign: "center",
+                        <TraxButton type="bottom-off" onClick={player.handleStop} disabled={!player.playing}>
+                            <div className="sprite_dialog_trax_stop"/>
+                        </TraxButton>
+                    </FlexLayout>
 
-                                    fontSize: 11,
-                                    fontFamily: "Ubuntu Bold",
-                                    textShadow: "1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000"
+                    <TraxDialogPanel style={{
+                        padding: "8px 8px 8px 4px"
+                    }}>
+                        <FlexLayout gap={2} direction="row">
+                            <FlexLayout direction="column" gap={2}>
+                                {(Array(4).fill(null).map((_, row) => (
+                                    <FlexLayout key={row} justify="center" align="center" style={{
+                                        width: 16,
+                                        height: 25,
+
+                                        textAlign: "center",
+
+                                        fontSize: 11,
+                                        fontFamily: "Ubuntu Bold",
+                                        textShadow: "1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000"
+                                    }}>
+                                        {row + 1}
+                                    </FlexLayout>
+                                )))}
+
+                                <div style={{ height: 15 }}/>
+                            </FlexLayout>
+
+                            <FlexLayout ref={containerRef} direction="column" gap={2}>
+                                {(Array(4).fill(null).map((_, row) => (
+                                    <FlexLayout key={row} direction="row" gap={1} style={{
+                                        height: 25,
+
+                                        border: "1px solid #000000",
+                                        background: "#83A2B0",
+                                        borderRadius: 6,
+                                        padding: 1,
+
+                                        boxSizing: "border-box"
+                                    }}>
+                                        {Array(24).fill(null).map((_, column) => (
+                                            <div key={column} className="sprite_dialog_trax_slot" data-trax-row={row} data-trax-slot={column}>
+                                                {(mappedSlots[row][column]) && (
+                                                    <div className={`sprite_dialog_trax_samples_set_${mappedSlots[row][column].set + 1}_sample_${mappedSlots[row][column].slot + 1}`} style={{
+                                                        position: "relative",
+                                                        cursor: "pointer"
+                                                    }} onClick={() => mappedSlots[row][column] && handleRemoveSlot(mappedSlots[row][column].duration, mappedSlots[row][column].row, mappedSlots[row][column].column)}>
+                                                        {(mappedSlots[row][column].set === mappedSlots[row][column + 1]?.set && mappedSlots[row][column].slot === mappedSlots[row][column + 1]?.slot) && (
+                                                            <div className={`sprite_dialog_trax_samples_set_${mappedSlots[row][column].set + 1}_connector`} style={{
+                                                                position: "absolute",
+
+                                                                right: -3,
+                                                                top: 0,
+
+                                                                zIndex: 1
+                                                            }}/>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </FlexLayout>
+                                )))}
+
+                                <div ref={slider.sliderContainerRef} style={{
+                                    height: 15,
+
+                                    position: "relative"
                                 }}>
-                                    {row + 1}
-                                </FlexLayout>
-                            )))}
-
-                            <div style={{ height: 15 }}/>
-                        </FlexLayout>
-
-                        <FlexLayout ref={containerRef} direction="column" gap={2}>
-                            {(Array(4).fill(null).map((_, row) => (
-                                <FlexLayout key={row} direction="row" gap={1} style={{
-                                    height: 25,
-
-                                    border: "1px solid #000000",
-                                    background: "#83A2B0",
-                                    borderRadius: 6,
-                                    padding: 1,
-
-                                    boxSizing: "border-box"
-                                }}>
-                                    {Array(24).fill(null).map((_, column) => (
-                                        <div key={column} className="sprite_dialog_trax_slot" data-trax-row={row} data-trax-slot={column}>
-                                            {(mappedSlots[row][column]) && (
-                                                <div className={`sprite_dialog_trax_samples_set_${mappedSlots[row][column].set + 1}_sample_${mappedSlots[row][column].slot + 1}`} style={{
-                                                    position: "relative",
-                                                    cursor: "pointer"
-                                                }} onClick={() => mappedSlots[row][column] && handleRemoveSlot(mappedSlots[row][column].length, mappedSlots[row][column].row, mappedSlots[row][column].column)}>
-                                                    {(mappedSlots[row][column].set === mappedSlots[row][column + 1]?.set && mappedSlots[row][column].slot === mappedSlots[row][column + 1]?.slot) && (
-                                                        <div className={`sprite_dialog_trax_samples_set_${mappedSlots[row][column].set + 1}_connector`} style={{
-                                                            position: "absolute",
-
-                                                            right: -3,
-                                                            top: 0,
-
-                                                            zIndex: 1
-                                                        }}/>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </FlexLayout>
-                            )))}
-
-                            <div ref={slider.sliderContainerRef} style={{
-                                height: 15,
-
-                                position: "relative"
-                            }}>
-                                <div style={{
-                                    width: 25,
-                                    position: "absolute",
-
-                                    display: "flex",
-
-                                    top: -5,
-                                    left: slider.sliderIndex * 22,
-
-                                    zIndex: 1
-                                }}>
-                                    <div className="sprite_dialog_trax_slider" style={{
+                                    <div style={{
+                                        width: 25,
                                         position: "absolute",
 
-                                        bottom: 0
-                                    }}/>
+                                        display: "flex",
 
-                                    <div onMouseDown={slider.handleSliderMouseDown} style={{
-                                        flex: 1,
+                                        top: -5,
+                                        left: slider.sliderIndex * 22,
 
-                                        height: 14,
-                                        width: 25,
-
-                                        cursor: "pointer",
-
-                                        position: "relative"
+                                        zIndex: 1
                                     }}>
+                                        <div className="sprite_dialog_trax_slider" style={{
+                                            position: "absolute",
 
+                                            bottom: 0
+                                        }}/>
+
+                                        <div onMouseDown={slider.handleSliderMouseDown} style={{
+                                            flex: 1,
+
+                                            height: 14,
+                                            width: 25,
+
+                                            cursor: "pointer",
+
+                                            position: "relative"
+                                        }}>
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </FlexLayout>
                         </FlexLayout>
-                    </FlexLayout>
-                </TraxDialogPanel>
+                    </TraxDialogPanel>
+                </FlexLayout>
             </TraxDialog>
             
             {(slot.dragging && slot.set !== null && slot.slot !== null && slot.length !== null) && (

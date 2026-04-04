@@ -2,9 +2,9 @@ syntax = "proto3";
 
 import "Furniture/FurnitureData.proto";
 import "Furniture/Trax/FurnitureTraxSetData.proto";
-import "Furniture/Trax/FurnitureTraxChannelData.proto";
+import "Furniture/Trax/FurnitureTraxSlotData.proto";
 
 message FurnitureTraxEditorData {
     repeated FurnitureTraxSetData sets = 1;
-    repeated FurnitureTraxChannelData channels = 2;
+    repeated FurnitureTraxSlotData slots = 2;
 }
