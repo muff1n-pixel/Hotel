@@ -201,6 +201,8 @@
 .sprite_dialog_trax_samples_set_4_connector { background-image: url('./spritesheet.png'); background-position: -642px -154px; width: 5px; height: 21px; }
 .sprite_friends_close-button { background-image: url('./spritesheet.png'); background-position: -611px -214px; width: 10px; height: 10px; }
 .sprite_stickies_close { background-image: url('./spritesheet.png'); background-position: -408px -275px; width: 10px; height: 10px; }
+.sprite_dialog_trax_arrow-left-small { background-image: url('./spritesheet.png'); background-position: -639px -574px; width: 8px; height: 12px; }
+.sprite_dialog_trax_arrow-right-small { background-image: url('./spritesheet.png'); background-position: -613px -151px; width: 8px; height: 12px; }
 .sprite_stickies_remove { background-image: url('./spritesheet.png'); background-position: -612px -327px; width: 9px; height: 10px; }
 .sprite_dialog_scroll_handle_top:active { background-image: url('./spritesheet.png'); background-position: -357px -331px; width: 17px; height: 5px; }
 .sprite_dialog_scroll_handle_top:hover { background-image: url('./spritesheet.png'); background-position: -374px -331px; width: 17px; height: 5px; }
@@ -210,11 +212,11 @@
 .sprite_dialog_scroll_handle_background:active { background-image: url('./spritesheet.png'); background-position: -384px -222px; width: 17px; height: 4px; }
 .sprite_dialog_scroll_handle_background_focus { background-image: url('./spritesheet.png'); background-position: -401px -222px; width: 17px; height: 4px; }
 .sprite_dialog_scroll_handle_background { background-image: url('./spritesheet.png'); background-position: -304px -226px; width: 17px; height: 4px; }
-.sprite_toolbar_arrow { background-image: url('./spritesheet.png'); background-position: -639px -574px; width: 8px; height: 8px; }
-.sprite_navigator_user-count { background-image: url('./spritesheet.png'); background-position: -639px -582px; width: 7px; height: 8px; }
+.sprite_toolbar_arrow { background-image: url('./spritesheet.png'); background-position: -613px -163px; width: 8px; height: 8px; }
+.sprite_navigator_user-count { background-image: url('./spritesheet.png'); background-position: -614px -70px; width: 7px; height: 8px; }
 .sprite_context-menu_arrow-down { background-image: url('./spritesheet.png'); background-position: -418px -275px; width: 10px; height: 5px; }
 .sprite_toolbar_chat_pointer { background-image: url('./spritesheet.png'); background-position: -418px -280px; width: 10px; height: 5px; }
 .sprite_dialog_scroll_disabled_background { background-image: url('./spritesheet.png'); background-position: -576px -555px; width: 17px; height: 2px; }
 .sprite_dialog_scroll_enabled_background { background-image: url('./spritesheet.png'); background-position: -593px -555px; width: 17px; height: 2px; }
-.sprite_forms_arrow { background-image: url('./spritesheet.png'); background-position: -613px -151px; width: 8px; height: 4px; }
+.sprite_forms_arrow { background-image: url('./spritesheet.png'); background-position: -639px -586px; width: 8px; height: 4px; }
 .sprite_dialog_list-fold { background-image: url('./spritesheet.png'); background-position: -611px -224px; width: 10px; height: 2px; }

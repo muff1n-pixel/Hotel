@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function useTraxSlider() {
+export default function useTraxSlider(offset: number) {
     const sliderContainerRef = useRef<HTMLDivElement>(null);
     
     const [sliderIndex, setSliderIndex] = useState(0);
@@ -34,7 +34,7 @@ export default function useTraxSlider() {
             document.removeEventListener("mousemove", mousemoveListener);
             document.removeEventListener("mouseup", mouseupListener);
         };
-    }, [movingSlider, sliderContainerRef]);
+    }, [movingSlider, offset, sliderContainerRef]);
 
     return {
         sliderContainerRef,
