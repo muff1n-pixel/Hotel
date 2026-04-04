@@ -6,12 +6,14 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useCallback, useMemo, useState } from "react";
 
 export type TraxPlaylistSetsProps = {
+    audioContext: React.RefObject<AudioContext>;
+
     trax: FurnitureTraxEditorData;
     onTraxChange: (trax: FurnitureTraxEditorData) => void;
     onDragSlot: (set: FurnitureTraxSetData, slot: number) => void;
 };
 
-export default function TraxPlaylistSets({ trax, onTraxChange, onDragSlot }: TraxPlaylistSetsProps) {
+export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onDragSlot }: TraxPlaylistSetsProps) {
     const [userSets] = useState<FurnitureData[]>(
         Array(10).fill(null).map((_, index) => FurnitureData.create({ id: `sound_set_${index + 1}`, type: `sound_set_${index + 1}`, name: `Sound set ${index + 1}`}))
     );
@@ -71,7 +73,7 @@ export default function TraxPlaylistSets({ trax, onTraxChange, onDragSlot }: Tra
             
             <TraxDialogSets>
                 {mappedSets.map((set, index) => (
-                    <TraxDialogSet slot={index} set={set} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => set && handleEjectSet(set)}/>
+                    <TraxDialogSet audioContext={audioContext} slot={index} set={set} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => set && handleEjectSet(set)}/>
                 ))}
             </TraxDialogSets>
         </FlexLayout>

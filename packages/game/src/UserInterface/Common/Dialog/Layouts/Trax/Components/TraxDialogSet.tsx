@@ -3,8 +3,12 @@ import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Component
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 import "./TraxDialogSet.css";
+import { useCallback } from "react";
+import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 
 export type TraxDialogSetProps = {
+    audioContext: React.RefObject<AudioContext>;
+
     slot: number;
     set?: FurnitureTraxSetData;
 
@@ -12,7 +16,45 @@ export type TraxDialogSetProps = {
     onDragSlot?: (slot: number) => void;
 }
 
-export default function TraxDialogSet({ slot, set, onEjectClick, onDragSlot }: TraxDialogSetProps) {
+export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, onDragSlot }: TraxDialogSetProps) {
+    const handlePlayback = useCallback((set: FurnitureTraxSetData, index: number) => {
+        if(!set.furniture) {
+            return;
+        }
+
+        if(audioContext.current.state !== "closed") {
+            audioContext.current.close();
+        }
+
+        audioContext.current = new AudioContext();
+
+        FurnitureAssets.getFurnitureData(set.furniture.type).then((furnitureData) => {
+            const furnitureSound = furnitureData.sounds?.[index];
+
+            if(!furnitureSound) {
+                console.error("Sound does not exist in furniture!");
+
+                return;
+            }
+
+            FurnitureAssets.getFurnitureAudioBuffer(audioContext.current, furnitureData.index.type, furnitureSound.file).then((audioBuffer) => {
+                console.log("Adding buffer");
+
+                const source = audioContext.current.createBufferSource();
+                source.buffer = audioBuffer;
+
+                source.connect(audioContext.current.destination);
+
+                source.start(audioContext.current.currentTime);
+            });
+        });
+
+    }, [audioContext]);
+
+    const handleStopPlayback = useCallback(() => {
+        audioContext.current.suspend();
+    }, [audioContext]);
+
     return (
         <FlexLayout direction="column" gap={0}>
             <FlexLayout align="center" justify="center" className={`trax-dialog-set-header ${(set)?("sprite_dialog_trax_set_header"):("sprite_dialog_trax_set_header_inactive")}`} onClick={onEjectClick} style={{
@@ -45,7 +87,7 @@ export default function TraxDialogSet({ slot, set, onEjectClick, onDragSlot }: T
                                 left: 2 + ((index - (Math.floor(index / 3) * 3)) * 24),
 
                                 cursor: "grab"
-                            }} onMouseDown={() => onDragSlot?.(index)}>
+                            }} onMouseDown={() => onDragSlot?.(index)} onMouseEnter={() => handlePlayback(set, index)} onMouseLeave={handleStopPlayback}>
                                 <div className={`sprite_dialog_trax_samples_set_${slot + 1}_sample_${index + 1}`}/>
                             </div>
                         ))}

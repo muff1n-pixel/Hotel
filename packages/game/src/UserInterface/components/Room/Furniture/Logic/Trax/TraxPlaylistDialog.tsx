@@ -18,6 +18,8 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
     const containerRef = useRef<HTMLDivElement>(null);
     const slotRef = useRef<HTMLDivElement>(null);
 
+    const audioContext = useRef<AudioContext>(new AudioContext());
+
     const [trax, setTrax] = useState<FurnitureTraxEditorData>(FurnitureTraxEditorData.create({}));
 
     const [offset, setOffset] = useState(0);
@@ -108,7 +110,7 @@ export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDial
                 flexDirection: "column",
                 gap: 10
             }}>
-                <TraxPlaylistSets trax={trax} onTraxChange={setTrax} onDragSlot={slot.handleDragging}/>
+                <TraxPlaylistSets audioContext={audioContext} trax={trax} onTraxChange={setTrax} onDragSlot={slot.handleDragging}/>
 
                 <FlexLayout direction="column" gap={0}>
                     <FlexLayout direction="row" gap={5} style={{
