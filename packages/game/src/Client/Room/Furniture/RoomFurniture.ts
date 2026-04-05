@@ -173,6 +173,23 @@ export default class RoomFurniture {
 
             this.data.data = payload.data;
         }
+
+        if(this.furnitureData.interactionType === "trax") {
+            if(this.data.animation === 0) {
+                console.log("reset");
+                if(this.instance.traxmachine.value?.data.id === this.data.id) {
+                    this.instance.traxmachine.value = undefined;
+                    this.instance.traxmachine.update();
+                }
+            }
+            else {
+                if(this.instance.traxmachine.value?.data.id !== this.data.id) {
+            console.log("set", this);
+                    this.instance.traxmachine.value = this;
+                    this.instance.traxmachine.update();
+                }
+            }
+        }
     }
 
     isPositionInside(position: Omit<RoomPositionData, "depth">, dimensions: RoomPositionData) {

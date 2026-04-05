@@ -1,4 +1,3 @@
-import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useUser } from "../../Hooks/useUser";
 import WidgetButton from "./WidgetButton";

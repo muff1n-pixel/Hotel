@@ -15,6 +15,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
+import ObservableProperty from "@Client/Utilities/ObservableProperty";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -47,6 +48,8 @@ export default class RoomInstance {
     public bots: RoomBot[] = [];
     public pets: RoomPet[] = [];
 
+    public traxmachine = new ObservableProperty<RoomFurniture>();
+
     public information?: RoomInformationData;
     
     public hasRights: boolean;
@@ -70,20 +73,6 @@ export default class RoomInstance {
 
         for(const user of event.users) {
             this.users.push(this.addUser(user as Required<RoomUserData>));
-        }
-
-        for(const furniture of event.furniture) {
-            const furnitureData = event.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
-
-            if(!furnitureData) {
-                RoomLogger.error("Server did not send furniture data for user furniture!", {
-                    furniture
-                });
-
-                continue;
-            }
-
-            this.furnitures.push(new RoomFurniture(this, furnitureData, furniture));
         }
 
         for(const bot of event.bots) {
@@ -115,6 +104,8 @@ export default class RoomInstance {
         this.removeEventListeners();
 
         this.roomRenderer.terminate();
+
+        this.traxmachine.value = undefined;
 
         AssetFetcher.clearMemory();
 

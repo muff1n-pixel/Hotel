@@ -1,4 +1,5 @@
 import WidgetNotification from "@UserInterface/Common/Widgets/WidgetNotification";
+import RoomTraxMachineWidget from "@UserInterface/Components/Room/Widget/RoomTraxMachineWidget";
 import Widget from "@UserInterface/Components/Widget/Widget";
 import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotifications";
 import { clientInstance } from "src";
@@ -20,6 +21,8 @@ export default function FlowInstance() {
             justifyContent: "flex-end"
         }}>
             <Widget/>
+
+            <RoomTraxMachineWidget/>
 
             {widgetNotifications?.map((widgetNotification) => (
                 <WidgetNotification
