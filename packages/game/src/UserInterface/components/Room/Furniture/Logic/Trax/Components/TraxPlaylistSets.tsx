@@ -1,9 +1,10 @@
-import { FurnitureData, FurnitureTraxSongData, FurnitureTraxSetData } from "@pixel63/events";
+import { FurnitureData, FurnitureTraxSongData, FurnitureTraxSetData, UserFurnitureData, UserInventorySoundSetsData, GetUserInventorySoundSetsData } from "@pixel63/events";
 import TraxDialogList from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogList";
 import TraxDialogSet from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSet";
 import TraxDialogSets from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSets";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { webSocketClient } from "src";
 
 export type TraxPlaylistSetsProps = {
     audioContext: React.RefObject<AudioContext>;
@@ -14,9 +15,7 @@ export type TraxPlaylistSetsProps = {
 };
 
 export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onDragSlot }: TraxPlaylistSetsProps) {
-    const [userSets] = useState<FurnitureData[]>(
-        Array(10).fill(null).map((_, index) => FurnitureData.create({ id: `sound_set_${index + 1}`, type: `sound_set_${index + 1}`, name: `Sound set ${index + 1}`}))
-    );
+    const [userSets, setUserSets] = useState<FurnitureData[]>([]);
 
     const mappedSets = useMemo(() => {
         return Array(4).fill(null).map((_, index) => trax.sets.find((set) => set.index === index));
@@ -25,6 +24,22 @@ export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onD
     const availableSets = useMemo(() => {
         return userSets.filter((set) => !trax.sets.some((traxSet) => traxSet.furniture?.id === set.id))
     }, [userSets, trax.sets]);
+
+    useEffect(() => {
+        const listener = webSocketClient.addProtobuffListener(UserInventorySoundSetsData, {
+            async handle(payload: UserInventorySoundSetsData) {
+                setUserSets(payload.sets);
+
+                
+            },
+        });
+
+        webSocketClient.sendProtobuff(GetUserInventorySoundSetsData, GetUserInventorySoundSetsData.create({}));
+
+        return () => {
+            webSocketClient.removeProtobuffListener(UserInventorySoundSetsData, listener);
+        };
+    }, []);
 
     const handleAddSet = useCallback((set: FurnitureData) => {
         let nextIndex = -1;
@@ -73,7 +88,7 @@ export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onD
             
             <TraxDialogSets>
                 {mappedSets.map((set, index) => (
-                    <TraxDialogSet audioContext={audioContext} slot={index} set={set} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => set && handleEjectSet(set)}/>
+                    <TraxDialogSet key={set?.furniture?.id} audioContext={audioContext} slot={index} set={set} onDragSlot={(slot) => set && onDragSlot(set, slot)} onEjectClick={() => set && handleEjectSet(set)}/>
                 ))}
             </TraxDialogSets>
         </FlexLayout>

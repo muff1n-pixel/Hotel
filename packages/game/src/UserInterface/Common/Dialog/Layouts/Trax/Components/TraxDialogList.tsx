@@ -17,6 +17,10 @@ export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
     const maxPages = useMemo(() => Math.ceil(sets.length / 3), [sets]);
 
     useEffect(() => {
+        setPage(0);
+    }, [sets]);
+
+    useEffect(() => {
         if(page >= maxPages) {
             setPage(maxPages - 1);
         }
@@ -42,7 +46,7 @@ export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
                         const set = sets[index + (page * 3)];
                         
                         return (
-                            <div key={(index + (page * 3))} style={{
+                            <div key={(set)?(set.id):((index + (page * 3)))} style={{
                                 flex: 1
                             }}>
                                 {(set) && (
