@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Furniture/Trax/Song/FurnitureTraxSongData.proto";
+
+message BurnRoomFurnitureTraxSongData {
+    string room_furniture_id = 1;
+
+    string song_id = 2;
+}

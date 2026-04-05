@@ -59,7 +59,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <b>{furniture.furnitureData.name}</b>
+                    <b>{furniture.data.name ?? furniture.furnitureData.name}</b>
 
                     {(hasEditFurniturePermissions) && (
                         <div className="sprite_room_user_motto_pen" style={{
@@ -82,7 +82,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     <FurnitureImage furnitureData={furniture.furnitureData}/>
                 </div>
 
-                {(furniture.furnitureData.description) && (
+                {(furniture.data.description ?? furniture.furnitureData.description) && (
                     <div style={{
                         width: "100%",
                         height: 1,
@@ -91,7 +91,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                 )}
 
                 {(furniture.furnitureData.description) && (
-                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.furnitureData.description}</p>
+                    <p style={{ fontSize: 12, color: "#AAA", maxWidth: 200 }}>{furniture.data.description ?? furniture.furnitureData.description}</p>
                 )}
 
                 {(furniture.data.user) && (

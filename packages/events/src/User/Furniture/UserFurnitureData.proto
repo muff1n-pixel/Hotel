@@ -24,5 +24,8 @@ message UserFurnitureData {
     UserFurnitureCustomData data = 8;
 
     optional UserNameData user = 10;
+
+    optional string name = 11;
+    optional string description = 12;
 }
 

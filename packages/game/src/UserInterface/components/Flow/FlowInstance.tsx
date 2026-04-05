@@ -26,6 +26,7 @@ export default function FlowInstance() {
                     key={widgetNotification.id}
                     text={widgetNotification.text}
                     badge={widgetNotification.badge}
+                    furniture={widgetNotification.furniture}
                     imageUrl={widgetNotification.imageUrl}
                     duration={5000}
                     onFinish={() => {

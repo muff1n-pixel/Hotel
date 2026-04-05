@@ -21,7 +21,8 @@ export default class UserInventory {
             where: {
                 id: userFurnitureId,
                 userId: this.user.model.id,
-                roomId: null
+                roomId: null,
+                traxId: null
             },
             include: [
                 {
@@ -57,7 +58,8 @@ export default class UserInventory {
             where: {
                 furnitureId,
                 userId: this.user.model.id,
-                roomId: null
+                roomId: null,
+                traxId: null
             },
             include: [
                 {
@@ -77,7 +79,8 @@ export default class UserInventory {
             where: {
                 furnitureId,
                 userId: this.user.model.id,
-                roomId: null
+                roomId: null,
+                traxId: null
             }
         });
     }
@@ -92,7 +95,10 @@ export default class UserInventory {
                         {
                             id: userFurniture.id,
                             quantity: count,
-                            furniture: userFurniture.furniture
+                            furniture: userFurniture.furniture,
+
+                            name: userFurniture.name,
+                            description: userFurniture.description
                         }
                     ]
                 }));
@@ -117,7 +123,10 @@ export default class UserInventory {
                 {
                     id: userFurniture.id,
                     quantity: (userFurniture.furniture.flags.inventoryStackable)?(await this.getFurnitureCount(userFurniture.furniture.id)):(1),
-                    furniture: userFurniture.furniture
+                    furniture: userFurniture.furniture,
+
+                    name: userFurniture.name,
+                    description: userFurniture.description
                 }
             ]
         }));
@@ -143,7 +152,8 @@ export default class UserInventory {
         const userFurnitures = await UserFurnitureModel.findAll({
             where: {
                 userId: this.user.model.id,
-                roomId: null
+                roomId: null,
+                traxId: null
             },
             include: {
                 model: FurnitureModel,
@@ -165,7 +175,10 @@ export default class UserInventory {
                     allUserFurniture.push(UserInventoryFurnitureData.fromJSON({
                         id: userFurniture.id,
                         quantity: 1,
-                        furniture: userFurniture.furniture
+                        furniture: userFurniture.furniture,
+
+                        name: userFurniture.name,
+                        description: userFurniture.description
                     }));
                 }
             }
@@ -173,7 +186,10 @@ export default class UserInventory {
                 allUserFurniture.push(UserInventoryFurnitureData.fromJSON({
                     id: userFurniture.id,
                     quantity: 1,
-                    furniture: userFurniture.furniture
+                    furniture: userFurniture.furniture,
+
+                    name: userFurniture.name,
+                    description: userFurniture.description
                 }));
             }
         }

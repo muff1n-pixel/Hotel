@@ -66,6 +66,7 @@ export default function Tooltip({ hideTooltips }: TooltipProps) {
             ref.current.style.top = `${Math.min(event.clientY + 16, maxTop)}px`;
 
             ref.current.style.display = "block";
+            ref.current.style.zIndex = performance.now().toString();
         };
 
         document.body.addEventListener("mousemove", listener);

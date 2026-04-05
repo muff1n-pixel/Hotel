@@ -168,6 +168,7 @@
 .sprite_currencies_credits { background-image: url('./spritesheet.png'); background-position: -155px -415px; width: 15px; height: 15px; }
 .sprite_currencies_diamonds { background-image: url('./spritesheet.png'); background-position: -170px -415px; width: 15px; height: 15px; }
 .sprite_currencies_duckets { background-image: url('./spritesheet.png'); background-position: -185px -415px; width: 15px; height: 15px; }
+.sprite_dialog_trax_cd { background-image: url('./spritesheet.png'); background-position: -200px -415px; width: 15px; height: 15px; }
 .sprite_room_lock_bell { background-image: url('./spritesheet.png'); background-position: -350px -475px; width: 13px; height: 16px; }
 .sprite_room_lock_invisible { background-image: url('./spritesheet.png'); background-position: -363px -475px; width: 13px; height: 16px; }
 .sprite_room_lock_password { background-image: url('./spritesheet.png'); background-position: -376px -475px; width: 13px; height: 16px; }

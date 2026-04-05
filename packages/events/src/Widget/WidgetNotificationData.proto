@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Badge/BadgeData.proto";
+import "Furniture/FurnitureData.proto";
 
 message WidgetNotificationData {
     string id = 1;
@@ -9,4 +10,5 @@ message WidgetNotificationData {
 
     optional BadgeData badge = 3;
     optional string image_url = 4;
+    optional FurnitureData furniture = 5;
 }

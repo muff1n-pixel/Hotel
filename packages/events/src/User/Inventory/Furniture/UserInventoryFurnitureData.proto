@@ -6,4 +6,7 @@ message UserInventoryFurnitureData {
     string id = 1;
     FurnitureData furniture = 2;
     uint32 quantity = 3;
+
+    optional string name = 4;
+    optional string description = 5;
 }

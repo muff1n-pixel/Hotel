@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Furniture/Trax/FurnitureTraxSongMetaData.proto";
+
+message UserFurnitureTraxSongDiskData {
+    FurnitureTraxSongMetaData song = 1;
+}

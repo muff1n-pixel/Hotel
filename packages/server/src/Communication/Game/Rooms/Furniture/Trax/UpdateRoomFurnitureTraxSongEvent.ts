@@ -22,6 +22,10 @@ export default class UpdateRoomFurnitureTraxSongEvent implements ProtobuffListen
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
+
+        if(furniture?.model.userId !== user.model.id) {
+            throw new Error("User is not owner of Trax.");
+        }
         
         const data = furniture.getData();
 

@@ -1,6 +1,9 @@
 import { FurnitureTraxSongMetaData, RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData } from "@pixel63/events";
 import ProtobuffListener from "../../../../Interfaces/ProtobuffListener";
 import User from "../../../../../Users/User";
+import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { game } from "../../../../..";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
 
 export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListener<DeleteRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
@@ -21,6 +24,10 @@ export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListen
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
+
+        if(furniture?.model.userId !== user.model.id) {
+            throw new Error("User is not owner of Trax.");
+        }
         
         const data = furniture.getData();
 
@@ -38,7 +45,26 @@ export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListen
         }
 
         if(existingSong.userFurnitureId) {
-            // TODO: unset furniture to user inventory
+            const userFurniture = await UserFurnitureModel.findByPk(existingSong.userFurnitureId, {
+                include: {
+                    model: FurnitureModel,
+                    as: "furniture"
+                }
+            });
+
+            if(userFurniture) {
+                await userFurniture.update({
+                    traxId: null
+                });
+
+                if(userFurniture.userId) {
+                    const user = game.getUserById(userFurniture.userId);
+
+                    if(user) {
+                        await user.getInventory().addFurniture(userFurniture);
+                    }
+                }
+            }
         }
 
         data.trax.songs = data.trax.songs.filter((song) => song.id !== existingSong.id);

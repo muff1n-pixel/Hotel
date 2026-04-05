@@ -3,12 +3,15 @@ import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
-import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 
 export class UserFurnitureModel extends Model {
     declare id: string;
     declare position: RoomPositionData;
     declare direction: number | null;
+
+    declare name?: string;
+    declare description?: string;
 
     declare animation: number;
     declare animationTags?: UserFurnitureAnimationTag[] | null;
@@ -24,6 +27,9 @@ export class UserFurnitureModel extends Model {
 
     declare furniture: NonAttribute<FurnitureModel>;
     declare furnitureId: NonAttribute<string>;
+
+    declare trax: NonAttribute<UserFurnitureModel | null>;
+    declare traxId: NonAttribute<string | null>;
 }
 
 export function initializeUserFurnitureModel(sequelize: Sequelize) {
@@ -33,6 +39,19 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
                 type: DataTypes.UUID,
                 primaryKey: true,
             },
+            
+            name: {
+                type: new DataTypes.STRING(256),
+                allowNull: true,
+                defaultValue: null
+            },
+
+            description: {
+                type: new DataTypes.STRING(256),
+                allowNull: true,
+                defaultValue: null
+            },
+
             position: {
                 type: DataTypes.TEXT,
                 get: function () {
@@ -102,6 +121,11 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
         as: "room",
         foreignKey: "roomId",
         constraints: false
+    });
+
+    UserFurnitureModel.belongsTo(UserFurnitureModel, {
+        as: "trax",
+        foreignKey: "traxId"
     });
 
     RoomModel.hasMany(UserFurnitureModel, {

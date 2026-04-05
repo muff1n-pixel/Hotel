@@ -159,7 +159,7 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
                             <div className="sprite_dialog_trax_stop"/>
                         </TraxButton>
 
-                        <TraxButton type="bottom-off" style={{ width: 54 }} onClick={handleSave}>
+                        <TraxButton type="bottom-off" disabled={!trax.sets.length || !trax.slots.length} style={{ width: 54 }} onClick={handleSave}>
                             <div className="sprite_dialog_trax_save"/>
                         </TraxButton>
 

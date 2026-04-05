@@ -245,8 +245,8 @@ export default function InventoryFurnitureTab() {
                         }}/>
 
                         <div style={{ flex: 1 }}>
-                            <b>{activeFurniture?.furniture?.name}</b>
-                            <p>{activeFurniture?.furniture?.description}</p>
+                            <b>{activeFurniture.name ?? activeFurniture?.furniture?.name}</b>
+                            <p>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
                         </div>
 
                         <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>

@@ -48,7 +48,9 @@ export default class RoomInstance {
     public pets: RoomPet[] = [];
 
     public information?: RoomInformationData;
+    
     public hasRights: boolean;
+    public isOwner: boolean;
 
     constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData) {
         this.id = event.id;
@@ -58,6 +60,7 @@ export default class RoomInstance {
         }
 
         this.hasRights = event.hasRights;
+        this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 

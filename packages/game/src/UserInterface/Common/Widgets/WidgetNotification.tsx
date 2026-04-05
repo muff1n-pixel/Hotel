@@ -1,16 +1,18 @@
-import { BadgeData } from "@pixel63/events";
+import { BadgeData, FurnitureData } from "@pixel63/events";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
+import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useEffect, useRef } from "react";
 
 export type WidgetNotificationProps = {
     badge?: BadgeData;
+    furniture?: FurnitureData;
     imageUrl?: string;
     text: string;
     duration: number;
     onFinish?: () => void;
 };
 
-export default function WidgetNotification({ badge, imageUrl, text, duration, onFinish }: WidgetNotificationProps) {
+export default function WidgetNotification({ badge, furniture, imageUrl, text, duration, onFinish }: WidgetNotificationProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -65,6 +67,12 @@ export default function WidgetNotification({ badge, imageUrl, text, duration, on
             {(badge) && (
                 <div>
                     <BadgeImage badge={badge}/>
+                </div>
+            )}
+
+            {(furniture) && (
+                <div>
+                    <FurnitureImage furnitureData={furniture}/>
                 </div>
             )}
 

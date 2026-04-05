@@ -1,5 +1,5 @@
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { DeleteRoomFurnitureTraxSongData, FurnitureTraxSongMetaData, UpdateRoomFurnitureTraxPlaylistData, UserFurnitureTraxPlaylistData, UseRoomFurnitureData } from "@pixel63/events";
+import { DeleteRoomFurnitureTraxSongData, FurnitureTraxSongMetaData, UpdateRoomFurnitureTraxPlaylistData, BurnRoomFurnitureTraxSongData, UseRoomFurnitureData } from "@pixel63/events";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxButton";
 import TraxDialogListPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogListPanel";
@@ -8,6 +8,7 @@ import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Component
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useUser } from "@UserInterface/Hooks/useUser";
 import { useCallback, useMemo, useState } from "react";
 import { webSocketClient } from "src";
 
@@ -20,7 +21,12 @@ export type TraxPlaylistsDialogProps = {
 }
 
 export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlaylistsDialogProps) {
+    const user = useUser();
     const dialogs = useDialogs();
+    
+    const isFurnitureOwner = useMemo(() => {
+        return user.id === data.roomFurniture.data.userId;
+    }, [user.id, data.roomFurniture.data.userId])
 
     const playlist = useMemo(() => {
         return data.roomFurniture.data.data?.trax?.playlist.map((playlist) => data.roomFurniture.data.data?.trax?.songs.find((song) => song.id === playlist)).filter((song) => song !== undefined) ?? [];
@@ -144,6 +150,22 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
         }));
     }, [activeSong]);
 
+    const handleBurnSong = useCallback(() => {
+        if(!activeSong) {
+            return;
+        }
+
+        webSocketClient.sendProtobuff(BurnRoomFurnitureTraxSongData, BurnRoomFurnitureTraxSongData.create({
+            roomFurnitureId: data.roomFurniture.data.id,
+
+            songId: activeSong.id
+        }));
+    }, [activeSong]);
+
+    const handleInsertSong = useCallback(() => {
+
+    }, []);
+
     return (
         <TraxDialog title="Trax Playlists" hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{
             display: "flex",
@@ -168,7 +190,13 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                             {(songs.length)?(
                                 songs.map((song) => (
                                     <TraxDialogListPanelItem key={song.id} active={song.id === activeSong?.id} onClick={() => setActiveSongId(song.id)}>
-                                        {song.name}
+                                        <FlexLayout direction="row">
+                                            {(song.userFurnitureId) && (
+                                                <div className="sprite_dialog_trax_cd"/>
+                                            )}
+
+                                            {song.name}
+                                        </FlexLayout>
                                     </TraxDialogListPanelItem>
                                 ))
                             ):(
@@ -178,16 +206,16 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                     </TraxDialogListPanel>
 
                     <FlexLayout direction="row">
-                        <TraxButton onClick={handleEditSong} disabled={!activeSong || activeSong.userFurnitureId !== undefined} containerStyle={{ flex: 1}}>
+                        <TraxButton onClick={handleEditSong} disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} containerStyle={{ flex: 1}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
                             Edit song
                         </TraxButton>
                         
-                        <TraxButton disabled={!activeSong || activeSong.userFurnitureId !== undefined} onClick={handleDeleteSong}>
+                        <TraxButton disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} onClick={handleDeleteSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
                             <div className="sprite_dialog_trax_trash"/>
                         </TraxButton>
                     </FlexLayout>
                     
-                    <TraxButton onClick={handleCreateSong}>
+                    <TraxButton disabled={!isFurnitureOwner} onClick={handleCreateSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
                         Create a new song
                     </TraxButton>
                 </FlexLayout>
@@ -231,7 +259,13 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                     playlist.map((song, index) => (
                                         <FlexLayout key={song.id} direction="row" gap={3}>
                                             <TraxDialogListPanelItem active={song.id === activeSong?.id} onClick={() => setActiveSongId(song.id)} style={{ flex: 1 }}>
-                                                {song.name}
+                                                <FlexLayout direction="row">
+                                                    {(song.userFurnitureId) && (
+                                                        <div className="sprite_dialog_trax_cd"/>
+                                                    )}
+
+                                                    {song.name}
+                                                </FlexLayout>
                                             </TraxDialogListPanelItem>
 
                                             <TraxDialogListPanelItem style={{ padding: 5 }} disabled={index === playlist.length - 1} onClick={() => handleMoveDown(song)}>
@@ -274,15 +308,23 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                 <div style={{ flex: 1 }}/>
 
                                 {(activeSong.userFurnitureId)?(
-                                    <TraxButton style={{ paddingLeft: 20, paddingRight: 20}}>Eject CD</TraxButton>
+                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)} onClick={handleDeleteSong}>Eject CD</TraxButton>
                                 ):(
-                                    <TraxButton style={{ paddingLeft: 20, paddingRight: 20}}>Burn Song</TraxButton>
+                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)} onClick={handleBurnSong}>Burn Song</TraxButton>
                                 )}
                             </FlexLayout>
                         </TraxDialogPanel>
                     ):(
                         <div style={{ flex: 2, padding: 2 }}></div>
                     )}
+                    
+                    <TraxButton onClick={handleInsertSong}>
+                        <FlexLayout direction="row" gap={4}>
+                            <div className="sprite_dialog_trax_cd"/>
+
+                            Insert a Song Disk
+                        </FlexLayout>
+                    </TraxButton>
                 </FlexLayout>
             </FlexLayout>
         </TraxDialog>
