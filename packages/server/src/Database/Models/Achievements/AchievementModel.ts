@@ -5,11 +5,13 @@ import { AchievementCategoryModel } from "./AchievementCategoryModel";
 import GameAchievementsSeeder, { GameAchievements } from "./Seeders/GameAchievementsSeeder";
 import RoomBuilderAchievementsSeeder, { RoomBuilderAchievements } from "./Seeders/RoomBuilderAchievementsSeeder";
 import ProfileAchievementsSeeder, { ProfileAchievements } from "./Seeders/ProfileAchievementsSeeder";
+import MusicAchievementsSeeder, { MusicAchievements } from "./Seeders/MusicAchievementsSeeder";
 
 export type AchievementId =
     GameAchievements
     | RoomBuilderAchievements
-    | ProfileAchievements;
+    | ProfileAchievements
+    | MusicAchievements;
 
 export class AchievementModel extends Model {
     declare id: AchievementId;
@@ -100,9 +102,16 @@ export async function seedAchievements() {
         iconImage: "room_builder.png"
     });
 
+    await AchievementCategoryModel.upsert({
+        id: "music",
+        name: "Music",
+        iconImage: "music.png"
+    });
+
     await RoomBuilderAchievementsSeeder.seedAchievements();
     await GameAchievementsSeeder.seedAchievements();
     await ProfileAchievementsSeeder.seedAchievements();
+    await MusicAchievementsSeeder.seedAchievements();
 
     const achievements = await AchievementModel.findAll();
 

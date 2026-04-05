@@ -15,6 +15,7 @@ import { game } from "../index.js";
 import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
 import { sequelize } from "../Database/Database.js";
 import RoomGames from "./Games/RoomGames.js";
+import RoomFurnitureTraxLogic from "./Furniture/Logic/RoomFurnitureTraxLogic.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -243,6 +244,14 @@ export default class Room {
             }
 
             game.getUserAchievements(this.model.owner.id).addAchievementScore("RoomHost", this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id).length).catch(console.error);
+
+            const usersExcludingOwner = this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id);
+
+            if(usersExcludingOwner.length) {
+                if(this.furnitures.some((furniture) => furniture.logic instanceof RoomFurnitureTraxLogic && furniture.model.animation === 1)) {
+                    game.getUserAchievements(this.model.owner.id).addAchievementScore("MusicPlayer", usersExcludingOwner.length).catch(console.error);
+                }
+            }
         }
 
         for(let furniture of this.furnitures) {
