@@ -28,6 +28,8 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
 
         audioContext.current = new AudioContext();
 
+        const gainNode = audioContext.current.createGain();
+
         FurnitureAssets.getFurnitureData(set.furniture.type).then((furnitureData) => {
             const furnitureSound = furnitureData.sounds?.[index];
 
@@ -40,10 +42,14 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
             FurnitureAssets.getFurnitureAudioBuffer(audioContext.current, furnitureData.index.type, furnitureSound.file).then((audioBuffer) => {
                 console.log("Adding buffer");
 
+                
                 const source = audioContext.current.createBufferSource();
                 source.buffer = audioBuffer;
 
-                source.connect(audioContext.current.destination);
+                source.connect(gainNode);
+
+                gainNode.connect(audioContext.current.destination);
+                gainNode.gain.setValueAtTime(0.03, audioContext.current.currentTime);
 
                 source.start(audioContext.current.currentTime);
             });
