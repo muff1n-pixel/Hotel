@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "User/Furniture/UserFurnitureData.proto";
+
+message UserInventorySongDisksData {
+    repeated UserFurnitureData disks = 1;
+}

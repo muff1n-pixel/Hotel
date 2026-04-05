@@ -50,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteShopFurnitureData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserProfileData, HotelAlertData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopPetData, RemoveUserFriendData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
+import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteShopFurnitureData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserInventorySongDisksData, GetUserProfileData, HotelAlertData, InsertRoomFurnitureTraxSongData, LeaveRoomData, MessageType, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopPetData, RemoveUserFriendData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 import GetShopPagePetsEvent from "../Communication/Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "../Communication/Game/Shop/Development/UpdateShopPetEvent.js";
@@ -94,6 +94,8 @@ import UpdateRoomFurnitureTraxSongEvent from "../Communication/Game/Rooms/Furnit
 import UpdateRoomFurnitureTraxPlaylistEvent from "../Communication/Game/Rooms/Furniture/Trax/UpdateRoomFurnitureTraxPlaylistEvent.js";
 import DeleteRoomFurnitureTraxSongEvent from "../Communication/Game/Rooms/Furniture/Trax/DeleteRoomFurnitureTraxSongEvent.js";
 import BurnRoomFurnitureTraxSongEvent from "../Communication/Game/Rooms/Furniture/Trax/BurnRoomFurnitureTraxSongEvent.js";
+import GetUserInventorySongDisksEvent from "../Communication/Game/Inventory/GetUserInventorySongDisksEvent.js";
+import InsertRoomFurnitureTraxSongEvent from "../Communication/Game/Rooms/Furniture/Trax/InsertRoomFurnitureTraxSongEvent.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -214,6 +216,9 @@ export default class EventHandler extends EventEmitter {
         this.addProtobuffListener(PurchaseShopBundleData, new PurchaseShopBundleEvent());
         this.addProtobuffListener(GetShopPageBundleFurnitureData, new GetShopPageBundleFurnitureEvent());
 
+        // User inventory furniture
+        this.addProtobuffListener(GetUserInventorySongDisksData, new GetUserInventorySongDisksEvent());
+
         // User inventory pets
         this.addProtobuffListener(GetUserInventoryPetsData, new GetUserInventoryPetsEvent());
 
@@ -255,6 +260,7 @@ export default class EventHandler extends EventEmitter {
         this.addProtobuffListener(UpdateRoomFurnitureTraxPlaylistData, new UpdateRoomFurnitureTraxPlaylistEvent());
         this.addProtobuffListener(DeleteRoomFurnitureTraxSongData, new DeleteRoomFurnitureTraxSongEvent());
         this.addProtobuffListener(BurnRoomFurnitureTraxSongData, new BurnRoomFurnitureTraxSongEvent());
+        this.addProtobuffListener(InsertRoomFurnitureTraxSongData, new InsertRoomFurnitureTraxSongEvent());
 
         this.addProtobuffListener(RoomReadyData, new RoomReadyEvent());
         this.addProtobuffListener(RoomClickData, new RoomClickEvent());

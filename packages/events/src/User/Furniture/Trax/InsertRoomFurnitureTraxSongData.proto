@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message InsertRoomFurnitureTraxSongData {
+    string room_furniture_id = 1;
+
+    string song_furniture_id = 2;
+}

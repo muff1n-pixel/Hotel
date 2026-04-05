@@ -163,8 +163,10 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
     }, [activeSong]);
 
     const handleInsertSong = useCallback(() => {
-
-    }, []);
+        dialogs.openUniqueDialog("trax-playlists-song", {
+            roomFurniture: data.roomFurniture
+        });
+    }, [dialogs, data]);
 
     return (
         <TraxDialog title="Trax Playlists" hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{

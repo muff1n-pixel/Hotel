@@ -1,4 +1,4 @@
-import { FurnitureTraxSongMetaData, RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData } from "@pixel63/events";
+import { FurnitureTraxSongMetaData, RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData } from "@pixel63/events";
 import ProtobuffListener from "../../../../Interfaces/ProtobuffListener";
 import User from "../../../../../Users/User";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
@@ -54,6 +54,11 @@ export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListen
 
             if(userFurniture) {
                 await userFurniture.update({
+                    data: UserFurnitureCustomData.create({
+                        traxSongDisk: {
+                            song: existingSong
+                        }
+                    }),
                     traxId: null
                 });
 
