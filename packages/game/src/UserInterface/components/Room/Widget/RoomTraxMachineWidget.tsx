@@ -56,6 +56,10 @@ export default function RoomTraxMachineWidget() {
         const song = traxmachine.data.data?.trax?.songs.find((song) => song.id === songId);
 
         setCurrentSong(song);
+
+        return () => {
+            traxPlayer.handleStop();
+        };
     }, [traxmachine]);
 
     useEffect(() => {
