@@ -1,4 +1,4 @@
-import { FurnitureData, FurnitureTraxEditorData, FurnitureTraxSetData } from "@pixel63/events";
+import { FurnitureData, FurnitureTraxSongData, FurnitureTraxSetData } from "@pixel63/events";
 import TraxDialogList from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogList";
 import TraxDialogSet from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSet";
 import TraxDialogSets from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSets";
@@ -8,8 +8,8 @@ import { useCallback, useMemo, useState } from "react";
 export type TraxPlaylistSetsProps = {
     audioContext: React.RefObject<AudioContext>;
 
-    trax: FurnitureTraxEditorData;
-    onTraxChange: (trax: FurnitureTraxEditorData) => void;
+    trax: FurnitureTraxSongData;
+    onTraxChange: (trax: FurnitureTraxSongData) => void;
     onDragSlot: (set: FurnitureTraxSetData, slot: number) => void;
 };
 
@@ -43,7 +43,7 @@ export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onD
             return;
         }
 
-        const mutatedTrax = FurnitureTraxEditorData.fromJSON(trax);
+        const mutatedTrax = FurnitureTraxSongData.fromJSON(trax);
         mutatedTrax.sets.push(FurnitureTraxSetData.create({
             furniture: set,
             index: nextIndex
@@ -62,7 +62,7 @@ export default function TraxPlaylistSets({ audioContext, trax, onTraxChange, onD
             return;
         }
 
-        const mutatedTrax = FurnitureTraxEditorData.fromJSON(trax);
+        const mutatedTrax = FurnitureTraxSongData.fromJSON(trax);
         mutatedTrax.sets.splice(index, 1);
         onTraxChange(mutatedTrax);
     }, [trax]);

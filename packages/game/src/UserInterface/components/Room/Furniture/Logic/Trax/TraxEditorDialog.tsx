@@ -1,4 +1,5 @@
-import { FurnitureTraxEditorData, FurnitureTraxSetData } from "@pixel63/events";
+import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import { FurnitureTraxSongData, FurnitureTraxSetData, FurnitureTraxSongMetaData, UpdateRoomFurnitureTraxSongData } from "@pixel63/events";
 import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxButton";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
@@ -7,20 +8,28 @@ import TraxPlaylistSets from "@UserInterface/Components/Room/Furniture/Logic/Tra
 import useTrax from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTrax";
 import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { webSocketClient } from "src";
 
 export type TraxEditorDialogProps = {
     hidden?: boolean;
+    data: {
+        roomFurniture: RoomFurniture;
+        song?: FurnitureTraxSongMetaData;
+    };
     onClose?: () => void;
 }
 
-export default function TraxEditorDialog({ hidden, onClose }: TraxEditorDialogProps) {
+export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDialogProps) {
+    const dialogs = useDialogs();
+
     const containerRef = useRef<HTMLDivElement>(null);
     const slotRef = useRef<HTMLDivElement>(null);
 
     const audioContext = useRef<AudioContext>(new AudioContext());
 
-    const [trax, setTrax] = useState<FurnitureTraxEditorData>(FurnitureTraxEditorData.create({}));
+    const [trax, setTrax] = useState<FurnitureTraxSongData>(FurnitureTraxSongData.fromJSON(data.song?.song ?? {}));
 
     const [offset, setOffset] = useState(0);
 
@@ -103,9 +112,28 @@ export default function TraxEditorDialog({ hidden, onClose }: TraxEditorDialogPr
 
     const slot = useTraxSlot(containerRef, slotRef, handleSetSlot);
 
+    const handleSave = useCallback(() => {
+        dialogs.openUniqueDialog("trax-song-name", {
+            roomFurniture: data.roomFurniture,
+            song: {
+                id: data.song?.id ?? undefined,
+                name: data.song?.name ?? undefined,
+                data: trax
+            }
+        });
+    }, [trax, data, dialogs, onClose]);
+
+    const handleClose = useCallback(() => {
+        onClose?.();
+
+        dialogs.openUniqueDialog("trax-playlists", {
+            roomFurniture: data.roomFurniture
+        });
+    }, [dialogs, onClose]);
+
     return (
         <Fragment>
-            <TraxDialog title="Trax Editor" hidden={hidden} onClose={onClose} width={590} height={340} initialPosition="center" style={{
+            <TraxDialog title={data.song?.name ?? "Trax Editor"} hidden={hidden} onClose={handleClose} width={590} height={340} initialPosition="center" style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10
@@ -131,7 +159,7 @@ export default function TraxEditorDialog({ hidden, onClose }: TraxEditorDialogPr
                             <div className="sprite_dialog_trax_stop"/>
                         </TraxButton>
 
-                        <TraxButton type="bottom-off" style={{ width: 54 }}>
+                        <TraxButton type="bottom-off" style={{ width: 54 }} onClick={handleSave}>
                             <div className="sprite_dialog_trax_save"/>
                         </TraxButton>
 

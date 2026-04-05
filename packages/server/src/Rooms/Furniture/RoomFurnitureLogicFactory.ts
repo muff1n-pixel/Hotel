@@ -33,7 +33,6 @@ import RoomFurnitureIceTagPoleLogic from "./Logic/Games/IceTag/RoomFurnitureIceT
 import RoomFurnitureFootballLogic from "./Logic/Games/RoomFurnitureFootballLogic";
 import RoomFurnitureBunnyRunFieldLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunFieldLogic";
 import RoomFurnitureBunnyRunPoleLogic from "./Logic/Games/BunnyRun/RoomFurnitureBunnyRunPoleLogic";
-import RoomFurnitureGameTimerLogic from "./Logic/Games/RoomFurnitureGameTimerLogic";
 import RoomFurnitureFreezeTileLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 import RoomFurnitureFreezeBlockLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeBlockLogic";
 import RoomFurnitureFreezeExitLogic from "./Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
@@ -54,6 +53,7 @@ import RoomFurnitureSnowboardRailLogic from "./Logic/Games/Snowboarding/RoomFurn
 import RoomFurnitureSnowboardRampLogic from "./Logic/Games/Snowboarding/RoomFurnitureSnowboardRampLogic";
 import RoomFurnitureClothingLogic from "./Logic/RoomFurnitureClothingLogic";
 import RoomFurnitureEnableBoxLogic from "./Logic/RoomFurnitureEnableBoxLogic";
+import RoomFurnitureTraxLogic from "./Logic/RoomFurnitureTraxLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -100,6 +100,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "fx_box":
                 return new RoomFurnitureEnableBoxLogic(roomFurniture);
+
+            case "trax":
+                return new RoomFurnitureTraxLogic(roomFurniture);
 
             // Skateboarding
             case "skate_rail":

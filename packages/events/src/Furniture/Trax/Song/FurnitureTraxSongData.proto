@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Furniture/Trax/Song/FurnitureTraxSetData.proto";
+import "Furniture/Trax/Song/FurnitureTraxSlotData.proto";
+
+message FurnitureTraxSongData {
+    repeated FurnitureTraxSetData sets = 1;
+    repeated FurnitureTraxSlotData slots = 2;
+}

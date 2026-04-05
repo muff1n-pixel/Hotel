@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Furniture/Trax/FurnitureTraxSongMetaData.proto";
+
+message UserFurnitureTraxData {
+    repeated FurnitureTraxSongMetaData songs = 1;
+    repeated string playlist = 2;
+}

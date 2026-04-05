@@ -1,8 +1,8 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
-import { FurnitureTraxEditorData } from "@pixel63/events";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { FurnitureTraxSongData } from "@pixel63/events";
+import { useCallback, useRef, useState } from "react";
 
-export default function useTrax(trax: FurnitureTraxEditorData, setStep: (index: number) => void) {
+export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: number) => void) {
     const [playing, setPlaying] = useState(false);
     const [paused, setPaused] = useState(false);
 

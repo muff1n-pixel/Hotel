@@ -101,7 +101,7 @@ export default class UpdateRoomFurnitureEvent implements ProtobuffListener<Updat
             furniture.model.color = payload.color;
         }
 
-        if(payload.data) {
+        if(payload.data && !payload.data.trax) {
             if(furniture.model.furniture.interactionType === "dimmer" && payload.data?.moodlight) {
                 await this.handleSingleActiveFurniture(user, furniture);
 

@@ -5,11 +5,13 @@ export type TraxDialogListPanelProps = {
     children?: ReactNode;
     style?: CSSProperties;
     active?: boolean;
+    onClick?: () => void;
+    disabled?: boolean;
 }
 
-export default function TraxDialogListPanel({ active, children }: TraxDialogListPanelProps) {
+export default function TraxDialogListPanelItem({ active, disabled, children, style, onClick }: TraxDialogListPanelProps) {
     return (
-        <div className={`trax-dialog-list-panel-item ${(active)?("trax-dialog-list-panel-item-active"):("")}`}>
+        <div className={`trax-dialog-list-panel-item ${(active)?("trax-dialog-list-panel-item-active"):("")} ${(disabled)?("trax-dialog-list-panel-item-disabled"):("")}`} onClick={onClick} style={style}>
             {children}
         </div>
     );

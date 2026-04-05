@@ -21,7 +21,8 @@ export default function RoomFurnitureTraxContextMenu({ roomFurniture }: RoomFurn
 
             <UserContextMenuButton text={(roomFurniture.data.animation === 0)?("Turn on"):("Turn off")} onClick={() => {
                 webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
-                    id: roomFurniture.data.id
+                    id: roomFurniture.data.id,
+                    animation: (roomFurniture.data.animation === 0)?(1):(0)
                 }));
             }}/>
 

@@ -47,6 +47,7 @@ import ClothingUnlockedDialog from "@UserInterface/Components/Clothing/ClothingU
 import WardrobeMannequinDialog from "@UserInterface/Components/Wardrobe/WardrobeMannequinDialog";
 import TraxEditorDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxEditorDialog";
 import TraxPlaylistsDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistsDialog";
+import TraxSongNameDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxSongNameDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -203,6 +204,9 @@ export default function DialogInstances() {
 
                     case "trax-editor":
                         return (<TraxEditorDialog {...props} key={dialog.id}/>);
+
+                    case "trax-song-name":
+                        return (<TraxSongNameDialog {...props} key={dialog.id}/>);
                 }
             })}
         </Fragment>

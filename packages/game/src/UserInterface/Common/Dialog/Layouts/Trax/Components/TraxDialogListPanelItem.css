@@ -12,3 +12,13 @@
 .trax-dialog-list-panel-item:hover, .trax-dialog-list-panel-item-active {
     background: #DEE0DF;
 }
+
+.trax-dialog-list-panel-item-disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+.trax-dialog-list-panel-item-disabled:hover {
+    background: #A8C2D1;
+}

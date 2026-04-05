@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/Trax/FurnitureTraxSlotData.proto";
+import "Furniture/Trax/Song/FurnitureTraxSlotData.proto";
 
 message FurnitureTraxChannelData {
     repeated FurnitureTraxSlotData slots = 1;

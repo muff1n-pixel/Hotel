@@ -10,6 +10,7 @@ import "User/Furniture/Data/UserFurnitureCrackableData.proto";
 import "User/Furniture/Data/UserFurnitureGameTimerData.proto";
 import "User/Furniture/Data/UserFurnitureStackHelperData.proto";
 import "User/Furniture/Data/UserFurnitureMannequinData.proto";
+import "User/Furniture/Data/UserFurnitureTraxData.proto";
 
 import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
@@ -49,5 +50,7 @@ message UserFurnitureCustomData {
         UserFurnitureStackHelperData stack_helper = 17;
 
         UserFurnitureMannequinData mannequin = 18;
+
+        UserFurnitureTraxData trax = 19;
     }
 }

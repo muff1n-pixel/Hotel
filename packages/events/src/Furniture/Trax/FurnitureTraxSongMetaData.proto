@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "Furniture/Trax/Song/FurnitureTraxSongData.proto";
+
+message FurnitureTraxSongMetaData {
+    string id = 1;
+    string name = 2;
+
+    uint32 duration = 3;
+
+    FurnitureTraxSongData song = 4;
+
+    optional string user_furniture_id = 5;
+}

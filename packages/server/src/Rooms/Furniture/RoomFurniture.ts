@@ -167,8 +167,8 @@ export default class RoomFurniture<T = unknown> {
         return true;
     }
 
-    public getData<T>() {
-        return {...(this.model.data ?? {})} as T;
+    public getData(): UserFurnitureCustomData {
+        return UserFurnitureCustomData.fromJSON(this.model.data ?? {});
     }
 
     public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
