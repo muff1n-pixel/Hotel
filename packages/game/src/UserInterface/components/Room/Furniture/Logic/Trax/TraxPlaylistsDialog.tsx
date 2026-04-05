@@ -169,7 +169,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
     }, [dialogs, data]);
 
     return (
-        <TraxDialog title="Trax Playlists" hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{
+        <TraxDialog title="Traxmachine" hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{
             display: "flex",
             flexDirection: "column",
             gap: 10
