@@ -208,7 +208,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                     </TraxDialogListPanel>
 
                     <FlexLayout direction="row">
-                        <TraxButton onClick={handleEditSong} disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} containerStyle={{ flex: 1}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
+                        <TraxButton onClick={handleEditSong} disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} containerStyle={{ flex: 1}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):((activeSong?.userFurnitureId)?("You can not modify a burnt song."):(undefined))}>
                             Edit song
                         </TraxButton>
                         
@@ -312,7 +312,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                 {(activeSong.userFurnitureId)?(
                                     <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)} onClick={handleDeleteSong}>Eject CD</TraxButton>
                                 ):(
-                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)} onClick={handleBurnSong}>Burn Song</TraxButton>
+                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):("Burning your song will make it impossible to edit in the future.")} onClick={handleBurnSong}>Burn Song</TraxButton>
                                 )}
                             </FlexLayout>
                         </TraxDialogPanel>

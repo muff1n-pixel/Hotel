@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
@@ -25,7 +24,17 @@ export default class RoomFurnitureTraxLogic implements RoomFurnitureLogic {
             return;
         }
 
-        await this.roomFurniture.setAnimation(1);
+        const activeTraxMachines = this.roomFurniture.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureTraxLogic && furniture.model.animation !== 0);
+
+        await this.roomFurniture.room.setBulkFurnitureAnimations(
+            activeTraxMachines.map((furniture) => ({
+                furniture,
+                animation: 0
+            })).concat({
+                furniture: this.roomFurniture,
+                animation: 1
+            })
+        );
     }
 
     async handleActionsInterval(): Promise<void> {
