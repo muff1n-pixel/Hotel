@@ -9,12 +9,12 @@ import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/H
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export type TraxPlaylistDialogProps = {
+export type TraxEditorDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
 }
 
-export default function TraxPlaylistDialog({ hidden, onClose }: TraxPlaylistDialogProps) {
+export default function TraxEditorDialog({ hidden, onClose }: TraxEditorDialogProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const slotRef = useRef<HTMLDivElement>(null);
 

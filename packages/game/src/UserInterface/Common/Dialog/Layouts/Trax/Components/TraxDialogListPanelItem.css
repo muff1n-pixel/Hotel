@@ -1,0 +1,14 @@
+.trax-dialog-list-panel-item {
+    background: #A8C2D1;
+    color: #000000;
+
+    border-radius: 6px;
+
+    padding: 3px 8px;
+
+    cursor: pointer;
+}
+
+.trax-dialog-list-panel-item:hover, .trax-dialog-list-panel-item-active {
+    background: #DEE0DF;
+}

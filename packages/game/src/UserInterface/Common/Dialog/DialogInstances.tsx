@@ -45,7 +45,8 @@ import EditShopFeatureDialog from "@UserInterface/Components/Shop/Development/Ed
 import EditShopFeatureCameraDialog from "@UserInterface/Components/Shop/Development/EditShopFeatureCameraDialog";
 import ClothingUnlockedDialog from "@UserInterface/Components/Clothing/ClothingUnlockedDialog";
 import WardrobeMannequinDialog from "@UserInterface/Components/Wardrobe/WardrobeMannequinDialog";
-import TraxPlaylistDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistDialog";
+import TraxEditorDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxEditorDialog";
+import TraxPlaylistsDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistsDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -197,8 +198,11 @@ export default function DialogInstances() {
                     case "user-profile":
                         return (<UserProfileDialog {...props} key={dialog.id}/>);
 
-                    case "trax-playlist":
-                        return (<TraxPlaylistDialog {...props} key={dialog.id}/>);
+                    case "trax-playlists":
+                        return (<TraxPlaylistsDialog {...props} key={dialog.id}/>);
+
+                    case "trax-editor":
+                        return (<TraxEditorDialog {...props} key={dialog.id}/>);
                 }
             })}
         </Fragment>

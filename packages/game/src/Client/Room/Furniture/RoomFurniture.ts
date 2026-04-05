@@ -18,6 +18,7 @@ import FurnitureDefaultMultistateLogic from "@Client/Furniture/Logic/FurnitureDe
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import RoomFurnitureClothingLogic from "@Client/Room/Furniture/Logic/RoomFurnitureClothingLogic";
 import RoomFurnitureMannequinLogic from "@Client/Room/Furniture/Logic/RoomFurnitureMannequinLogic";
+import RoomFurnitureTraxLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTraxLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -62,6 +63,9 @@ export default class RoomFurniture {
 
             case "stack_helper":
                 return new RoomFurnitureStackHelperLogic(this.instance, this);
+
+            case "trax":
+                return new RoomFurnitureTraxLogic(this.instance, this);
 
             case "gate":
             case "multiheight":
