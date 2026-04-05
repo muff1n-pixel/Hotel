@@ -153,6 +153,10 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             else {
                 await user.getInventory().addFurniture(userFurniture);
             }
+
+            if(userFurniture.furniture.interactionType === "sound_set") {
+                user.achievements.addAchievementScore("MusicCollector", 1).catch(console.error);
+            }
         }
 
         user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
