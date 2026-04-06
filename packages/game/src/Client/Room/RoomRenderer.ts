@@ -189,8 +189,6 @@ export default class RoomRenderer extends EventTarget {
             return this.getSpritePriority(a) - this.getSpritePriority(b);
         });
 
-        console.time("Render");
-
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
 
@@ -199,10 +197,6 @@ export default class RoomRenderer extends EventTarget {
 
             sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
         }
-
-        console.timeEnd("Render");
-
-        context.resetTransform();
 
         if(!this.lighting.moodlight?.backgroundOnly) {
             this.lighting.render(context);
