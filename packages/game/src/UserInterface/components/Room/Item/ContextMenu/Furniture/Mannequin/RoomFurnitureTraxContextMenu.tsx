@@ -16,7 +16,7 @@ export default function RoomFurnitureTraxContextMenu({ roomFurniture }: RoomFurn
     return (
         <RoomItemContextMenuWrapper item={roomFurniture.item}>
             <UserContextMenuElement position="top">
-                {roomFurniture.furnitureData.name}
+                Trax
             </UserContextMenuElement>
 
             <UserContextMenuButton text={(roomFurniture.data.animation === 0)?("Turn on"):("Turn off")} onClick={() => {
