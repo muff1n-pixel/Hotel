@@ -13,7 +13,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
 
     }
 
-    render(context: OffscreenCanvasRenderingContext2D): void {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number): void {
         
     }
 

@@ -19,12 +19,8 @@ export default class RoomWallSprite extends RoomSprite {
 
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
-        const scale = this.item.roomRenderer.getSizeScale();
-
-        context.scale(scale, scale);
-
-        context.drawImage(this.image, this.offset.left - this.item.wallRenderer.structure.wall!.thickness, this.offset.top);
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
+        context.drawImage(this.image, left + this.offset.left - this.item.wallRenderer.structure.wall!.thickness, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {

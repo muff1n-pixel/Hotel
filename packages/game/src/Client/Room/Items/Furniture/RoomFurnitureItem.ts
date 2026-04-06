@@ -71,13 +71,13 @@ export default class RoomFurnitureItem extends RoomItem {
             return;
         }
 
-        if(this.furnitureRenderer.type !== "tile_cursor") {
+        /*if(this.furnitureRenderer.type !== "tile_cursor") {
             if(this.furnitureRenderer.size !== this.roomRenderer.size) {
                 this.furnitureRenderer.size = this.roomRenderer.size;
 
                 this.sprites = [];
             }
-        }
+        }*/
 
         if(!this.sprites.length) {
             this.sprites = [

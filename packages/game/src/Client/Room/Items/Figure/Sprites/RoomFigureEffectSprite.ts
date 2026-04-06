@@ -21,16 +21,12 @@ export default class RoomFigureEffectSprite extends RoomSprite {
         }
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
-        const scale = this.item.roomRenderer.getSizeScale();
-
-        context.scale(scale, scale);
-        
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(this.sprite.ink) {
             context.globalCompositeOperation = this.sprite.ink;
         }
         
-        context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
+        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover() {

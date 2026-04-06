@@ -18,12 +18,8 @@ export default class RoomFigureSprite extends RoomSprite {
         };
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
-        const scale = this.item.roomRenderer.getSizeScale();
-
-        context.scale(scale, scale);
-
-        context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
+        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -31,11 +27,9 @@ export default class RoomFigureSprite extends RoomSprite {
             return null;
         }
         
-        const scale = this.item.roomRenderer.getSizeScale();
-
         const relativePosition: MousePosition = {
-            left: ((position.left * (1 / scale)) - (this.offset.left)),
-            top: ((position.top * (1 / scale)) - (this.offset.top))
+            left: ((position.left) - (this.offset.left)),
+            top: ((position.top) - (this.offset.top))
         };
 
         if(relativePosition.left < 0 || relativePosition.top < 0) {

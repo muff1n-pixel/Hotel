@@ -54,16 +54,12 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
         return `idle_${direction}_${this.currentAssetFrame + 1}`;
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(!this.image) {
             return;
         }
 
-        const scale = this.item.roomRenderer.getSizeScale();
-
-        context.scale(scale, scale);
-        
-        context.drawImage(this.image, this.offset.left, this.offset.top);
+        context.drawImage(this.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover() {

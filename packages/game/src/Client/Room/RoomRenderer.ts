@@ -102,9 +102,9 @@ export default class RoomRenderer extends EventTarget {
         this.element.remove();
     }
 
-    public getSizeScale() {
+    /*public getSizeScale() {
         return this.currentSize / 64;
-    }
+    }*/
 
     private render() {
         if(this.terminated) {
@@ -121,7 +121,7 @@ export default class RoomRenderer extends EventTarget {
             this.frame = ((this.frame + 1) % this.framesPerSecond);
             this.lastFrameTimestamp = performance.now();
 
-            this.currentSize = this.size;
+            //this.currentSize = this.size;
 
             for(let index = 0; index < this.items.length; index++) {
                 this.items[index].process(this.frame);
@@ -189,25 +189,18 @@ export default class RoomRenderer extends EventTarget {
             return this.getSpritePriority(a) - this.getSpritePriority(b);
         });
 
-        context.translate(this.renderedOffset.left, this.renderedOffset.top);
+        console.time("Render");
 
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
 
-            context.save();
-
-            if(sprite.item.position) {
-                const translatePosition = this.getCoordinatePosition(sprite.item.position);
-
-                context.translate(translatePosition.left, translatePosition.top);
-            }
-
+            context.globalCompositeOperation = "source-over";
             context.globalAlpha = sprite.item.alpha;
 
-            sprite.render(context as any as OffscreenCanvasRenderingContext2D);
-
-            context.restore();
+            sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
         }
+
+        console.timeEnd("Render");
 
         context.resetTransform();
 
@@ -228,10 +221,10 @@ export default class RoomRenderer extends EventTarget {
             top: this.camera.mousePosition.top - this.renderedOffset.top
         };
 
-        const scale = this.getSizeScale();
+        /*const scale = this.getSizeScale();
 
         result.left *= scale;
-        result.top *= scale;
+        result.top *= scale;*/
 
         return result;
     }
@@ -249,7 +242,7 @@ export default class RoomRenderer extends EventTarget {
                 filteredItems = filteredItems.filter(filter);
             }
 
-            const scale = this.getSizeScale();
+            const scale = 1; // this.getSizeScale();
 
             const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.getSpritePriority(b) - this.getSpritePriority(a));
 
@@ -281,8 +274,15 @@ export default class RoomRenderer extends EventTarget {
         return null;
     }
 
-    public getCoordinatePosition(coordinate: RoomPositionData): MousePosition {
-        return RoomRenderer.getCoordinatePosition(coordinate, this.getSizeScale());
+    public getCoordinatePosition(coordinate?: RoomPositionData): MousePosition {
+        if(!coordinate) {
+            return {
+                left: 0,
+                top: 0
+            };
+        }
+
+        return RoomRenderer.getCoordinatePosition(coordinate, 1 /*this.getSizeScale()*/);
     }
 
     public static getCoordinatePosition(coordinate: RoomPositionData, scale: number) {
@@ -471,7 +471,7 @@ export default class RoomRenderer extends EventTarget {
             top: minimumTop - this.renderedOffset.top
         };
 
-        const scale = this.getSizeScale();
+        const scale = 1; /*this.getSizeScale()*/;
 
         const filteredItems = this.items.filter((item) => {
             return item.sprites.some((sprite) => {

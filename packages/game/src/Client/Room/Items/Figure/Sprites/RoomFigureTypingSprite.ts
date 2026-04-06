@@ -18,16 +18,12 @@ export default class RoomFigureTypingSprite extends RoomSprite {
         AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => this.image = image);
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(!this.image) {
             return;
         }
 
-        const scale = this.item.roomRenderer.getSizeScale();
-
-        context.scale(scale, scale);
-        
-        context.drawImage(this.image, this.figureOffsets.left + this.offset.left, this.figureOffsets.top + this.offset.top);
+        context.drawImage(this.image, left + this.figureOffsets.left + this.offset.left, top + this.figureOffsets.top + this.offset.top);
     }
 
     mouseover() {

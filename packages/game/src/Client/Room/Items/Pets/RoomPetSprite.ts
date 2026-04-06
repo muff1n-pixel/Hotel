@@ -19,14 +19,11 @@ export default class RoomPetSprite extends RoomSprite {
         this.offset.left += 64;
         this.offset.top += 16;
 
-        this.offset.left *= this.item.roomRenderer.getSizeScale();
-        this.offset.top *= this.item.roomRenderer.getSizeScale();
-
         this.offset.left += this.sprite.x;
         this.offset.top += this.sprite.y;
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(this.sprite.ink) {
             context.globalCompositeOperation = this.sprite.ink;
         }
@@ -35,7 +32,7 @@ export default class RoomPetSprite extends RoomSprite {
             context.globalAlpha = this.sprite.alpha / 255;
         }
 
-        context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
+        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {

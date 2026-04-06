@@ -4,12 +4,15 @@ import { RoomPositionData } from "@pixel63/events";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
+import { MousePosition } from "@Client/Interfaces/MousePosition";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
     
     _position?: RoomPositionData;
     _priority: number = 0;
+    
+    screenPosition: MousePosition = { left: 0, top: 0 };
 
     public get priority() {
         return this._priority;
@@ -66,6 +69,8 @@ export default class RoomItem implements RoomItemInterface {
 
         this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
         this._position = position;
+
+        this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
     }
 
     constructor(public roomRenderer: RoomRenderer, public type: string, public sprites: RoomSprite[] = []) {

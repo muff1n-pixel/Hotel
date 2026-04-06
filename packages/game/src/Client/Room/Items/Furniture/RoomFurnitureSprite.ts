@@ -49,14 +49,14 @@ export default class RoomFurnitureSprite extends RoomSprite {
         this.priority = this.sprite.zIndex;
         this.tag = sprite.tag;
 
-        this.offset = RoomFurnitureSprite.getDefaultOffsetPosition(item.furnitureRenderer, sprite, this.item.roomRenderer.getSizeScale());
+        this.offset = RoomFurnitureSprite.getDefaultOffsetPosition(item.furnitureRenderer, sprite, 1);
 
         if(this.item.furnitureRenderer.type === "tile_cursor" && this.sprite.zIndex === 101) {
             this.priority = 100000;
         }
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(this.item.furnitureRenderer.type === "tile_cursor" && this.sprite.zIndex === 101) {
             if(this.item.position) {
                 const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.item.position, undefined, this.item.id);
@@ -79,16 +79,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             context.globalAlpha = this.sprite.alpha / 255;
         }
 
-        if(this.item.furnitureRenderer.type === "tile_cursor") {
-            const scale = this.item.roomRenderer.getSizeScale();
-
-            context.scale(scale, scale);
-            context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
-
-            return;
-        }
-
-        context.drawImage(this.sprite.image, this.offset.left, this.offset.top);
+        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {

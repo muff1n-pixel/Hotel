@@ -16,13 +16,10 @@ export default class RoomFurniturePlaceholderSprite extends RoomSprite {
 
         this.offset.left += 32;
         this.offset.top -= 32;
-
-        this.offset.left *= this.item.roomRenderer.getSizeScale();
-        this.offset.top *= this.item.roomRenderer.getSizeScale();
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
-        const placeholder = (this.item.roomRenderer.size === 64)?(FurnitureAssets.placeholder):(FurnitureAssets.placeholder32);
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
+        const placeholder = FurnitureAssets.placeholder;
 
         if(!placeholder) {
             RoomLogger.warn("Furniture placeholder is not loaded.");
@@ -31,7 +28,7 @@ export default class RoomFurniturePlaceholderSprite extends RoomSprite {
         }
 
         if(placeholder.image) {
-            context.drawImage(placeholder.image, this.offset.left, this.offset.top);
+            context.drawImage(placeholder.image, left + this.offset.left, top + this.offset.top);
         }
     }
 

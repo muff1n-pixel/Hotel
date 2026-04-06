@@ -18,16 +18,12 @@ export default class RoomFloorSprite extends RoomSprite {
         };
     }
 
-    render(context: OffscreenCanvasRenderingContext2D) {
+    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
         if(!this.image) {
             return;
         }
         
-        const scale = this.item.roomRenderer.getSizeScale();
-        
-        context.scale(scale, scale);
-
-        context.drawImage(this.image, this.offset.left - (this.item.floorRenderer.structure.wall?.thickness ?? 0), this.offset.top);
+        context.drawImage(this.image, left + this.offset.left - (this.item.floorRenderer.structure.wall?.thickness ?? 0), top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -41,14 +37,10 @@ export default class RoomFloorSprite extends RoomSprite {
             throw new ContextNotAvailableError();
         }
         
-        const scale = this.item.roomRenderer.getSizeScale();
-        context.scale(scale, scale);
-        
-
         context.setTransform(1, .5, -1, .5, this.offset.left + (this.item.floorRenderer.rows * 32), 0);
 
         for(let path = this.item.floorRenderer.tiles.length - 1; path != -1; path--) {
-            if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, position.left * (1 / scale), position.top * (1 / scale))) {
+            if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, position.left, position.top)) {
                 continue;
             }
 
