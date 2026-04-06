@@ -27,7 +27,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
         setPaused(false);
     }, [context, timer]);
 
-    const buildAudioContext = useCallback(async () => {
+    const buildAudioContext = useCallback(async (startIndex: number) => {
         if(context.current) {
             console.error("An audio context already exists!");
 
@@ -69,6 +69,12 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     return;
                 }
 
+                if(slot.column + slot.duration < startIndex) {
+                    resolve();
+
+                    return;
+                }
+
                 FurnitureAssets.getFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
                     console.log("Adding buffer");
                     
@@ -80,10 +86,12 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     gainNode.connect(audioContext.destination);
                     gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
 
-                    source.start(audioContext.currentTime + slot.column * 2);
+                    const relativeColumn = Math.max(0, slot.column - startIndex);
 
-                    if((slot.column + slot.duration) * 2 > maxDuration) {
-                        maxDuration = (slot.column + slot.duration) * 2;
+                    source.start(audioContext.currentTime + relativeColumn * 2);
+
+                    if((relativeColumn + slot.duration) * 2 > maxDuration) {
+                        maxDuration = (relativeColumn + slot.duration) * 2;
                     }
 
                     resolve();
@@ -97,12 +105,12 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
         };
     }, [context, trax]);
 
-    const handleStart = useCallback(() => {
+    const handleStart = useCallback((startIndex: number) => {
         if(context.current) {
             handleStop();
         }
         
-        buildAudioContext().then((result) => {
+        buildAudioContext(startIndex).then((result) => {
             if(!result) {
                 return;
             }
@@ -113,7 +121,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
             setPlaying(true);
             setPaused(false);
 
-            setStep(0);
+            setStep(startIndex);
 
             context.current.resume();
 
@@ -128,7 +136,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     }
 
                     if(context.current.state === "running") {
-                        setStep(Math.floor(context.current.currentTime / 2));
+                        setStep(startIndex + Math.floor(context.current.currentTime / 2));
                     }
 
                     if(context.current.currentTime > duration.current) {

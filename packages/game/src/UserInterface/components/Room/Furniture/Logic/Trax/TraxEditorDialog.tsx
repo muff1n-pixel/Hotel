@@ -148,7 +148,7 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
                         paddingRight: 6
                     }}>
                         {(!player.playing)?(
-                            <TraxButton type="bottom-off" onClick={player.handleStart} style={{ width: 54 }}>
+                            <TraxButton type="bottom-off" onClick={() => player.handleStart(slider.sliderIndex)} style={{ width: 54 }}>
                                 <div className="sprite_dialog_trax_play"/>
                             </TraxButton>
                         ):(
