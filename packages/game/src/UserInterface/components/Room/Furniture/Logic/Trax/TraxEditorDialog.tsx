@@ -48,10 +48,12 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
             const rowSlots = trax.slots.filter((slot) => slot.row === row);
 
             return Array(24).fill(null).map((_, column) => {
-                return rowSlots.find((slot) => column >= slot.column && column < slot.column + slot.duration);
+                const columnWithOffset = column + offset;
+
+                return rowSlots.find((slot) => columnWithOffset >= slot.column && columnWithOffset < slot.column + slot.duration);
             });
         });
-    }, [trax.slots]);
+    }, [trax.slots, offset]);
 
     const handleSetSlot = useCallback((set: FurnitureTraxSetData, slot: number, duration: number, row: number, column: number) => {
         const mutatedSlot = trax.slots.filter((slot) => {
@@ -229,7 +231,7 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
                                         {Array(24).fill(null).map((_, column) => {
                                             const offsetColumn = column + offset;
 
-                                            const slot = mappedSlots[row][offsetColumn];
+                                            const slot = mappedSlots[row][column];
 
                                             return (
                                                 <div key={offsetColumn} className="sprite_dialog_trax_slot" data-trax-row={row} data-trax-slot={offsetColumn}>
@@ -238,7 +240,7 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
                                                             position: "relative",
                                                             cursor: "pointer"
                                                         }} onClick={() => slot && handleRemoveSlot(slot.duration, slot.row, slot.column)}>
-                                                            {(slot.set === mappedSlots[row][offsetColumn + 1]?.set && slot.slot === mappedSlots[row][offsetColumn + 1]?.slot) && (
+                                                            {(slot.set === mappedSlots[row][column + 1]?.set && slot.slot === mappedSlots[row][column + 1]?.slot) && (
                                                                 <div className={`sprite_dialog_trax_samples_set_${slot.set + 1}_connector`} style={{
                                                                     position: "absolute",
 
