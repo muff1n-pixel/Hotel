@@ -1,13 +1,13 @@
 export const figureRenderPriority: Record<string, Record<string, string[]>> = {
     "std": {
-        "0": ["li","lh","ls","ri","bd","sh","lg","ch","cp","wa","ca","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "1": ["li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "2": ["li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "3": ["bd","sh","lg","ch","cp","wa","ca","li","lh","ls","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "4": ["rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he","lh","li","ls","ri"],
-        "5": ["rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "6": ["rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
-        "7": ["li","lh","ls","ri","rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he"]
+        "0": ["sd","li","lh","ls","ri","bd","sh","lg","ch","cp","wa","ca","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "1": ["sd","li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "2": ["sd","li","lh","ls","bd","sh","lg","ch","cp","wa","ca","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "3": ["sd","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","ri","rh","rs","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "4": ["sd","rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he","lh","li","ls","ri"],
+        "5": ["sd","rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "6": ["sd","rh","rs","ri","bd","sh","lg","ch","cp","wa","ca","li","lh","ls","hd","fc","ey","hr","hrb","fa","ea","ha","he"],
+        "7": ["sd","li","lh","ls","ri","rh","rs","bd","sh","lg","ch","cp","wa","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he"]
     },
     "lh-up": {
         "4": ["rh","rs","bd","sh","lg","ch","cp","wa","ri","ca","hd","fc","ey","hr","hrb","fa","ea","ha","he","lh","ls","li"],

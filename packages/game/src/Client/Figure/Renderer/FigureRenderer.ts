@@ -33,6 +33,8 @@ export type FigureRendererSprite = {
 
     index: number;
 
+    alpha?: number;
+
     ink?: GlobalCompositeOperation;
 }
 
@@ -421,6 +423,16 @@ export default class FigureRenderer {
 
             if(setData.hiddenPartTypes) {
                 hiddenPartTypes.push(...setData.hiddenPartTypes);
+            }
+
+            if(settypeData.type === "hd" && !setData.parts.some((part) => part.type === "sd")) {
+                setData.parts.push({
+                    id: "1",
+                    type: "sd",
+                    colorable: false,
+                    index: 0,
+                    colorIndex: 0
+                });
             }
 
             for(const setPartData of setData.parts) {
@@ -890,6 +902,10 @@ export default class FigureRenderer {
 
             const frame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
 
+            if(spriteConfiguration.type === "sd") {
+                spriteDirection = 0;
+            }
+
             let assetFlipped = false;
             let assetDirection = spriteDirection;
             let assetType = spriteConfiguration.type;
@@ -958,6 +974,10 @@ export default class FigureRenderer {
             const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
 
             if(result) {
+                if(spriteConfiguration.type === "sd") {
+                    result.alpha = 0.15;
+                }
+
                 if(actionForSprite.destinationX) {
                     result.x += actionForSprite.destinationX;
                 }
@@ -1020,7 +1040,7 @@ export default class FigureRenderer {
         };
     }
 
-    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined) {
+    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite | null> {
         const sprite = await FigureAssets.getFigureSprite(spriteConfiguration.assetId, {
             x: spriteData.x,
             y: spriteData.y,
@@ -1065,8 +1085,8 @@ export default class FigureRenderer {
             x: x - 32,
             y: y + 32,
 
-            index: (partPriority * 10) 
-        };
+            index: (partPriority * 10)
+        } satisfies FigureRendererSprite;
     }
 
     private getCurrentAnimationFrame(frames: FigureAnimationData["frames"]) {
@@ -1133,6 +1153,10 @@ export default class FigureRenderer {
 
             for(const sprite of mutatedSprites.toSorted((a, b) => a.index - b.index)) {
                 context.save();
+
+                if(sprite.alpha) {
+                    context.globalAlpha = sprite.alpha;
+                }
 
                 if(sprite.ink) {
                     context.globalCompositeOperation = sprite.ink;

@@ -1,7 +1,7 @@
 export const figurePartSets = [
     {
         id: "figure",
-        parts: [ "rh", "rhs", "rs", "rc", "bd", "bds", "ss", "sh", "lg", "ch", "cp", "cc", "wa", "hd", "fc", "ey", "hr", "hrb", "lh", "lhs", "ls", "lc", "ea", "ca", "fa", "ha", "he" ]
+        parts: [ "rh", "rhs", "rs", "rc", "bd", "bds", "ss", "sh", "lg", "ch", "cp", "cc", "wa", "hd", "fc", "ey", "hr", "hrb", "lh", "lhs", "ls", "lc", "ea", "ca", "fa", "ha", "he", "sd" ]
     },
     {
         id: "head",
