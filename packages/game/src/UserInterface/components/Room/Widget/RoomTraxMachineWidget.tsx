@@ -25,8 +25,6 @@ export default function RoomTraxMachineWidget() {
             index.current = 0;
         }
 
-        console.log("Moving to index " + index.current);
-
         const songId = traxmachine?.data.data?.trax?.playlist[index.current];
 
         if(!songId) {
@@ -66,6 +64,8 @@ export default function RoomTraxMachineWidget() {
         }
 
         const song = traxmachine.data.data?.trax?.songs.find((song) => song.id === songId);
+
+        setCurrentSong(song);
         
         if(!song) {
             return;
