@@ -39,6 +39,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         if(this.animated) {
             const layerFrames = this.getLayerFrames(options).map((frame) => frame.animationLayerId + '-' + frame.spriteFrame).join('_');
 
+
             if(this.previousLayerFrames !== layerFrames) {
                 return true;
             }
@@ -75,7 +76,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         const layerFramesData = this.getLayerFrames(options);
         const layerFrames = Array(this.visualization?.layerCount ?? 0).fill(null).map((_, layer) => {
             const data = layerFramesData.find((layerFrameData) => layerFrameData.animationLayerId === layer);
-
 
             return layer + '-' + (data?.spriteFrame ?? 0);
         }).join('_');
@@ -199,14 +199,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         if(!this.visualization) {
             throw new Error("Visualization for " + this.type + " does not exist for size: " + options.size + ".");
         }
+       
+        const animationFrames = this.getLayerFrames(options);
 
+        this.previousLayerFrames = animationFrames.map((frame) => frame.animationLayerId + '-' + frame.spriteFrame).join('_');
+       
         const directionData = this.visualization.directions.find((visualizationDirection) => visualizationDirection.id === options.direction);
 
         this.animated = false;
-
-        const animationFrames = this.getLayerFrames(options);
-
-        this.previousLayerFrames = animationFrames.map((frame) => frame.animationLayerId + '-' + frame.frameSequenceIndex).join('_');
 
         const layers = Array(this.visualization.layerCount).fill(null).map((_, index) => ({
             layer: index as (number | undefined),
