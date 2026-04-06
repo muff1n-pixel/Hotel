@@ -9,6 +9,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
     const context = useRef<AudioContext>(undefined);
     const timer = useRef<NodeJS.Timeout>(undefined);
     const duration = useRef<number>(undefined);
+    const previousStartIndex = useRef<number>(0);
 
     const handleStop = useCallback(() => {
         console.debug("Stopping playback!");
@@ -16,6 +17,8 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
         if(context.current) {
             context.current.close();
             context.current = undefined;
+
+            setStep(previousStartIndex.current);
         }
 
         if(timer.current !== undefined) {
@@ -117,6 +120,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
             
             context.current = result.audioContext;
             duration.current = result.duration;
+            previousStartIndex.current = startIndex;
 
             setPlaying(true);
             setPaused(false);
@@ -136,7 +140,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     }
 
                     if(context.current.state === "running") {
-                        setStep(startIndex + Math.floor(context.current.currentTime / 2));
+                        setStep(startIndex + Math.round(context.current.currentTime / 2));
                     }
 
                     if(context.current.currentTime > duration.current) {
