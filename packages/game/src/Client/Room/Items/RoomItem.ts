@@ -9,10 +9,22 @@ export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
     
     _position?: RoomPositionData;
-    priority: number = 0;
+    _priority: number = 0;
+
+    public get priority() {
+        return this._priority;
+    }
+
+    public set priority(priority: number) {
+        this._priority = priority;
+
+        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+    }
 
     disabled: boolean = false;
     alpha: number = 1;
+
+    public calculatedPriority: number = 0;
 
     public get position() {
         return this._position;
@@ -52,6 +64,7 @@ export default class RoomItem implements RoomItemInterface {
             }
         }
 
+        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
         this._position = position;
     }
 

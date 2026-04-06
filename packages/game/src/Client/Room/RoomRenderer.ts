@@ -155,7 +155,7 @@ export default class RoomRenderer extends EventTarget {
         if(!context) {
             throw new ContextNotAvailableError();
         }
-        
+                
         this.renderOffScreen(context);
 
         const timestamp = performance.now();
@@ -298,29 +298,33 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private getSpritePriority(sprite: RoomSprite) {
-        let priority = sprite.item.priority + sprite.priority;
+        return sprite.item.calculatedPriority + sprite.priority;
+    }
 
-        if(sprite.item.position) {
-            if(Math.round(sprite.item.position.row) === this.structure.door?.row && Math.round(sprite.item.position.column) === this.structure.door.column) {
+    public getItemCalculatedPriority(item: RoomItem) {
+        let priority = item.priority;
+
+        if(item.position) {
+            if(Math.round(item.position.row) === this.structure.door?.row && Math.round(item.position.column) === this.structure.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
                     priority = -2000;
-                    priority += (sprite.item.position.depth * 100);
+                    priority += (item.position.depth * 100);
                 
                     return priority;
                 }
             }
 
-            if(sprite.item instanceof RoomFurnitureItem) {
-                if(sprite.item.furnitureRenderer.placement === "wall") {
+            if(item instanceof RoomFurnitureItem) {
+                if(item.furnitureRenderer.placement === "wall") {
                     priority = 0;
-                    priority += (sprite.item.position.depth * 100);
+                    priority += (item.position.depth * 100);
                 }
                 else {
-                    priority += RoomRenderer.getPositionPriority(sprite.item.position);
+                    priority += RoomRenderer.getPositionPriority(item.position);
                 }
             }
             else {
-                priority += RoomRenderer.getPositionPriority(sprite.item.position);
+                priority += RoomRenderer.getPositionPriority(item.position);
             }
         }
 
