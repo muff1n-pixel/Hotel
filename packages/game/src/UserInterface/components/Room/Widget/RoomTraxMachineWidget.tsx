@@ -21,9 +21,11 @@ export default function RoomTraxMachineWidget() {
 
         index.current++;
 
-        if(index.current === traxmachine?.data.data?.trax?.playlist.length) {
+        if(!traxmachine?.data.data?.trax?.playlist[index.current]) {
             index.current = 0;
         }
+
+        console.log("Moving to index " + index.current);
 
         const songId = traxmachine?.data.data?.trax?.playlist[index.current];
 
@@ -36,6 +38,16 @@ export default function RoomTraxMachineWidget() {
         const song = traxmachine.data.data?.trax?.songs.find((song) => song.id === songId);
 
         setCurrentSong(song);
+
+        if(!song) {
+            return;
+        }
+
+        if(manuallyStopped.current) {
+            return;
+        }
+
+        traxPlayer.handleStart(song, handleFinish);
     }, [traxmachine]);
 
     useEffect(() => {
@@ -54,20 +66,8 @@ export default function RoomTraxMachineWidget() {
         }
 
         const song = traxmachine.data.data?.trax?.songs.find((song) => song.id === songId);
-
-        setCurrentSong(song);
-
-        return () => {
-            traxPlayer.handleStop();
-        };
-    }, [traxmachine]);
-
-    useEffect(() => {
-        if(!traxmachine) {
-            return;
-        }
-
-        if(!currentSong) {
+        
+        if(!song) {
             return;
         }
 
@@ -75,8 +75,12 @@ export default function RoomTraxMachineWidget() {
             return;
         }
 
-        traxPlayer.handleStart(currentSong, handleFinish);
-    }, [currentSong]);
+        traxPlayer.handleStart(song, handleFinish);
+
+        return () => {
+            traxPlayer.handleStop();
+        };
+    }, [traxmachine]);
 
     if(!traxmachine) {
         return null;
