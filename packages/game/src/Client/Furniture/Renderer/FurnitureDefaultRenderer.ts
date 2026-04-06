@@ -208,17 +208,25 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         this.previousLayerFrames = animationFrames.map((frame) => frame.animationLayerId + '-' + frame.frameSequenceIndex).join('_');
 
-        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
+        const layers = Array(this.visualization.layerCount).fill(null).map((_, index) => ({
+            layer: index as (number | undefined),
+            layerCode: String.fromCharCode(97 + index)
+        })).concat({
+            layer: -1,
+            layerCode: "sd"
+        });
+
+        for(const { layer, layerCode } of layers) {
             const animationFrame = animationFrames.find((frame) => frame.animationLayerId === layer);
 
             if(animationFrame) {
                 this.animated = true;
             }
 
-            let assetName = `${this.type}_${options.size}_${String.fromCharCode(97 + layer)}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
+            let assetName = `${this.type}_${options.size}_${layerCode}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
 
             if(options.size === 1) {
-                assetName = `${this.type}_icon_${String.fromCharCode(97 + layer)}`;
+                assetName = `${this.type}_icon_${layerCode}`;
             }
 
             const assetData = data.assets.find((asset) => asset.name === assetName);
@@ -290,8 +298,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 ink: getGlobalCompositeModeFromInk(layerData?.ink),
                 tag: layerData?.tag,
 
-                zIndex: (directionLayerData?.zIndex ?? layerData?.zIndex ?? 0) + layer,
-                alpha: layerData?.alpha,
+                zIndex: (directionLayerData?.zIndex ?? layerData?.zIndex ?? 0) + (layer ?? 0),
+                alpha: layerData?.alpha ?? ((layerCode === "sd")?(0.15 * 255):(undefined)),
                 ignoreMouse: layerData?.ignoreMouse
             };
 
