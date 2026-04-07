@@ -33,6 +33,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@pixel63/events": "file:../events",
     "@pixel63/shared": "file:../shared",
     "@types/js-cookie": "^3.0.6",
     "js-cookie": "^3.0.5",

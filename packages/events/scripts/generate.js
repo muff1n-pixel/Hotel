@@ -1,5 +1,6 @@
 const { execSync } = require("child_process");
-const { readdirSync, writeFileSync, statSync } = require("fs");
+const { readdirSync, writeFileSync, statSync, existsSync, rmdirSync, mkdirSync, rmSync } = require("fs");
+const { platform } = require("os");
 const path = require("path");
 const { join, resolve, relative } = require("path");
 
@@ -32,15 +33,25 @@ if (protoFiles.length === 0) {
     process.exit(0);
 }
 
+if(existsSync(OUT_DIR)) {
+    rmSync(OUT_DIR, {
+        recursive: true
+    });
+}
+
+mkdirSync(OUT_DIR);
+
 const relativeProtoFiles = protoFiles.map(file =>
     relative(ROOT, file)
 );
+
+const protocPath = path.join("..", "..", "bin", "protoc", "bin", (platform() === "win32")?("protoc.exe"):("protoc"));
 
 for (let i = 0; i < relativeProtoFiles.length; i += 20) {
     const chunk = relativeProtoFiles.slice(i, i + 20);
 
     const command = [
-        `protoc`,
+        protocPath,
         `--plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\protoc-gen-ts_proto.cmd"`,
         `--ts_proto_opt=esModuleInterop=true,importSuffix=.js,outputTypeRegistry=true`,
         `--ts_proto_out=${OUT_DIR}`,
@@ -100,5 +111,3 @@ function generateIndex() {
 }
 
 generateIndex();
-
-console.log("Done.");

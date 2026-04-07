@@ -9,7 +9,7 @@ export default class SetupAssets {
     }
 
     public static async setup() {
-        console.log(`Downloading assets...`);
+        console.log(`3.a Downloading assets (this may take a while)...`);
 
         const response = await fetch("http://pixel63.muff1n-pixel.org/game/assets/assets.zip");
 
@@ -28,7 +28,7 @@ export default class SetupAssets {
             file.on("error", reject);
         });
 
-        console.log("Download finish, extracting...");
+        console.log("3.b Extracting downloaded archive (this may take a while)...");
 
         mkdirSync(path.join("..", "..", "assets"), { recursive: true });
 

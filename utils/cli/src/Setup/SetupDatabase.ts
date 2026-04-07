@@ -1,5 +1,5 @@
 import { confirm, input, number } from "@inquirer/prompts";
-import { existsSync, readdirSync, readFileSync } from "fs";
+import { copyFileSync, existsSync, readdirSync, readFile, readFileSync, writeFileSync } from "fs";
 import mysql from "mysql2/promise";
 import path from "path";
 
@@ -182,5 +182,31 @@ export default class SetupDatabase {
         }
 
         await connection.end();
+    }
+
+    public static saveCredentials() {
+        if(!this.credentials) {
+            throw new Error("Credentials are not set.");
+        }
+
+        const packagePaths = ["server", "web"].map((name) => path.join("..", "..", "packages", name));
+
+        for(const packagePath of packagePaths) {
+            const configPath = path.join(packagePath, "config.json");
+
+            if(!existsSync(configPath)) {
+                copyFileSync(path.join(packagePath, "config.example.json"), configPath);
+            }
+
+            const config = JSON.parse(readFileSync(configPath, { encoding: "utf-8" }));
+
+            config.database.database = this.credentials.database;
+            config.database.port = this.credentials.port;
+            config.database.username = this.credentials.username;
+            config.database.password = this.credentials.password;
+            config.database.hostname = this.credentials.hostname;
+
+            writeFileSync(configPath, JSON.stringify(config, undefined, 4));
+        }
     }
 }

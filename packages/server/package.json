@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@types/bcrypt": "^6.0.0",
     "@types/cli-progress": "^3.11.6",
     "@types/ini": "^4.1.1",
     "@types/jsonwebtoken": "^9.0.10",
