@@ -6,12 +6,15 @@ build/game/*
 !build/web/
 build/web/*
 
+bin/
+
 !build/game/index.html
 !build/game/favicon.ico
 
 node_modules/
 
 packages/*/build/
+utils/*/build/
 
 packages/*/node_modules/
 utils/*/node_modules/

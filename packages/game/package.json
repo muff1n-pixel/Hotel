@@ -33,12 +33,12 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@pixel63/shared": "file:../shared",
     "@types/js-cookie": "^3.0.6",
     "js-cookie": "^3.0.5",
     "react": "^19.1.0",
     "react-color-palette": "^7.3.1",
-    "react-dom": "^19.1.0",
-    "@pixel63/shared": "file:../shared"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -50,7 +50,7 @@
     "@types/node-sprite-generator": "^0.10.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^8.57.1",
     "eslint-plugin-storybook": "10.2.19",
     "node-sprite-generator": "^0.10.2",
     "parcel": "^2.16.4",
