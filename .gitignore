@@ -20,12 +20,7 @@ packages/*/node_modules/
 utils/*/node_modules/
 utils/swf-extract/sounds/
 
-assets/*/
-!assets/reception/
-!assets/shop/*/
-assets/shop/headers/
-assets/shop/teasers/
-!assets/loader/
+assets/
 
 tsconfig.tsbuildinfo
 
