@@ -51,7 +51,7 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
     }
 
     return (
-        <DimmerDialog title="Room dimmer">
+        <DimmerDialog title="Room dimmer" onClose={onClose}>
             <div style={{
                 display: "flex",
                 flexDirection: "row",
