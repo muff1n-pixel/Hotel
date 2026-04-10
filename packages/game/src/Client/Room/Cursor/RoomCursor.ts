@@ -154,7 +154,7 @@ export default class RoomCursor extends EventTarget {
         if(otherEntity?.item && this.roomRenderer.focusedItem.value?.id !== otherEntity.item.id) {
             this.roomRenderer.focusedItem.value = otherEntity.item;
         }
-        else if(this.roomRenderer.focusedItem.value && (!floorEntity || otherEntity)) {
+        else if(this.roomRenderer.focusedItem.value && (!floorEntity && !otherEntity)) {
             this.roomRenderer.focusedItem.value = null;
         }
     }
