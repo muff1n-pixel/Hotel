@@ -148,7 +148,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     }
                 }, 1000);
             }
-        });
+        }).catch(console.error);
     }, [trax, context, timer, handleStop]);
 
     const handlePause = useCallback(() => {

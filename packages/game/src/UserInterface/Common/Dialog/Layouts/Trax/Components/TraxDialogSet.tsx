@@ -22,15 +22,15 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
             return;
         }
 
-        if(audioContext.current.state !== "closed") {
-            audioContext.current.close();
-        }
-
-        audioContext.current = new AudioContext();
-
-        const gainNode = audioContext.current.createGain();
-
         FurnitureAssets.getFurnitureData(set.furniture.type).then((furnitureData) => {
+            if(audioContext.current.state !== "closed") {
+                audioContext.current.close();
+            }
+
+            audioContext.current = new AudioContext();
+
+            const gainNode = audioContext.current.createGain();
+
             const furnitureSound = furnitureData.sounds?.[index];
 
             if(!furnitureSound) {
