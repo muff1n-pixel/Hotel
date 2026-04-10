@@ -13,6 +13,12 @@ export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
 };
 
+export type FurnitureRenderResult = {
+    sprites: FurnitureRendererSprite[];
+    animated: boolean;
+    layerFrames: string;
+};
+
 export type FurnitureRendererSprite = {
     image: ImageBitmap;
     imageData: ImageData | null;

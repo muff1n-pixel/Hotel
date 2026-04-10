@@ -1,7 +1,7 @@
 import AssetFetcher, { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
@@ -38,7 +38,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         if(this.animated) {
             const layerFrames = this.getLayerFrames(options).map((frame) => frame.animationLayerId + '-' + frame.spriteFrame).join('_');
-
 
             if(this.previousLayerFrames !== layerFrames) {
                 return true;
@@ -175,7 +174,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return result;
     }
 
-    public static renderMap: Map<string, FurnitureRendererSprite[]> = new Map();
+    public static renderMap: Map<string, FurnitureRenderResult> = new Map();
 
     public async render(data: FurnitureData, options: FurnitureRenderOptions) {
         this.options = options;
@@ -186,10 +185,13 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const renderOptions = this.getRenderOptionsKey(options);
        
-        const existingSprites = FurnitureDefaultRenderer.renderMap.get(renderOptions);
+        const existingRender = FurnitureDefaultRenderer.renderMap.get(renderOptions);
        
-        if(existingSprites) {
-            return existingSprites;
+        if(existingRender) {
+            this.animated = existingRender.animated;
+            this.previousLayerFrames = existingRender.layerFrames;
+
+            return existingRender.sprites;
         }
         
         const sprites: FurnitureRendererSprite[] = [];
@@ -321,7 +323,11 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             const canCacheAllSprites = frameCounts.every((frames) => maxFrames % frames === 0);
 
             if(canCacheAllSprites) {
-                FurnitureDefaultRenderer.renderMap.set(renderOptions, sprites);
+                FurnitureDefaultRenderer.renderMap.set(renderOptions, {
+                    animated: this.animated,
+                    layerFrames: this.previousLayerFrames,
+                    sprites
+                });
             }
         }
 
