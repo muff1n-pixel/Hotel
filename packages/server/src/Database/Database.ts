@@ -45,6 +45,7 @@ import { initializeUserClothingModel } from "./Models/Users/Clothes/UserClothing
 import { initializeClothingModel } from "./Models/Clothes/ClothesModel.js";
 import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureModel.js";
 import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectModel.js";
+import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -105,6 +106,7 @@ export async function initializeModels() {
   initializeUserClothingModel(sequelize);
   initializeUserEffectModel(sequelize);
   initializeUserFigureModel(sequelize);
+  initializeUserNotificationModel(sequelize);
 
   await sequelize.sync();
 

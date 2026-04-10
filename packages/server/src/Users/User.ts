@@ -6,7 +6,7 @@ import UserInventory from "./Inventory/UserInventory.js";
 import Room from "../Rooms/Room.js";
 import { debugTimestamps } from "../Database/Database.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
-import { MessageType, UnknownMessage, UserData, UserPermissionsData } from "@pixel63/events";
+import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
 import UserNotifications from "./Notifications/UserNotifications.js";
@@ -31,7 +31,7 @@ export default class User extends EventEmitter {
         this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this.model.id);
-        this.notifications = new UserNotifications(this);
+        this.notifications = new UserNotifications(this.model.id);
         
         this.permissions.loadPermissions().then(() => {
             this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
@@ -85,5 +85,9 @@ export default class User extends EventEmitter {
 
     public sendUserData() {
         this.sendProtobuff(UserData, UserData.fromJSON(this.model));
+    }
+    
+    public sendWidgetNotification(data: WidgetNotificationData) {
+        this.sendProtobuff(WidgetNotificationData, data);
     }
 }

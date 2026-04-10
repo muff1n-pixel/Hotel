@@ -7,6 +7,7 @@ import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
+import UserNotifications from "./Users/Notifications/UserNotifications.js";
 
 export default class Game {
     public readonly hotelInformation;
@@ -45,5 +46,11 @@ export default class Game {
         const user = this.getUserById(userId);
 
         return user?.achievements ?? new UserAchievements(userId);
+    }
+
+    public getUserNotifications(userId: string) {
+        const user = this.getUserById(userId);
+
+        return user?.notifications ?? new UserNotifications(userId);
     }
 }

@@ -41,7 +41,7 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
 
         roomUser.addAction(this.game.getTeamAvatarEffect(player));
 
-        roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
+        roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
     }
     
     public getPlayer(roomUser: RoomUser) {
@@ -109,10 +109,10 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
             }));
         }
 
-        player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
+        player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
 
         if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
-            triggerPlayer.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
+            triggerPlayer.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
 
             triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1).catch(console.error);
         }

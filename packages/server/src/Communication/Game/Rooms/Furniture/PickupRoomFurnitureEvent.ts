@@ -1,3 +1,4 @@
+import { game } from "../../../../index.js";
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PickupRoomFurnitureData } from "@pixel63/events";
@@ -15,10 +16,14 @@ export default class PickupRoomFurnitureEvent implements ProtobuffListener<Picku
             return;
         }
 
-        if(roomFurniture.model.user?.id !== user.model.id && !roomUser.hasRights()) {
+        if(roomFurniture.model.userId !== user.model.id && !roomUser.hasRights()) {
             throw new Error("User is not owner of the furniture and does not have rights.");
         }
 
         await roomFurniture.pickup();
+
+        if(roomFurniture.model.userId && roomFurniture.model.userId !== user.model.id) {
+            await game.getUserNotifications(roomFurniture.model.userId).addNotification("furniture");
+        }
     }
 }

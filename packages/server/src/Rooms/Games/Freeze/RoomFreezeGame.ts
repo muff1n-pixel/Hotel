@@ -206,7 +206,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 health: null
             }));
 
-            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
+            player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
         }
 
         for(const player of this.players.getFrozenPlayers()) {
@@ -246,7 +246,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
                             player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
                             
-                            player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPlayerEliminated());
+                            player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerEliminated());
                         }
                     }
                 }
@@ -279,7 +279,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                         health: player.health
                     }));
 
-                    player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                    player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
                 }
 
                 break;
@@ -288,7 +288,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.BiggerBomb: {
                 player.radius++;
 
-                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -300,7 +300,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 player.roomUser.removeAction("AvatarEffect");
                 player.roomUser.addAction(this.getTeamAvatarEffect(player));
 
-                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -308,7 +308,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.CrossBlast: {
                 player.crossBlast = true;
 
-                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -316,7 +316,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.MorePower: {
                 player.maxSnowballs++;
 
-                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -324,7 +324,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.MegaSnowball: {
                 player.megaSnowball = true;
 
-                player.roomUser.user.notifications.sendNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }

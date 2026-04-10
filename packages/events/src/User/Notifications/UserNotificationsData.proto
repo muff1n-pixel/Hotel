@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "User/Notifications/UserNotificationData.proto";
+
+message UserNotificationsData {
+    repeated UserNotificationData notifications = 1;
+}
