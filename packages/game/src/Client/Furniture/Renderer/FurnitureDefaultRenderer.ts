@@ -211,10 +211,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         const layers = Array(this.visualization.layerCount).fill(null).map((_, index) => ({
             layer: index as (number | undefined),
             layerCode: String.fromCharCode(97 + index)
-        })).concat({
-            layer: -1,
-            layerCode: "sd"
-        });
+        }));
+
+        if(!options.tags?.length) {
+            layers.push({
+                layer: -1,
+                layerCode: "sd"
+            });
+        }
 
         for(const { layer, layerCode } of layers) {
             const animationFrame = animationFrames.find((frame) => frame.animationLayerId === layer);
