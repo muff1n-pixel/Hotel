@@ -164,7 +164,7 @@ export default class WallRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
-            color: leftWallColor ?? [visualization.color, "666"],
+            color: leftWallColor ?? [visualization.color, "CCC"],
             flipHorizontal: assetData.flipHorizontal
         });
 
@@ -177,7 +177,7 @@ export default class WallRenderer {
 
             destinationHeight: Math.min(spriteData.height, material.width * 2),
 
-            color: [visualization.color, "BBB"],
+            color: [visualization.color, "AAA"],
             flipHorizontal: assetData.flipHorizontal
         });
 
@@ -246,7 +246,7 @@ export default class WallRenderer {
             const rectangle = rectangles[index];
 
             let width = this.fullSize;
-            let height = ((3.5 + (this.depth - rectangle.depth)) * this.fullSize);
+            let height = Math.ceil((3.5 + (this.depth - rectangle.depth)) * this.fullSize) + 1;
 
             let row = rectangle.row;
             let column = rectangle.column;
@@ -261,7 +261,7 @@ export default class WallRenderer {
                 }
 
                 width = (this.structure.wall?.thickness ?? 8);
-                height += (this.structure.floor?.thickness ?? 9);
+                height += (this.structure.floor?.thickness ?? 9) - 1;
             }
             else if(rectangle.direction == 2) {
                 depth = this.parseDepth(this.getTileDepth(row, column + 1, false));
@@ -316,7 +316,7 @@ export default class WallRenderer {
             const column = rectangle.column;  
 
             let width = this.fullSize;
-            let height = ((3.5 + (this.depth - rectangle.depth)) * this.fullSize);
+            let height = Math.ceil((3.5 + (this.depth - rectangle.depth)) * this.fullSize) + 1;
 
             if(rectangle.direction == 2) {
                 row++;
@@ -326,7 +326,7 @@ export default class WallRenderer {
                 }
 
                 width = (this.structure.wall?.thickness ?? 8);
-                height += (this.structure.floor?.thickness ?? 9);
+                height += (this.structure.floor?.thickness ?? 9) - 1;
             }
             else if(rectangle.direction !== 4) {
                 continue;

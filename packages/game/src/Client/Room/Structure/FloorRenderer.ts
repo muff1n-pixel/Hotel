@@ -124,7 +124,7 @@ export default class FloorRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
-            color: [visualization.color, "BBB"],
+            color: [visualization.color, "CCC"],
             flipHorizontal: assetData.flipHorizontal
         });
 
@@ -137,7 +137,7 @@ export default class FloorRenderer {
 
             destinationHeight: Math.min(spriteData.height, material.width * 2),
 
-            color: [visualization.color, "666"],
+            color: [visualization.color, "AAA"],
             flipHorizontal: assetData.flipHorizontal
         });
 
