@@ -31,7 +31,7 @@ export default class WallRenderer {
     public leftWalls: WallTile[] = [];
     public rightWalls: WallTile[] = [];
 
-    public hasDoorWall = false;
+    public hasDoorWall = true;
 
     public rows: number;
     public columns: number;
