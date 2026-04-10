@@ -860,6 +860,8 @@ export default class FigureRenderer {
     }
 
     private async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: BodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite[]> {
+        const actionForSit = this.actions.some((action) => action === "Sit");
+
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
         
@@ -917,7 +919,7 @@ export default class FigureRenderer {
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
             if(!asset && flipHorizontal) {
-                //console.warn("Can't find asset for " + assetName + ", trying with flipped direction");
+                console.warn("Can't find asset for " + assetName + ", trying with flipped direction");
 
                 if(assetType[1] !== 'g') {
                     if(assetType[0] == 'l') {
@@ -937,7 +939,7 @@ export default class FigureRenderer {
             }
 
             if(!asset) {
-                //console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
+                console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
                 
                 assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
 
@@ -986,9 +988,7 @@ export default class FigureRenderer {
                     result.y += actionForSprite.destinationY;
                 }
 
-                const actionForSit = this.actions.some((action) => action === "Sit");
-
-                if(actionForSit) {
+                if(actionForSit && spriteConfiguration.type !== "sd") {
                     result.y += 16;
                 }
 

@@ -209,6 +209,12 @@ export default class RoomUser implements RoomActor {
             return;
         }
 
+        if(action === "Sit") {
+            if(this.direction % 2) {
+                this.path.setDirection((this.direction + 1) % 8);
+            }
+        }
+
         if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
             removeAfterMs = 2000;
         }
