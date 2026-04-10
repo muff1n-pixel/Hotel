@@ -438,9 +438,9 @@ export default class WallRenderer {
             context.drawImage(image, left, top, image.width, image.height);
             
             if(overlappingWalls === 1) {
-                top -= image.height;
+                top -= image.height - 1;
                 
-                context.drawImage(image, left, top);
+                context.drawImage(image, left, top, image.width, image.height + 1);
             }
 
             this.hasDoorWall = true;
@@ -465,9 +465,9 @@ export default class WallRenderer {
             context.drawImage(image, left - image.width, top);
 
             if(overlappingWalls === 1) {
-                top -= image.height;
+                top -= image.height - 1;
 
-                context.drawImage(image, left - image.width, top);
+                context.drawImage(image, left - image.width, top, image.width, image.height + 1);
             }
 
             this.hasDoorWall = true;
