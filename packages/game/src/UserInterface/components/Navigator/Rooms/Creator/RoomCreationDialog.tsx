@@ -70,7 +70,9 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
-        <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={600} height={360}>
+        <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={600} height={360} style={{
+            overflow: "visible"
+        }}>
             <DialogContent>
                 <div style={{
                     flex: 1,
