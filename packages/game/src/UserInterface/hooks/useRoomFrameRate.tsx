@@ -7,9 +7,17 @@ export function useRoomFrameRate() {
     const [value, setValue] = useState<number | undefined>(0);
 
     useEffect(() => {
-        return room?.roomRenderer.frameRate?.subscribe((value) => {
-            setValue(value);
-        });
+        let animationFrame = window.requestAnimationFrame(updateAnimationFrame);
+
+        function updateAnimationFrame() {
+            setValue(room?.roomRenderer.frameRate);
+            
+            animationFrame = window.requestAnimationFrame(updateAnimationFrame);
+        }
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+        };
     }, [room]);
 
     return value;

@@ -25,6 +25,7 @@ import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprit
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
+    private readonly context: CanvasRenderingContext2D;
     public readonly camera: RoomCamera;
     public readonly cursor?: RoomCursor;
 
@@ -39,7 +40,7 @@ export default class RoomRenderer extends EventTarget {
     public frame: number = 0;
 
     private frames: number[] = [];
-    public frameRate: ObservableProperty<number> = new ObservableProperty<number>(0);
+    public frameRate: number = 0;
 
     public size: number = 64;
     private currentSize: number = 64;
@@ -84,6 +85,10 @@ export default class RoomRenderer extends EventTarget {
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
 
+        this.context = this.element.getContext("2d", {
+            alpha: false
+        })!;
+
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
 
@@ -111,9 +116,7 @@ export default class RoomRenderer extends EventTarget {
             return;
         }
 
-        if(this.lastAnimationFrame !== null) {
-            window.cancelAnimationFrame(this.lastAnimationFrame);
-        }
+        this.lastAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
 
         const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
 
@@ -130,8 +133,6 @@ export default class RoomRenderer extends EventTarget {
             this.dispatchEvent(new RoomFrameEvent());
         }
         else if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
-            window.requestAnimationFrame(this.render.bind(this));
-
             return;
         }
         
@@ -145,27 +146,22 @@ export default class RoomRenderer extends EventTarget {
         };
 
         // Automatically clears the context
-        this.element.width = boundingRectangle.width;
-        this.element.height = boundingRectangle.height;
-
-        const context = this.element.getContext("2d", {
-            alpha: false
-        });
-
-        if(!context) {
-            throw new ContextNotAvailableError();
+        if(boundingRectangle.width === this.element.width && boundingRectangle.height === this.element.height) {
+            this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         }
-                
-        this.renderOffScreen(context);
+        else {
+            this.element.width = boundingRectangle.width;
+            this.element.height = boundingRectangle.height;
+        }
+
+        this.renderOffScreen(this.context);
 
         const timestamp = performance.now();
 
         this.frames = this.frames.filter((frame) => frame >= timestamp - 1000);
         this.frames.push(timestamp);
 
-        this.frameRate.value = this.frames.length;
-        
-        this.lastAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
+        this.frameRate = this.frames.length;
     }
 
     private renderOffScreen(context: CanvasRenderingContext2D) {
