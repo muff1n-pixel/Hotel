@@ -135,23 +135,25 @@ export default class RoomRenderer extends EventTarget {
         else if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
             return;
         }
+
+        for(let index = 0; index < this.items.length; index++) {
+            this.items[index].processPositionPath();
+        }
         
         this.lastCappedFrameTimestamp = performance.now();
 
-        const boundingRectangle = this.parent.getBoundingClientRect();
-
         this.center = {
-            left: Math.floor(boundingRectangle.width / 2),
-            top: Math.floor(boundingRectangle.height / 2)
+            left: Math.floor(this.element.clientWidth / 2),
+            top: Math.floor(this.element.clientHeight / 2)
         };
 
         // Automatically clears the context
-        if(boundingRectangle.width === this.element.width && boundingRectangle.height === this.element.height) {
+        if(this.element.width === this.element.clientWidth && this.element.height === this.element.clientHeight) {
             this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         }
         else {
-            this.element.width = boundingRectangle.width;
-            this.element.height = boundingRectangle.height;
+            this.element.width = this.element.clientWidth;
+            this.element.height = this.element.clientHeight;
         }
 
         this.renderOffScreen(this.context);
@@ -173,17 +175,14 @@ export default class RoomRenderer extends EventTarget {
             top: this.center.top + this.camera.cameraPosition.top
         };
 
-        const sprites = this.items.flatMap((item) => {
-            item.processPositionPath();
-
-            if(item.disabled) {
-                return [];
-            }
-
-            return item.sprites;
-        }).sort((a, b) => {
-            return this.getSpritePriority(a) - this.getSpritePriority(b);
-        });
+        const sprites = this.items
+            .filter(item => !item.disabled)
+            .flatMap(item => item.sprites)
+            .sort((a, b) => {
+                const priorityA = a.item.calculatedPriority + a.priority;
+                const priorityB = b.item.calculatedPriority + b.priority;
+                return priorityA - priorityB;
+            });
 
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
