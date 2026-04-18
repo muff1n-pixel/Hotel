@@ -74,12 +74,16 @@ export default class FigureSpriteBuilder {
                 let setPartAssetData = this.getAssetForSetPart(setPartData.id, setPartData.type);
 
                 if(!setPartAssetData) {
-                    if(["ls", "rs"].includes(setPartData.type) && setPartData.id === "2") {
-                        setPartAssetData = FigureAssets.figuremap!.find((asset) => asset.id === "hh_human_shirt") ?? null;
+                    if(["ls", "rs"].includes(setPartData.type)) {
+                        setPartAssetData = this.getAssetForSetPart(setPartData.id, "sh");
+                    
+                        if(!setPartAssetData) {
+                            setPartAssetData = this.getAssetForSetPart(setPartData.id, "ch");
+                        }
                     }
 
                     if(!setPartAssetData) {
-                        //console.log("Set part asset data does not exist for set part id " + setPartData.id + ", type " + setPartData.type + ".");
+                        console.log("Set part asset data does not exist for set part id " + setPartData.id + ", type " + setPartData.type + ".");
 
                         continue;
                     }

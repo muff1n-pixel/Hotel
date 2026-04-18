@@ -155,7 +155,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     {part}-{set.id}
                                 </div>
 
-                                {(!sets.includes(set))?(
+                                {(sets.includes(set))?(
                                     <div className="sprite_sub" style={{
                                         position: "absolute",
 
