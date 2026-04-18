@@ -18,7 +18,7 @@ export default function WiredDialog({ children, initialPosition, hidden, onClose
     ):(
         {
             left: Math.round((window.innerWidth - 240) / 2),
-            top: 10
+            top: Math.round((window.innerHeight - 240) / 2)
         }
     ));
 

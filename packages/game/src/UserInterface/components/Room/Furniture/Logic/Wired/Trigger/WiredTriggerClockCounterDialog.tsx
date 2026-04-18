@@ -33,12 +33,6 @@ export default function WiredTriggerClockCounterDialog({ data, onClose }: RoomFu
             return;
         }
 
-        const furnitureTriggerStates = furnitureIds.map((furnitureId) => {
-            const roomFurniture = room.getFurnitureById(furnitureId);
-
-            return roomFurniture.furniture.animation;
-        });
-
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
