@@ -85,6 +85,11 @@ export default class RoomRenderer extends EventTarget {
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
 
+        const boundingBox = this.parent.getBoundingClientRect();
+
+        this.element.width = boundingBox.width;
+        this.element.height = boundingBox.height;
+
         this.context = this.element.getContext("2d", {
             alpha: false
         })!;
