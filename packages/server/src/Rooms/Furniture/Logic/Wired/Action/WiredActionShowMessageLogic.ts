@@ -4,7 +4,7 @@ import { WiredTriggerOptions } from "../WiredLogic";
 import { RoomActorChatData } from "@pixel63/events";
 
 export type DelayedMessageData = {
-    userId: string;
+    userId: string | null;
     timestamp: number;
 };
 
@@ -29,9 +29,9 @@ export default class WiredActionShowMessageLogic extends WiredActionLogic {
                 continue;
             }
 
-            const roomUser = this.roomFurniture.room.users.find((user) => user.user.model.id === message.userId);
+            const roomUsers = this.getRoomUsersForMessage(message);
 
-            if(!roomUser) {
+            if(!roomUsers.length) {
                 this.messages.splice(this.messages.indexOf(message), 1);
 
                 continue;
@@ -39,32 +39,40 @@ export default class WiredActionShowMessageLogic extends WiredActionLogic {
 
             await this.setActive();
 
-            roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
-                actor: {
-                    user: {
-                        userId: roomUser.user.model.id
-                    }
-                },
+            for(const roomUser of roomUsers) {
+                roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                    actor: {
+                        user: {
+                            userId: roomUser.user.model.id
+                        }
+                    },
 
-                message: this.roomFurniture.model.data.wiredActionShowMessage.message,
-                roomChatStyleId: "notification",
-                options: {
-                    hideUsername: true
-                }
-            }));
+                    message: this.roomFurniture.model.data.wiredActionShowMessage.message,
+                    roomChatStyleId: "notification",
+                    options: {
+                        hideUsername: true
+                    }
+                }));
+            }
 
             this.messages.splice(this.messages.indexOf(message), 1);
         }
     }
 
     public async handleAction(options?: WiredTriggerOptions): Promise<void> {
-        if(options?.roomUser) {
-            if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
-                this.messages.push({
-                    userId: options.roomUser.user.model.id,
-                    timestamp: performance.now()
-                });
-            }
+        if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
+            this.messages.push({
+                userId: options?.roomUser?.user.model.id ?? null,
+                timestamp: performance.now()
+            });
         }
+    }
+
+    private getRoomUsersForMessage(message: DelayedMessageData) {
+        if(!message.userId) {
+            return this.roomFurniture.room.users;
+        }
+
+        return this.roomFurniture.room.users.filter((user) => user.user.model.id === message.userId);
     }
 }
