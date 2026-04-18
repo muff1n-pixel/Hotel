@@ -54,6 +54,7 @@ import RoomFurnitureSnowboardRampLogic from "./Logic/Games/Snowboarding/RoomFurn
 import RoomFurnitureClothingLogic from "./Logic/RoomFurnitureClothingLogic";
 import RoomFurnitureEnableBoxLogic from "./Logic/RoomFurnitureEnableBoxLogic";
 import RoomFurnitureTraxLogic from "./Logic/RoomFurnitureTraxLogic";
+import WiredTriggerClockCounterLogic from "./Logic/Wired/Trigger/WiredTriggerClockCounterLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -266,6 +267,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_recv_signal":
                 return new WiredTriggerReceiveSignalLogic(roomFurniture);
+
+            case "wf_trg_clock_counter":
+                return new WiredTriggerClockCounterLogic(roomFurniture);
         }
 
         return null;

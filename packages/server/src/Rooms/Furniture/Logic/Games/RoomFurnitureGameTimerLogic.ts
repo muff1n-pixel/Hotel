@@ -4,6 +4,7 @@ import RoomFurniture from "../../RoomFurniture.js";
 import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic.js";
 import RoomGame, { RoomGameConstructor } from "../../../Games/RoomGame.js";
 import Room from "../../../Room.js";
+import WiredTriggerClockCounterLogic from "../Wired/Trigger/WiredTriggerClockCounterLogic.js";
 
 export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
     private seconds: number;
@@ -120,6 +121,12 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
     }
 
     private async updateAnimationTags() {
+        const clockFurniture = this.roomFurniture.room.getFurnitureWithCategory(WiredTriggerClockCounterLogic);
+
+        for(const furniture of clockFurniture) {
+            furniture.handleClockCounter(this.roomFurniture, this.seconds).catch(console.error);
+        }
+
         const minutes = Math.floor(this.seconds / 60);
         const seconds = this.seconds % 60;
 
