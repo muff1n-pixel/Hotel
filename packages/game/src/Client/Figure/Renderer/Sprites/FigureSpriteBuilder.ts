@@ -71,12 +71,18 @@ export default class FigureSpriteBuilder {
                     continue;
                 }
                 
-                const setPartAssetData = this.getAssetForSetPart(setPartData.id, setPartData.type);
+                let setPartAssetData = this.getAssetForSetPart(setPartData.id, setPartData.type);
 
                 if(!setPartAssetData) {
-                    //console.log("Set part asset data does not exist for set part id " + setPartData.id + ", type " + setPartData.type + ".");
+                    if(["ls", "rs"].includes(setPartData.type) && setPartData.id === "2") {
+                        setPartAssetData = FigureAssets.figuremap!.find((asset) => asset.id === "hh_human_shirt") ?? null;
+                    }
 
-                    continue;
+                    if(!setPartAssetData) {
+                        //console.log("Set part asset data does not exist for set part id " + setPartData.id + ", type " + setPartData.type + ".");
+
+                        continue;
+                    }
                 }
 
                 result.push({
