@@ -244,7 +244,7 @@ export default function InventoryFurnitureTab() {
                             width: "100%",
                         }}/>
 
-                        <div style={{ flex: 1 }}>
+                        <div style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
                             <b>{activeFurniture.name ?? activeFurniture?.furniture?.name}</b>
                             <p>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
                         </div>
