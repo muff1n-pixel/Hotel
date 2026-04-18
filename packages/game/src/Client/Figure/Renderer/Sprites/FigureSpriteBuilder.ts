@@ -75,11 +75,7 @@ export default class FigureSpriteBuilder {
 
                 if(!setPartAssetData) {
                     if(["ls", "rs"].includes(setPartData.type)) {
-                        setPartAssetData = this.getAssetForSetPart(setPartData.id, "sh");
-                    
-                        if(!setPartAssetData) {
-                            setPartAssetData = this.getAssetForSetPart(setPartData.id, "ch");
-                        }
+                        setPartAssetData = this.getAssetForSetPart(setPartData.id, "ch");
                     }
 
                     if(!setPartAssetData) {
