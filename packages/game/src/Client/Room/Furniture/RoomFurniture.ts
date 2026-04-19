@@ -28,6 +28,8 @@ export default class RoomFurniture {
     constructor(private readonly instance: RoomInstance, public furnitureData: FurnitureData, data: UserFurnitureData) {
         this.data = data;
 
+        this.instance.roomRenderer.roomWorkerClient.addFurnitureItem(this.furnitureData.type, this.data.direction, this.data.animation, this.furnitureData.color, data.position, data.data);
+
         this.furniture = new Furniture(this.furnitureData.type, 64, this.data.direction, this.data.animation, this.furnitureData.color);
         this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, data.position, this.data.data as any);
 

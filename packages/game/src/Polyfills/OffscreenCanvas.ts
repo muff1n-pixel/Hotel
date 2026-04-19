@@ -38,6 +38,6 @@ if (typeof window !== 'undefined') {
         }
 
         window.OffscreenCanvas =
-            OffscreenCanvasPolyfill as unknown as typeof OffscreenCanvas;
+            OffscreenCanvas ?? OffscreenCanvasPolyfill as unknown as typeof OffscreenCanvas;
     //}
 }

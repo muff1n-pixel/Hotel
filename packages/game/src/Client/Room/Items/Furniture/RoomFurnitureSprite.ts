@@ -3,7 +3,6 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
-import { clientInstance } from "src";
 
 export default class RoomFurnitureSprite extends RoomSprite {
     private readonly offset: MousePosition = {
@@ -57,29 +56,15 @@ export default class RoomFurnitureSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(this.item.furnitureRenderer.type === "tile_cursor" && this.sprite.zIndex === 101) {
-            if(this.item.position) {
-                const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.item.position, undefined, this.item.id);
-
-                if(upmostFurniture?.item.position && upmostFurniture.furnitureData.flags?.walkable) {
-                   top += -((upmostFurniture.item.position.depth + upmostFurniture.getDimensionDepth()) * 32);
-                   top += this.item.position.depth * 32;
-                }
-                else {
-                    return;
-                }
-            }
+        if(context.globalCompositeOperation !== (this.sprite.ink ?? "source-over")) {
+            context.globalCompositeOperation = this.sprite.ink ?? "source-over";
         }
 
-        if(this.sprite.ink) {
-            context.globalCompositeOperation = this.sprite.ink;
+        if(context.globalAlpha !== (this.sprite.alpha ?? 255) / 255) {
+            context.globalAlpha = (this.sprite.alpha ?? 255) / 255;
         }
 
-        if(this.sprite.alpha) {
-            context.globalAlpha = this.sprite.alpha / 255;
-        }
-
-        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
+        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top, this.sprite.image.width, this.sprite.image.height);
     }
 
     mouseover(position: MousePosition) {

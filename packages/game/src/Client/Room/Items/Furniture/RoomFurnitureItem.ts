@@ -7,16 +7,15 @@ import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFur
 import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Background/RoomFurnitureBackgroundSprite";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
-import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
-import { clientInstance } from "src";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
+import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomFurnitureItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
     public readonly id = Math.random();
 
-    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
+    constructor(public roomRenderer: RoomRenderer | RoomWorkerRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
         super(roomRenderer, "furniture");
 
         if(position) {
@@ -88,10 +87,6 @@ export default class RoomFurnitureItem extends RoomItem {
         this.furnitureRenderer.frame++;
 
         if(this.furnitureRenderer.shouldRender()) {
-            if(clientInstance.settings.value?.debugRoomRendering) {
-                this.sprites.push(new RoomTextSprite(this, "Rendering"));
-            }
-
             this.furnitureRenderer.render().then((sprites) => {
                 if(sprites.length) {
                     this.sprites = sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));

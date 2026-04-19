@@ -5,6 +5,7 @@ import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
@@ -73,7 +74,7 @@ export default class RoomItem implements RoomItemInterface {
         this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
     }
 
-    constructor(public roomRenderer: RoomRenderer, public type: string, public sprites: RoomSprite[] = []) {
+    constructor(public roomRenderer: RoomRenderer | RoomWorkerRenderer, public type: string, public sprites: RoomSprite[] = []) {
 
     }
 

@@ -2,7 +2,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomRenderer from "./RoomRenderer";
 
 export default class RoomCamera {
-    private moving: boolean = false;
+    public moving: boolean = false;
 
     private lastPosition: MousePosition | null = null;
 
@@ -13,7 +13,7 @@ export default class RoomCamera {
         top: 0
     };
 
-    constructor(renderer: RoomRenderer) {
+    constructor(private readonly renderer: RoomRenderer) {
         this.cameraPosition.top = -(renderer.structure.grid.length + renderer.structure.grid[0]?.length) * 6;
 
         if(renderer.roomInstance) {

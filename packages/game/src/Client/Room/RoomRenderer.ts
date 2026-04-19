@@ -22,12 +22,15 @@ import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, ShopFeatur
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
+import RoomWorkerClient from "@Client/Room/Worker/RoomWorkerClient";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
-    private readonly context: CanvasRenderingContext2D;
     public readonly camera: RoomCamera;
     public readonly cursor?: RoomCursor;
+
+    public readonly roomWorkerClient: RoomWorkerClient;
+    private readonly offscreenCanvas: OffscreenCanvas;
 
     public lighting: RoomLighting;
 
@@ -90,10 +93,6 @@ export default class RoomRenderer extends EventTarget {
         this.element.width = boundingBox.width;
         this.element.height = boundingBox.height;
 
-        this.context = this.element.getContext("2d", {
-            alpha: false
-        })!;
-
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
 
@@ -103,10 +102,34 @@ export default class RoomRenderer extends EventTarget {
 
         this.parent.appendChild(this.element);
 
-        window.requestAnimationFrame(this.render.bind(this));
+        this.offscreenCanvas = this.element.transferControlToOffscreen();
+
+        this.roomWorkerClient = new RoomWorkerClient();
+        this.roomWorkerClient.render(this.offscreenCanvas, this.handleFrame.bind(this), this.handleTick.bind(this));
+
+        window.requestAnimationFrame(this.handleFrame.bind(this));
+    }
+
+    private handleFrame() {
+        if(this.camera.moving) {
+            this.roomWorkerClient.setCameraPosition(this.camera.cameraPosition);
+        }
+
+        const rectangle = this.parent.getBoundingClientRect();
+
+        if(this.offscreenCanvas.width !== rectangle.width || this.offscreenCanvas.height !== rectangle.height) {
+            this.roomWorkerClient.setCanvasSize(rectangle.width, rectangle.height);
+        }
+
+        window.requestAnimationFrame(this.handleFrame.bind(this));
+    }
+
+    private handleTick() {
     }
 
     public terminate() {
+        this.roomWorkerClient.terminate();
+
         this.terminated = true;
 
         this.element.remove();
@@ -152,16 +175,6 @@ export default class RoomRenderer extends EventTarget {
             top: Math.floor(this.element.clientHeight / 2)
         };
 
-        // Automatically clears the context
-        if(this.element.width === this.element.clientWidth && this.element.height === this.element.clientHeight) {
-            this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-        }
-        else {
-            this.element.width = this.element.clientWidth;
-            this.element.height = this.element.clientHeight;
-        }
-
-        this.renderOffScreen(this.context);
 
         const timestamp = performance.now();
 
