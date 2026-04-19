@@ -5,11 +5,12 @@ import RoomFloorSprite from "../Floor/RoomFloorSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomFloorShadowSprite from "@Client/Room/Items/Floor/RoomFloorShadowSprite";
+import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomFloorItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
-    constructor(public roomRenderer: RoomRenderer, public readonly floorRenderer: FloorRenderer) {
+    constructor(public roomRenderer: RoomRenderer | RoomWorkerRenderer, public readonly floorRenderer: FloorRenderer) {
         super(roomRenderer, "floor");
 
         this.render();

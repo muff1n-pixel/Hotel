@@ -5,11 +5,12 @@ import RoomWallSprite from "../Floor/RoomWallSprite";
 import RoomDoorMaskSprite from "../Floor/RoomDoorMaskSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomWallItem extends RoomItem {
     sprites: RoomItemSpriteInterface[] = [];
 
-    constructor(public roomRenderer: RoomRenderer, public readonly wallRenderer: WallRenderer) {
+    constructor(public roomRenderer: RoomRenderer | RoomWorkerRenderer, public readonly wallRenderer: WallRenderer) {
         super(roomRenderer, "wall");
 
         this.render();

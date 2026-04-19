@@ -139,85 +139,6 @@ export default class RoomRenderer extends EventTarget {
         return this.currentSize / 64;
     }*/
 
-    private render() {
-        if(this.terminated) {
-            return;
-        }
-
-        this.lastAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
-
-        const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
-
-        if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
-            this.frame = ((this.frame + 1) % this.framesPerSecond);
-            this.lastFrameTimestamp = performance.now();
-
-            //this.currentSize = this.size;
-
-            for(let index = 0; index < this.items.length; index++) {
-                this.items[index].process(this.frame);
-            }
-
-            this.dispatchEvent(new RoomFrameEvent());
-        }
-        else if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
-            return;
-        }
-
-        for(let index = 0; index < this.items.length; index++) {
-            this.items[index].processPositionPath();
-        }
-        
-        this.lastCappedFrameTimestamp = performance.now();
-
-        this.center = {
-            left: Math.floor(this.element.clientWidth / 2),
-            top: Math.floor(this.element.clientHeight / 2)
-        };
-
-
-        const timestamp = performance.now();
-
-        this.frames = this.frames.filter((frame) => frame >= timestamp - 1000);
-        this.frames.push(timestamp);
-
-        this.frameRate = this.frames.length;
-    }
-
-    private renderOffScreen(context: CanvasRenderingContext2D) {
-        context.fillStyle = this.lighting.backgroundToner?.color ?? "#000000";
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-        this.renderedOffset = {
-            left: this.center.left + this.camera.cameraPosition.left,
-            top: this.center.top + this.camera.cameraPosition.top
-        };
-
-        const sprites = this.items
-            .filter(item => !item.disabled)
-            .flatMap(item => item.sprites)
-            .sort((a, b) => {
-                const priorityA = a.item.calculatedPriority + a.priority;
-                const priorityB = b.item.calculatedPriority + b.priority;
-                return priorityA - priorityB;
-            });
-
-        for(let index = 0; index < sprites.length; index++) {
-            const sprite = sprites[index];
-
-            context.globalCompositeOperation = "source-over";
-            context.globalAlpha = sprite.item.alpha;
-
-            sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
-        }
-
-        if(!this.lighting.moodlight?.backgroundOnly) {
-            this.lighting.render(context);
-        }
-
-        this.dispatchEvent(new RoomRenderEvent());
-    }
-
     public getMouseOffsetPosition() {
         if(!this.camera.mousePosition) {
             return null;
@@ -520,33 +441,7 @@ export default class RoomRenderer extends EventTarget {
     private wallItem?: RoomWallItem;
     
     public setStructure(structure: RoomStructureData) {
-        this.structure = structure;
-
-        if(this.floorItem) {
-            this.items.splice(this.items.indexOf(this.floorItem), 1);
-            this.floorItem = undefined;
-        }
-
-        this.floorItem = new RoomFloorItem(
-            this,
-            new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
-        );
-
-        this.items.push(this.floorItem);
-
-        if(this.wallItem) {
-            this.items.splice(this.items.indexOf(this.wallItem), 1);
-            this.wallItem = undefined;
-        }
-
-        if(!structure.wall?.hidden) {
-            this.wallItem = new RoomWallItem(
-                this,
-                new WallRenderer(structure, structure.wall?.id ?? "default", 64)
-            );
-
-            this.items.push(this.wallItem);
-        }
+        this.roomWorkerClient.setStructure(structure);
     }
 
     public getSortedFurnitureAtPosition(position: RoomPositionData) {

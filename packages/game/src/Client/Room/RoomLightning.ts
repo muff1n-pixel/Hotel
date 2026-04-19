@@ -2,6 +2,7 @@ import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
@@ -9,7 +10,7 @@ export default class RoomLighting {
     public moodlight?: UserFurnitureMoodlightData;
     public backgroundToner?: UserFurnitureTonerData;
 
-    constructor(private roomRenderer: RoomRenderer) {
+    constructor(private roomRenderer: RoomRenderer | RoomWorkerRenderer) {
 
     }
 

@@ -1,5 +1,5 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, UserFurnitureCustomData } from "@pixel63/events";
 
 export default class RoomWorkerClient {
     private readonly worker: Worker;
@@ -69,6 +69,15 @@ export default class RoomWorkerClient {
                 position,
                 data
             }
+        }, [channel.port1]);
+    }
+
+    public setStructure(structure: RoomStructureData) {
+        const channel = new MessageChannel();
+
+        this.worker.postMessage({
+            type: "setStructure",
+            structure
         }, [channel.port1]);
     }
 

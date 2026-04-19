@@ -2,8 +2,13 @@ import RoomWorkerFurniture from "src/Workers/Room/Interfaces/RoomWorkerFurniture
 import RoomWorkerFrameRateTracker from "./RoomWorkerFrameRateTracker";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData } from "@pixel63/events";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
+import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
+import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
+import WallRenderer from "@Client/Room/Structure/WallRenderer";
+import RoomLighting from "@Client/Room/RoomLightning";
 
 export default class RoomWorkerRenderer {
     private frameTracker: RoomWorkerFrameRateTracker;
@@ -28,8 +33,13 @@ export default class RoomWorkerRenderer {
         top: 0
     };
 
+    public lighting: RoomLighting;
+    public structure?: RoomStructureData;
+    
     constructor() {
         this.frameTracker = new RoomWorkerFrameRateTracker();
+        
+        this.lighting = new RoomLighting(this);
     }
 
     public setCameraPosition(position: MousePosition) {
@@ -169,5 +179,38 @@ export default class RoomWorkerRenderer {
         result.top *= scale;
 
         return result;
+    }
+    
+    private floorItem?: RoomFloorItem;
+    private wallItem?: RoomWallItem;
+        
+    public setStructure(structure: RoomStructureData) {
+        this.structure = structure;
+
+        if(this.floorItem) {
+            this.items.splice(this.items.indexOf(this.floorItem), 1);
+            this.floorItem = undefined;
+        }
+
+        this.floorItem = new RoomFloorItem(
+            this,
+            new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
+        );
+
+        this.items.push(this.floorItem);
+
+        if(this.wallItem) {
+            this.items.splice(this.items.indexOf(this.wallItem), 1);
+            this.wallItem = undefined;
+        }
+
+        if(!structure.wall?.hidden) {
+            this.wallItem = new RoomWallItem(
+                this,
+                new WallRenderer(structure, structure.wall?.id ?? "default", 64)
+            );
+
+            this.items.push(this.wallItem);
+        }
     }
 }

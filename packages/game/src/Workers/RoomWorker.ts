@@ -46,5 +46,10 @@ onmessage = async (event: MessageEvent) => {
             
             break;
         }
+
+        case "setStructure": {
+            roomWorkerRenderer.setStructure(event.data.structure);
+            break;
+        }
     }
 };
