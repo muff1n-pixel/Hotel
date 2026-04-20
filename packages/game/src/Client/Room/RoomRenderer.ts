@@ -22,6 +22,7 @@ import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, ShopFeatur
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
+import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -29,35 +30,24 @@ export default class RoomRenderer extends EventTarget {
     public readonly camera: RoomCamera;
     public readonly cursor?: RoomCursor;
 
+    public readonly frameCounter = new RoomRendererFrameCounter(this);
+
     public lighting: RoomLighting;
 
     public furniturePlacer?: RoomFurniturePlacer;
 
     public readonly items: RoomItem[] = [];
 
+    //public itemSpritesChanged: boolean = true;
+    private sortedSprites: RoomSprite[] = [];
+
     private terminated = false;
-
-    public frame: number = 0;
-
-    private frames: number[] = [];
-    public frameRate: number = 0;
 
     public size: number = 64;
     private currentSize: number = 64;
-
-    private readonly framesPerSecond: number = 24;
-    private readonly millisecondsPerFrame: number = 1000 / this.framesPerSecond;
     
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
-
-    private readonly cappedFramesPerSecond: number = 60;
-    private readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
-
-    private lastFrameTimestamp: number = performance.now();
-    private lastCappedFrameTimestamp: number = performance.now();
-
-    private lastAnimationFrame: number | null = null;
 
     public itemPositionMap: Map<string, RoomItem[]> = new Map();
 
@@ -85,10 +75,7 @@ export default class RoomRenderer extends EventTarget {
         this.element = document.createElement("canvas");
         this.element.classList.add("renderer");
 
-        const boundingBox = this.parent.getBoundingClientRect();
-
-        this.element.width = boundingBox.width;
-        this.element.height = boundingBox.height;
+        this.updateCanvasSize();
 
         this.context = this.element.getContext("2d", {
             alpha: false
@@ -116,42 +103,23 @@ export default class RoomRenderer extends EventTarget {
         return this.currentSize / 64;
     }*/
 
-    private render() {
-        if(this.terminated) {
-            return;
+    private processTick() {
+        for(let index = 0; index < this.items.length; index++) {
+            this.items[index].process(this.frameCounter.tick);
         }
 
-        this.lastAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
+        this.sortSprites();
 
-        const millisecondsElapsedSinceLastFrame = performance.now() - this.lastFrameTimestamp;
+        this.dispatchEvent(new RoomFrameEvent());
+    }
 
-        if(millisecondsElapsedSinceLastFrame >= this.millisecondsPerFrame) {
-            this.frame = ((this.frame + 1) % this.framesPerSecond);
-            this.lastFrameTimestamp = performance.now();
-
-            //this.currentSize = this.size;
-
-            for(let index = 0; index < this.items.length; index++) {
-                this.items[index].process(this.frame);
-            }
-
-            this.dispatchEvent(new RoomFrameEvent());
-        }
-        else if(this.clientInstance?.settings.value?.limitRoomFrames && (performance.now() - this.lastCappedFrameTimestamp) < this.cappedMillisecondsPerFrame) {
-            return;
-        }
-
+    private processFrame() {
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].processPositionPath();
         }
-        
-        this.lastCappedFrameTimestamp = performance.now();
+    }
 
-        this.center = {
-            left: Math.floor(this.element.clientWidth / 2),
-            top: Math.floor(this.element.clientHeight / 2)
-        };
-
+    private updateCanvasSize() {
         // Automatically clears the context
         if(this.element.width === this.element.clientWidth && this.element.height === this.element.clientHeight) {
             this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
@@ -159,28 +127,58 @@ export default class RoomRenderer extends EventTarget {
         else {
             this.element.width = this.element.clientWidth;
             this.element.height = this.element.clientHeight;
+            
+            this.center = {
+                left: Math.floor(this.element.width / 2),
+                top: Math.floor(this.element.height / 2)
+            };
         }
+    }
+
+    private render() {
+        if(this.terminated) {
+            return;
+        }
+
+        const shouldProcessTick = this.frameCounter.shouldProcessTick();
+
+        if(shouldProcessTick) {
+            this.processTick();
+        }
+
+        if(!this.frameCounter.shouldProcessFrame()) {
+            window.requestAnimationFrame(this.render.bind(this));
+
+            return;
+        }
+
+        if(shouldProcessTick) {
+            this.updateCanvasSize();
+        }
+
+        this.frameCounter.updateFrameRate();
+
+        this.processFrame();
 
         this.renderOffScreen(this.context);
 
-        const timestamp = performance.now();
-
-        this.frames = this.frames.filter((frame) => frame >= timestamp - 1000);
-        this.frames.push(timestamp);
-
-        this.frameRate = this.frames.length;
+        window.requestAnimationFrame(this.render.bind(this));
     }
 
-    private renderOffScreen(context: CanvasRenderingContext2D) {
+    private drawBackground(context: CanvasRenderingContext2D) {
         context.fillStyle = this.lighting.backgroundToner?.color ?? "#000000";
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    }
 
+    private updateRenderedOffset() {
         this.renderedOffset = {
             left: this.center.left + this.camera.cameraPosition.left,
             top: this.center.top + this.camera.cameraPosition.top
         };
+    }
 
-        const sprites = this.items
+    private sortSprites() {
+        this.sortedSprites = this.items
             .filter(item => !item.disabled)
             .flatMap(item => item.sprites)
             .sort((a, b) => {
@@ -188,7 +186,9 @@ export default class RoomRenderer extends EventTarget {
                 const priorityB = b.item.calculatedPriority + b.priority;
                 return priorityA - priorityB;
             });
+    }
 
+    private drawSprites(context: CanvasRenderingContext2D, sprites: RoomSprite[]) {
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
 
@@ -197,10 +197,22 @@ export default class RoomRenderer extends EventTarget {
 
             sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
         }
+    }
 
+    private drawLightingForeground(context: CanvasRenderingContext2D) {
         if(!this.lighting.moodlight?.backgroundOnly) {
             this.lighting.render(context);
         }
+    }
+
+    private renderOffScreen(context: CanvasRenderingContext2D) {
+        this.drawBackground(context);
+
+        this.updateRenderedOffset();
+        
+        this.drawSprites(context, this.sortedSprites);
+
+        this.drawLightingForeground(context);
 
         this.dispatchEvent(new RoomRenderEvent());
     }

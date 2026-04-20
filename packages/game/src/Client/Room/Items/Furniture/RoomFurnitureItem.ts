@@ -12,8 +12,6 @@ import { clientInstance } from "src";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 
 export default class RoomFurnitureItem extends RoomItem {
-    sprites: RoomItemSpriteInterface[] = [];
-
     public readonly id = Math.random();
 
     constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {

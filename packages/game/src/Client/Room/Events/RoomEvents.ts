@@ -28,8 +28,6 @@ export default function registerRoomEvents(clientInstance: ClientInstance) {
                     continue;
                 }
 
-                console.log("add");
-
                 clientInstance.roomInstance.value.furnitures.push(new RoomFurniture(clientInstance.roomInstance.value, furnitureData, furniture));
             }
 

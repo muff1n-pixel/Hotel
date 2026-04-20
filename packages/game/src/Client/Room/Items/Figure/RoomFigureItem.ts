@@ -11,8 +11,6 @@ import { RoomPositionData } from "@pixel63/events";
 import RoomFigureHealthSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureHealthSprite";
 
 export default class RoomFigureItem extends RoomItem {
-    sprites: RoomItemSpriteInterface[] = [];
-
     private typingSprite: RoomFigureTypingSprite | null = null;
     private idlingSprite: RoomFigureIdlingSprite | null = null;
     private healthSprite: RoomFigureHealthSprite | null = null;

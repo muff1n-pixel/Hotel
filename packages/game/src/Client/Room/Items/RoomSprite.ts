@@ -10,7 +10,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     tag?: string;
     
     constructor(public item: RoomItem) {
-
+        
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number): void {

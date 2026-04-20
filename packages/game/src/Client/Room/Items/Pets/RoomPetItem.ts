@@ -8,8 +8,6 @@ import { clientInstance } from "src";
 import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
 
 export default class RoomPetItem extends RoomItem {
-    sprites: RoomItemSpriteInterface[] = [];
-
     public readonly id = Math.random();
 
     constructor(public roomRenderer: RoomRenderer, public readonly pet: Pet, position?: RoomPositionData) {

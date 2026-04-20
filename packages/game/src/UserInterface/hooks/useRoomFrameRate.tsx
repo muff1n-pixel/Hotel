@@ -10,7 +10,7 @@ export function useRoomFrameRate() {
         let animationFrame = window.requestAnimationFrame(updateAnimationFrame);
 
         function updateAnimationFrame() {
-            setValue(room?.roomRenderer.frameRate);
+            setValue(room?.roomRenderer.frameCounter.frameRate);
             
             animationFrame = window.requestAnimationFrame(updateAnimationFrame);
         }

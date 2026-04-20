@@ -7,8 +7,6 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 
 export default class RoomWallItem extends RoomItem {
-    sprites: RoomItemSpriteInterface[] = [];
-
     constructor(public roomRenderer: RoomRenderer, public readonly wallRenderer: WallRenderer) {
         super(roomRenderer, "wall");
 

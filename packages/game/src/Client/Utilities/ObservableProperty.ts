@@ -15,8 +15,6 @@ export default class ObservableProperty<T, Value = T> {
     }
 
     set value(value: Value | undefined) {
-        console.log("Updated", value, this.listeners);
-
         this._value = value;
         this.listeners.forEach(l => l(value));
     }

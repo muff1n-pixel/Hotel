@@ -24,7 +24,30 @@ export default class RoomItem implements RoomItemInterface {
         this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
     }
 
-    disabled: boolean = false;
+    private _sprites: RoomSprite[] = [];
+
+    public get sprites() {
+        return this._sprites;
+    }
+
+    public set sprites(sprites: RoomSprite[]) {
+        this._sprites = sprites;
+        
+        //this.roomRenderer.itemSpritesChanged = true;
+    }
+
+    private _disabled: boolean = false;
+
+    public set disabled(value: boolean) {
+        this._disabled = value;
+
+        //this.roomRenderer.itemSpritesChanged = true;
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
+
     alpha: number = 1;
 
     public calculatedPriority: number = 0;
@@ -73,8 +96,8 @@ export default class RoomItem implements RoomItemInterface {
         this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
     }
 
-    constructor(public roomRenderer: RoomRenderer, public type: string, public sprites: RoomSprite[] = []) {
-
+    constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
+        this.sprites = sprites;
     }
 
     public getDimensions(): RoomPositionData {

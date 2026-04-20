@@ -7,8 +7,6 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import RoomFloorShadowSprite from "@Client/Room/Items/Floor/RoomFloorShadowSprite";
 
 export default class RoomFloorItem extends RoomItem {
-    sprites: RoomItemSpriteInterface[] = [];
-
     constructor(public roomRenderer: RoomRenderer, public readonly floorRenderer: FloorRenderer) {
         super(roomRenderer, "floor");
 
