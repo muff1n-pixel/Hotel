@@ -51,5 +51,18 @@ onmessage = async (event: MessageEvent) => {
             roomWorkerRenderer.setStructure(event.data.structure);
             break;
         }
+
+        case "getItemAtMousePosition": {
+            const position = event.data.position;
+
+            const item = roomWorkerRenderer.getItemAtMousePosition(position);
+
+            port.postMessage({
+                type: "itemAtMousePosition",
+                item
+            });
+         
+            break;
+        }
     }
 };

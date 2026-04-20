@@ -9,6 +9,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomLighting from "@Client/Room/RoomLightning";
+import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 
 export default class RoomWorkerRenderer {
     private frameTracker: RoomWorkerFrameRateTracker;
@@ -85,6 +86,11 @@ export default class RoomWorkerRenderer {
         self.requestAnimationFrame(this.handleAnimationFrame.bind(this, context, port));
     }
 
+    private offset: MousePosition = {
+        left: 0,
+        top: 0
+    };
+
     private drawFrame(context: OffscreenCanvasRenderingContext2D): void {
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].processPositionPath();
@@ -101,7 +107,7 @@ export default class RoomWorkerRenderer {
                 return priorityA - priorityB;
             });
 
-        const offset: MousePosition = {
+        this.offset = {
             left: Math.floor(context.canvas.width / 2) + this.cameraPosition.left,
             top: Math.floor(context.canvas.height / 2) + this.cameraPosition.top,
         };
@@ -109,7 +115,7 @@ export default class RoomWorkerRenderer {
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
 
-            sprite.render(context as any as OffscreenCanvasRenderingContext2D, offset.left + sprite.item.screenPosition.left, offset.top + sprite.item.screenPosition.top);
+            sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.offset.left + sprite.item.screenPosition.left, this.offset.top + sprite.item.screenPosition.top);
         }
 
         context.fillStyle = "red";
@@ -212,5 +218,51 @@ export default class RoomWorkerRenderer {
 
             this.items.push(this.wallItem);
         }
+    }
+
+    public getItemAtMousePosition(position: MousePosition): RoomPointerPosition | null {
+        const offsetMousePosition = {
+            left: position.left - this.offset.left,
+            top: position.top - this.offset.top
+        };
+
+        let filteredItems = this.items;
+
+        const scale = 1; // this.getSizeScale();
+
+        const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => {
+            const priorityA = a.item.calculatedPriority + a.priority;
+            const priorityB = b.item.calculatedPriority + b.priority;
+
+            return priorityA - priorityB;
+        });
+
+        for(let index = 0; index < sprites.length; index++) {
+            const sprite = sprites[index];
+
+            const relativeMousePosition: MousePosition = {
+                left: offsetMousePosition.left,
+                top: offsetMousePosition.top
+            };
+
+            if(sprite.item.position) {
+                relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
+                relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
+            }
+
+            const tile = sprite.mouseover(relativeMousePosition);
+
+            if(tile) {
+                return {
+                    reference: {
+                        key: sprite.item.key
+                    },
+                    sprite: sprite,
+                    position: tile
+                }
+            }
+        }
+
+        return null;
     }
 }

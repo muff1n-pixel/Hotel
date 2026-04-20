@@ -136,7 +136,7 @@ export default class RoomInstance {
             return;
         }
 
-        if(performance.now() - this.lastSentClickEvent >= 500) {
+        /*if(performance.now() - this.lastSentClickEvent >= 500) {
             if(event.otherEntity) {
                 if(event.otherEntity.item instanceof RoomFurnitureItem) {
                     const roomFurniture = this.getFurnitureByItem(event.otherEntity.item);
@@ -176,7 +176,7 @@ export default class RoomInstance {
             webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
                 target: RoomPositionData.fromJSON(event.floorEntity.position)
             }));
-        }
+        }*/
     }
 
     private doubleclick(event: Event) {
@@ -218,9 +218,9 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
         this.users.splice(this.users.indexOf(user), 1);
         
-        if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
+        /*if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
             this.roomRenderer.focusedItem.value = null;
-        }
+        }*/
         
         clientInstance.roomInstance.update();
     }
@@ -307,9 +307,9 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(pet.item), 1);
         this.pets.splice(this.pets.indexOf(pet), 1);
 
-        if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
+        /*if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
             this.roomRenderer.focusedItem.value = null;
-        }
+        }*/
         
         clientInstance.roomInstance.update();
     }
@@ -360,9 +360,9 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(bot.item), 1);
         this.bots.splice(this.bots.indexOf(bot), 1);
 
-        if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {
+        /*if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {
             this.roomRenderer.focusedItem.value = null;
-        }
+        }*/
 
         clientInstance.roomInstance.update();
     }

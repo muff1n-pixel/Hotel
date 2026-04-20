@@ -38,7 +38,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
+        /*const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
             if(otherEntity.item instanceof RoomFurnitureItem) {
@@ -48,7 +48,7 @@ export default class RoomCursor extends EventTarget {
                     this.roomRenderer.roomInstance.moveFurniture(roomFurnitureItem.data.id);
                 }
             }
-        }
+        }*/
     }
 
     private doubleclick() {
@@ -56,7 +56,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
+        /*const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
@@ -71,11 +71,11 @@ export default class RoomCursor extends EventTarget {
             }
         }
 
-        this.dispatchEvent(new RoomDoubleClickEvent(floorEntity, otherEntity));
+        this.dispatchEvent(new RoomDoubleClickEvent(floorEntity, otherEntity));*/
     }
 
     private render() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
+        /*const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         
         if(!entity || this.cursorDisabled) {
             this.furnitureItem.disabled = true;
@@ -91,26 +91,26 @@ export default class RoomCursor extends EventTarget {
             }));
 
             this.furnitureItem.disabled = false;
-        }
+        }*/
     }
 
     private frame() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure", "bot", "pet"].includes(item.type));
+        this.roomRenderer.getItemAtMousePosition().then((entity) => {
+            if(entity) {
+                this.roomRenderer.hoveredItem.value = entity.reference;
+            }
+            else if(!entity && this.roomRenderer.hoveredItem.value) {
+                this.roomRenderer.hoveredItem.value = null;
+            }
 
-        if(entity) {
-            this.roomRenderer.hoveredItem.value = entity.item;
-        }
-        else if(!entity && this.roomRenderer.hoveredItem.value) {
-            this.roomRenderer.hoveredItem.value = null;
-        }
+            if(!entity) {
+                this.roomRenderer.element.style.cursor = "default";
 
-        if(!entity) {
-            this.roomRenderer.element.style.cursor = "default";
+                return;
+            }
 
-            return;
-        }
-
-        this.roomRenderer.element.style.cursor = "pointer";
+            this.roomRenderer.element.style.cursor = "pointer";
+        });
     }
 
     private click(event: MouseEvent) {
@@ -118,7 +118,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
         
-        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
+        /*const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
 
         if(this.roomRenderer.roomInstance && otherEntity?.item.position) {
@@ -156,6 +156,6 @@ export default class RoomCursor extends EventTarget {
         }
         else if(this.roomRenderer.focusedItem.value && (!floorEntity && !otherEntity)) {
             this.roomRenderer.focusedItem.value = null;
-        }
+        }*/
     }
 }

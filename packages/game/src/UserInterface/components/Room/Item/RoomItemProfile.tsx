@@ -32,7 +32,7 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
 
     const [focusedItem, setFocusedItem] = useState<RoomItemProfileItem>();
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(roomEventsRegistered.current) {
             return;
         }
@@ -74,7 +74,7 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
                 setFocusedItem(undefined);
             }
         });
-    }, []);
+    }, []);*/
     
     useEffect(() => {
         if(!focusedItem) {

@@ -23,6 +23,7 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomWorkerClient from "@Client/Room/Worker/RoomWorkerClient";
+import { RoomWorkerItemReference } from "src/Workers/Room/Interfaces/RoomWorkerFurnitureReference";
 
 export default class RoomRenderer extends EventTarget {
     public readonly element: HTMLCanvasElement;
@@ -51,8 +52,8 @@ export default class RoomRenderer extends EventTarget {
     private readonly framesPerSecond: number = 24;
     private readonly millisecondsPerFrame: number = 1000 / this.framesPerSecond;
     
-    public focusedItem = new ObservableProperty<RoomItem | null>(null);
-    public hoveredItem = new ObservableProperty<RoomItem | null>(null);
+    public focusedItem = new ObservableProperty<RoomWorkerItemReference | null>(null);
+    public hoveredItem = new ObservableProperty<RoomWorkerItemReference | null>(null);
 
     private readonly cappedFramesPerSecond: number = 60;
     private readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
@@ -125,6 +126,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private handleTick() {
+        this.dispatchEvent(new RoomFrameEvent());
     }
 
     public terminate() {
@@ -157,49 +159,14 @@ export default class RoomRenderer extends EventTarget {
         return result;
     }
 
-    public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
-        if(this.camera.mousePosition) {
-            const offsetMousePosition = {
-                left: this.camera.mousePosition.left - this.renderedOffset.left,
-                top: this.camera.mousePosition.top - this.renderedOffset.top
-            };
-
-            let filteredItems = this.items;
-
-            if(filter) {
-                filteredItems = filteredItems.filter(filter);
-            }
-
-            const scale = 1; // this.getSizeScale();
-
-            const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.getSpritePriority(b) - this.getSpritePriority(a));
-
-            for(let index = 0; index < sprites.length; index++) {
-                const sprite = sprites[index];
-
-                const relativeMousePosition: MousePosition = {
-                    left: offsetMousePosition.left,
-                    top: offsetMousePosition.top
-                };
-
-                if(sprite.item.position) {
-                    relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
-                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
-                }
-
-                const tile = sprite.mouseover(relativeMousePosition);
-
-                if(tile) {
-                    return {
-                        item: sprite.item,
-                        sprite: sprite,
-                        position: tile
-                    }
-                }
-            }
+    public async getItemAtMousePosition(): Promise<RoomPointerPosition | null> {
+        if(!this.camera.mousePosition) {
+            return null;
         }
-
-        return null;
+        
+        return this.roomWorkerClient.getItemAtMousePosition(this.camera.mousePosition).then((pointerPosition) => {
+            return pointerPosition;
+        });
     }
 
     public getCoordinatePosition(coordinate?: RoomPositionData): MousePosition {
@@ -429,7 +396,7 @@ export default class RoomRenderer extends EventTarget {
                     animation: item.furnitureRenderer.animation,
                     color: item.furnitureRenderer.color,
                     direction: item.furnitureRenderer.direction,
-                    type: item.furnitureRenderer.type,
+                        type: item.furnitureRenderer.type,
                     position: item.position,
                     priority: item.priority
                 };

@@ -1,4 +1,5 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import { RoomPositionData, RoomStructureData, UserFurnitureCustomData } from "@pixel63/events";
 
 export default class RoomWorkerClient {
@@ -79,6 +80,23 @@ export default class RoomWorkerClient {
             type: "setStructure",
             structure
         }, [channel.port1]);
+    }
+
+    public getItemAtMousePosition(position: MousePosition): Promise<RoomPointerPosition | null> {
+        const channel = new MessageChannel();
+        
+        return new Promise((resolve) => {
+            channel.port2.onmessage = (event) => {
+                if(event.data.type === "itemAtMousePosition") {
+                    resolve(event.data.position);
+                }
+            };
+
+            this.worker.postMessage({
+                type: "getItemAtMousePosition",
+                position
+            }, [channel.port1]);
+        });
     }
 
     public terminate() {

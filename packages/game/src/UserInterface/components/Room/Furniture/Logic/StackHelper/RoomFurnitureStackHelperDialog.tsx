@@ -66,7 +66,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
 
         let currentHoveredItem: RoomFurnitureItem | null = null;
 
-        function resetPreviousHoveredItem() {
+        /*function resetPreviousHoveredItem() {
             if(!currentHoveredItem) {
                 return;
             }
@@ -123,7 +123,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
             unsubscribeHoveredItem();
             unsubscribeFocusedItem();
             resetPreviousHoveredItem();
-        };
+        };*/
     }, [copyDepthFromFurniture, room]);
 
     if(hidden) {

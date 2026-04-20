@@ -39,7 +39,7 @@ export default function RoomItemContextMenu() {
         }
     }, [focusedItem, room]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(!room) {
             return;
         }
@@ -54,7 +54,7 @@ export default function RoomItemContextMenu() {
             setFocusedItem(null);
             setHoveredItem(null);
         };
-    }, [room]);
+    }, [room]);*/
 
     if(focusedItem) {
         if(focusedItem instanceof RoomFigureItem) {

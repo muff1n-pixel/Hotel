@@ -9,6 +9,7 @@ import RoomWorkerRenderer from "src/Workers/Room/RoomWorkerRenderer";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
+    public key: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     
     _position?: RoomPositionData;
     _priority: number = 0;

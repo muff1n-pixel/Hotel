@@ -17,9 +17,9 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
 
     const [minimized, setMinimized] = useState(false);
 
-    if(room?.roomRenderer.focusedItem.value?.id === user.item.id) {
+    /*if(room?.roomRenderer.focusedItem.value?.id === user.item.id) {
         return null;
-    }
+    }*/
 
     if(minimized) {
         return null;

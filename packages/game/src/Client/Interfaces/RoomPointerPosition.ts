@@ -1,13 +1,12 @@
-import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomSprite from "@Client/Room/Items/RoomSprite";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import { RoomWorkerItemReference } from "src/Workers/Room/Interfaces/RoomWorkerFurnitureReference";
 
 export type RoomPointerPosition = {
-    item: RoomItem;
+    reference: RoomWorkerItemReference;
+
     sprite?: RoomSprite;
-
     position?: RoomPositionWithDirectionData;
-
     direction?: number;
 }
 

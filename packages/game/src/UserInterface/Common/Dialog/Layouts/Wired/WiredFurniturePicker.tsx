@@ -41,7 +41,7 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
         }
 
         const listener = (event: Event) => {
-            if(!(event instanceof RoomClickEvent)) {
+            /*if(!(event instanceof RoomClickEvent)) {
                 return;
             }
 
@@ -71,7 +71,7 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
                     furnitureIds.current = [...furnitureIds.current, furniture.data.id];
                     onChange(furnitureIds.current);
                 }
-            }
+            }*/
         };
 
         room.roomRenderer.cursor.addEventListener("click", listener);

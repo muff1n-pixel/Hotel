@@ -178,7 +178,7 @@ export default class RoomFurniturePlacer {
         }
     }
 
-    private render() {
+    private async render() {
         if(this.paused) {
             return;
         }
@@ -195,7 +195,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const entity = await this.roomInstance.roomRenderer.getItemAtMousePosition();//((item) => item.type === placement);
 
         if(entity?.position) {
             const dimensions = (
@@ -251,7 +251,7 @@ export default class RoomFurniturePlacer {
         }
     }
 
-    private click() {
+    private async click() {
         if(this.paused) {
             return;
         }
@@ -268,7 +268,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const entity = await this.roomInstance.roomRenderer.getItemAtMousePosition();// getItemAtPosition((item) => item.type === placement);
 
         const dimensions = (
             (isFurniture)?(
