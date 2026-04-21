@@ -15,12 +15,16 @@ export default function useTraxPlayer() {
 
     const [currentDuration, setCurrentDuration] = useState<number>();
 
-    const handleStop = useCallback(() => {
+    const handleStop = useCallback((executeFinish: boolean = true) => {
         console.debug("Stopping playback!");
 
         setCurrentDuration(undefined);
 
         if(context.current) {
+            console.log("suspending");
+
+            context.current.suspend();
+
             context.current.close();
             context.current = undefined;
         }
@@ -33,7 +37,9 @@ export default function useTraxPlayer() {
         setPlaying(false);
         setPaused(false);
 
-        handleFinish.current?.();
+        if(executeFinish) {
+            handleFinish.current?.();
+        }
     }, [context, timer]);
 
     const buildAudioContext = useCallback(async (data: FurnitureTraxSongMetaData) => {
@@ -119,8 +125,10 @@ export default function useTraxPlayer() {
     }, [context]);
 
     const handleStart = useCallback((song: FurnitureTraxSongMetaData, onFinish: () => void) => {
+        console.log("Starting");
+
         if(context.current) {
-            handleStop();
+            handleStop(false);
         }
         
         buildAudioContext(song).then((result) => {
@@ -169,11 +177,11 @@ export default function useTraxPlayer() {
     }, [context, timer, handleStop]);
 
     const handlePause = useCallback(() => {
-        if(paused) {
-            context.current?.resume();
+        if(context.current?.state === "running") {
+            context.current?.suspend();
         }
         else {
-            context.current?.suspend();
+            context.current?.resume();
         }
 
         setPaused(!paused);

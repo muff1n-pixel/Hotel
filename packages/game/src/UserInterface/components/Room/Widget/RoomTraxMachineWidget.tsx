@@ -15,6 +15,8 @@ export default function RoomTraxMachineWidget() {
     const [currentSong, setCurrentSong] = useState<FurnitureTraxSongMetaData>();
 
     const handleFinish = useCallback(() => {
+        console.log("Finish");
+
         if(!traxmachine) {
             return;
         }
@@ -78,7 +80,7 @@ export default function RoomTraxMachineWidget() {
         traxPlayer.handleStart(song, handleFinish);
 
         return () => {
-            traxPlayer.handleStop();
+            traxPlayer.handleStop(false);
         };
     }, [traxmachine]);
 
@@ -135,7 +137,12 @@ export default function RoomTraxMachineWidget() {
                             manuallyStopped.current = false;
 
                             if(currentSong) {
-                                traxPlayer.handleStart(currentSong, handleFinish);
+                                if(traxPlayer.paused) {
+                                    traxPlayer.handlePause();
+                                }
+                                else {
+                                    traxPlayer.handleStart(currentSong, handleFinish);
+                                }
                             }
                         }}/>
                     )}
