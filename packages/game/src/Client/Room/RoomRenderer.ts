@@ -121,12 +121,12 @@ export default class RoomRenderer extends EventTarget {
 
     private updateCanvasSize() {
         // Automatically clears the context
-        if(this.element.width === this.element.clientWidth && this.element.height === this.element.clientHeight) {
+        if(this.element.width === this.parent.clientWidth && this.element.height === this.parent.clientHeight) {
             this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         }
         else {
-            this.element.width = this.element.clientWidth;
-            this.element.height = this.element.clientHeight;
+            this.element.width = this.parent.clientWidth;
+            this.element.height = this.parent.clientHeight;
             
             this.center = {
                 left: Math.floor(this.element.width / 2),

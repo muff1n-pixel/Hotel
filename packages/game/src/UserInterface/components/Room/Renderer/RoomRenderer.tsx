@@ -67,6 +67,10 @@ export default function RoomRenderer({ style, options, figureData, furnitureData
     }, [roomFurnitureRenderer]);
 
     return (
-        <div ref={roomRef} style={style}/>
+        <div ref={roomRef} style={{
+            width: "100%",
+            height: "100%",
+            ...style
+        }}/>
     );
 }
