@@ -338,7 +338,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public static getPositionPriority(position: RoomPositionData) {
-        return (Math.round(position.row) * 1000) + (Math.round(position.column) * 1000) + (position.depth * 10);
+        return (Math.round(position.row * 2) / 2 * 1000) + (Math.round(position.column * 2) / 2 * 1000) + (position.depth * 10);
     }
 
     public getItemScreenPosition(item: RoomItem): MousePosition {

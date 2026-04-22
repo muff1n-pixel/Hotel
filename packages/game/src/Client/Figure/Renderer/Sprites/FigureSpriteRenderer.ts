@@ -72,7 +72,7 @@ export default class FigureSpriteRenderer {
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
             if(!asset && flipHorizontal) {
-                console.warn("Can't find asset for " + assetName + ", trying with flipped direction");
+                //console.warn("Can't find asset for " + assetName + ", trying with flipped direction");
 
                 if(assetType[1] !== 'g') {
                     if(assetType[0] == 'l') {
@@ -92,7 +92,7 @@ export default class FigureSpriteRenderer {
             }
 
             if(!asset) {
-                console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
+                //console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
                 
                 assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
 

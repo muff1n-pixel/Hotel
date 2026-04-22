@@ -49,14 +49,14 @@ export default class RoomPet implements RoomActor {
         return this.actions.includes(actionId);
     }
 
-    public addAction(action: string) {
+    public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null {
         if(this.actions.includes(action)) {
-            return;
+            return null;
         }
 
         this.actions.push(action);
 
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+        const roomActorActionData = RoomActorActionData.create({
             actor: {
                 pet: {
                     petId: this.model.id
@@ -64,7 +64,13 @@ export default class RoomPet implements RoomActor {
             },
             
             actionsAdded: [action]
-        }));
+        });
+
+        if(sendProtobuff) {
+            this.room.sendProtobuff(RoomActorActionData, roomActorActionData);
+        }
+
+        return roomActorActionData;
     }
 
     public removeAction(action: string) {
@@ -114,7 +120,7 @@ export default class RoomPet implements RoomActor {
         }));
     }
 
-    public sendPositionEvent(usePath: boolean) {
+    public sendPositionEvent(usePath: boolean, roomActorActionsData?: RoomActorActionData | null) {
         this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
             actor: {
                 pet: {
@@ -124,7 +130,9 @@ export default class RoomPet implements RoomActor {
             
             position: this.position,
             direction: this.direction,
-            usePath
+            usePath,
+
+            action: roomActorActionsData ?? undefined
         }));
     }
 

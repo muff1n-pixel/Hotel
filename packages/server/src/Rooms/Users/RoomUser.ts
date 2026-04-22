@@ -204,9 +204,9 @@ export default class RoomUser implements RoomActor {
         return this.actions.some((action) => action.id === actionId);
     }
 
-    public addAction(action: string, removeAfterMs?: number) {
+    public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null {
         if(this.hasAction(action)) {
-            return;
+            return null;
         }
 
         if(action === "Sit") {
@@ -224,7 +224,7 @@ export default class RoomUser implements RoomActor {
             expiresAt: (removeAfterMs !== undefined)?(performance.now() + removeAfterMs):(undefined)
         });
 
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+        const roomActorActionData = RoomActorActionData.create({
             actor: {
                 user: {
                     userId: this.user.model.id
@@ -232,11 +232,17 @@ export default class RoomUser implements RoomActor {
             },
             
             actionsAdded: [action]
-        }));
+        });
+
+        if(sendProtobuff) {
+            this.room.sendProtobuff(RoomActorActionData, roomActorActionData);
+        }
 
         for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
             logic.handleUserAction(this, action).catch(console.error);
         }
+
+        return roomActorActionData;
     }
 
     public removeAction(action: string) {
@@ -287,7 +293,7 @@ export default class RoomUser implements RoomActor {
         }));
     }
 
-    public sendPositionEvent(usePath: boolean) {
+    public sendPositionEvent(usePath: boolean, roomActorActionsData?: RoomActorActionData | null) {
         this.room.sendProtobuff(RoomActorPositionData, RoomActorPositionData.create({
             actor: {
                 user: {
@@ -297,7 +303,9 @@ export default class RoomUser implements RoomActor {
             
             position: this.position,
             direction: this.direction,
-            usePath
+            usePath,
+
+            action: roomActorActionsData ?? undefined
         }));
     }
 

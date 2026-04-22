@@ -1,7 +1,7 @@
 import Room from "../Room";
 import RoomFurniture from "../Furniture/RoomFurniture";
 import RoomActorPath from "./Path/RoomActorPath";
-import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default interface RoomActor {
     room: Room;
@@ -13,12 +13,12 @@ export default interface RoomActor {
 
     path: RoomActorPath;
 
-    sendPositionEvent(usePath: boolean): void;
+    sendPositionEvent(usePath: boolean, roomActorActionsData: RoomActorActionData | null): void;
     sendDirectionEvent(): void;
     sendWalkEvent(previousPosition: RoomPositionData, jump?: boolean): void;
 
     hasAction(actionId: string): boolean;
-    addAction(actionId: string): void;
+    addAction(actionId: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null;
     removeAction(actionId: string): void;
 
     handleWalkEvent?(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData): Promise<void>;

@@ -1,7 +1,7 @@
 import RoomActor from "../RoomActor";
 import RoomUser from "../../Users/RoomUser";
 import RoomBot from "../../Bots/RoomBot";
-import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomPet from "../../Pets/RoomPet";
 
 export default class RoomActorPath {
@@ -183,11 +183,12 @@ export default class RoomActorPath {
         const furniture = this.actor.room.getUpmostFurnitureAtPosition(position);
 
         if(sitableFurniture) {
-            this.actor.addAction("Sit");
+            const roomActorActionsData = this.actor.addAction("Sit", undefined, false);
+
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent);
+            }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent, roomActorActionsData);
         }
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
@@ -209,7 +210,7 @@ export default class RoomActorPath {
         }
     }
 
-    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean, walkEvent: boolean = true) {
+    public setPosition(position: RoomPositionData, direction?: number, usePath?: boolean, walkEvent: boolean = true, roomActorActionsData: RoomActorActionData | null = null) {
         if(position.row === this.actor.position.row && position.column === this.actor.position.column && position.depth === this.actor.position.depth && (direction !== undefined && direction === this.actor.direction)) {
             return;
         }
@@ -230,7 +231,7 @@ export default class RoomActorPath {
 
         this.actor.lastActivity = performance.now();
 
-        this.actor.sendPositionEvent(usePath === true);
+        this.actor.sendPositionEvent(usePath === true, roomActorActionsData);
 
         if(walkEvent) {
             this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(previousPosition), RoomPositionOffsetData.fromJSON(position)).catch(console.error);
@@ -257,11 +258,12 @@ export default class RoomActorPath {
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.actor.position));
 
         if(sitableFurniture) {
-            this.actor.addAction("Sit");
+            const roomActorActionsData = this.actor.addAction("Sit", undefined, false);
+
             this.actor.path.setPosition({
                 ...this.actor.position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction ?? undefined);
+            }, sitableFurniture.model.direction ?? undefined, undefined, undefined, roomActorActionsData);
         }
 
         this.path = undefined;

@@ -1,5 +1,6 @@
 import { clientInstance } from "../../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { RoomActorPositionData } from "@pixel63/events";
 
@@ -31,6 +32,10 @@ export default class RoomActorPositionEvent implements ProtobuffListener<RoomAct
             actor.item.finishPositionPath();
 
             actor.item.setPosition(payload.position);
+        }
+
+        if(payload.action) {
+            await (new RoomActorActionEvent()).handle(payload.action);
         }
     }
 }
