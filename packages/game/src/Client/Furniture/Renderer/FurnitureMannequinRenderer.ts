@@ -1,4 +1,3 @@
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
@@ -57,7 +56,7 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
 
             const figure = new Figure(figureConfiguration, options.direction ?? 0, [], false);
 
-            const figureImage = await figure.renderToCanvas(defaultFigureWorkerClient, 0, false, true, true, ["ey", "fc"]);
+            const figureImage = await figure.renderToCanvas(0, false, true, true, ["ey", "fc"]);
 
             avatarImageSprite.image = figureImage.figure.image;
 

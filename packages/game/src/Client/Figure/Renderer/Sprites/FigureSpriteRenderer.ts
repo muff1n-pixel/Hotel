@@ -12,8 +12,8 @@ export default class FigureSpriteRenderer {
 
     }
     
-    public async getFigureSprites(spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: FigureBodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite[]> {
-        const actionForSit = this.figureRenderer.actions.some((action) => action === "Sit");
+    public async getFigureSprites(actions: string[], frame: number, spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: FigureBodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined, headOnly?: boolean): Promise<FigureRendererSprite[]> {
+        const actionForSit = actions.some((action) => action === "Sit");
 
         const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
@@ -49,13 +49,13 @@ export default class FigureSpriteRenderer {
 
             const geometryPart = actionForSprite.geometry.bodyparts.find((bodypart) => bodypart.parts.includes(spriteConfiguration.type));
 
-            if(this.figureRenderer.headOnly && geometryPart?.id !== "head") {
+            if(headOnly && geometryPart?.id !== "head") {
                 return null
             }
 
-            const avatarAnimation = this.figureRenderer.figureAnimations.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, spriteDirection, this.figureRenderer.frame);
+            const avatarAnimation = this.figureRenderer.figureAnimations.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, spriteDirection, frame);
 
-            const frame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
+            const spriteFrame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
 
             if(spriteConfiguration.type === "sd") {
                 spriteDirection = 0;
@@ -67,7 +67,7 @@ export default class FigureSpriteRenderer {
 
             const spriteConfigurationId = this.figureRenderer.figureActions.effectTypeRemaps.get(spriteConfiguration.type) ?? spriteConfiguration.id;
 
-            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
+            let assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${spriteFrame}`;
 
             let asset = figureData.assets.find((asset) => asset.name === assetName);
 
@@ -86,7 +86,7 @@ export default class FigureSpriteRenderer {
                 assetFlipped = flipHorizontal;
                 assetDirection = flippedDirection;
 
-                assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
+                assetName = `h_${avatarAnimation?.assetPartDefinition ?? actionForSprite.assetPartDefinition ?? "std"}_${assetType}_${spriteConfigurationId}_${assetDirection}_${spriteFrame}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);
             }
@@ -94,7 +94,7 @@ export default class FigureSpriteRenderer {
             if(!asset) {
                 //console.warn("Can't find asset for " + assetName + ", trying with standing part definition.");
                 
-                assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${frame}`;
+                assetName = `h_std_${assetType}_${spriteConfigurationId}_${assetDirection}_${spriteFrame}`;
 
                 asset = figureData.assets.find((asset) => asset.name === assetName);
             }

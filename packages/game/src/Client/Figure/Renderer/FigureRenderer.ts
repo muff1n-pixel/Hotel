@@ -9,6 +9,7 @@ import FigureAnimations from "@Client/Figure/Renderer/Animations/FigureAnimation
 import FigureSpriteRenderer from "@Client/Figure/Renderer/Sprites/FigureSpriteRenderer";
 import FigureEffectRenderer from "@Client/Figure/Renderer/Effects/FigureEffectRenderer";
 import FigureCanvasRenderer from "@Client/Figure/Renderer/FigureCanvasRenderer";
+import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -61,7 +62,7 @@ export default class FigureRenderer {
 
     public readonly figureCanvasRenderer = new FigureCanvasRenderer(this);
 
-    constructor(public readonly configuration: FigureConfigurationData, public direction: number, public readonly actions: string[], public readonly frame: number, public readonly headOnly: boolean = false) {
+    constructor(public readonly configuration: FigureConfigurationData) {
         
     }
 
@@ -140,20 +141,22 @@ export default class FigureRenderer {
         console.timeEnd("Prepare");
     }
 
-    public async render(useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
-        const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !this.actions.some((actionId) => actionId.startsWith("AvatarEffect"));
+    public async render(options: FigureRendererOptions, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+        const mutatedActions = [...options.actions];
+
+        const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
 
         if(shouldAddConfigurationEffect) {
-            this.actions.push(`AvatarEffect.${this.configuration.effect}`);
+            mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
         }
 
-        const actions = this.figureActions.getAvatarActions(this.actions);
+        const actions = this.figureActions.getAvatarActions(mutatedActions);
 
-        const effects = await this.figureEffects.getEffects(actions);
+        const effects = await this.figureEffects.getEffects(mutatedActions, actions);
 
-        const direction = this.figureEffects.getDirectionFromEffect(effects);
+        const direction = this.figureEffects.getDirectionFromEffect(options.direction, effects);
 
-        const actionsForBodyParts = await this.figureActions.getActionsForBodyParts(actions, effects, ignoreBodyparts);
+        const actionsForBodyParts = await this.figureActions.getActionsForBodyParts(options.frame, actions, effects, ignoreBodyparts);
 
         // TODO: already here filter out parts that will not be rendered to minimize the overhead
         const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
@@ -162,7 +165,7 @@ export default class FigureRenderer {
 
         if(carryItemAction) {
             spritesFromConfiguration.push({
-                id: this.figureActions.getActionParamId(this.actions, carryItemAction.actionId)?.toString() ?? "0",
+                id: this.figureActions.getActionParamId(mutatedActions, carryItemAction.actionId)?.toString() ?? "0",
                 assetId: "hh_human_item",
                 colorable: false,
                 colorIndex: 0,
@@ -181,17 +184,9 @@ export default class FigureRenderer {
             foreground: effectAvatar.data.animation.avatar.foreground,
         }):(undefined);
 
-        const sprites = await this.figureSpriteRenderer.getFigureSprites(spritesFromConfiguration, actionsForBodyParts, direction, grayscaled);
+        const sprites = await this.figureSpriteRenderer.getFigureSprites(mutatedActions, options.frame, spritesFromConfiguration, actionsForBodyParts, direction, grayscaled, headOnly);
 
-        const effectSprites = await this.figureEffectRenderer.getEffectSprites(actions, actionsForBodyParts, effects, direction);
-
-        if(shouldAddConfigurationEffect) {
-            const index = this.actions.indexOf(`AvatarEffect.${this.configuration.effect}`);
-
-            if(index !== -1) {
-                this.actions.splice(index, 1);
-            }
-        }
+        const effectSprites = await this.figureEffectRenderer.getEffectSprites(options.frame, actions, actionsForBodyParts, effects, direction);
 
         return {
             sprites,
@@ -199,8 +194,8 @@ export default class FigureRenderer {
         };
     }
 
-    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
-        return this.figureCanvasRenderer.renderToCanvas(cropped, drawEffects, useConfigurationEffect, ignoreBodyparts);
+    public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+        return this.figureCanvasRenderer.renderToCanvas(options, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, headOnly);
     }
 
     public getConfigurationAsString(): string {

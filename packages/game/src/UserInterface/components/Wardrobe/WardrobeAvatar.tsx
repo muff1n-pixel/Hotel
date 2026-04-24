@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Figure from "@Client/Figure/Figure";
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FigureConfigurationData } from "@pixel63/events";
 
 export type WardrobeAvatarProps = {
@@ -14,7 +13,7 @@ export default function WardrobeAvatar({ configuration }: WardrobeAvatarProps) {
     useEffect(() => {
         const figureRenderer = new Figure(configuration, 4);
         
-        figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false, true).then(({ figure }) => {
+        figureRenderer.renderToCanvas(0, false, true).then(({ figure }) => {
             setFigureImage(figure.image);
         });
     }, [ configuration ]);

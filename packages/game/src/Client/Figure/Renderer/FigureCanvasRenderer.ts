@@ -1,5 +1,6 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
+import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FigureCanvasRenderer {
@@ -7,9 +8,9 @@ export default class FigureCanvasRenderer {
 
     }
 
-    public async renderToCanvas(cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
+    public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
         return await (async () => {
-            const { sprites, effectSprites } = await this.figureRenderer.render(useConfigurationEffect || drawEffects, ignoreBodyparts);
+            const { sprites, effectSprites } = await this.figureRenderer.render(options, useConfigurationEffect || drawEffects, ignoreBodyparts, headOnly);
 
             let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
         

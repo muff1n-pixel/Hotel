@@ -1,4 +1,3 @@
-import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomItem from "../RoomItem";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureSprite from "./RoomFigureSprite";
@@ -6,7 +5,6 @@ import RoomFigureEffectSprite from "@Client/Room/Items/Figure/Sprites/RoomFigure
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureTypingSprite";
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureIdlingSprite";
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { RoomPositionData } from "@pixel63/events";
 import RoomFigureHealthSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureHealthSprite";
 
@@ -41,7 +39,7 @@ export default class RoomFigureItem extends RoomItem {
 
         const frame = this.frame;
 
-        this.figureRenderer.renderToCanvas(defaultFigureWorkerClient, this.frame, false, false, true).then((result) => {
+        this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
             if(frame !== this.frame) {
                 return;
             }

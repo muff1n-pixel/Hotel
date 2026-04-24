@@ -8,7 +8,7 @@ export default class FigureEffects {
 
     }
 
-    public async getEffects(actions: AvatarActionData[]) {
+    public async getEffects(actionIds: string[], actions: AvatarActionData[]) {
         const results = [];
         
         for(const action of actions) {
@@ -16,7 +16,7 @@ export default class FigureEffects {
                 continue;
             }
 
-            const actionKey = this.figureRenderer.actions.find((actionId) => actionId.split('.')[0] === action.id);
+            const actionKey = actionIds.find((actionId) => actionId.split('.')[0] === action.id);
 
             if(!actionKey) {
                 continue;
@@ -53,37 +53,37 @@ export default class FigureEffects {
         return FigureAssets.effectmap.find((effect) => effect.id === id);
     }
 
-    public getEffectFrame(effect: FigureEffectData) {
+    public getEffectFrame(frame: number, effect: FigureEffectData) {
         if(!effect?.data.animation) {
             return null;
         }
 
-        const frame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(effect.data.animation.frames);
+        const animationFrameIndex = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, effect.data.animation.frames);
 
-        if(!effect.data.animation.frames[frame]) {
+        if(!effect.data.animation.frames[animationFrameIndex]) {
             return null;
         }
 
-        return effect.data.animation.frames[frame];
+        return effect.data.animation.frames[animationFrameIndex];
     }
 
-    public getDirectionFromEffect(effects: FigureEffectData[]) {
-        let direction = this.figureRenderer.direction;
+    public getDirectionFromEffect(direction: number, effects: FigureEffectData[]) {
+        let mutatedDirection = direction;
 
         for(const effect of effects) {
-            direction = this.figureRenderer.direction;
+            mutatedDirection = direction;
 
             if(effect?.data.animation?.direction) {
-                direction += effect.data.animation.direction.offset;
+                mutatedDirection += effect.data.animation.direction.offset;
 
-                while(direction < 0) {
-                    direction += 8;
+                while(mutatedDirection < 0) {
+                    mutatedDirection += 8;
                 }
             
-                direction %= 8;
+                mutatedDirection %= 8;
             }
         }
 
-        return direction;
+        return mutatedDirection;
     }
 }

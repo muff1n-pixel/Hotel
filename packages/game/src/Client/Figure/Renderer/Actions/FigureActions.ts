@@ -27,7 +27,7 @@ export default class FigureActions {
         return avatarActionsData;
     }
     
-    public async getActionsForBodyParts(actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
+    public async getActionsForBodyParts(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
         let result: FigureBodyPartAction[] = [];
         const bodyPartsRemoved: string[] = ignoreBodyparts;
         this.effectTypeRemaps = new Map();
@@ -37,7 +37,7 @@ export default class FigureActions {
                 bodyPartsRemoved.push(...effect.data.animation.remove.map((remove) => remove.id));
             }
 
-            const effectFrame = this.figureRenderer.figureEffects.getEffectFrame(effect);
+            const effectFrame = this.figureRenderer.figureEffects.getEffectFrame(frame, effect);
 
             // effect says bodypart id rightarm (geometry bodypart) is used for action CarryItem
             // CarryItem says handRight is used for activePartSet
@@ -57,9 +57,9 @@ export default class FigureActions {
                         continue;
                     }
 
-                    const frame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(override.frames);
+                    const animationFrame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, override.frames);
 
-                    const overrideFrame = override.frames[frame];
+                    const overrideFrame = override.frames[animationFrame];
 
                     bodyPartsRemoved.push(...overrideFrame.bodyParts.flatMap((bodypart) => bodypart.items.map((item) => item.id)));
 

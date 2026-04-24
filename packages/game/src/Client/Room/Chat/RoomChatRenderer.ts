@@ -1,7 +1,6 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import Figure from "@Client/Figure/Figure";
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FigureConfigurationData, RoomActorChatOptionsData } from "@pixel63/events";
 
 export default class RoomChatRenderer {
@@ -72,7 +71,7 @@ export default class RoomChatRenderer {
         if(roomChatStyle.figure) {
             const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);
 
-            const { figure } = await figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0, false);
+            const { figure } = await figureRenderer.renderToCanvas(0, false);
             
             context.drawImage(
                 figure.image,

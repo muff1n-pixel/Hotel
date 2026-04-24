@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Figure from "@Client/Figure/Figure";
 import { useUser } from "../../../Hooks/useUser";
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 
 export default function ToolbarFigureItem() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,7 +16,7 @@ export default function ToolbarFigureItem() {
 
         const figureRenderer = new Figure(user.figureConfiguration, 2);
 
-        figureRenderer.renderToCanvas(defaultFigureWorkerClient, 0).then(({ figure }) => {
+        figureRenderer.renderToCanvas(0).then(({ figure }) => {
             setFigureImage(figure.image);
         });
     }, [user]);

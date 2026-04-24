@@ -1,12 +1,12 @@
 import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageDataWorkerInterface";
-import { ImageDataWorkerRequestEvent } from "../../../Workers/Figure/ImageDataWorker";
+import { ImageDataWorkerRequestEvent } from "../../../Workers/ImageDataWorker";
 import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
 
 export default class ImageDataWorkerClient implements ImageDataWorkerInterface {
     private readonly worker: Worker;
 
     constructor() {
-        this.worker = new Worker(new URL("/src/Workers/Figure/ImageDataWorker.ts", import.meta.url), {
+        this.worker = new Worker(new URL("/src/Workers/ImageDataWorker.ts", import.meta.url), {
             type: "module"
         });
     }

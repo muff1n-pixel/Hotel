@@ -5,7 +5,6 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { defaultFigureWorkerClient } from "@Client/Figure/Worker/FigureWorkerClient";
 import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
@@ -131,7 +130,7 @@ export default class RoomFurniturePlacer {
             });
         }
         else if(this.roomFurnitureItem instanceof RoomFigureItem) {
-            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(defaultFigureWorkerClient, 0, true).then((result) => {
+            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(0, true).then((result) => {
                 this.iconElement.width = result.figure.image.width;
                 this.iconElement.height = result.figure.image.height;
 

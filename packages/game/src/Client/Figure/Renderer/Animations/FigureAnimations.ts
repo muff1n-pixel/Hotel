@@ -59,10 +59,10 @@ export default class FigureAnimations {
         };
     }
 
-    public getCurrentAnimationFrame(frames: FigureAnimationData["frames"]) {
+    public getCurrentAnimationFrame(frame: number, frames: FigureAnimationData["frames"]) {
         const frameSequence = frames.length;
         const frameRepeat = 2;
-        const spriteFrame = Math.floor((this.figureRenderer.frame % (frameSequence * frameRepeat)) / frameRepeat);
+        const spriteFrame = Math.floor((frame % (frameSequence * frameRepeat)) / frameRepeat);
 
         return spriteFrame;
     }

@@ -1,5 +1,4 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
-import { createFigureWorkerClient } from "../Worker/FigureWorkerClient";
 import Figure from "../Figure";
 import { FigureConfigurationData, UserClothesData, UserClothingData } from "@pixel63/events";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
@@ -17,8 +16,6 @@ export type FigureWardrobeColor = {
 };
 
 export default class FigureWardrobe {
-    public static figureWorker = createFigureWorkerClient();
-
     public static async getWardrobePartTypes(data: UserClothesData, colors: number[] | undefined, gender: string, editMode: boolean) {
         const settype = FigureAssets.figuredata.settypes.find((settype) => settype.type === data.part);
 
@@ -65,7 +62,7 @@ export default class FigureWardrobe {
                 }, 2, undefined, (data.part === "hd"));
 
                 const image = new Promise<ImageBitmap>((resolve, reject) => {
-                    figureRenderer.renderToCanvas(this.figureWorker, 0, true).then(({ figure }) => resolve(figure.image)).catch(reject);
+                    figureRenderer.renderToCanvas(0, true).then(({ figure }) => resolve(figure.image)).catch(reject);
                 });
 
                 return {

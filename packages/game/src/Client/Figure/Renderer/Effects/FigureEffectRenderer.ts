@@ -13,7 +13,7 @@ export default class FigureEffectRenderer {
 
     }
     
-    public async getEffectSprites(actions: AvatarActionData[], actionsForBodyParts: FigureBodyPartAction[], effects: FigureEffectData[], direction: number): Promise<FigureRendererSprite[]> {
+    public async getEffectSprites(frame: number, actions: AvatarActionData[], actionsForBodyParts: FigureBodyPartAction[], effects: FigureEffectData[], direction: number): Promise<FigureRendererSprite[]> {
         const sprites: FigureRendererSprite[] = [];
 
         this.figureRenderer.avatarEffect = undefined;
@@ -24,11 +24,11 @@ export default class FigureEffectRenderer {
                 continue;
             }
 
-            const frame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(effect.data.animation.frames);
+            const animationFrameIndex = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, effect.data.animation.frames);
 
             //console.log("Frame " + this.frame + " becomes " + frame + " (" + effect.data.animation.frames.length + ")");
 
-            const animationFrame = effect.data.animation.frames?.[frame];
+            const animationFrame = effect.data.animation.frames?.[animationFrameIndex];
 
             const avatarBodypart = animationFrame?.effects?.find((bodyPart) => bodyPart.id === "avatar");
 
@@ -119,9 +119,9 @@ export default class FigureEffectRenderer {
                         continue;
                     }
 
-                    const frame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(override.frames);
+                    const animationFrameIndex = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, override.frames);
 
-                    const overrideFrame = override.frames[frame];
+                    const overrideFrame = override.frames[animationFrameIndex];
 
                     if(overrideFrame) {
                         const results = overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {

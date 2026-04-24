@@ -1,38 +1,20 @@
-import FigureWorkerInterface from "@Client/Figure/Worker/Interfaces/FigureWorkerInterface";
 import { FigureConfigurationData } from "@pixel63/events";
-import { FigureRendererResult } from "@Client/Figure/Renderer/FigureRenderer";
+import FigureRenderer, { FigureRendererResult } from "@Client/Figure/Renderer/FigureRenderer";
+import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 
 export default class Figure {
-    public actions: string[] = ["Default"]
+    public actions: string[] = ["Default"];
+
+    private renderer: FigureRenderer;
 
     constructor(public configuration: FigureConfigurationData | undefined, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
         this.actions.push(...actions);
+
+        this.renderer = new FigureRenderer(this.configuration!);
     }
 
-    public async preload(worker: FigureWorkerInterface) {
-        await worker.preload(this);
-    }
-
-    public async renderToCanvas(worker: FigureWorkerInterface, frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
-        /*let renderName = `${this.getConfigurationAsString()}_${this.direction}_${frame}_${this.actions.join('_')}`;
-
-        if(this.headOnly) {
-            renderName += "_headonly";
-        }
-
-        if(cropped) {
-            renderName += "_cropped";
-        }
-
-        if(FigureAssets.figureImage.has(renderName)) {
-            return await FigureAssets.figureImage.get(renderName)!;
-        }*/
-        
-        const result = worker.renderInWebWorker(this, frame, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts);
-        
-        //FigureAssets.figureImage.set(renderName, result);
-
-        return await result;
+    public async renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
+        return await this.renderer.renderToCanvas(this.getOptions(frame), cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
     }
 
     public getConfigurationAsString(): string {
@@ -69,5 +51,14 @@ export default class Figure {
         }
 
         this.actions.splice(actionIndex, 1);
+    }
+
+    private getOptions(frame: number): FigureRendererOptions {
+        return {
+            frame,
+
+            actions: this.actions,
+            direction: this.direction
+        };
     }
 }
