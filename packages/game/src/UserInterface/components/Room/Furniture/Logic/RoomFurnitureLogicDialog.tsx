@@ -22,6 +22,7 @@ import RoomFurnitureStackHelperDialog from "@UserInterface/Components/Room/Furni
 import RoomFurnitureClothingDialog from "@UserInterface/Components/Room/Furniture/Logic/Clothing/RoomFurnitureClothingDialog";
 import RoomFurnitureMannequinDialog from "@UserInterface/Components/Room/Furniture/Logic/Mannequin/RoomFurnitureMannequinDialog";
 import WiredTriggerClockCounterDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerClockCounterDialog";
+import WiredTriggerAtGivenTimeDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerAtGivenTimeDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -100,6 +101,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_trg_clock_counter":
             return (<WiredTriggerClockCounterDialog {...props}/>);
+
+        case "wf_trg_at_given_time":
+            return (<WiredTriggerAtGivenTimeDialog {...props}/>);
 
         case "wf_trg_recv_signal":
         case "wf_act_send_signal":

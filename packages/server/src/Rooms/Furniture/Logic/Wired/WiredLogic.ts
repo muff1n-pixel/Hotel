@@ -13,8 +13,10 @@ export default class WiredLogic implements RoomFurnitureLogic {
     public lastTriggered: number = 0;
 
     constructor(public readonly roomFurniture: RoomFurniture) {
-
+        this.roomFurniture.setAnimation(0).catch(console.error);
     }
+
+    public handleDataChanged?(roomUser: RoomUser): void;
 
     public async handleActionsInterval(): Promise<void> {
         if(this.roomFurniture.model.animation !== 0) {

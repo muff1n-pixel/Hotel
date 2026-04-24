@@ -21,6 +21,7 @@ import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerUserPerformsActionData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerUserSaysSomethingData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerClockCounterData.proto";
+import "User/Furniture/Data/Wired/Triggers/WiredTriggerAtSetTimeData.proto";
 
 import "User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
 import "User/Furniture/Data/Wired/WiredUserSpecifierData.proto";
@@ -41,6 +42,7 @@ message UserFurnitureCustomData {
         WiredTriggerUserPerformsActionData wired_trigger_user_performs_action = 10;
         WiredTriggerUserSaysSomethingData wired_trigger_user_says_something = 11;
         WiredTriggerClockCounterData wired_trigger_clock_counter = 21;
+        WiredTriggerAtSetTimeData wired_trigger_at_set_time = 22;
 
         WiredFurnitureSelectionData wired_furniture_selection = 12;
         WiredUserSpecifierData wired_user_specifier = 13;

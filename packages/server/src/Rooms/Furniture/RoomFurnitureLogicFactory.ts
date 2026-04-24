@@ -55,6 +55,7 @@ import RoomFurnitureClothingLogic from "./Logic/RoomFurnitureClothingLogic";
 import RoomFurnitureEnableBoxLogic from "./Logic/RoomFurnitureEnableBoxLogic";
 import RoomFurnitureTraxLogic from "./Logic/RoomFurnitureTraxLogic";
 import WiredTriggerClockCounterLogic from "./Logic/Wired/Trigger/WiredTriggerClockCounterLogic";
+import WiredTriggerAtGivenTimeLogic from "./Logic/Wired/Trigger/WiredTriggerAtGivenTimeLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -270,6 +271,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_clock_counter":
                 return new WiredTriggerClockCounterLogic(roomFurniture);
+
+            case "wf_trg_at_given_time":
+                return new WiredTriggerAtGivenTimeLogic(roomFurniture);
         }
 
         return null;

@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message WiredTriggerAtSetTimeData {
+    uint32 seconds = 1;
+}
