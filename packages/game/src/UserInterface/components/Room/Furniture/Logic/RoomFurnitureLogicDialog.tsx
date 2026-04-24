@@ -23,6 +23,9 @@ import RoomFurnitureClothingDialog from "@UserInterface/Components/Room/Furnitur
 import RoomFurnitureMannequinDialog from "@UserInterface/Components/Room/Furniture/Logic/Mannequin/RoomFurnitureMannequinDialog";
 import WiredTriggerClockCounterDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerClockCounterDialog";
 import WiredTriggerAtGivenTimeDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerAtGivenTimeDialog";
+import WiredDivider from "@UserInterface/Common/Dialog/Layouts/Wired/WiredDivider";
+import WiredSection from "@UserInterface/Common/Dialog/Layouts/Wired/WiredSection";
+import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -114,6 +117,14 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         return (
             <WiredDialog onClose={props.onClose}>
                 <WiredFurniture furniture={props.data.furnitureData}/>
+
+                <WiredDivider/>
+
+                <WiredSection style={{ flexDirection: "row" }}>
+                    <div style={{ flex: 1 }} />
+
+                    <WiredButton onClick={props.onClose}>Cancel</WiredButton>
+                </WiredSection>
             </WiredDialog>
         );
     }
