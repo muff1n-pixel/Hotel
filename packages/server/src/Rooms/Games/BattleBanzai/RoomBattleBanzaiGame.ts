@@ -112,6 +112,8 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
                 };
             })
         );
+
+        await this.room.handleGameEnds(this);
     }
 
     async pauseGame(): Promise<void> {

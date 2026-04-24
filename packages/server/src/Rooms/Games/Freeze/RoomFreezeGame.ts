@@ -214,6 +214,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         }
 
         await Promise.all(this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0)));
+
+        await this.room.handleGameEnds(this);
     }
 
     private lastActionInterval: number = 0;
