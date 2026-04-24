@@ -83,12 +83,12 @@ export default function ToolbarRoomInfo() {
                                     if(!zoomed) {
                                         setZoomed(true);
                                         
-                                        room.roomRenderer.size = 32;
+                                        room.roomRenderer.setCanvasScale(2);
                                     }
                                     else {
                                         setZoomed(false);
                                         
-                                        room.roomRenderer.size = 64;
+                                        room.roomRenderer.setCanvasScale(1);
                                     }
                                 }
                             },

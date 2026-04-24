@@ -43,6 +43,8 @@ export default class RoomRenderer extends EventTarget {
 
     private terminated = false;
 
+    public scale: number = 1;
+
     public size: number = 64;
     private currentSize: number = 64;
     
@@ -91,6 +93,26 @@ export default class RoomRenderer extends EventTarget {
         this.parent.appendChild(this.element);
 
         window.requestAnimationFrame(this.render.bind(this));
+    }
+
+    public setCanvasScale(scale: number) {
+        this.scale = scale;
+
+        if(this.scale === 1) {
+            this.element.style.removeProperty("transform");
+        }
+
+        if(this.scale >= 2) {
+            this.element.style.imageRendering = "pixelated";
+        }
+        else {
+            this.element.style.imageRendering = "auto";
+        }
+
+        this.element.style.transform = `scale(${scale})`;
+        this.element.style.transformOrigin = `0 0`;
+
+        this.parent.style.overflow = "hidden";
     }
 
     public terminate() {
@@ -172,8 +194,8 @@ export default class RoomRenderer extends EventTarget {
 
     private updateRenderedOffset() {
         this.renderedOffset = {
-            left: this.center.left + this.camera.cameraPosition.left,
-            top: this.center.top + this.camera.cameraPosition.top
+            left: Math.round((this.center.left + this.camera.cameraPosition.left) / this.scale),
+            top: Math.round((this.center.top + this.camera.cameraPosition.top) / this.scale)
         };
     }
 
@@ -223,24 +245,20 @@ export default class RoomRenderer extends EventTarget {
         }
 
         const result = {
-            left: this.camera.mousePosition.left - this.renderedOffset.left,
-            top: this.camera.mousePosition.top - this.renderedOffset.top
+            left: Math.round((this.camera.mousePosition.left / this.scale) - this.renderedOffset.left),
+            top: Math.round((this.camera.mousePosition.top / this.scale) - this.renderedOffset.top)
         };
-
-        /*const scale = this.getSizeScale();
-
-        result.left *= scale;
-        result.top *= scale;*/
 
         return result;
     }
 
     public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
         if(this.camera.mousePosition) {
-            const offsetMousePosition = {
-                left: this.camera.mousePosition.left - this.renderedOffset.left,
-                top: this.camera.mousePosition.top - this.renderedOffset.top
-            };
+            const offsetMousePosition = this.getMouseOffsetPosition();
+
+            if(!offsetMousePosition) {
+                return null;
+            }
 
             let filteredItems = this.items;
 
@@ -261,8 +279,8 @@ export default class RoomRenderer extends EventTarget {
                 };
 
                 if(sprite.item.position) {
-                    relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
-                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
+                    relativeMousePosition.left = offsetMousePosition.left - ((Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale);
+                    relativeMousePosition.top = offsetMousePosition.top - ((Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale);
                 }
 
                 const tile = sprite.mouseover(relativeMousePosition);
@@ -344,8 +362,8 @@ export default class RoomRenderer extends EventTarget {
     public getItemScreenPosition(item: RoomItem): MousePosition {
         if(!item.position) {
             return {
-                left: this.renderedOffset.left,
-                top: this.renderedOffset.top
+                left: (this.renderedOffset.left * this.scale),
+                top: (this.renderedOffset.top * this.scale)
             };
         }
 
@@ -377,8 +395,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         return {
-            left: this.renderedOffset.left + translatePosition.left,
-            top: this.renderedOffset.top + translatePosition.top
+            left: (this.renderedOffset.left + translatePosition.left) * this.scale,
+            top: (this.renderedOffset.top + translatePosition.top) * this.scale
         };
     }
 

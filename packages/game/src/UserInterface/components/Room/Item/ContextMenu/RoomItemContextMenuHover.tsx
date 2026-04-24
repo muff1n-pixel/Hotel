@@ -48,12 +48,14 @@ export default function RoomItemContextMenuHover({ item }: RoomItemContextMenuHo
             whiteSpace: "nowrap",
 
             left: position?.left,
-            top: position?.top
+            top: position?.top,
+            
+            transform: `translate(${(64 * item.roomRenderer.scale)}px, -${(58 * item.roomRenderer.scale)}px) scale(${item.roomRenderer.scale})`,
         }}>
             <div className="arrow" style={{
                 display: "flex",
 
-                transform: "translate(64px, -58px) translate(-50%, -100%)",
+                transform: `translate(-50%, -100%)`,
 
                 background: "#2C2B2A",
                 border: "1px solid #000000",

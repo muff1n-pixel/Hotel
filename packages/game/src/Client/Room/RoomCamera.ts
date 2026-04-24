@@ -13,7 +13,7 @@ export default class RoomCamera {
         top: 0
     };
 
-    constructor(renderer: RoomRenderer) {
+    constructor(private readonly renderer: RoomRenderer) {
         this.cameraPosition.top = -(renderer.structure.grid.length + renderer.structure.grid[0]?.length) * 6;
 
         if(renderer.roomInstance) {
@@ -21,6 +21,16 @@ export default class RoomCamera {
             renderer.element.addEventListener("mousemove", this.mousemove.bind(this));
             renderer.element.addEventListener("mouseup", this.mouseup.bind(this));
             renderer.element.addEventListener("mouseleave", this.mouseleave.bind(this));
+            renderer.element.addEventListener("wheel", this.wheel.bind(this));
+        }
+    }
+
+    private wheel(event: WheelEvent) {
+        if(event.deltaY < 0) {
+            this.renderer.setCanvasScale(Math.min(5, this.renderer.scale + 0.1));
+        }
+        else {
+            this.renderer.setCanvasScale(Math.max(1, this.renderer.scale - 0.1));
         }
     }
 
