@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredTriggerScoreAchievedData {
+    string team = 1;
+    uint32 score = 2;
+}

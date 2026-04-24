@@ -58,6 +58,7 @@ import WiredTriggerClockCounterLogic from "./Logic/Wired/Trigger/WiredTriggerClo
 import WiredTriggerAtGivenTimeLogic from "./Logic/Wired/Trigger/WiredTriggerAtGivenTimeLogic";
 import WiredTriggerGameEndsLogic from "./Logic/Wired/Trigger/WiredTriggerGameEndsLogic";
 import WiredTriggerGameStartsLogic from "./Logic/Wired/Trigger/WiredTriggerGameStartsLogic";
+import WiredTriggerScoreAchievedLogic from "./Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -282,6 +283,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_game_ends":
                 return new WiredTriggerGameEndsLogic(roomFurniture);
+
+            case "wf_trg_score_achieved":
+                return new WiredTriggerScoreAchievedLogic(roomFurniture);
         }
 
         return null;

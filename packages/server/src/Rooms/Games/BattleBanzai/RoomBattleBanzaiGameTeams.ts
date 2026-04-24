@@ -24,6 +24,8 @@ export default class RoomBattleBanzaiGameTeams {
         for(const furniture of this.getTeamCounterFurniture(team)) {
             (furniture.logic as RoomFurnitureBattleBanzaiCounterLogic).updateAnimationTags(teamData.score).catch(console.error);
         }
+        
+        this.game.room.handleGameScore(team, teamData.score).catch(console.error);
     }
 
     public getTeam(team: RoomBattleBanzaiGameTeam) {

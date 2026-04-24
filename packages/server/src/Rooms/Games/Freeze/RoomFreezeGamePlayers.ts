@@ -132,6 +132,8 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
         for(const furniture of this.game.getCounterFurniture(triggerPlayer.team)) {
             (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.game.teams[triggerPlayer.team].score).catch(console.error);
         }
+
+        this.game.room.handleGameScore(triggerPlayer.team, this.game.teams[triggerPlayer.team].score).catch(console.error);
     }
 
     public unfreezePlayer(player: RoomFreezeGamePlayer) {

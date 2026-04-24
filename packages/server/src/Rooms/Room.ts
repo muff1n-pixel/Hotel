@@ -19,6 +19,7 @@ import RoomFurnitureTraxLogic from "./Furniture/Logic/RoomFurnitureTraxLogic.js"
 import RoomGame from "./Games/RoomGame.js";
 import WiredTriggerGameEndsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameEndsLogic.js";
 import WiredTriggerGameStartsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameStartsLogic.js";
+import WiredTriggerScoreAchievedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -487,6 +488,14 @@ export default class Room {
 
         for(const logic of wiredTriggerGameStartsLogic) {
             logic.handleGameStarts(game).catch(console.error);
+        }
+    }
+
+    public async handleGameScore(team: string, score: number) {
+        const wiredTriggerScoreAchievedLogic = this.getFurnitureWithCategory(WiredTriggerScoreAchievedLogic);
+
+        for(const logic of wiredTriggerScoreAchievedLogic) {
+            logic.handleTeamScore(team, score).catch(console.error);
         }
     }
 

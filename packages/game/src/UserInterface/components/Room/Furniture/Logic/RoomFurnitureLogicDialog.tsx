@@ -26,6 +26,7 @@ import WiredTriggerAtGivenTimeDialog from "@UserInterface/Components/Room/Furnit
 import WiredDivider from "@UserInterface/Common/Dialog/Layouts/Wired/WiredDivider";
 import WiredSection from "@UserInterface/Common/Dialog/Layouts/Wired/WiredSection";
 import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton";
+import WiredTriggerScoreAchievedDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -107,6 +108,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_trg_at_given_time":
             return (<WiredTriggerAtGivenTimeDialog {...props}/>);
+
+        case "wf_trg_score_achieved":
+            return (<WiredTriggerScoreAchievedDialog {...props}/>);
 
         case "wf_trg_recv_signal":
         case "wf_act_send_signal":
