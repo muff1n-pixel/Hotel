@@ -10,6 +10,7 @@ export class FurnitureModel extends Model {
     declare placement: "floor" | "wall";
     declare dimensions: RoomPositionData;
     declare directions: number[];
+    declare animations: number[];
     declare interactionType: string;
     declare color?: number;
     declare category: string;
@@ -71,6 +72,17 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
                 },
                 set: function (value) {
                     this.setDataValue("directions", JSON.stringify(value));
+                },
+                allowNull: false,
+                defaultValue: JSON.stringify([])
+            },
+            animations: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("animations"));
+                },
+                set: function (value) {
+                    this.setDataValue("animations", JSON.stringify(value));
                 },
                 allowNull: false,
                 defaultValue: JSON.stringify([])
