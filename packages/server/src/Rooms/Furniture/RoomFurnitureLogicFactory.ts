@@ -59,6 +59,7 @@ import WiredTriggerAtGivenTimeLogic from "./Logic/Wired/Trigger/WiredTriggerAtGi
 import WiredTriggerGameEndsLogic from "./Logic/Wired/Trigger/WiredTriggerGameEndsLogic";
 import WiredTriggerGameStartsLogic from "./Logic/Wired/Trigger/WiredTriggerGameStartsLogic";
 import WiredTriggerScoreAchievedLogic from "./Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic";
+import WiredActionToggleStateLogic from "./Logic/Wired/Action/WiredActionToggleStateLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -259,15 +260,6 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_collision":
                 return new WiredTriggerCollisionLogic(roomFurniture);
-                
-            case "wf_act_show_message":
-                return new WiredActionShowMessageLogic(roomFurniture);
-
-            case "wf_act_teleport_to":
-                return new WiredActionTeleportToLogic(roomFurniture);
-
-            case "wf_act_send_signal":
-                return new WiredActionSendSignalLogic(roomFurniture);
 
             case "wf_trg_recv_signal":
                 return new WiredTriggerReceiveSignalLogic(roomFurniture);
@@ -286,6 +278,18 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_score_achieved":
                 return new WiredTriggerScoreAchievedLogic(roomFurniture);
+                
+            case "wf_act_show_message":
+                return new WiredActionShowMessageLogic(roomFurniture);
+
+            case "wf_act_teleport_to":
+                return new WiredActionTeleportToLogic(roomFurniture);
+
+            case "wf_act_send_signal":
+                return new WiredActionSendSignalLogic(roomFurniture);
+
+            case "wf_act_toggle_state":
+                return new WiredActionToggleStateLogic(roomFurniture);
         }
 
         return null;

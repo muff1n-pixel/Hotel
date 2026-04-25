@@ -334,6 +334,64 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
+    public getNextDirection(): number | null {
+        return this.getDirectionAtOffset(1);
+    }
+
+    public getPreviousDirection(): number | null {
+        return this.getDirectionAtOffset(-1);
+    }
+
+    private getDirectionAtOffset(offset: number): number | null {
+        const directions = this.model.furniture.directions;
+
+        if (!directions.length) {
+            return this.model.direction;
+        }
+
+        const currentDirection = this.model.direction;
+
+        if (currentDirection === null || !directions.includes(currentDirection)) {
+            return offset >= 0 
+                ? directions[0] ?? null
+                : directions[directions.length - 1] ?? null;
+        }
+
+        const currentIndex = directions.indexOf(currentDirection);
+        const newIndex = (currentIndex + offset + directions.length) % directions.length;
+
+        return directions[newIndex] ?? null;
+    }
+
+    public getNextAnimation(): number | null {
+        return this.getAnimationAtOffset(1);
+    }
+
+    public getPreviousAnimation(): number | null {
+        return this.getAnimationAtOffset(-1);
+    }
+
+    private getAnimationAtOffset(offset: number): number | null {
+        const animations = this.model.furniture.animations.filter((animation) => animation < 100);
+
+        if (!animations.length) {
+            return this.model.animation;
+        }
+
+        const currentanimation = this.model.animation;
+
+        if (currentanimation === null || !animations.includes(currentanimation)) {
+            return offset >= 0 
+                ? animations[0] ?? null
+                : animations[animations.length - 1] ?? null;
+        }
+
+        const currentIndex = animations.indexOf(currentanimation);
+        const newIndex = (currentIndex + offset + animations.length) % animations.length;
+
+        return animations[newIndex] ?? null;
+    }
+
     /** Call this from the Room instance only. */
     public async handleUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
         await this.logic?.handleUserWalksOn?.(roomUser, previousRoomFurniture);

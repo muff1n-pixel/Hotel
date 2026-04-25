@@ -27,6 +27,7 @@ import WiredDivider from "@UserInterface/Common/Dialog/Layouts/Wired/WiredDivide
 import WiredSection from "@UserInterface/Common/Dialog/Layouts/Wired/WiredSection";
 import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton";
 import WiredTriggerScoreAchievedDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedDialog";
+import WiredActionToggleStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleStateDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -90,6 +91,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_teleport_to":
             return (<WiredActionTeleportToFurnitureDialog {...props}/>);
+
+        case "wf_act_toggle_state":
+            return (<WiredActionToggleStateDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);
