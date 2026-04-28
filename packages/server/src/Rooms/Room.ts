@@ -360,6 +360,10 @@ export default class Room {
                 return null;
             }
 
+            if(this.model.structure.grid[position.row]![position.column] === 'X') {
+                return null;
+            }
+
             return RoomFloorplanHelper.parseDepth(this.model.structure.grid[position.row]![position.column]!)
         }
 
