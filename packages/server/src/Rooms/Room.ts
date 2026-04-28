@@ -168,11 +168,15 @@ export default class Room {
                 }, sitableFurniture.model.direction ?? undefined);
             }
             else {
-                actor.removeAction("Sit");
-                actor.path.setPosition({
-                    ...actor.position,
-                    depth: this.getUpmostDepthAtPosition(RoomPositionOffsetData.fromJSON(actor.position))
-                });
+                const depth = this.getUpmostDepthAtPosition(RoomPositionOffsetData.fromJSON(actor.position));
+
+                if(depth !== null) {
+                    actor.removeAction("Sit");
+                    actor.path.setPosition({
+                        ...actor.position,
+                        depth
+                    });
+                }
             }
         }
     }
@@ -353,7 +357,7 @@ export default class Room {
     public getUpmostDepthAtPosition(position: RoomPositionOffsetData, furniture?: RoomFurniture) {
         if(!furniture) {
             if(!this.model.structure.grid[position.row] || !this.model.structure.grid[position.row]![position.column]) {
-                return 0;
+                return null;
             }
 
             return RoomFloorplanHelper.parseDepth(this.model.structure.grid[position.row]![position.column]!)

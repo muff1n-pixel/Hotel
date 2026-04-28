@@ -28,6 +28,10 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
         const upmostFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(offsetPosition);
         const upmostDepth = this.roomFurniture.room.getUpmostDepthAtPosition(offsetPosition, upmostFurniture);
 
+        if(upmostDepth === null) {
+            return;
+        }
+
         const rampDepth = this.roomFurniture.model.position.depth + this.roomFurniture.model.furniture.dimensions.depth;
 
         if(upmostDepth >= rampDepth) {

@@ -16,6 +16,7 @@ import "User/Furniture/Data/UserFurnitureTraxSongDiskData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionToggleStateData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionMoveRotateData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -39,6 +40,7 @@ message UserFurnitureCustomData {
         WiredActionShowMessageData wired_action_show_message = 6;
         WiredActionTeleportToFurnitureData wired_action_teleport_to_furniture = 7;
         WiredActionToggleStateData wired_action_toggle_state = 24;
+        WiredActionMoveRotateData wired_action_move_rotate = 25;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;

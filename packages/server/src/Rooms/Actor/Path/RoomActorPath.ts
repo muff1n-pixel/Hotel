@@ -58,6 +58,13 @@ export default class RoomActorPath {
 
         const depth = this.actor.room.getUpmostDepthAtPosition(nextPosition, furniture);
 
+        if(depth === null) {
+            this.path = undefined;
+            this.pathOnCancel?.();
+
+            return;
+        }
+
         const previousPosition = {...this.actor.position};
 
         if(this.actor.hasAction("Sit")) {
@@ -193,20 +200,24 @@ export default class RoomActorPath {
         else if(furniture) {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
-            this.setPosition(RoomPositionData.create({
-                row: position.row,
-                column: position.column,
-                depth
-            }), undefined, usePath, walkEvent);
+            if(depth !== null) {
+                this.setPosition(RoomPositionData.create({
+                    row: position.row,
+                    column: position.column,
+                    depth
+                }), undefined, usePath, walkEvent);
+            }
         }
         else {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
 
-            this.setPosition(RoomPositionData.create({
-                row: position.row,
-                column: position.column,
-                depth
-            }), undefined, usePath, walkEvent);
+            if(depth !== null) {
+                this.setPosition(RoomPositionData.create({
+                    row: position.row,
+                    column: position.column,
+                    depth
+                }), undefined, usePath, walkEvent);
+            }
         }
     }
 

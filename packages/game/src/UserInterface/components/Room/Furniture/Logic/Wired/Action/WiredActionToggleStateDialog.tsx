@@ -33,7 +33,7 @@ export default function WiredActionToggleStateDialog({ data, onClose }: RoomFurn
         }));
 
         onClose();
-    }, [furnitureIds, delayInSeconds, data, onClose]);
+    }, [toggleType, furnitureIds, delayInSeconds, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>

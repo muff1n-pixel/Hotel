@@ -92,11 +92,17 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             }
 
             const nextFurniture = this.roomFurniture.room.getUpmostFurnitureAtPosition(nextOffsetPosition);
+            
+            const depth = this.roomFurniture.room.getUpmostDepthAtPosition(nextOffsetPosition, nextFurniture);
+
+            if(depth === null) {
+                return;
+            }
  
             const position = RoomPositionData.create({
                 row: nextOffsetPosition.row,
                 column: nextOffsetPosition.column,
-                depth: this.roomFurniture.room.getUpmostDepthAtPosition(nextOffsetPosition, nextFurniture) + 0.0001
+                depth: depth + 0.0001
             });
 
             await this.roomFurniture.setPosition(position, false);

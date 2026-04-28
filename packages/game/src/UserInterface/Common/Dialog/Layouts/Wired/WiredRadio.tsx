@@ -1,10 +1,12 @@
+import { ReactNode } from "react";
+
 export type WiredRadioProps = {
     value: any;
     onChange: (value: any) => void;
 
     items: {
         value: any;
-        label: string;
+        label: ReactNode;
     }[];
 };
 
