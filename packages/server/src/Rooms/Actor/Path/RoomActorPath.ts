@@ -201,6 +201,8 @@ export default class RoomActorPath {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
             if(depth !== null) {
+                this.actor.removeAction("Sit");
+
                 this.setPosition(RoomPositionData.create({
                     row: position.row,
                     column: position.column,
@@ -212,6 +214,8 @@ export default class RoomActorPath {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
 
             if(depth !== null) {
+                this.actor.removeAction("Sit");
+
                 this.setPosition(RoomPositionData.create({
                     row: position.row,
                     column: position.column,

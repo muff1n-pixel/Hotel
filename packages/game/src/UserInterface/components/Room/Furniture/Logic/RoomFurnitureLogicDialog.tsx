@@ -29,6 +29,7 @@ import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton"
 import WiredTriggerScoreAchievedDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedDialog";
 import WiredActionToggleStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleStateDialog";
 import WiredActionMoveRotateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateDialog";
+import WiredActionMoveRotateUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateUserDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -98,6 +99,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_move_rotate":
             return (<WiredActionMoveRotateDialog {...props}/>);
+
+        case "wf_act_move_rotate_user":
+            return (<WiredActionMoveRotateUserDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

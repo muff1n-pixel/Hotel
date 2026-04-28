@@ -61,6 +61,7 @@ import WiredTriggerGameStartsLogic from "./Logic/Wired/Trigger/WiredTriggerGameS
 import WiredTriggerScoreAchievedLogic from "./Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic";
 import WiredActionToggleStateLogic from "./Logic/Wired/Action/WiredActionToggleStateLogic";
 import WiredActionMoveRotateLogic from "./Logic/Wired/Action/WiredActionMoveRotateLogic";
+import WiredActionMoveRotateUserLogic from "./Logic/Wired/Action/WiredActionMoveRotateUserLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -294,6 +295,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_move_rotate":
                 return new WiredActionMoveRotateLogic(roomFurniture);
+
+            case "wf_act_move_rotate_user":
+                return new WiredActionMoveRotateUserLogic(roomFurniture);
         }
 
         return null;

@@ -11,6 +11,7 @@ import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigge
 import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 import { RoomActorAction } from "../Actor/RoomActorAction.js";
+import Directions from "../../Helpers/Directions.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -312,10 +313,41 @@ export default class RoomUser implements RoomActor {
     public getOffsetPosition(direction: number, offset: number) {
         const position = {...this.position};
 
-        switch(direction) {
+        switch(Directions.normalizeDirection(direction)) {
+            case 0:
+                position.row -= offset;
+                break;
+
+            case 1:
+                position.row -= offset;
+                position.column += offset;
+                break;
+
             case 2:
                 position.column += offset;
+                break;
 
+            case 3:
+                position.row += offset;
+                position.column += offset;
+                break;
+            
+            case 4:
+                position.row += offset;
+                break;
+
+            case 5:
+                position.row += offset;
+                position.column -= offset;
+                break;
+            
+            case 6:
+                position.column -= offset;
+                break;
+
+            case 7:
+                position.row -= offset;
+                position.column -= offset;
                 break;
         }
 
