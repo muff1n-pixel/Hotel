@@ -37,14 +37,12 @@ jobs:
           echo "$INSTALL_DIR/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
-        run: |
-          cd packages/events
-          npm install
+        working-directory: packages/events
+        run: npm install
 
       - name: Generate events
-        run: |
-          cd packages/events
-          npm run generate
+        working-directory: packages/events
+        run: npm run generate
 
       - name: Upload generated files as artifact
         uses: actions/upload-artifact@v4
