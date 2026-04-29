@@ -4,10 +4,10 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
 import { Fragment, useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import Selection from "../../../Common/Form/Components/Selection";
 import { ShopPageData, UpdateShopPageData } from "@pixel63/events";
-import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useRoomInstance } from "@UserInterface/Hooks2/useRoomInstance";
 
 export type EditShopPageDialogProps = {
     data: ShopPageData & { shopPages?: ShopPageData[]; } | null;

@@ -4,7 +4,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import { PetData, ShopPageData, ShopPetData, UpdateShopPetData } from "@pixel63/events";
 import PetImage from "../../Pets/PetImage";
 

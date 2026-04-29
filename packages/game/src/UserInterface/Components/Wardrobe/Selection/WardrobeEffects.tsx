@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import { FigureConfigurationData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
 import useEffects from "@UserInterface/Components/Wardrobe/Hooks/useEffects";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";

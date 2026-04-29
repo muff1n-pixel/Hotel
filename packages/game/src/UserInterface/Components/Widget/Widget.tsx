@@ -1,5 +1,5 @@
-import { useDialogs } from "../../Hooks/useDialogs";
-import { useUser } from "../../Hooks/useUser";
+import { useDialogs } from "../../Hooks2/useDialogs";
+import { useUser } from "../../Hooks2/useUser";
 import WidgetButton from "./WidgetButton";
 import WidgetCurrency from "./WidgetCurrency";
 import WidgetItem from "./WidgetItem";

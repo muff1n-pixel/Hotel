@@ -1,4 +1,4 @@
-import { useRoomInstance } from "../../Hooks/useRoomInstance";
+import { useRoomInstance } from "../../Hooks2/useRoomInstance";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
 import { useEffect, useState } from "react";
 import ToolbarFriends from "@UserInterface/Components/Toolbar/ToolbarFriends";

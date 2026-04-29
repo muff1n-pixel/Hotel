@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useRoomInstance } from "@UserInterface/Hooks2/useRoomInstance";
 
 export function useRoomFrameRate() {
     const room = useRoomInstance();

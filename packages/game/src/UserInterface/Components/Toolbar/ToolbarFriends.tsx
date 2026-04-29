@@ -5,10 +5,10 @@ import FriendsPanel from "@UserInterface/Common/Friends/Components/FriendsPanel"
 import Tooltip from "@UserInterface/Common/Tooltip/Tooltip";
 import ToolbarItem from "@UserInterface/Components/Toolbar/Items/ToolbarItem";
 import ToolbarToggle from "@UserInterface/Components/Toolbar/ToolbarToggle";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import useFriends from "@UserInterface/Hooks/useFriends";
-import { useMessenger } from "@UserInterface/Hooks/useMessenger";
-import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import useFriends from "@UserInterface/Hooks2/useFriends";
+import { useMessenger } from "@UserInterface/Hooks2/useMessenger";
+import { useMessengerUnread } from "@UserInterface/Hooks2/useMessengerUnread";
 
 export default function ToolbarFriends() {
     const dialogs = useDialogs();

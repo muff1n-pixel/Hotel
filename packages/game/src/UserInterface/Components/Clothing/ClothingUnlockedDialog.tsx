@@ -7,8 +7,8 @@ import DialogUnlocked from "@UserInterface/Common/Dialog/Components/Unlocked/Dia
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { useUser } from "@UserInterface/Hooks/useUser";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useUser } from "@UserInterface/Hooks2/useUser";
 
 export type ClothingUnlockedDialogProps = {
     hidden?: boolean;

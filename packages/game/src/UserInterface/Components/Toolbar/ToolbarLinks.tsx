@@ -3,9 +3,9 @@ import ToolbarFigureItem from "@UserInterface/Components/Toolbar/Items/ToolbarFi
 import ToolbarItem from "@UserInterface/Components/Toolbar/Items/ToolbarItem";
 import ToolbarTab from "@UserInterface/Components/Toolbar/ToolbarTab";
 import ToolbarToggle from "@UserInterface/Components/Toolbar/ToolbarToggle";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
-import { useUser } from "@UserInterface/Hooks/useUser";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useRoomInstance } from "@UserInterface/Hooks2/useRoomInstance";
+import { useUser } from "@UserInterface/Hooks2/useUser";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 

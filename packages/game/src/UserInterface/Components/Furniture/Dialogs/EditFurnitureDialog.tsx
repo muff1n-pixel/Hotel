@@ -5,11 +5,11 @@ import { useCallback, useState } from "react";
 import Input from "../../../Common/Form/Components/Input";
 import Checkbox from "../../../Common/Form/Components/Checkbox";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import useFurnitureTypes from "../../../Hooks/Furniture/useFurnitureTypes";
+import useFurnitureTypes from "../../../Hooks2/Furniture/useFurnitureTypes";
 import Selection from "../../../Common/Form/Components/Selection";
 import { webSocketClient } from "../../../..";
 import { FurnitureData, FurnitureFlagsData, UpdateFurnitureData } from "@pixel63/events";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;

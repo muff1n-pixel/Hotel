@@ -2,10 +2,10 @@ import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomItemContextMenuWrapper from "../RoomItemContextMenuWrapper";
 import UserContextMenuElement from "../../../Users/UserContextMenuElement";
 import { Fragment, useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
-import { useUser } from "../../../../../Hooks/useUser";
+import { useRoomInstance } from "../../../../../Hooks2/useRoomInstance";
+import { useUser } from "../../../../../Hooks2/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
-import { useDialogs } from "../../../../../Hooks/useDialogs";
+import { useDialogs } from "../../../../../Hooks2/useDialogs";
 import { webSocketClient } from "../../../../../..";
 import { PickupRoomBotData, UpdateRoomBotData } from "@pixel63/events";
 

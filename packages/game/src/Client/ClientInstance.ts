@@ -4,7 +4,7 @@ import RoomFurnitureEvent from "@Client/Communications/Room/Furniture/RoomFurnit
 import { webSocketClient } from "..";
 import RoomStructureEvent from "@Client/Communications/Room/RoomStructureEvent";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
-import { Dialog } from "../UserInterface/Contexts/AppContext";
+import { Dialog } from "../UserInterface/Contexts2/AppContext";
 import RoomInformationEvent from "@Client/Communications/Room/RoomInformationEvent";
 import UserEvent from "@Client/Communications/User/UserEvent";
 import { RoomHistory } from "../UserInterface/Components/Room/Toolbar/ToolbarRoomChat";

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
-import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
 import { webSocketClient } from "../../../..";
 import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
-import { useUser } from "../../../Hooks/useUser";
+import { useUser } from "../../../Hooks2/useUser";
 import { RoomActorChatData } from "@pixel63/events";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 

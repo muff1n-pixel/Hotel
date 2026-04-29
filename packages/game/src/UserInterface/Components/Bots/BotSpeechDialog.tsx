@@ -1,4 +1,4 @@
-import { useBotSpeech } from "../../Hooks/Bots/useBotSpeech";
+import { useBotSpeech } from "../../Hooks2/Bots/useBotSpeech";
 import Dialog from "../../Common/Dialog/Dialog";
 import DialogContent from "../../Common/Dialog/Components/DialogContent";
 import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
@@ -7,7 +7,7 @@ import Input from "../../Common/Form/Components/Input";
 import Checkbox from "../../Common/Form/Components/Checkbox";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../Hooks/useDialogs";
+import { useDialogs } from "../../Hooks2/useDialogs";
 import { UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotSpeechDialogProps = {

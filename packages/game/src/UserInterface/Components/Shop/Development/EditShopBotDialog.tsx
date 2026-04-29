@@ -4,8 +4,8 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../Hooks/useDialogs";
-import { useUser } from "../../../Hooks/useUser";
+import { useDialogs } from "../../../Hooks2/useDialogs";
+import { useUser } from "../../../Hooks2/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 

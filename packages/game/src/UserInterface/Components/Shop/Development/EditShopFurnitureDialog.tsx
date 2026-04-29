@@ -4,7 +4,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
 import { DeleteShopFurnitureData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";

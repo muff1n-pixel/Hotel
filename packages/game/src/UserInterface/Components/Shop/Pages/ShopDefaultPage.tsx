@@ -6,9 +6,9 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
-import { useDialogs } from "../../../Hooks/useDialogs";
-import { useUser } from "../../../Hooks/useUser";
-import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useDialogs } from "../../../Hooks2/useDialogs";
+import { useUser } from "../../../Hooks2/useUser";
+import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";

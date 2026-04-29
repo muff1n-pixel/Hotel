@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import Selection from "../../../../Common/Form/Components/Selection";
-import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks2/useRoomInstance";
 import { webSocketClient } from "../../../../..";
 import Checkbox from "../../../../Common/Form/Components/Checkbox";
 import { UpdateRoomStructureData } from "@pixel63/events";

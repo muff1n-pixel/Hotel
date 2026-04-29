@@ -2,11 +2,11 @@ import FurnitureImage from "../../../Furniture/FurnitureImage";
 import { clientInstance, webSocketClient } from "../../../../..";
 import "./RoomFurnitureProfile.css"
 import { useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
-import { useUser } from "../../../../Hooks/useUser";
+import { useRoomInstance } from "../../../../Hooks2/useRoomInstance";
+import { useUser } from "../../../../Hooks2/useUser";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
-import { useDialogs } from "../../../../Hooks/useDialogs";
+import { usePermissionAction } from "../../../../Hooks2/usePermissionAction";
+import { useDialogs } from "../../../../Hooks2/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 import FurnitureShopLink from "@UserInterface/Components/Furniture/FurnitureShopLink";
 import UserLink from "@UserInterface/Common/Users/UserLink";

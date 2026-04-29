@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { useDialogs } from "../../Hooks/useDialogs";
-import { useHotel } from "../../Hooks/useHotel";
-import { useRoomInstance } from "../../Hooks/useRoomInstance";
+import { useDialogs } from "../../Hooks2/useDialogs";
+import { useHotel } from "../../Hooks2/useHotel";
+import { useRoomInstance } from "../../Hooks2/useRoomInstance";
 import { webSocketClient } from "../../..";
-import { usePermissions } from "../../Hooks/usePermissions";
+import { usePermissions } from "../../Hooks2/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
-import { useRoomFrameRate } from "@UserInterface/Hooks/useRoomFrameRate";
+import { useRoomFrameRate } from "@UserInterface/Hooks2/useRoomFrameRate";
 
 export default function DebugInformationPanel() {
     const room = useRoomInstance();

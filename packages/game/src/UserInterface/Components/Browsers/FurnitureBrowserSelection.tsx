@@ -1,6 +1,6 @@
 import { FurnitureData } from "@pixel63/events";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
 import { Fragment } from "react/jsx-runtime";
 
 export type FurnitureBrowserSelectionProps = {

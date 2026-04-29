@@ -1,6 +1,6 @@
 import Dialog from "../../Common/Dialog/Dialog";
 import DialogContent from "../../Common/Dialog/Components/DialogContent";
-import { useUser } from "../../Hooks/useUser";
+import { useUser } from "../../Hooks2/useUser";
 import Input from "../../Common/Form/Components/Input";
 import { useState } from "react";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";

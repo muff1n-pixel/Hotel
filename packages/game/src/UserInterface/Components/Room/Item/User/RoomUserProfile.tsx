@@ -1,6 +1,6 @@
-import { useUserBadges } from "../../../../Hooks/useUserBadges";
+import { useUserBadges } from "../../../../Hooks2/useUserBadges";
 import BadgeImage from "../../../../Common/Badges/BadgeImage";
-import { useUser } from "../../../../Hooks/useUser";
+import { useUser } from "../../../../Hooks2/useUser";
 import { useCallback } from "react";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";

@@ -3,7 +3,7 @@ import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomItemContextMenuWrapper from "@UserInterface/Components/Room/Item/ContextMenu/RoomItemContextMenuWrapper";
 import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserContextMenuButton";
 import UserContextMenuElement from "@UserInterface/Components/Room/Users/UserContextMenuElement";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
 import { webSocketClient } from "@Game/index";
 
 export type RoomFurnitureTraxContextMenuProps = {

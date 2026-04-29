@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
-import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import { webSocketClient } from "../../../..";
 import RoomThumbnail from "../Thumbnail/RoomThumbnail";
-import { useUser } from "../../../Hooks/useUser";
+import { useUser } from "../../../Hooks2/useUser";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import { SetUserHomeRoomData } from "@pixel63/events";
 
 export type RoomInformationDialogProps = {

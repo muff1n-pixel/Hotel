@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getTimeSinceDate from "@UserInterface/Utils/getTimeSinceDate";
+import getTimeSinceDate from "@UserInterface/Utils2/getTimeSinceDate";
 
 export type TimeSinceDateProps = {
     date: Date;

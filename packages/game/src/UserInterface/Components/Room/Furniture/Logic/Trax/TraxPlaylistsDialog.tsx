@@ -7,8 +7,8 @@ import TraxDialogListPanelItem from "@UserInterface/Common/Dialog/Layouts/Trax/C
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { useUser } from "@UserInterface/Hooks/useUser";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useUser } from "@UserInterface/Hooks2/useUser";
 import { useCallback, useMemo, useState } from "react";
 import { webSocketClient } from "@Game/index";
 

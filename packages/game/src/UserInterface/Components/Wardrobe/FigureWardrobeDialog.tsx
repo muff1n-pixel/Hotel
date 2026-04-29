@@ -7,7 +7,7 @@ import WardrobeSelection from "./Selection/WardrobeSelection";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { FigureConfigurationData, GetUserClothesData, UserClothesData, UserClothingData } from "@pixel63/events";
 import { webSocketClient } from "@Game/index";
-import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
+import { usePermissionAction } from "@UserInterface/Hooks2/usePermissionAction";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WardrobeFigures from "@UserInterface/Components/Wardrobe/Components/WardrobeFigures";
 import WardrobeEffects from "@UserInterface/Components/Wardrobe/Selection/WardrobeEffects";

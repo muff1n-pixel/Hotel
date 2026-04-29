@@ -3,7 +3,7 @@ import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import RoomFloorPlanEditor, { RoomFloorPlanTool } from "./RoomFloorPlanEditor";
-import { useRoomInstance } from "../../../Hooks/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../../..";
 import Checkbox from "../../../Common/Form/Components/Checkbox";

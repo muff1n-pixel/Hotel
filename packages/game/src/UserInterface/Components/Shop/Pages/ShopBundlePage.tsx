@@ -5,7 +5,7 @@ import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";

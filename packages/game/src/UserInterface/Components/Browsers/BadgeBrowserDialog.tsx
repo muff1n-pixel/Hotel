@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import { BadgeBrowserData, BadgeData, GetBadgeBrowserData } from "@pixel63/events";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../Hooks/useDialogs";
-import { usePermissionAction } from "../../Hooks/usePermissionAction";
+import { useDialogs } from "../../Hooks2/useDialogs";
+import { usePermissionAction } from "../../Hooks2/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";

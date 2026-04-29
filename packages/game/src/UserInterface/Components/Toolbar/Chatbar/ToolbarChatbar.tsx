@@ -1,7 +1,7 @@
 import { CSSProperties, useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
-import { useDialogs } from "../../../Hooks/useDialogs";
+import { useDialogs } from "../../../Hooks2/useDialogs";
 import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
 
 export type ToolbarChatbarProps = {

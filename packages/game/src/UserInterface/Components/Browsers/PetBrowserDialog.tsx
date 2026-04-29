@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { GetPetBrowserData, PetBrowserData, PetData } from "@pixel63/events";
 import { webSocketClient } from "../../..";
-import { useDialogs } from "../../Hooks/useDialogs";
+import { useDialogs } from "../../Hooks2/useDialogs";
 import PetPaletteItem from "../Pets/PetPaletteItem";
-import { usePermissionAction } from "../../Hooks/usePermissionAction";
+import { usePermissionAction } from "../../Hooks2/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import PetImage from "@UserInterface/Components/Pets/PetImage";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";

@@ -1,6 +1,6 @@
 import { FurnitureData, GetShopFurnitureLinkData, ShopFurnitureLinkData } from "@pixel63/events";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
 import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 

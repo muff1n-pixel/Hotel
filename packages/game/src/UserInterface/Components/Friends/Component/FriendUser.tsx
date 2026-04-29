@@ -4,8 +4,8 @@ import { Fragment } from "react/jsx-runtime";
 import { webSocketClient } from "@Game/index";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import useFriends from "@UserInterface/Hooks/useFriends";
+import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import useFriends from "@UserInterface/Hooks2/useFriends";
 
 export type FriendUserProps = {
     friend: UserFriendData;
