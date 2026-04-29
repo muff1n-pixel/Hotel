@@ -38,7 +38,7 @@ jobs:
 
       - name: Download Ubuntu fonts
         run: |
-          mkdir -p assets/fonts/ubuntu
+          mkdir -p assets/fonts/Ubuntu
           curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Regular.ttf -o assets/fonts/Ubuntu/Ubuntu-Regular.ttf
           curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Italic.ttf -o assets/fonts/Ubuntu/Ubuntu-Italic.ttf
           curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Bold.ttf -o assets/fonts/Ubuntu/Ubuntu-Bold.ttf
