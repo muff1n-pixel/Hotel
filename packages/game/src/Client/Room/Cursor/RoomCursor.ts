@@ -118,7 +118,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        if(this.roomRenderer.camera.dragged) {
+        if(this.roomRenderer.camera.dragging) {
             return;
         }
         
