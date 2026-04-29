@@ -4,7 +4,7 @@ import { StrictMode } from 'react';
 import "../UserInterface/Styles/fonts.css";
 import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
-import Loader from './components/Loader';
+import Loader from './Components/Loader';
 
 export default class LoaderInstance {
   private readonly root: Root;
