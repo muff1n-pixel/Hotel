@@ -46,11 +46,6 @@ CREATE TABLE `shop_page_bundles` (
 -- Dumping data for table `shop_page_bundles`
 --
 
-LOCK TABLES `shop_page_bundles` WRITE;
-/*!40000 ALTER TABLE `shop_page_bundles` DISABLE KEYS */;
-INSERT INTO `shop_page_bundles` VALUES ('bbb85bc1-9dec-4bbf-b45e-b994f349859a',100,0,0,'2026-03-17 18:28:47','2026-03-18 16:43:12','9e537f60-eb35-44f8-8999-523b02b18250','9f07e5c5-03cb-4aff-8b17-8ca56c592084','SHH16');
-/*!40000 ALTER TABLE `shop_page_bundles` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
