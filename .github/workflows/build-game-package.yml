@@ -36,6 +36,18 @@ jobs:
         working-directory: packages/game
         run: NODE_ENV=development npm install
 
+      - name: Download Ubuntu fonts
+        run: |
+          mkdir -p assets/fonts/ubuntu
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Regular.ttf -o assets/fonts/Ubuntu/Ubuntu-Regular.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Italic.ttf -o assets/fonts/Ubuntu/Ubuntu-Italic.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Bold.ttf -o assets/fonts/Ubuntu/Ubuntu-Bold.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-BoldItalic.ttf -o assets/fonts/Ubuntu/Ubuntu-BoldItalic.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Light.ttf -o assets/fonts/Ubuntu/Ubuntu-Light.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-LightItalic.ttf -o assets/fonts/Ubuntu/Ubuntu-LightItalic.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-Medium.ttf -o assets/fonts/Ubuntu/Ubuntu-Medium.ttf
+          curl -L https://github.com/google/fonts/raw/main/ofl/ubuntu/Ubuntu-MediumItalic.ttf -o assets/fonts/Ubuntu/Ubuntu-MediumItalic.ttf
+
       - name: Build package
         working-directory: packages/game
         run: NODE_ENV=development npm run build
