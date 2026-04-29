@@ -4,7 +4,7 @@ import RoomItemContextMenuWrapper from "@UserInterface/Components/Room/Item/Cont
 import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserContextMenuButton";
 import UserContextMenuElement from "@UserInterface/Components/Room/Users/UserContextMenuElement";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type RoomFurnitureTraxContextMenuProps = {
     roomFurniture: RoomFurniture;

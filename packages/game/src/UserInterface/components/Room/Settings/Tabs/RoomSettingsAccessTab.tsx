@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import Input from "../../../../Common/Form/Components/Input";
 import Radio from "@UserInterface/Common/Form/Components/Radio";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 import { UpdateRoomInformationData } from "@pixel63/events";
 
 export default function RoomSettingsAccessTab() {

@@ -1,7 +1,7 @@
 import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import ToolbarChatbar from "./Chatbar/ToolbarChatbar";
 import { useEffect, useState } from "react";
-import ToolbarFriends from "src/UserInterface/Components/Toolbar/ToolbarFriends";
+import ToolbarFriends from "@UserInterface/Components/Toolbar/ToolbarFriends";
 import ToolbarLinks from "@UserInterface/Components/Toolbar/ToolbarLinks";
 
 export default function Toolbar() {

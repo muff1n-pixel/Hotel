@@ -4,7 +4,7 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 import { RoomPositionData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetSprite from "@Client/Room/Items/Pets/RoomPetSprite";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
 
 export default class RoomPetItem extends RoomItem {

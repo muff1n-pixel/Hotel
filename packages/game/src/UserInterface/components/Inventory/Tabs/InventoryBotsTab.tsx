@@ -9,7 +9,7 @@ import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { useUser } from "../../../Hooks/useUser";
 import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export default function InventoryBotsTab() {
     const user = useUser();

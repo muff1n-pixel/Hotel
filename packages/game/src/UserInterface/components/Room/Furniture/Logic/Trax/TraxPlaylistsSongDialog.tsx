@@ -8,7 +8,7 @@ import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useEffect, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type TraxPlaylistsSongDialogProps = {
     hidden?: boolean;

@@ -3,7 +3,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { EnterRoomData, RoomInformationData } from "@pixel63/events";
 import { useCallback, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 import Input from "@UserInterface/Common/Form/Components/Input";
 
 export type RoomPasswordDialogProps = {

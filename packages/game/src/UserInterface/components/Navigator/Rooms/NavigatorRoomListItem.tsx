@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
-import NavigatorRoomProfile from "src/UserInterface/Components/Navigator/Rooms/NavigatorRoomProfile";
+import NavigatorRoomProfile from "@UserInterface/Components/Navigator/Rooms/NavigatorRoomProfile";
 import { NavigatorRoomData } from "@pixel63/events";
 import NavigatorRoomLock from "@UserInterface/Components/Navigator/Rooms/NavigatorRoomLock";
 

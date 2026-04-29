@@ -64,6 +64,7 @@
   },
   "alias": {
     "@Client/*": "./src/Client/$1",
-    "@UserInterface/*": "./src/UserInterface/$1"
+    "@UserInterface/*": "./src/UserInterface/$1",
+    "@Game/*": "./src/$1"
   }
 }

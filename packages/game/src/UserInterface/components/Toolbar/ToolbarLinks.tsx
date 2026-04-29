@@ -7,7 +7,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useEffect, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export default function ToolbarLinks() {
     const user = useUser();

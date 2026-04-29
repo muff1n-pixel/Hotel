@@ -10,7 +10,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useCallback, useMemo, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type TraxPlaylistsDialogProps = {
     hidden?: boolean;

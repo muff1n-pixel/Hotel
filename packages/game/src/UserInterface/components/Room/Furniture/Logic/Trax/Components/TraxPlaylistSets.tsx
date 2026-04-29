@@ -4,7 +4,7 @@ import TraxDialogSet from "@UserInterface/Common/Dialog/Layouts/Trax/Components/
 import TraxDialogSets from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSets";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type TraxPlaylistSetsProps = {
     audioContext: React.RefObject<AudioContext>;

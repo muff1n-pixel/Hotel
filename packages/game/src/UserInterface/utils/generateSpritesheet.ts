@@ -13,8 +13,8 @@ export function createSpritesheet() {
         ],
         layout: "packed",
         stylesheet: "css",
-        spritePath: "src/UserInterface/styles/spritesheet.png",
-        stylesheetPath: "src/UserInterface/styles/spritesheet.css",
+        spritePath: "@UserInterface/styles/spritesheet.png",
+        stylesheetPath: "@UserInterface/styles/spritesheet.css",
         stylesheetOptions: {
             nameMapping: ((file: string) => {
                 let name = file.split('/').filter((directory) => !(directory === '.' || directory === 'images')).join('_').replace('.png', '').replace('src_UserInterface_', '');

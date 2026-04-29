@@ -8,7 +8,7 @@ import { FurnitureCrackableData, FurnitureCrackableRewardData, FurnitureData, Ge
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type EditFurnitureCrackableDialogProps = {

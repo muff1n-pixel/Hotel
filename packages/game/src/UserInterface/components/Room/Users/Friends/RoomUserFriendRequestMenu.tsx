@@ -1,9 +1,9 @@
 import useRoomItemScreenPosition from "../../Users/Hooks/useRoomItemScreenPosition";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { RoomUser } from "@Client/Room/RoomInstance";
-import UserLink from "src/UserInterface/Common/Users/UserLink";
-import DialogButton from "src/UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { webSocketClient } from "src";
+import UserLink from "@UserInterface/Common/Users/UserLink";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { webSocketClient } from "@Game/index";
 import { UpdateUserFriendRequestData } from "@pixel63/events";
 import { useState } from "react";
 

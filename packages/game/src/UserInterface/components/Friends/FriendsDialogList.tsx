@@ -1,13 +1,13 @@
 import { RemoveUserFriendData, UserFriendData } from "@pixel63/events";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import { Fragment, useEffect, useState } from "react";
-import { webSocketClient } from "src";
-import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
-import DialogButton from "src/UserInterface/Common/Dialog/Components/Button/DialogButton";
-import DialogScrollArea from "src/UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
-import FriendUser from "src/UserInterface/Components/Friends/Component/FriendUser";
-import useFriends from "src/UserInterface/Hooks/useFriends";
+import { webSocketClient } from "@Game/index";
+import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import FriendUser from "@UserInterface/Components/Friends/Component/FriendUser";
+import useFriends from "@UserInterface/Hooks/useFriends";
 
 export default function FriendsDialogList() {
     const { friends, offlineFriends, incomingRequests, outgoingRequests } = useFriends();

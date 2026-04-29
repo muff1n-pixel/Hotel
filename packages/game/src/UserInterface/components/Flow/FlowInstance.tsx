@@ -2,7 +2,7 @@ import WidgetNotification from "@UserInterface/Common/Widgets/WidgetNotification
 import RoomTraxMachineWidget from "@UserInterface/Components/Room/Widget/RoomTraxMachineWidget";
 import Widget from "@UserInterface/Components/Widget/Widget";
 import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotifications";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 
 export default function FlowInstance() {
     const widgetNotifications = useWidgetNotifications();

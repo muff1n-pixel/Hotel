@@ -3,7 +3,7 @@ import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import useUserFigures from "@UserInterface/Components/Wardrobe/Hooks/useUserFigures";
 import { useCallback } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type WardrobeFiguresProps = {
     figureConfiguration: FigureConfigurationData;

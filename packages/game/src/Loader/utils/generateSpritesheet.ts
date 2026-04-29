@@ -13,8 +13,8 @@ export function createSpritesheet() {
         ],
         layout: "packed",
         stylesheet: "css",
-        spritePath: "src/Loader/styles/spritesheet.png",
-        stylesheetPath: "src/Loader/styles/spritesheet.css",
+        spritePath: "@Game/Loader/styles/spritesheet.png",
+        stylesheetPath: "@Game/Loader/styles/spritesheet.css",
         stylesheetOptions: {
             nameMapping: ((file: string) => {
                 let name = file.split('/').filter((directory) => !(directory === '.' || directory === 'images')).join('_').replace('.png', '').replace('src_Loader_', '');

@@ -9,7 +9,7 @@ import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { webSocketClient } from "../../../../../..";
 import { SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
-import useFriends from "src/UserInterface/Hooks/useFriends";
+import useFriends from "@UserInterface/Hooks/useFriends";
 
 export type RoomUserContextMenuProps = {
     item: RoomFigureItem;

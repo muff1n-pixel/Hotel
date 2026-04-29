@@ -4,7 +4,7 @@ import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/Fu
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FigureConfigurationData } from "@pixel63/events";
 import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
-import { Figure } from "src/library";
+import { Figure } from "@Game/library";
 
 export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer {
     public placement?: "wall" | "floor" | undefined;

@@ -1,6 +1,6 @@
 import FigureRenderer, { SpriteConfiguration } from "@Client/Figure/Renderer/FigureRenderer";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureSpriteBuilder {
     constructor(private readonly figureRenderer: FigureRenderer) {

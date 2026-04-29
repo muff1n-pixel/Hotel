@@ -1,7 +1,7 @@
-import DialogTabs from "src/UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
-import Dialog from "src/UserInterface/Common/Dialog/Dialog";
-import FriendsDialogList from "src/UserInterface/Components/Friends/FriendsDialogList";
-import FriendsDialogSearch from "src/UserInterface/Components/Friends/FriendsDialogSearch";
+import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
+import Dialog from "@UserInterface/Common/Dialog/Dialog";
+import FriendsDialogList from "@UserInterface/Components/Friends/FriendsDialogList";
+import FriendsDialogSearch from "@UserInterface/Components/Friends/FriendsDialogSearch";
 
 export type FriendsDialogProps = {
     hidden?: boolean;

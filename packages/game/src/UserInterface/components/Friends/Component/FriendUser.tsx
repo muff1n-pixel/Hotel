@@ -1,11 +1,11 @@
 import { SendUserFriendRequestData, UpdateUserFriendRequestData, UserFriendData } from "@pixel63/events";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import { Fragment } from "react/jsx-runtime";
-import { webSocketClient } from "src";
-import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
-import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
-import useFriends from "src/UserInterface/Hooks/useFriends";
+import { webSocketClient } from "@Game/index";
+import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import useFriends from "@UserInterface/Hooks/useFriends";
 
 export type FriendUserProps = {
     friend: UserFriendData;

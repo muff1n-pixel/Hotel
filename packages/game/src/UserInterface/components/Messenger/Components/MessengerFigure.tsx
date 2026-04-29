@@ -1,5 +1,5 @@
 import { FigureConfigurationData } from "@pixel63/events";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export type MessengerFigureProps = {
     figureConfiguration?: FigureConfigurationData;

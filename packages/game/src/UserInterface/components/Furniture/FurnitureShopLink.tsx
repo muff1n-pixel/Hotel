@@ -2,7 +2,7 @@ import { FurnitureData, GetShopFurnitureLinkData, ShopFurnitureLinkData } from "
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type FurnitureShopLinkProps = {
     furniture: FurnitureData;

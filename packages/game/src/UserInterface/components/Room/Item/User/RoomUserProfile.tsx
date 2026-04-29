@@ -6,7 +6,7 @@ import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomUserProfileProps = {

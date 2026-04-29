@@ -1,6 +1,6 @@
 import { GetUserEffectsData, UserClothingUnlockedData, UserEffectsData } from "@pixel63/events";
 import { useEffect, useRef, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export default function useEffects() {
     const requested = useRef<boolean>(null);

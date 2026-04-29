@@ -1,6 +1,6 @@
 import { AchievementData, AchievementsData, GetAchievementsData } from "@pixel63/events";
 import { useEffect, useRef, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export function useAchievements(categoryId: string) {
     const requested = useRef<string>(undefined);

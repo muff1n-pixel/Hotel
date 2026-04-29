@@ -6,7 +6,7 @@ import { figurePartSets } from "@Client/Figure/Renderer/Geometry/FigurePartSets"
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import { FigureAnimationData } from "@Client/Interfaces/Figure/FigureAnimationData";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureActions {
     public effectTypeRemaps: Map<string, string> = new Map();

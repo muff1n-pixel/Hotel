@@ -1,6 +1,6 @@
 import { GetUserFriendsData, UserFriendData } from "@pixel63/events";
 import { useEffect, useRef, useState } from "react";
-import { clientInstance, webSocketClient } from "src";
+import { clientInstance, webSocketClient } from "@Game/index";
 
 export default function useFriends() {
     const friendsRequested = useRef<boolean>(false);

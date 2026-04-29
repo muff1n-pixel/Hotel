@@ -3,7 +3,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { EnterRoomBellQueueData, ExitRoomBellQueueData, RoomInformationData, UpdateRoomBellQueueData } from "@pixel63/events";
 import { useCallback, useEffect, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type RoomDoorbellDialogProps = {
     data?: RoomInformationData;

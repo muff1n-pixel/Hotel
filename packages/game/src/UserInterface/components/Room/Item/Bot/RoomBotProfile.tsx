@@ -6,7 +6,7 @@ import { useUser } from "../../../../Hooks/useUser";
 import { useCallback } from "react";
 import { webSocketClient } from "../../../../..";
 import { UpdateRoomBotData } from "@pixel63/events";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;

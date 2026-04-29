@@ -7,7 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export type EditShopBotDialogProps = {
     data: Partial<ShopBotData> & {

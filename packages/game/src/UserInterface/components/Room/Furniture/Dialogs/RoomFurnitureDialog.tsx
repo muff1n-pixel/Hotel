@@ -6,7 +6,7 @@ import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable"
 import Input from "../../../../Common/Form/Components/Input";
 import { useState } from "react";
 import Selection from "../../../../Common/Form/Components/Selection";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 
 export type RoomFurnitureDialogProps = {
     hidden?: boolean;

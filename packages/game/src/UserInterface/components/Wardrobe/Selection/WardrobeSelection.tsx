@@ -6,7 +6,7 @@ import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FigureConfigurationData, UpdateClothingData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import useClothes from "@UserInterface/Components/Wardrobe/Hooks/useClothes";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";

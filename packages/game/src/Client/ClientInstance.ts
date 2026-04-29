@@ -30,7 +30,7 @@ import LeaveRoomEvent from "@Client/Communications/Room/LeaveRoomEvent";
 import RoomPetsEvent from "@Client/Communications/Room/Pets/RoomPetsEvent";
 import UserFriendsEvent from "@Client/Communications/User/Friends/UserFriendsEvent";
 import UserFriendUpdateEvent from "@Client/Communications/User/Friends/UserFriendUpdateEvent";
-import { MessengerTab } from "src/UserInterface/Components/Messenger/Interfaces/MessengerTab";
+import { MessengerTab } from "@UserInterface/Components/Messenger/Interfaces/MessengerTab";
 import UserFriendMessageEvent from "@Client/Communications/User/Friends/UserFriendMessageEvent";
 import WidgetNotificationEvent from "@Client/Communications/Widget/WidgetNotificationEvent";
 import RoomLockEvent from "@Client/Communications/Room/Lock/RoomLockEvent";

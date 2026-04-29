@@ -3,7 +3,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { RoomBellQueueUserData, UpdateRoomBellQueueData } from "@pixel63/events";
 import { Fragment, useCallback } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 
 export type RoomDoorbellQueueDialogProps = {

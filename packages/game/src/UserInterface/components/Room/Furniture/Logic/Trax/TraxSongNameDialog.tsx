@@ -5,7 +5,7 @@ import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type TraxSongNameDialogProps = {
     hidden?: boolean;

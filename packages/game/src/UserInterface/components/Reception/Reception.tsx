@@ -1,6 +1,6 @@
 import { useUser } from "../../Hooks/useUser";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export default function Reception() {
     const user = useUser();

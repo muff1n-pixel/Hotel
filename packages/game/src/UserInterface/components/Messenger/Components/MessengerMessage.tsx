@@ -1,7 +1,7 @@
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import "./MessengerMessage.css";
 import { FigureConfigurationData } from "@pixel63/events";
-import TimeSinceDate from "src/UserInterface/Common/Date/TimeSinceDate";
+import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 
 export type MessengerMessageProps = {
     name: string;

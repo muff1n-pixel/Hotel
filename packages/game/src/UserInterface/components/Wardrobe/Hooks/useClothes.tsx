@@ -2,8 +2,8 @@ import FigureWardrobe from "@Client/Figure/Wardrobe/FigureWardrobe";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { GetUserClothesData, UserClothesData, UserClothingUnlockedData } from "@pixel63/events";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { webSocketClient } from "src";
-import { FigureAssets } from "src/library";
+import { webSocketClient } from "@Game/index";
+import { FigureAssets } from "@Game/library";
 
 function filterAndSortSets(sets: (FiguredataData["settypes"][0]["sets"][0] | undefined)[] | undefined, gender: string) {
     return sets?.filter((set) => set !== undefined)

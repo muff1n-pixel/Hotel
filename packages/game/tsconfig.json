@@ -10,8 +10,6 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
-    "baseUrl": "./",
-
     /* Emit */
     "noEmit": true,
 
@@ -31,6 +29,7 @@
     "paths": {
       "@Client/*": ["./src/Client/*"],
       "@UserInterface/*": ["./src/UserInterface/*"],
+      "@Game/*": ["./src/*"],
     },
   },
   "parcel-plugin-typescript": {

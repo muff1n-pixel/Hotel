@@ -1,14 +1,14 @@
 import { EnterRoomData } from "@pixel63/events";
 import { useState } from "react";
-import { webSocketClient } from "src";
-import FriendsPanel from "src/UserInterface/Common/Friends/Components/FriendsPanel";
-import Tooltip from "src/UserInterface/Common/Tooltip/Tooltip";
-import ToolbarItem from "src/UserInterface/Components/Toolbar/Items/ToolbarItem";
-import ToolbarToggle from "src/UserInterface/Components/Toolbar/ToolbarToggle";
-import { useDialogs } from "src/UserInterface/Hooks/useDialogs";
-import useFriends from "src/UserInterface/Hooks/useFriends";
-import { useMessenger } from "src/UserInterface/Hooks/useMessenger";
-import { useMessengerUnread } from "src/UserInterface/Hooks/useMessengerUnread";
+import { webSocketClient } from "@Game/index";
+import FriendsPanel from "@UserInterface/Common/Friends/Components/FriendsPanel";
+import Tooltip from "@UserInterface/Common/Tooltip/Tooltip";
+import ToolbarItem from "@UserInterface/Components/Toolbar/Items/ToolbarItem";
+import ToolbarToggle from "@UserInterface/Components/Toolbar/ToolbarToggle";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import useFriends from "@UserInterface/Hooks/useFriends";
+import { useMessenger } from "@UserInterface/Hooks/useMessenger";
+import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
 
 export default function ToolbarFriends() {
     const dialogs = useDialogs();

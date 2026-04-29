@@ -1,19 +1,19 @@
 import { SendUserFriendMessageData } from "@pixel63/events";
 import { useCallback, useEffect, useState } from "react";
-import { clientInstance, webSocketClient } from "src";
-import DialogContent from "src/UserInterface/Common/Dialog/Components/DialogContent";
-import DialogScrollArea from "src/UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import Dialog from "src/UserInterface/Common/Dialog/Dialog";
-import Input from "src/UserInterface/Common/Form/Components/Input";
-import UserLink from "src/UserInterface/Common/Users/UserLink";
-import MessengerFigure from "src/UserInterface/Components/Messenger/Components/MessengerFigure";
-import MessengerMessage from "src/UserInterface/Components/Messenger/Components/MessengerMessage";
-import MessengerStatus from "src/UserInterface/Components/Messenger/Components/MessengerStatus";
-import { MessengerTab } from "src/UserInterface/Components/Messenger/Interfaces/MessengerTab";
-import useFriends from "src/UserInterface/Hooks/useFriends";
-import { useMessenger } from "src/UserInterface/Hooks/useMessenger";
-import { useMessengerUnread } from "src/UserInterface/Hooks/useMessengerUnread";
-import { useUser } from "src/UserInterface/Hooks/useUser";
+import { clientInstance, webSocketClient } from "@Game/index";
+import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
+import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
+import Dialog from "@UserInterface/Common/Dialog/Dialog";
+import Input from "@UserInterface/Common/Form/Components/Input";
+import UserLink from "@UserInterface/Common/Users/UserLink";
+import MessengerFigure from "@UserInterface/Components/Messenger/Components/MessengerFigure";
+import MessengerMessage from "@UserInterface/Components/Messenger/Components/MessengerMessage";
+import MessengerStatus from "@UserInterface/Components/Messenger/Components/MessengerStatus";
+import { MessengerTab } from "@UserInterface/Components/Messenger/Interfaces/MessengerTab";
+import useFriends from "@UserInterface/Hooks/useFriends";
+import { useMessenger } from "@UserInterface/Hooks/useMessenger";
+import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
+import { useUser } from "@UserInterface/Hooks/useUser";
 
 export type MessengerDialogProps = {
     hidden?: boolean;

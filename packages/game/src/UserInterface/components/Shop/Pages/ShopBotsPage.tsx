@@ -8,7 +8,7 @@ import { useUser } from "../../../Hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { PurchaseShopBotData, ShopBotData } from "@pixel63/events";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();

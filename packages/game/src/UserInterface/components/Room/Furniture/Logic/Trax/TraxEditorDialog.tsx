@@ -10,7 +10,7 @@ import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/H
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { webSocketClient } from "src";
+import { webSocketClient } from "@Game/index";
 
 export type TraxEditorDialogProps = {
     hidden?: boolean;
