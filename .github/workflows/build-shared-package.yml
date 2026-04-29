@@ -20,9 +20,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Download generated events
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: generate-events.yml
+          workflow_conclusion: success
+          name: generated-events
+          path: packages/events/build/
+
       - name: Install dependencies
         working-directory: packages/shared
-        run: npm install
+        run: npm ci
 
       - name: Build package
         working-directory: packages/shared
