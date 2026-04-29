@@ -3,7 +3,7 @@ import Skeleton from '../../Images/community/habbo_skeleton.gif';
 
 // TODO: add type declarations
 //@ts-expect-error
-import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
+import { FigureAssets, Figure } from "@pixel63/game";
 
 type UserProps = {
     name?: string | null;
@@ -19,7 +19,7 @@ const CommunityUser = ({ name = null, motto = null, figureConfiguration = null }
             FigureAssets.loadAssets().then(() => {
                 const figure = new Figure(figureConfiguration, 4);
 
-                figure.renderToCanvas(new FigureWorkerMainThread(), 0, false).then(({ figure }: any) => {
+                figure.renderToCanvas(new Figure(), 0, false).then(({ figure }: any) => {
                     const context = figureCanvasRef.current?.getContext("2d");
 
                     if(!context) {
