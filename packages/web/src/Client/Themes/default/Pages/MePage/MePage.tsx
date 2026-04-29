@@ -14,7 +14,7 @@ import UnknowUserImage from '../../Images/unknow_user.gif';
 
 // TODO: add type declarations
 //@ts-expect-error
-import { FigureAssets, Figure, FigureWorkerMainThread } from "@pixel63/game";
+import { FigureAssets, Figure } from "@pixel63/game";
 
 const MePage = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const MePage = () => {
                 FigureAssets.loadAssets().then(() => {
                     const figure = new Figure(currentUser.figureConfiguration, 2);
 
-                    figure.renderToCanvas(new FigureWorkerMainThread(), 0, false).then(({ figure }: any) => {
+                    figure.renderToCanvas(0, false).then(({ figure }: any) => {
                         const context = figureCanvasRef.current?.getContext("2d");
 
                         if(!context) {
