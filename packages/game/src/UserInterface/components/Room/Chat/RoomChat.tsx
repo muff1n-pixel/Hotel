@@ -247,8 +247,8 @@ export default function RoomChat() {
                         left: message.left,
                         bottom: message.index * 32,
                         transition: "bottom 320ms",
-                        cursor: message.userId ? "pointer" : "default",
-                        pointerEvents: message.userId ? "auto" : "none"
+                        cursor: (message.userId)?("pointer"):("default"),
+                        pointerEvents: (message.userId)?("auto"):("none")
                     }} onClick={() => onClickUserMessage(message)}>
                         <OffscreenCanvasRender offscreenCanvas={message.image}/>
                     </div>
