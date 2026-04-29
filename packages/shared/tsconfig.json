@@ -3,7 +3,7 @@
   "compilerOptions": {
     // File Layout
     "rootDir": "./",
-    "outDir": "../../build/shared",
+    "outDir": "./build",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
