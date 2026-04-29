@@ -1,11 +1,11 @@
-name: Generate Events
+name: Generate events
 
 on:
   pull_request:
 
 jobs:
   generate-events:
-    name: Generate event files
+    name: Generate events
     runs-on: ubuntu-latest
 
     outputs:

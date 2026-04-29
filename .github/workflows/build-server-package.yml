@@ -1,0 +1,42 @@
+name: Build server package
+
+on:
+  workflow_run:
+    workflows:
+      - Generate events
+      - Build shared package
+    types:
+      - completed
+
+jobs:
+  build-server-package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download generated events
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: generate-events.yml
+          workflow_conclusion: success
+          name: generated-events
+          path: packages/events/build/
+
+      - name: Download built shared package
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: build-shared-package.yml
+          workflow_conclusion: success
+          name: shared-package
+          path: packages/shared/build/
+
+      - name: Install dependencies
+        working-directory: packages/server
+        run: npm ci
+
+      - name: Build package
+        working-directory: packages/server
+        run: npm run build
