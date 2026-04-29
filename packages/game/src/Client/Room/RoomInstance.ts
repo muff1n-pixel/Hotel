@@ -351,6 +351,21 @@ export default class RoomInstance {
         this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(furniture.item), 1);
         this.furnitures.splice(this.furnitures.indexOf(furniture), 1);
 
+        if(this.clientInstance.dialogs.value) {
+            this.clientInstance.dialogs.value = this.clientInstance.dialogs.value.filter(
+                (dialog) => !(dialog.type === "room-furniture-logic" && (dialog.data as any)?.data?.id === roomFurnitureId)
+            );
+            this.clientInstance.dialogs.update();
+        }
+
+        if(furniture.furnitureData.interactionType === "background_toner") {
+            this.setBackgroundToner({ $type: 'UserFurnitureTonerData', enabled: false, color: "" });
+        }
+
+        if(furniture.furnitureData.interactionType === "dimmer") {
+            this.setMoodlight({ $type: 'UserFurnitureMoodlightData', enabled: false, color: "", alpha: 0, backgroundOnly: false });
+        }
+
         this.clientInstance.roomInstance.update();
     }
 
