@@ -50,3 +50,4 @@ jobs:
           name: generated-events
           path: packages/events/build/
           if-no-files-found: error
+          retention-days: 1
