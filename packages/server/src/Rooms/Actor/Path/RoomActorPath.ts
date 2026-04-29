@@ -164,6 +164,8 @@ export default class RoomActorPath {
             return false;
         }
 
+        this.walkThroughFurniture = walkThroughFurniture;
+
         if(!this.isNextPositionFree(path[0]!, path)) {
             onCancel?.();
 
@@ -171,7 +173,6 @@ export default class RoomActorPath {
         }
 
         this.path = path;
-        this.walkThroughFurniture = walkThroughFurniture;
         this.pathOnFinish = onFinish;
         this.pathOnCancel = onCancel;
         this.pathJump = jump;
