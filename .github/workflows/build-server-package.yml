@@ -16,9 +16,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: generated-events
-          run-id: ${{ github.event.workflow_run.id }}
           path: packages/events/build/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install events dependencies
         working-directory: packages/events
@@ -28,9 +26,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: shared-package
-          run-id: ${{ github.event.workflow_run.id }}
           path: packages/shared/build/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install shared dependencies
         working-directory: packages/shared
