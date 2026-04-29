@@ -5,12 +5,12 @@ import RoomFloorItem from "../Map/RoomFloorItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomFloorSprite extends RoomSprite {
-    priority = -3000;
-
     private readonly offset: MousePosition;
 
-    constructor(public readonly item: RoomFloorItem, private readonly image: OffscreenCanvas) {
+    constructor(public readonly item: RoomFloorItem, private readonly image: OffscreenCanvas, elevated: boolean = false) {
         super(item);
+
+        this.priority = elevated ? -50 : -3000;
 
         this.offset = {
             left: -(this.item.floorRenderer.rows * 32),
