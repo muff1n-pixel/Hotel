@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../..";
@@ -12,6 +12,7 @@ type RoomChatMessage = {
     image: ImageBitmap;
     left: number;
     index: number;
+    userId?: string;
 };
 
 function moveMessagesUp(messages: RoomChatMessage[], bottomMessage: RoomChatMessage) {
@@ -141,7 +142,8 @@ export default function RoomChat() {
                     id: Math.random(),
                     image,
                     left,
-                    index: -1
+                    index: -1,
+                    userId: payload.actor?.user?.userId
                 };
 
                 moveMessagesUp(messages.current, newMessage);
@@ -213,6 +215,22 @@ export default function RoomChat() {
         };
     }, [messages.current.length]);
 
+    const onClickUserMessage = useCallback((message: RoomChatMessage) => {
+        if(!room) {
+            return;
+        }
+
+        if(!message.userId) {
+            return;
+        }
+
+        const roomUser = room.users.find((user) => user.data.id === message.userId);
+
+        if(roomUser) {
+            room.roomRenderer.focusedItem.value = roomUser.item;
+        }
+    }, [room]);
+
     return (
         <div ref={rootRef} style={{
             position: "absolute",
@@ -228,8 +246,10 @@ export default function RoomChat() {
                         position: "absolute",
                         left: message.left,
                         bottom: message.index * 32,
-                        transition: "bottom 320ms"
-                    }}>
+                        transition: "bottom 320ms",
+                        cursor: (message.userId)?("pointer"):("default"),
+                        pointerEvents: (message.userId)?("auto"):("none")
+                    }} onClick={() => onClickUserMessage(message)}>
                         <OffscreenCanvasRender offscreenCanvas={message.image}/>
                     </div>
                 );
