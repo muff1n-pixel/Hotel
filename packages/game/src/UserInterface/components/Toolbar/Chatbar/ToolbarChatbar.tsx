@@ -166,6 +166,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
                 onKeyUp={(event) => event.key === "Enter" && handleSubmit()}
                 placeholder="Click here to chat..."
+                maxLength={100}
                 style={{
                     flex: 1,
                     border: "none",

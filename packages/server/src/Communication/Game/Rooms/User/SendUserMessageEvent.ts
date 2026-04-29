@@ -15,6 +15,10 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
             throw new Error("Message is empty.");
         }
 
+        if(payload.message.length > 100) {
+            throw new Error("Message exceeds 100 characters.");
+        }
+
         const roomUser = user.room.getRoomUser(user);
 
         roomUser.lastActivity = performance.now();
