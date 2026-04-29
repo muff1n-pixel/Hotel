@@ -17,10 +17,14 @@ export default class RoomFloorItem extends RoomItem {
     }
 
     render() {
-        this.floorRenderer.renderOffScreen().then(({ floor, shadow }) => {
+        this.floorRenderer.renderOffScreen().then(({ floor, elevatedFloor, shadow }) => {
             this.sprites = [];
 
             this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(floor)));
+
+            if(elevatedFloor) {
+                this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(elevatedFloor), true));
+            }
 
             if(shadow) {
                 this.sprites.push(new RoomFloorShadowSprite(this, shadow));

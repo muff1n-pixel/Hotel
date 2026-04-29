@@ -156,12 +156,40 @@ export default class FloorRenderer {
 
         this.tiles = [];
 
-        for(let currentDepth = 0; currentDepth <= this.depth; currentDepth++) {
-            const currentRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
+        const doorDepth = this.structure.door
+            ? this.parseDepth(this.getTileDepth(this.structure.door.row, this.structure.door.column))
+            : 0;
+        const groundLevel = doorDepth === 'X' ? 0 : doorDepth;
+
+        const groundRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) <= groundLevel);
+        const elevatedRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) > groundLevel);
+
+        for(let currentDepth = 0; currentDepth <= groundLevel; currentDepth++) {
+            const currentRectangles = groundRectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
 
             this.renderLeftEdges(context, currentRectangles, leftEdgeImage.image);
             this.renderRightEdges(context, currentRectangles, rightEdgeImage.image);
             this.renderTiles(context, currentRectangles, tileImage.image);
+        }
+
+        let elevatedCanvas: OffscreenCanvas | undefined = undefined;
+
+        if(elevatedRectangles.length > 0) {
+            elevatedCanvas = new OffscreenCanvas(width, height);
+
+            const elevatedContext = elevatedCanvas.getContext("2d");
+
+            if(!elevatedContext) {
+                throw new ContextNotAvailableError();
+            }
+
+            for(let currentDepth = groundLevel + 1; currentDepth <= this.depth; currentDepth++) {
+                const currentRectangles = elevatedRectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
+
+                this.renderLeftEdges(elevatedContext, currentRectangles, leftEdgeImage.image);
+                this.renderRightEdges(elevatedContext, currentRectangles, rightEdgeImage.image);
+                this.renderTiles(elevatedContext, currentRectangles, tileImage.image);
+            }
         }
 
         let shadowCanvas: OffscreenCanvas | undefined = undefined;
@@ -177,10 +205,15 @@ export default class FloorRenderer {
 
             shadowContext.filter = "blur(10px) brightness(0%) opacity(50%)";
             shadowContext.drawImage(canvas, 0, 10);
+
+            if(elevatedCanvas) {
+                shadowContext.drawImage(elevatedCanvas, 0, 10);
+            }
         }
 
         return {
             floor: canvas,
+            elevatedFloor: elevatedCanvas,
             shadow: shadowCanvas
         };
     }
