@@ -1,7 +1,7 @@
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
 
-import "../UserInterface/styles/fonts.css";
+import "../UserInterface/Styles/fonts.css";
 import "./styles/spritesheet.css";
 import "./styles/spritesheet.png";
 import Loader from './components/Loader';
