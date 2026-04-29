@@ -83,6 +83,7 @@ export default class RoomCamera {
 
         this.moving = false;
         this.lastPosition = null;
+        this.dragging = false;
     }
 
     private mouseleave() {
