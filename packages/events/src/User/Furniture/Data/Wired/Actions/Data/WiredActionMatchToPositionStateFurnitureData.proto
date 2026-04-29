@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Room/RoomPositionData.proto";
+
+message WiredActionMatchToPositionStateFurnitureData {
+    string furniture_id = 1;
+
+    uint32 animation = 2;
+    uint32 direction = 3;
+    RoomPositionData position = 4;
+};

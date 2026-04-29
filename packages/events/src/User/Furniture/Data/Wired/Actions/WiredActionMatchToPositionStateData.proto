@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "User/Furniture/Data/Wired/Actions/Data/WiredActionMatchToPositionStateFurnitureData.proto";
+
+message WiredActionMatchToPositionStateData {
+    bool match_state = 1;
+    bool match_direction = 2;
+    bool match_position = 3;
+    bool match_altitude = 4;
+
+    repeated WiredActionMatchToPositionStateFurnitureData furniture = 5;
+    uint32 delay_in_seconds = 6;
+}
