@@ -12,7 +12,6 @@ import { RoomActorIdentifierData, RoomClickData, RoomDoubleClickData, RoomInform
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
-import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
@@ -355,14 +354,15 @@ export default class RoomInstance {
             this.clientInstance.dialogs.value = this.clientInstance.dialogs.value.filter(
                 (dialog) => !(dialog.type === "room-furniture-logic" && (dialog.data as any)?.data?.id === roomFurnitureId)
             );
+
             this.clientInstance.dialogs.update();
         }
 
-        if(furniture.furnitureData.interactionType === "background_toner") {
+        if(furniture.furnitureData.interactionType === "background_toner" && furniture.data.data?.toner?.enabled) {
             this.setBackgroundToner({ $type: 'UserFurnitureTonerData', enabled: false, color: "" });
         }
 
-        if(furniture.furnitureData.interactionType === "dimmer") {
+        if(furniture.furnitureData.interactionType === "dimmer" && furniture.data.data?.moodlight?.enabled) {
             this.setMoodlight({ $type: 'UserFurnitureMoodlightData', enabled: false, color: "", alpha: 0, backgroundOnly: false });
         }
 
