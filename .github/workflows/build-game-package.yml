@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: packages/game
-        run: npm ci
+        run: npm install
 
       - name: Build package
         working-directory: packages/game
