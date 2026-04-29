@@ -12,6 +12,7 @@ type RoomChatMessage = {
     image: ImageBitmap;
     left: number;
     index: number;
+    userId?: string;
 };
 
 function moveMessagesUp(messages: RoomChatMessage[], bottomMessage: RoomChatMessage) {
@@ -141,7 +142,8 @@ export default function RoomChat() {
                     id: Math.random(),
                     image,
                     left,
-                    index: -1
+                    index: -1,
+                    userId: payload.actor?.user?.userId
                 };
 
                 moveMessagesUp(messages.current, newMessage);
@@ -213,6 +215,13 @@ export default function RoomChat() {
         };
     }, [messages.current.length]);
 
+    const onClickUserMessage = (message: RoomChatMessage) => {
+        if(message.userId && room) {
+            const roomUser = room.getUserById(message.userId);
+            room.roomRenderer.focusedItem.value = roomUser.item;
+        }
+    }
+
     return (
         <div ref={rootRef} style={{
             position: "absolute",
@@ -228,8 +237,10 @@ export default function RoomChat() {
                         position: "absolute",
                         left: message.left,
                         bottom: message.index * 32,
-                        transition: "bottom 320ms"
-                    }}>
+                        transition: "bottom 320ms",
+                        cursor: message.userId ? "pointer" : "default",
+                        pointerEvents: message.userId ? "auto" : "none"
+                    }} onClick={() => onClickUserMessage(message)}>
                         <OffscreenCanvasRender offscreenCanvas={message.image}/>
                     </div>
                 );
