@@ -231,9 +231,13 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
                     transform: "rotateZ(180deg)",
                     cursor: active ? "pointer" : undefined,
                 }}
-                onMouseDown={(e) => {
-                    if(!active) return;
-                    e.preventDefault();
+                onMouseDown={(event) => {
+                    if(!active) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    
                     scrollBy(ARROW_SCROLL_AMOUNT);
                 }}
             />
