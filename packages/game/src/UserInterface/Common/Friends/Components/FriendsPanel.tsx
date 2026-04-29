@@ -1,6 +1,6 @@
 import { FigureConfigurationData } from "@pixel63/events";
-import DialogPanel from "src/UserInterface/Common/Dialog/Components/Panels/DialogPanel";
-import FigureImage from "src/UserInterface/Common/Figure/FigureImage";
+import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import "./FriendsPanel.css";
 import { useEffect, useRef } from "react";
 

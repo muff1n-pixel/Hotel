@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
 import { UserFriendUpdateData } from "@pixel63/events";
-import { clientInstance } from "src";
+import { clientInstance } from "../../../..";
 
 export default class UserFriendUpdateEvent implements ProtobuffListener<UserFriendUpdateData> {
     async handle(payload: UserFriendUpdateData) {

@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
 import { WidgetNotificationData } from "@pixel63/events";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 
 export default class WidgetNotificationEvent implements ProtobuffListener<WidgetNotificationData> {
     async handle(payload: WidgetNotificationData) {

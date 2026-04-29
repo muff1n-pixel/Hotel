@@ -1,7 +1,7 @@
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectData";
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureEffects {
     constructor(private readonly figureRenderer: FigureRenderer) {

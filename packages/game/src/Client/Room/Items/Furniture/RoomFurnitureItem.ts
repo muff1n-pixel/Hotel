@@ -8,7 +8,7 @@ import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Backgrou
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 
 export default class RoomFurnitureItem extends RoomItem {

@@ -3,7 +3,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
-import { clientInstance } from "src";
+import { clientInstance } from "@Game/index";
 
 export default class RoomFurnitureSprite extends RoomSprite {
     private readonly offset: MousePosition = {

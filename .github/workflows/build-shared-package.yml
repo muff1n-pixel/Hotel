@@ -1,0 +1,47 @@
+name: Build shared package
+
+on:
+  workflow_call:
+
+jobs:
+  build-shared-package:
+    name: Build shared package
+    runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: shared-package
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download generated events
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-events
+          path: packages/events/build/
+
+      - name: Install events dependencies
+        working-directory: packages/events
+        run: npm ci
+
+      - name: Install dependencies
+        working-directory: packages/shared
+        run: npm ci
+
+      - name: Build package
+        working-directory: packages/shared
+        run: npm run build
+
+      - name: Upload built files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-package
+          path: packages/shared/build/
+          if-no-files-found: error
+          retention-days: 1

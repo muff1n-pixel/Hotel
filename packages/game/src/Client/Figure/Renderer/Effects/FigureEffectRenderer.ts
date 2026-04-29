@@ -6,7 +6,7 @@ import { FurnitureAsset } from "@Client/Interfaces/Furniture/FurnitureAssets";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { getGlobalCompositeModeFromInkNumber } from "@Client/Renderers/GlobalCompositeModes";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureEffectRenderer {
     constructor(private readonly figureRenderer: FigureRenderer) {

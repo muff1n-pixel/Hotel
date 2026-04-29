@@ -1,6 +1,6 @@
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureAnimationData } from "@Client/Interfaces/Figure/FigureAnimationData";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureAnimations {
     constructor(private readonly figureRenderer: FigureRenderer) {

@@ -5,7 +5,7 @@ import FigureBodyPartAction from "@Client/Figure/Renderer/Interfaces/FigureBodyP
 import { FurnitureAsset } from "@Client/Interfaces/Furniture/FurnitureAssets";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
-import { FigureAssets } from "src/library";
+import { FigureAssets } from "@Game/library";
 
 export default class FigureSpriteRenderer {
     constructor(private readonly figureRenderer: FigureRenderer) {

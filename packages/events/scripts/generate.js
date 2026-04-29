@@ -33,7 +33,7 @@ if (protoFiles.length === 0) {
     process.exit(0);
 }
 
-if(existsSync(OUT_DIR)) {
+if (existsSync(OUT_DIR)) {
     rmSync(OUT_DIR, {
         recursive: true
     });
@@ -45,14 +45,24 @@ const relativeProtoFiles = protoFiles.map(file =>
     relative(ROOT, file)
 );
 
-const protocPath = path.join("..", "..", "bin", "protoc", "bin", (platform() === "win32")?("protoc.exe"):("protoc"));
+const protocPath = path.join("..", "..", "bin", "protoc", "bin", (platform() === "win32") ? ("protoc.exe") : ("protoc"));
+
+const pluginPath = path.resolve(
+    __dirname,
+    "..",
+    "node_modules",
+    ".bin",
+    platform() === "win32"
+        ? "protoc-gen-ts_proto.cmd"
+        : "protoc-gen-ts_proto"
+);
 
 for (let i = 0; i < relativeProtoFiles.length; i += 20) {
     const chunk = relativeProtoFiles.slice(i, i + 20);
 
     const command = [
         protocPath,
-        `--plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\${(platform() === "win32")?("protoc-gen-ts_proto.cmd"):("protoc-gen-ts_proto")}"`,
+        `--plugin=protoc-gen-ts_proto=${pluginPath}`,
         `--ts_proto_opt=esModuleInterop=true,importSuffix=.js,outputTypeRegistry=true`,
         `--ts_proto_out=${OUT_DIR}`,
         `-I=src`, // root must prefix the proto paths

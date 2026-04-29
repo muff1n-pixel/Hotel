@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
+import { clientInstance } from "@Game/index";
 import { UserFriendMessageData } from "@pixel63/events";
-import { clientInstance } from "src";
 
 export default class UserFriendMessageEvent implements ProtobuffListener<UserFriendMessageData> {
     async handle(payload: UserFriendMessageData) {

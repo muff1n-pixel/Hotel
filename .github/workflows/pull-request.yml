@@ -1,0 +1,29 @@
+name: Pull request
+
+on:
+  pull_request:
+
+jobs:
+  generate-events:
+    name: Events
+    uses: ./.github/workflows/generate-events.yml
+
+  build-shared-package:
+    name: Shared
+    uses: ./.github/workflows/build-shared-package.yml
+    needs:
+      - generate-events
+
+  build-server-package:
+    name: Server
+    uses: ./.github/workflows/build-server-package.yml
+    needs:
+      - generate-events
+      - build-shared-package
+
+  build-game-package:
+    name: Game
+    uses: ./.github/workflows/build-game-package.yml
+    needs:
+      - generate-events
+      - build-shared-package
