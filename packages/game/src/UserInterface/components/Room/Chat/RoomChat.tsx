@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../..";
@@ -215,12 +215,21 @@ export default function RoomChat() {
         };
     }, [messages.current.length]);
 
-    const onClickUserMessage = (message: RoomChatMessage) => {
-        if(message.userId && room) {
-            const roomUser = room.getUserById(message.userId);
+    const onClickUserMessage = useCallback((message: RoomChatMessage) => {
+        if(!room) {
+            return;
+        }
+
+        if(!message.userId) {
+            return;
+        }
+
+        const roomUser = room.users.find((user) => user.data.id === message.userId);
+
+        if(roomUser) {
             room.roomRenderer.focusedItem.value = roomUser.item;
         }
-    }
+    }, [room]);
 
     return (
         <div ref={rootRef} style={{
