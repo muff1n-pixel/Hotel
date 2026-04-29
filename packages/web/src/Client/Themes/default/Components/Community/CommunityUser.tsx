@@ -19,7 +19,7 @@ const CommunityUser = ({ name = null, motto = null, figureConfiguration = null }
             FigureAssets.loadAssets().then(() => {
                 const figure = new Figure(figureConfiguration, 4);
 
-                figure.renderToCanvas(new Figure(), 0, false).then(({ figure }: any) => {
+                figure.renderToCanvas(0, false).then(({ figure }: any) => {
                     const context = figureCanvasRef.current?.getContext("2d");
 
                     if(!context) {

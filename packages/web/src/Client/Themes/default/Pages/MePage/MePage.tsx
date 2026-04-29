@@ -33,7 +33,7 @@ const MePage = () => {
                 FigureAssets.loadAssets().then(() => {
                     const figure = new Figure(currentUser.figureConfiguration, 2);
 
-                    figure.renderToCanvas(new Figure(), 0, false).then(({ figure }: any) => {
+                    figure.renderToCanvas(0, false).then(({ figure }: any) => {
                         const context = figureCanvasRef.current?.getContext("2d");
 
                         if(!context) {
