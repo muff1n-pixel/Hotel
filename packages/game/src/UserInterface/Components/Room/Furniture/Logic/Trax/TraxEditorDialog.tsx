@@ -4,10 +4,10 @@ import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/Tra
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import TraxPlaylistSets from "@UserInterface/Components2/Room/Furniture/Logic/Trax/Components/TraxPlaylistSets";
-import useTrax from "@UserInterface/Components2/Room/Furniture/Logic/Trax/Hooks/useTrax";
-import useTraxSlider from "@UserInterface/Components2/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
-import useTraxSlot from "@UserInterface/Components2/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
+import TraxPlaylistSets from "@UserInterface/Components/Room/Furniture/Logic/Trax/Components/TraxPlaylistSets";
+import useTrax from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTrax";
+import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
+import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { webSocketClient } from "@Game/index";

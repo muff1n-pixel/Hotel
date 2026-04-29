@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { ShopPageProps } from "./ShopPage";
 import { ShopFeatureData } from "@pixel63/events";
-import ShopPageHorizontalFeature from "@UserInterface/Components2/Shop/Pages/Features/ShopPageHorizontalFeature";
-import ShopPageVerticalFeature from "@UserInterface/Components2/Shop/Pages/Features/ShopPageVerticalFeature";
+import ShopPageHorizontalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageHorizontalFeature";
+import ShopPageVerticalFeature from "@UserInterface/Components/Shop/Pages/Features/ShopPageVerticalFeature";
 
 export default function ShopFeaturesPage({ page, setActiveShopPage, editMode }: ShopPageProps) {
     const handleFeatureClick = useCallback((feature: ShopFeatureData) => {

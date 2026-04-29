@@ -18,18 +18,18 @@ import WiredFurnitureSelectionDialog from "./Wired/WiredFurnitureSelectionDialog
 import WiredDialog from "../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import WiredFurniture from "../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import RoomFurnitureStackHelperDialog from "@UserInterface/Components2/Room/Furniture/Logic/StackHelper/RoomFurnitureStackHelperDialog";
-import RoomFurnitureClothingDialog from "@UserInterface/Components2/Room/Furniture/Logic/Clothing/RoomFurnitureClothingDialog";
-import RoomFurnitureMannequinDialog from "@UserInterface/Components2/Room/Furniture/Logic/Mannequin/RoomFurnitureMannequinDialog";
-import WiredTriggerClockCounterDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Trigger/WiredTriggerClockCounterDialog";
-import WiredTriggerAtGivenTimeDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Trigger/WiredTriggerAtGivenTimeDialog";
+import RoomFurnitureStackHelperDialog from "@UserInterface/Components/Room/Furniture/Logic/StackHelper/RoomFurnitureStackHelperDialog";
+import RoomFurnitureClothingDialog from "@UserInterface/Components/Room/Furniture/Logic/Clothing/RoomFurnitureClothingDialog";
+import RoomFurnitureMannequinDialog from "@UserInterface/Components/Room/Furniture/Logic/Mannequin/RoomFurnitureMannequinDialog";
+import WiredTriggerClockCounterDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerClockCounterDialog";
+import WiredTriggerAtGivenTimeDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerAtGivenTimeDialog";
 import WiredDivider from "@UserInterface/Common/Dialog/Layouts/Wired/WiredDivider";
 import WiredSection from "@UserInterface/Common/Dialog/Layouts/Wired/WiredSection";
 import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton";
-import WiredTriggerScoreAchievedDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedDialog";
-import WiredActionToggleStateDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Action/WiredActionToggleStateDialog";
-import WiredActionMoveRotateDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateDialog";
-import WiredActionMoveRotateUserDialog from "@UserInterface/Components2/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateUserDialog";
+import WiredTriggerScoreAchievedDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedDialog";
+import WiredActionToggleStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleStateDialog";
+import WiredActionMoveRotateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateDialog";
+import WiredActionMoveRotateUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateUserDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;

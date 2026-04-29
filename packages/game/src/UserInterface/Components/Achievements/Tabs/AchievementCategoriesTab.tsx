@@ -1,7 +1,7 @@
 import { AchievementsCategoryData } from "@pixel63/events";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
 import ProgressBar from "@UserInterface/Common/Dialog/Components/ProgressBar/ProgressBar";
-import AchievementCategoryItem from "@UserInterface/Components2/Achievements/Components/AchievementCategoryItem";
+import AchievementCategoryItem from "@UserInterface/Components/Achievements/Components/AchievementCategoryItem";
 import { useMemo } from "react";
 
 export type AchievementCategoriesTabProps = {

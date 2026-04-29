@@ -7,7 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
 import { DeleteShopFurnitureData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
-import FurnitureBrowserSelection from "@UserInterface/Components2/Browsers/FurnitureBrowserSelection";
+import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {

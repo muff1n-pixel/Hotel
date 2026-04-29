@@ -1,6 +1,6 @@
 import { ShopFeatureData, ShopPageData } from "@pixel63/events";
-import ShopPageFeatureImage from "@UserInterface/Components2/Shop/Pages/Features/ShopPageFeatureImage";
-import ShopPageFeatureTitle from "@UserInterface/Components2/Shop/Pages/Features/ShopPageFeatureTitle";
+import ShopPageFeatureImage from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureImage";
+import ShopPageFeatureTitle from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureTitle";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment } from "react/jsx-runtime";
 

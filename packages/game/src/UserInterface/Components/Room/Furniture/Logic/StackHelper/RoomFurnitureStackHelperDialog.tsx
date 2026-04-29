@@ -6,7 +6,7 @@ import Dialog from "../../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../../../Common/Form/Components/Input";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-import FurnitureImage from "@UserInterface/Components2/Furniture/FurnitureImage";
+import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";

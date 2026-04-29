@@ -5,7 +5,7 @@ import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import FriendUser from "@UserInterface/Components2/Friends/Component/FriendUser";
+import FriendUser from "@UserInterface/Components/Friends/Component/FriendUser";
 import useFriends from "@UserInterface/Hooks/useFriends";
 
 export default function FriendsDialogSearch() {

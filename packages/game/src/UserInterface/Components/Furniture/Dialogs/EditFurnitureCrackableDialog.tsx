@@ -6,7 +6,7 @@ import Input from "../../../Common/Form/Components/Input";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { FurnitureCrackableData, FurnitureCrackableRewardData, FurnitureData, GetFurnitureCrackableData, UpdateFurnitureCrackableData } from "@pixel63/events";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
-import FurnitureIcon from "@UserInterface/Components2/Furniture/FurnitureIcon";
+import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";

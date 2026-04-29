@@ -12,7 +12,7 @@ import DebugInformationPanel from "./Debug/DebugInformationPanel";
 import FlyingFurnitureInstances from "./Inventory/FlyingFurniture/FlyingFurnitureInstances";
 import { GetUserData } from "@pixel63/events";
 import Tooltip from "@UserInterface/Common/Tooltip/Tooltip";
-import FlowInstance from "@UserInterface/Components2/Flow/FlowInstance";
+import FlowInstance from "@UserInterface/Components/Flow/FlowInstance";
 
 export default function InterfaceInstance() {
     const room = useRoomInstance();

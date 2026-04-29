@@ -8,7 +8,7 @@ import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
-import FurnitureShopLink from "@UserInterface/Components2/Furniture/FurnitureShopLink";
+import FurnitureShopLink from "@UserInterface/Components/Furniture/FurnitureShopLink";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomFurnitureProfileProps = {

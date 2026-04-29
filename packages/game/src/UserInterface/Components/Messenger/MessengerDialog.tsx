@@ -6,10 +6,10 @@ import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/Dia
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import UserLink from "@UserInterface/Common/Users/UserLink";
-import MessengerFigure from "@UserInterface/Components2/Messenger/Components/MessengerFigure";
-import MessengerMessage from "@UserInterface/Components2/Messenger/Components/MessengerMessage";
-import MessengerStatus from "@UserInterface/Components2/Messenger/Components/MessengerStatus";
-import { MessengerTab } from "@UserInterface/Components2/Messenger/Interfaces/MessengerTab";
+import MessengerFigure from "@UserInterface/Components/Messenger/Components/MessengerFigure";
+import MessengerMessage from "@UserInterface/Components/Messenger/Components/MessengerMessage";
+import MessengerStatus from "@UserInterface/Components/Messenger/Components/MessengerStatus";
+import { MessengerTab } from "@UserInterface/Components/Messenger/Interfaces/MessengerTab";
 import useFriends from "@UserInterface/Hooks/useFriends";
 import { useMessenger } from "@UserInterface/Hooks/useMessenger";
 import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";

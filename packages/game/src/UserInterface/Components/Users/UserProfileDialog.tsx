@@ -1,6 +1,6 @@
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
-import useUserProfile from "@UserInterface/Components2/Users/Hooks/useUserProfile";
+import useUserProfile from "@UserInterface/Components/Users/Hooks/useUserProfile";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";

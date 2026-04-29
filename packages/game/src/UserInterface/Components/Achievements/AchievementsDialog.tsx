@@ -1,8 +1,8 @@
 import { AchievementsCategoryData } from "@pixel63/events";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
-import { useAchievementCategories } from "@UserInterface/Components2/Achievements/Hooks/useAchievementCategories";
-import AchievementCategoriesTab from "@UserInterface/Components2/Achievements/Tabs/AchievementCategoriesTab";
-import AchievementCategoryTab from "@UserInterface/Components2/Achievements/Tabs/AchievementCategoryTab";
+import { useAchievementCategories } from "@UserInterface/Components/Achievements/Hooks/useAchievementCategories";
+import AchievementCategoriesTab from "@UserInterface/Components/Achievements/Tabs/AchievementCategoriesTab";
+import AchievementCategoryTab from "@UserInterface/Components/Achievements/Tabs/AchievementCategoryTab";
 import { useState } from "react";
 
 export type AchievementsDialogProps = {

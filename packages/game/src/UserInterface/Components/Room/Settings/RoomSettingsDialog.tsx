@@ -2,7 +2,7 @@ import Dialog from "../../../Common/Dialog/Dialog";
 import DialogTabs from "../../../Common/Dialog/Components/Tabs/DialogTabs";
 import RoomSettingsBasicTab from "./Tabs/RoomSettingsBasicTab";
 import RoomSettingsCustomizeTab from "./Tabs/RoomSettingsCustomizeTab";
-import RoomSettingsAccessTab from "@UserInterface/Components2/Room/Settings/Tabs/RoomSettingsAccessTab";
+import RoomSettingsAccessTab from "@UserInterface/Components/Room/Settings/Tabs/RoomSettingsAccessTab";
 
 export type RoomSettingsDialogProps = {
     hidden?: boolean;

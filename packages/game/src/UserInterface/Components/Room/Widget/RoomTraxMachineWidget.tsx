@@ -1,6 +1,6 @@
 import { FurnitureTraxSongMetaData } from "@pixel63/events";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import useTraxPlayer from "@UserInterface/Components2/Room/Widget/Hooks/useTraxPlayer";
+import useTraxPlayer from "@UserInterface/Components/Room/Widget/Hooks/useTraxPlayer";
 import { useRoomTraxmachine } from "@UserInterface/Hooks/useRoomTraxmachine";
 import { useCallback, useEffect, useRef, useState } from "react";
 

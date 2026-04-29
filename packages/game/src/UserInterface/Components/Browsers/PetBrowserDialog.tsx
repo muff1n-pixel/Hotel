@@ -5,7 +5,7 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import PetPaletteItem from "../Pets/PetPaletteItem";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import PetImage from "@UserInterface/Components2/Pets/PetImage";
+import PetImage from "@UserInterface/Components/Pets/PetImage";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
 
 export type PetBrowserDialogProps = {

@@ -2,7 +2,7 @@ import { NavigatorRoomData } from "@pixel63/events";
 import { RefObject, useEffect, useRef } from "react";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import UserLink from "@UserInterface/Common/Users/UserLink";
-import RoomThumbnail from "@UserInterface/Components2/Room/Thumbnail/RoomThumbnail";
+import RoomThumbnail from "@UserInterface/Components/Room/Thumbnail/RoomThumbnail";
 
 export type NavigatorRoomProfileProps = {
     elementRef: RefObject<HTMLDivElement | null>;

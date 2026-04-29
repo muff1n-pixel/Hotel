@@ -3,8 +3,8 @@ import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
 import ProgressBar from "@UserInterface/Common/Dialog/Components/ProgressBar/ProgressBar";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import AchievementItem from "@UserInterface/Components2/Achievements/Components/AchievementItem";
-import { useAchievements } from "@UserInterface/Components2/Achievements/Hooks/useAchievements";
+import AchievementItem from "@UserInterface/Components/Achievements/Components/AchievementItem";
+import { useAchievements } from "@UserInterface/Components/Achievements/Hooks/useAchievements";
 import { Fragment, useEffect, useState } from "react";
 
 export type AchievementCategoryTabProps = {

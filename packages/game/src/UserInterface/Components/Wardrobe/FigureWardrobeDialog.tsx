@@ -9,9 +9,9 @@ import { FigureConfigurationData, GetUserClothesData, UserClothesData, UserCloth
 import { webSocketClient } from "@Game/index";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import WardrobeFigures from "@UserInterface/Components2/Wardrobe/Components/WardrobeFigures";
-import WardrobeEffects from "@UserInterface/Components2/Wardrobe/Selection/WardrobeEffects";
-import WardrobeHotlooks from "@UserInterface/Components2/Wardrobe/Components/WardrobeHotlooks";
+import WardrobeFigures from "@UserInterface/Components/Wardrobe/Components/WardrobeFigures";
+import WardrobeEffects from "@UserInterface/Components/Wardrobe/Selection/WardrobeEffects";
+import WardrobeHotlooks from "@UserInterface/Components/Wardrobe/Components/WardrobeHotlooks";
 
 const wardrobeTabs = [
     {

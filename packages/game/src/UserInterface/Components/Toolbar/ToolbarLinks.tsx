@@ -1,8 +1,8 @@
 import { EnterRoomData, LeaveRoomData } from "@pixel63/events";
-import ToolbarFigureItem from "@UserInterface/Components2/Toolbar/Items/ToolbarFigureItem";
-import ToolbarItem from "@UserInterface/Components2/Toolbar/Items/ToolbarItem";
-import ToolbarTab from "@UserInterface/Components2/Toolbar/ToolbarTab";
-import ToolbarToggle from "@UserInterface/Components2/Toolbar/ToolbarToggle";
+import ToolbarFigureItem from "@UserInterface/Components/Toolbar/Items/ToolbarFigureItem";
+import ToolbarItem from "@UserInterface/Components/Toolbar/Items/ToolbarItem";
+import ToolbarTab from "@UserInterface/Components/Toolbar/ToolbarTab";
+import ToolbarToggle from "@UserInterface/Components/Toolbar/ToolbarToggle";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUser } from "@UserInterface/Hooks/useUser";

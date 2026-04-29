@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { FigureConfigurationData, UpdateRoomFurnitureData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import WardrobeMannequinAvatar from "@UserInterface/Components2/Wardrobe/WardrobeMannequinAvatar";
+import WardrobeMannequinAvatar from "@UserInterface/Components/Wardrobe/WardrobeMannequinAvatar";
 
 export type WardrobeMannequinDialogProps = {
     hidden?: boolean;

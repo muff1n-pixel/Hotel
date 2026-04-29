@@ -7,7 +7,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import ShopFeatureImage from "@Client/Images/ShopFeatureImage";
 import DialogColorPicker from "@UserInterface/Common/Dialog/Components/ColorPicker/DialogColorPicker";
-import FurnitureBrowserSelection from "@UserInterface/Components2/Browsers/FurnitureBrowserSelection";
+import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { webSocketClient } from "@Game/index";
 import Selection from "@UserInterface/Common/Form/Components/Selection";

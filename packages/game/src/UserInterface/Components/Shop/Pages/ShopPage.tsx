@@ -4,7 +4,7 @@ import ShopTrophiesPage from "./ShopTrophiesPage";
 import ShopBotsPage from "./ShopBotsPage";
 import { ShopPageData } from "@pixel63/events";
 import ShopPetsPage from "./ShopPetsPage";
-import ShopBundlePage from "@UserInterface/Components2/Shop/Pages/ShopBundlePage";
+import ShopBundlePage from "@UserInterface/Components/Shop/Pages/ShopBundlePage";
 
 export type ShopPageProps = {
     editMode?: boolean;

@@ -11,7 +11,7 @@ import { useUser } from "../../../Hooks/useUser";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
-import usePurchasableItem from "@UserInterface/Components2/Shop/Pages/Hooks/usePurchasableItem";
+import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";

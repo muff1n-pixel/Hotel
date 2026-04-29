@@ -1,7 +1,7 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
-import RoomItemsCameraRenderer from "@UserInterface/Components2/Room/Camera/RoomItemsCameraRenderer";
+import RoomItemsCameraRenderer from "@UserInterface/Components/Room/Camera/RoomItemsCameraRenderer";
 import { useCallback, useRef } from "react";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";

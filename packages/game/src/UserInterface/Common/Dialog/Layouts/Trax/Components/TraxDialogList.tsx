@@ -1,5 +1,5 @@
 import { FurnitureData } from "@pixel63/events";
-import FurnitureIcon from "@UserInterface/Components2/Furniture/FurnitureIcon";
+import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 
 import "./TraxDialogList.css";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";

@@ -1,6 +1,6 @@
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
-import InterfaceInstance from './Components2/InterfaceInstance';
+import InterfaceInstance from './Components/InterfaceInstance';
 
 import "./Styles/fonts.css";
 import "./Styles/index.css";

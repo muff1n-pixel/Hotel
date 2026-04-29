@@ -6,7 +6,7 @@ import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink"
 import DialogUnlocked from "@UserInterface/Common/Dialog/Components/Unlocked/DialogUnlocked";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import FurnitureImage from "@UserInterface/Components2/Furniture/FurnitureImage";
+import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 

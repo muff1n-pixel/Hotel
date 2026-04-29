@@ -3,7 +3,7 @@ import FigureWardrobeDialog from "./FigureWardrobeDialog";
 import { webSocketClient } from "../../..";
 import { useCallback, useState } from "react";
 import { FigureConfigurationData, SetUserFigureConfigurationData } from "@pixel63/events";
-import WardrobeAvatar from "@UserInterface/Components2/Wardrobe/WardrobeAvatar";
+import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 
 export type WardrobeDialogProps = {

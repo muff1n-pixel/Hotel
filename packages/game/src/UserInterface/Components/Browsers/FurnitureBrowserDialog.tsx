@@ -5,8 +5,8 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
-import FurnitureImage from "@UserInterface/Components2/Furniture/FurnitureImage";
-import FurnitureIcon from "@UserInterface/Components2/Furniture/FurnitureIcon";
+import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
+import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type FurnitureBrowserDialogProps = {

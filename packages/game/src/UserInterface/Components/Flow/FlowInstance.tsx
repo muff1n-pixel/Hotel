@@ -1,6 +1,6 @@
 import WidgetNotification from "@UserInterface/Common/Widgets/WidgetNotification";
-import RoomTraxMachineWidget from "@UserInterface/Components2/Room/Widget/RoomTraxMachineWidget";
-import Widget from "@UserInterface/Components2/Widget/Widget";
+import RoomTraxMachineWidget from "@UserInterface/Components/Room/Widget/RoomTraxMachineWidget";
+import Widget from "@UserInterface/Components/Widget/Widget";
 import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotifications";
 import { clientInstance } from "@Game/index";
 

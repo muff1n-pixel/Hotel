@@ -7,7 +7,7 @@ import DialogContent from "../../../../../Common/Dialog/Components/DialogContent
 import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogButton";
 import { UseRoomFurnitureData } from "@pixel63/events";
 import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogHeaderContent";
-import FurnitureImage from "@UserInterface/Components2/Furniture/FurnitureImage";
+import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 

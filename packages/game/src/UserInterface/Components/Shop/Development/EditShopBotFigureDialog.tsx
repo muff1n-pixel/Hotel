@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import FigureWardrobeDialog from "../../Wardrobe/FigureWardrobeDialog";
 import { FigureConfigurationData, ShopBotData, ShopPageData } from "@pixel63/events";
-import WardrobeAvatar from "@UserInterface/Components2/Wardrobe/WardrobeAvatar";
+import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 
 export type EditShopBotFigureDialogProps = {
