@@ -28,6 +28,10 @@ jobs:
           name: generated-events
           path: packages/events/build/
 
+      - name: Install events dependencies
+        working-directory: packages/events
+        run: npm ci
+
       - name: Install dependencies
         working-directory: packages/shared
         run: npm ci

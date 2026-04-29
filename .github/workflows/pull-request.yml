@@ -5,24 +5,24 @@ on:
 
 jobs:
   generate-events:
-    name: Generate events
+    name: Events
     uses: ./.github/workflows/generate-events.yml
 
   build-shared-package:
-    name: Build shared package
+    name: Shared
     uses: ./.github/workflows/build-shared-package.yml
     needs:
       - generate-events
 
   build-server-package:
-    name: Build server package
+    name: Server
     uses: ./.github/workflows/build-server-package.yml
     needs:
       - generate-events
       - build-shared-package
 
   build-game-package:
-    name: Build game package
+    name: Game
     uses: ./.github/workflows/build-game-package.yml
     needs:
       - generate-events
