@@ -3,7 +3,7 @@ import { FurnitureTraxSongData, UpdateRoomFurnitureTraxSongData } from "@pixel63
 import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxButton";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "@Game/index";
 

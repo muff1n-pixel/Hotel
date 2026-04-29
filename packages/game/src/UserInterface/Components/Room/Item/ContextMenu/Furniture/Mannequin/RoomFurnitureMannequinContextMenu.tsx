@@ -2,7 +2,7 @@ import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomItemContextMenuWrapper from "@UserInterface/Components/Room/Item/ContextMenu/RoomItemContextMenuWrapper";
 import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserContextMenuButton";
 import UserContextMenuElement from "@UserInterface/Components/Room/Users/UserContextMenuElement";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type RoomFurnitureMannequinContextMenuProps = {
     roomFurniture: RoomFurniture;

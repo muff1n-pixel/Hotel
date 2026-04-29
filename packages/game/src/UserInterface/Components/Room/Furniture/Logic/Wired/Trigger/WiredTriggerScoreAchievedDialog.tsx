@@ -6,7 +6,7 @@ import WiredSection from "../../../../../../Common/Dialog/Layouts/Wired/WiredSec
 import { useCallback, useState } from "react";
 import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../../..";
-import { useRoomInstance } from "../../../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../../../Hooks/useRoomInstance";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredSlider from "@UserInterface/Common/Dialog/Layouts/Wired/Slider/WiredSlider";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";

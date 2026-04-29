@@ -1,6 +1,6 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
 import Dialog from "../../Common/Dialog/Dialog";
-import { useUser } from "../../Hooks2/useUser";
+import { useUser } from "../../Hooks/useUser";
 import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";

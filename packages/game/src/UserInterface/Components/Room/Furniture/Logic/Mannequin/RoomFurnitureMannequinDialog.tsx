@@ -10,7 +10,7 @@ import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogH
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
-import { useUser } from "@UserInterface/Hooks2/useUser";
+import { useUser } from "@UserInterface/Hooks/useUser";
 import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
 
 export type RoomFurnitureMannequinDialogData = {

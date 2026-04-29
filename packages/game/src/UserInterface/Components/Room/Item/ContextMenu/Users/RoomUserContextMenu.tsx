@@ -2,14 +2,14 @@ import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomItemContextMenuWrapper from "../RoomItemContextMenuWrapper";
 import UserContextMenuElement from "../../../Users/UserContextMenuElement";
 import { Fragment, useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
 import UserContextMenuList from "../../../Users/UserContextMenuList";
-import { useUser } from "../../../../../Hooks2/useUser";
+import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
-import { useDialogs } from "../../../../../Hooks2/useDialogs";
+import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { webSocketClient } from "../../../../../..";
 import { SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
-import useFriends from "@UserInterface/Hooks2/useFriends";
+import useFriends from "@UserInterface/Hooks/useFriends";
 
 export type RoomUserContextMenuProps = {
     item: RoomFigureItem;

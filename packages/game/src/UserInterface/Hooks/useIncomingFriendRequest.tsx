@@ -1,6 +1,6 @@
 import { UserFriendData } from "@pixel63/events";
 import { useEffect, useState } from "react";
-import useFriends from "@UserInterface/Hooks2/useFriends";
+import useFriends from "@UserInterface/Hooks/useFriends";
 
 export default function useIncomingFriendRequest(userId: string) {
     const { incomingRequests } = useFriends();

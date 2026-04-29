@@ -6,8 +6,8 @@ import DialogButton from "../../../../Common/Dialog/Components/Button/DialogButt
 import RoomMapImage from "../../../Room/Map/RoomMapImage";
 import { webSocketClient } from "../../../../..";
 import useRoomMaps from "./Hooks/useRoomMaps";
-import { useDialogs } from "../../../../Hooks2/useDialogs";
-import { useRoomCategories } from "../../../../Hooks2/useRoomCategories";
+import { useDialogs } from "../../../../Hooks/useDialogs";
+import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import Selection from "../../../../Common/Form/Components/Selection";
 import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
 import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";

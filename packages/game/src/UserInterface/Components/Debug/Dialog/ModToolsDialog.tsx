@@ -1,7 +1,7 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type ModToolsDialogProps = {
     hidden?: boolean;

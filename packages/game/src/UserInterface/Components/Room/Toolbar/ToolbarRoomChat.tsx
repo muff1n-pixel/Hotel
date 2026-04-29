@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import ToolbarToggle from "../../Toolbar/ToolbarToggle";
-import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { clientInstance, webSocketClient } from "../../../..";
 import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
-import { useRoomHistory } from "../../../Hooks2/useRoomHistory";
+import { useRoomHistory } from "../../../Hooks/useRoomHistory";
 import { RoomActorChatData } from "@pixel63/events";
 
 export type ToolbarRoomChatProps = {

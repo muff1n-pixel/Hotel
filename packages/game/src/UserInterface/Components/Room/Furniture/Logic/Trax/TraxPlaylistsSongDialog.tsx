@@ -6,7 +6,7 @@ import TraxDialogListPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Compo
 import TraxDialogListPanelItem from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogListPanelItem";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 

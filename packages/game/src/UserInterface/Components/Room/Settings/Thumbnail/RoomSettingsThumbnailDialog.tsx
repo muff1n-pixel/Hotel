@@ -3,9 +3,9 @@ import DialogButton from "../../../../Common/Dialog/Components/Button/DialogButt
 import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
 import RoomCameraRenderer from "../../Camera/RoomCameraRenderer";
-import { useRoomInstance } from "../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
-import { useDialogs } from "../../../../Hooks2/useDialogs";
+import { useDialogs } from "../../../../Hooks/useDialogs";
 import { UpdateRoomInformationData } from "@pixel63/events";
 
 export type RoomSettingsThumbnailDialogProps = {

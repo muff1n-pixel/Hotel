@@ -1,7 +1,7 @@
 import { ShopFeatureData, ShopPageData } from "@pixel63/events";
 import ShopPageFeatureImage from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureImage";
 import ShopPageFeatureTitle from "@UserInterface/Components/Shop/Pages/Features/ShopPageFeatureTitle";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment } from "react/jsx-runtime";
 
 export type ShopPageHorizontalFeatureProps = {

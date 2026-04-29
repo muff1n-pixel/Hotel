@@ -1,5 +1,5 @@
 import { Fragment, RefObject, useEffect, useState } from "react";
-import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";

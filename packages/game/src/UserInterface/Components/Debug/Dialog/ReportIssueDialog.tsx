@@ -4,7 +4,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../Common/Form/Components/Input";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../../..";
-import { useDialogs } from "../../../Hooks2/useDialogs";
+import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendHotelFeedbackData } from "@pixel63/events";
 
 export type ReportIssueDialogProps = {

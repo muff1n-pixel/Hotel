@@ -1,8 +1,8 @@
 import { useState } from "react";
 import ToolbarToggle from "../../Toolbar/ToolbarToggle";
 import ToolbarRoomInfoButton from "./Button/ToolbarRoomInfoButton";
-import { useDialogs } from "../../../Hooks2/useDialogs";
-import { useRoomInstance } from "../../../Hooks2/useRoomInstance";
+import { useDialogs } from "../../../Hooks/useDialogs";
+import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ToolbarRoomChat from "./ToolbarRoomChat";
 
 export default function ToolbarRoomInfo() {

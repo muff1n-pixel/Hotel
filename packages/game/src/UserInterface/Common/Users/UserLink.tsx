@@ -1,4 +1,4 @@
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type UserLinkProps = {
     id: string;

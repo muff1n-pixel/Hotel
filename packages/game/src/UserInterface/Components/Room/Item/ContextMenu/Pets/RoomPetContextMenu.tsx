@@ -1,8 +1,8 @@
 import RoomItemContextMenuWrapper from "../RoomItemContextMenuWrapper";
 import UserContextMenuElement from "../../../Users/UserContextMenuElement";
 import { Fragment, useEffect, useState } from "react";
-import { useRoomInstance } from "../../../../../Hooks2/useRoomInstance";
-import { useUser } from "../../../../../Hooks2/useUser";
+import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
+import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import { PickupRoomPetData } from "@pixel63/events";

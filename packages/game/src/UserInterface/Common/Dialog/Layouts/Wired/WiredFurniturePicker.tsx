@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import WiredSection from "./WiredSection";
-import { useRoomInstance } from "../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 

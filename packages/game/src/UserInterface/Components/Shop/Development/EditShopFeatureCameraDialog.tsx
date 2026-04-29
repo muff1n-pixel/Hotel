@@ -6,7 +6,7 @@ import { useCallback, useRef } from "react";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { useRoomInstance } from "@UserInterface/Hooks2/useRoomInstance";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { ShopFeatureRoomConfigurationData } from "@pixel63/events";
 
 export type EditShopFeatureDialogProps = {

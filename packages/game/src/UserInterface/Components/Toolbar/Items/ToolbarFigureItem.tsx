@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Figure from "@Client/Figure/Figure";
-import { useUser } from "../../../Hooks2/useUser";
+import { useUser } from "../../../Hooks/useUser";
 
 export default function ToolbarFigureItem() {
     const canvasRef = useRef<HTMLCanvasElement>(null);

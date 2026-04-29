@@ -1,4 +1,4 @@
-import { useUser } from "../../Hooks2/useUser";
+import { useUser } from "../../Hooks/useUser";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 

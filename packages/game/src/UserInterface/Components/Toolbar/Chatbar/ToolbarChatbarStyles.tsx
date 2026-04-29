@@ -1,6 +1,6 @@
 import { SetUserRoomChatStyleData } from "@pixel63/events";
 import { webSocketClient } from "../../../..";
-import { useRoomChatStyles } from "../../../Hooks2/useRoomChatStyles";
+import { useRoomChatStyles } from "../../../Hooks/useRoomChatStyles";
 
 export type ToolbarChatbarStylesProps = {
     onClose: () => void;

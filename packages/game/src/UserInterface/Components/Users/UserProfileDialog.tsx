@@ -4,11 +4,11 @@ import useUserProfile from "@UserInterface/Components/Users/Hooks/useUserProfile
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
-import { useUser } from "@UserInterface/Hooks2/useUser";
+import { useUser } from "@UserInterface/Hooks/useUser";
 import { Fragment } from "react/jsx-runtime";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type UserProfileDialogProps = {
     data: string;

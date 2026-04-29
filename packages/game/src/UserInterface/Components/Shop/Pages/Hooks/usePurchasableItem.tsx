@@ -1,7 +1,7 @@
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { RoomPositionData } from "@pixel63/events";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
-import { useRoomInstance } from "@UserInterface/Hooks2/useRoomInstance";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useCallback, useEffect, useState } from "react";
 
 export default function usePurchasableItem(purchaseItem: (stopPlacing: () => void, position: RoomPositionData | undefined, direction: number | undefined) => void) {

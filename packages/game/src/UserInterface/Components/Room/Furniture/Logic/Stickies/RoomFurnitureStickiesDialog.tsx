@@ -4,7 +4,7 @@ import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import { useRoomInstance } from "../../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../../..";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 

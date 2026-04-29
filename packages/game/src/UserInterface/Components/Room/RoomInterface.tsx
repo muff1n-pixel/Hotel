@@ -1,5 +1,5 @@
 import RoomUserFriendRequests from "@UserInterface/Components/Room/Users/Friends/RoomUserFriendRequests";
-import { useRoomInstance } from "../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../Hooks/useRoomInstance";
 import RoomChat from "./Chat/RoomChat";
 import RoomItemContextMenu from "./Item/ContextMenu/RoomItemContextMenu";
 import RoomItemProfile from "./Item/RoomItemProfile";

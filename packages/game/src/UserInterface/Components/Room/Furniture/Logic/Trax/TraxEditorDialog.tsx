@@ -8,7 +8,7 @@ import TraxPlaylistSets from "@UserInterface/Components/Room/Furniture/Logic/Tra
 import useTrax from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTrax";
 import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlider";
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
-import { useDialogs } from "@UserInterface/Hooks2/useDialogs";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { webSocketClient } from "@Game/index";
 

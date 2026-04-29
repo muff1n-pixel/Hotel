@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useRoomInstance } from "../../../../Hooks2/useRoomInstance";
+import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import Input from "../../../../Common/Form/Components/Input";
 import Radio from "@UserInterface/Common/Form/Components/Radio";
 import { webSocketClient } from "@Game/index";

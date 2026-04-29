@@ -10,10 +10,10 @@ import MessengerFigure from "@UserInterface/Components/Messenger/Components/Mess
 import MessengerMessage from "@UserInterface/Components/Messenger/Components/MessengerMessage";
 import MessengerStatus from "@UserInterface/Components/Messenger/Components/MessengerStatus";
 import { MessengerTab } from "@UserInterface/Components/Messenger/Interfaces/MessengerTab";
-import useFriends from "@UserInterface/Hooks2/useFriends";
-import { useMessenger } from "@UserInterface/Hooks2/useMessenger";
-import { useMessengerUnread } from "@UserInterface/Hooks2/useMessengerUnread";
-import { useUser } from "@UserInterface/Hooks2/useUser";
+import useFriends from "@UserInterface/Hooks/useFriends";
+import { useMessenger } from "@UserInterface/Hooks/useMessenger";
+import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
+import { useUser } from "@UserInterface/Hooks/useUser";
 
 export type MessengerDialogProps = {
     hidden?: boolean;
