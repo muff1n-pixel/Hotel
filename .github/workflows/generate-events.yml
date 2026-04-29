@@ -1,0 +1,54 @@
+name: Generate Events
+
+on:
+  pull_request:
+
+jobs:
+  generate-events:
+    name: Generate event files
+    runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: generated-events
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install protoc locally
+        run: |
+          PROTOC_VERSION=25.3
+          INSTALL_DIR=bin/protoc
+
+          mkdir -p "$INSTALL_DIR"
+
+          curl -L -o protoc.zip \
+            "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
+
+          unzip -o protoc.zip -d "$INSTALL_DIR"
+
+          rm protoc.zip
+
+          echo "$INSTALL_DIR/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          cd packages/events
+          npm ci
+
+      - name: Generate events
+        run: |
+          cd packages/events
+          npm run generate
+
+      - name: Upload generated files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-events
+          path: packages/events/build/
+          if-no-files-found: error
