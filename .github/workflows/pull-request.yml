@@ -1,0 +1,25 @@
+name: Generate events
+
+on:
+  pull_request:
+
+jobs:
+  generate-events:
+    uses: .github/workflows/generate-events.yml@ref
+
+  build-shared-package:
+    uses: .github/workflows/build-shared-package.yml@ref
+    needs:
+      - generate-events
+
+  build-server-package:
+    uses: .github/workflows/build-server-package.yml@ref
+    needs:
+      - generate-events
+      - build-shared-package
+
+  build-game-package:
+    uses: .github/workflows/build-game-package.yml@ref
+    needs:
+      - generate-events
+      - build-shared-package

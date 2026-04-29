@@ -1,11 +1,7 @@
 name: Build shared package
 
 on:
-  workflow_run:
-    workflows:
-      - Generate events
-    types:
-      - completed
+  workflow_call:
 
 jobs:
   build-shared-package:
