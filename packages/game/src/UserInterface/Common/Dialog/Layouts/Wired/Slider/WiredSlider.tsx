@@ -26,7 +26,7 @@ export default function WiredSlider({ min, max, value, step, onChange }: WiredSl
             }} onClick={() => onChange(Math.max(min, value - (step ?? 1)))}/>
 
             <div className="wired-slider sprite_dialog_wired_slider-background">
-                <input type="range" step={step} min={min} max={max} value={value} onChange={(event) => onChange(Math.max(0.5, Math.floor(parseFloat((event.target as HTMLInputElement).value))))}/>
+                <input type="range" step={step} min={min} max={max} value={value} onChange={(event) => onChange(Math.max(min, Math.floor(parseFloat((event.target as HTMLInputElement).value))))}/>
             </div>
 
             <div className="sprite_dialog_wired_arrow-right" style={{
