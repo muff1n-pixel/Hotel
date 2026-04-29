@@ -117,6 +117,10 @@ export default class RoomCursor extends EventTarget {
         if(this.cursorDisabled) {
             return;
         }
+
+        if(this.roomRenderer.camera.dragging) {
+            return;
+        }
         
         const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
