@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 
 export type DialogScrollbarProps = {
     containerRef: RefObject<HTMLDivElement | null>;
@@ -11,6 +11,9 @@ const scrollHandleBackgroundImage = new URL('../../../../Images/dialog/scroll/ha
 const scrollBackgroundImageEnabled = new URL('../../../../Images/dialog/scroll/enabled_background.png', import.meta.url);
 const scrollBackgroundImageDisabled = new URL('../../../../Images/dialog/scroll/disabled_background.png', import.meta.url);
 
+const ARROW_SCROLL_AMOUNT = 30;
+const DRAG_SPEED_MULTIPLIER = 2;
+
 export default function DialogScrollbar({ reversed, containerRef, hideInactive }: DialogScrollbarProps) {
     const handleContainerRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +21,10 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
 
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [containerHeightPercentage, setContainerHeightPercentage] = useState(100);
+
+    const isDragging = useRef(false);
+    const dragStartY = useRef(0);
+    const dragStartScrollTop = useRef(0);
 
     useEffect(() => {
         if(!containerRef.current) {
@@ -76,15 +83,92 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
         };
     }, [containerRef, handleContainerRef]);
 
+    const scrollBy = useCallback((amount: number) => {
+        if(!containerRef.current) return;
+
+        const direction = reversed ? -1 : 1;
+        containerRef.current.scrollTop += amount * direction;
+    }, [containerRef, reversed]);
+
+    const onTrackClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if(!containerRef.current || !handleContainerRef.current || isDragging.current) return;
+
+        const trackRect = handleContainerRef.current.getBoundingClientRect();
+        const clickY = e.clientY - trackRect.top;
+        const trackHeight = trackRect.height;
+
+        const clickPercentage = clickY / trackHeight;
+
+        const container = containerRef.current;
+        const maxScroll = container.scrollHeight - container.clientHeight;
+
+        if(reversed) {
+            container.scrollTop = -(clickPercentage * maxScroll);
+        } else {
+            container.scrollTop = clickPercentage * maxScroll;
+        }
+    }, [containerRef, reversed]);
+
+    const onHandleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if(!containerRef.current || !handleContainerRef.current) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        isDragging.current = true;
+        dragStartY.current = e.clientY;
+        dragStartScrollTop.current = containerRef.current.scrollTop;
+        document.body.style.cursor = "grabbing";
+    }, [containerRef]);
+
+    useEffect(() => {
+        const onMouseMove = (e: MouseEvent) => {
+            if(!isDragging.current || !containerRef.current || !handleContainerRef.current) return;
+
+            const trackHeight = handleContainerRef.current.clientHeight;
+            const container = containerRef.current;
+            const maxScroll = container.scrollHeight - container.clientHeight;
+
+            const deltaY = e.clientY - dragStartY.current;
+            const scrollRatio = (maxScroll / trackHeight) * DRAG_SPEED_MULTIPLIER;
+
+            if(reversed) {
+                container.scrollTop = dragStartScrollTop.current - (deltaY * scrollRatio);
+            } else {
+                container.scrollTop = dragStartScrollTop.current + (deltaY * scrollRatio);
+            }
+        };
+
+        const onMouseUp = () => {
+            isDragging.current = false;
+            document.body.style.cursor = "";
+        };
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+
+        return () => {
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+        };
+    }, [containerRef, reversed]);
+
     return (
         <div style={{
             display: (hideInactive && !active)?("none"):("flex"),
             flexDirection: "column",
 
-            // TODO: add mouse events
-            pointerEvents: "none",
+            pointerEvents: "auto",
         }}>
-            <div className={(active)?("sprite_dialog_scroll_enabled_top"):("sprite_dialog_scroll_disabled_top")}/>
+            <div
+                className={(active)?("sprite_dialog_scroll_enabled_top"):("sprite_dialog_scroll_disabled_top")}
+                style={{ cursor: active ? "pointer" : undefined }}
+                onMouseDown={(e) => {
+                    if(!active) return;
+                    e.preventDefault();
+                    scrollBy(-ARROW_SCROLL_AMOUNT);
+                }}
+            />
 
             <div ref={handleContainerRef} style={{
                 flex: 1,
@@ -94,20 +178,27 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
                 width: "100%",
                 background: (active)?(`url(${scrollBackgroundImageEnabled.toString()})`):(`url(${scrollBackgroundImageDisabled.toString()})`),
 
-                position: "relative"
-            }}>
+                position: "relative",
+                cursor: active ? "pointer" : undefined,
+            }}
+                onClick={active ? onTrackClick : undefined}
+            >
                 {(active) && (
-                    <div style={{
-                        position: "absolute",
+                    <div
+                        style={{
+                            position: "absolute",
 
-                        top: (!reversed)?(`${scrollPercentage}%`):(undefined),
-                        bottom: (reversed)?(`${scrollPercentage}%`):(undefined),
+                            top: (!reversed)?(`${scrollPercentage}%`):(undefined),
+                            bottom: (reversed)?(`${scrollPercentage}%`):(undefined),
 
-                        height: `${containerHeightPercentage}%`,
+                            height: `${containerHeightPercentage}%`,
 
-                        display: "flex",
-                        flexDirection: "column"
-                    }}>
+                            display: "flex",
+                            flexDirection: "column",
+                            cursor: "grab",
+                        }}
+                        onMouseDown={onHandleMouseDown}
+                    >
                         <div className={"sprite_dialog_scroll_handle_top"}/>
 
                         <div style={{
@@ -124,9 +215,18 @@ export default function DialogScrollbar({ reversed, containerRef, hideInactive }
                 )}
             </div>
 
-            <div className={(active)?("sprite_dialog_scroll_enabled_top"):("sprite_dialog_scroll_disabled_top")} style={{
-                transform: "rotateZ(180deg)"
-            }}/>
+            <div
+                className={(active)?("sprite_dialog_scroll_enabled_top"):("sprite_dialog_scroll_disabled_top")}
+                style={{
+                    transform: "rotateZ(180deg)",
+                    cursor: active ? "pointer" : undefined,
+                }}
+                onMouseDown={(e) => {
+                    if(!active) return;
+                    e.preventDefault();
+                    scrollBy(ARROW_SCROLL_AMOUNT);
+                }}
+            />
         </div>
     );
 }
