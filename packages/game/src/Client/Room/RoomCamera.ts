@@ -4,6 +4,8 @@ import RoomRenderer from "./RoomRenderer";
 export default class RoomCamera {
     private moving: boolean = false;
 
+    public dragged: boolean = false;
+
     private lastPosition: MousePosition | null = null;
 
     public mousePosition: MousePosition | null = null;
@@ -40,6 +42,7 @@ export default class RoomCamera {
         }
 
         this.moving = true;
+        this.dragged = false;
 
         this.lastPosition = {
             left: event.pageX,
@@ -64,6 +67,10 @@ export default class RoomCamera {
 
         this.cameraPosition.left += relativePosition.left;
         this.cameraPosition.top += relativePosition.top;
+
+        if(Math.abs(relativePosition.left) > 2 || Math.abs(relativePosition.top) > 2) {
+            this.dragged = true;
+        }
 
         this.lastPosition = {
             left: event.pageX,
