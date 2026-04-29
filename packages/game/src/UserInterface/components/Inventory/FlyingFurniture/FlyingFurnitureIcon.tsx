@@ -27,7 +27,9 @@ export default function FlyingFurnitureIcon({ data, onFinish }: FlyingFurnitureI
         const targetElement = document.getElementById(data.targetElementId);
 
         if(!targetElement) {
-            throw new Error("Target element does not exist.");
+            onFinish();
+
+            return;
         }
 
         elementRef.current.style.left = `${data.position.left}px`;
