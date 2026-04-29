@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: packages/shared
-        run: npm ci
+        run: npm install
 
       - name: Build package
         working-directory: packages/shared

@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-game-package:
+    name: Build game package
     runs-on: ubuntu-latest
 
     steps:

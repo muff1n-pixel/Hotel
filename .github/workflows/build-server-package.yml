@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-server-package:
+    name: Build server package
     runs-on: ubuntu-latest
 
     steps:
