@@ -38,4 +38,4 @@ jobs:
 
       - name: Build package
         working-directory: packages/game
-        run: npm run build
+        run: NODE_ENV=dev npm run build
