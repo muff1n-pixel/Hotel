@@ -3,7 +3,7 @@ name: Build shared package
 on:
   workflow_run:
     workflows:
-      - Build shared package
+      - Generate events
     types:
       - completed
 
