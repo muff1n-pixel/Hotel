@@ -35,11 +35,11 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
             const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size);
             const wallRenderer = new WallRenderer(structure, structure.wall?.id ?? "default", size);
 
-            const [ floorImage, [wallImage, doorMaskImage] ] = await Promise.all([
+            const [ [ floor, elevatedFloor ], [wallImage, doorMaskImage] ] = await Promise.all([
                 (async () => {
-                    const { floor } = await floorRenderer.renderOffScreen();
+                    const { floor, elevatedFloor } = await floorRenderer.renderOffScreen();
 
-                    return floor;
+                    return [ floor, elevatedFloor ];
                 })(),
                 
                 (async () => {
@@ -52,7 +52,7 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
                 })()
             ]);
 
-            const canvas = new OffscreenCanvas(Math.max(wallImage.width, floorImage.width), Math.max(wallImage.height, floorImage.height));
+            const canvas = new OffscreenCanvas(Math.max(wallImage.width, floor.width, elevatedFloor?.width ?? 0), Math.max(wallImage.height, floor.height, elevatedFloor?.height ?? 0));
 
             const context = canvas.getContext("2d");
 
@@ -63,7 +63,12 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
             context.translate((floorRenderer.rows * fullSize), (wallRenderer.depth + 3.5) * fullSize);
 
             context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
-            context.drawImage(floorImage, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+            context.drawImage(floor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+            
+            if(elevatedFloor) {
+                context.drawImage(elevatedFloor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+            }
+
             context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
 
             const resultContext = canvasRef.current?.getContext("2d");
