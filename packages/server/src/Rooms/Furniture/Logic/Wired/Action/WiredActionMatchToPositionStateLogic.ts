@@ -24,14 +24,10 @@ export default class WiredActionMatchToPositionStateLogic extends WiredActionLog
 
             if(this.roomFurniture.model.data.wiredActionMatchToPositionState.matchState) {
                 await roomFurniture.setAnimation(furniture.animation);
-
-                executed = true;
             }
             
             if(this.roomFurniture.model.data.wiredActionMatchToPositionState.matchDirection) {
                 await roomFurniture.setDirection(furniture.direction);
-
-                executed = true;
             }
             
             if(this.roomFurniture.model.data.wiredActionMatchToPositionState.matchPosition && furniture.position) {
@@ -49,8 +45,6 @@ export default class WiredActionMatchToPositionStateLogic extends WiredActionLog
                     id: roomFurniture.model.id,
                     position
                 }));
-
-                executed = true;
             }
             else if(this.roomFurniture.model.data.wiredActionMatchToPositionState.matchAltitude && furniture.position) {
                 const position = RoomPositionData.fromJSON(roomFurniture.model.position);
@@ -65,9 +59,9 @@ export default class WiredActionMatchToPositionStateLogic extends WiredActionLog
                     id: roomFurniture.model.id,
                     position
                 }));
-
-                executed = true;
             }
+
+            executed = true;
         }
 
         if(executed) {
