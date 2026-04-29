@@ -44,6 +44,7 @@ export default class RoomRenderer extends EventTarget {
     private terminated = false;
 
     public scale: number = 1;
+    public previewScale: number = 1;
 
     public size: number = 64;
     private currentSize: number = 64;
@@ -231,8 +232,19 @@ export default class RoomRenderer extends EventTarget {
         this.drawBackground(context);
 
         this.updateRenderedOffset();
-        
+
+        if(this.previewScale !== 1) {
+            context.save();
+            context.translate(this.center.left, this.center.top);
+            context.scale(this.previewScale, this.previewScale);
+            context.translate(-this.center.left, -this.center.top);
+        }
+
         this.drawSprites(context, this.sortedSprites);
+
+        if(this.previewScale !== 1) {
+            context.restore();
+        }
 
         this.drawLightingForeground(context);
 
@@ -429,6 +441,67 @@ export default class RoomRenderer extends EventTarget {
             
             this.camera.cameraPosition.left = position.left + 64 + offset.left;
             this.camera.cameraPosition.top = -position.top + offset.top;
+        }
+    }
+
+    public updatePreviewScale() {
+        const furnitureItem = this.items.find(
+            (item): item is RoomFurnitureItem => item instanceof RoomFurnitureItem
+        );
+
+        if(!furnitureItem) {
+            this.previewScale = 1;
+            return;
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let hasSprites = false;
+
+        for(const roomSprite of furnitureItem.sprites) {
+            if(!(roomSprite instanceof RoomFurnitureSprite)) {
+                continue;
+            }
+
+            const s = roomSprite.sprite;
+            if(!s.image) {
+                continue;
+            }
+
+            const offset = RoomFurnitureSprite.getDefaultOffsetPosition(furnitureItem.furnitureRenderer, s, 1);
+
+            minX = Math.min(minX, offset.left);
+            minY = Math.min(minY, offset.top);
+            maxX = Math.max(maxX, offset.left + s.image.width);
+            maxY = Math.max(maxY, offset.top + s.image.height);
+            hasSprites = true;
+        }
+
+        if(!hasSprites) {
+            return;
+        }
+
+        const furnitureWidth = maxX - minX;
+        const furnitureHeight = maxY - minY;
+
+        const canvasWidth = this.element.width;
+        const canvasHeight = this.element.height;
+
+        if(canvasWidth <= 0 || canvasHeight <= 0 || furnitureWidth <= 0 || furnitureHeight <= 0) {
+            return;
+        }
+
+        const padding = 20;
+        const scaleX = (canvasWidth - padding) / furnitureWidth;
+        const scaleY = (canvasHeight - padding) / furnitureHeight;
+        this.previewScale = Math.min(scaleX, scaleY, 1);
+
+        if(this.previewScale < 1 && furnitureItem.position) {
+            const screenPos = this.getCoordinatePosition(furnitureItem.position);
+            const spriteCenterX = (minX + maxX) / 2;
+            const spriteCenterY = (minY + maxY) / 2;
+
+            this.camera.cameraPosition.left = Math.round(-(screenPos.left + spriteCenterX));
+            this.camera.cameraPosition.top = Math.round(-(screenPos.top + spriteCenterY));
         }
     }
 

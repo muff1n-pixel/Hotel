@@ -58,6 +58,8 @@ export default class RoomFurnitureRenderer {
                         top: (this.roomItem.position?.depth ?? 0) * 32
                     });
                 }
+
+                this.roomRenderer.updatePreviewScale();
             }
         });
 
