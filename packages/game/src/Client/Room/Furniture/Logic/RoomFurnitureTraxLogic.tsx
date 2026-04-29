@@ -3,7 +3,7 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import { clientInstance } from "../../../..";
 import { ReactNode } from "react";
-import RoomFurnitureTraxContextMenu from "@UserInterface/Components/Room/Item/ContextMenu/Furniture/Mannequin/RoomFurnitureTraxContextMenu";
+import RoomFurnitureTraxContextMenu from "@UserInterface/Components2/Room/Item/ContextMenu/Furniture/Mannequin/RoomFurnitureTraxContextMenu";
 
 export default class RoomFurnitureTraxLogic implements FurnitureLogic {
     constructor(private readonly room: RoomInstance, private readonly roomFurniture: RoomFurniture) {

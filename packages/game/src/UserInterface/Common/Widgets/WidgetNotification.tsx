@@ -1,6 +1,6 @@
 import { BadgeData, FurnitureData } from "@pixel63/events";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
-import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
+import FurnitureImage from "@UserInterface/Components2/Furniture/FurnitureImage";
 import { useEffect, useRef } from "react";
 
 export type WidgetNotificationProps = {

@@ -1,0 +1,35 @@
+import Dialog from "../../../Common/Dialog/Dialog";
+import DialogTabs from "../../../Common/Dialog/Components/Tabs/DialogTabs";
+import RoomSettingsBasicTab from "./Tabs/RoomSettingsBasicTab";
+import RoomSettingsCustomizeTab from "./Tabs/RoomSettingsCustomizeTab";
+import RoomSettingsAccessTab from "@UserInterface/Components2/Room/Settings/Tabs/RoomSettingsAccessTab";
+
+export type RoomSettingsDialogProps = {
+    hidden?: boolean;
+    onClose?: () => void;
+}
+
+export default function RoomSettingsDialog({ hidden, onClose }: RoomSettingsDialogProps) {
+    return (
+        <Dialog title="Room Settings" hidden={hidden} onClose={onClose} width={340} height={470} style={{ overflow: "visible" }}>
+            <DialogTabs withoutHeader initialActiveIndex={0} tabs={[
+                {
+                    icon: "Basic",
+                    element: (<RoomSettingsBasicTab/>),
+                },
+                {
+                    icon: "Access",
+                    element: (<RoomSettingsAccessTab/>),
+                },
+                {
+                    icon: "Rights",
+                    element: (<div style={{ flex: 1 }}/>),
+                },
+                {
+                    icon: "Customize",
+                    element: (<RoomSettingsCustomizeTab/>),
+                }
+            ]}/>
+        </Dialog>
+    );
+}
