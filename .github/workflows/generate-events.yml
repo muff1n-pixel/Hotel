@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd packages/events
-          npm ci
+          npm install
 
       - name: Generate events
         run: |
