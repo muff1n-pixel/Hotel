@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: packages/events
-        run: npm install
+        run: npm ci
 
       - name: Generate events
         working-directory: packages/events

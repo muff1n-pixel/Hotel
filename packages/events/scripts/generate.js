@@ -52,7 +52,7 @@ for (let i = 0; i < relativeProtoFiles.length; i += 20) {
 
     const command = [
         protocPath,
-        `--plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\${(platform() === "win32")?("protoc-gen-ts_proto.cmd"):("protoc-gen-ts_proto")}"`,
+        `--plugin=protoc-gen-ts_proto="..\\node_modules\\.bin\\${(platform() === "win32")?("protoc-gen-ts_proto.cmd"):("protoc-gen-ts_proto")}"`,
         `--ts_proto_opt=esModuleInterop=true,importSuffix=.js,outputTypeRegistry=true`,
         `--ts_proto_out=${OUT_DIR}`,
         `-I=src`, // root must prefix the proto paths
