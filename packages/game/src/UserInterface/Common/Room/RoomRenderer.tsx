@@ -74,7 +74,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             if(!item) {
                 item = new RoomFurnitureItem(
                     roomRenderer, 
-                    new Furniture(furnitureItem.furniture.type, 64),
+                    new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),
                     furnitureItem.position
                 );
 
