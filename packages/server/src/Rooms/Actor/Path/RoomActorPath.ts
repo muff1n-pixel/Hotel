@@ -22,7 +22,9 @@ export default class RoomActorPath {
 
     public async handleActionsInterval() {
         if(this.previousPosition) {
-            await this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(this.previousPosition), RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
+            if(this.previousPosition.row !== this.actor.position.row && this.previousPosition.column !== this.actor.position.column) {
+                await this.actor.handleWalkEvent?.(RoomPositionOffsetData.fromJSON(this.previousPosition), RoomPositionOffsetData.fromJSON(this.actor.position)).catch(console.error);
+            }
 
             this.previousPosition = undefined;
         }
@@ -246,7 +248,6 @@ export default class RoomActorPath {
             this.actor.direction = direction;
         }
 
-        this.previousPosition = undefined;
         this.path = undefined;
         this.pathOnCancel?.();
 
