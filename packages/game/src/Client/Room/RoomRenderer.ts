@@ -145,7 +145,7 @@ export default class RoomRenderer extends EventTarget {
     private updateCanvasSize() {
         // Automatically clears the context
         if(this.element.width === this.parent.clientWidth && this.element.height === this.parent.clientHeight) {
-            this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+            //this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         }
         else {
             this.element.width = this.parent.clientWidth;
@@ -229,6 +229,8 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private renderOffScreen(context: CanvasRenderingContext2D) {
+        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+
         this.drawBackground(context);
 
         this.updateRenderedOffset();
