@@ -205,7 +205,7 @@ export default class RoomUser implements RoomActor {
         return this.actions.some((action) => action.id === actionId);
     }
 
-    public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null {
+    public addAction(action: string, removeAfterMs?: number, sendProtobuff: boolean = true): RoomActorActionData | null {
         if(this.hasAction(action)) {
             return null;
         }
