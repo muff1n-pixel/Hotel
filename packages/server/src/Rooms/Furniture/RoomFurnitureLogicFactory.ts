@@ -64,6 +64,7 @@ import WiredActionMoveRotateLogic from "./Logic/Wired/Action/WiredActionMoveRota
 import WiredActionMoveRotateUserLogic from "./Logic/Wired/Action/WiredActionMoveRotateUserLogic";
 import WiredActionMatchToPositionStateLogic from "./Logic/Wired/Action/WiredActionMatchToPositionStateLogic";
 import WiredActionToggleRandomStateLogic from "./Logic/Wired/Action/WiredActionToggleRandomStateLogic";
+import WiredActionCallStacksLogic from "./Logic/Wired/Action/WiredActionCallStacksLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -306,6 +307,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_toggle_to_rnd":
                 return new WiredActionToggleRandomStateLogic(roomFurniture);
+
+            case "wf_act_call_stacks":
+                return new WiredActionCallStacksLogic(roomFurniture);
         }
 
         return null;

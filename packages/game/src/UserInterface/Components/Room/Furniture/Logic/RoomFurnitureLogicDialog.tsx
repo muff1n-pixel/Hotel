@@ -32,6 +32,7 @@ import WiredActionMoveRotateDialog from "@UserInterface/Components/Room/Furnitur
 import WiredActionMoveRotateUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateUserDialog";
 import WiredActionMatchToPositionStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMatchToPositionStateDialog";
 import WiredActionToggleRandomStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleRandomStateDialog";
+import WiredActionCallStacksDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionCallStacksDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -110,6 +111,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         
         case "wf_act_match_to_sshot":
             return (<WiredActionMatchToPositionStateDialog {...props}/>);
+
+        case "wf_act_call_stacks":
+            return (<WiredActionCallStacksDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);
