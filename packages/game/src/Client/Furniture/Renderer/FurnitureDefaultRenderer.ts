@@ -259,7 +259,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 continue;
             }
 
-            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color, options.grayscaled, layerData?.tag, assetData.usesPalette);
+            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
 
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
