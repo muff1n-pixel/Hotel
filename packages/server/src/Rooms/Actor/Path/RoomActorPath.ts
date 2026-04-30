@@ -199,6 +199,10 @@ export default class RoomActorPath {
             }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent, roomActorActionsData);
         }
         else if(furniture) {
+            if(!furniture.isWalkable(true)) {
+                return;
+            }
+            
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
             if(depth !== null) {
