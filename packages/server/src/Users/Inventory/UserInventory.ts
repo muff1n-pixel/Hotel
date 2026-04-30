@@ -89,7 +89,7 @@ export default class UserInventory {
         if(userFurniture.furniture.flags.inventoryStackable) {
             const count = await this.getFurnitureCount(userFurniture.furniture.id);
 
-            if(count > 1) {
+            if(count >= 1) {
                 this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
                     updatedUserFurniture: [
                         {
