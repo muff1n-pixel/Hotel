@@ -41,8 +41,8 @@ export default class PlaceFurnitureEvent implements ProtobuffListener<PlaceRoomF
             });
         }
 
-        await inventory.deleteFurniture(userFurniture);
-
         await RoomFurniture.place(user.room, userFurniture, payload.position, payload.direction);
+
+        await inventory.deleteFurniture(userFurniture);
     }
 }
