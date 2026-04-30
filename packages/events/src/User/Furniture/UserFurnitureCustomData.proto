@@ -21,6 +21,7 @@ import "User/Furniture/Data/Wired/Actions/WiredActionMoveRotateUserData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionMatchToPositionStateData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionToggleRandomStateData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionCallStacksData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionControlClockData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -49,6 +50,7 @@ message UserFurnitureCustomData {
         WiredActionMatchToPositionStateData wired_action_match_to_position_state = 27;
         WiredActionToggleRandomStateData wired_action_toggle_random_state = 28;
         WiredActionCallStacksData wired_action_call_stacks = 29;
+        WiredActionControlClockData wired_action_control_clock = 30;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;

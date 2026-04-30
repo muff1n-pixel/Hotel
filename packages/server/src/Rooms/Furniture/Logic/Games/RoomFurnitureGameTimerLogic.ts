@@ -25,32 +25,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         const game = this.room.games.getGame(this.game);
 
         if(payload.tag === "reset") {
-            if(this.room.games.isGamePlaying(this.game)) {
-                return;
-            }
-
-            if(game) {
-                await game.endGame("counter");
-            }
-
-            if(this.seconds !== (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30)) {
-                this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
-
-                await this.updateAnimationTags();
-            }
-            else {
-                this.seconds = this.getNextSecondsInterval();
-
-                await this.roomFurniture.model.update({
-                    data: UserFurnitureCustomData.create({
-                        gameTimer: {
-                            seconds: this.seconds
-                        }
-                    })
-                });
-
-                await this.updateAnimationTags();
-            }
+            await this.reset();
 
             // TODO: was this a mistake?
             //await this.getGame().endGame("counter");
@@ -59,18 +34,14 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         }
 
         if(!game?.started) {
-            this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
-
-            await this.updateAnimationTags();
-
-            await this.room.games.startGame(this.game, this.seconds);
+            await this.start();
         }
         else {
             if(game.paused) {
-                await game.resumeGame();
+                await this.resume();
             }
             else {
-                await game.pauseGame();
+                await this.pause();
             }
         }
     }
@@ -154,5 +125,72 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
                 frame: secondsDigit
             })
         ]);
+    }
+
+    public async start() {
+        const game = this.room.games.getGame(this.game);
+
+        if(!game?.started) {
+            this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
+
+            await this.updateAnimationTags();
+
+            await this.room.games.startGame(this.game, this.seconds);
+        }
+    }
+
+    public async resume() {
+        const game = this.room.games.getGame(this.game);
+
+        if(game?.started && game?.paused) {
+            await game.resumeGame();
+        }
+    }
+
+    public async pause() {
+        const game = this.room.games.getGame(this.game);
+
+        if(game?.started && !game?.paused) {
+            await game?.pauseGame();
+        }
+    }
+
+    public async stop() {
+        const game = this.room.games.getGame(this.game);
+
+        if(this.room.games.isGamePlaying(this.game)) {
+            await game?.endGame("counter");
+        }
+    }
+
+    public async reset() {
+        if(this.room.games.isGamePlaying(this.game)) {
+            return;
+        }
+
+        const game = this.room.games.getGame(this.game);
+
+        if(game) {
+            await this.stop();
+        }
+
+        if(this.seconds !== (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30)) {
+            this.seconds = (this.roomFurniture.model.data?.gameTimer?.seconds ?? 30);
+
+            await this.updateAnimationTags();
+        }
+        else {
+            this.seconds = this.getNextSecondsInterval();
+
+            await this.roomFurniture.model.update({
+                data: UserFurnitureCustomData.create({
+                    gameTimer: {
+                        seconds: this.seconds
+                    }
+                })
+            });
+
+            await this.updateAnimationTags();
+        }
     }
 }
