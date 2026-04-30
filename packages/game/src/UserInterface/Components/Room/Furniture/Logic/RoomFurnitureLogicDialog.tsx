@@ -31,6 +31,7 @@ import WiredActionToggleStateDialog from "@UserInterface/Components/Room/Furnitu
 import WiredActionMoveRotateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateDialog";
 import WiredActionMoveRotateUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveRotateUserDialog";
 import WiredActionMatchToPositionStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMatchToPositionStateDialog";
+import WiredActionToggleRandomStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleRandomStateDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -100,6 +101,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_move_rotate":
             return (<WiredActionMoveRotateDialog {...props}/>);
+
+        case "wf_act_toggle_to_rnd":
+            return (<WiredActionToggleRandomStateDialog {...props}/>);
 
         case "wf_act_move_rotate_user":
             return (<WiredActionMoveRotateUserDialog {...props}/>);
