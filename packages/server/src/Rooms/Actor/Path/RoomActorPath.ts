@@ -246,6 +246,7 @@ export default class RoomActorPath {
             this.actor.direction = direction;
         }
 
+        this.previousPosition = undefined;
         this.path = undefined;
         this.pathOnCancel?.();
 
