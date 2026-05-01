@@ -10,6 +10,10 @@ export default class WiredTriggerAtGivenTimeLogic extends WiredTriggerLogic {
     }
     
     public handleDataChanged(): void {
+        this.reset();
+    }
+
+    public reset(): void {
         this.readyAtTimestamp = performance.now();
         this.hasTriggered = false;
     }

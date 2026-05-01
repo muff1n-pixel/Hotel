@@ -66,6 +66,7 @@ import WiredActionMatchToPositionStateLogic from "./Logic/Wired/Action/WiredActi
 import WiredActionToggleRandomStateLogic from "./Logic/Wired/Action/WiredActionToggleRandomStateLogic";
 import WiredActionCallStacksLogic from "./Logic/Wired/Action/WiredActionCallStacksLogic";
 import WiredActionControlClockLogic from "./Logic/Wired/Action/WiredActionControlClockLogic";
+import WiredActionResetTimersLogic from "./Logic/Wired/Action/WiredActionResetTimersLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -314,6 +315,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_control_clock":
                 return new WiredActionControlClockLogic(roomFurniture);
+
+            case "wf_act_reset_timers":
+                return new WiredActionResetTimersLogic(roomFurniture);
         }
 
         return null;
