@@ -25,6 +25,7 @@ import "User/Furniture/Data/Wired/Actions/WiredActionToggleRandomStateData.proto
 import "User/Furniture/Data/Wired/Actions/WiredActionCallStacksData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionControlClockData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionAdjustClockData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionSetAltitudeData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -61,6 +62,7 @@ message UserFurnitureCustomData {
         WiredActionCallStacksData wired_action_call_stacks = 29;
         WiredActionControlClockData wired_action_control_clock = 30;
         WiredActionAdjustClockData wired_action_adjust_clock = 31;
+        WiredActionSetAltitudeData wired_action_set_altitude = 32;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;
