@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredActionMoveFurniToFurniData {
+    repeated string furniture_ids = 1;
+    repeated string target_furniture_ids = 2;
+}

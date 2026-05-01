@@ -8,6 +8,7 @@ export type AssetSpriteGrayscaledProperties = {
     ink?: number;
     background: string;
     foreground: string;
+    alpha?: number;
 }
 
 export type AssetSpriteProperties = {
@@ -120,7 +121,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink)) && (!properties.requireImageData || imageData));
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink && grayscaled?.alpha === properties.grayscaled?.alpha)) && (!properties.requireImageData || imageData));
 
         if(existingSprite) {
             const output = await existingSprite.result;
@@ -278,9 +279,16 @@ export default class AssetFetcher {
                     mutatedImageData.data[index + 2] = background.blue;
                 }
                 else {
-                    mutatedImageData.data[index] = foreground.red;
-                    mutatedImageData.data[index + 1] = foreground.green;
-                    mutatedImageData.data[index + 2] = foreground.blue;
+                    if(grayscaled.alpha === undefined) {
+                        mutatedImageData.data[index] = foreground.red;
+                        mutatedImageData.data[index + 1] = foreground.green;
+                        mutatedImageData.data[index + 2] = foreground.blue;
+                    }
+                    else {
+                        mutatedImageData.data[index] = (mutatedImageData.data[index] * (1 - grayscaled.alpha)) + (foreground.red * grayscaled.alpha);
+                        mutatedImageData.data[index + 1] = (mutatedImageData.data[index + 1] * (1 - grayscaled.alpha)) + (foreground.green * grayscaled.alpha);
+                        mutatedImageData.data[index + 2] = (mutatedImageData.data[index + 2] * (1 - grayscaled.alpha)) + (foreground.blue * grayscaled.alpha);
+                    }
                 }
             }
         }

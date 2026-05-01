@@ -37,6 +37,7 @@ import WiredActionControlClockDialog from "@UserInterface/Components/Room/Furnit
 import WiredActionAdjustClockDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionAdjustClockDialog";
 import WiredActionSetAltitudeDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionSetAltitudeDialog";
 import WiredActionMoveToDirectionDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveToDirectionDialog";
+import WiredActionMoveFurniToFurniDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveFurniToFurniDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -130,6 +131,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_move_to_dir":
             return (<WiredActionMoveToDirectionDialog {...props}/>);
+
+        case "wf_act_furni_to_furni":
+            return (<WiredActionMoveFurniToFurniDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

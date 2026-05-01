@@ -1,11 +1,12 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 export type WiredButtonProps = {
     children: ReactNode;
     onClick: () => void;
+    style?: CSSProperties;
 };
 
-export default function WiredButton({ children, onClick }: WiredButtonProps) {
+export default function WiredButton({ children, onClick, style }: WiredButtonProps) {
     return (
         <div style={{
             flex: 1,
@@ -18,7 +19,9 @@ export default function WiredButton({ children, onClick }: WiredButtonProps) {
             justifyContent: "center",
             alignItems: "center",
 
-            cursor: "pointer"
+            cursor: "pointer",
+
+            ...style
         }} onClick={onClick}>
             <div>{children}</div>
         </div>

@@ -1,18 +1,28 @@
-import { useEffect, useRef } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef } from "react";
 import WiredSection from "./WiredSection";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 
 export type WiredFurniturePickerProps = {
+    label?: string;
+    enabled?: boolean;
+
     maxFurniture: number;
     restrictedToFurnitureTypes?: string[];
 
     value: string[];
     onChange: (value: string[]) => void;
+
+    grayscale?: AssetSpriteGrayscaledProperties;
+
+    children?: ReactNode;
+
+    style?: CSSProperties;
 };
 
-export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFurniture, value, onChange }: WiredFurniturePickerProps) {
+export default function WiredFurniturePicker({ label, restrictedToFurnitureTypes, maxFurniture, value, onChange, enabled = true, grayscale = { foreground: "#999999", background: "#FFFFFF" }, children, style }: WiredFurniturePickerProps) {
     const room = useRoomInstance();
 
     const furnitureIds = useRef<string[]>(value);
@@ -34,13 +44,14 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
         for(const furnitureId of furnitureIds.current) {
             const furniture = room.getFurnitureById(furnitureId);
 
-            furniture.furniture.grayscaled = {
-                foreground: "#999999",
-                background: "#FFFFFF"
-            };
+            furniture.furniture.grayscaled = grayscale;
         }
 
         const listener = (event: Event) => {
+            if(!enabled) {
+                return;
+            }
+
             if(!(event instanceof RoomClickEvent)) {
                 return;
             }
@@ -63,10 +74,7 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
             }
             else {
                 if(furnitureIds.current.length < maxFurniture) {
-                    furniture.furniture.grayscaled = {
-                        foreground: "#999999",
-                        background: "#FFFFFF"
-                    };
+                    furniture.furniture.grayscaled = grayscale;
                     
                     furnitureIds.current = [...furnitureIds.current, furniture.data.id];
                     onChange(furnitureIds.current);
@@ -85,13 +93,15 @@ export default function WiredFurniturePicker({ restrictedToFurnitureTypes, maxFu
                 furniture.furniture.grayscaled = undefined;
             }
         };
-    }, [room, furnitureIds, maxFurniture, restrictedToFurnitureTypes, onChange]);
+    }, [room, furnitureIds, maxFurniture, restrictedToFurnitureTypes, grayscale, enabled, onChange]);
 
     return (
-        <WiredSection>
-            <b>Pick furnis [{value.length}/{maxFurniture}]</b>
+        <WiredSection style={style}>
+            <b>{label ?? "Pick furnis"} [{value.length}/{maxFurniture}]</b>
 
             <div>You must pick one or more furnis for this entry. You can select or deselect a furni in your room by clicking / tapping it.</div>
+
+            {children}
         </WiredSection>
     );
 }
