@@ -34,6 +34,7 @@ import WiredActionMatchToPositionStateDialog from "@UserInterface/Components/Roo
 import WiredActionToggleRandomStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionToggleRandomStateDialog";
 import WiredActionCallStacksDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionCallStacksDialog";
 import WiredActionControlClockDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionControlClockDialog";
+import WiredActionAdjustClockDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionAdjustClockDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -118,6 +119,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_control_clock":
             return (<WiredActionControlClockDialog {...props}/>);
+
+        case "wf_act_adjust_clock":
+            return (<WiredActionAdjustClockDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

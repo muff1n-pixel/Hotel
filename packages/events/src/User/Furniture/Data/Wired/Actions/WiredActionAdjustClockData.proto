@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message WiredActionAdjustClockData {
+    repeated string furniture_ids = 1;
+    string action = 2;
+
+    uint32 minutes = 3;
+    uint32 seconds = 4;
+}

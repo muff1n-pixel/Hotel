@@ -193,4 +193,49 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             await this.updateAnimationTags();
         }
     }
+
+    public async increase(seconds: number) {
+        const game = this.room.games.getGame(this.game);
+
+        if(game?.started) {
+            game.seconds += seconds;
+
+            await this.updateAnimationTags();
+        }
+        else {
+            this.seconds += seconds;
+
+            await this.updateAnimationTags();
+        }
+    }
+
+    public async decrease(seconds: number) {
+        const game = this.room.games.getGame(this.game);
+
+        if(game?.started) {
+            game.seconds -= seconds;
+
+            await this.updateAnimationTags();
+        }
+        else {
+            this.seconds -= seconds;
+
+            await this.updateAnimationTags();
+        }
+    }
+
+    public async set(seconds: number) {
+        const game = this.room.games.getGame(this.game);
+
+        if(game?.started) {
+            game.seconds = seconds;
+
+            await this.updateAnimationTags();
+        }
+        else {
+            this.seconds = seconds;
+
+            await this.updateAnimationTags();
+        }
+    }
 }

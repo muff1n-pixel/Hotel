@@ -1,5 +1,4 @@
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import WiredDivider from "../../../../../../Common/Dialog/Layouts/Wired/WiredDivider";
