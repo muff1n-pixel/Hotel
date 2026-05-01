@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message WiredActionMoveToDirectionData {
+    repeated string furniture_ids = 1;
+
+    uint32 start_direction = 2;
+    string blocked_direction_action = 3;
+
+    bool block_colliding_with_users = 4;
+}

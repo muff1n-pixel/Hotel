@@ -37,28 +37,14 @@ export default class WiredActionMatchToPositionStateLogic extends WiredActionLog
                     position.depth = roomFurniture.model.position.depth;
                 }
 
-                await roomFurniture.setPosition(position, false);
-                
-                await roomFurniture.model.save();
-
-                this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                    id: roomFurniture.model.id,
-                    position
-                }));
+                await roomFurniture.movePosition(position);
             }
             else if(this.roomFurniture.model.data.wiredActionMatchToPositionState.matchAltitude && furniture.position) {
                 const position = RoomPositionData.fromJSON(roomFurniture.model.position);
 
                 position.depth = furniture.position.depth;
 
-                await roomFurniture.setPosition(position, false);
-                
-                await roomFurniture.model.save();
-
-                this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                    id: roomFurniture.model.id,
-                    position
-                }));
+                await roomFurniture.movePosition(position);
             }
 
             executed = true;

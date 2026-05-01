@@ -88,14 +88,7 @@ export default class WiredActionMoveRotateLogic extends WiredActionLogic {
             depth: upmostDepth
         });
 
-        await roomFurniture.setPosition(position, false);
-        
-        await roomFurniture.model.save();
-
-        this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-            id: roomFurniture.model.id,
-            position
-        }));
+        await roomFurniture.movePosition(position);
     }
 
     private async handleFurnitureRotation(roomFurniture: RoomFurniture) {

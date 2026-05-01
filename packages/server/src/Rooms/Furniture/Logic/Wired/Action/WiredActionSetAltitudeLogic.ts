@@ -54,14 +54,7 @@ export default class WiredActionSetAltitudeLogic extends WiredActionLogic {
                 depth
             });
 
-            await roomFurniture.setPosition(position, false);
-            
-            await roomFurniture.model.save();
-
-            this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                id: roomFurniture.model.id,
-                position
-            }));
+            await roomFurniture.movePosition(position);
         }
 
         if(executed) {

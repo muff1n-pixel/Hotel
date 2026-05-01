@@ -69,6 +69,7 @@ import WiredActionControlClockLogic from "./Logic/Wired/Action/WiredActionContro
 import WiredActionResetTimersLogic from "./Logic/Wired/Action/WiredActionResetTimersLogic";
 import WiredActionAdjustClockLogic from "./Logic/Wired/Action/WiredActionAdjustClockLogic";
 import WiredActionSetAltitudeLogic from "./Logic/Wired/Action/WiredActionSetAltitudeLogic";
+import WiredActionMoveToDirectionLogic from "./Logic/Wired/Action/WiredActionMoveToDirectionLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -326,6 +327,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_set_altitude":
                 return new WiredActionSetAltitudeLogic(roomFurniture);
+
+            case "wf_act_move_to_dir":
+                return new WiredActionMoveToDirectionLogic(roomFurniture);
         }
 
         return null;

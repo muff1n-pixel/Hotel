@@ -105,17 +105,9 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 depth: depth + 0.0001
             });
 
-            await this.roomFurniture.setPosition(position, false);
-                            
-            await this.roomFurniture.model.save();
-
             const duration = (this.travelingPassing)?(500):(1000 / this.travelingVelocity);
 
-            this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                id: this.roomFurniture.model.id,
-                position: position,
-                duration
-            }));
+            await this.roomFurniture.movePosition(position, duration);
 
             if(this.travelingVelocity === 0) {
                 this.travelingVelocity = null;

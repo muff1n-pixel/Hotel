@@ -94,14 +94,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
                 depth: nextPosition.depth + (furniture.model.position.depth - this.roomFurniture.model.position.depth - this.roomFurniture.model.furniture.dimensions.depth)
             });
 
-            await furniture.setPosition(position, false);
-            
-            await furniture.model.save();
-
-            this.roomFurniture.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
-                id: furniture.model.id,
-                position
-            }));
+            await furniture.movePosition(position);
             
             animate = true;
         }

@@ -4,7 +4,7 @@ import { game } from "../../index.js";
 import RoomFurnitureLogic from "./Logic/Interfaces/RoomFurnitureLogic.js";
 import RoomUser from "../Users/RoomUser.js";
 import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuffStateLogic.js";
-import { RoomFurnitureData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
+import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic.js";
 import Directions from "../../Helpers/Directions.js";
@@ -306,6 +306,18 @@ export default class RoomFurniture<T = unknown> {
                 ]
             }));
         }
+    }
+
+    public async movePosition(position: RoomPositionData, duration?: number) {
+        await this.setPosition(position, false);
+        
+        await this.model.save();
+
+        this.room.sendProtobuff(RoomFurnitureMovedData, RoomFurnitureMovedData.create({
+            id: this.model.id,
+            position,
+            duration
+        }));
     }
 
     public async setDirection(direction: number, save: boolean = true) {
