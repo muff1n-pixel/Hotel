@@ -16,18 +16,23 @@ export default function WiredActionToggleStateDialog({ data, onClose }: RoomFurn
     const [toggleType, setToggleType] = useState(data.data.data?.wiredActionToggleState?.toggleType ?? "next");
 
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionToggleState?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionToggleState?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+
                 wiredActionToggleState: {
                     toggleType,
                     
-                    furnitureIds,
-                    delayInSeconds
+                    furnitureIds
                 }
             }
         }));

@@ -51,4 +51,8 @@ export default class WiredLogic implements RoomFurnitureLogic {
         this.lastTriggered = performance.now();
         await this.roomFurniture.setAnimation(101);
     }
+
+    public getCommonDelayData() {
+        return this.roomFurniture.model.data?.common?.delay;
+    }
 }

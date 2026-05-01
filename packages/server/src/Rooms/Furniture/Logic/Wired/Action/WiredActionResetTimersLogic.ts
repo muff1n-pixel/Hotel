@@ -1,8 +1,6 @@
-import { RoomPositionOffsetData } from "@pixel63/events";
 import RoomFurniture from "../../../RoomFurniture";
 import { WiredTriggerOptions } from "../WiredLogic";
 import WiredActionLogic from "../WiredActionLogic";
-import RoomFurnitureGameTimerLogic from "../../Games/RoomFurnitureGameTimerLogic";
 import WiredTriggerAtGivenTimeLogic from "../Trigger/WiredTriggerAtGivenTimeLogic";
 
 export default class WiredActionResetTimersLogic extends WiredActionLogic {

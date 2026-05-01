@@ -12,16 +12,21 @@ import { UpdateRoomFurnitureData } from "@pixel63/events";
 
 export default function WiredActionToggleRandomStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionToggleRandomState?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionToggleRandomState?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+                
                 wiredActionToggleRandomState: {
                     furnitureIds,
-                    delayInSeconds
                 }
             }
         }));

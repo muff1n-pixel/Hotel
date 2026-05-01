@@ -21,7 +21,7 @@ export default function WiredActionMatchToPositionStateDialog({ data, onClose }:
     const [matchAltitude, setMatchAltitude] = useState(data.data.data?.wiredActionMatchToPositionState?.matchAltitude ?? false);
 
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionMatchToPositionState?.furniture.map((furniture) => furniture.furnitureId) ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionMatchToPositionState?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         if(!room) {
@@ -32,6 +32,12 @@ export default function WiredActionMatchToPositionStateDialog({ data, onClose }:
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+                
                 wiredActionMatchToPositionState: {
                     matchState,
                     matchDirection,
@@ -48,8 +54,7 @@ export default function WiredActionMatchToPositionStateDialog({ data, onClose }:
                             direction: furniture.data.direction,
                             position: furniture.item.position,
                         };
-                    }),
-                    delayInSeconds
+                    })
                 }
             }
         }));

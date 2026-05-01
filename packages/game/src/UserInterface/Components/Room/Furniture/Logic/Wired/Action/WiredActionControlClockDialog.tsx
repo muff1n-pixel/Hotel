@@ -18,7 +18,7 @@ export default function WiredActionControlClockDialog({ data, onClose }: RoomFur
     const [action, setAction] = useState(data.data.data?.wiredActionControlClock?.action ?? "start");
 
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionControlClock?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionControlClock?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         if(!room) {
@@ -29,11 +29,16 @@ export default function WiredActionControlClockDialog({ data, onClose }: RoomFur
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+                
                 wiredActionControlClock: {
                     action,
 
-                    furnitureIds,
-                    delayInSeconds
+                    furnitureIds
                 }
             }
         }));

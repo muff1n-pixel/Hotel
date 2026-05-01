@@ -21,7 +21,7 @@ export default class WiredTriggerLogic extends WiredLogic {
         await Promise.all(wiredStackActionFurniture.map(async (furniture) => {
             const logic = furniture.logic as WiredActionLogic;
 
-            await logic.handleAction?.(options);
+            await logic.handleTrigger?.(options);
         }));
     }
 }

@@ -18,19 +18,24 @@ export default function WiredActionMoveRotateDialog({ data, onClose }: RoomFurni
     const [rotation, setRotation] = useState(data.data.data?.wiredActionMoveRotate?.rotation ?? "none");
 
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionMoveRotate?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionMoveRotate?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+                
                 wiredActionMoveRotate: {
                     movement,
                     rotation,
                     
-                    furnitureIds,
-                    delayInSeconds
+                    furnitureIds
                 }
             }
         }));

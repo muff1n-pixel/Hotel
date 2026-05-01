@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message WiredCommonDelayData {
+    uint32 delay_in_seconds = 1;
+}

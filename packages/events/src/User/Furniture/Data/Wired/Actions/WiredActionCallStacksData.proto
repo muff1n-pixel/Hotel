@@ -2,5 +2,4 @@ syntax = "proto3";
 
 message WiredActionCallStacksData {
     repeated string furniture_ids = 1;
-    uint32 delay_in_seconds = 2;
 }

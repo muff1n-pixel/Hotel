@@ -13,6 +13,8 @@ import "User/Furniture/Data/UserFurnitureMannequinData.proto";
 import "User/Furniture/Data/UserFurnitureTraxData.proto";
 import "User/Furniture/Data/UserFurnitureTraxSongDiskData.proto";
 
+import "User/Furniture/Data/Wired/Common/WiredCommonDelayData.proto";
+
 import "User/Furniture/Data/Wired/Actions/WiredActionShowMessageData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionTeleportToFurnitureData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionToggleStateData.proto";
@@ -35,6 +37,12 @@ import "User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
 import "User/Furniture/Data/Wired/WiredUserSpecifierData.proto";
 
 message UserFurnitureCustomData {
+    message UserFurnitreCustomCommonData {
+        WiredCommonDelayData delay = 1;
+    }
+
+    UserFurnitreCustomCommonData common = 100;
+
     oneof data {
         UserFurnitureMoodlightData moodlight = 1;
         UserFurnitureTonerData toner = 2;

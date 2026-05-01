@@ -2,7 +2,6 @@ syntax = "proto3";
 
 message WiredActionToggleStateData {
     repeated string furniture_ids = 1;
-    uint32 delay_in_seconds = 2;
 
     string toggle_type = 3;
 }

@@ -10,21 +10,24 @@ import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
 import WiredFurniturePicker from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export default function WiredActionCallStacksDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionCallStacks?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionCallStacks?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+
                 wiredActionCallStacks: {
-                    furnitureIds,
-                    delayInSeconds
+                    furnitureIds
                 }
             }
         }));

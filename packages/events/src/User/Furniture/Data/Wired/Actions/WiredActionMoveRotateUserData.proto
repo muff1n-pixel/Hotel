@@ -3,6 +3,4 @@ syntax = "proto3";
 message WiredActionMoveRotateUserData {
     string movement = 1;
     string rotation = 2;
-
-    uint32 delay_in_seconds = 3;
 }

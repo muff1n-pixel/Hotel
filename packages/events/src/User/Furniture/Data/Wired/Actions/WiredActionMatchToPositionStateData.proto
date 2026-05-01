@@ -9,5 +9,4 @@ message WiredActionMatchToPositionStateData {
     bool match_altitude = 4;
 
     repeated WiredActionMatchToPositionStateFurnitureData furniture = 5;
-    uint32 delay_in_seconds = 6;
 }

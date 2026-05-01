@@ -3,38 +3,18 @@ import WiredActionLogic from "../WiredActionLogic";
 import { WiredTriggerOptions } from "../WiredLogic";
 import { RoomActorChatData } from "@pixel63/events";
 
-export type DelayedMessageData = {
-    userId: string | null;
-    timestamp: number;
-};
 
 export default class WiredActionShowMessageLogic extends WiredActionLogic {
-    private messages: DelayedMessageData[] = [];
-    
     constructor(roomFurniture: RoomFurniture) {
         super(roomFurniture);
     }
 
-    public async handleActionsInterval(): Promise<void> {
-        await super.handleActionsInterval();
-        
-        if(!this.roomFurniture.model.data?.wiredActionShowMessage) {
-            return;
-        }
-        
-        for(const message of this.messages) {
-            const elapsed = performance.now() - message.timestamp;
-
-            if(elapsed < this.roomFurniture.model.data.wiredActionShowMessage.delayInSeconds * 1000) {
-                continue;
-            }
-
-            const roomUsers = this.getRoomUsersForMessage(message);
+    public async handleAction(options?: WiredTriggerOptions): Promise<void> {
+        if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
+            const roomUsers = this.getRoomUsersForMessage(options?.roomUser?.user.model.id);
 
             if(!roomUsers.length) {
-                this.messages.splice(this.messages.indexOf(message), 1);
-
-                continue;
+                return;
             }
 
             await this.setActive();
@@ -54,25 +34,14 @@ export default class WiredActionShowMessageLogic extends WiredActionLogic {
                     }
                 }));
             }
-
-            this.messages.splice(this.messages.indexOf(message), 1);
         }
     }
 
-    public async handleAction(options?: WiredTriggerOptions): Promise<void> {
-        if(this.roomFurniture.model.data?.wiredActionShowMessage?.message.length) {
-            this.messages.push({
-                userId: options?.roomUser?.user.model.id ?? null,
-                timestamp: performance.now()
-            });
-        }
-    }
-
-    private getRoomUsersForMessage(message: DelayedMessageData) {
-        if(!message.userId) {
+    private getRoomUsersForMessage(userId: string | undefined) {
+        if(!userId) {
             return this.roomFurniture.room.users;
         }
 
-        return this.roomFurniture.room.users.filter((user) => user.user.model.id === message.userId);
+        return this.roomFurniture.room.users.filter((user) => user.user.model.id === userId);
     }
 }

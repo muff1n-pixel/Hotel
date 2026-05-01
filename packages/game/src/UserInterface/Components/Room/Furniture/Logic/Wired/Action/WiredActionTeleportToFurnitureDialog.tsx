@@ -18,16 +18,21 @@ export type WiredActionTeleportToFurnitureDialogData = {
 
 export default function WiredActionTeleportToFurnitureDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionTeleportToFurniture?.furnitureIds ?? []);
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionTeleportToFurniture?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+                
                 wiredActionTeleportToFurniture: {
                     furnitureIds,
-                    delayInSeconds
                 }
             }
         }));

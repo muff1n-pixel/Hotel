@@ -18,16 +18,21 @@ export type WiredActionShowMessageDialogData = {
 
 export default function WiredActionShowMessageDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [message, setMessage] = useState(data.data.data?.wiredActionShowMessage?.message ?? "");
-    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.wiredActionShowMessage?.delayInSeconds ?? 0);
+    const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
+                common: {
+                    delay: {
+                        delayInSeconds
+                    }
+                },
+
                 wiredActionShowMessage: {
                     message,
-                    delayInSeconds
                 }
             }
         }));
