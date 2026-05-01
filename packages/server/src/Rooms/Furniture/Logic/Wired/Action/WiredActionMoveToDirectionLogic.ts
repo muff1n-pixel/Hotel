@@ -98,7 +98,7 @@ export default class WiredActionMoveToDirectionLogic extends WiredActionLogic {
             }
 
             case "back": {
-                return Directions.normalizeDirection(direction + 6);
+                return Directions.normalizeDirection(direction + 4);
             }
 
             case "random": {
