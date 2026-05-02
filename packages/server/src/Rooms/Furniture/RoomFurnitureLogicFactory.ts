@@ -90,6 +90,7 @@ import WiredActionBotTalkToUserLogic from "./Logic/Wired/Action/WiredActionBotTa
 import WiredActionBotFollowUserLogic from "./Logic/Wired/Action/WiredActionBotFollowUserLogic";
 import WiredActionBotChangeClothesLogic from "./Logic/Wired/Action/WiredActionBotChangeClothesLogic";
 import WiredConditionMatchToPositionStateLogic from "./Logic/Wired/Conditions/WiredConditionMatchToPositionStateLogic";
+import WiredConditionUserOnFurnitureLogic from "./Logic/Wired/Conditions/WiredConditionUserOnFurnitureLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -415,6 +416,9 @@ export default class RoomFurnitureLogicFactory {
             // Wired conditions
             case "wf_cnd_match_snapshot":
                 return new WiredConditionMatchToPositionStateLogic(roomFurniture);
+                
+            case "wf_cnd_trggrer_on_frn":
+                return new WiredConditionUserOnFurnitureLogic(roomFurniture);
         }
 
         return null;

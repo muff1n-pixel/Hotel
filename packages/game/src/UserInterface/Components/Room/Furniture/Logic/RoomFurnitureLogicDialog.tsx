@@ -57,6 +57,7 @@ import WiredActionBotTalkToUserDialog from "@UserInterface/Components/Room/Furni
 import WiredActionBotFollowUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotFollowUserDialog";
 import WiredActionBotChangeClothesDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotChangeClothesDialog";
 import WiredConditionMatchToPositionStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionMatchToPositionStateDialog";
+import WiredConditionUserOnFurnitureDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionUserOnFurnitureDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -208,8 +209,7 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         case "wf_act_bot_clothes":
             return (<WiredActionBotChangeClothesDialog {...props}/>);
 
-        case "wf_cnd_match_snapshot":
-            return (<WiredConditionMatchToPositionStateDialog {...props}/>);
+        // Wired triggers
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);
@@ -235,6 +235,13 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
         case "wf_trg_recv_signal":
         case "wf_act_send_signal":
             return (<WiredSignalDialog {...props}/>);
+
+        // Wired conditions
+        case "wf_cnd_match_snapshot":
+            return (<WiredConditionMatchToPositionStateDialog {...props}/>);
+            
+        case "wf_cnd_trggrer_on_frn":
+            return (<WiredConditionUserOnFurnitureDialog {...props}/>);
     }
 
     if(props.data.furnitureData.type.startsWith("wf_")) {
