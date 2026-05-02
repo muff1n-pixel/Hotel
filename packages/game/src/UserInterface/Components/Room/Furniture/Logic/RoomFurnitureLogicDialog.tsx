@@ -52,6 +52,7 @@ import WiredActionKickUserDialog from "@UserInterface/Components/Room/Furniture/
 import WiredActionGiveHanditemDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionGiveHanditemDialog";
 import WiredActionBotMoveToFurniDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotMoveToFurniDialog";
 import WiredActionBotTeleportToFurniDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotTeleportToFurniDialog";
+import WiredActionBotTalkDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotTalkDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -190,6 +191,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_bot_teleport":
             return (<WiredActionBotTeleportToFurniDialog {...props}/>);
+
+        case "wf_act_bot_talk":
+            return (<WiredActionBotTalkDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);
