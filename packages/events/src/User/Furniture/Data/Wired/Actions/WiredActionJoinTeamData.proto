@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredActionJoinTeamData {
+    string team = 1;
+    string game = 2;
+}

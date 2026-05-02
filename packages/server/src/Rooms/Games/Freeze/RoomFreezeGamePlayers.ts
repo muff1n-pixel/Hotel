@@ -17,6 +17,8 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
     }
 
     public addPlayer(roomUser: RoomUser, team: RoomFreezeGameTeam) {
+        this.removePlayer(roomUser);
+        
         const player: RoomFreezeGamePlayer = {
             roomUser,
             team,

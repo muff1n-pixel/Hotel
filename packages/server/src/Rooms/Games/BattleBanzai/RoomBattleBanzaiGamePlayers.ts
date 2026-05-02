@@ -18,6 +18,8 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
     }
 
     public addPlayer(roomUser: RoomUser, team: RoomBattleBanzaiGameTeam): void {
+        this.removePlayer(roomUser);
+        
         const player: RoomBattleBanzaiGamePlayer = {
             roomUser,
             team
