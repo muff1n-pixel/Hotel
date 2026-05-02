@@ -32,7 +32,7 @@ export default class WiredActionBotChangeClothesLogic extends WiredActionLogic {
         bot.room.sendProtobuff(RoomBotsData, RoomBotsData.fromJSON({
             botsUpdated: [
                 {
-                    ...bot.model,
+                    ...bot.model.toJSON(),
                     position: bot.position,
                     direction: bot.direction
                 }
