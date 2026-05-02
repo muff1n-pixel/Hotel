@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import "./DialogSlider.css";
 
 export type DialogSliderProps = {
@@ -8,9 +9,11 @@ export type DialogSliderProps = {
     max: number;
 
     step?: number;
+
+    style?: CSSProperties;
 }
 
-export default function DialogSlider({ min, max, value, step, onChange }: DialogSliderProps) {
+export default function DialogSlider({ min, max, value, step, onChange, style }: DialogSliderProps) {
     return (
         <div style={{
             display: "flex",
@@ -26,7 +29,9 @@ export default function DialogSlider({ min, max, value, step, onChange }: Dialog
             }} onClick={() => onChange(Math.max(min, value - (step ?? 1)))}/>
 
             <div className="dialog-slider sprite_dialog_wired_slider-background" style={{
-                filter: "invert(1)"
+                filter: "invert(1)",
+
+                ...style
             }}>
                 <input type="range" step={step} min={min} max={max} value={value} onChange={(event) => onChange(Math.max(0, parseFloat((event.target as HTMLInputElement).value)))}/>
             </div>

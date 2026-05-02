@@ -3,6 +3,7 @@ import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPa
 import CameraDialog from "@UserInterface/Common/Dialog/Layouts/Camera/CameraDialog";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import RoomCameraRenderer from "@UserInterface/Components/Room/Camera/RoomCameraRenderer";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useRef, useState } from "react";
 
 export type RoomCameraDialogProps = {
@@ -11,8 +12,9 @@ export type RoomCameraDialogProps = {
 }
 
 export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogProps) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const dialogs = useDialogs();
 
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const nextIndex = useRef<number>(0);
 
     const [images, setImages] = useState<string[]>([]);
@@ -89,7 +91,13 @@ export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogPr
                             background: "rgba(0, 0, 0, .4)",
                             padding: "18px 0"
                         }}>
-                            <DialogButton>Edit picture</DialogButton>
+                            <DialogButton onClick={() => {
+                                dialogs.openUniqueDialog("room-camera-editor", {
+                                    image: images[activeImageIndex]
+                                });
+                            }}>
+                                Edit picture
+                            </DialogButton>
                         </FlexLayout>
 
                     </Fragment>
