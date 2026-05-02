@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message WiredActionBotChangeClothesData {
+    string bot_name = 1;
+    FigureConfigurationData figure_configuration = 2;
+}

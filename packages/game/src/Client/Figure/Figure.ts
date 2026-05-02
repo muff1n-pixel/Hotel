@@ -14,6 +14,8 @@ export default class Figure {
     }
 
     public async renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
+        this.renderer.configuration = this.configuration!;
+
         return await this.renderer.renderToCanvas(this.getOptions(frame), cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
     }
 

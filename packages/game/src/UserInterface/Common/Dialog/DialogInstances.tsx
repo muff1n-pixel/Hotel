@@ -49,6 +49,7 @@ import TraxEditorDialog from "@UserInterface/Components/Room/Furniture/Logic/Tra
 import TraxPlaylistsDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistsDialog";
 import TraxSongNameDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxSongNameDialog";
 import TraxPlaylistsSongDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistsSongDialog";
+import CommonWardrobeDialog from "@UserInterface/Components/Wardrobe/CommonWardrobeDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -79,6 +80,9 @@ export default function DialogInstances() {
 
                     case "wardrobe":
                         return (<WardrobeDialog {...props} key={dialog.id}/>);
+
+                    case "wardrobe-common":
+                        return (<CommonWardrobeDialog {...props} key={dialog.id}/>);
 
                     case "wardrobe-mannequin":
                         return (<WardrobeMannequinDialog {...props} key={dialog.id}/>);

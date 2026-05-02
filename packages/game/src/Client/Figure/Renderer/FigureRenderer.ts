@@ -62,7 +62,7 @@ export default class FigureRenderer {
 
     public readonly figureCanvasRenderer = new FigureCanvasRenderer(this);
 
-    constructor(public readonly configuration: FigureConfigurationData) {
+    constructor(public configuration: FigureConfigurationData) {
         
     }
 
