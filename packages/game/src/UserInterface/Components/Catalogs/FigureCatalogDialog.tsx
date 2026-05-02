@@ -57,7 +57,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     }}/>
                             </div>
 
-                            <DialogTable columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
+                            <DialogTable activeId={action?.split('.')[1]} columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
                                 return {
                                     id: effect.id.toString(),
                                     values: [effect.id.toString(), effect.library],
@@ -98,7 +98,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     }}/>
                             </div>
 
-                            <DialogTable columns={["Item ID", "Name"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
+                            <DialogTable activeId={action?.split('.')[1]} columns={["Item ID", "Name"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
                                 return {
                                     id: param.value.toString(),
                                     values: [param.value.toString(), getCarryItemTranslation(`handitem_${param.value}`)],
