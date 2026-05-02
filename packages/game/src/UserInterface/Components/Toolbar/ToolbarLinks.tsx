@@ -102,6 +102,12 @@ export default function ToolbarLinks() {
                         }
                     ]}/>
             )}
+
+            {(room) && (
+                <ToolbarItem onClick={() => addUniqueDialog("room-camera")} tooltip="Room Camera">
+                    <div className="sprite_toolbar_camera"/>
+                </ToolbarItem>
+            )}
         </div>
     );
 }
