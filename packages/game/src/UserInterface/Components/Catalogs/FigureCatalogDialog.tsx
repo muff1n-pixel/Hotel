@@ -6,6 +6,7 @@ import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
 import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import { RoomPositionData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type FigureCatalogDialogProps = {
     hidden?: boolean;
@@ -14,6 +15,7 @@ export type FigureCatalogDialogProps = {
 
 export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDialogProps) {
     const user = useUser();
+    const [getCarryItemTranslation] = useTranslation("carryitems");
 
     const [action, setAction] = useState<string | null>(null);
 
@@ -96,10 +98,10 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     }}/>
                             </div>
 
-                            <DialogTable columns={["ID", "Item ID"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
+                            <DialogTable columns={["Item ID", "Name"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
                                 return {
-                                    id: param.id.toString(),
-                                    values: [param.id.toString(), param.value.toString()],
+                                    id: param.value.toString(),
+                                    values: [param.value.toString(), getCarryItemTranslation(`handitem_${param.value}`)],
                                     onClick: () => setAction(`CarryItem.${param.value}`)
                                 }
                             })}/>
