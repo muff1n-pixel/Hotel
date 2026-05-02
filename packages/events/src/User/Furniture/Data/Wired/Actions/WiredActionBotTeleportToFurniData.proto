@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message WiredActionBotTeleportToFurniData {
+    string bot_name = 1;
+}
