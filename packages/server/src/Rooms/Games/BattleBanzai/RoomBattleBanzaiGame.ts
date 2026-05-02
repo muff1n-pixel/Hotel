@@ -223,4 +223,12 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
     public getAllCounterFurniture() {
         return this.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiCounterLogic);
     }
+    
+    public giveTeamScore(team: RoomBattleBanzaiGameTeam, score: number): void {
+        this.teams.addTeamScore(team, score);
+    }
+
+    public removeTeamScore(team: RoomBattleBanzaiGameTeam, score: number): void {
+        this.teams.removeTeamScore(team, score);
+    }
 }

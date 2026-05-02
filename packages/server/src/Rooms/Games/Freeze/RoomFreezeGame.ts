@@ -432,4 +432,25 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
         return leadingTeam;
     }
+    
+    public giveTeamScore(team: RoomFreezeGameTeam, score: number): void {
+        this.teams[team].score += score;
+        
+        for(const furniture of this.getCounterFurniture(team)) {
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score).catch(console.error);
+        }
+
+        this.room.handleGameScore(team, this.teams[team].score).catch(console.error);
+    }
+    
+    public removeTeamScore(team: RoomFreezeGameTeam, score: number): void {
+        this.teams[team].score -= score;
+        this.teams[team].score = Math.max(0, this.teams[team].score);
+        
+        for(const furniture of this.getCounterFurniture(team)) {
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score).catch(console.error);
+        }
+
+        this.room.handleGameScore(team, this.teams[team].score).catch(console.error);
+    }
 }

@@ -23,6 +23,9 @@ export default interface RoomGame<T = unknown> {
     resumeGame(): Promise<void>;
     pauseGame(): Promise<void>;
 
+    giveTeamScore(team: T, score: number): void;
+    removeTeamScore(team: T, score: number): void;
+
     players: RoomGamePlayers<T>;
 }
 
