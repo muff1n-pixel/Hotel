@@ -73,6 +73,7 @@ import WiredActionMoveToDirectionLogic from "./Logic/Wired/Action/WiredActionMov
 import WiredActionMoveFurniToFurniLogic from "./Logic/Wired/Action/WiredActionMoveFurniToFurniLogic";
 import WiredActionMoveFurniToUserLogic from "./Logic/Wired/Action/WiredActionMoveFurniToUserLogic";
 import WiredActionChaseLogic from "./Logic/Wired/Action/WiredActionChaseLogic";
+import WiredActionFleeLogic from "./Logic/Wired/Action/WiredActionFleeLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -342,6 +343,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_chase":
                 return new WiredActionChaseLogic(roomFurniture);
+
+            case "wf_act_flee":
+                return new WiredActionFleeLogic(roomFurniture);
         }
 
         return null;
