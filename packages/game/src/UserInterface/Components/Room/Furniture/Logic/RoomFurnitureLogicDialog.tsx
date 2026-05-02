@@ -58,6 +58,7 @@ import WiredActionBotFollowUserDialog from "@UserInterface/Components/Room/Furni
 import WiredActionBotChangeClothesDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotChangeClothesDialog";
 import WiredConditionMatchToPositionStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionMatchToPositionStateDialog";
 import WiredConditionUserOnFurnitureDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionUserOnFurnitureDialog";
+import WiredConditionFurniHasUsersDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionFurniHasUsersDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -242,6 +243,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             
         case "wf_cnd_trggrer_on_frn":
             return (<WiredConditionUserOnFurnitureDialog {...props}/>);
+
+        case "wf_cnd_furnis_hv_avtrs":
+            return (<WiredConditionFurniHasUsersDialog {...props}/>);
     }
 
     if(props.data.furnitureData.type.startsWith("wf_")) {

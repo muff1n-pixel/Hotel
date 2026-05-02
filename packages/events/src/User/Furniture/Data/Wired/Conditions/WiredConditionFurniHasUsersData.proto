@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message WiredConditionFurniHasUsersData {
+    bool require_all_furni = 1;
+}
