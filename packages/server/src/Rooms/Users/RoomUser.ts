@@ -171,6 +171,10 @@ export default class RoomUser implements RoomActor {
     private readonly disconnectListener = this.disconnect.bind(this);
     public disconnect() {
         this.removeEventListeners();
+
+        for(const bot of this.room.bots) {
+            bot.stopFollowingUser(this);
+        }
         
         this.room.users.splice(this.room.users.indexOf(this), 1);
 

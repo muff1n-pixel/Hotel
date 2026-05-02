@@ -4,6 +4,8 @@ import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import RoomUser from "../Users/RoomUser.js";
+import Directions from "../../Helpers/Directions.js";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -185,7 +187,10 @@ export default class RoomBot implements RoomActor {
             await this.handleAutomaticChat();
         }
 
-        if(this.model.relaxed) {
+        if(this.followingUsers.length) {
+            this.handleFollowingUsers();
+        }
+        else if(this.model.relaxed) {
             await this.handleRelaxed();
         }
 
@@ -270,5 +275,35 @@ export default class RoomBot implements RoomActor {
         }
 
         this.path.walkTo(targetPosition);
+    }
+
+    private followingUsers: RoomUser[] = [];
+
+    public setFollowingUser(roomUser: RoomUser) {
+        if(this.followingUsers.includes(roomUser)) {
+            return;
+        }
+
+        this.followingUsers.push(roomUser);
+    }
+
+    public stopFollowingUser(roomUser: RoomUser) {
+        const index = this.followingUsers.indexOf(roomUser);
+
+        if(index === -1) {
+            return;
+        }
+
+        this.followingUsers.splice(index, 1);
+    }
+
+    private handleFollowingUsers() {
+        const userToFollow = this.followingUsers[Math.floor(Math.random() * this.followingUsers.length)];
+
+        if(!userToFollow) {
+            return;
+        }
+
+        this.path.walkTo(RoomPositionOffsetData.fromJSON(userToFollow.position));
     }
 }

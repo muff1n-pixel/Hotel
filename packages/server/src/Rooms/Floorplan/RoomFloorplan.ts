@@ -57,18 +57,20 @@ export default class RoomFloorplan {
             }
         }
 
-        const user = this.room.getRoomUserAtPosition(position);
+        if(!finalDestination) {
+            const user = this.room.getRoomUserAtPosition(position);
 
-        if(user) {
-            return 1;
-        }
+            if(user) {
+                return 1;
+            }
 
-        if(this.room.getBotAtPosition(position)) {
-            return 1;
-        }
+            if(this.room.getBotAtPosition(position)) {
+                return 1;
+            }
 
-        if(this.room.getPetAtPosition(position)) {
-            return 1;
+            if(this.room.getPetAtPosition(position)) {
+                return 1;
+            }
         }
 
         return 0;

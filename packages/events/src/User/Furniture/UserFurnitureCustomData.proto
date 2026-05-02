@@ -41,6 +41,7 @@ import "User/Furniture/Data/Wired/Actions/WiredActionBotMoveToFurniData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionBotTeleportToFurniData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionBotTalkData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionBotTalkToUserData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionBotFollowUserData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -93,6 +94,7 @@ message UserFurnitureCustomData {
         WiredActionBotTeleportToFurniData wired_action_bot_teleport_to_furni = 44;
         WiredActionBotTalkData wired_action_bot_talk = 45;
         WiredActionBotTalkToUserData wired_action_bot_talk_to_user = 46;
+        WiredActionBotFollowUserData wired_action_bot_follow_user = 47;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;

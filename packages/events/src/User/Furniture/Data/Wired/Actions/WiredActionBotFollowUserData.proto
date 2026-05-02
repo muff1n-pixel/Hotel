@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredActionBotFollowUserData {
+    string bot_name = 1;
+    bool stop_following = 2;
+}
