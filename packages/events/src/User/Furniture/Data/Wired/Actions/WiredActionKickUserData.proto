@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Room/Configuration/RoomClickConfigurationData.proto";
+
+message WiredActionKickUserData {
+    string message = 1;
+}
