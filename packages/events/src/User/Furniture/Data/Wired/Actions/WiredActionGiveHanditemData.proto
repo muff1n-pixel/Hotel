@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message WiredActionGiveHanditemData {
+    bool give_handitem_using_bot = 1;
+    optional string bot_name = 2;
+
+    uint32 handitem = 3;
+}

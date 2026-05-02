@@ -82,6 +82,7 @@ import WiredActionFreezeLogic from "./Logic/Wired/Action/WiredActionFreezeLogic"
 import WiredActionUnfreezeLogic from "./Logic/Wired/Action/WiredActionUnfreezeLogic";
 import WiredActionClickConfigurationLogic from "./Logic/Wired/Action/WiredActionClickConfigurationLogic";
 import WiredActionKickUserLogic from "./Logic/Wired/Action/WiredActionKickUserLogic";
+import WiredActionGiveHanditemLogic from "./Logic/Wired/Action/WiredActionGiveHanditemLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -378,6 +379,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_kick_user":
                 return new WiredActionKickUserLogic(roomFurniture);
+
+            case "wf_act_bot_give_handitem":
+                return new WiredActionGiveHanditemLogic(roomFurniture);
         }
 
         return null;
