@@ -159,8 +159,10 @@ export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogPr
                                         <div className="sprite_room_camera_remove" style={{
                                             position: "absolute",
 
-                                            top: -4,
-                                            right: -4,
+                                            top: -2,
+                                            right: -6,
+
+                                            zIndex: 1,
 
                                             cursor: "pointer"
                                         }} onClick={() => {
