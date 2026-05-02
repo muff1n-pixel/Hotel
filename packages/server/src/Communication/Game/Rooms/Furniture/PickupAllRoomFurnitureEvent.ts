@@ -15,7 +15,9 @@ export default class PickupAllRoomFurnitureEvent implements ProtobuffListener<Pi
         }
 
         for(const roomFurniture of roomUser.room.furnitures) {
-            await roomFurniture.pickup();
+            await roomFurniture.pickup(false);
         }
+
+        roomUser.room.furnitures.length = 0;
     }
 }

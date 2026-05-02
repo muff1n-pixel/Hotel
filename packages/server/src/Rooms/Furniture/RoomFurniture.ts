@@ -71,8 +71,10 @@ export default class RoomFurniture<T = unknown> {
         return roomFurniture;
     }
 
-    public async pickup() {
-        this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
+    public async pickup(splice: boolean = true) {
+        if(splice) {
+            this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
+        }
 
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
         this.room.refreshActorsSitting(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());
