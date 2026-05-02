@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message WiredActionBotTalkToUserData {
+    string bot_name = 1;
+    string message = 2;
+    bool whisper = 3;
+}
