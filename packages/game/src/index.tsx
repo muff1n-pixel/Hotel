@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import Figure from "@Client/Figure/Figure";
 
 import "./Polyfills/OffscreenCanvas";
+import i18n from "@Game/Locales/i18n";
 
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");
@@ -56,6 +57,8 @@ async function start(text?: string) {
             userId: searchParams.get("user") ?? "user1"
         }
     );
+
+    await i18n.init();
 
     clientInstance = new ClientInstance(clientElement);
     userInterface = new UserInterfaceInstance(interfaceElement);

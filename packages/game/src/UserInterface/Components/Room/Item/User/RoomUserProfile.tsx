@@ -1,20 +1,48 @@
 import { useUserBadges } from "../../../../Hooks/useUserBadges";
 import BadgeImage from "../../../../Common/Badges/BadgeImage";
 import { useUser } from "../../../../Hooks/useUser";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import "./RoomUserProfile.css";
 import { webSocketClient } from "../../../../..";
 import RoomUserProfileMotto from "./RoomUserProfileMotto";
 import { RoomUserData, SetUserMottoData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import UserLink from "@UserInterface/Common/Users/UserLink";
+import { useTranslation } from "react-i18next";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
 }
 
 export default function RoomUserProfile({ user: targetUser }: RoomUserProfileProps) {
+    const room = useRoomInstance();
+
     const user = useUser();
+    
+    const [getCarryItemTranslation] = useTranslation("carryitems");
+
+    const carryItemId = useMemo(() => {
+        const roomUser = room?.users.find((roomUser) => roomUser.data.id === user.id);
+
+        if(!roomUser) {
+            return null;
+        }
+
+        const carryItemAction = roomUser.item.figureRenderer.actions.find((action) => action.startsWith("CarryItem"));
+
+        if(!carryItemAction) {
+            return null;
+        }
+
+        const carryItemId = carryItemAction.split('.')[1];
+
+        if(carryItemId === undefined) {
+            return null;
+        }
+
+        return carryItemId;
+    }, [user, room]);
 
     const badges = useUserBadges(targetUser.id);
 
@@ -101,6 +129,18 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             }}/>
 
             <RoomUserProfileMotto canEdit={user.id == targetUser.id} value={targetUser.motto ?? ""} onChange={handleMottoChange}/>
+
+            {(carryItemId) && (
+                <div style={{
+                    width: "100%",
+                    height: 1,
+                    background: "#333333"
+                }}/>
+            )}
+
+            {(carryItemId) && (
+                <div>Carrying: {getCarryItemTranslation(`handitem_${carryItemId}`)}</div>
+            )}
         </div>
     );
 }
