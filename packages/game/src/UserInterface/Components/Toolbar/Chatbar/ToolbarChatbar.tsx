@@ -3,6 +3,7 @@ import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type ToolbarChatbarProps = {
     style?: CSSProperties;
@@ -10,6 +11,7 @@ export type ToolbarChatbarProps = {
 
 export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
     const dialogs = useDialogs();
+    const roomInstance = useRoomInstance();
 
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
@@ -100,6 +102,16 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                 case "modtools": {
                     dialogs.addUniqueDialog("modtools");
                     
+                    return;
+                }
+
+                case "pickall": {
+                    if(!roomInstance?.isOwner) {
+                        return;
+                    }
+
+                    dialogs.addUniqueDialog("room-pickall");
+
                     return;
                 }
             }

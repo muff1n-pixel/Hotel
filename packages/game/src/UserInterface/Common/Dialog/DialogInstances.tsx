@@ -50,6 +50,7 @@ import TraxPlaylistsDialog from "@UserInterface/Components/Room/Furniture/Logic/
 import TraxSongNameDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxSongNameDialog";
 import TraxPlaylistsSongDialog from "@UserInterface/Components/Room/Furniture/Logic/Trax/TraxPlaylistsSongDialog";
 import CommonWardrobeDialog from "@UserInterface/Components/Wardrobe/CommonWardrobeDialog";
+import RoomPickallDialog from "@UserInterface/Components/Room/Commands/RoomPickallDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -134,6 +135,9 @@ export default function DialogInstances() {
 
                     case "room-doorbell-queue":
                         return (<RoomDoorbellQueueDialog {...props} key={dialog.id}/>);
+
+                    case "room-pickall":
+                        return (<RoomPickallDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

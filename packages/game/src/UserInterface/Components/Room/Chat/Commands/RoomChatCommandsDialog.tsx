@@ -57,6 +57,10 @@ export default function RoomChatCommandsDialog({ hidden, onClose }: RoomChatComm
                         {
                             id: ":teleport",
                             values: [":teleport", "Enables teleportation for yourself."]
+                        },
+                        {
+                            id: ":pickall",
+                            values: [":pickall", "(Dangerous) Picks up all furniture from the room."]
                         }
                     ]}/>
                 </div>

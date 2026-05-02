@@ -10,7 +10,8 @@ export default function DialogHeaderContent({ header }: DialogHeaderContentProps
     return (
         <div style={{
             backgroundImage: `url(${header.backgroundImage})`,
-            backgroundSize: "cover",
+            backgroundSize: "contain",
+            backgroundRepeat: "repeat",
             backgroundColor: header.backgroundColor,
 
             padding: 20,
