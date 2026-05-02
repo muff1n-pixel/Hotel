@@ -39,6 +39,7 @@ import WiredActionSetAltitudeDialog from "@UserInterface/Components/Room/Furnitu
 import WiredActionMoveToDirectionDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveToDirectionDialog";
 import WiredActionMoveFurniToFurniDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveFurniToFurniDialog";
 import WiredActionMoveFurniToUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionMoveFurniToUserDialog";
+import WiredActionChaseDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionChaseDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -138,6 +139,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_furni_to_user":
             return (<WiredActionMoveFurniToUserDialog {...props}/>);
+
+        case "wf_act_chase":
+            return (<WiredActionChaseDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

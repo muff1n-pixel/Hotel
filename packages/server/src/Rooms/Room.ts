@@ -96,6 +96,26 @@ export default class Room {
         return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
     }
 
+    public getClosestRoomUser(position: RoomPositionOffsetData): RoomUser | null {
+        let closestUser: RoomUser | null = null;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        for (const user of this.users) {
+            const rowDifference = user.position.row - position.row;
+            const columnDifference = user.position.column - position.column;
+            
+            const distanceSquared = rowDifference * rowDifference + columnDifference * columnDifference;
+
+            if (distanceSquared < closestDistance) {
+                closestDistance = distanceSquared;
+            
+                closestUser = user;
+            }
+        }
+
+        return closestUser;
+    }
+
     public getActorAtPosition(position: RoomPositionOffsetData) {
         const user = this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
         const bot = this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
