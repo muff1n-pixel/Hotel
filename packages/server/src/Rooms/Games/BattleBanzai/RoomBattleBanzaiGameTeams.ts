@@ -28,6 +28,23 @@ export default class RoomBattleBanzaiGameTeams {
         this.game.room.handleGameScore(team, teamData.score).catch(console.error);
     }
 
+    public removeTeamScore(team: RoomBattleBanzaiGameTeam, score: number) {
+        const teamData = this.getTeam(team);
+
+        if(!teamData) {
+            return;
+        }
+
+        teamData.score -= score;
+        teamData.score = Math.max(0, teamData.score);
+
+        for(const furniture of this.getTeamCounterFurniture(team)) {
+            (furniture.logic as RoomFurnitureBattleBanzaiCounterLogic).updateAnimationTags(teamData.score).catch(console.error);
+        }
+        
+        this.game.room.handleGameScore(team, teamData.score).catch(console.error);
+    }
+
     public getTeam(team: RoomBattleBanzaiGameTeam) {
         return this.teams.find((_team) => _team.team === team);
     }

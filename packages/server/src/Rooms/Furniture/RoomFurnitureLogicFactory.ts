@@ -76,6 +76,7 @@ import WiredActionChaseLogic from "./Logic/Wired/Action/WiredActionChaseLogic";
 import WiredActionFleeLogic from "./Logic/Wired/Action/WiredActionFleeLogic";
 import WiredActionJoinTeamLogic from "./Logic/Wired/Action/WiredActionJoinTeamLogic";
 import WiredActionLeaveTeamLogic from "./Logic/Wired/Action/WiredActionLeaveTeamLogic";
+import WiredActionGiveScoreLogic from "./Logic/Wired/Action/WiredActionGiveScoreLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -354,6 +355,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_leave_team":
                 return new WiredActionLeaveTeamLogic(roomFurniture);
+
+            case "wf_act_give_score":
+                return new WiredActionGiveScoreLogic(roomFurniture);
         }
 
         return null;

@@ -144,4 +144,37 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
 
         player.roomUser.path.setFrozen(false);
     }
+
+    public givePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams[player.team].score += score;
+        
+        for(const furniture of this.game.getCounterFurniture(player.team)) {
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.game.teams[player.team].score).catch(console.error);
+        }
+
+        this.game.room.handleGameScore(player.team, this.game.teams[player.team].score).catch(console.error);
+    }
+
+    public removePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams[player.team].score -= score;
+        this.game.teams[player.team].score = Math.max(0, this.game.teams[player.team].score);
+
+        for(const furniture of this.game.getCounterFurniture(player.team)) {
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.game.teams[player.team].score).catch(console.error);
+        }
+
+        this.game.room.handleGameScore(player.team, this.game.teams[player.team].score).catch(console.error);
+    }
 }

@@ -63,4 +63,24 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
             furniture.setAnimation(this.getTeamPlayers(player.team).length).catch(console.error);
         }
     }
+
+    public givePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams.addTeamScore(player.team, score);
+    }
+
+    public removePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams.removeTeamScore(player.team, score);
+    }
 }

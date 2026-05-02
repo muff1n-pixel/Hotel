@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredActionGiveScoreData {
+    uint32 score = 1;
+    string action = 2;
+}
