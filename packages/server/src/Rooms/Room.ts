@@ -8,7 +8,7 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
+import { MessageType, RoomClickConfigurationData, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
 import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
@@ -26,6 +26,8 @@ export default class Room {
     public readonly bots: RoomBot[] = [];
     public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
+
+    public clickConfiguration: RoomClickConfigurationData | undefined = undefined;
 
     public games: RoomGames = new RoomGames(this);
 

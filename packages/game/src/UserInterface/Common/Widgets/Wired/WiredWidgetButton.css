@@ -1,0 +1,26 @@
+.wired-widget-button {
+    background: linear-gradient(to bottom, #6D8BB6 3px, #617BA1 50%, #5D769B 50%);
+    height: 22px;
+    padding: 0 14px;
+
+    border: 1px solid #222C39;
+    border-radius: 4px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Ubuntu Bold";
+
+    cursor: pointer;
+}
+
+.wired-widget-button:hover {
+    background: linear-gradient(to bottom, #6D8BB6 3px, #6581A9 50%, #627DA3 50%);
+}
+
+.wired-widget-button:active {
+    border-color: #222C39;
+
+    background: #5C7599;
+}

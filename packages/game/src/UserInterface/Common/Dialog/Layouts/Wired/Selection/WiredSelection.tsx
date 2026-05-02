@@ -62,6 +62,7 @@ export default function WiredSelection({ value, items, onChange }: WiredSelectio
                 <div style={{
                     flex: 1,
                     paddingLeft: 6,
+                    textWrap: "nowrap"
                 }}>
                     {items.find((item) => item.value === value)?.label}
                 </div>

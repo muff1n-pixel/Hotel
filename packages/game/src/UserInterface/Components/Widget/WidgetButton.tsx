@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 
 import "./WidgetButton.css";
 
@@ -7,12 +7,15 @@ export type WidgetButtonProps = PropsWithChildren & {
     disabled?: boolean;
     color: string;
     onClick: () => void;
+    style?: CSSProperties;
 }
 
-export default function WidgetButton({ tooltip, disabled, color, children, onClick }: WidgetButtonProps) {
+export default function WidgetButton({ tooltip, disabled, color, children, style, onClick }: WidgetButtonProps) {
     return (
         <div className={`widget-button ${(disabled)?("disabled"):("")}`} data-tooltip={tooltip} style={{
-            background: color
+            background: color,
+
+            ...style
         }} onClick={onClick}>
             {children}
         </div>

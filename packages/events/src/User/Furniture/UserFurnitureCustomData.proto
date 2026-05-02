@@ -34,6 +34,7 @@ import "User/Furniture/Data/Wired/Actions/WiredActionJoinTeamData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionGiveScoreData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionGiveScoreTeamData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionFreezeData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionClickConfigurationData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -79,6 +80,7 @@ message UserFurnitureCustomData {
         WiredActionGiveScoreData wired_action_give_score = 37;
         WiredActionGiveScoreTeamData wired_action_give_score_team = 38;
         WiredActionFreezeData wired_action_freeze = 39;
+        WiredActionClickConfigurationData wired_action_click_configuration = 40;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;

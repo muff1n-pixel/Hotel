@@ -8,7 +8,7 @@ import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomActorIdentifierData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
@@ -42,6 +42,8 @@ export default class RoomInstance {
 
     public readonly roomRenderer: RoomRenderer;
 
+    public clickConfiguration: ObservableProperty<RoomClickConfigurationData> = new ObservableProperty();
+
     public readonly users: RoomUser[] = [];
     public furnitures: RoomFurniture[] = [];
     public bots: RoomBot[] = [];
@@ -63,6 +65,7 @@ export default class RoomInstance {
 
         this.hasRights = event.hasRights;
         this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
+        this.clickConfiguration.value = event.clickConfiguration;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 
@@ -171,7 +174,7 @@ export default class RoomInstance {
             return;
         }
 
-        if(event.floorEntity?.position && !(event.otherEntity?.item instanceof RoomFigureItem)) {
+        if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
             webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
                 target: RoomPositionData.fromJSON(event.floorEntity.position)
             }));

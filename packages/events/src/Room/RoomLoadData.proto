@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Room/Information/RoomInformationData.proto";
+import "Room/Configuration/RoomClickConfigurationData.proto";
 
 import "Room/Users/RoomUserData.proto";
 
@@ -18,6 +19,7 @@ message RoomLoadData {
     RoomInformationData information = 2;
 
     RoomStructureData structure = 3;
+    RoomClickConfigurationData click_configuration = 10;
 
     repeated UserFurnitureData furniture = 5;
     repeated FurnitureData furniture_data = 9;

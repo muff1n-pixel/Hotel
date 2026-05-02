@@ -5,6 +5,8 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { clientInstance, webSocketClient } from "../../..";
 import { PickupRoomFurnitureData, RoomPositionData, UpdateRoomFurnitureData } from "@pixel63/events";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
+import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Room/Configuration/RoomClickConfigurationData";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 export default class RoomCursor extends EventTarget {
     private readonly furnitureItem: RoomFurnitureItem;
@@ -41,7 +43,7 @@ export default class RoomCursor extends EventTarget {
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
-            if(otherEntity.item instanceof RoomFurnitureItem) {
+            if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {
                 const roomFurnitureItem = this.roomRenderer.roomInstance?.getFurnitureByItem(otherEntity.item);
 
                 if(event.altKey) {
@@ -60,7 +62,7 @@ export default class RoomCursor extends EventTarget {
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
-            if(otherEntity.item instanceof RoomFurnitureItem) {
+            if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {
                 const roomFurnitureItem = this.roomRenderer.roomInstance?.getFurnitureByItem(otherEntity.item);
                 
                 const logic = roomFurnitureItem.getLogic();
@@ -126,7 +128,7 @@ export default class RoomCursor extends EventTarget {
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
 
         if(this.roomRenderer.roomInstance && otherEntity?.item.position) {
-            if(otherEntity.item instanceof RoomFurnitureItem) {
+            if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {
                 const roomFurnitureItem = this.roomRenderer.roomInstance?.getFurnitureByItem(otherEntity.item);
 
                 if(event.shiftKey && this.roomRenderer.roomInstance.hasRights) {
@@ -155,11 +157,55 @@ export default class RoomCursor extends EventTarget {
 
         this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
 
+        if(otherEntity?.item instanceof RoomFurnitureItem && !this.canClickFurniture()) {
+            return;
+        }
+
+        if(otherEntity?.item instanceof RoomFigureItem && !this.canClickUser()) {
+            return;
+        }
+
         if(otherEntity?.item && this.roomRenderer.focusedItem.value?.id !== otherEntity.item.id) {
             this.roomRenderer.focusedItem.value = otherEntity.item;
         }
         else if(this.roomRenderer.focusedItem.value && (!floorEntity && !otherEntity)) {
             this.roomRenderer.focusedItem.value = null;
         }
+    }
+
+    public canClickBehindUser() {
+        if(!this.roomRenderer.roomInstance?.clickConfiguration.value?.enabled) {
+            return false;
+        }
+
+        if(this.roomRenderer.roomInstance?.clickConfiguration.value.userBehaviour === RoomClickUserConfiguration.CLICKABLE_USER_BEHAVIOUR) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public canClickUser() {
+        if(!this.roomRenderer.roomInstance?.clickConfiguration.value?.enabled) {
+            return true;
+        }
+
+        if(this.roomRenderer.roomInstance?.clickConfiguration.value.userBehaviour === RoomClickUserConfiguration.UNCLICKABLE_USER_BEHAVIOUR) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private canClickFurniture() {
+        if(!this.roomRenderer.roomInstance?.clickConfiguration.value?.enabled) {
+            return true;
+        }
+
+        if(this.roomRenderer.roomInstance?.clickConfiguration.value.furnitureBehaviour === RoomClickFurnitureConfiguration.UNCLICKABLE_FURNITURE_CLICK_BEHAVIOUR) {
+            return false;
+        }
+
+        return true;
     }
 }

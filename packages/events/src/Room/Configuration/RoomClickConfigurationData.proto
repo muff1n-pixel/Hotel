@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+enum RoomClickUserConfiguration {
+    DEFAULT_USER_CLICK_BEHAVIOUR = 0;
+    CLICKABLE_USER_BEHAVIOUR = 1;
+    UNCLICKABLE_USER_BEHAVIOUR = 2;
+}
+
+enum RoomClickFurnitureConfiguration {
+    DEFAULT_FURNITURE_CLICK_BEHAVIOUR = 0;
+    UNCLICKABLE_FURNITURE_CLICK_BEHAVIOUR = 1;
+}
+
+message RoomClickConfigurationData {
+    bool enabled = 1;
+
+    RoomClickUserConfiguration user_behaviour = 2;
+    RoomClickFurnitureConfiguration furniture_behaviour = 3;
+}

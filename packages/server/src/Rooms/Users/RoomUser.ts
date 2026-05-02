@@ -1,12 +1,10 @@
 import User from "../../Users/User.js";
 import Room from "../Room.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
 import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import WiredTriggerUserLeavesRoomLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserLeavesRoomLogic.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
 import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
@@ -80,6 +78,7 @@ export default class RoomUser implements RoomActor {
             id: this.room.model.id,
             
             information: this.room.getInformationData(),
+            clickConfiguration: this.room.clickConfiguration,
             
             structure: this.room.model.structure,
 

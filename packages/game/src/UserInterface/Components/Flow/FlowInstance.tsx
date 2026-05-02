@@ -3,6 +3,7 @@ import RoomTraxMachineWidget from "@UserInterface/Components/Room/Widget/RoomTra
 import Widget from "@UserInterface/Components/Widget/Widget";
 import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotifications";
 import { clientInstance } from "@Game/index";
+import RoomClickConfigurationWidget from "@UserInterface/Components/Room/Widget/RoomClickConfigurationWidget";
 
 export default function FlowInstance() {
     const widgetNotifications = useWidgetNotifications();
@@ -23,6 +24,8 @@ export default function FlowInstance() {
             <Widget/>
 
             <RoomTraxMachineWidget/>
+
+            <RoomClickConfigurationWidget/>
 
             {widgetNotifications?.map((widgetNotification) => (
                 <WidgetNotification
