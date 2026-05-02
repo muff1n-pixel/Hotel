@@ -15,12 +15,12 @@ import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 export default function WiredActionMatchToPositionStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const room = useRoomInstance();
 
-    const [matchState, setMatchState] = useState(data.data.data?.wiredActionMatchToPositionState?.matchState ?? false);
-    const [matchDirection, setMatchDirection] = useState(data.data.data?.wiredActionMatchToPositionState?.matchDirection ?? false);
-    const [matchPosition, setMatchPosition] = useState(data.data.data?.wiredActionMatchToPositionState?.matchPosition ?? false);
-    const [matchAltitude, setMatchAltitude] = useState(data.data.data?.wiredActionMatchToPositionState?.matchAltitude ?? false);
+    const [matchState, setMatchState] = useState(data.data.data?.common?.furnitureState?.matchState ?? false);
+    const [matchDirection, setMatchDirection] = useState(data.data.data?.common?.furnitureState?.matchDirection ?? false);
+    const [matchPosition, setMatchPosition] = useState(data.data.data?.common?.furnitureState?.matchPosition ?? false);
+    const [matchAltitude, setMatchAltitude] = useState(data.data.data?.common?.furnitureState?.matchAltitude ?? false);
 
-    const [furnitureIds, setFurnitureIds] = useState(data.data.data?.wiredActionMatchToPositionState?.furniture.map((furniture) => furniture.furnitureId) ?? []);
+    const [furnitureIds, setFurnitureIds] = useState(data.data.data?.common?.furnitureState?.furniture.map((furniture) => furniture.furnitureId) ?? []);
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
@@ -35,27 +35,27 @@ export default function WiredActionMatchToPositionStateDialog({ data, onClose }:
                 common: {
                     delay: {
                         delayInSeconds
+                    },
+
+                    furnitureState: {
+                        matchState,
+                        matchDirection,
+                        matchPosition,
+                        matchAltitude,
+                        
+                        furniture: furnitureIds.map((furnitureId) => {
+                            const furniture = room.getFurnitureById(furnitureId);
+
+                            return {
+                                furnitureId,
+
+                                animation: furniture.data.animation,
+                                direction: furniture.data.direction,
+                                position: furniture.item.position,
+                            };
+                        })
                     }
                 },
-                
-                wiredActionMatchToPositionState: {
-                    matchState,
-                    matchDirection,
-                    matchPosition,
-                    matchAltitude,
-                    
-                    furniture: furnitureIds.map((furnitureId) => {
-                        const furniture = room.getFurnitureById(furnitureId);
-
-                        return {
-                            furnitureId,
-
-                            animation: furniture.data.animation,
-                            direction: furniture.data.direction,
-                            position: furniture.item.position,
-                        };
-                    })
-                }
             }
         }));
 

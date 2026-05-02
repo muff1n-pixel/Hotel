@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "User/Furniture/Data/Wired/Common/WiredCommonFurniStateFurnitureData.proto";
+
+message WiredCommonFurniStateData {
+    bool match_state = 1;
+    bool match_direction = 2;
+    bool match_position = 3;
+    bool match_altitude = 4;
+
+    repeated WiredCommonFurniStateFurnitureData furniture = 5;
+}

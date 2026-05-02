@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "Room/RoomPositionData.proto";
 
-message WiredActionMatchToPositionStateFurnitureData {
+message WiredCommonFurniStateFurnitureData {
     string furniture_id = 1;
 
     uint32 animation = 2;
