@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WiredActionFreezeData {
+    string effect = 1;
+    bool unfreeze_when_teleporting = 2;
+}

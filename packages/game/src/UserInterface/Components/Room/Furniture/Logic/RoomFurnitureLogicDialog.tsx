@@ -45,6 +45,8 @@ import WiredActionJoinTeamDialog from "@UserInterface/Components/Room/Furniture/
 import WiredActionLeaveTeamDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionLeaveTeamDialog";
 import WiredActionGiveScoreDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionGiveScoreDialog";
 import WiredActionGiveScoreTeamDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionGiveScoreTeamDialog";
+import WiredActionFreezeDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionFreezeDialog";
+import WiredCommonDelayDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/WiredCommonDelayDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -162,6 +164,12 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_give_score_team":
             return (<WiredActionGiveScoreTeamDialog {...props}/>);
+
+        case "wf_act_freeze":
+            return (<WiredActionFreezeDialog {...props}/>);
+
+        case "wf_act_unfreeze":
+            return (<WiredCommonDelayDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

@@ -4,6 +4,7 @@ import { RoomGamePlayers } from "../RoomGame";
 import RoomFreezeGame, { RoomFreezeGamePlayer, RoomFreezeGameTeam } from "./RoomFreezeGame";
 import UserFreezeGameNotifications from "../../../Users/Notifications/Games/UserFreezeGameNotifications";
 import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
+import { RoomUserFrozenEffect } from "../../Users/Interfaces/RoomUserFrozenEffect";
 
 export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreezeGameTeam> {
     private players: RoomFreezeGamePlayer[] = [];
@@ -94,11 +95,8 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
         if(player.shield) {
             return;
         }
-
-        player.roomUser.removeAction("AvatarEffect");
-        player.roomUser.addAction("AvatarEffect.12");
-        
-        player.roomUser.path.setFrozen(true);
+ 
+        player.roomUser.setFrozen(true, RoomUserFrozenEffect.FROZEN);
 
         if(player.health > 0) {
             player.health--;

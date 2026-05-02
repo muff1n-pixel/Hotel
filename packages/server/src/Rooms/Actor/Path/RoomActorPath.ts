@@ -7,6 +7,7 @@ import RoomPet from "../../Pets/RoomPet";
 export default class RoomActorPath {
     public frozen: boolean = false;
     public frozenAt: number = 0;
+    private unfreezeOnTeleport: boolean = false;
 
     private previousPosition: RoomPositionData | undefined;
 
@@ -185,6 +186,10 @@ export default class RoomActorPath {
     public teleportTo(position: RoomPositionOffsetData, usePath: boolean = true, walkEvent: boolean = true) {
         if(this.actor.room.model.structure.grid[position.row]?.[position.column] === undefined || this.actor.room.model.structure.grid[position.row]?.[position.column] === 'X') {
             return;
+        }
+
+        if(this.frozen && this.unfreezeOnTeleport) {
+            this.setFrozen(false);
         }
 
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(position);
@@ -394,12 +399,17 @@ export default class RoomActorPath {
         });
     }
 
-    public setFrozen(frozen: boolean) {
+    public setFrozen(frozen: boolean, unfreezeOnTeleport?: boolean) {
         if(this.frozen === frozen) {
             return;
         }
 
+        if(!frozen) {
+            this.actor.removeAction("AvatarEffect");
+        }
+
         this.frozen = frozen;
+        this.unfreezeOnTeleport = unfreezeOnTeleport ?? false;
 
         if(frozen) {
             this.frozenAt = performance.now();

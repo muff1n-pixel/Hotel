@@ -12,6 +12,7 @@ import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositio
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 import { RoomActorAction } from "../Actor/RoomActorAction.js";
 import Directions from "../../Helpers/Directions.js";
+import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -442,5 +443,18 @@ export default class RoomUser implements RoomActor {
         );
 
         return distance <= radius;
+    }
+
+    public setFrozen(frozen: boolean, effect?: RoomUserFrozenEffect, unfreezeOnTeleport?: boolean) {
+        this.path.setFrozen(frozen, unfreezeOnTeleport);
+
+        if(effect) {
+            if(frozen) {
+                this.addAction(effect);
+            }
+            else {
+                this.removeAction(effect);
+            }
+        }
     }
 }
