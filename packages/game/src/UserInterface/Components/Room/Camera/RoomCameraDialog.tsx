@@ -131,12 +131,15 @@ export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogPr
                             cursor: "pointer"
                         }} onClick={() => setActiveImageIndex(index)}>
                             <div style={{
-                                border: (activeImageIndex !== index)?("1px solid #000000"):(undefined),
+                                border: (activeImageIndex !== index)?("1px solid #000000"):("1px solid transparent"),
 
                                 width: 56,
                                 height: 56,
 
-                                margin: 4
+                                position: "absolute",
+
+                                left: 2,
+                                top: 2
                             }}>
                                 {images[index] && (
                                     <img src={images[index]} width={56} height={56}/>
