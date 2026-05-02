@@ -50,6 +50,7 @@ import WiredCommonDelayDialog from "@UserInterface/Components/Room/Furniture/Log
 import WiredActionClickConfigurationDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionClickConfigurationDialog";
 import WiredActionKickUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionKickUserDialog";
 import WiredActionGiveHanditemDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionGiveHanditemDialog";
+import WiredActionBotMoveToFurniDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotMoveToFurniDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -182,6 +183,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_bot_give_handitem":
             return (<WiredActionGiveHanditemDialog {...props}/>);
+
+        case "wf_act_bot_move":
+            return (<WiredActionBotMoveToFurniDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

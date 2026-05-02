@@ -37,6 +37,7 @@ import "User/Furniture/Data/Wired/Actions/WiredActionFreezeData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionClickConfigurationData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionKickUserData.proto";
 import "User/Furniture/Data/Wired/Actions/WiredActionGiveHanditemData.proto";
+import "User/Furniture/Data/Wired/Actions/WiredActionBotMoveToFurniData.proto";
 
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerPeriodicallyData.proto";
 import "User/Furniture/Data/Wired/Triggers/WiredTriggerStuffStateData.proto";
@@ -85,6 +86,7 @@ message UserFurnitureCustomData {
         WiredActionClickConfigurationData wired_action_click_configuration = 40;
         WiredActionKickUserData wired_action_kick_user = 41;
         WiredActionGiveHanditemData wired_action_give_handitem = 42;
+        WiredActionBotMoveToFurniData wired_action_bot_move_to_furni = 43;
 
         WiredTriggerPeriodicallyData wired_trigger_periodically = 8;
         WiredTriggerStuffStateData wired_trigger_stuff_state = 9;
