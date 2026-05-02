@@ -56,6 +56,7 @@ import WiredActionBotTalkDialog from "@UserInterface/Components/Room/Furniture/L
 import WiredActionBotTalkToUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotTalkToUserDialog";
 import WiredActionBotFollowUserDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotFollowUserDialog";
 import WiredActionBotChangeClothesDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionBotChangeClothesDialog";
+import WiredConditionMatchToPositionStateDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionMatchToPositionStateDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -206,6 +207,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_bot_clothes":
             return (<WiredActionBotChangeClothesDialog {...props}/>);
+
+        case "wf_cnd_match_snapshot":
+            return (<WiredConditionMatchToPositionStateDialog {...props}/>);
 
         case "wf_trg_periodically":
             return (<WiredTriggerPeriodicallyDialog {...props}/>);

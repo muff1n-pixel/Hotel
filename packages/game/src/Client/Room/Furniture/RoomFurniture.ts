@@ -98,7 +98,7 @@ export default class RoomFurniture {
                 return new RoomFurnitureTrophyLogic(this.instance, this);
         }
 
-        if(this.furnitureData.interactionType.startsWith("wf_trg") || this.furnitureData.interactionType.startsWith("wf_act")) {
+        if(this.furnitureData.interactionType.startsWith("wf_")) {
             return new RoomFurnitureWiredLogic(this.instance, this);
         }
 

@@ -89,6 +89,7 @@ import WiredActionBotTalkLogic from "./Logic/Wired/Action/WiredActionBotTalkLogi
 import WiredActionBotTalkToUserLogic from "./Logic/Wired/Action/WiredActionBotTalkToUserLogic";
 import WiredActionBotFollowUserLogic from "./Logic/Wired/Action/WiredActionBotFollowUserLogic";
 import WiredActionBotChangeClothesLogic from "./Logic/Wired/Action/WiredActionBotChangeClothesLogic";
+import WiredConditionMatchToPositionStateLogic from "./Logic/Wired/Conditions/WiredConditionMatchToPositionStateLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -249,6 +250,8 @@ export default class RoomFurnitureLogicFactory {
             case "conf_invis_control":
                 return new RoomInvisibleFurnitureControlLogic(roomFurniture);
 
+            // Wired triggers
+
             case "wf_trg_says_something":
                 return new WiredTriggerUserSaysSomethingLogic(roomFurniture);
 
@@ -307,6 +310,8 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_trg_score_achieved":
                 return new WiredTriggerScoreAchievedLogic(roomFurniture);
+
+            // Wired actions
                 
             case "wf_act_show_message":
                 return new WiredActionShowMessageLogic(roomFurniture);
@@ -406,6 +411,10 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_bot_clothes":
                 return new WiredActionBotChangeClothesLogic(roomFurniture);
+
+            // Wired conditions
+            case "wf_cnd_match_snapshot":
+                return new WiredConditionMatchToPositionStateLogic(roomFurniture);
         }
 
         return null;
