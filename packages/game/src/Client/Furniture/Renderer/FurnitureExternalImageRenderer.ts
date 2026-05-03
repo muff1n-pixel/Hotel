@@ -2,9 +2,6 @@ import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
-import { FigureConfigurationData } from "@pixel63/events";
-import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
-import { Figure } from "@Game/library";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 export default class FurnitureExternalImageRenderer extends FurnitureDefaultRenderer {

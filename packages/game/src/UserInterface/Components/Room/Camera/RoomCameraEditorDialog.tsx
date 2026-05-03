@@ -3,10 +3,11 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { Fragment, useRef, useState } from "react";
+import { act, Fragment, useEffect, useRef, useState } from "react";
 import RoomCameraEditorRenderer from "@UserInterface/Components/Room/Camera/RoomCameraEditorRenderer";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type RoomCameraOptions = {
     zoomed: boolean;
@@ -16,6 +17,10 @@ export type RoomCameraOptions = {
         saturation?: number;
         contrast?: number;
         pale?: number;
+    };
+
+    frames?: {
+        [key: string]: number | undefined;
     };
 }
 
@@ -46,19 +51,111 @@ const ROOM_CAMERA_FILTERS = [
     }
 ];
 
+const ROOM_CAMERA_FRAMES = [
+    {
+        tooltip: "Alien",
+        image: "alien_hrd"
+    },
+    {
+        tooltip: "Bluemood",
+        image: "bluemood_mpl"
+    },
+    {
+        tooltip: "Coffee",
+        image: "coffee_mpl"
+    },
+    {
+        tooltip: "Drops",
+        image: "drops_mpl"
+    },
+    {
+        tooltip: "Finger",
+        image: "finger_nrm"
+    },
+    {
+        tooltip: "Frame Black",
+        image: "frame_black_2"
+    },
+    {
+        tooltip: "Frame Gold 1",
+        image: "frame_gold"
+    },
+    {
+        tooltip: "Frame Gray 2",
+        image: "frame_gray_2"
+    },
+    {
+        tooltip: "Frame Gray 3",
+        image: "frame_gray_3"
+    },
+    {
+        tooltip: "Frame Gray 4",
+        image: "frame_gray_4"
+    },
+    {
+        tooltip: "Wood Frame",
+        image: "frame_wood_2"
+    },
+    {
+        tooltip: "Glitter",
+        image: "glitter_hrd"
+    },
+    {
+        tooltip: "Hearts",
+        image: "hearts_hardlight_02"
+    },
+    {
+        tooltip: "Misty",
+        image: "misty_hrd"
+    },
+    {
+        tooltip: "Pinky",
+        image: "pinky_nrm"
+    },
+    {
+        tooltip: "Rusty",
+        image: "rusty_mpl"
+    },
+    {
+        tooltip: "Security",
+        image: "security_hardlight"
+    },
+    {
+        tooltip: "Shadow",
+        image: "shadow_multiply_02"
+    },
+    {
+        tooltip: "Shiny",
+        image: "shiny_hrd"
+    },
+    {
+        tooltip: "Stars",
+        image: "stars_hardlight_02"
+    },
+    {
+        tooltip: "Texture",
+        image: "texture_overlay"
+    },
+    {
+        tooltip: "Toxic",
+        image: "toxic_hrd"
+    }
+]
+
 export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCameraEditorDialogProps) {
     const [options, setOptions] = useState<RoomCameraOptions>({
         zoomed: false
     });
 
     const [activeFilter, setActiveFilter] = useState<number | null>(null);
+    const [activeFrame, setActiveFrame] = useState<number | null>(null);
 
     if(!data) {
         return null;
     }
 
     const roomCameraEditorPreview = (
-        <RoomCameraEditorPreview key={data.image} activeFilter={activeFilter} image={data.image} options={options} onOptionsChanged={setOptions} onClose={onClose}/>
+        <RoomCameraEditorPreview key={data.image} activeFilter={activeFilter} activeFrame={activeFrame} image={data.image} options={options} onOptionsChanged={setOptions} onClose={onClose}/>
     );
 
     return (
@@ -101,6 +198,7 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
                                             }
 
                                             setActiveFilter(index);
+                                            setActiveFrame(null);
                                         }}>
                                             <div style={{
                                                 width: 56,
@@ -174,9 +272,97 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
                         icon: (<div className="sprite_room_camera_icon_compositefilter"/>),
                         element: (
                             <FlexLayout direction="row">
-                                <div style={{ flex: 1 }}>
-                                    test
+                                <div style={{ flex: "1 1 0", height: 370, overflowY: "overlay" }}>
+                                    <div style={{
+                                        display: "grid",
+                                        gridTemplateColumns: "1fr 1fr 1fr",
+                                    }}>
+                                        {ROOM_CAMERA_FRAMES.map((frame, index) => (
+                                            <div key={index} data-tooltip={frame.tooltip} style={{
+                                                width: 62,
+                                                height: 62,
+
+                                                position: "relative",
+
+                                                cursor: "pointer"
+                                            }} onClick={() => {
+                                                if(options.frames?.[frame.image as keyof RoomCameraOptions["filters"]] === undefined) {
+                                                    setOptions({
+                                                        ...options,
+                                                        frames: {
+                                                            ...options.frames,
+                                                            [frame.image]: 100
+                                                        }
+                                                    });
+                                                }
+
+                                                setActiveFrame(index);
+                                                setActiveFilter(null);
+                                            }}>
+                                                <div style={{
+                                                    width: 56,
+                                                    height: 56,
+
+                                                    position: "absolute",
+
+                                                    left: 2,
+                                                    top: 2,
+
+                                                    border: "1px solid #000000"
+                                                }}>
+                                                    <RoomCameraEditorRenderer size={56} image={data.image} options={{
+                                                        zoomed: options.zoomed,
+                                                        frames: {
+                                                            [frame.image]: 100
+                                                        }
+                                                    }}/>
+                                                </div>
+
+                                                {(activeFilter === index)?(
+                                                    <div className="sprite_room_camera_fx_button_selected" style={{
+                                                        position: "absolute",
+
+                                                        left: 0,
+                                                        top: 0
+                                                    }}/>
+                                                ):(
+                                                    ((options.frames?.[frame.image]) !== undefined) && (
+                                                        <div className="sprite_room_camera_fx_button_active" style={{
+                                                            position: "absolute",
+
+                                                            left: 0,
+                                                            top: 0
+                                                        }}/>
+                                                    )
+                                                )}
+
+                                                {((options.frames?.[frame.image]) !== undefined) && (
+                                                    <div className="sprite_room_camera_remove" style={{
+                                                        position: "absolute",
+
+                                                        top: -2,
+                                                        right: -6,
+
+                                                        zIndex: 1,
+
+                                                        cursor: "pointer"
+                                                    }} onClick={() => {
+                                                        setOptions({
+                                                            ...options,
+                                                            frames: {
+                                                                ...options.frames,
+                                                                [frame.image]: undefined
+                                                            }
+                                                        });
+
+                                                        setActiveFilter(null);
+                                                    }}/>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
+
 
                                 {roomCameraEditorPreview}
                             </FlexLayout>
@@ -189,6 +375,7 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
 
 export type RoomCameraEditorPreviewProps = {
     activeFilter: number | null;
+    activeFrame: number | null;
 
     image: string;
     options: RoomCameraOptions;
@@ -196,7 +383,7 @@ export type RoomCameraEditorPreviewProps = {
     onClose?: () => void;
 }
 
-export function RoomCameraEditorPreview({ activeFilter, image, options, onOptionsChanged, onClose }: RoomCameraEditorPreviewProps) {
+export function RoomCameraEditorPreview({ activeFilter, activeFrame, image, options, onOptionsChanged, onClose }: RoomCameraEditorPreviewProps) {
     const dialogs = useDialogs();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -243,6 +430,36 @@ export function RoomCameraEditorPreview({ activeFilter, image, options, onOption
                                 filters: {
                                     ...options.filters,
                                     [ROOM_CAMERA_FILTERS[activeFilter].property as keyof RoomCameraOptions["filters"]]: value
+                                }
+                            });
+                        }} style={{
+                            filter: "none"
+                        }}/>
+                    </div>
+                )}
+
+                {(activeFrame !== null) && (
+                    <div style={{
+                        position: "absolute",
+
+                        left: 0,
+                        right: 0,
+
+                        bottom: 0,
+
+                        background: "rgba(0, 0, 0, .75)",
+                        padding: 6,
+
+                        color: "#FFFFFF"
+                    }}>
+                        <div style={{ textAlign: "center" }}><b>{ROOM_CAMERA_FRAMES[activeFrame].tooltip}</b></div>
+
+                        <DialogSlider min={0} max={100} value={options.frames?.[ROOM_CAMERA_FRAMES[activeFrame].image] ?? 0} onChange={(value: number) => {
+                            onOptionsChanged({
+                                ...options,
+                                frames: {
+                                    ...options.frames,
+                                    [ROOM_CAMERA_FRAMES[activeFrame].image]: value
                                 }
                             });
                         }} style={{
