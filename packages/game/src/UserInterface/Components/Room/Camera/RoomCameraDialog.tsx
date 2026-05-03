@@ -119,74 +119,76 @@ export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogPr
                 }} onClick={handleCapture}/>
             </FlexLayout>
 
-            <DialogPanel style={{
-                borderTop: "none",
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0
-            }} contentStyle={{
-                borderTop: "none",
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0
-            }}>
-                <FlexLayout direction="row" align="center" justify="space-between" gap={0}>
-                    {Array(5).fill(null).map((_, index) => (
-                        <div key={index} style={{
-                            position: "relative",
-                            
-                            width: 62,
-                            height: 62,
+            {(images.length > 0) && (
+                <DialogPanel style={{
+                    borderTop: "none",
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0
+                }} contentStyle={{
+                    borderTop: "none",
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0
+                }}>
+                    <FlexLayout direction="row" align="center" justify="space-between" gap={0}>
+                        {Array(5).fill(null).map((_, index) => (
+                            <div key={index} style={{
+                                position: "relative",
+                                
+                                width: 62,
+                                height: 62,
 
-                            cursor: "pointer"
-                        }} onClick={() => setActiveImageIndex(index)}>
-                            <div style={{
-                                border: (activeImageIndex !== index)?("1px solid #000000"):("1px solid transparent"),
+                                cursor: "pointer"
+                            }} onClick={() => setActiveImageIndex(index)}>
+                                <div style={{
+                                    border: (activeImageIndex !== index)?("1px solid #000000"):("1px solid transparent"),
 
-                                width: 56,
-                                height: 56,
+                                    width: 56,
+                                    height: 56,
 
-                                position: "absolute",
+                                    position: "absolute",
 
-                                left: 2,
-                                top: 2
-                            }}>
-                                {images[index] && (
-                                    <img src={images[index]} width={56} height={56}/>
-                                )}
-                            </div>
+                                    left: 2,
+                                    top: 2
+                                }}>
+                                    {images[index] && (
+                                        <img src={images[index]} width={56} height={56}/>
+                                    )}
+                                </div>
 
-                            {(activeImageIndex === index) && (
-                                <Fragment>
-                                    <div className="sprite_room_camera_photo_border" style={{
-                                        position: "absolute",
-
-                                        left: 1,
-                                        top: 1
-                                    }}/>
-
-                                    {(images[index]) && (
-                                        <div className="sprite_room_camera_remove" style={{
+                                {(activeImageIndex === index) && (
+                                    <Fragment>
+                                        <div className="sprite_room_camera_photo_border" style={{
                                             position: "absolute",
 
-                                            top: -2,
-                                            right: -6,
-
-                                            zIndex: 1,
-
-                                            cursor: "pointer"
-                                        }} onClick={() => {
-                                            const mutatedImages = [...images];
-                                            mutatedImages.splice(index, 1);
-
-                                            setImages(mutatedImages);
-                                            setShowCamera(true);
+                                            left: 1,
+                                            top: 1
                                         }}/>
-                                    )}
-                                </Fragment>
-                            )}
-                        </div>
-                    ))}
-                </FlexLayout>
-            </DialogPanel>
+
+                                        {(images[index]) && (
+                                            <div className="sprite_room_camera_remove" style={{
+                                                position: "absolute",
+
+                                                top: -2,
+                                                right: -6,
+
+                                                zIndex: 1,
+
+                                                cursor: "pointer"
+                                            }} onClick={() => {
+                                                const mutatedImages = [...images];
+                                                mutatedImages.splice(index, 1);
+
+                                                setImages(mutatedImages);
+                                                setShowCamera(true);
+                                            }}/>
+                                        )}
+                                    </Fragment>
+                                )}
+                            </div>
+                        ))}
+                    </FlexLayout>
+                </DialogPanel>
+            )}
         </CameraDialog>
     );
 }
