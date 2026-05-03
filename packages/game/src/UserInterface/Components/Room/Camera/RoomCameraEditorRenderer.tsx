@@ -6,9 +6,10 @@ export type RoomCameraEditorRendererProps = {
     size: number;
     image: string;
     options: RoomCameraOptions;
+    onDataUrlChanged?: (dataUrl: string) => void;
 }
 
-export default function RoomCameraEditorRenderer({ canvasRef = useRef<HTMLCanvasElement>(null), size, image: imageSource, options }: RoomCameraEditorRendererProps) {    
+export default function RoomCameraEditorRenderer({ canvasRef = useRef<HTMLCanvasElement>(null), size, image: imageSource, options, onDataUrlChanged }: RoomCameraEditorRendererProps) {    
     const [image, setImage] = useState<HTMLImageElement>();
     const [imageData, setImageData] = useState<ImageData>();
 
@@ -107,7 +108,9 @@ export default function RoomCameraEditorRenderer({ canvasRef = useRef<HTMLCanvas
         }
         
         outputContext.drawImage(offscreenCanvas, 0, 0, 320, 320, 0, 0, size, size);
-    }, [image, imageData, options, size]);
+
+        onDataUrlChanged?.(outputContext.canvas.toDataURL("image/png"));
+    }, [image, imageData, options, size, onDataUrlChanged]);
 
     return (
         <canvas ref={canvasRef} width={size} height={size}/>

@@ -6,6 +6,7 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import { Fragment, useRef, useState } from "react";
 import RoomCameraEditorRenderer from "@UserInterface/Components/Room/Camera/RoomCameraEditorRenderer";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type RoomCameraOptions = {
     zoomed: boolean;
@@ -57,7 +58,7 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
     }
 
     const roomCameraEditorPreview = (
-        <RoomCameraEditorPreview key={data.image} activeFilter={activeFilter} image={data.image} options={options} onOptionsChanged={setOptions}/>
+        <RoomCameraEditorPreview key={data.image} activeFilter={activeFilter} image={data.image} options={options} onOptionsChanged={setOptions} onClose={onClose}/>
     );
 
     return (
@@ -192,9 +193,12 @@ export type RoomCameraEditorPreviewProps = {
     image: string;
     options: RoomCameraOptions;
     onOptionsChanged: (options: RoomCameraOptions) => void;
+    onClose?: () => void;
 }
 
-export function RoomCameraEditorPreview({ activeFilter, image, options, onOptionsChanged }: RoomCameraEditorPreviewProps) {
+export function RoomCameraEditorPreview({ activeFilter, image, options, onOptionsChanged, onClose }: RoomCameraEditorPreviewProps) {
+    const dialogs = useDialogs();
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     return (
@@ -283,9 +287,18 @@ export function RoomCameraEditorPreview({ activeFilter, image, options, onOption
             <div style={{ height: 6 }}/>
 
             <FlexLayout direction="row">
-                <DialogButton style={{ flex: 1 }}>Cancel</DialogButton>
+                <DialogButton style={{ flex: 1 }} onClick={onClose}>Cancel</DialogButton>
 
-                <DialogButton style={{ flex: 1 }} color="green">Preview</DialogButton>
+                <DialogButton style={{ flex: 1 }} color="green" onClick={() => {
+                    onClose?.();
+
+                    dialogs.openUniqueDialog("room-camera-preview", {
+                        image,
+                        options
+                    });
+                }}>
+                    Preview
+                </DialogButton>
             </FlexLayout>
         </FlexLayout>
     );

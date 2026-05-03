@@ -53,6 +53,7 @@ import CommonWardrobeDialog from "@UserInterface/Components/Wardrobe/CommonWardr
 import RoomPickallDialog from "@UserInterface/Components/Room/Commands/RoomPickallDialog";
 import RoomCameraDialog from "@UserInterface/Components/Room/Camera/RoomCameraDialog";
 import RoomCameraEditorDialog from "@UserInterface/Components/Room/Camera/RoomCameraEditorDialog";
+import RoomCameraPreviewDialog from "@UserInterface/Components/Room/Camera/RoomCameraPreviewDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -146,6 +147,9 @@ export default function DialogInstances() {
 
                     case "room-camera-editor":
                         return (<RoomCameraEditorDialog {...props} key={dialog.id}/>);
+
+                    case "room-camera-preview":
+                        return (<RoomCameraPreviewDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

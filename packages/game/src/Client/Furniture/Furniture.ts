@@ -8,6 +8,7 @@ import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRende
 import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
+import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -42,6 +43,8 @@ export default class Furniture {
     public placement?: "wall" | "floor";
 
     public frame: number = 0;
+
+    public externalImage: string | undefined = undefined;
 
     public readonly renderer: FurnitureRenderer;
 
@@ -107,6 +110,13 @@ export default class Furniture {
                 break;
             }
 
+            case "external_image_wallitem_poster":
+            case "external_image_wallitem_poster_small": {
+                this.renderer = new FurnitureExternalImageRenderer(this.type);
+
+                break;
+            }
+
             default: {
                 this.renderer = new FurnitureDefaultRenderer(this.type);
 
@@ -125,7 +135,8 @@ export default class Furniture {
             frame: this.frame,
             grayscaled: this.grayscaled,
             tags: undefined,
-            figureConfiguration: this.figureConfiguration
+            figureConfiguration: this.figureConfiguration,
+            externalImage: this.externalImage
         };
     }
 

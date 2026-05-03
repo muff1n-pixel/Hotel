@@ -13,6 +13,7 @@ export type FurnitureRenderOptions = {
     grayscaled?: AssetSpriteGrayscaledProperties | undefined;
     tags: string[] | undefined;
     figureConfiguration?: FigureConfigurationData;
+    externalImage?: string;
 }
 
 export default interface FurnitureRenderer {
