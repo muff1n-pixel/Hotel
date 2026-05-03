@@ -5,7 +5,7 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
@@ -25,11 +25,14 @@ export default class RoomFurniturePlacer {
     private readonly originalPosition?: RoomPositionData;
     private readonly originalDirection?: number;
 
-    public static fromFurnitureData(roomInstance: RoomInstance, furnitureData: FurnitureData) {
+    public static fromFurnitureData(roomInstance: RoomInstance, furnitureData: FurnitureData, userFurnitureData?: UserFurnitureData) {
         const roomFurnitureItem = new RoomFurnitureItem(
             roomInstance.roomRenderer,
             new Furniture(furnitureData.type, 64, undefined, 0, furnitureData.color)
         );
+
+        roomFurnitureItem.furnitureRenderer.figureConfiguration = userFurnitureData?.data?.mannequin?.figureConfiguration;
+        roomFurnitureItem.furnitureRenderer.externalImage = userFurnitureData?.data?.externalImage?.externalImage;
 
         return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
     }

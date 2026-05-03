@@ -144,7 +144,7 @@ export default function InventoryFurnitureTab() {
             return;
         }
 
-        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, userFurniture.furniture));
+        setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, userFurniture.furniture, userFurniture.userFurniture));
         roomFurniturePlacerId.current = (userFurniture?.furniture.flags?.inventoryStackable)?(userFurniture?.furniture.id):(userFurniture?.id);
     }, [roomFurniturePlacer]);
 
@@ -178,8 +178,6 @@ export default function InventoryFurnitureTab() {
     if(!userFurniture.length) {
         return (<InventoryEmptyTab/>);
     }
-
-    console.log({ activeFurniture });
 
     return (
         <div style={{
