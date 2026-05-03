@@ -108,13 +108,13 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                         justifySelf: "flex-end",
                     }} onClick={(event) => {
                         webSocketClient.sendProtobuff(PurchaseRoomCameraPhotoData, PurchaseRoomCameraPhotoData.create({
-                            action: "regular",
+                            action: "small",
                             image: dataUrl
                         }));
                         
                         clientInstance.flyingFurnitureIcons.value!.push({
                             id: Math.random().toString(),
-                            furniture: FurnitureData.create({ type: "external_image_wallitem_poster" }),
+                            furniture: FurnitureData.create({ type: "external_image_wallitem_poster_small" }),
                             position: (event?.target as HTMLDivElement).getBoundingClientRect(),
                             targetElementId: "toolbar-inventory"
                         });
