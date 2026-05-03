@@ -6,7 +6,7 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { HotelAlertData, PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
@@ -59,6 +59,22 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             }));
 
             return;
+        }
+
+        if(shopFurniture.membership) {
+            switch(shopFurniture.membership) {
+                case "habboclub": {
+                    if(!user.model.habboClub || new Date(user.model.habboClub) < new Date()) {
+                        user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                            message: "You must be a Habbo Club member to buy this furniture!"
+                        }));
+
+                        return;
+                    }
+
+                    break;
+                }
+            }
         }
 
         user.model.credits -= (shopFurniture.credits ?? 0) * quantity;

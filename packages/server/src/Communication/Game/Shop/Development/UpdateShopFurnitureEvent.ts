@@ -39,6 +39,8 @@ export default class UpdateShopFurnitureEvent implements ProtobuffListener<Updat
                     credits: (payload.credits > 0)?(payload.credits):(null),
                     duckets: (payload.duckets > 0)?(payload.duckets):(null),
                     diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+
+                    membership: payload.membership ?? undefined
                 }, {
                     where: {
                         id: payload.id
@@ -55,6 +57,8 @@ export default class UpdateShopFurnitureEvent implements ProtobuffListener<Updat
                     credits: (payload.credits > 0)?(payload.credits):(null),
                     duckets: (payload.duckets > 0)?(payload.duckets):(null),
                     diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+
+                    membership: payload.membership ?? undefined,
                 });
             }
         }

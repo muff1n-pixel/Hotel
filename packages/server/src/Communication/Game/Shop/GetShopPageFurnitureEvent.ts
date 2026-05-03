@@ -34,7 +34,8 @@ export default class GetShopPageFurnitureEvent implements ProtobuffListener<GetS
                     furniture: furniture.furniture,
                     credits: furniture.credits,
                     duckets: furniture.duckets,
-                    diamonds: furniture.diamonds
+                    diamonds: furniture.diamonds,
+                    membership: furniture.membership
                 }
             })
         }));

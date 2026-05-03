@@ -16,6 +16,7 @@ import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
+import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
 
 export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -306,6 +307,16 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
                                             <b>{furniture.diamonds}</b>
 
                                             <div className="sprite_currencies_diamonds-small"/>
+                                        </div>
+                                    )}
+
+                                    {(furniture.membership) && (
+                                        <div style={{
+                                            position: "absolute",
+                                            top: -4,
+                                            right: 2,
+                                        }}>
+                                            <MembershipSmallIcon membership={furniture.membership}/>
                                         </div>
                                     )}
 

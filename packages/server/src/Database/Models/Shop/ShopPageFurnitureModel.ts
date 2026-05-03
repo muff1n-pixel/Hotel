@@ -9,6 +9,8 @@ export class ShopPageFurnitureModel extends Model {
     declare credits?: number;
     declare duckets?: number;
     declare diamonds?: number;
+
+    declare membership?: string;
     
     declare furniture: NonAttribute<FurnitureModel>;
 
@@ -35,6 +37,11 @@ export function initializeShopPageFurnitureModel(sequelize: Sequelize) {
           },
           diamonds: {
             type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: null
+          },
+          membership: {
+            type: DataTypes.STRING,
             allowNull: true,
             defaultValue: null
           }

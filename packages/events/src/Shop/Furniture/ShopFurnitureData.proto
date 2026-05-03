@@ -11,5 +11,7 @@ message ShopFurnitureData {
 
     optional uint32 quantity = 6;
 
+    optional string membership = 7;
+
     FurnitureData furniture = 5;
 }

@@ -8,6 +8,7 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import FurnitureImage from "../../Furniture/FurnitureImage";
 import { DeleteShopFurnitureData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
+import Selection from "@UserInterface/Common/Form/Components/Selection";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {
@@ -26,6 +27,8 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
     const [duckets, setDuckets] = useState(data?.duckets ?? 0);
     const [diamonds, setDiamonds] = useState(data?.diamonds ?? 0);
 
+    const [membership, setMembership] = useState(data?.membership ?? undefined);
+
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     const handleUpdate = useCallback(() => {
@@ -39,10 +42,12 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
             credits,
             duckets,
             diamonds,
+
+            membership
         }));
 
         dialogs.closeDialog("edit-shop-furniture");
-    }, [dialogs, data, furniture, credits, duckets, diamonds]);
+    }, [dialogs, data, membership, furniture, credits, duckets, diamonds]);
 
     const handleDelete = useCallback(() => {
         if(!confirmDelete) {
@@ -150,6 +155,19 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                             <Input type="number" placeholder="0" value={diamonds.toString()} onChange={(value) => setDiamonds(parseInt(value))}/>
                         </div>
                     </div>
+
+                    <b>Membership required</b>
+
+                    <Selection value={membership} onChange={setMembership} items={[
+                        {
+                            value: undefined,
+                            label: "None"
+                        },
+                        {
+                            value: "habboclub",
+                            label: "Habbo Club"
+                        }
+                    ]}/>
 
                     <div style={{
                         flex: 1

@@ -10,4 +10,6 @@ message UpdateShopFurnitureData {
     uint32 credits = 7;
     uint32 duckets = 8;
     uint32 diamonds = 9;
+
+    string membership = 10;
 }
