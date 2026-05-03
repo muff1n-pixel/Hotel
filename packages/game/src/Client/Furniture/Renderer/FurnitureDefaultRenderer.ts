@@ -12,7 +12,7 @@ import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
     private previousLayerFrames: string = "";
-    private hasImageData: boolean = false;
+    public hasImageData: boolean = false;
     
     public animationTransitioned?: number;
     public animationTransitionedTo?: number;

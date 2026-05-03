@@ -50,9 +50,11 @@ export default class FurnitureExternalImageRenderer extends FurnitureDefaultRend
                 context.drawImage(externalImage, 0, 0, externalImage.width, externalImage.height, 1, 0, Math.floor(canvas.height * 0.65) - 2, Math.floor(canvas.height * 0.7) - 1);
             }
 
-
             thumbnailImageSprite.image = canvas.transferToImageBitmap();
-            thumbnailImageSprite.ignoreMouse = true;
+
+            if(this.hasImageData) {
+                this.hasImageData = Boolean(thumbnailImageSprite.imageData);
+            }
         }
 
         return result;
