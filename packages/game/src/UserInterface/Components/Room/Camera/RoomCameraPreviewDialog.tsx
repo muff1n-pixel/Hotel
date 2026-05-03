@@ -7,7 +7,8 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { FurnitureData, PurchaseRoomCameraPhotoData } from "@pixel63/events";
 import { useRef, useState } from "react";
-import { webSocketClient } from "@Game/index";
+import { clientInstance, webSocketClient } from "@Game/index";
+import { useUser } from "@UserInterface/Hooks/useUser";
 
 export type RoomCameraPreviewDialogProps = {
     data: {
@@ -19,6 +20,8 @@ export type RoomCameraPreviewDialogProps = {
 }
 
 export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomCameraPreviewDialogProps) {
+    const user = useUser();
+
     const [dataUrl, setDataUrl] = useState<string>();
 
     if(!data) {
@@ -46,7 +49,7 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                     padding: 10
                 }}>
                     <FlexLayout align="center" justify="center" flex={1}>
-                        <FurnitureImage externalImage={dataUrl} furnitureData={FurnitureData.create({ type: "external_image_wallitem_poster", interactionType: "external_image" })}/>
+                        <FurnitureImage externalImage={dataUrl} furnitureData={FurnitureData.create({ type: "external_image_wallitem_poster" })}/>
                     </FlexLayout>
 
                     <FlexLayout gap={5} flex={3}>
@@ -57,16 +60,25 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                         <FlexLayout direction="row" align="center" gap={5}>Price: <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>5</b></FlexLayout></FlexLayout>
                     </FlexLayout>
 
-                    <DialogButton color="green" style={{
+                    <DialogButton disabled={user.credits < 3} color="green" style={{
                         flex: 1,
 
                         alignSelf: "flex-end",
                         justifySelf: "flex-end",
-                    }} onClick={() => {
+                    }} onClick={(event) => {
                         webSocketClient.sendProtobuff(PurchaseRoomCameraPhotoData, PurchaseRoomCameraPhotoData.create({
                             action: "regular",
                             image: dataUrl
                         }));
+                        
+                        clientInstance.flyingFurnitureIcons.value!.push({
+                            id: Math.random().toString(),
+                            furniture: FurnitureData.create({ type: "external_image_wallitem_poster" }),
+                            position: (event?.target as HTMLDivElement).getBoundingClientRect(),
+                            targetElementId: "toolbar-inventory"
+                        });
+
+                        clientInstance.flyingFurnitureIcons.update();
                     }}>
                         Buy
                     </DialogButton>
@@ -89,16 +101,25 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                         <FlexLayout direction="row" align="center" gap={5}>Price: <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>2</b></FlexLayout></FlexLayout>
                     </FlexLayout>
 
-                    <DialogButton color="green" style={{
+                    <DialogButton disabled={user.credits < 5} color="green" style={{
                         flex: 1,
 
                         alignSelf: "flex-end",
                         justifySelf: "flex-end",
-                    }} onClick={() => {
+                    }} onClick={(event) => {
                         webSocketClient.sendProtobuff(PurchaseRoomCameraPhotoData, PurchaseRoomCameraPhotoData.create({
                             action: "regular",
                             image: dataUrl
                         }));
+                        
+                        clientInstance.flyingFurnitureIcons.value!.push({
+                            id: Math.random().toString(),
+                            furniture: FurnitureData.create({ type: "external_image_wallitem_poster" }),
+                            position: (event?.target as HTMLDivElement).getBoundingClientRect(),
+                            targetElementId: "toolbar-inventory"
+                        });
+
+                        clientInstance.flyingFurnitureIcons.update();
                     }}>
                         Buy
                     </DialogButton>

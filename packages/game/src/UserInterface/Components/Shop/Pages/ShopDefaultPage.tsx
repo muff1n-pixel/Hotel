@@ -365,7 +365,7 @@ export default function ShopDefaultPage({ editMode, page, requestedFurnitureId }
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds
-                    )} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
+                    )} style={{ flex: 1 }} onClick={() => handlePurchaseFurniture()}>Purchase</DialogButton>
                 </div>
             </div>
         </div>

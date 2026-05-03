@@ -28,33 +28,33 @@ export default class FurnitureExternalImageRenderer extends FurnitureDefaultRend
         const thumbnailImageSprite = result.find((sprite) => sprite.tag === "THUMBNAIL");
 
         if(thumbnailImageSprite && options.externalImage) {
-            const externalImage = await AssetFetcher.fetchImage(options.externalImage);
+            AssetFetcher.fetchImage(options.externalImage).then((externalImage) => {
+                const canvas = new OffscreenCanvas(thumbnailImageSprite.image.width, thumbnailImageSprite.image.height);
+                const context = canvas.getContext("2d");
 
-            const canvas = new OffscreenCanvas(thumbnailImageSprite.image.width, thumbnailImageSprite.image.height);
-            const context = canvas.getContext("2d");
+                if(!context) {
+                    return result;
+                }
 
-            if(!context) {
-                return result;
-            }
+                context.drawImage(thumbnailImageSprite.image, 0, 0);
 
-            context.drawImage(thumbnailImageSprite.image, 0, 0);
+                if(options.direction === 2) {
+                    context.setTransform(1, -.5, 0, 1, 0, 0);
+                
+                    context.drawImage(externalImage, 0, 0, externalImage.width, externalImage.height, 1, Math.ceil(canvas.height * 0.3) + 1, Math.floor(canvas.height * 0.65) - 2, Math.floor(canvas.height * 0.7) - 1);
+                }
+                else {
+                    context.setTransform(1, .5, 0, 1, 0, 0);
+                
+                    context.drawImage(externalImage, 0, 0, externalImage.width, externalImage.height, 1, 0, Math.floor(canvas.height * 0.65) - 2, Math.floor(canvas.height * 0.7) - 1);
+                }
 
-            if(options.direction === 2) {
-                context.setTransform(1, -.5, 0, 1, 0, 0);
-            
-                context.drawImage(externalImage, 0, 0, externalImage.width, externalImage.height, 1, Math.ceil(canvas.height * 0.3) + 1, Math.floor(canvas.height * 0.65) - 2, Math.floor(canvas.height * 0.7) - 1);
-            }
-            else {
-                context.setTransform(1, .5, 0, 1, 0, 0);
-            
-                context.drawImage(externalImage, 0, 0, externalImage.width, externalImage.height, 1, 0, Math.floor(canvas.height * 0.65) - 2, Math.floor(canvas.height * 0.7) - 1);
-            }
+                thumbnailImageSprite.image = canvas.transferToImageBitmap();
 
-            thumbnailImageSprite.image = canvas.transferToImageBitmap();
-
-            if(this.hasImageData) {
-                this.hasImageData = Boolean(thumbnailImageSprite.imageData);
-            }
+                if(this.hasImageData) {
+                    this.hasImageData = Boolean(thumbnailImageSprite.imageData);
+                }
+            });
         }
 
         return result;
