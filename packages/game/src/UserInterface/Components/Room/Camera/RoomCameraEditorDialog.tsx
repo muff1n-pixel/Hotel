@@ -3,7 +3,7 @@ import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import RoomCameraEditorRenderer from "@UserInterface/Components/Room/Camera/RoomCameraEditorRenderer";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
 
@@ -14,6 +14,7 @@ export type RoomCameraOptions = {
         sepia?: number;
         saturation?: number;
         contrast?: number;
+        pale?: number;
     };
 }
 
@@ -37,6 +38,10 @@ const ROOM_CAMERA_FILTERS = [
     {
         tooltip: "Increase contrast",
         property: "contrast"
+    },
+    {
+        tooltip: "Pale",
+        property: "pale"
     }
 ];
 
@@ -52,7 +57,7 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
     }
 
     const roomCameraEditorPreview = (
-        <RoomCameraEditorPreview activeFilter={activeFilter} image={data.image} options={options} onOptionsChanged={setOptions}/>
+        <RoomCameraEditorPreview key={data.image} activeFilter={activeFilter} image={data.image} options={options} onOptionsChanged={setOptions}/>
     );
 
     return (
@@ -71,7 +76,9 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
                                     flex: 1,
 
                                     display: "grid",
-                                    gridTemplateColumns: "1fr 1fr 1fr"
+                                    gridTemplateColumns: "1fr 1fr 1fr",
+
+                                    height: "max-content"
                                 }}>
                                     {ROOM_CAMERA_FILTERS.map((filter, index) => (
                                         <div key={index} data-tooltip={filter.tooltip} style={{
@@ -188,6 +195,8 @@ export type RoomCameraEditorPreviewProps = {
 }
 
 export function RoomCameraEditorPreview({ activeFilter, image, options, onOptionsChanged }: RoomCameraEditorPreviewProps) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
     return (
         <FlexLayout style={{
             marginTop: -50,
@@ -206,7 +215,7 @@ export function RoomCameraEditorPreview({ activeFilter, image, options, onOption
 
                 position: "relative"
             }}>
-                <RoomCameraEditorRenderer image={image} options={options} size={320}/>
+                <RoomCameraEditorRenderer canvasRef={canvasRef} image={image} options={options} size={320}/>
 
                 {(activeFilter !== null) && (
                     <div style={{
@@ -244,6 +253,17 @@ export function RoomCameraEditorPreview({ activeFilter, image, options, onOption
             }}>
                 <FlexLayout direction="row" align="center" style={{
                     cursor: "pointer"
+                }} onClick={() => {
+                    if(!canvasRef.current) {
+                        return;
+                    }
+
+                    const link = document.createElement("a");
+                    
+                    link.download = "Room Camera.png";
+                    link.href = canvasRef.current.toDataURL("image/png");
+
+                    link.click();
                 }}>
                     <div className="sprite_room_camera_save"/>
 

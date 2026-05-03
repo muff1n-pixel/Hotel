@@ -1,21 +1,33 @@
 import { RoomCameraOptions } from "@UserInterface/Components/Room/Camera/RoomCameraEditorDialog";
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 export type RoomCameraEditorRendererProps = {
+    canvasRef?: RefObject<HTMLCanvasElement | null>;
     size: number;
     image: string;
     options: RoomCameraOptions;
 }
 
-export default function RoomCameraEditorRenderer({ size, image: imageSource, options }: RoomCameraEditorRendererProps) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    
+export default function RoomCameraEditorRenderer({ canvasRef = useRef<HTMLCanvasElement>(null), size, image: imageSource, options }: RoomCameraEditorRendererProps) {    
     const [image, setImage] = useState<HTMLImageElement>();
+    const [imageData, setImageData] = useState<ImageData>();
 
     useEffect(() => {
         const image = new Image();
 
-        image.onload = () => setImage(image);
+        image.onload = () => {
+            const canvas = new OffscreenCanvas(320, 320);
+            const context = canvas.getContext("2d");
+
+            if(!context) {
+                return;
+            }
+
+            context.drawImage(image, 0, 0);
+
+            setImageData(context.getImageData(0, 0, 320, 320));
+            setImage(image);
+        };
 
         image.src = imageSource;
     }, [imageSource]);
@@ -34,9 +46,40 @@ export default function RoomCameraEditorRenderer({ size, image: imageSource, opt
             return;
         }
 
+        if(!imageData) {
+            return;
+        }
+
         context.clearRect(0, 0, 320, 320);
 
         const filters: string[] = [];
+
+        const mutatedImageData = new ImageData(new Uint8ClampedArray(imageData.data), 320, 320);
+
+        if(options.filters?.pale) {
+            for (let i = 0; i < mutatedImageData.data.length; i += 4) {
+                let r = mutatedImageData.data[i];
+                let g = mutatedImageData.data[i + 1];
+                let b = mutatedImageData.data[i + 2];
+
+                // Convert to grayscale (luminance)
+                const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // Blend original color with grayscale (desaturate)
+                const amount = options.filters.pale / 100;
+                r = r * (1 - amount) + gray * amount;
+                g = g * (1 - amount) + gray * amount;
+                b = b * (1 - amount) + gray * amount;
+
+                // Lift brightness slightly
+                const lift = 20;
+                mutatedImageData.data[i]     = Math.min(255, r + lift);
+                mutatedImageData.data[i + 1] = Math.min(255, g + lift);
+                mutatedImageData.data[i + 2] = Math.min(255, b + lift);
+            }
+        }
+
+        context.putImageData(mutatedImageData, 0, 0);
 
         if(options.filters?.sepia) {
             filters.push(`sepia(${options.filters.sepia}%)`);
@@ -55,16 +98,16 @@ export default function RoomCameraEditorRenderer({ size, image: imageSource, opt
         if(options.zoomed) {
             context.imageSmoothingEnabled = false;
 
-            context.drawImage(image, 80, 80, 160, 160, 0, 0, 320, 320);
+            context.drawImage(offscreenCanvas, 80, 80, 160, 160, 0, 0, 320, 320);
             
             context.imageSmoothingEnabled = true;
         }
         else {
-            context.drawImage(image, 0, 0);
+            context.drawImage(offscreenCanvas, 0, 0);
         }
         
         outputContext.drawImage(offscreenCanvas, 0, 0, 320, 320, 0, 0, size, size);
-    }, [image, options, size]);
+    }, [image, imageData, options, size]);
 
     return (
         <canvas ref={canvasRef} width={size} height={size}/>
