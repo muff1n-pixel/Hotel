@@ -13,4 +13,6 @@ message UserData {
     FigureConfigurationData figure_configuration = 6;
 
     optional string home_room_id = 7;
+
+    optional string habbo_club = 8;
 }

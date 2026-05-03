@@ -1,13 +1,17 @@
+import DateHelper from "@UserInterface/Utils/DateHelper";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useUser } from "../../Hooks/useUser";
 import WidgetButton from "./WidgetButton";
 import WidgetCurrency from "./WidgetCurrency";
 import WidgetItem from "./WidgetItem";
+import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 
 
 export default function Widget() {
     const user = useUser();
     const dialogs = useDialogs();
+
+    const { openShopPage } = useShopPageLink("habbo_club");
 
     return (
         <div style={{
@@ -69,10 +73,16 @@ export default function Widget() {
                     gap: 6,
                     width: 80
                 }}>
-                    <WidgetItem>
+                    <WidgetItem onClick={() => {
+                        openShopPage();
+                    }}>
                         <div className="sprite_currencies_club"/>
 
-                        <b>Join</b>
+                        {(DateHelper.isDateInTheFuture(user.habboClub))?(
+                            <b>{DateHelper.getDaysBetweenDates(user.habboClub, new Date())} d.</b>
+                        ):(
+                            <b>Join</b>
+                        )}
                     </WidgetItem>
 
                     <WidgetItem>
