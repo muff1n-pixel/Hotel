@@ -32,8 +32,8 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
             const size = 6;
             const fullSize = size / 2;
 
-            const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size);
-            const wallRenderer = new WallRenderer(structure, structure.wall?.id ?? "default", size);
+            const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size, true, true);
+            const wallRenderer = new WallRenderer(structure, structure.wall?.id ?? "default", size, true);
 
             const [ [ floor, elevatedFloor ], [wallImage, doorMaskImage] ] = await Promise.all([
                 (async () => {

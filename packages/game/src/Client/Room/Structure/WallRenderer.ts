@@ -40,9 +40,12 @@ export default class WallRenderer {
     private fullSize: number;
     private halfSize: number;
 
+    private leftOutlinePaths: Path2D[] = [];
+    private rightOutlinePaths: Path2D[] = [];
+
     public readonly structure: RoomStructureData;
 
-    constructor(structure: RoomStructureData, public wallId: string, public readonly size: number) {
+    constructor(structure: RoomStructureData, public wallId: string, public readonly size: number, private readonly outline: boolean = false) {
         if(!structure) {
             throw new Error();
         }
@@ -153,6 +156,8 @@ export default class WallRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
+            destinationWidth: (this.fullSize * (spriteData.width / 32)),
+
             color: visualization.color,
             flipHorizontal: assetData.flipHorizontal
         });
@@ -163,6 +168,8 @@ export default class WallRenderer {
 
             width: spriteData.width,
             height: spriteData.height,
+            
+            destinationWidth: (this.fullSize * (spriteData.width / 32)),
 
             color: leftWallColor ?? [visualization.color, "CCC"],
             flipHorizontal: assetData.flipHorizontal
@@ -194,6 +201,11 @@ export default class WallRenderer {
             throw new ContextNotAvailableError();
         }
 
+        this.leftOutlinePaths = [];
+        this.rightOutlinePaths = [];
+
+        context.imageSmoothingEnabled = false;
+
         this.leftWalls = [];
         this.rightWalls = [];
 
@@ -211,6 +223,22 @@ export default class WallRenderer {
             this.renderDoorMask(context, rectangles, doorMask.image);
 
             context.globalCompositeOperation = "source-over";
+        }
+
+        if(this.outline) {
+            context.strokeStyle = "black";
+    
+            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));        
+
+            for(const outlinePath of this.rightOutlinePaths) {
+                context.stroke(outlinePath);
+            }
+        
+            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
+
+            for(const outlinePath of this.leftOutlinePaths) {
+                context.stroke(outlinePath);
+            }
         }
 
         const doorMaskCanvas = new OffscreenCanvas(canvas.width, canvas.height);
@@ -295,6 +323,35 @@ export default class WallRenderer {
                     width,
                     height
                 });
+
+                if(this.outline) {
+                    if(!rectangles.some((_rectangle) => _rectangle.row === rectangle.row + 1 && _rectangle.column === rectangle.column)) {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left, top);
+                        outlinePath.lineTo(left, top + height);
+
+                        this.leftOutlinePaths.push(outlinePath);
+                    }
+                    
+                    if(!rectangles.some((_rectangle) => _rectangle.row === rectangle.row - 1 && _rectangle.column === rectangle.column)) {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left + this.fullSize, top);
+                        outlinePath.lineTo(left + this.fullSize, top + height);
+
+                        this.leftOutlinePaths.push(outlinePath);
+                    }
+                    
+                    {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left, top);
+                        outlinePath.lineTo(left + this.fullSize, top);
+
+                        this.leftOutlinePaths.push(outlinePath);
+                    }
+                }
             }
 
             context.rect(left, top, width, height);
@@ -357,6 +414,35 @@ export default class WallRenderer {
                     width,
                     height
                 });
+
+                if(this.outline) {
+                    if(!rectangles.some((_rectangle) => _rectangle.row === rectangle.row && _rectangle.column === rectangle.column + 1)) {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left + this.fullSize, top);
+                        outlinePath.lineTo(left + this.fullSize, top + height);
+
+                        this.rightOutlinePaths.push(outlinePath);
+                    }
+                    
+                    if(!rectangles.some((_rectangle) => _rectangle.row === rectangle.row && _rectangle.column === rectangle.column - 1)) {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left, top);
+                        outlinePath.lineTo(left, top + height);
+
+                        this.rightOutlinePaths.push(outlinePath);
+                    }
+                    
+                    {
+                        const outlinePath = new Path2D();
+                        
+                        outlinePath.moveTo(left, top);
+                        outlinePath.lineTo(left + this.fullSize, top);
+
+                        this.rightOutlinePaths.push(outlinePath);
+                    }
+                }
             }
 
             context.rect(left - ((width == this.fullSize)?(0):((this.structure.wall?.thickness ?? 8))), top, width, height);
@@ -444,6 +530,17 @@ export default class WallRenderer {
             }
 
             this.hasDoorWall = true;
+
+            if(this.outline && overlappingWalls === 0) {
+                const outlinePath = new Path2D();
+                
+                outlinePath.moveTo(left, top + image.height);
+                outlinePath.lineTo(left, top);
+                outlinePath.lineTo(left + image.width, top);
+                outlinePath.lineTo(left + image.width, top + image.height);
+
+                this.leftOutlinePaths.push(outlinePath);
+            }
         }
         else if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row + 1 && rectangle.column === this.structure.door!.column && rectangle.direction === 4)) {
             context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
@@ -471,6 +568,17 @@ export default class WallRenderer {
             }
 
             this.hasDoorWall = true;
+
+            if(this.outline && overlappingWalls === 0) {
+                const outlinePath = new Path2D();
+                
+                outlinePath.moveTo(left - this.fullSize, top + image.height);
+                outlinePath.lineTo(left - this.fullSize, top);
+                outlinePath.lineTo(left - this.fullSize + image.width, top);
+                outlinePath.lineTo(left - this.fullSize + image.width, top + image.height);
+
+                this.rightOutlinePaths.push(outlinePath);
+            }
         }
     }
 

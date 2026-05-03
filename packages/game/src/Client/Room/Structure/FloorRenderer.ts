@@ -29,9 +29,12 @@ export default class FloorRenderer {
     private fullSize: number;
     private halfSize: number;
 
+    private leftOutlinePaths: Path2D[] = [];
+    private rightOutlinePaths: Path2D[] = [];
+
     public readonly structure: RoomStructureData;
 
-    constructor(structure: RoomStructureData | undefined, public floorId: string, private readonly size: number) {
+    constructor(structure: RoomStructureData | undefined, public floorId: string, private readonly size: number, private readonly outline: boolean = false, private readonly hideDoor: boolean = false) {
         if(!structure) {
             throw new Error();
         }
@@ -113,6 +116,9 @@ export default class FloorRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
+            destinationWidth: (this.fullSize * (spriteData.width / 32)),
+            destinationHeight: (this.fullSize * (spriteData.height / 32)),
+
             color: visualization.color,
             flipHorizontal: assetData.flipHorizontal
         });
@@ -123,6 +129,9 @@ export default class FloorRenderer {
 
             width: spriteData.width,
             height: spriteData.height,
+
+            destinationWidth: (this.fullSize * (spriteData.width / 32)),
+            destinationHeight: (this.fullSize * (spriteData.height / 32)),
 
             color: [visualization.color, "CCC"],
             flipHorizontal: assetData.flipHorizontal
@@ -135,7 +144,8 @@ export default class FloorRenderer {
             width: spriteData.width,
             height: spriteData.height,
 
-            destinationHeight: Math.min(spriteData.height, material.width * 2),
+            destinationWidth: (this.fullSize * (spriteData.width / 32)),
+            destinationHeight: Math.min((this.fullSize * (spriteData.height / 32)), (this.fullSize * ((material.width * 2) / 32))),
 
             color: [visualization.color, "AAA"],
             flipHorizontal: assetData.flipHorizontal
@@ -151,6 +161,11 @@ export default class FloorRenderer {
         if(!context) {
             throw new ContextNotAvailableError();
         }
+
+        this.leftOutlinePaths = [];
+        this.rightOutlinePaths = [];
+
+        context.imageSmoothingEnabled = false;
 
         const rectangles = this.getRectangles();
 
@@ -172,6 +187,24 @@ export default class FloorRenderer {
             this.renderTiles(context, currentRectangles, tileImage.image);
         }
 
+        if(this.outline) {
+            context.strokeStyle = "black";
+            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+
+            for(const outlinePath of this.rightOutlinePaths) {
+                context.stroke(outlinePath);
+            }
+            
+            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+
+            for(const outlinePath of this.leftOutlinePaths) {
+                context.stroke(outlinePath);
+            }
+        }
+
+        this.rightOutlinePaths = [];
+        this.leftOutlinePaths = [];
+
         let elevatedCanvas: OffscreenCanvas | undefined = undefined;
 
         if(elevatedRectangles.length > 0) {
@@ -189,6 +222,22 @@ export default class FloorRenderer {
                 this.renderLeftEdges(elevatedContext, currentRectangles, leftEdgeImage.image);
                 this.renderRightEdges(elevatedContext, currentRectangles, rightEdgeImage.image);
                 this.renderTiles(elevatedContext, currentRectangles, tileImage.image);
+            }
+
+            if(this.outline) {
+                elevatedContext.strokeStyle = "black";
+
+                elevatedContext.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+
+                for(const outlinePath of this.rightOutlinePaths) {
+                    elevatedContext.stroke(outlinePath);
+                }
+
+                elevatedContext.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+
+                for(const outlinePath of this.leftOutlinePaths) {
+                    elevatedContext.stroke(outlinePath);
+                }
             }
         }
 
@@ -225,13 +274,27 @@ export default class FloorRenderer {
 
         for(const index in rectangles) {
             const rectangle = rectangles[index];
+
+            const left = (rectangle.column * this.fullSize) - (rectangle.row * this.fullSize) - rectangle.height;
+            const top = (rectangle.row * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.height;
+
+            if(this.outline && Math.floor(rectangle.row) === rectangle.row) {
+                if(!rectangles.some(x => (Math.floor(x.row) === Math.floor(rectangle.row) - 1 && Math.floor(x.column) === Math.floor(rectangle.column)))) {
+                    if(!this.hideDoor || (rectangle.row - 1 !== this.structure.door?.row && rectangle.column !== this.structure.door?.column)) {
+                        const outlinePath = new Path2D();
+
+                        outlinePath.moveTo(left + this.fullSize, top - this.fullSize);
+                        outlinePath.lineTo(left + this.fullSize + rectangle.width, top - this.fullSize);
+                        outlinePath.closePath();
+
+                        this.leftOutlinePaths.push(outlinePath);
+                    }
+                }
+            }
             
             if(rectangles.some(x => (Math.floor(x.row) == Math.floor(rectangle.row) + 1 && Math.floor(x.column) == Math.floor(rectangle.column) && x.depth == rectangle.depth))) {
                 continue;
             }
-
-            const left = (rectangle.column * this.fullSize) - (rectangle.row * this.fullSize) - rectangle.height;
-            const top = (rectangle.row * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.height;
 
             const nextStepEdge = rectangles.find(x => (x.column == rectangle.column) && (x.row == rectangle.row + 0.25 || x.row == rectangle.row + 1) && (x.depth === rectangle.depth - 0.25));
             let thickness = (this.structure.floor?.thickness ?? 8);
@@ -241,6 +304,16 @@ export default class FloorRenderer {
             }
 
             context.rect(left, top, rectangle.width, thickness);
+
+            if(this.outline) {
+                const outlinePath = new Path2D();
+
+                outlinePath.moveTo(left, top);
+                outlinePath.lineTo(left + rectangle.width, top);
+                outlinePath.closePath();
+
+                this.leftOutlinePaths.push(outlinePath);
+            }
         }
 
         context.fill();
@@ -254,18 +327,31 @@ export default class FloorRenderer {
         for(const index in rectangles) {
             const rectangle = rectangles[index];
 
+            const row = rectangle.row;
+            const column = rectangle.column;
+
+            const left = -(row * this.fullSize) + (column * this.fullSize) + rectangle.width - rectangle.height;
+            const top = (column * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.width;
+
+            if(this.outline && Math.floor(column) === column) {
+                if(!rectangles.some(x => (Math.floor(x.row) === Math.floor(rectangle.row) && Math.floor(x.column) === Math.floor(rectangle.column) - 1))) {
+                    if(!this.hideDoor || (rectangle.row !== this.structure.door?.row && rectangle.column - 1 !== this.structure.door?.column)) {
+                        const outlinePath = new Path2D();
+
+                        outlinePath.moveTo(left - this.fullSize, top - this.fullSize);
+                        outlinePath.lineTo(left - this.fullSize + rectangle.height, top - this.fullSize);
+                        outlinePath.closePath();
+
+                        this.rightOutlinePaths.push(outlinePath);
+                    }
+                }
+            }
+
             if(rectangles.some(x => (Math.floor(x.row) == Math.floor(rectangle.row) && Math.floor(x.column) == Math.floor(rectangle.column) + 1 && x.depth == rectangle.depth))) {
                 continue;
             }
 
             const nextStepEdge = rectangles.find(x => (x.row == rectangle.row) && (x.column == rectangle.column + 0.25 || x.column == rectangle.column + 1) && (x.depth === rectangle.depth - 0.25));
-
-            const row = rectangle.row;
-
-            const column = rectangle.column;
-
-            const left = -(row * this.fullSize) + (column * this.fullSize) + rectangle.width - rectangle.height;
-            const top = (column * this.fullSize) - (rectangle.depth * this.fullSize) + rectangle.width;
 
             let thickness = (this.structure.floor?.thickness ?? 8);
 
@@ -274,6 +360,16 @@ export default class FloorRenderer {
             }
 
             context.rect(left, top, rectangle.height, thickness);
+
+            if(this.outline) {
+                const outlinePath = new Path2D();
+
+                outlinePath.moveTo(left, top);
+                outlinePath.lineTo(left + rectangle.height, top);
+                outlinePath.closePath();
+
+                this.rightOutlinePaths.push(outlinePath);
+            }
         }
 
         context.fill();
@@ -288,6 +384,10 @@ export default class FloorRenderer {
 
         for(const index in rectangles) {
             const rectangle = rectangles[index];
+
+            if(this.hideDoor && rectangle.row === this.structure.door?.row && rectangle.column === this.structure.door.column) {
+                continue;
+            }
 
             const left = rectangle.column * this.fullSize - (rectangle.depth * this.fullSize);
             const top = rectangle.row * this.fullSize - (rectangle.depth * this.fullSize);
@@ -322,7 +422,7 @@ export default class FloorRenderer {
                             column: column + (step * .25),
                             depth: currentDepth + 0.75 - (step * .25),
         
-                            width: 8, height: this.fullSize
+                            width: this.fullSize / 4, height: this.fullSize
                         });
                     }
 
@@ -336,7 +436,7 @@ export default class FloorRenderer {
                             column,
                             depth: currentDepth + 0.75 - (step * .25),
         
-                            width: this.fullSize, height: 8
+                            width: this.fullSize, height: this.fullSize / 4
                         });
                     }
 
