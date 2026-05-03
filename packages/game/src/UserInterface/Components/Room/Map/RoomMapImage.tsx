@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
@@ -14,14 +14,11 @@ export type RoomMapImageProps = {
 }
 
 export default function RoomMapImage({ crop = false, width, height, style, structure, leftWallColor }: RoomMapImageProps) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
     const rendered = useRef(false);
 
-    useEffect(() => {
-        if(!canvasRef.current) {
-            return;
-        }
+    const [dataUrl, setDataUrl] = useState("");
 
+    useEffect(() => {
         if(rendered.current) {
             return;
         }
@@ -52,7 +49,9 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
                 })()
             ]);
 
-            const canvas = new OffscreenCanvas(Math.max(wallImage.width, floor.width, elevatedFloor?.width ?? 0), Math.max(wallImage.height, floor.height, elevatedFloor?.height ?? 0));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(wallImage.width, floor.width, elevatedFloor?.width ?? 0);
+            canvas.height = Math.max(wallImage.height, floor.height, elevatedFloor?.height ?? 0);
 
             const context = canvas.getContext("2d");
 
@@ -60,7 +59,25 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
                 throw new ContextNotAvailableError();
             }
 
-            context.translate((floorRenderer.rows * fullSize), (wallRenderer.depth + 3.5) * fullSize);
+            let translateLeft = 0, translateTop = 0;
+
+            if(canvas.width < width) {
+                const difference = width - canvas.width;
+
+                translateLeft = difference / 2;
+
+                canvas.width = width;
+            }
+
+            if(canvas.height < height) {
+                const difference = height - canvas.height;
+
+                translateTop = difference / 2;
+
+                canvas.height = height;
+            }
+
+            context.translate(Math.floor(translateLeft + (floorRenderer.rows * fullSize)), Math.floor(translateTop + (wallRenderer.depth + 3.5) * fullSize));
 
             context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
             context.drawImage(floor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
@@ -71,13 +88,7 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
 
             context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
 
-            const resultContext = canvasRef.current?.getContext("2d");
-
-            if(!resultContext) {
-                throw new ContextNotAvailableError();
-            }
-
-            if(crop) {
+            /*if(crop) {
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
                 const bounds = { top: height, left: width, right: 0, bottom: 0 };
@@ -120,11 +131,22 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
                 resultContext.canvas.height = height;
 
                 resultContext.drawImage(canvas, 0, 0);
-            }
+            }*/
+
+            setDataUrl(canvas.toDataURL("image/png"));
+
+            canvas.remove();
         })();
-    }, [ canvasRef, structure ]);
+    }, [ structure ]);
 
     return (
-        <canvas ref={canvasRef} style={style}/>
+        <img src={dataUrl} style={{
+            objectFit: "contain",
+
+            width: "100%",
+            height: "100%",
+
+            ...style
+        }}/>
     );
 }
