@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UserFurnitureExternalImageData {
+    string external_image = 1;
+}

@@ -12,6 +12,7 @@ import "User/Furniture/Data/UserFurnitureStackHelperData.proto";
 import "User/Furniture/Data/UserFurnitureMannequinData.proto";
 import "User/Furniture/Data/UserFurnitureTraxData.proto";
 import "User/Furniture/Data/UserFurnitureTraxSongDiskData.proto";
+import "User/Furniture/Data/UserFurnitureExternalImageData.proto";
 
 import "User/Furniture/Data/Wired/Common/WiredCommonDelayData.proto";
 import "User/Furniture/Data/Wired/Common/WiredCommonFurniSelectionData.proto";
@@ -124,5 +125,7 @@ message UserFurnitureCustomData {
 
         UserFurnitureTraxData trax = 19;
         UserFurnitureTraxSongDiskData trax_song_disk = 20;
+
+        UserFurnitureExternalImageData external_image = 50;
     }
 }

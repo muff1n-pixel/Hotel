@@ -10,6 +10,7 @@ import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import RoomTextSprite from "@Client/Room/Items/RoomTextSprite";
 import { clientInstance } from "@Game/index";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
+import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
 
 export default class RoomFurnitureItem extends RoomItem {
     public readonly id = Math.random();
@@ -103,6 +104,10 @@ export default class RoomFurnitureItem extends RoomItem {
 
         if(this.furnitureRenderer.renderer instanceof FurnitureMannequinRenderer) {
             this.furnitureRenderer.figureConfiguration = this.data.mannequin?.figureConfiguration;
+        }
+
+        if(this.furnitureRenderer.renderer instanceof FurnitureExternalImageRenderer) {
+            this.furnitureRenderer.externalImage = this.data.externalImage?.externalImage;
         }
     }
 }

@@ -15,6 +15,10 @@
             "path": "../../assets/shop/features/generated/"
         }
     },
+
+    "camera": {
+        "path": "../../assets/room/photos/generated/"
+    },
     
     "database": {
         "dialect": "mysql",

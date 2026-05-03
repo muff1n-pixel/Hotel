@@ -5,8 +5,9 @@ import { RoomCameraOptions } from "@UserInterface/Components/Room/Camera/RoomCam
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
-import { FurnitureData } from "@pixel63/events";
+import { FurnitureData, PurchaseRoomCameraPhotoData } from "@pixel63/events";
 import { useRef, useState } from "react";
+import { webSocketClient } from "@Game/index";
 
 export type RoomCameraPreviewDialogProps = {
     data: {
@@ -61,6 +62,11 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
 
                         alignSelf: "flex-end",
                         justifySelf: "flex-end",
+                    }} onClick={() => {
+                        webSocketClient.sendProtobuff(PurchaseRoomCameraPhotoData, PurchaseRoomCameraPhotoData.create({
+                            action: "regular",
+                            image: dataUrl
+                        }));
                     }}>
                         Buy
                     </DialogButton>
@@ -88,13 +94,18 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
 
                         alignSelf: "flex-end",
                         justifySelf: "flex-end",
+                    }} onClick={() => {
+                        webSocketClient.sendProtobuff(PurchaseRoomCameraPhotoData, PurchaseRoomCameraPhotoData.create({
+                            action: "regular",
+                            image: dataUrl
+                        }));
                     }}>
                         Buy
                     </DialogButton>
                 </FlexLayout>
                 
 
-                <FlexLayout direction="row" justify="space-between" style={{
+                {/*<FlexLayout direction="row" justify="space-between" style={{
                     background: "#C6C5BE",
                     borderRadius: 5,
                     padding: 10
@@ -113,7 +124,7 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                     }}>
                         Publish
                     </DialogButton>
-                </FlexLayout>
+                </FlexLayout>*/}
 
                 <div style={{ flex: 1 }}/>
 

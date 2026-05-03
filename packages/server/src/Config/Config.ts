@@ -20,6 +20,10 @@ export type Config = {
         };
     };
 
+    camera: {
+        path: string;
+    };
+
     database: Options;
 };
 
