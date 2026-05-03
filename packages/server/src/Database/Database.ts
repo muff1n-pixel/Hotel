@@ -46,6 +46,7 @@ import { initializeClothingModel } from "./Models/Clothes/ClothesModel.js";
 import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureModel.js";
 import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectModel.js";
 import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
+import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembershipModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -65,6 +66,7 @@ export async function initializeModels() {
   initializeShopPageFeatureModel(sequelize);
   initializeShopPageBotModel(sequelize);
   initializeShopPagePetModel(sequelize);
+  initializeShopPageMembershipModel(sequelize);
 
   initializeRoomMapModel(sequelize);
   initializeRoomCategoryModel(sequelize);

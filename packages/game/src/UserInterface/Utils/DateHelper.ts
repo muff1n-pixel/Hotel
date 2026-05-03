@@ -10,4 +10,20 @@ export default class DateHelper {
 
         return new Date(date) >= new Date();
     }
+
+    public static getFormattedDays(days: number) {
+        if(days >= 365) {
+            const years = Math.round(days / 365);
+
+            return `${years} ${(years === 1)?("year"):("years")}`;
+        }
+
+        if(days >= 30) {
+            const months = Math.round(days / 30);
+
+            return `${months} ${(months === 1)?("month"):("months")}`;
+        }
+
+        return `${days} ${(days === 1)?("day"):("days")}`;
+    }
 }

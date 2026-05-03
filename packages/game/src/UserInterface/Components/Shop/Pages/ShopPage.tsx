@@ -5,6 +5,7 @@ import ShopBotsPage from "./ShopBotsPage";
 import { ShopPageData } from "@pixel63/events";
 import ShopPetsPage from "./ShopPetsPage";
 import ShopBundlePage from "@UserInterface/Components/Shop/Pages/ShopBundlePage";
+import ShopHabboClubPage from "@UserInterface/Components/Shop/Pages/ShopHabboClubPage";
 
 export type ShopPageProps = {
     editMode?: boolean;
@@ -33,6 +34,9 @@ export default function ShopPage({ editMode, page, setActiveShopPage, requestedF
 
         case "features":
             return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId} setActiveShopPage={setActiveShopPage}/>);
+            
+        case "habbo_club":
+            return (<ShopHabboClubPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
         
         default:
             return <div/>;

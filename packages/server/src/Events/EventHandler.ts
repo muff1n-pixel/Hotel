@@ -50,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteShopFurnitureData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPageLinkData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserInventorySongDisksData, GetUserInventorySoundSetsData, GetUserProfileData, HotelAlertData, InsertRoomFurnitureTraxSongData, LeaveRoomData, MessageType, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseRoomCameraPhotoData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopPetData, RemoveUserFriendData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData } from "@pixel63/events";
+import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteShopFurnitureData, DeleteShopMembershipData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPageLinkData, GetShopPageMembershipsData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserInventorySongDisksData, GetUserInventorySoundSetsData, GetUserProfileData, HotelAlertData, InsertRoomFurnitureTraxSongData, LeaveRoomData, MessageType, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseRoomCameraPhotoData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopMembershipData, PurchaseShopPetData, RemoveUserFriendData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopMembershipData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 import GetShopPagePetsEvent from "../Communication/Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "../Communication/Game/Shop/Development/UpdateShopPetEvent.js";
@@ -102,6 +102,10 @@ import ResetRoomClickConfigurationEvent from "../Communication/Game/Rooms/Config
 import PickupAllRoomFurnitureEvent from "../Communication/Game/Rooms/Furniture/PickupAllRoomFurnitureEvent.js";
 import PurchaseRoomCameraPhotoEvent from "../Communication/Game/Rooms/Camera/PurchaseRoomCameraPhotoEvent.js";
 import GetShopPageLinkEvent from "../Communication/Game/Shop/GetShopPageLinkEvent.js";
+import GetShopPageMembershipsEvent from "../Communication/Game/Shop/GetShopPageMembershipsEvent.js";
+import UpdateShopMembershipEvent from "../Communication/Game/Shop/Development/UpdateShopMembershipEvent.js";
+import DeleteShopMembershipEvent from "../Communication/Game/Shop/Development/DeleteShopMembershipEvent.js";
+import PurchaseShopMembershipEvent from "../Communication/Game/Shop/PurchaseShopMembershipEvent.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -202,8 +206,13 @@ export default class EventHandler extends EventEmitter {
         this.addProtobuffListener(GetShopPagesData, new GetShopPagesEvent());
         this.addProtobuffListener(GetShopPageFurnitureData, new GetShopPageFurnitureEvent());
         this.addProtobuffListener(GetShopPageBotsData, new GetShopPageBotsEvent());
+        this.addProtobuffListener(GetShopPageMembershipsData, new GetShopPageMembershipsEvent());
         this.addProtobuffListener(PurchaseShopFurnitureData, new PurchaseShopFurnitureEvent());
         this.addProtobuffListener(PurchaseShopBotData, new PurchaseShopBotEvent());
+
+        // Shop membership events
+        this.addProtobuffListener(DeleteShopMembershipData, new DeleteShopMembershipEvent());
+        this.addProtobuffListener(PurchaseShopMembershipData, new PurchaseShopMembershipEvent());
 
         // Shop furniture events
         this.addProtobuffListener(DeleteShopFurnitureData, new DeleteShopFurnitureEvent());
@@ -323,6 +332,7 @@ export default class EventHandler extends EventEmitter {
         this
             .addProtobuffListener(UpdateShopPageData, new UpdateShopPageEvent())
             .addProtobuffListener(UpdateShopFurnitureData, new UpdateShopFurnitureEvent())
+            .addProtobuffListener(UpdateShopMembershipData, new UpdateShopMembershipEvent())
             .addProtobuffListener(UpdateShopBotData, new UpdateShopBotEvent());
 
         this.addProtobuffListener(GetUserBotSpeechData, new GetRoomBotSpeechEvent());

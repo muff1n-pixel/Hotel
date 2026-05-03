@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message UpdateShopMembershipData {
+    optional string id = 1;
+
+    string page_id = 2;
+
+    string membership = 3;
+    uint32 days = 4;
+
+    uint32 credits = 5;
+    uint32 duckets = 6;
+    uint32 diamonds = 7;
+}

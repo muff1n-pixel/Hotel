@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Shop/Memberships/ShopMembershipData.proto";
+
+message ShopMembershipsData {
+    string page_id = 1;
+
+    repeated ShopMembershipData memberships = 2;
+}

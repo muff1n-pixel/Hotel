@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message ShopMembershipData {
+    string id = 1;
+
+    string membership = 2;
+
+    optional uint32 credits = 3;
+    optional uint32 duckets = 4;
+    optional uint32 diamonds = 5;
+
+    uint32 days = 6;
+}

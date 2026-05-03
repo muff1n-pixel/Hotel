@@ -54,6 +54,7 @@ import RoomPickallDialog from "@UserInterface/Components/Room/Commands/RoomPicka
 import RoomCameraDialog from "@UserInterface/Components/Room/Camera/RoomCameraDialog";
 import RoomCameraEditorDialog from "@UserInterface/Components/Room/Camera/RoomCameraEditorDialog";
 import RoomCameraPreviewDialog from "@UserInterface/Components/Room/Camera/RoomCameraPreviewDialog";
+import EditShopMembershipDialog from "@UserInterface/Components/Shop/Development/EditShopMembershipDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -168,6 +169,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-furniture":
                         return (<EditShopFurnitureDialog {...props} key={dialog.id}/>);
+
+                    case "edit-shop-membership":
+                        return (<EditShopMembershipDialog {...props} key={dialog.id}/>);
 
                     case "edit-shop-pet":
                         return (<EditShopPetDialog {...props} key={dialog.id}/>);
