@@ -69,7 +69,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
         }
 
         for(const furnitureItem of furniture ?? []) {
-            let item = roomChildrenItems.current.get(furnitureItem.id);
+            let item: RoomFurnitureItem = roomChildrenItems.current.get(furnitureItem.id) as RoomFurnitureItem;
 
             if(!item) {
                 item = new RoomFurnitureItem(
@@ -85,6 +85,9 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             else {
                 item.position = furnitureItem.position;
             }
+            
+            item.furnitureRenderer.figureConfiguration = furnitureItem.figureConfiguration;
+            item.furnitureRenderer.externalImage = furnitureItem.externalImage;
 
             if(!furnitureItem.position) {
                 if(item instanceof RoomFurnitureItem) {

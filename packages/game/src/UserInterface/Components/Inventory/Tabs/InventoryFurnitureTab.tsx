@@ -1,21 +1,22 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import RoomRenderer from "../../Room/Renderer/RoomRenderer";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
-import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
+import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, RoomStructureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 
 export default function InventoryFurnitureTab() {
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
     const [activeFurniture, setActiveFurniture] = useState<UserInventoryFurnitureData>();
+
     const [userFurniture, setUserFurniture] = useState<UserInventoryFurnitureData[]>([]);
     const userFurnitureRequested = useRef<boolean>(false);
 
@@ -178,6 +179,8 @@ export default function InventoryFurnitureTab() {
         return (<InventoryEmptyTab/>);
     }
 
+    console.log({ activeFurniture });
+
     return (
         <div style={{
             flex: "1 1 0",
@@ -239,14 +242,39 @@ export default function InventoryFurnitureTab() {
             }}>
                 {(activeFurniture) && (
                     <Fragment>
-                        <RoomRenderer key={activeFurniture.id} options={{ withoutWalls: activeFurniture.furniture?.placement === "floor" }} furnitureData={activeFurniture?.furniture} style={{
-                            height: 130,
-                            width: "100%",
-                        }}/>
+                        <div style={{
+                            height: 130
+                        }}>
+                            <RoomRenderer
+                                structure={RoomStructureData.create({
+                                    grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
+                                    floor: {
+                                        id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                                        thickness: 8
+                                    },
+                                    wall: {
+                                        id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                                        thickness: 8,
+                                        hidden: false
+                                    }
+                                })}
+                                furniture={
+                                    (activeFurniture?.furniture)?([
+                                        {
+                                            id: activeFurniture.id,
+                                            furniture: activeFurniture.furniture,
+                                            externalImage: activeFurniture.userFurniture?.data?.externalImage?.externalImage,
+                                            figureConfiguration: activeFurniture.userFurniture?.data?.mannequin?.figureConfiguration,
+                                            panToItem: true
+                                        }
+                                    ]):([])
+                                }
+                                />
+                        </div>
 
                         <div style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
                             <b>{activeFurniture.name ?? activeFurniture?.furniture?.name}</b>
-                            <p>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
+                            <p style={{ textOverflow: "ellipsis", maxHeight: 40, overflow: "hidden" }}>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
                         </div>
 
                         <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>

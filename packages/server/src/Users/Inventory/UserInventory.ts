@@ -96,6 +96,7 @@ export default class UserInventory {
                             id: userFurniture.id,
                             quantity: count,
                             furniture: userFurniture.furniture,
+                            userFurniture,
 
                             name: userFurniture.name,
                             description: userFurniture.description
@@ -124,6 +125,7 @@ export default class UserInventory {
                     id: userFurniture.id,
                     quantity: (userFurniture.furniture.flags.inventoryStackable)?(await this.getFurnitureCount(userFurniture.furniture.id)):(1),
                     furniture: userFurniture.furniture,
+                    userFurniture,
 
                     name: userFurniture.name,
                     description: userFurniture.description
@@ -176,6 +178,7 @@ export default class UserInventory {
                         id: userFurniture.id,
                         quantity: 1,
                         furniture: userFurniture.furniture,
+                        userFurniture,
 
                         name: userFurniture.name,
                         description: userFurniture.description
@@ -187,6 +190,7 @@ export default class UserInventory {
                     id: userFurniture.id,
                     quantity: 1,
                     furniture: userFurniture.furniture,
+                    userFurniture,
 
                     name: userFurniture.name,
                     description: userFurniture.description

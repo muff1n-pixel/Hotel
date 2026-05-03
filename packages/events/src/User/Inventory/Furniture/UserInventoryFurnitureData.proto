@@ -1,10 +1,14 @@
 syntax = "proto3";
 
 import "Furniture/FurnitureData.proto";
+import "User/Furniture/UserFurnitureData.proto";
 
 message UserInventoryFurnitureData {
     string id = 1;
+    
     FurnitureData furniture = 2;
+    UserFurnitureData user_furniture = 6;
+
     uint32 quantity = 3;
 
     optional string name = 4;
