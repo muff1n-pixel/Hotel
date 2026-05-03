@@ -90,4 +90,14 @@ export default class User extends EventEmitter {
     public sendWidgetNotification(data: WidgetNotificationData) {
         this.sendProtobuff(WidgetNotificationData, data);
     }
+
+    public hasMembership(membership: string) {
+        switch(membership) {
+            case "habboclub": {
+                return this.model.habboClub && new Date(this.model.habboClub) >= new Date();
+            }
+        }
+
+        return false;
+    }
 }

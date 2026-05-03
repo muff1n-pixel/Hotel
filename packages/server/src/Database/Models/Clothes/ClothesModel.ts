@@ -4,6 +4,7 @@ export class ClothingModel extends Model {
     declare id: string;
     declare part: string;
     declare setId: string;
+    declare membership: string;
 }
 
 export function initializeClothingModel(sequelize: Sequelize) {
@@ -22,6 +23,11 @@ export function initializeClothingModel(sequelize: Sequelize) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            membership: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            }
         },
         {
             tableName: 'clothes',

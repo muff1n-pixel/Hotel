@@ -10,6 +10,10 @@ import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
+import { useUser } from "@UserInterface/Hooks/useUser";
+import DateHelper from "@UserInterface/Utils/DateHelper";
+import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 
 export type WardrobeSelectionProps = {
     part: string;
@@ -21,8 +25,11 @@ export type WardrobeSelectionProps = {
 
 export default function WardrobeSelection({ part, figureConfiguration, onFigureConfigurationChange, editMode }: WardrobeSelectionProps) {
     const dialogs = useDialogs();
+    const user = useUser();
 
-    const { sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
+    const { openShopPage } = useShopPageLink("habbo_club");
+
+    const { data, sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
 
     const activeConfiguration = useMemo(() => figureConfiguration.parts.find((configuration) => configuration.type === part), [figureConfiguration.parts]);
     const activeFigureData = useMemo(() => allSets.find((set) => set.id === activeConfiguration?.setId), [activeConfiguration]);
@@ -83,7 +90,15 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                     {(!editMode)?(
                         <Fragment>
                             {sets.map((set) => (
-                                <WardrobeSelectionItem key={set.id} active={activeConfiguration?.setId === set.id} onClick={() => handleEquip(set)}>
+                                <WardrobeSelectionItem key={set.id} active={activeConfiguration?.setId === set.id} onClick={() => {
+                                    if(set.club && !DateHelper.isDateInTheFuture(user.habboClub)) {
+                                        openShopPage();
+                                        
+                                        return;
+                                    }
+
+                                    handleEquip(set);
+                                }}>
                                     <FigureImage figureConfiguration={FigureConfigurationData.create({
                                         gender: figureConfiguration.gender,
                                         parts: [
@@ -94,6 +109,17 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                             }
                                         ]
                                     })} direction={2} cropped headOnly={part === 'hd'}/>
+
+                                    {(set.club) && (
+                                        <div style={{
+                                            position: "absolute",
+
+                                            top: 0,
+                                            left: 0
+                                        }}>
+                                            <MembershipSmallIcon membership="habboclub"/>
+                                        </div>
+                                    )}
                                 </WardrobeSelectionItem>
                             ))}
 
@@ -155,19 +181,39 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
                                     {part}-{set.id}
                                 </div>
 
-                                {(sets.includes(set))?(
-                                    <div className="sprite_sub" style={{
-                                        position: "absolute",
+                                {(sets.some((_set) => _set.id === set.id))?(
+                                    <Fragment>
+                                        <div className="sprite_sub" style={{
+                                            position: "absolute",
 
-                                        top: 0,
-                                        right: 0
-                                    }} onClick={() => {
-                                        webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
-                                            part,
-                                            setId: set.id,
-                                            available: false
-                                        }))
-                                    }}/>
+                                            top: 0,
+                                            right: 0
+                                        }} onClick={() => {
+                                            webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
+                                                part,
+                                                setId: set.id,
+                                                available: false
+                                            }))
+                                        }}/>
+
+                                        <div style={{
+                                            position: "absolute",
+
+                                            top: 0,
+                                            left: 0,
+
+                                            opacity: (set.club)?(1):(0.5)
+                                        }} onClick={() => {
+                                            webSocketClient.sendProtobuff(UpdateClothingData, UpdateClothingData.create({
+                                                part,
+                                                setId: set.id,
+                                                available: true,
+                                                membership: (set.club)?(undefined):("habboclub")
+                                            }))
+                                        }}>
+                                            <MembershipSmallIcon membership="habboclub"/>
+                                        </div>
+                                    </Fragment>
                                 ):(
                                     <div className="sprite_add" style={{
                                         position: "absolute",

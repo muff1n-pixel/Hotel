@@ -62,18 +62,12 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         }
 
         if(shopFurniture.membership) {
-            switch(shopFurniture.membership) {
-                case "habboclub": {
-                    if(!user.model.habboClub || new Date(user.model.habboClub) < new Date()) {
-                        user.sendProtobuff(HotelAlertData, HotelAlertData.create({
-                            message: "You must be a Habbo Club member to buy this furniture!"
-                        }));
+            if(!user.hasMembership(shopFurniture.membership)) {
+                user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                    message: "You must be a Habbo Club member to buy this furniture!"
+                }));
 
-                        return;
-                    }
-
-                    break;
-                }
+                return;
             }
         }
 

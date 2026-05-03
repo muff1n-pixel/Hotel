@@ -17,14 +17,16 @@ export default class UpdateClothingEvent implements ProtobuffListener<UpdateClot
             await ClothingModel.upsert({
                 id: randomUUID(),
                 part: payload.part,
-                setId: payload.setId
+                setId: payload.setId,
+                membership: payload.membership ?? null
             });
         }
         else {
             await ClothingModel.destroy({
                 where: {
                     part: payload.part,
-                    setId: payload.setId
+                    setId: payload.setId,
+                    membership: payload.membership ?? null
                 }
             });
         }

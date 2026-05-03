@@ -26,6 +26,7 @@ export default class GetUserClothesEvent implements ProtobuffListener<GetUserClo
             clothes: clothes.map((clothing) => ({
                 id: clothing.id,
                 setId: clothing.setId,
+                membership: clothing.membership
             })),
 
             userClothes: userClothes.map((clothing) => ({

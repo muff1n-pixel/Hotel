@@ -5,4 +5,5 @@ message UpdateClothingData {
     string set_id = 2;
 
     bool available = 3;
+    optional string membership = 4;
 }

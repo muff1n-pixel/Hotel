@@ -39,17 +39,31 @@ export default function useClothes(part: string, gender: string) {
 
     const allSets = useMemo(() => {
         const settype = FigureAssets.figuredata.settypes.find((setType) => setType.type === part);
+
+        const sets = settype?.sets.map((set) => {
+            return {
+                ...set,
+                club: data?.clothes.find((clothing) => clothing.setId === set.id)?.membership === "habboclub"
+            };
+        });
         
-        return filterAndSortSets(settype?.sets, gender);
-    }, [part, gender]);
+        return filterAndSortSets(sets, gender);
+    }, [data, part, gender]);
 
     const sets = useMemo(() => {
         const settype = FigureAssets.figuredata.settypes.find((setType) => setType.type === part);
         const sets = data?.clothes.map((clothing) => {
-            return settype?.sets.find((set) => set.id === clothing.setId);
-        });
+            const set = settype?.sets.find((set) => set.id === clothing.setId);
 
-        console.log(sets);
+            if(!set) {
+                return undefined;
+            }
+
+            return {
+                ...set,
+                club: data.clothes.find((clothing) => clothing.setId === set.id)?.membership === "habboclub"
+            };
+        });
         
         return filterAndSortSets(sets, gender);
     }, [data, part, gender]);
@@ -57,7 +71,16 @@ export default function useClothes(part: string, gender: string) {
     const userSets = useMemo(() => {
         const settype = FigureAssets.figuredata.settypes.find((setType) => setType.type === part);
         const sets = data?.userClothes.map((clothing) => {
-            return settype?.sets.find((set) => set.id === clothing.setId);
+            const set = settype?.sets.find((set) => set.id === clothing.setId);
+
+            if(!set) {
+                return undefined;
+            }
+
+            return {
+                ...set,
+                club: data.clothes.find((clothing) => clothing.setId === set.id)?.membership === "habboclub"
+            };
         });
         
         return filterAndSortSets(sets, gender);
@@ -112,6 +135,8 @@ export default function useClothes(part: string, gender: string) {
         allSets,
 
         colors,
-        mandatory
+        mandatory,
+
+        data
     };
 }

@@ -3,4 +3,6 @@ syntax = "proto3";
 message ClothingData {
     string id = 1;
     string set_id = 2;
+
+    optional string membership = 3;
 }
