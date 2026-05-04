@@ -26,7 +26,7 @@ export default class WiredConditionFurniHasUserLogic extends WiredConditionLogic
                 }
             }
             else if(!this.roomFurniture.model.data.wiredConditionFurniHasUsers?.requireAllFurni) {
-                return true;
+                return false;
             }
         }
 
