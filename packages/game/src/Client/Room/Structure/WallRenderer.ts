@@ -227,14 +227,15 @@ export default class WallRenderer {
 
         if(this.outline) {
             context.strokeStyle = "black";
+            context.imageSmoothingEnabled = false;
     
-            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));        
+            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
 
             for(const outlinePath of this.rightOutlinePaths) {
                 context.stroke(outlinePath);
             }
         
-            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
+            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
 
             for(const outlinePath of this.leftOutlinePaths) {
                 context.stroke(outlinePath);

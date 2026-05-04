@@ -189,13 +189,17 @@ export default class FloorRenderer {
 
         if(this.outline) {
             context.strokeStyle = "black";
-            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+            context.imageSmoothingEnabled = false;
+
+            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.translate(0.5, 0.5);
 
             for(const outlinePath of this.rightOutlinePaths) {
                 context.stroke(outlinePath);
             }
             
-            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.translate(0.5, 0.5);
 
             for(const outlinePath of this.leftOutlinePaths) {
                 context.stroke(outlinePath);
@@ -226,14 +230,15 @@ export default class FloorRenderer {
 
             if(this.outline) {
                 elevatedContext.strokeStyle = "black";
+                elevatedContext.imageSmoothingEnabled = false;
 
-                elevatedContext.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+                elevatedContext.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
 
                 for(const outlinePath of this.rightOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
                 }
 
-                elevatedContext.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+                elevatedContext.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
 
                 for(const outlinePath of this.leftOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
@@ -335,7 +340,7 @@ export default class FloorRenderer {
 
             if(this.outline && Math.floor(column) === column) {
                 if(!rectangles.some(x => (Math.floor(x.row) === Math.floor(rectangle.row) && Math.floor(x.column) === Math.floor(rectangle.column) - 1))) {
-                    if(!this.hideDoor || (rectangle.row !== this.structure.door?.row && rectangle.column - 1 !== this.structure.door?.column)) {
+                    if(this.hideDoor || (rectangle.row !== this.structure.door?.row && rectangle.column - 1 !== this.structure.door?.column)) {
                         const outlinePath = new Path2D();
 
                         outlinePath.moveTo(left - this.fullSize, top - this.fullSize);

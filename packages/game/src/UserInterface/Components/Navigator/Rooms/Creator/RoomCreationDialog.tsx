@@ -158,7 +158,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
 
                                         cursor: "pointer"
                                     }} onClick={() => setActiveRoomMap(roomMap)}>
-                                        <RoomMapImage crop={true} width={135} height={96} style={{
+                                        <RoomMapImage crop={true} width={180} height={120} style={{
                                         }} structure={RoomStructureData.create({
                                             grid: roomMap.grid,
                                             door: roomMap.door,
