@@ -109,7 +109,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
     }, [floorPlanEditor, data, direction, wallHidden, wallThickness, wallHeight, floorThickness]);
 
     return (
-        <Dialog title="Room Floorplan" hidden={hidden} onClose={onClose} initialPosition="center" width={700} height={400}>
+        <Dialog title="Room Floorplan" hidden={hidden} onClose={onClose} initialPosition="center" width={840} height={440}>
             <DialogContent>
                 <div style={{
                     flex: 1,

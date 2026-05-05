@@ -11,6 +11,8 @@ export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sin
 export default class RoomFloorPlanEditor {
     private data?: RoomFloorplanEditData;
 
+    private readonly offscreenCanvas: OffscreenCanvas;
+
     private terminated = false;
     private moving = false;
     private middleButton = false;
@@ -35,7 +37,7 @@ export default class RoomFloorPlanEditor {
 
     private mousePosition: MousePosition | null = null;
     
-    private readonly cappedFramesPerSecond: number = 24;
+    private readonly cappedFramesPerSecond: number = 30;
     private readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
 
     private lastCappedFrameTimestamp: number = performance.now();
@@ -46,6 +48,8 @@ export default class RoomFloorPlanEditor {
         canvas.addEventListener("mouseleave", this.mouseleave.bind(this));
         canvas.addEventListener("mouseup", this.mouseup.bind(this));
         canvas.addEventListener("wheel", this.wheel.bind(this));
+
+        this.offscreenCanvas = new OffscreenCanvas(1, 1);
 
         this.process();
     }
@@ -264,10 +268,10 @@ export default class RoomFloorPlanEditor {
             }
         }
 
-        this.canvas.width = this.canvas.parentElement!.getBoundingClientRect().width;
-        this.canvas.height = this.canvas.parentElement!.getBoundingClientRect().height;
+        this.offscreenCanvas.width = this.canvas.parentElement!.getBoundingClientRect().width;
+        this.offscreenCanvas.height = this.canvas.parentElement!.getBoundingClientRect().height;
 
-        const context = this.canvas.getContext("2d");
+        const context = this.offscreenCanvas.getContext("2d");
 
         if(!context) {
             throw new ContextNotAvailableError();
@@ -300,7 +304,7 @@ export default class RoomFloorPlanEditor {
             top: this.offset.top
         };
 
-        context.setTransform(1, 0.5, -1, 0.5, this.canvasOffset.left, this.canvasOffset.top);
+        context.setTransform(1, 0.5, -1, 0.5, Math.round(this.canvasOffset.left) + 0.5, Math.round(this.canvasOffset.top) + 0.5);
 
         context.lineWidth = 1;
         context.fillStyle = "#FFF";
@@ -348,6 +352,17 @@ export default class RoomFloorPlanEditor {
             context.strokeStyle = "#FFFFFF";
             context.strokeRect(left, top, tileSize - 3, tileSize - 3);
         }
+
+        const outputContext = this.canvas.getContext("2d");
+
+        if(!outputContext) {
+            throw new ContextNotAvailableError();
+        }
+
+        this.canvas.width = this.offscreenCanvas.width;
+        this.canvas.height = this.offscreenCanvas.height;
+
+        outputContext.drawImage(this.offscreenCanvas, 0, 0);
     }
 
     updateStructure(row: number, column: number, value: string) {
