@@ -29,6 +29,9 @@ export default class FloorRenderer {
     private fullSize: number;
     private halfSize: number;
 
+    public wallThickness: number;
+    public floorThickness: number;
+
     private leftOutlinePaths: Path2D[] = [];
     private rightOutlinePaths: Path2D[] = [];
 
@@ -63,6 +66,9 @@ export default class FloorRenderer {
 
         this.fullSize = size / 2;
         this.halfSize = this.fullSize / 2;
+
+        this.wallThickness = ((this.structure.wall?.thickness ?? 8) / 32) * this.fullSize;
+        this.floorThickness = ((this.structure.floor?.thickness ?? 8) / 32) * this.fullSize;
     }
 
     private parseDepth(character: string): number | 'X' {
@@ -151,8 +157,8 @@ export default class FloorRenderer {
             flipHorizontal: assetData.flipHorizontal
         });
 
-        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.structure.wall?.thickness ?? 8) * 2);
-        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (((this.structure.wall?.thickness ?? 8) + (this.structure.floor?.thickness ?? 8)) * 2) + this.halfSize;
+        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.wallThickness) * 2);
+        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (((this.wallThickness) + (this.floorThickness)) * 2) + this.halfSize;
 
         const canvas = new OffscreenCanvas(width, height);
 
@@ -191,14 +197,14 @@ export default class FloorRenderer {
             context.strokeStyle = "black";
             context.imageSmoothingEnabled = false;
 
-            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
             context.translate(0.5, 0.5);
 
             for(const outlinePath of this.rightOutlinePaths) {
                 context.stroke(outlinePath);
             }
             
-            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
             context.translate(0.5, 0.5);
 
             for(const outlinePath of this.leftOutlinePaths) {
@@ -232,13 +238,13 @@ export default class FloorRenderer {
                 elevatedContext.strokeStyle = "black";
                 elevatedContext.imageSmoothingEnabled = false;
 
-                elevatedContext.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+                elevatedContext.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
 
                 for(const outlinePath of this.rightOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
                 }
 
-                elevatedContext.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+                elevatedContext.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
 
                 for(const outlinePath of this.leftOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
@@ -274,7 +280,7 @@ export default class FloorRenderer {
 
     private renderLeftEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+        context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -302,7 +308,7 @@ export default class FloorRenderer {
             }
 
             const nextStepEdge = rectangles.find(x => (x.column == rectangle.column) && (x.row == rectangle.row + 0.25 || x.row == rectangle.row + 1) && (x.depth === rectangle.depth - 0.25));
-            let thickness = (this.structure.floor?.thickness ?? 8);
+            let thickness = (this.floorThickness);
 
             if(nextStepEdge && (thickness > this.halfSize / 2)) {
                 thickness = this.halfSize / 2;
@@ -326,7 +332,7 @@ export default class FloorRenderer {
 
     private renderRightEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+        context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -358,7 +364,7 @@ export default class FloorRenderer {
 
             const nextStepEdge = rectangles.find(x => (x.row == rectangle.row) && (x.column == rectangle.column + 0.25 || x.column == rectangle.column + 1) && (x.depth === rectangle.depth - 0.25));
 
-            let thickness = (this.structure.floor?.thickness ?? 8);
+            let thickness = (this.floorThickness);
 
             if(nextStepEdge && (thickness > this.halfSize / 2)) {
                 thickness = this.halfSize / 2;
@@ -382,7 +388,7 @@ export default class FloorRenderer {
 
     private renderTiles(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, -1, .5, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.structure.wall?.thickness ?? 8));
+        context.setTransform(1, .5, -1, .5, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
                 
         const tiles = new Path2D();

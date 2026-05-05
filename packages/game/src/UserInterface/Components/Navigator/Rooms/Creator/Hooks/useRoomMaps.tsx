@@ -8,21 +8,25 @@ export default function useRoomMaps() {
     const [roomMaps, setRoomMaps] = useState<RoomMapData[]>([]);
 
     useEffect(() => {
+        const listener = webSocketClient.addProtobuffListener(RoomMapsData, {
+            async handle(payload: RoomMapsData) {
+                setRoomMaps(payload.maps);
+            },
+        });
+
         if(roomMapsRequested.current) {
-            return;
+            return () => {
+                webSocketClient.removeProtobuffListener(RoomMapsData, listener);
+            };
         }
 
         roomMapsRequested.current = true;
 
-        webSocketClient.addProtobuffListener(RoomMapsData, {
-            async handle(payload: RoomMapsData) {
-                setRoomMaps(payload.maps);
-            },
-        }, {
-            once: true
-        });
-
         webSocketClient.sendProtobuff(GetRoomMapsData, GetRoomMapsData.create({}));
+    
+        return () => {
+            webSocketClient.removeProtobuffListener(RoomMapsData, listener);
+        };
     }, []);
 
     return roomMaps;

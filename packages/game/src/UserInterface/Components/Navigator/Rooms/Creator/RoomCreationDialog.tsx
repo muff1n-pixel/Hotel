@@ -11,6 +11,7 @@ import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import Selection from "../../../../Common/Form/Components/Selection";
 import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
 import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -18,15 +19,18 @@ export type RoomCreationDialogProps = {
 }
 
 export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDialogProps) {
-    const { closeDialog } = useDialogs();
+    const { addUniqueDialog, closeDialog } = useDialogs();
 
     const roomMaps = useRoomMaps();
     const roomCategories = useRoomCategories();
+    const hasRoomMapsPermission = usePermissionAction("room:maps");
 
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [maxUsers, setMaxUsers] = useState<number>(25);
+
+    const [editMode, setEditMode] = useState<boolean>(false);
 
     const [activeRoomMap, setActiveRoomMap] = useState<RoomMapData>();
 
@@ -70,7 +74,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
-        <Dialog title="Room Creation" hidden={hidden} onClose={onClose} width={600} height={360} style={{
+        <Dialog title="Room Creation" onEditClick={hasRoomMapsPermission && (() => setEditMode(!editMode))} hidden={hidden} onClose={onClose} width={600} height={360} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -158,8 +162,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
 
                                         cursor: "pointer"
                                     }} onClick={() => setActiveRoomMap(roomMap)}>
-                                        <RoomMapImage crop={true} width={180} height={120} style={{
-                                        }} structure={RoomStructureData.create({
+                                        <RoomMapImage width={180} height={120} structure={RoomStructureData.create({
                                             grid: roomMap.grid,
                                             door: roomMap.door,
                                             floor: {
@@ -172,8 +175,34 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                                 hidden: false
                                             }
                                         })} leftWallColor={["D48612"]}/>
+
+                                        {(editMode) && (
+                                            <div style={{
+                                                position: "absolute",
+                                                top: 4,
+                                                right: 3,
+                                                cursor: "pointer"
+                                            }} onClick={() => addUniqueDialog("edit-room-map", { map: roomMap })}>
+                                                <div className="sprite_room_user_motto_pen"/>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
+
+                                {(editMode) && (
+                                    <div style={{
+                                        width: 135,
+                                        height: 96,
+
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+
+                                        cursor: "pointer"
+                                    }} onClick={() => addUniqueDialog("edit-room-map")}>
+                                        <div className="sprite_add"/>
+                                    </div>
+                                )}
                             </div>
                         </DialogScrollArea>
                     </div>

@@ -39,6 +39,9 @@ export default class WallRenderer {
 
     private fullSize: number;
     private halfSize: number;
+    
+    public wallThickness: number;
+    public floorThickness: number;
 
     private leftOutlinePaths: Path2D[] = [];
     private rightOutlinePaths: Path2D[] = [];
@@ -78,6 +81,9 @@ export default class WallRenderer {
 
         this.fullSize = this.size / 2;
         this.halfSize = this.fullSize / 2;
+
+        this.wallThickness = ((this.structure.wall?.thickness ?? 8) / 32) * this.fullSize;
+        this.floorThickness = ((this.structure.floor?.thickness ?? 8) / 32) * this.fullSize;
     }
 
     private parseDepth(character: string) {
@@ -190,8 +196,8 @@ export default class WallRenderer {
 
         const doorMask = await this.getDoorMask(data);
         
-        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.structure.floor?.thickness ?? 9) * 2);
-        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (this.structure.wall?.thickness ?? 8) + (this.structure.floor?.thickness ?? 9) + (this.size * 2);
+        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + (this.floorThickness * 2);
+        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (this.wallThickness) + this.floorThickness + (this.size * 2);
 
         const canvas = new OffscreenCanvas(width, height);
 
@@ -229,13 +235,13 @@ export default class WallRenderer {
             context.strokeStyle = "black";
             context.imageSmoothingEnabled = false;
     
-            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.wallThickness) + 0.5);
 
             for(const outlinePath of this.rightOutlinePaths) {
                 context.stroke(outlinePath);
             }
         
-            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8) + 0.5);
+            context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, (this.depth * this.halfSize) + (this.wallThickness) + 0.5);
 
             for(const outlinePath of this.leftOutlinePaths) {
                 context.stroke(outlinePath);
@@ -268,7 +274,7 @@ export default class WallRenderer {
 
     private renderLeftWalls(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
+        context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -289,8 +295,8 @@ export default class WallRenderer {
                     continue;
                 }
 
-                width = (this.structure.wall?.thickness ?? 8);
-                height += (this.structure.floor?.thickness ?? 9) - 1;
+                width = (this.wallThickness);
+                height += this.floorThickness - 1;
             }
             else if(rectangle.direction == 2) {
                 depth = this.parseDepth(this.getTileDepth(row, column + 1, false));
@@ -364,7 +370,7 @@ export default class WallRenderer {
 
     private renderRightWalls(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));        
+        context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));        
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -383,8 +389,8 @@ export default class WallRenderer {
                     continue;
                 }
 
-                width = (this.structure.wall?.thickness ?? 8);
-                height += (this.structure.floor?.thickness ?? 9) - 1;
+                width = (this.wallThickness);
+                height += this.floorThickness - 1;
             }
             else if(rectangle.direction !== 4) {
                 continue;
@@ -398,7 +404,7 @@ export default class WallRenderer {
                 
                 const path = new Path2D();
                 
-                path.rect(left - ((width == this.fullSize)?(0):((this.structure.wall?.thickness ?? 8))), top, width, height);
+                path.rect(left - ((width == this.fullSize)?(0):((this.wallThickness))), top, width, height);
 
                 this.rightWalls.push({
                     path,
@@ -446,7 +452,7 @@ export default class WallRenderer {
                 }
             }
 
-            context.rect(left - ((width == this.fullSize)?(0):((this.structure.wall?.thickness ?? 8))), top, width, height);
+            context.rect(left - ((width == this.fullSize)?(0):((this.wallThickness))), top, width, height);
         }
 
         context.fill();
@@ -455,7 +461,7 @@ export default class WallRenderer {
 
     private renderWallTops(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, -1, .5, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));     
+        context.setTransform(1, .5, -1, .5, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));     
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -471,21 +477,21 @@ export default class WallRenderer {
             let top = row * this.fullSize - (this.depth * this.halfSize);
            
             if(rectangle.direction == 1) {
-                width = (this.structure.wall?.thickness ?? 8);
-                height = (this.structure.wall?.thickness ?? 8);
+                width = (this.wallThickness);
+                height = (this.wallThickness);
 
-                left -= (this.structure.wall?.thickness ?? 8);
-                top -= (this.structure.wall?.thickness ?? 8);
+                left -= (this.wallThickness);
+                top -= (this.wallThickness);
             }
             else if(rectangle.direction == 2) {
-                width = (this.structure.wall?.thickness ?? 8);
+                width = (this.wallThickness);
 
-                left -= (this.structure.wall?.thickness ?? 8);
+                left -= (this.wallThickness);
             }
             else if(rectangle.direction == 4) {
-                height = (this.structure.wall?.thickness ?? 8);
+                height = (this.wallThickness);
 
-                top -= (this.structure.wall?.thickness ?? 8);
+                top -= (this.wallThickness);
             }
             else {
                 continue;
@@ -506,7 +512,7 @@ export default class WallRenderer {
         const extraTile = (overlappingWalls === 1)?(1):(0);
 
         if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row && rectangle.column === this.structure.door!.column + 1 && rectangle.direction === 2)) {
-            context.setTransform(1, -.5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
+            context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));
 
             const row = this.structure.door.row + extraTile;
             const column = this.structure.door.column;
@@ -544,7 +550,7 @@ export default class WallRenderer {
             }
         }
         else if(rectangles.some((rectangle) => rectangle.row === this.structure.door!.row + 1 && rectangle.column === this.structure.door!.column && rectangle.direction === 4)) {
-            context.setTransform(1, .5, 0, 1, (this.structure.wall?.thickness ?? 8) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.structure.wall?.thickness ?? 8));
+            context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));
 
             const row = this.structure.door.row;
             const column = this.structure.door.column + extraTile;

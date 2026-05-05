@@ -55,6 +55,8 @@ import RoomCameraDialog from "@UserInterface/Components/Room/Camera/RoomCameraDi
 import RoomCameraEditorDialog from "@UserInterface/Components/Room/Camera/RoomCameraEditorDialog";
 import RoomCameraPreviewDialog from "@UserInterface/Components/Room/Camera/RoomCameraPreviewDialog";
 import EditShopMembershipDialog from "@UserInterface/Components/Shop/Development/EditShopMembershipDialog";
+import EditRoomMapDialog from "@UserInterface/Components/Room/Map/EditRoomMapDialog";
+import FloorPlanDialog from "@UserInterface/Components/Room/FloorPlan/FloorPlanDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -125,6 +127,9 @@ export default function DialogInstances() {
                     case "room-floorplan":
                         return (<RoomFloorPlanDialog {...props} key={dialog.id}/>);
 
+                    case "room-common-floorplan":
+                        return (<FloorPlanDialog {...props} key={dialog.id}/>);
+
                     case "room-chat-commands":
                         return (<RoomChatCommandsDialog {...props} key={dialog.id}/>);
 
@@ -183,7 +188,7 @@ export default function DialogInstances() {
                         return (<EditShopBotFigureDialog {...props} key={dialog.id}/>);
                         
                     case "edit-room-map":
-                        return (<RoomCreationDialog {...props} key={dialog.id}/>);
+                        return (<EditRoomMapDialog {...props} key={dialog.id}/>);
 
                     case "figure-catalog":
                         return (<FigureCatalogDialog {...props} key={dialog.id}/>);

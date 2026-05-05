@@ -5,28 +5,21 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import { RoomStructureData } from "@pixel63/events";
 
 export type RoomMapImageProps = {
-    crop?: boolean;
+    size?: number;
     width: number;
     height: number;
     structure: RoomStructureData;
-    style: CSSProperties;
+    style?: CSSProperties;
     leftWallColor?: string[];
 }
 
-export default function RoomMapImage({ crop = false, width, height, style, structure, leftWallColor }: RoomMapImageProps) {
+export default function RoomMapImage({ size = 6, width, height, style, structure, leftWallColor }: RoomMapImageProps) {
     const rendered = useRef(false);
 
     const [dataUrl, setDataUrl] = useState("");
 
     useEffect(() => {
-        if(rendered.current) {
-            return;
-        }
-
-        rendered.current = true;
-
         (async () => {
-            const size = 6;
             const fullSize = size / 2;
 
             const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size, true, true);
@@ -79,65 +72,20 @@ export default function RoomMapImage({ crop = false, width, height, style, struc
 
             context.translate(Math.floor(translateLeft + (floorRenderer.rows * fullSize)), Math.floor(translateTop + (wallRenderer.depth + 3.5) * fullSize));
 
-            context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
-            context.drawImage(floor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+            context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.wallThickness);
+            context.drawImage(floor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - floorRenderer.wallThickness);
             
             if(elevatedFloor) {
-                context.drawImage(elevatedFloor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - (floorRenderer.structure.wall?.thickness ?? 0));
+                context.drawImage(elevatedFloor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - floorRenderer.wallThickness);
             }
 
-            context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - (wallRenderer.structure.wall?.thickness ?? 0));
-
-            /*if(crop) {
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-                const bounds = { top: height, left: width, right: 0, bottom: 0 };
-
-                for (let row = 0; row < imageData.height; row++) {
-                    for (let column = 0; column < imageData.width; column++) {
-                        if (imageData.data[row * width * 4 + column * 4 + 3] !== 0) {
-                            if (row < bounds.top) {
-                                bounds.top = row;
-                            }
-
-                            if (column < bounds.left) {
-                                bounds.left = column;
-                            } 
-
-                            if (column > bounds.right) {
-                                bounds.right = column;
-                            }
-
-                            if (row > bounds.bottom) {
-                                bounds.bottom = row
-                            }
-                        }
-                    }
-                }
-
-                const newWidth = bounds.right - bounds.left
-                const newHeight = bounds.bottom - bounds.top
-
-                resultContext.canvas.width = newWidth;
-                resultContext.canvas.height = newHeight;
-
-                resultContext.drawImage(canvas,
-                    bounds.left, bounds.top, newWidth, newHeight,
-                    0, 0, newWidth, newHeight
-                );
-            }
-            else {
-                resultContext.canvas.width = width;
-                resultContext.canvas.height = height;
-
-                resultContext.drawImage(canvas, 0, 0);
-            }*/
+            context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.wallThickness);
 
             setDataUrl(canvas.toDataURL("image/png"));
 
             canvas.remove();
         })();
-    }, [ structure ]);
+    }, [ structure, size ]);
 
     return (
         <img src={dataUrl} style={{

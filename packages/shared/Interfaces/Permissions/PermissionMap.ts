@@ -18,7 +18,8 @@ export type RoomPermissions =
     "room:export_furniture"
     | "room:import_furniture"
     | "room:type"
-    | "room:rights";
+    | "room:rights"
+    | "room:maps";
 
 export type CommandPermissions =
     "command:give";
