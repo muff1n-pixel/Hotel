@@ -68,7 +68,9 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
             directions: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("directions"));
+                    const dataValue = this.getDataValue("directions");
+                    
+                    return dataValue ? JSON.parse(dataValue) : [];
                 },
                 set: function (value) {
                     this.setDataValue("directions", JSON.stringify(value));
@@ -79,7 +81,9 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
             animations: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("animations"));
+                    const dataValue = this.getDataValue("animations");
+
+                    return dataValue ? JSON.parse(dataValue) : [];
                 },
                 set: function (value) {
                     this.setDataValue("animations", JSON.stringify(value));
