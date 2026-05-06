@@ -61,7 +61,7 @@ export default function EditShopMembershipDialog({ hidden, data, onClose }: Edit
     }, [data, confirmDelete]);
 
     return (
-        <Dialog title={(data.membership?.id)?("Edit shop membership"):("Create shop membership")} hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={580} initialPosition="center">
+        <Dialog title={(data.membership?.id)?("Edit shop membership"):("Create shop membership")} editMode hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={580} initialPosition="center">
             <DialogContent style={{
                 display: "flex",
                 flexDirection: "column",

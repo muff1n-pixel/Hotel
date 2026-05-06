@@ -114,7 +114,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
     }, [ state, data, featuredPageId, title, onClose ]);
 
     return (
-        <Dialog title={(data?.feature)?("Edit Shop Feature"):("Create Shop Feature")} hidden={hidden} onClose={onClose} initialPosition="center" width={1280} height={600} style={{
+        <Dialog title={(data?.feature)?("Edit Shop Feature"):("Create Shop Feature")} editMode hidden={hidden} onClose={onClose} initialPosition="center" width={1280} height={600} style={{
             overflow: "visible"
         }}>
             <DialogContent>

@@ -72,7 +72,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds, roomId, badgeId]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
+        <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} editMode hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",

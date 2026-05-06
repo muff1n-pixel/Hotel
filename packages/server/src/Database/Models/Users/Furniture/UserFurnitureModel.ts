@@ -56,7 +56,9 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
             position: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("position"));
+                    const dataValue = this.getDataValue("position");
+
+                    return (dataValue)?(JSON.parse(dataValue)):(null);
                 },
                 set: function (value) {
                     this.setDataValue("position", JSON.stringify(value));
@@ -77,7 +79,9 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
             animationTags: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("animationTags"));
+                    const dataValue = this.getDataValue("animationTags");
+
+                    return (dataValue)?(JSON.parse(dataValue)):(null);
                 },
                 set: function (value) {
                     this.setDataValue("animationTags", JSON.stringify(value));
@@ -93,7 +97,9 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
             data: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("data"));
+                    const dataValue = this.getDataValue("data");
+
+                    return (dataValue)?(JSON.parse(dataValue)):(null);
                 },
                 set: function (value) {
                     this.setDataValue("data", JSON.stringify(value));

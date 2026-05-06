@@ -53,7 +53,7 @@ export default function EditShopFeatureCameraDialog({ hidden, data, onClose }: E
     }, [room, data, canvasRef, onClose]);
 
     return (
-        <Dialog title={"Shop Feature Room Camera"} hidden={hidden} onClose={() => {
+        <Dialog title={"Shop Feature Room Camera"} editMode hidden={hidden} onClose={() => {
             data.onCancel();
             onClose?.();
         }} initialPosition="center" width={(data.alignment === "vertical")?(200):(380)} height="auto" assumedHeight={420}>

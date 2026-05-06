@@ -1,6 +1,6 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
@@ -11,7 +11,13 @@ import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoom
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 
-export default function InventoryFurnitureTab() {
+export type InventoryFurnitureTabProps = {
+    allowPlacingInRoom: boolean;
+    trading?: boolean;
+    button?: (activeFurniture: UserInventoryFurnitureData | undefined) => ReactNode;
+};
+
+export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, button }: InventoryFurnitureTabProps) {
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
@@ -30,12 +36,18 @@ export default function InventoryFurnitureTab() {
 
         userFurnitureRequested.current = true;
 
-        webSocketClient.sendProtobuff(GetUserInventoryFurnitureData, GetUserInventoryFurnitureData.create({}));
-    }, []);
+        webSocketClient.sendProtobuff(GetUserInventoryFurnitureData, GetUserInventoryFurnitureData.create({
+            trading
+        }));
+    }, [trading]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryFurnitureCollectionData, {
             async handle(payload: UserInventoryFurnitureCollectionData) {
+                if(payload.trading && !trading) {
+                    return;
+                }
+
                 if(payload.allUserFurniture.length) {
                     setUserFurniture(payload.allUserFurniture);
                 }
@@ -67,7 +79,7 @@ export default function InventoryFurnitureTab() {
         return () => {
             webSocketClient.removeProtobuffListener(UserInventoryFurnitureCollectionData, listener);
         };
-    }, [userFurniture]);
+    }, [userFurniture, trading]);
 
     useEffect(() => {
         if(!activeFurniture && userFurniture.length) {
@@ -149,6 +161,10 @@ export default function InventoryFurnitureTab() {
     }, [roomFurniturePlacer]);
 
     const handleMouseDown = useCallback((userFurniture: UserInventoryFurnitureData) => {
+        if(!allowPlacingInRoom) {
+            return;
+        }
+
         if(!clientInstance.roomInstance.value) {
             return;
         }
@@ -173,7 +189,7 @@ export default function InventoryFurnitureTab() {
         }, {
             once: true
         });
-    }, [ setDialogHidden, room, activeFurniture, roomFurniturePlacer ]);
+    }, [ setDialogHidden, room, activeFurniture, roomFurniturePlacer, allowPlacingInRoom ]);
 
     if(!userFurniture.length) {
         return (<InventoryEmptyTab/>);
@@ -275,7 +291,11 @@ export default function InventoryFurnitureTab() {
                             <p style={{ textOverflow: "ellipsis", maxHeight: 40, overflow: "hidden" }}>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
                         </div>
 
-                        <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>
+                        {(allowPlacingInRoom)?(
+                            <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>
+                        ):(
+                            button?.(activeFurniture)
+                        )}
                     </Fragment>
                 )}
             </div>

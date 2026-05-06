@@ -54,7 +54,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
     }, [dialogs, data, type, name, motto, figureConfiguration, credits, duckets, diamonds]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop bot"):("Create shop bot")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?("Edit shop bot"):("Create shop bot")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",

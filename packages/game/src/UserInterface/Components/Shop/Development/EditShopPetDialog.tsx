@@ -42,7 +42,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
     }, [dialogs, data, pet, credits, duckets, diamonds]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop pet"):("Create shop pet")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?("Edit shop pet"):("Create shop pet")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",

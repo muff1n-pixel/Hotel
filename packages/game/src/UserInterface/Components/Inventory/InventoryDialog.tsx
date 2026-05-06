@@ -19,7 +19,7 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
             <DialogTabs initialActiveIndex={["furniture", "pets", "badges", "bots"].indexOf(data?.tab ?? "furniture")} withoutHeader tabs={[
                 {
                     icon: "Furniture",
-                    element: (<InventoryFurnitureTab/>)
+                    element: (<InventoryFurnitureTab allowPlacingInRoom/>)
                 },
                 {
                     icon: "Pets",

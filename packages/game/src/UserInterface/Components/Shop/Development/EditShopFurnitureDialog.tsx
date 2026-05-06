@@ -64,7 +64,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
     }, [data, confirmDelete]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop furniture"):("Create shop furniture")} hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?("Edit shop furniture"):("Create shop furniture")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",

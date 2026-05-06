@@ -10,6 +10,7 @@ import { UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureC
 import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
+import { Op } from "sequelize";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -150,8 +151,8 @@ export default class UserInventory {
         }));
     }
 
-    public async sendFurniture() {
-        const userFurnitures = await UserFurnitureModel.findAll({
+    public async sendFurniture(trading?: boolean) {
+        let userFurnitures = await UserFurnitureModel.findAll({
             where: {
                 userId: this.user.model.id,
                 roomId: null,
@@ -161,10 +162,18 @@ export default class UserInventory {
                 model: FurnitureModel,
                 as: "furniture"
             },
-            order: [['updatedAt','DESC']]
+            order: [[(trading)?('furnitureId'):('updatedAt'),'DESC']]
         });
 
         const allUserFurniture: UserInventoryFurnitureData[] = [];
+
+        if(trading) {
+            const roomUser = this.user.room?.getRoomUser(this.user);
+
+            userFurnitures = userFurnitures.filter((userFurniture) => {
+                return !roomUser?.trading.userFurniture.some((tradingUserFurniture) => tradingUserFurniture.id === userFurniture.id)
+            });
+        }
 
         for(const userFurniture of userFurnitures) {
             if(userFurniture.furniture.flags.inventoryStackable) {
@@ -199,7 +208,8 @@ export default class UserInventory {
         }
         
         this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
-            allUserFurniture
+            allUserFurniture,
+            trading
         }));
     }
 

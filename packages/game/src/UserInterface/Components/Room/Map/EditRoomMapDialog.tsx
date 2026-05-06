@@ -95,7 +95,7 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
     }, [confirmDelete, data, onClose]);
 
     return (
-        <Dialog title="Room Map Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={320} assumedHeight={500} height={"auto"}>
+        <Dialog title="Room Map Editor" editMode hidden={hidden} onClose={onClose} initialPosition="center" width={320} assumedHeight={500} height={"auto"}>
             <DialogContent style={{
                 gap: 10
             }}>

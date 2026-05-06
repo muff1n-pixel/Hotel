@@ -1,5 +1,5 @@
 syntax = "proto3";
 
 message GetUserInventoryFurnitureData {
-  
+    optional bool trading = 1;
 }

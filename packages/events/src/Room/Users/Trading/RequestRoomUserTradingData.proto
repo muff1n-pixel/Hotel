@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message RequestRoomUserTradingData {
+    string target_user_id = 1;
+    
+    bool accept = 2;
+}

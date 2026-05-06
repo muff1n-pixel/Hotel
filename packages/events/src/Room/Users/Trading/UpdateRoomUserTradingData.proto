@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "User/Inventory/Furniture/UserInventoryFurnitureData.proto";
+
+message UpdateRoomUserTradingData {
+    string user_id = 1;
+    optional bool cancel = 2;
+    optional bool lock = 3;
+
+    optional string add_user_furniture_id = 4;
+    optional uint32 add_user_furniture_quantity = 5;
+
+    optional string remove_user_furniture_id = 6;
+}
