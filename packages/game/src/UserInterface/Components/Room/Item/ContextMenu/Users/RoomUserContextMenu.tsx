@@ -7,8 +7,8 @@ import UserContextMenuList from "../../../Users/UserContextMenuList";
 import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
-import { webSocketClient } from "../../../../../..";
-import { SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
+import { clientInstance, webSocketClient } from "../../../../../..";
+import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
 import useFriends from "@UserInterface/Hooks/useFriends";
 
 export type RoomUserContextMenuProps = {
@@ -86,6 +86,16 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                     )
                                 )
                             )}
+
+                            <UserContextMenuButton text={"Ask to trade"} style={{ fontSize: 11 }} onClick={() => {
+                                webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
+                                    targetUserId: targetUser.data.id
+                                }));
+
+                                if(room) {
+                                    room.roomRenderer.focusedItem.value = null;
+                                }
+                            }}/>
 
                             {(room?.information?.owner?.id === user?.id) && (
                                 <UserContextMenuButton text={(targetUser.data.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {

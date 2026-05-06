@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "User/Inventory/Furniture/UserInventoryFurnitureData.proto";
+
+message RoomUserTradingData {
+    string user_id = 1;
+    optional string completes_at = 3;
+
+    bool receiving_locked = 4;
+    bool giving_locked = 5;
+
+    repeated UserInventoryFurnitureData receiving_user_furniture = 6;
+    repeated UserInventoryFurnitureData giving_user_furniture = 7;
+}

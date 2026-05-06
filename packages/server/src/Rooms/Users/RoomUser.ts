@@ -11,11 +11,13 @@ import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.j
 import { RoomActorAction } from "../Actor/RoomActorAction.js";
 import Directions from "../../Helpers/Directions.js";
 import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
+import RoomUserTrading from "./Trading/RoomUserTrading.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
     public path: RoomActorPath;
+    public readonly trading: RoomUserTrading;
     
     public position: RoomPositionData;
     public direction: number;
@@ -46,6 +48,8 @@ export default class RoomUser implements RoomActor {
 
     constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPositionData) {
         this.user.room = room;
+
+        this.trading = new RoomUserTrading(this);
 
         this.position = initialPosition ?? {
             $type: "RoomPositionData",
@@ -165,12 +169,15 @@ export default class RoomUser implements RoomActor {
             }
         }
 
+        await this.trading.handleActionsInterval();
         await this.path.handleActionsInterval();
     }
 
     private readonly disconnectListener = this.disconnect.bind(this);
     public disconnect() {
         this.removeEventListeners();
+
+        this.trading.stopTrading();
 
         for(const bot of this.room.bots) {
             bot.stopFollowingUser(this);

@@ -4,6 +4,7 @@ import RoomChat from "./Chat/RoomChat";
 import RoomItemContextMenu from "./Item/ContextMenu/RoomItemContextMenu";
 import RoomItemProfile from "./Item/RoomItemProfile";
 import ToolbarRoomInfo from "./Toolbar/ToolbarRoomInfo";
+import RoomUserTradeRequests from "@UserInterface/Components/Room/Users/Trading/RoomUserTradeRequests";
 
 export default function RoomInterface() {
     const room = useRoomInstance();
@@ -29,6 +30,7 @@ export default function RoomInterface() {
             <RoomItemContextMenu/>
 
             <RoomUserFriendRequests/>
+            <RoomUserTradeRequests/>
 
             <RoomItemProfile room={room}/>
 

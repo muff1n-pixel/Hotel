@@ -5,7 +5,7 @@ import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 export default class GetUserFurnitureEvent implements ProtobuffListener<GetUserInventoryFurnitureData> {
     minimumDurationBetweenEvents?: number = 100;
 
-    async handle(user: User): Promise<void> {
-        await user.getInventory().sendFurniture();
+    async handle(user: User, payload: GetUserInventoryFurnitureData): Promise<void> {
+        await user.getInventory().sendFurniture(payload.trading);
     }
 }

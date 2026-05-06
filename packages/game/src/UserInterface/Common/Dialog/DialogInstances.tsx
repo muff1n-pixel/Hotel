@@ -58,6 +58,7 @@ import EditShopMembershipDialog from "@UserInterface/Components/Shop/Development
 import EditRoomMapDialog from "@UserInterface/Components/Room/Map/EditRoomMapDialog";
 import FloorPlanDialog from "@UserInterface/Components/Room/FloorPlan/FloorPlanDialog";
 import AudioSettingsDialog from "@UserInterface/Components/Settings/AudioSettingsDialog";
+import RoomUserTradingDialog from "@UserInterface/Components/Room/Users/Trading/RoomUserTradingDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -160,6 +161,9 @@ export default function DialogInstances() {
 
                     case "room-camera-preview":
                         return (<RoomCameraPreviewDialog {...props} key={dialog.id}/>);
+
+                    case "room-user-trading":
+                        return (<RoomUserTradingDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);
