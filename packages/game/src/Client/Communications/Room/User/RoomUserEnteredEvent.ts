@@ -13,5 +13,6 @@ export default class RoomUserEnteredEvent implements ProtobuffListener<RoomUserE
         }
 
         clientInstance.roomInstance.value.users.push(clientInstance.roomInstance.value.addUser(payload.user as Required<RoomUserData>));
+        clientInstance.roomInstance.update();
     }
 }

@@ -9,5 +9,6 @@ export default class RoomUserLeftEvent implements ProtobuffListener<RoomUserLeft
         }
 
         clientInstance.roomInstance.value.removeUser(payload.userId);
+        clientInstance.roomInstance.update();
     }
 }
