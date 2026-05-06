@@ -82,7 +82,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <FurnitureImage furnitureData={furniture.furnitureData}/>
+                    <FurnitureImage furnitureData={furniture.furnitureData} externalImage={furniture.data.data?.externalImage?.externalImage}/>
                 </div>
 
                 {(furniture.data.description ?? furniture.furnitureData.description) && (
