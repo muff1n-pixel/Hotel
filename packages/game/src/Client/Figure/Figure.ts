@@ -7,7 +7,22 @@ export default class Figure {
 
     private renderer: FigureRenderer;
 
-    constructor(public configuration: FigureConfigurationData | undefined, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
+    private _configuration: FigureConfigurationData | undefined;
+    private configurationChanged: boolean = true;
+
+    public get configuration() {
+        return this._configuration;
+    }
+
+    public set configuration(configuration: FigureConfigurationData | undefined) {
+        this._configuration = configuration;
+
+        this.configurationChanged = true;
+    }
+
+    constructor(configuration: FigureConfigurationData | undefined, public direction: number, actions: string[] = [], public headOnly: boolean = false) {
+        this.configuration = configuration;
+
         this.actions.push(...actions);
 
         this.renderer = new FigureRenderer(this.configuration!);
@@ -15,6 +30,7 @@ export default class Figure {
 
     public async renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
         this.renderer.configuration = this.configuration!;
+        this.configurationChanged = false;
 
         return await this.renderer.renderToCanvas(this.getOptions(frame), cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
     }
@@ -65,6 +81,10 @@ export default class Figure {
     }
 
     public shouldRender(frame: number) {
+        if(this.configurationChanged) {
+            return true;
+        }
+
         return this.renderer.shouldRender(this.getOptions(frame));
     }
 }
