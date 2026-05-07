@@ -1,4 +1,4 @@
-import { FurnitureData, FurnitureTraxSongData, FurnitureTraxSetData, UserFurnitureData, UserInventorySoundSetsData, GetUserInventorySoundSetsData } from "@pixel63/events";
+import { FurnitureData, FurnitureTraxSongData, FurnitureTraxSetData, UserInventorySoundSetsData, GetUserInventorySoundSetsData } from "@pixel63/events";
 import TraxDialogList from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogList";
 import TraxDialogSet from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSet";
 import TraxDialogSets from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogSets";

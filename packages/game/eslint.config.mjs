@@ -4,30 +4,36 @@ import storybook from "eslint-plugin-storybook";
 // @ts-check
 
 import eslint from '@eslint/js';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
+import i18next from 'eslint-plugin-i18next';
 
 export default defineConfig(
-  eslint.configs.recommended,
-  tseslint.configs.recommended,
-  {
-    languageOptions: {
-      parserOptions: {
-        tsconfigRootDir: import.meta.dirname,
-        projectService: true,
-      }
-    },
-    rules: {
-        "@typescript-eslint/no-explicit-any": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-          "warn", // or "error"
-          {
-            "argsIgnorePattern": "^_",
-            "varsIgnorePattern": "^_",
-            "caughtErrorsIgnorePattern": "^_"
-          }
-        ]
+    eslint.configs.recommended,
+    tseslint.configs.recommended,
+    globalIgnores(["**/*.stories.tsx"]),
+    {
+        plugins: {
+            i18next
+        },
+
+        languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname,
+                projectService: true,
+            }
+        },
+        rules: {
+            "@typescript-eslint/no-explicit-any": "off",
+            "no-unused-vars": "off",
+            "@typescript-eslint/no-unused-vars": [
+                "warn", // or "error"
+                {
+                    "argsIgnorePattern": "^_",
+                    "varsIgnorePattern": "^_",
+                    "caughtErrorsIgnorePattern": "^_"
+                }
+            ]
+        }
     }
-  }
 );

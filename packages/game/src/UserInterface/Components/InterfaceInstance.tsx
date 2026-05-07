@@ -6,7 +6,6 @@ import DialogInstances from "../Common/Dialog/DialogInstances";
 import { clientInstance, webSocketClient } from "../..";
 import Reception from "./Reception/Reception";
 import { useRoomInstance } from "../Hooks/useRoomInstance";
-import Widget from "./Widget/Widget";
 import { useUser } from "../Hooks/useUser";
 import DebugInformationPanel from "./Debug/DebugInformationPanel";
 import FlyingFurnitureInstances from "./Inventory/FlyingFurniture/FlyingFurnitureInstances";

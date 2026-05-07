@@ -1,4 +1,4 @@
-import AssetFetcher, { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
+import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderResult, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";

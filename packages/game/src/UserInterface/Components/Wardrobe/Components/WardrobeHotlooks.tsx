@@ -1,10 +1,5 @@
-import { useCallback } from "react";
 import { FigureConfigurationData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
-import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import useEffects from "@UserInterface/Components/Wardrobe/Hooks/useEffects";
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import WardrobeSelectionItem from "@UserInterface/Components/Wardrobe/Selection/WardrobeSelectionItem";
 import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
 import WardrobeSelectionSquareItem from "@UserInterface/Components/Wardrobe/Selection/WardrobeSelectionSquareItem";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
@@ -69,22 +64,7 @@ export type WardrobeHotlooksProps = {
     editMode: boolean;
 };
 
-export default function WardrobeHotlooks({ figureConfiguration, onFigureConfigurationChange, editMode }: WardrobeHotlooksProps) {
-    const dialogs = useDialogs();
-
-    const effects = useEffects();
-
-    const handleEquip = useCallback((effect: number) => {
-        if(editMode) {
-            return;
-        }
-
-        onFigureConfigurationChange({
-            ...figureConfiguration,
-            effect
-        });
-    }, [editMode]);
-
+export default function WardrobeHotlooks({ figureConfiguration, onFigureConfigurationChange }: WardrobeHotlooksProps) {
     return (
         <div style={{
             display: "flex",

@@ -1,6 +1,6 @@
 import FigureAssets from "@Client/Assets/FigureAssets";
 import Figure from "../Figure";
-import { FigureConfigurationData, UserClothesData, UserClothingData } from "@pixel63/events";
+import { FigureConfigurationData, UserClothesData } from "@pixel63/events";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 
 export type FigureWardrobeItem = {

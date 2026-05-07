@@ -5,7 +5,6 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import LoaderInstance from "./Loader";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Cookies from "js-cookie";
-import Figure from "@Client/Figure/Figure";
 
 import "./Polyfills/OffscreenCanvas";
 import i18n from "@Game/Locales/i18n";

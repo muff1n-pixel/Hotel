@@ -7,7 +7,6 @@ import { useCallback, useState } from "react";
 import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
-import WiredFurniturePicker from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 

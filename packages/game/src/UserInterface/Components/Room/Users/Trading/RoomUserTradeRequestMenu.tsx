@@ -4,7 +4,7 @@ import { RoomUser } from "@Client/Room/RoomInstance";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "@Game/index";
-import { RequestRoomUserTradingData, UpdateUserFriendRequestData } from "@pixel63/events";
+import { RequestRoomUserTradingData } from "@pixel63/events";
 import { useState } from "react";
 import "./RoomUserTradeRequestMenu.css";
 

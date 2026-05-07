@@ -1,4 +1,3 @@
-import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";

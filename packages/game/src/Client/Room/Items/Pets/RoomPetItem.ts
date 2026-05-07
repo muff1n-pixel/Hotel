@@ -1,4 +1,3 @@
-import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomItem from "../RoomItem";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { RoomPositionData } from "@pixel63/events";

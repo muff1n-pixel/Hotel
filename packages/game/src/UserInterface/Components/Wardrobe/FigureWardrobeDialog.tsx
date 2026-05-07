@@ -1,12 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import Dialog from "../../Common/Dialog/Dialog";
 import DialogSubTabs from "../../Common/Dialog/Components/Tabs/DialogSubTabs";
 import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
-import WardrobeAvatar from "./WardrobeAvatar";
 import WardrobeSelection from "./Selection/WardrobeSelection";
-import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
-import { FigureConfigurationData, GetUserClothesData, UserClothesData, UserClothingData } from "@pixel63/events";
-import { webSocketClient } from "@Game/index";
+import { FigureConfigurationData } from "@pixel63/events";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WardrobeFigures from "@UserInterface/Components/Wardrobe/Components/WardrobeFigures";

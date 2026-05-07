@@ -1,6 +1,5 @@
 import RoomInstance from "@Client/Room/RoomInstance";
 import { useEffect, useRef, useState } from "react";
-import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import RoomFurnitureProfile from "./Furniture/RoomFurnitureProfile";

@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
@@ -14,8 +14,6 @@ export type RoomMapImageProps = {
 }
 
 export default function RoomMapImage({ size = 6, width, height, style, structure, leftWallColor }: RoomMapImageProps) {
-    const rendered = useRef(false);
-
     const [dataUrl, setDataUrl] = useState("");
 
     useEffect(() => {

@@ -1,8 +1,6 @@
 import { Fragment, useCallback, useMemo } from "react";
-import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import WardrobeSelectionItem from "./WardrobeSelectionItem";
 import WardrobeSelectionColors from "./WardrobeSelectionColors";
-import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FigureConfigurationData, UpdateClothingData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import useClothes from "@UserInterface/Components/Wardrobe/Hooks/useClothes";
@@ -29,7 +27,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
 
     const { openShopPage } = useShopPageLink("habboclub");
 
-    const { data, sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
+    const { sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
 
     const activeConfiguration = useMemo(() => figureConfiguration.parts.find((configuration) => configuration.type === part), [figureConfiguration.parts]);
     const activeFigureData = useMemo(() => allSets.find((set) => set.id === activeConfiguration?.setId), [activeConfiguration]);

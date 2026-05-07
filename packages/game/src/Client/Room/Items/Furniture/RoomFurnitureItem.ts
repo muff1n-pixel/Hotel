@@ -1,5 +1,4 @@
 import Furniture from "@Client/Furniture/Furniture";
-import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
 import RoomRenderer from "@Client/Room/RoomRenderer";

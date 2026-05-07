@@ -3,17 +3,14 @@ import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
 import Input from "../../../../Common/Form/Components/Input";
 import DialogButton from "../../../../Common/Dialog/Components/Button/DialogButton";
-import RoomMapImage from "../../../Room/Map/RoomMapImage";
 import { webSocketClient } from "../../../../..";
 import useRoomMaps from "./Hooks/useRoomMaps";
 import { useDialogs } from "../../../../Hooks/useDialogs";
 import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import Selection from "../../../../Common/Form/Components/Selection";
-import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
+import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData } from "@pixel63/events";
 import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
-import MembershipIcon from "@UserInterface/Common/Memberships/MembershipIcon";
-import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
 import RoomCreationMap from "@UserInterface/Components/Navigator/Rooms/RoomCreationMap";
 
 export type RoomCreationDialogProps = {

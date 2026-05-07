@@ -161,7 +161,7 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
                 )
             }}
 
-            onSelect={(data?.onSelect) && ((id) => data?.onSelect?.(activeItems))}
+            onSelect={(data?.onSelect) && (() => data?.onSelect?.(activeItems))}
             onPageChange={setPage}
 
             hidden={hidden}

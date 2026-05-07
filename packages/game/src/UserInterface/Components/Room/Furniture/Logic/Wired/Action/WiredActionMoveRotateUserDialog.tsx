@@ -1,5 +1,4 @@
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import WiredDivider from "../../../../../../Common/Dialog/Layouts/Wired/WiredDivider";
@@ -8,10 +7,8 @@ import { useCallback, useState } from "react";
 import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
-import WiredFurniturePicker from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export default function WiredActionMoveRotateUserDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [movement, setMovement] = useState(data.data.data?.wiredActionMoveRotateUser?.movement ?? "none");

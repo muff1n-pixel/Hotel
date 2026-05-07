@@ -6,7 +6,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { FurnitureData, PurchaseRoomCameraPhotoData } from "@pixel63/events";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { clientInstance, webSocketClient } from "@Game/index";
 import { useUser } from "@UserInterface/Hooks/useUser";
 

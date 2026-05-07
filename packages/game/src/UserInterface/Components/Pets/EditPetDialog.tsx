@@ -9,7 +9,6 @@ import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import PetPaletteSelection from "./PetPaletteSelection";
-import { useDialogs } from "../../Hooks/useDialogs";
 
 export type EditPetDialogProps = {
     hidden?: boolean;
@@ -20,8 +19,6 @@ export type EditPetDialogProps = {
 }
 
 export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogProps) {
-    const dialogs = useDialogs();
-
     const [type, setType] = useState<string>(data?.type ?? "");
 
     const [name, setName] = useState<string>(data?.name ?? "");

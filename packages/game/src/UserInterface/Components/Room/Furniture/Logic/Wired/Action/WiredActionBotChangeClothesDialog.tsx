@@ -9,7 +9,6 @@ import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
 import { FigureConfigurationData, UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
-import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";

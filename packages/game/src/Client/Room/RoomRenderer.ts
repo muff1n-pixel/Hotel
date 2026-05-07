@@ -18,7 +18,7 @@ import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
-import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";

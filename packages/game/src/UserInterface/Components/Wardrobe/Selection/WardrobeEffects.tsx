@@ -5,7 +5,6 @@ import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScr
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useEffects from "@UserInterface/Components/Wardrobe/Hooks/useEffects";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 
 export type WardrobeEffectsProps = {
     figureConfiguration: FigureConfigurationData;

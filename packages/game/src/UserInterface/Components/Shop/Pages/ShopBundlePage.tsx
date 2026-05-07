@@ -3,7 +3,7 @@ import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { clientInstance, webSocketClient } from "../../../..";
+import { webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData } from "@pixel63/events";

@@ -7,7 +7,7 @@ import UserContextMenuList from "../../../Users/UserContextMenuList";
 import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
-import { clientInstance, webSocketClient } from "../../../../../..";
+import { webSocketClient } from "../../../../../..";
 import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
 import useFriends from "@UserInterface/Hooks/useFriends";
 import { useTranslation } from "react-i18next";

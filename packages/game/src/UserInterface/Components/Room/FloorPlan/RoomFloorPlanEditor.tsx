@@ -3,7 +3,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 import RoomFloorplanHelper from "@pixel63/shared/Helpers/RoomFloorplanHelper";
 import { clientInstance } from "../../../..";
-import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
