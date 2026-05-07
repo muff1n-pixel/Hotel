@@ -1,0 +1,22 @@
+{
+    "links": {
+        "reception": "Reception",
+        "homeroom": "Home room",
+        "navigator": "Navigator",
+        "shop": "Shop",
+        "inventory": "Inventory",
+        "wardrobe": "Wardrobe",
+        "achievements": "Achievements",
+        "room_camera": "Room camera"
+    },
+
+    "chatbar": {
+        "placeholder": "Click here to chat..."
+    },
+
+    "friends": {
+        "my_friends": "My friends",
+        "find_friends": "Find friends",
+        "find_new_friends": "Find new friends"
+    }
+}

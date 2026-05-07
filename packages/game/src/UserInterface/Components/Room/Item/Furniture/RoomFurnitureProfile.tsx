@@ -10,12 +10,15 @@ import { useDialogs } from "../../../../Hooks/useDialogs";
 import { PickupRoomFurnitureData, UpdateRoomFurnitureData } from "@pixel63/events";
 import FurnitureShopLink from "@UserInterface/Components/Furniture/FurnitureShopLink";
 import UserLink from "@UserInterface/Common/Users/UserLink";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureProfileProps = {
     furniture: RoomFurniture;
 };
 
 export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfileProps) {
+    const [getTranslation] = useTranslation("room");
+
     const user = useUser();
     const dialogs = useDialogs();
 
@@ -79,7 +82,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <FurnitureImage furnitureData={furniture.furnitureData}/>
+                    <FurnitureImage furnitureData={furniture.furnitureData} externalImage={furniture.data.data?.externalImage?.externalImage}/>
                 </div>
 
                 {(furniture.data.description ?? furniture.furnitureData.description) && (
@@ -110,7 +113,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     <div className="room-furniture-profile-button" onClick={() => {
                         clientInstance.roomInstance.value?.moveFurniture(furniture.data.id);
                     }}>
-                        Move
+                        {getTranslation("item.profile.move")}
                     </div>
                 )}
 
@@ -120,7 +123,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                             id: furniture.data.id
                         }));
                     }}>
-                        Pick up
+                        {getTranslation("item.profile.pick_up")}
                     </div>
                 )}
 
@@ -136,7 +139,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                             direction: furniture.item.furnitureRenderer.getNextDirection()
                         }));
                     }}>
-                        Rotate
+                        {getTranslation("item.profile.rotate")}
                     </div>
                 )}
 
@@ -144,7 +147,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     <div className="room-furniture-profile-button" onClick={() => {
                         logic.use();
                     }}>
-                        Use
+                        {getTranslation("item.profile.use")}
                     </div>
                 )}
             </div>

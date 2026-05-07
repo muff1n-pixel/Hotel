@@ -1,0 +1,46 @@
+{
+    "toolbar": {
+        "information": "Information",
+        "settings": "Inställningar",
+        "zoom": "Zoom",
+        "chat_history": "Chatt historik",
+        "link": "Länk till rummet"
+    },
+
+    "item": {
+        "profile": {
+            "move": "Flytta",
+            "pick_up": "Ta upp",
+            "rotate": "Rotera",
+            "use": "Använd",
+            
+            "buy": "Köp möbel"
+        },
+
+        "context_menu": {
+            "wardrobe": "Garderob",
+
+            "dance": "Dansa",
+            "stop_dancing": "Sluta dansa",
+            "dances": {
+                "dance_default": "Dansa",
+                "dance_pogo_mogo": "Pogo Mogo",
+                "dance_duck_funk": "Duck Funk",
+                "dance_the_rollie": "The Rollie"
+            },
+
+            "friends": {
+                "revoke_request": "Återkalla vänförfrågan",
+                "accept_request": "Acceptera vänförfrågan",
+                "ask_to_be_friends": "Be om att få vara vänner"
+            },
+
+            "ask_to_trade": "Begär att byta",
+
+            "give_rights": "Ge rättigheter",
+            "revoke_rights": "Ta bort rättigheter",
+
+            "back": "Tillbaka"
+        }
+    }
+}

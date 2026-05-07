@@ -4,5 +4,6 @@
     "*.{ts,tsx}": [
       "@parcel/validator-typescript"
     ]
-  }
+  },
+  "reporters":  ["...", "parcel-reporter-static-files-copy"]
 }

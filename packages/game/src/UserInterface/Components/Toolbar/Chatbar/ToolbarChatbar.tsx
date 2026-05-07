@@ -5,12 +5,15 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export type ToolbarChatbarProps = {
     style?: CSSProperties;
 }
 
 export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
+    const [getTranslation] = useTranslation("toolbar");
+
     const dialogs = useDialogs();
     const user = useUser();
     const roomInstance = useRoomInstance();
@@ -201,7 +204,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                 value={value}
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
                 onKeyUp={(event) => event.key === "Enter" && handleSubmit()}
-                placeholder="Click here to chat..."
+                placeholder={getTranslation("chatbar.placeholder")}
                 maxLength={100}
                 style={{
                     flex: 1,

@@ -37,6 +37,7 @@
     "@pixel63/shared": "file:../shared",
     "@types/js-cookie": "^3.0.6",
     "i18next": "^26.0.8",
+    "i18next-http-backend": "^4.0.0",
     "js-cookie": "^3.0.5",
     "react": "^19.1.0",
     "react-color-palette": "^7.3.1",
@@ -57,6 +58,7 @@
     "eslint-plugin-storybook": "10.2.19",
     "node-sprite-generator": "^0.10.2",
     "parcel": "^2.16.4",
+    "parcel-reporter-static-files-copy": "^1.5.3",
     "process": "^0.11.10",
     "storybook": "^10.2.19",
     "ts-node": "^10.9.2",
@@ -68,5 +70,9 @@
     "@Client/*": "./src/Client/$1",
     "@UserInterface/*": "./src/UserInterface/$1",
     "@Game/*": "./src/$1"
+  },
+  "staticFiles": {
+    "staticPath": "src/Locales/",
+    "staticOutPath": "locales"
   }
 }

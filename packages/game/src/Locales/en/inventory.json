@@ -1,0 +1,19 @@
+{
+    "title": "Inventory",
+
+    "tabs": {
+        "furniture": "Furniture",
+        "pets": "Pets",
+        "badges": "Badges",
+        "bots": "Bots"
+    },
+
+    "place_in_room": "Place in room",
+
+    "empty": {
+        "category_is_empty": "This category seems to be empty!",
+        "all_furniture_in_room": "You have either placed all your furniture in your rooms or have not purchased any yet.",
+        "explore_habbo_shop": "Check the Habbo shop to see what's available!",
+        "open_shop": "Open shop"
+    }
+}

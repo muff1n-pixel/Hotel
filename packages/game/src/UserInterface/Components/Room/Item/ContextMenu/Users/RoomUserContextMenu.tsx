@@ -10,12 +10,15 @@ import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { clientInstance, webSocketClient } from "../../../../../..";
 import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
 import useFriends from "@UserInterface/Hooks/useFriends";
+import { useTranslation } from "react-i18next";
 
 export type RoomUserContextMenuProps = {
     item: RoomFigureItem;
 };
 
 export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) {
+    const [getTranslation] = useTranslation("room");
+
     const dialogs = useDialogs();
     const room = useRoomInstance();
     const user = useUser();
@@ -42,11 +45,11 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                 <UserContextMenuList>
                     {(targetUser.data.id === user.id)?(
                         <Fragment>
-                            <UserContextMenuButton text="Wardrobe" onClick={() => {
+                            <UserContextMenuButton text={getTranslation("item.context_menu.wardrobe")} onClick={() => {
                                 dialogs.addUniqueDialog("wardrobe");
                             }}/>
                             
-                            <UserContextMenuButton text={item.figureRenderer.hasAction("Dance")?("Stop dancing"):("Dance")} hasDropdown={!item.figureRenderer.hasAction("Dance")} onClick={() => {
+                            <UserContextMenuButton text={item.figureRenderer.hasAction("Dance")?(getTranslation("item.context_menu.stop_dancing")):(getTranslation("item.context_menu.dance"))} hasDropdown={!item.figureRenderer.hasAction("Dance")} onClick={() => {
                                 if(item.figureRenderer.hasAction("Dance")) {
                                     webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                         message: ":dance 0"
@@ -62,7 +65,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                     ):(
                         <Fragment>
                             {outgoingRequests?.some((request) => request.id === targetUser.data.id)?(
-                                <UserContextMenuButton text={"Revoke request"} style={{ fontSize: 11 }} onClick={() => {
+                                <UserContextMenuButton text={getTranslation("item.context_menu.friends.revoke_request")} style={{ fontSize: 11 }} onClick={() => {
                                     webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
                                         userId: targetUser.data.id,
                                         accept: false
@@ -70,7 +73,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                 }}/>
                             ):(
                                 (incomingRequests?.some((request) => request.id === targetUser.data.id))?(
-                                    <UserContextMenuButton text={"Accept request"} style={{ fontSize: 11 }} onClick={() => {
+                                    <UserContextMenuButton text={getTranslation("item.context_menu.friends.accept_request")} style={{ fontSize: 11 }} onClick={() => {
                                         webSocketClient.sendProtobuff(UpdateUserFriendRequestData, UpdateUserFriendRequestData.create({
                                             userId: targetUser.data.id,
                                             accept: true
@@ -78,7 +81,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                     }}/>
                                 ):(
                                     (!friends?.some((friend) => friend.id === targetUser.data.id)) && (
-                                        <UserContextMenuButton text={"Ask to be a friend"} style={{ fontSize: 10 }} onClick={() => {
+                                        <UserContextMenuButton text={getTranslation("item.context_menu.friends.ask_to_be_friends")} style={{ fontSize: 10 }} onClick={() => {
                                             webSocketClient.sendProtobuff(SendUserFriendRequestData, SendUserFriendRequestData.create({
                                                 userId: targetUser.data.id
                                             }));
@@ -87,7 +90,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                 )
                             )}
 
-                            <UserContextMenuButton text={"Ask to trade"} style={{ fontSize: 11 }} onClick={() => {
+                            <UserContextMenuButton text={getTranslation("item.context_menu.ask_to_trade")} style={{ fontSize: 11 }} onClick={() => {
                                 webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
                                     targetUserId: targetUser.data.id
                                 }));
@@ -98,7 +101,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                             }}/>
 
                             {(room?.information?.owner?.id === user?.id) && (
-                                <UserContextMenuButton text={(targetUser.data.hasRights)?("Revoke rights"):("Give rights")} onClick={() => {
+                                <UserContextMenuButton text={(targetUser.data.hasRights)?(getTranslation("item.context_menu.revoke_rights")):(getTranslation("item.context_menu.give_rights"))} onClick={() => {
                                     webSocketClient.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
                                         id: targetUser.data.id,
                                         hasRights: !targetUser.data.hasRights
@@ -112,7 +115,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
 
             {(tab === "dance") && (
                 <UserContextMenuList>
-                    <UserContextMenuButton text={"Dance"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_default")} onClick={() => {
                         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                             message: ":dance 1"
                         }));
@@ -120,7 +123,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                         setTab(null);
                     }}/>
                     
-                    <UserContextMenuButton text={"Pogo Mogo"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_pogo_mogo")} onClick={() => {
                         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                             message: ":dance 2"
                         }));
@@ -128,7 +131,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                         setTab(null);
                     }}/>
                     
-                    <UserContextMenuButton text={"Duck Funk"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_duck_funk")} onClick={() => {
                         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                             message: ":dance 3"
                         }));
@@ -136,7 +139,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                         setTab(null);
                     }}/>
                     
-                    <UserContextMenuButton text={"The Rollie"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_the_rollie")} onClick={() => {
                         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                             message: ":dance 4"
                         }));
@@ -144,7 +147,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                         setTab(null);
                     }}/>
                     
-                    <UserContextMenuButton text={"Back"} hasBack onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.back")} hasBack onClick={() => {
                         setTab(null);
                     }}/>
                 </UserContextMenuList>
