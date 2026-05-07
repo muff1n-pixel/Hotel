@@ -62,6 +62,9 @@ export default class FigureRenderer {
 
     public readonly figureCanvasRenderer = new FigureCanvasRenderer(this);
 
+    private previousFrames?: string;
+    private previousOptions?: FigureRendererOptions;
+
     constructor(public configuration: FigureConfigurationData) {
         
     }
@@ -142,6 +145,9 @@ export default class FigureRenderer {
     }
 
     public async render(options: FigureRendererOptions, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+        this.previousFrames = this.getFramesKey(options);
+        this.previousOptions = options;
+        
         const mutatedActions = [...options.actions];
 
         const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
@@ -152,11 +158,13 @@ export default class FigureRenderer {
 
         const actions = this.figureActions.getAvatarActions(mutatedActions);
 
-        const effects = await this.figureEffects.getEffects(mutatedActions, actions);
+        await this.figureEffects.loadEffects(mutatedActions, actions);
+
+        const effects = this.figureEffects.getEffects(mutatedActions, actions);
 
         const direction = this.figureEffects.getDirectionFromEffect(options.direction, effects);
 
-        const actionsForBodyParts = await this.figureActions.getActionsForBodyParts(options.frame, actions, effects, ignoreBodyparts);
+        const actionsForBodyParts = this.figureActions.getActionsForBodyParts(options.frame, actions, effects, ignoreBodyparts);
 
         // TODO: already here filter out parts that will not be rendered to minimize the overhead
         const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
@@ -200,5 +208,87 @@ export default class FigureRenderer {
 
     public getConfigurationAsString(): string {
         return this.configuration.parts.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
+    }
+
+    private getFramesKey(options: FigureRendererOptions) {
+        const mutatedActions = [...options.actions];
+
+        const shouldAddConfigurationEffect = this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
+
+        if(shouldAddConfigurationEffect) {
+            mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
+        }
+
+        const actions = this.figureActions.getAvatarActions(mutatedActions);
+
+        const effects = this.figureEffects.getEffects(mutatedActions, actions);
+
+        const actionsForBodyParts = this.figureActions.getActionsForBodyParts(options.frame, actions, effects, []);
+
+        const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
+
+        const frameSections: string[] = [];
+
+        for(const spriteConfiguration of spritesFromConfiguration) {
+            const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
+
+            if(!actionForSprite) {
+                continue;
+            }
+
+            let spriteDirection = options.direction;
+
+            if(actionForSprite.directionOffset !== undefined) {
+                spriteDirection += actionForSprite.directionOffset;
+            }
+
+            while(spriteDirection < 0) {
+                spriteDirection += 8;
+            }
+
+            spriteDirection %= 8;
+
+            const geometryPart = actionForSprite.geometry.bodyparts.find((bodypart) => bodypart.parts.includes(spriteConfiguration.type));
+
+            const avatarAnimation = this.figureAnimations.getAvatarAnimation(actionForSprite.actionId, geometryPart?.id, spriteConfiguration.type, spriteDirection, options.frame);
+
+            const spriteFrame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
+
+            frameSections.push(`${spriteConfiguration.type}-${spriteFrame}`);
+        }
+
+        for(const effect of effects) {
+            if(!effect.data.animation) {
+                continue;
+            }
+
+            const animationFrameIndex = this.figureAnimations.getCurrentAnimationFrame(options.frame, effect.data.animation.frames);
+
+            const animationFrame = effect.data.animation.frames?.[animationFrameIndex];
+
+            frameSections.push(`${effect.id}-${animationFrame}`);
+        }
+
+        return frameSections.join('_');
+    }
+
+    public shouldRender(options: FigureRendererOptions) {
+        if(!this.previousOptions) {
+            return true;
+        }
+
+        if(this.previousFrames !== this.getFramesKey(options)) {
+            return true;
+        }
+
+        if(options.direction !== this.previousOptions.direction) {
+            return true;
+        }
+
+        if(options.actions.join('_') !== this.previousOptions.actions.join('_')) {
+            return true;
+        }
+
+        return false;
     }
 }

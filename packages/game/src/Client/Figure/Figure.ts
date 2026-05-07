@@ -63,4 +63,8 @@ export default class Figure {
             direction: this.direction
         };
     }
+
+    public shouldRender(frame: number) {
+        return this.renderer.shouldRender(this.getOptions(frame));
+    }
 }
