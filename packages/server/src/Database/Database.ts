@@ -47,70 +47,73 @@ import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureMode
 import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectModel.js";
 import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
 import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembershipModel.js";
+import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/HotelSettingModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
 export async function initializeModels() {
-  initializeBadgeModel(sequelize);
+    initializeBadgeModel(sequelize);
 
-  initializeFurnitureModel(sequelize);
-  
-  initializeFurnitureCrackableRewardModel(sequelize);
-  initializeFurnitureCrackableModel(sequelize);
+    initializeFurnitureModel(sequelize);
 
-  initializePetBreedModel(sequelize);
-  initializePetModel(sequelize);
+    initializeFurnitureCrackableRewardModel(sequelize);
+    initializeFurnitureCrackableModel(sequelize);
 
-  initializeShopPageModel(sequelize);
-  initializeShopPageFurnitureModel(sequelize);
-  initializeShopPageFeatureModel(sequelize);
-  initializeShopPageBotModel(sequelize);
-  initializeShopPagePetModel(sequelize);
-  initializeShopPageMembershipModel(sequelize);
+    initializePetBreedModel(sequelize);
+    initializePetModel(sequelize);
 
-  initializeRoomMapModel(sequelize);
-  initializeRoomCategoryModel(sequelize);
+    initializeShopPageModel(sequelize);
+    initializeShopPageFurnitureModel(sequelize);
+    initializeShopPageFeatureModel(sequelize);
+    initializeShopPageBotModel(sequelize);
+    initializeShopPagePetModel(sequelize);
+    initializeShopPageMembershipModel(sequelize);
 
-  initializeUserModel(sequelize);
-  initializeUserTokenModel(sequelize);
-  initializeUserBadgeModel(sequelize);
-  initializeUserPreferencesModel(sequelize);
-  
-  initializeUserFriendModel(sequelize);
-  initializeUserFriendRequestModel(sequelize);
+    initializeRoomMapModel(sequelize);
+    initializeRoomCategoryModel(sequelize);
 
-  initializeWebArticleModel(sequelize);
-  initializeWebArticleLikeModel(sequelize);
-  initializeWebArticleCommentModel(sequelize);
+    initializeUserModel(sequelize);
+    initializeUserTokenModel(sequelize);
+    initializeUserBadgeModel(sequelize);
+    initializeUserPreferencesModel(sequelize);
 
-  initializeRoomModel(sequelize);
-  initializeRoomRightsModel(sequelize);
+    initializeUserFriendModel(sequelize);
+    initializeUserFriendRequestModel(sequelize);
 
-  initializeShopPageBundleModel(sequelize);
+    initializeWebArticleModel(sequelize);
+    initializeWebArticleLikeModel(sequelize);
+    initializeWebArticleCommentModel(sequelize);
 
-  initializeUserPetModel(sequelize);
-  initializeUserBotModel(sequelize);
-  initializeUserFurnitureModel(sequelize);
-  initializeRoomChatStyleModel(sequelize);
+    initializeRoomModel(sequelize);
+    initializeRoomRightsModel(sequelize);
 
-  initializeHotelFeedbackModel(sequelize);
+    initializeShopPageBundleModel(sequelize);
 
-  intitializePermissionModel(sequelize);
-  intitializePermissionRoleModel(sequelize);
+    initializeUserPetModel(sequelize);
+    initializeUserBotModel(sequelize);
+    initializeUserFurnitureModel(sequelize);
+    initializeRoomChatStyleModel(sequelize);
 
-  initializeAchievementModel(sequelize);
-  initializeAchievementCategoryModel(sequelize);
-  
-  initializeUserAchievementModel(sequelize);
+    initializeHotelFeedbackModel(sequelize);
+    initializeHotelSettingModel(sequelize);
 
-  initializeClothingModel(sequelize);
-  
-  initializeUserClothingModel(sequelize);
-  initializeUserEffectModel(sequelize);
-  initializeUserFigureModel(sequelize);
-  initializeUserNotificationModel(sequelize);
+    intitializePermissionModel(sequelize);
+    intitializePermissionRoleModel(sequelize);
 
-  await sequelize.sync();
+    initializeAchievementModel(sequelize);
+    initializeAchievementCategoryModel(sequelize);
 
-  await seedAchievements();
+    initializeUserAchievementModel(sequelize);
+
+    initializeClothingModel(sequelize);
+
+    initializeUserClothingModel(sequelize);
+    initializeUserEffectModel(sequelize);
+    initializeUserFigureModel(sequelize);
+    initializeUserNotificationModel(sequelize);
+
+    await sequelize.sync();
+
+    await seedAchievements();
+    await seedHotelSettings();
 }

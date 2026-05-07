@@ -9,8 +9,11 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useFriends from "@UserInterface/Hooks/useFriends";
 import { useMessenger } from "@UserInterface/Hooks/useMessenger";
 import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
+import { useTranslation } from "react-i18next";
 
 export default function ToolbarFriends() {
+    const [getTranslation] = useTranslation("toolbar");
+
     const dialogs = useDialogs();
     const messenger = useMessenger();
     const messengerUnread = useMessengerUnread();
@@ -30,11 +33,11 @@ export default function ToolbarFriends() {
 
             position: "relative"
         }}>
-            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends")} tooltip="My friends">
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends")} tooltip={getTranslation("friends.my_friends")}>
                 <div className="sprite_friends_list"/>
             </ToolbarItem>
             
-            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends", { tab: "search" })} tooltip="Find friends">
+            <ToolbarItem onClick={() => dialogs.addUniqueDialog("friends", { tab: "search" })} tooltip={getTranslation("friends.find_friends")}>
                 <div className="sprite_friends_search"/>
             </ToolbarItem>
 

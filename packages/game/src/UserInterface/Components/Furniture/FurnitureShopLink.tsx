@@ -3,12 +3,15 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
+import { useTranslation } from "react-i18next";
 
 export type FurnitureShopLinkProps = {
     furniture: FurnitureData;
 };
 
 export default function FurnitureShopLink({ furniture }: FurnitureShopLinkProps) {
+    const [getTranslation] = useTranslation("room");
+
     const dialogs = useDialogs();
 
     const handleClick = useCallback(() => {
@@ -37,7 +40,7 @@ export default function FurnitureShopLink({ furniture }: FurnitureShopLinkProps)
         }}>
             <div className="sprite_shop-small"/>
 
-            <div>Buy furniture</div>
+            <div>{getTranslation("item.profile.buy")}</div>
         </FlexLayout>
     );
 }

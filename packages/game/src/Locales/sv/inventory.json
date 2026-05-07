@@ -1,0 +1,19 @@
+{
+    "title": "Förråd",
+
+    "tabs": {
+        "furniture": "Möbler",
+        "pets": "Husdjur",
+        "badges": "Märken",
+        "bots": "Bottar"
+    },
+
+    "place_in_room": "Placera i rummet",
+
+    "empty": {
+        "category_is_empty": "Den här kategorin verkar vara tom!",
+        "all_furniture_in_room": "Antingen har du placerat alla dina möbler i dina rum eller så har du inte köpt några än.",
+        "explore_habbo_shop": "Kolla in Habbo-shoppen för att se vad som finns tillgängligt!",
+        "open_shop": "Öppna shoppen"
+    }
+}

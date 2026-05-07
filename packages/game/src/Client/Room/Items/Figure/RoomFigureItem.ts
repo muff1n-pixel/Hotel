@@ -37,70 +37,66 @@ export default class RoomFigureItem extends RoomItem {
     render(_frame: number = 0) {
         this.frame++;
 
-        const frame = this.frame;
+        if(this.figureRenderer.shouldRender(this.frame)) {
+            this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
+                this.sprites = [
+                    new RoomFigureSprite(this, result.figure),
+                    ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
+                ];
 
-        this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
-            if(frame !== this.frame) {
-                return;
-            }
+                if(this.health !== null) {
+                    if(!this.healthSprite || this.healthSprite.health !== this.health) {
+                        this.healthSprite = new RoomFigureHealthSprite(this, {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        }, this.health);
+                    }
+                    else {
+                        this.healthSprite.figureOffsets = {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        };
+                    }
 
-            this.sprites = [
-                new RoomFigureSprite(this, result.figure),
-                ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
-            ];
-
-            if(this.health !== null) {
-                if(!this.healthSprite || this.healthSprite.health !== this.health) {
-                    this.healthSprite = new RoomFigureHealthSprite(this, {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    }, this.health);
-                }
-                else {
-                    this.healthSprite.figureOffsets = {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    };
+                    this.sprites.push(this.healthSprite);
                 }
 
-                this.sprites.push(this.healthSprite);
-            }
+                if(this.typing) {
+                    if(!this.typingSprite) {
+                        this.typingSprite = new RoomFigureTypingSprite(this, {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        });
+                    }
+                    else {
+                        this.typingSprite.figureOffsets = {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        };
+                    }
 
-            if(this.typing) {
-                if(!this.typingSprite) {
-                    this.typingSprite = new RoomFigureTypingSprite(this, {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    });
+                    this.sprites.push(this.typingSprite);
                 }
-                else {
-                    this.typingSprite.figureOffsets = {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    };
-                }
+                else if(this.idling) {
+                    if(!this.idlingSprite) {
+                        this.idlingSprite = new RoomFigureIdlingSprite(this, {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        });
+                    }
+                    else {
+                        this.idlingSprite.figureOffsets = {
+                            left: result.figure.x,
+                            top: result.figure.y,
+                        };
 
-                this.sprites.push(this.typingSprite);
-            }
-            else if(this.idling) {
-                if(!this.idlingSprite) {
-                    this.idlingSprite = new RoomFigureIdlingSprite(this, {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    });
-                }
-                else {
-                    this.idlingSprite.figureOffsets = {
-                        left: result.figure.x,
-                        top: result.figure.y,
-                    };
+                        this.idlingSprite.process();
+                    }
 
-                    this.idlingSprite.process();
+                    this.sprites.push(this.idlingSprite);
                 }
-
-                this.sprites.push(this.idlingSprite);
-            }
-        });
+            });
+        }
     }
 
     public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData | RoomPositionData[], delay: number = 0, useAction: boolean = true): void {

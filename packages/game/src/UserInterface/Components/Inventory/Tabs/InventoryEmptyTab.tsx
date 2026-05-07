@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { useDialogs } from "../../../Hooks/useDialogs";
 
 export default function InventoryEmptyTab() {
+    const [getTranslation] = useTranslation("inventory");
     const { addUniqueDialog } = useDialogs();
 
     return (
@@ -32,12 +34,12 @@ export default function InventoryEmptyTab() {
 
                 fontSize: 13
             }}>
-                <b style={{ color: "#E12827" }}>This category seems to be empty!</b>
+                <b style={{ color: "#E12827" }}>{getTranslation("empty.category_is_empty")}</b>
 
-                <p>You have either placed all your furniture in your rooms or have not purchased any yet.</p>
-                <p>Check the Habbo shop to see what's available!</p>
+                <p>{getTranslation("empty.all_furniture_in_room")}</p>
+                <p>{getTranslation("empty.explore_habbo_shop")}</p>
 
-                <DialogButton onClick={() => addUniqueDialog("shop")}>Open shop</DialogButton>
+                <DialogButton onClick={() => addUniqueDialog("shop")}>{getTranslation("empty.open_shop")}</DialogButton>
             </div>
         </div>
     );

@@ -10,6 +10,7 @@ import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, RoomStructureData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
+import { useTranslation } from "react-i18next";
 
 export type InventoryFurnitureTabProps = {
     allowPlacingInRoom: boolean;
@@ -18,6 +19,8 @@ export type InventoryFurnitureTabProps = {
 };
 
 export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, button }: InventoryFurnitureTabProps) {
+    const [getTranslation] = useTranslation("inventory");
+
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
@@ -292,7 +295,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                         </div>
 
                         {(allowPlacingInRoom)?(
-                            <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>Place in room</DialogButton>
+                            <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>{getTranslation("place_in_room")}</DialogButton>
                         ):(
                             button?.(activeFurniture)
                         )}

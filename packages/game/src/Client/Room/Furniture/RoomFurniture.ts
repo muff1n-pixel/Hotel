@@ -19,6 +19,7 @@ import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurn
 import RoomFurnitureClothingLogic from "@Client/Room/Furniture/Logic/RoomFurnitureClothingLogic";
 import RoomFurnitureMannequinLogic from "@Client/Room/Furniture/Logic/RoomFurnitureMannequinLogic";
 import RoomFurnitureTraxLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTraxLogic";
+import RoomFurnitureDialogLogic from "@Client/Room/Furniture/Logic/RoomFurnitureDialogLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -97,6 +98,9 @@ export default class RoomFurniture {
 
             case "trophy":
                 return new RoomFurnitureTrophyLogic(this.instance, this);
+
+            case "external_image":
+                return new RoomFurnitureDialogLogic(this.instance, this);
         }
 
         if(this.furnitureData.interactionType.startsWith("wf_")) {

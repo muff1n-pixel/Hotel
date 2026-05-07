@@ -4,6 +4,7 @@ import InventoryBadgesTab from "./Tabs/InventoryBadgesTab";
 import InventoryBotsTab from "./Tabs/InventoryBotsTab";
 import InventoryFurnitureTab from "./Tabs/InventoryFurnitureTab";
 import InventoryPetsTab from "./Tabs/InventoryPetsTab";
+import { useTranslation } from "react-i18next";
 
 export type InventoryDialogProps = {
     data?: {
@@ -14,23 +15,25 @@ export type InventoryDialogProps = {
 };
 
 export default function InventoryDialog({ data, hidden, onClose }: InventoryDialogProps) {
+    const [getTranslation] = useTranslation("inventory");
+
     return (
-        <Dialog title="Inventory" width={500} height={340} hidden={hidden} onClose={onClose}>
+        <Dialog title={getTranslation("title")} width={500} height={340} hidden={hidden} onClose={onClose}>
             <DialogTabs initialActiveIndex={["furniture", "pets", "badges", "bots"].indexOf(data?.tab ?? "furniture")} withoutHeader tabs={[
                 {
-                    icon: "Furniture",
+                    icon: getTranslation("tabs.furniture"),
                     element: (<InventoryFurnitureTab allowPlacingInRoom/>)
                 },
                 {
-                    icon: "Pets",
+                    icon: getTranslation("tabs.pets"),
                     element: (<InventoryPetsTab/>)
                 },
                 {
-                    icon: "Badges",
+                    icon: getTranslation("tabs.badges"),
                     element: (<InventoryBadgesTab/>)
                 },
                 {
-                    icon: "Bots",
+                    icon: getTranslation("tabs.bots"),
                     element: (<InventoryBotsTab/>)
                 }
             ]}/>

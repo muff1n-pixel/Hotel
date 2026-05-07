@@ -4,6 +4,7 @@ import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/Use
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel";
 import { Op } from "sequelize";
 import { sequelize } from "../../../Database/Database";
+import { game } from "../../..";
 
 export default class RoomUserTrading {
     public tradingWithUser?: RoomUser;
@@ -200,7 +201,7 @@ export default class RoomUserTrading {
 
         if(this.tradingWithUser.trading.locked) {
             const date = new Date();
-            date.setSeconds(date.getSeconds() + 5);
+            date.setSeconds(date.getSeconds() + game.hotelSettings.roomUserTradeCompletionSeconds);
 
             this.completesAt = this.tradingWithUser.trading.completesAt = date;
         }
