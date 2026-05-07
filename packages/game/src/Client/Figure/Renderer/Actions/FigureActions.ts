@@ -27,7 +27,7 @@ export default class FigureActions {
         return avatarActionsData;
     }
     
-    public async getActionsForBodyParts(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
+    public getActionsForBodyParts(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
         let result: FigureBodyPartAction[] = [];
         const bodyPartsRemoved: string[] = ignoreBodyparts;
         this.effectTypeRemaps = new Map();

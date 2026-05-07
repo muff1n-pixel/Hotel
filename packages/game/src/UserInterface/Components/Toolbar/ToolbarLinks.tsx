@@ -8,8 +8,11 @@ import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
+import { useTranslation } from "react-i18next";
 
 export default function ToolbarLinks() {
+    const [getTranslation] = useTranslation("toolbar");
+
     const user = useUser();
     const room = useRoomInstance();
 
@@ -47,12 +50,12 @@ export default function ToolbarLinks() {
 
             {(!minimized) && (
                 (room)?(
-                    <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))} tooltip="Reception">
+                    <ToolbarItem onClick={() => webSocketClient.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}))} tooltip={getTranslation("links.reception")}>
                         <div className="sprite_toolbar_logo"/>
                     </ToolbarItem>
                 ):(
                     (user?.homeRoomId) && (
-                        <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))} tooltip="Homeroom">
+                        <ToolbarItem onClick={() => webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({ id: user.homeRoomId }))} tooltip={getTranslation("links.homeroom")}>
                             <div className="sprite_toolbar_home"/>
                         </ToolbarItem>
                     )
@@ -60,17 +63,17 @@ export default function ToolbarLinks() {
             )}
 
             {(!minimized) && (
-                <ToolbarItem onClick={() => addUniqueDialog("navigator")} tooltip="Navigator">
+                <ToolbarItem onClick={() => addUniqueDialog("navigator")} tooltip={getTranslation("links.navigator")}>
                     <div className="sprite_toolbar_navigator"/>
                 </ToolbarItem>
             )}
 
-            <ToolbarItem onClick={() => addUniqueDialog("shop")} tooltip="Shop">
+            <ToolbarItem onClick={() => addUniqueDialog("shop")} tooltip={getTranslation("links.shop")}>
                 <div className="sprite_toolbar_shop"/>
             </ToolbarItem>
 
             {(room) && (
-                <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip="Inventory">
+                <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip={getTranslation("links.inventory")}>
                     <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
                 </ToolbarItem>
             )}
@@ -90,7 +93,7 @@ export default function ToolbarLinks() {
                                 addUniqueDialog("wardrobe");
                                 setTab(undefined);
                             },
-                            tooltip: "Wardrobe"
+                            tooltip: getTranslation("links.wardrobe")
                         },
                         {
                             spriteClass: "sprite_toolbar_me_achievements",
@@ -98,13 +101,13 @@ export default function ToolbarLinks() {
                                 addUniqueDialog("achievements");
                                 setTab(undefined);
                             },
-                            tooltip: "Achievements"
+                            tooltip: getTranslation("links.achievements")
                         }
                     ]}/>
             )}
 
             {(room) && (
-                <ToolbarItem onClick={() => addUniqueDialog("room-camera")} tooltip="Room Camera">
+                <ToolbarItem onClick={() => addUniqueDialog("room-camera")} tooltip={getTranslation("links.room_camera")}>
                     <div className="sprite_toolbar_camera"/>
                 </ToolbarItem>
             )}

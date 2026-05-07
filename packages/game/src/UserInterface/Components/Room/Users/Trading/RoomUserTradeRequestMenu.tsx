@@ -6,6 +6,7 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import { webSocketClient } from "@Game/index";
 import { RequestRoomUserTradingData, UpdateUserFriendRequestData } from "@pixel63/events";
 import { useState } from "react";
+import "./RoomUserTradeRequestMenu.css";
 
 export type RoomUserTradeRequestMenuProps = {
     user: RoomUser;
@@ -34,14 +35,14 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
             left: position?.left,
             top: position?.top
         }}>
-            <div className="arrow arrow-orange" style={{
+            <div className="room-user-trade-request-menu-arrow room-user-trade-request-menu-arrow-orange" style={{
                 display: "flex",
 
                 transform: "translate(64px, -58px) translate(-50%, -100%)",
 
                 width: 164,
 
-                background: "#B59011",
+                background: "#367897",
                 border: "1px solid #000000",
                 borderBottomWidth: 2,
                 borderRadius: 5,
@@ -50,7 +51,7 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
             }}>
                 <div style={{
                     flex: 1,
-                    border: "1px solid #F9C818",
+                    border: "1px solid #408CAF",
                     borderRadius: 5,
                     boxSizing: "border-box",
 
@@ -130,7 +131,7 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
                     </div>
                 </div>
 
-                <div className="arrow-outline"/>
+                <div className="room-user-trade-request-menu-arrow-outline"/>
             </div>
         </div>
     );

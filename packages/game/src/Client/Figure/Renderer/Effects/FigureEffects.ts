@@ -4,11 +4,54 @@ import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import { FigureAssets } from "@Game/library";
 
 export default class FigureEffects {
+    private effects: Record<string, FigureEffectData> = {};
+
     constructor(private readonly figureRenderer: FigureRenderer) {
 
     }
 
-    public async getEffects(actionIds: string[], actions: AvatarActionData[]) {
+    public async loadEffects(actionIds: string[], actions: AvatarActionData[]) {
+        for(const action of actions) {
+            if(!["AvatarEffect", "Dance"].includes(action.id)) {
+                continue;
+            }
+
+            const actionKey = actionIds.find((actionId) => actionId.split('.')[0] === action.id);
+
+            if(!actionKey) {
+                continue;
+            }
+            
+            const id = parseInt(actionKey.split('.')[1]);
+
+            if(action.id === "AvatarEffect") {
+                const library = this.getEffectLibrary(id);
+
+                if(!library) {
+                    continue;
+                }
+
+                if(!this.effects[library.id]) {
+                    this.effects[library.id] = {
+                        id: library.id,
+                        library: library.library,
+                        data: await FigureAssets.getEffectData(library.library)
+                    };
+                }
+            }
+            else if(action.id === "Dance") {
+                if(!this.effects[id]) {
+                    this.effects[id] = {
+                        id: id,
+                        library: `Dance${id}`,
+                        data: await FigureAssets.getEffectData(`Dance${id}`)
+                    };
+                }
+            }
+        }
+    }
+
+    public getEffects(actionIds: string[], actions: AvatarActionData[]) {
         const results = [];
         
         for(const action of actions) {
@@ -31,22 +74,14 @@ export default class FigureEffects {
                     continue;
                 }
 
-                results.push({
-                    id: library.id,
-                    library: library.library,
-                    data: await FigureAssets.getEffectData(library.library)
-                });
+                results.push(this.effects[library.id]);
             }
             else if(action.id === "Dance") {
-                results.push({
-                    id: id,
-                    library: `Dance${id}`,
-                    data: await FigureAssets.getEffectData(`Dance${id}`)
-                });
+                results.push(this.effects[`Dance${id}`]);
             }
         }
 
-        return results;
+        return results.filter<FigureEffectData>((value): value is FigureEffectData => value !== undefined);
     }
 
     public getEffectLibrary(id: number) {

@@ -150,7 +150,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleActionsInterval() {
-        if(!this.idling && (performance.now() - this.lastActivity) > 2 * 60 * 1000) {
+        if(!this.idling && (performance.now() - this.lastActivity) > (game.hotelSettings.roomUserIdlingTimeout * 1000)) {
             this.idling = true;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({

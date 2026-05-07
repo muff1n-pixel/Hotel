@@ -8,7 +8,7 @@ import Checkbox from "../../Common/Form/Components/Checkbox";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
-import { UpdateRoomBotData, UserBotData } from "@pixel63/events";
+import { RoomBotsData, UpdateRoomBotData, UserBotData } from "@pixel63/events";
 
 export type BotSpeechDialogProps = {
     data: UserBotData;
@@ -30,6 +30,20 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
     const [activeMessageIndex, setActiveMessageIndex] = useState<number | null>(null);
 
     useEffect(() => {
+        const listener = webSocketClient.addProtobuffListener(RoomBotsData, {
+            async handle(payload: RoomBotsData) {
+                if(payload.botsRemoved?.some((removedBot) => removedBot.id === data.id)) {
+                    dialogs.closeDialog("bot-speech");
+                }
+            },
+        });
+
+        return () => {
+            webSocketClient.removeProtobuffListener(RoomBotsData, listener);
+        };
+    }, [data.id, dialogs]);
+
+    useEffect(() => {
         if(botSpeech) {
             setMessages(botSpeech.messages);
 
@@ -43,7 +57,7 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
         const mutatedMessages = [...messages];
         mutatedMessages.push("");
         setMessages(mutatedMessages);
-        
+
         setMessage("");
         setActiveMessageIndex(mutatedMessages.length - 1);
     }, [messages]);
@@ -103,7 +117,7 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
                                     }
 
                                     const mutatedMessages = [...messages];
-                                    mutatedMessages.splice(index, 1); 
+                                    mutatedMessages.splice(index, 1);
                                     setMessages(mutatedMessages);
                                 }}/>
                             </div>

@@ -3,6 +3,7 @@ import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPa
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import "./FriendsPanel.css";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export type FriendsPanelProps = {
     figureConfiguration?: FigureConfigurationData;
@@ -17,6 +18,8 @@ export type FriendsPanelProps = {
 };
 
 export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand, onChatClick, onRoomClick }: FriendsPanelProps) {
+    const [getTranslation] = useTranslation("toolbar");
+
     const elementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -77,7 +80,7 @@ export default function FriendsPanel({ figureConfiguration, name, roomId, expand
                         {(name)?(
                             name
                         ):(
-                            "Find new friends"
+                            getTranslation("friends.find_new_friends")
                         )}
                     </div>
                 </div>

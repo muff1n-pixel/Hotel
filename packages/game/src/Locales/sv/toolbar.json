@@ -1,0 +1,22 @@
+{
+    "links": {
+        "reception": "Reception",
+        "homeroom": "Hemmarummet",
+        "navigator": "Rumsnavigator",
+        "shop": "Butik",
+        "inventory": "Förråd",
+        "wardrobe": "Garderob",
+        "achievements": "Prestationer",
+        "room_camera": "Rumskamera"
+    },
+
+    "chatbar": {
+        "placeholder": "Klicka här för att chatta..."
+    },
+
+    "friends": {
+        "my_friends": "Mina vänner",
+        "find_friends": "Hitta vänner",
+        "find_new_friends": "Hitta nya vänner"
+    }
+}

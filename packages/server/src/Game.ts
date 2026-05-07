@@ -8,9 +8,11 @@ import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import UserNotifications from "./Users/Notifications/UserNotifications.js";
+import HotelSettings from "./Hotel/HotelSettings.js";
 
 export default class Game {
     public readonly hotelInformation;
+    public readonly hotelSettings;
 
     public readonly roomManager;
     public readonly roomNavigatorManager;
@@ -23,6 +25,7 @@ export default class Game {
 
     constructor() {
         this.hotelInformation = new HotelInformation();
+        this.hotelSettings = new HotelSettings();
 
         this.roomNavigatorManager = new RoomNavigatorManager();
         this.roomManager = new RoomManager();
@@ -35,6 +38,7 @@ export default class Game {
     }
 
     public async loadModels() {
+        await this.hotelSettings.loadModels();
         await this.roomNavigatorManager.loadModels();
     }
 

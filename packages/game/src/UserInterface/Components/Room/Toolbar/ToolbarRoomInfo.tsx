@@ -4,10 +4,11 @@ import ToolbarRoomInfoButton from "./Button/ToolbarRoomInfoButton";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ToolbarRoomChat from "./ToolbarRoomChat";
+import { useTranslation } from "react-i18next";
 
 export default function ToolbarRoomInfo() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
-
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
@@ -63,14 +64,14 @@ export default function ToolbarRoomInfo() {
                         {[
                             {
                                 sprite: "sprite_toolbar_room_information",
-                                label: "Information",
+                                label: getTranslation("toolbar.information"),
                                 onClick: () => {
                                     addUniqueDialog("room-information");
                                 }
                             },
                             {
                                 sprite: "sprite_toolbar_room_settings",
-                                label: "Settings",
+                                label: getTranslation("toolbar.settings"),
                                 onClick: () => {
                                     addUniqueDialog("room-settings");
                                 },
@@ -78,7 +79,7 @@ export default function ToolbarRoomInfo() {
                             },
                             {
                                 sprite: (!zoomed)?("sprite_toolbar_room_zoom-out"):("sprite_toolbar_room_zoom-in"),
-                                label: "Zoom",
+                                label: getTranslation("toolbar.zoom"),
                                 onClick: () => {
                                     if(!zoomed) {
                                         setZoomed(true);
@@ -94,14 +95,14 @@ export default function ToolbarRoomInfo() {
                             },
                             {
                                 sprite: "sprite_toolbar_room_chat",
-                                label: "Chat history",
+                                label: getTranslation("toolbar.chat_history"),
                                 onClick: () => {
                                     setChatMinimized(!chatMinimized);
                                 }
                             },
                             {
                                 sprite: "sprite_toolbar_room_link",
-                                label: "Link to room",
+                                label: getTranslation("toolbar.link"),
                                 onClick: () => {
                                     
                                 }
