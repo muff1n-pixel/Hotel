@@ -204,11 +204,11 @@ export default class Room {
     }
 
     public getBotAtPosition(position: RoomPositionOffsetData) {
-        return this.bots.find((bot) => bot.model.position.row === position.row && bot.model.position.column === position.column);
+        return this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
     }
 
     public getPetAtPosition(position: RoomPositionOffsetData) {
-        return this.pets.find((pet) => pet.model.position.row === position.row && pet.model.position.column === position.column);
+        return this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
     }
 
     public getRoomUser(user: User) {
