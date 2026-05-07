@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useEffect, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useState, useRef } from "react";
 import { webSocketClient } from "../../../..";
 import ToolbarChatbarStyles from "./ToolbarChatbarStyles";
 import { useDialogs } from "../../../Hooks/useDialogs";
@@ -21,6 +21,27 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
     const [value, setValue] = useState("");
     const [roomChatStyles, setRoomChatStyles] = useState(false);
     const [typing, setTyping] = useState(false);
+		const roomChatRef = useRef<HTMLInputElement>(null);
+
+		useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (['input', 'textarea'].includes(document.activeElement?.tagName.toLowerCase() || '')) {
+                return;
+            }
+
+            if (event.ctrlKey || event.altKey || event.metaKey || event.key.length > 1) {
+                return;
+            }
+
+            roomChatRef.current?.focus();
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     useEffect(() => {
         if(value.length && !typing) {
@@ -62,7 +83,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
             switch(command) {
                 case "commands": {
                     dialogs.addUniqueDialog("room-chat-commands");
-                
+
                     return;
                 }
 
@@ -100,13 +121,13 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
 
                 case "floor": {
                     dialogs.addUniqueDialog("room-floorplan");
-                    
+
                     return;
                 }
 
                 case "modtools": {
                     dialogs.addUniqueDialog("modtools");
-                    
+
                     return;
                 }
 
@@ -178,6 +199,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
             </div>
 
             <input
+								ref={roomChatRef}
                 type="text"
                 value={value}
                 onChange={(event) => setValue((event.target as HTMLInputElement).value)}
