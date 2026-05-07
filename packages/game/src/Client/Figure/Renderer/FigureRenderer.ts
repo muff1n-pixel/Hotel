@@ -243,14 +243,16 @@ export default class FigureRenderer {
 
             const spriteFrame = actionForSprite.frame ?? avatarAnimation?.spriteFrame ?? 0;
 
-            frameSections.push(`${spriteConfiguration.type}-${spriteFrame}`);
+            frameSections.push(`${spriteConfiguration.id}-${spriteConfiguration.type}-${spriteFrame}`);
         }
 
         return frameSections.join('_');
     }
 
     public shouldRender(options: FigureRendererOptions) {
-        if(!this.previousOptions) {
+        return true;
+
+        /*if(!this.previousOptions) {
             return true;
         }
 
@@ -286,6 +288,6 @@ export default class FigureRenderer {
             return true;
         }
 
-        return false;
+        return false;*/
     }
 }
