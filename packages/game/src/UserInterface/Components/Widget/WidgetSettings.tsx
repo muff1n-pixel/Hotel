@@ -2,6 +2,7 @@ import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink"
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type WidgetSettingsProps = {
     settingsExpanded: boolean;
@@ -9,6 +10,8 @@ export type WidgetSettingsProps = {
 }
 
 export default function WidgetSettings({ settingsExpanded, onSettingsExpanded }: WidgetSettingsProps) {
+    const [getTranslation] = useTranslation("widget");
+
     const { openUniqueDialog } = useDialogs();
 
     if(!settingsExpanded) {
@@ -16,14 +19,14 @@ export default function WidgetSettings({ settingsExpanded, onSettingsExpanded }:
     }
 
     return (
-        <WidgetPanel title="Settings">
+        <WidgetPanel title={getTranslation("settings.title")}>
             <FlexLayout direction="column">
                 <DialogLink onClick={() => {
                     onSettingsExpanded(false);
 
                     openUniqueDialog("audio-settings");
                 }}>
-                    Audio Settings
+                    {getTranslation("settings.audio_settings")}
                 </DialogLink>
                 
                 <DialogLink onClick={() => {
@@ -31,7 +34,7 @@ export default function WidgetSettings({ settingsExpanded, onSettingsExpanded }:
 
                     openUniqueDialog("game-settings");
                 }}>
-                    Game Settings
+                    {getTranslation("settings.game_settings")}
                 </DialogLink>
             </FlexLayout>
         </WidgetPanel>

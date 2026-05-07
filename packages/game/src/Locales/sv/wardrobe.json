@@ -1,0 +1,15 @@
+{
+    "wardrobe": "Garderob",
+    "subject_wardrobe": "{{subject}} Garderob",
+    "save_my_looks": "Spara min stil",
+    "my_wardrobe": "Min garderob",
+
+    "avatar_effects": "Avatareffekter",
+    "no_content": "Inget innehåll!",
+    "no_effects": "Du äger inga avatareffekter!",
+
+    "hot_looks": {
+        "title": "Heta blickar från hotellet!",
+        "description": "Välj och vraka bland en av de heta lookerna från hotellet!"
+    }
+}

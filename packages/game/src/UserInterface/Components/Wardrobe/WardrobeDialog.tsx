@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { FigureConfigurationData, SetUserFigureConfigurationData } from "@pixel63/events";
 import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { useTranslation } from "react-i18next";
 
 export type WardrobeDialogProps = {
     hidden?: boolean;
@@ -12,6 +13,8 @@ export type WardrobeDialogProps = {
 };
 
 export default function WardrobeDialog(props: WardrobeDialogProps) {
+    const [getWardrobeTranslation] = useTranslation("wardrobe");
+
     const user = useUser();
 
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(user.figureConfiguration);
@@ -27,7 +30,7 @@ export default function WardrobeDialog(props: WardrobeDialogProps) {
     }
 
     return (
-        <FigureWardrobeDialog title="Wardrobe" header={user.name} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
+        <FigureWardrobeDialog title={getWardrobeTranslation("subject_wardrobe", { subject: user.name})} header={user.name} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
             <div style={{
                 flex: 1,
 
@@ -43,7 +46,7 @@ export default function WardrobeDialog(props: WardrobeDialogProps) {
                 </div>
 
                 <div style={{ width: "100%" }}>
-                    <DialogButton onClick={handleApply}>Save my looks</DialogButton>
+                    <DialogButton onClick={handleApply}>{getWardrobeTranslation("save_my_looks")}</DialogButton>
                 </div>
             </div>
         </FigureWardrobeDialog>

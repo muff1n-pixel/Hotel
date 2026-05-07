@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@parcel/validator-eslint": "^2.16.4",
     "@parcel/validator-typescript": "^2.16.4",
     "@storybook/addon-docs": "^10.2.19",
     "@storybook/react": "^10.2.19",

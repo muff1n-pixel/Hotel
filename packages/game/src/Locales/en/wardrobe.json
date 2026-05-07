@@ -1,0 +1,15 @@
+{
+    "wardrobe": "Wardrobe",
+    "subject_wardrobe": "{{subject}} Wardrobe",
+    "save_my_looks": "Save my looks",
+    "my_wardrobe": "My wardrobe",
+
+    "avatar_effects": "Avatar effects",
+    "no_content": "No content!",
+    "no_effects": "Sorry! You do not own any effects!",
+
+    "hot_looks": {
+        "title": "Hot looks from the Hotel!",
+        "description": "Pick and choose from one of the hot looks from the Hotel!"
+    }
+}

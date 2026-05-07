@@ -5,6 +5,7 @@ import { FigureConfigurationData, UpdateRoomFurnitureData } from "@pixel63/event
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import WardrobeMannequinAvatar from "@UserInterface/Components/Wardrobe/WardrobeMannequinAvatar";
+import { useTranslation } from "react-i18next";
 
 export type WardrobeMannequinDialogProps = {
     hidden?: boolean;
@@ -15,6 +16,8 @@ export type WardrobeMannequinDialogProps = {
 };
 
 export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogProps) {
+    const [getWardrobeTranslation] = useTranslation("wardrobe");
+
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(props.data.roomFurniture.data.data?.mannequin?.figureConfiguration ?? FigureConfigurationData.create({ gender: "male" }));
    
     const handleFigureConfiguration = useCallback((figureConfiguration: FigureConfigurationData) => {
@@ -45,7 +48,7 @@ export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogPr
     }
 
     return (
-        <FigureWardrobeDialog title="Mannequin Wardrobe" header={props.data.roomFurniture.furnitureData.name} figureConfiguration={figureConfiguration} onFigureConfigurationChange={handleFigureConfiguration} {...props}>
+        <FigureWardrobeDialog title={getWardrobeTranslation("subject_wardrobe", { subject: props.data.roomFurniture.furnitureData.name })} header={props.data.roomFurniture.furnitureData.name} figureConfiguration={figureConfiguration} onFigureConfigurationChange={handleFigureConfiguration} {...props}>
             <div style={{
                 flex: 1,
 
@@ -61,7 +64,7 @@ export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogPr
                 </div>
 
                 <div style={{ width: "100%" }}>
-                    <DialogButton onClick={handleApply}>Save my looks</DialogButton>
+                    <DialogButton onClick={handleApply}>{getWardrobeTranslation("save_my_looks")}</DialogButton>
                 </div>
             </div>
         </FigureWardrobeDialog>

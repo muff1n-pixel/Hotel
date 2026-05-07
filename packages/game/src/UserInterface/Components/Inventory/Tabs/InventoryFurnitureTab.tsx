@@ -58,7 +58,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                     let mutatedUserFurniture = [...userFurniture];
 
                     if(payload.updatedUserFurniture.length) {
-                        mutatedUserFurniture = 
+                        mutatedUserFurniture =
                             payload.updatedUserFurniture.concat(
                                 ...mutatedUserFurniture
                                     .filter((userFurniture) => !payload.updatedUserFurniture?.some((updatedUserFurniture) => (
@@ -69,7 +69,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
 
                     if(payload.deletedUserFurniture.length) {
                         mutatedUserFurniture = mutatedUserFurniture
-                            .filter((userFurniture) => !payload.deletedUserFurniture?.some((updatedUserFurniture) => 
+                            .filter((userFurniture) => !payload.deletedUserFurniture?.some((updatedUserFurniture) =>
                                 (updatedUserFurniture.furniture?.flags?.inventoryStackable)?(updatedUserFurniture.furniture?.id === userFurniture.furniture?.id):(updatedUserFurniture.id === userFurniture.id)
                             ))
                     }
@@ -94,7 +94,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
             setActiveFurniture(userFurniture[0] ?? undefined);
         }
         else if(activeFurniture) {
-            const active = userFurniture.find((userFurniture) => 
+            const active = userFurniture.find((userFurniture) =>
                 (activeFurniture.furniture?.flags?.inventoryStackable)?(activeFurniture.furniture?.id === userFurniture.furniture?.id):(activeFurniture.id === userFurniture.id)
             );
 
@@ -105,7 +105,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
     useEffect(() => {
         if(!roomFurniturePlacer) {
             setDialogHidden("inventory", false);
-            
+
             return;
         }
 
@@ -126,7 +126,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                 id: activeFurniture.id,
                 furnitureId: activeFurniture.furniture!.id,
                 stackable: activeFurniture.furniture!.flags!.inventoryStackable,
-                
+
                 position,
                 direction
             }));
@@ -179,7 +179,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
         const mousemove = () => {
             document.body.removeEventListener("mousemove", mousemove);
 
-            if(room && userFurniture.furniture) {                
+            if(room && userFurniture.furniture) {
                 setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(room, userFurniture.furniture));
                 roomFurniturePlacerId.current = (userFurniture?.furniture.flags?.inventoryStackable)?(userFurniture?.furniture.id):(userFurniture?.id);
             }
@@ -224,7 +224,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                             key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
                             active={activeFurniture?.id === userFurniture.id}
                             onClick={() => setActiveFurniture(userFurniture)}
-                            onMouseDown={() => handleMouseDown(userFurniture)}>
+                            onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}>
                                 <FurnitureIcon furnitureData={userFurniture.furniture}/>
 
                                 {(userFurniture.quantity > 1) && (
