@@ -2,7 +2,7 @@ import Furniture from "@Client/Furniture/Furniture";
 import RoomRenderer from "../RoomRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
-import { clientInstance, webSocketClient } from "../../..";
+import { webSocketClient } from "../../..";
 import { PickupRoomFurnitureData, RoomPositionData, UpdateRoomFurnitureData } from "@pixel63/events";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Room/Configuration/RoomClickConfigurationData";

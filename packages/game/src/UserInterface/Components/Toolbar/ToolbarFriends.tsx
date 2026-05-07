@@ -2,7 +2,6 @@ import { EnterRoomData } from "@pixel63/events";
 import { useState } from "react";
 import { webSocketClient } from "@Game/index";
 import FriendsPanel from "@UserInterface/Common/Friends/Components/FriendsPanel";
-import Tooltip from "@UserInterface/Common/Tooltip/Tooltip";
 import ToolbarItem from "@UserInterface/Components/Toolbar/Items/ToolbarItem";
 import ToolbarToggle from "@UserInterface/Components/Toolbar/ToolbarToggle";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";

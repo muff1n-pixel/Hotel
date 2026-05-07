@@ -1,6 +1,5 @@
 import { CSSProperties, PropsWithChildren } from "react";
 import useDialogMovement from "../../Hooks/useDialogMovement";
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type TraxDialogProps = PropsWithChildren & {
     hidden?: boolean;

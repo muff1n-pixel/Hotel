@@ -1,15 +1,12 @@
 import { webSocketClient } from "@Game/index";
 import { UpdateRoomUserTradingData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import InventoryFurnitureTab from "@UserInterface/Components/Inventory/Tabs/InventoryFurnitureTab";
 import TradingPanel from "@UserInterface/Components/Room/Users/Trading/Components/TradingPanel";
-import { useRoom } from "@UserInterface/Hooks/useRoom";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useRoomUserTrading } from "@UserInterface/Hooks/useRoomUserTrading";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";

@@ -5,7 +5,7 @@ export function useRoomTraxmachine() {
     const room = useRoomInstance();
 
     const [value, setValue] = useState(room?.traxmachine.value);
-    const [state, setState] = useState(room?.traxmachine.state);
+    const [_state, setState] = useState(room?.traxmachine.state);
 
     useEffect(() => {
         return room?.traxmachine?.subscribe((value) => {

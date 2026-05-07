@@ -1,10 +1,6 @@
-import { Fragment, RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect } from "react";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import RoomRenderer from "@Client/Room/RoomRenderer";
-import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
-import Furniture from "@Client/Furniture/Furniture";
-import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import ShopFeatureImage from "@Client/Images/ShopFeatureImage";
 
 export type RoomItemsCameraRendererProps = {

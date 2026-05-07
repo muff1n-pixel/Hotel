@@ -1,9 +1,7 @@
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
-import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { useEffect, useState } from "react";
 
 export type WidgetSettingsProps = {
     settingsExpanded: boolean;

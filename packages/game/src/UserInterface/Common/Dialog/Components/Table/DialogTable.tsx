@@ -1,5 +1,5 @@
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 
 export type DialogTableProps = {
     activeId?: any;

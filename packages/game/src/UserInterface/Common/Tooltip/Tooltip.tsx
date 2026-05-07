@@ -1,4 +1,3 @@
-import { MousePosition } from "@Client/Interfaces/MousePosition";
 import { useEffect, useRef, useState } from "react";
 
 export type TooltipProps = {

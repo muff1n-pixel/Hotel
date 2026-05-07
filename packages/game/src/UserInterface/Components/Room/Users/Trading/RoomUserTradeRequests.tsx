@@ -1,13 +1,12 @@
 import { RoomUser } from "@Client/Room/RoomInstance";
 import { useEffect, useState } from "react";
-import RoomUserFriendRequestMenu from "@UserInterface/Components/Room/Users/Friends/RoomUserFriendRequestMenu";
 import { useRoom } from "@UserInterface/Hooks/useRoom";
-import { clientInstance, webSocketClient } from "@Game/index";
+import { webSocketClient } from "@Game/index";
 import { RoomUserLeftData, RoomUserTradingRequestData } from "@pixel63/events";
 import RoomUserTradeRequestMenu from "@UserInterface/Components/Room/Users/Trading/RoomUserTradeRequestMenu";
 
 export default function RoomUserTradeRequests() {
-    const { room, roomState } = useRoom();
+    const { room } = useRoom();
 
     const [users, setUsers] = useState<RoomUser[]>([]);
 

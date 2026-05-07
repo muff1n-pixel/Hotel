@@ -1,7 +1,6 @@
 import { ShopPageProps } from "./ShopPage";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
-import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";

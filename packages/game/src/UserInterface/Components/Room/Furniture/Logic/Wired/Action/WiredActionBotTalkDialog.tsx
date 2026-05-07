@@ -8,11 +8,7 @@ import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButt
 import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheckbox";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
-import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection/WiredSelection";
-import { useTranslation } from "react-i18next";
-import WiredFurniturePicker from "@UserInterface/Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 
 export default function WiredActionBotTalkDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {

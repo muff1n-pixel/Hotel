@@ -1,6 +1,6 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
 import { clientInstance } from "@Game/index";
-import { RoomUserData, RoomUserTradingData } from "@pixel63/events";
+import { RoomUserTradingData } from "@pixel63/events";
 
 export default class RoomUserTradingEvent implements ProtobuffListener<RoomUserTradingData> {
     async handle(payload: RoomUserTradingData) {

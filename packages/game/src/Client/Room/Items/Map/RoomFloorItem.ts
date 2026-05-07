@@ -1,4 +1,3 @@
-import RoomItemSpriteInterface from "@Client/Room/Interfaces/RoomItemSpriteInterface";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import RoomItem from "../RoomItem";
 import RoomFloorSprite from "../Floor/RoomFloorSprite";

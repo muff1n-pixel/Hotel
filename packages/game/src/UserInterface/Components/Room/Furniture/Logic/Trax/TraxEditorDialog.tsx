@@ -1,5 +1,5 @@
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import { FurnitureTraxSongData, FurnitureTraxSetData, FurnitureTraxSongMetaData, UpdateRoomFurnitureTraxSongData } from "@pixel63/events";
+import { FurnitureTraxSongData, FurnitureTraxSetData, FurnitureTraxSongMetaData } from "@pixel63/events";
 import TraxButton from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxButton";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import TraxDialog from "@UserInterface/Common/Dialog/Layouts/Trax/TraxDialog";
@@ -10,7 +10,6 @@ import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/H
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { webSocketClient } from "@Game/index";
 
 export type TraxEditorDialogProps = {
     hidden?: boolean;

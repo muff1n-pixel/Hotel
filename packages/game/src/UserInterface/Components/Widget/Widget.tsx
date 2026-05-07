@@ -1,5 +1,4 @@
 import DateHelper from "@UserInterface/Utils/DateHelper";
-import { useDialogs } from "../../Hooks/useDialogs";
 import { useUser } from "../../Hooks/useUser";
 import WidgetButton from "./WidgetButton";
 import WidgetCurrency from "./WidgetCurrency";
@@ -12,7 +11,6 @@ export type WidgetProps = {
 
 export default function Widget({ onSettingsClick }: WidgetProps) {
     const user = useUser();
-    const dialogs = useDialogs();
 
     const { openShopPage } = useShopPageLink("habboclub");
 

@@ -1,13 +1,11 @@
 import Dialog from "../../../Common/Dialog/Dialog";
-import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import { act, Fragment, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import RoomCameraEditorRenderer from "@UserInterface/Components/Room/Camera/RoomCameraEditorRenderer";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 
 export type RoomCameraOptions = {
     zoomed: boolean;

@@ -1,5 +1,4 @@
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
-import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
 import WiredDivider from "../../../../../../Common/Dialog/Layouts/Wired/WiredDivider";
@@ -11,7 +10,6 @@ import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay
 import WiredFurniturePicker from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheckbox";
 
 export default function WiredActionMoveToDirectionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {

@@ -1,6 +1,6 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";

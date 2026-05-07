@@ -30,7 +30,8 @@
     "spritesheet": "npx ts-node src/UserInterface/utils/generateSpritesheet.ts",
     "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "lint": "npx eslint ./src"
   },
   "dependencies": {
     "@pixel63/events": "file:../events",
@@ -54,7 +55,8 @@
     "@types/node-sprite-generator": "^0.10.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "eslint": "^8.57.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-i18next": "^6.1.4",
     "eslint-plugin-storybook": "10.2.19",
     "node-sprite-generator": "^0.10.2",
     "parcel": "^2.16.4",

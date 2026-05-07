@@ -5,9 +5,6 @@ import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotificati
 import { clientInstance } from "@Game/index";
 import RoomClickConfigurationWidget from "@UserInterface/Components/Room/Widget/RoomClickConfigurationWidget";
 import { useState } from "react";
-import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
-import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
-import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import WidgetSettings from "@UserInterface/Components/Widget/WidgetSettings";
 
 export default function FlowInstance() {
