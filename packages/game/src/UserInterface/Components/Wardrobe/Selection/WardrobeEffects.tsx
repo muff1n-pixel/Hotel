@@ -5,6 +5,7 @@ import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScr
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useEffects from "@UserInterface/Components/Wardrobe/Hooks/useEffects";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useTranslation } from "react-i18next";
 
 export type WardrobeEffectsProps = {
     figureConfiguration: FigureConfigurationData;
@@ -14,8 +15,9 @@ export type WardrobeEffectsProps = {
 };
 
 export default function WardrobeEffects({ figureConfiguration, onFigureConfigurationChange, editMode }: WardrobeEffectsProps) {
-    const dialogs = useDialogs();
+    const [getWardrobeTranslation] = useTranslation("wardrobe");
 
+    const dialogs = useDialogs();
     const effects = useEffects();
 
     const handleEquip = useCallback((effect: number) => {
@@ -40,16 +42,16 @@ export default function WardrobeEffects({ figureConfiguration, onFigureConfigura
             <FlexLayout direction="row" align="center">
                 <div className="sprite_wardrobe_effects_fx"/>
 
-                <h2>Avatar effects</h2>
+                <h2>{getWardrobeTranslation("avatar_effects")}</h2>
             </FlexLayout>
 
             {(!effects.length)?(
                 <FlexLayout direction="column" flex={1} style={{
                     padding: 5
                 }}>
-                    <h3>No content!</h3>
+                    <h3>{getWardrobeTranslation("no_content")}</h3>
 
-                    <p>Sorry! You do not own any effects!</p>
+                    <p>{getWardrobeTranslation("no_effects")}</p>
                 </FlexLayout>
             ):(
                 <DialogScrollArea hideInactive style={{

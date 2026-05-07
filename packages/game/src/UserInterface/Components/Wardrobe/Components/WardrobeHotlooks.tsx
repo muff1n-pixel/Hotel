@@ -3,6 +3,7 @@ import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScr
 import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
 import WardrobeSelectionSquareItem from "@UserInterface/Components/Wardrobe/Selection/WardrobeSelectionSquareItem";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useTranslation } from "react-i18next";
 
 // TODO: move to server
 
@@ -65,6 +66,8 @@ export type WardrobeHotlooksProps = {
 };
 
 export default function WardrobeHotlooks({ figureConfiguration, onFigureConfigurationChange }: WardrobeHotlooksProps) {
+    const [getWardrobeTranslation] = useTranslation("wardrobe");
+
     return (
         <div style={{
             display: "flex",
@@ -74,9 +77,9 @@ export default function WardrobeHotlooks({ figureConfiguration, onFigureConfigur
             width: (6 * 50) + 20,
         }}>
             <div>
-                <h2>Hot looks from the Hotel!</h2>
+                <h2>{getWardrobeTranslation("hot_looks.title")}</h2>
 
-                <p>Pick and choose from one of the hot looks from the Hotel!</p>
+                <p>{getWardrobeTranslation("hot_looks.description")}</p>
             </div>
 
             <DialogScrollArea hideInactive style={{

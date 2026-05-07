@@ -1,0 +1,14 @@
+{
+    "join": "Gå med",
+    "earnings": "Intäkter",
+    "discord": "Discord",
+    "membership_days": "{{ days }} d.",
+
+    "log_out": "Logga ut",
+
+    "settings": {
+        "title": "Inställningar",
+        "audio_settings": "Ljud Inställningar",
+        "game_settings": "Spel Inställningar"
+    }
+}

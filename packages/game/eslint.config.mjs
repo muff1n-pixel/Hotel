@@ -33,7 +33,8 @@ export default defineConfig(
                     "varsIgnorePattern": "^_",
                     "caughtErrorsIgnorePattern": "^_"
                 }
-            ]
+            ],
+            //"i18next/no-literal-string": "warn"
         }
     }
 );

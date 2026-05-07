@@ -4,12 +4,16 @@ import WidgetButton from "./WidgetButton";
 import WidgetCurrency from "./WidgetCurrency";
 import WidgetItem from "./WidgetItem";
 import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
+import { useTranslation } from "react-i18next";
 
 export type WidgetProps = {
     onSettingsClick?: () => void;
 }
 
 export default function Widget({ onSettingsClick }: WidgetProps) {
+    const [getCurrencyTranslation] = useTranslation("currencies");
+    const [getWidgetTranslation] = useTranslation("widget");
+
     const user = useUser();
 
     const { openShopPage } = useShopPageLink("habboclub");
@@ -54,15 +58,15 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                     justifyContent: "space-around",
                     alignItems: "flex-end"
                 }}>
-                    <WidgetCurrency color="#37C8E9" value={user?.diamonds ?? 0} tooltip="Diamonds">
+                    <WidgetCurrency color="#37C8E9" value={user?.diamonds ?? 0} tooltip={getCurrencyTranslation("diamonds")}>
                         <div className="sprite_currencies_diamonds"/>
                     </WidgetCurrency>
 
-                    <WidgetCurrency color="#CCA822" value={user?.credits ?? 0} tooltip="Credits">
+                    <WidgetCurrency color="#CCA822" value={user?.credits ?? 0} tooltip={getCurrencyTranslation("credits")}>
                         <div className="sprite_currencies_credits"/>
                     </WidgetCurrency>
 
-                    <WidgetCurrency color="#CE82CC" value={user?.duckets ?? 0} tooltip="Duckets">
+                    <WidgetCurrency color="#CE82CC" value={user?.duckets ?? 0} tooltip={getCurrencyTranslation("duckets")}>
                         <div className="sprite_currencies_duckets"/>
                     </WidgetCurrency>
                 </div>
@@ -80,16 +84,16 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                         <div className="sprite_currencies_club"/>
 
                         {(DateHelper.isDateInTheFuture(user.habboClub))?(
-                            <b>{DateHelper.getDaysBetweenDates(user.habboClub, new Date())} d.</b>
+                            <b>{getWidgetTranslation("membership_days", { days: DateHelper.getDaysBetweenDates(user.habboClub, new Date()) })}</b>
                         ):(
-                            <b>Join</b>
+                            <b>{getWidgetTranslation("join")}</b>
                         )}
                     </WidgetItem>
 
                     <WidgetItem>
                         <div className="sprite_currencies_earnings"/>
 
-                        <b>Earnings</b>
+                        <b>{getWidgetTranslation("earnings")}</b>
                     </WidgetItem>
                 </div>
 
@@ -100,19 +104,19 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
 
                     width: 50,
                 }}>
-                    <WidgetButton tooltip="Discord" color="#4D5FF2" onClick={() => {
+                    <WidgetButton tooltip={getWidgetTranslation("discord")} color="#4D5FF2" onClick={() => {
                         window.open("/discord", "_blank")?.focus();
                     }}>
-                        Discord
+                        {getWidgetTranslation("discord")}
                     </WidgetButton>
 
-                    <WidgetButton tooltip="Settings" color="#716A85" onClick={() => {
+                    <WidgetButton tooltip={getWidgetTranslation("settings.title")} color="#716A85" onClick={() => {
                         onSettingsClick?.();
                     }}>
                         <div className="sprite_widget_settings"/>
                     </WidgetButton>
 
-                    <WidgetButton tooltip="Log out" color="#DD5246" onClick={() => {
+                    <WidgetButton tooltip={getWidgetTranslation("log_out")} color="#DD5246" onClick={() => {
                         window.location.href = "/logout";
                     }}>
                         <div className="sprite_widget_logout"/>

@@ -1,0 +1,14 @@
+{
+    "join": "Join",
+    "earnings": "Earnings",
+    "discord": "Discord",
+    "membership_days": "{{ days }} d.",
+
+    "log_out": "Log out",
+
+    "settings": {
+        "title": "Settings",
+        "audio_settings": "Audio Settings",
+        "game_settings": "Game Settings"
+    }
+}

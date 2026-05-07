@@ -4,6 +4,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import useUserFigures from "@UserInterface/Components/Wardrobe/Hooks/useUserFigures";
 import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
+import { useTranslation } from "react-i18next";
 
 export type WardrobeFiguresProps = {
     figureConfiguration: FigureConfigurationData;
@@ -11,6 +12,8 @@ export type WardrobeFiguresProps = {
 }
 
 export default function WardrobeFigures({ figureConfiguration, onFigureChange }: WardrobeFiguresProps) {
+    const [getWardrobeTranslation] = useTranslation("wardrobe");
+    
     const figures = useUserFigures();
 
     const handleStore = useCallback((index: number) => {
@@ -35,7 +38,7 @@ export default function WardrobeFigures({ figureConfiguration, onFigureChange }:
             boxSizing: "border-box",
             borderLeft: "1px solid #CECECE"
         }}>
-            <b style={{ color: "#878682" }}>My wardrobe</b>
+            <b style={{ color: "#878682" }}>{getWardrobeTranslation("my_wardrobe")}</b>
 
             <div style={{
                 display: "grid",
