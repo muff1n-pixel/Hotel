@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+message RoomWiredMonitorData {
+    string room_id = 1;
+
+    message RoomWiredMonitorStatisticsData {
+        message RoomWiredMonitorStatisticData {
+            string type = 1;
+            uint32 value = 2;
+            uint32 max_value = 3;
+        }
+
+        repeated RoomWiredMonitorStatisticData variables = 1;
+        bool heavy = 2;
+    }
+
+    RoomWiredMonitorStatisticsData statistics = 2;
+
+    message RoomWiredMonitorLogData {
+        string type = 1;
+        string category = 2;
+        uint32 amount = 3;
+        optional string latest_occurrence = 4;
+    }
+
+    repeated RoomWiredMonitorLogData logs = 3;
+}

@@ -134,6 +134,12 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
 
                     return;
                 }
+
+                case "wired": {
+                    dialogs.addUniqueDialog("room-wired");
+
+                    return;
+                }
             }
         }
 

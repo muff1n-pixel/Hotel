@@ -8,6 +8,7 @@ export type DialogTabHeaderProps = {
     backgroundImage?: string;
     backgroundImageOffset?: number;
     backgroundColor?: string;
+    backgroundOpacity?: number;
 
     title?: string;
     description?: ReactNode;
@@ -103,7 +104,7 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
                                 objectFit: "cover",
                                 imageRendering: "pixelated",
 
-                                opacity: .05
+                                opacity: currentHeader.backgroundOpacity ?? .05
                             }}/>
                         )}
                     </div>

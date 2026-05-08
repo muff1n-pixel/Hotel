@@ -58,6 +58,7 @@ import FloorPlanDialog from "@UserInterface/Components/Room/FloorPlan/FloorPlanD
 import AudioSettingsDialog from "@UserInterface/Components/Settings/AudioSettingsDialog";
 import RoomUserTradingDialog from "@UserInterface/Components/Room/Users/Trading/RoomUserTradingDialog";
 import AdministrationDialog from "@UserInterface/Components/Administration/AdministrationDialog";
+import RoomWiredDialog from "@UserInterface/Components/Room/Wired/RoomWiredDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -163,6 +164,9 @@ export default function DialogInstances() {
 
                     case "room-user-trading":
                         return (<RoomUserTradingDialog {...props} key={dialog.id}/>);
+
+                    case "room-wired":
+                        return (<RoomWiredDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

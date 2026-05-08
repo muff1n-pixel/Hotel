@@ -1,11 +1,14 @@
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { CSSProperties, Fragment, ReactNode, useEffect, useState } from "react";
 
 export type DialogTableProps = {
     activeId?: any;
+    style?: CSSProperties;
 
     flex?: number[];
     columns?: string[];
+    empty?: ReactNode;
     items?: {
         id: any;
         preview?: ReactNode;
@@ -17,7 +20,7 @@ export type DialogTableProps = {
     tools?: ReactNode;
 };
 
-export default function DialogTable({ activeId, flex, columns, items, tools }: DialogTableProps) {
+export default function DialogTable({ empty, style, activeId, flex, columns, items, tools }: DialogTableProps) {
     const [_activeId, setActiveId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -72,7 +75,9 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
             flexDirection: "column",
 
             padding: 4,
-            gap: 4
+            gap: 4,
+
+            ...style
         }}>
             {(columns) && (
                 <Fragment>
@@ -107,54 +112,60 @@ export default function DialogTable({ activeId, flex, columns, items, tools }: D
                 </Fragment>
             )}
 
-            <DialogScrollArea style={{ gap: 10 }} hideInactive>
-                {items?.map((item) => (
-                    <div key={item.id} style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 10,
-                        padding: 4,
-                        background: (item.id === _activeId || (Array.isArray(activeId)?(activeId.includes(item.id)):(activeId === item.id)))?("#B8E2FC"):("transparent"),
-                        cursor: "pointer"
-                    }} onClick={() => {
-                        if(!item.onClick && activeId === undefined) {
-                            setActiveId(item.id);
-                        }
-                        else {
-                            item.onClick?.();
-                        }
-                    }}>
-                        {(item.preview) && (
-                            <div>
-                                {item.preview}
-                            </div>
-                        )}
-
-                        <div style={{
-                            flex: 1,
+            {(items?.length || !empty)?(
+                <DialogScrollArea style={{ gap: 10 }} hideInactive>
+                    {items?.map((item) => (
+                        <div key={item.id} style={{
                             display: "flex",
                             flexDirection: "row",
-                            alignItems: "center",
-                            gap: 5,
+                            gap: 10,
+                            padding: 4,
+                            background: (item.id === _activeId || (Array.isArray(activeId)?(activeId.includes(item.id)):(activeId === item.id)))?("#B8E2FC"):("transparent"),
+                            cursor: "pointer"
+                        }} onClick={() => {
+                            if(!item.onClick && activeId === undefined) {
+                                setActiveId(item.id);
+                            }
+                            else {
+                                item.onClick?.();
+                            }
                         }}>
-                            {item.values.map((value, index) => (
-                                <div key={value?.toString()} style={{
-                                    flex: flex?.[index] ?? 1,
-                                }}>
-                                    <div style={{
-                                        color: "#000",
-                                        fontSize: 12
-                                    }}>
-                                        {(value?.toString().length)?(value):(<i>Empty</i>)}
-                                    </div>
+                            {(item.preview) && (
+                                <div>
+                                    {item.preview}
                                 </div>
-                            ))}
+                            )}
 
-                            {item.tools}
+                            <div style={{
+                                flex: 1,
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 5,
+                            }}>
+                                {item.values.map((value, index) => (
+                                    <div key={value?.toString()} style={{
+                                        flex: flex?.[index] ?? 1,
+                                    }}>
+                                        <div style={{
+                                            color: "#000",
+                                            fontSize: 12
+                                        }}>
+                                            {(value?.toString().length)?(value):(<i>Empty</i>)}
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {item.tools}
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </DialogScrollArea>
+                    ))}
+                </DialogScrollArea>
+            ):(
+                <FlexLayout flex={1} justify="center" align="center">
+                    {empty}
+                </FlexLayout>
+            )}
         </div>
     );
 }

@@ -1,0 +1,24 @@
+{
+    "creator_tools": "Verktygslåda för Wired",
+
+    "monitor": {
+        "monitor": "Övervakning",
+        "statistics": "Statistik",
+        "logs": "Loggar",
+        "type": "Typ",
+        "category": "Kategori",
+        "amount": "Antal",
+        "latest_occurrence": "Senasta händelsen",
+        "no_logs": "Det finns inga loggar att visa ännu.",
+
+        "variables": {
+            "is_heavy": "Rummet klassas som tungt",
+            "wired_usage": "Wired användning",
+            "floor_furni": "Golvmöbler",
+            "wall_furni": "Väggmöbler",
+            "permanent_furni_vars": "Permanenta möbler vars",
+            "permanent_user_vars": "Permanenta användare vars",
+            "permanent_global_vars": "Permanenta globala vars"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "creator_tools": "Wired Creator Tools",
+
+    "monitor": {
+        "monitor": "Monitor",
+        "statistics": "Statistics",
+        "logs": "Logs",
+        "type": "Type",
+        "category": "Category",
+        "amount": "Amount",
+        "latest_occurrence": "Latest occurrence",
+        "no_logs": "There is no logs to show yet.",
+
+        "variables": {
+            "is_heavy": "Is heavy",
+            "wired_usage": "Wired usage",
+            "floor_furni": "Floor furni",
+            "wall_furni": "Wall furni",
+            "permanent_furni_vars": "Permanent furni vars",
+            "permanent_user_vars": "Permanent user vars",
+            "permanent_global_vars": "Permanent global vars"
+        }
+    }
+}
