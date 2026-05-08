@@ -125,12 +125,6 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
                     return;
                 }
 
-                case "modtools": {
-                    dialogs.addUniqueDialog("modtools");
-
-                    return;
-                }
-
                 case "pickall": {
                     if(roomInstance?.information?.owner?.id !== user.id) {
                         return;

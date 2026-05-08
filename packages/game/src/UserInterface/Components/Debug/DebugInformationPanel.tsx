@@ -6,6 +6,7 @@ import { webSocketClient } from "../../..";
 import { usePermissions } from "../../Hooks/usePermissions";
 import { RoomFurnitureExportData, RoomFurnitureImportData } from "@pixel63/events";
 import { useRoomFrameRate } from "@UserInterface/Hooks/useRoomFrameRate";
+import { useAnyPermissionAction } from "@UserInterface/Hooks/useAnyPermissionAction";
 
 export default function DebugInformationPanel() {
     const room = useRoomInstance();
@@ -14,9 +15,13 @@ export default function DebugInformationPanel() {
     const hotel = useHotel();
     const dialogs = useDialogs();
 
-    const [
-        hasReadFeedbackPermissions,
+    const hasAdministrationPermissions = useAnyPermissionAction([
+        "feedback:read",
+        "room:import_furniture",
+        "room:export_furniture"
+    ]);
 
+    const [
         hasImportRoomFurniturePermissions,
         hasExportRoomFurniturePermissions
     ] = usePermissions([
@@ -129,16 +134,6 @@ export default function DebugInformationPanel() {
                 flexDirection: "column",
                 gap: 5
             }}>
-                {(hasReadFeedbackPermissions) && (
-                    <div style={{
-                        cursor: "pointer",
-                        pointerEvents: "auto",
-                        textDecoration: "underline"
-                    }} onClick={() => dialogs.addUniqueDialog("view-issues")}>
-                        View feedback reports
-                    </div>
-                )}
-
                 <div style={{
                     cursor: "pointer",
                     pointerEvents: "auto",
@@ -146,6 +141,20 @@ export default function DebugInformationPanel() {
                 }} onClick={() => dialogs.addUniqueDialog("report-issue")}>
                     Report an issue
                 </div>
+
+                <div style={{
+                    height: 20
+                }}/>
+
+                {(hasAdministrationPermissions) && (
+                    <div style={{
+                        cursor: "pointer",
+                        pointerEvents: "auto",
+                        textDecoration: "underline"
+                    }} onClick={() => dialogs.addUniqueDialog("administration")}>
+                        Administration tools
+                    </div>
+                )}
 
                 <div style={{
                     height: 20

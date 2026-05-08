@@ -10,7 +10,6 @@ import RoomSettingsDialog from "../../Components/Room/Settings/RoomSettingsDialo
 import RoomInformationDialog from "../../Components/Room/Information/RoomInformationDialog";
 import ReportIssueDialog from "../../Components/Debug/Dialog/ReportIssueDialog";
 import HotelAlertDialog from "../../Components/Hotel/Alert/HotelAlertDialog";
-import ViewIssuesDialog from "../../Components/Debug/Dialog/ViewIssuesDialog";
 import RoomSettingsThumbnailDialog from "../../Components/Room/Settings/Thumbnail/RoomSettingsThumbnailDialog";
 import EditShopPageDialog from "../../Components/Shop/Development/EditShopPageDialog";
 import EditShopFurnitureDialog from "../../Components/Shop/Development/EditShopFurnitureDialog";
@@ -30,7 +29,6 @@ import PetBrowserDialog from "../../Components/Browsers/PetBrowserDialog";
 import EditPetDialog from "../../Components/Pets/EditPetDialog";
 import FriendsDialog from "@UserInterface/Components/Friends/FriendsDialog";
 import MessengerDialog from "@UserInterface/Components/Messenger/MessengerDialog";
-import ModToolsDialog from "@UserInterface/Components/Debug/Dialog/ModToolsDialog";
 import FurnitureBrowserDialog from "@UserInterface/Components/Browsers/FurnitureBrowserDialog";
 import BadgeBrowserDialog from "@UserInterface/Components/Browsers/BadgeBrowserDialog";
 import EditBadgeDialog from "@UserInterface/Components/Badges/EditBadgeDialog";
@@ -59,6 +57,7 @@ import EditRoomMapDialog from "@UserInterface/Components/Room/Map/EditRoomMapDia
 import FloorPlanDialog from "@UserInterface/Components/Room/FloorPlan/FloorPlanDialog";
 import AudioSettingsDialog from "@UserInterface/Components/Settings/AudioSettingsDialog";
 import RoomUserTradingDialog from "@UserInterface/Components/Room/Users/Trading/RoomUserTradingDialog";
+import AdministrationDialog from "@UserInterface/Components/Administration/AdministrationDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -75,9 +74,9 @@ export default function DialogInstances() {
                 };
 
                 switch(dialog.type) {
-                    case "modtools":
-                        return (<ModToolsDialog {...props} key={dialog.id}/>);
-                    
+                    case "administration":
+                        return (<AdministrationDialog {...props} key={dialog.id}/>);
+
                     case "achievements":
                         return (<AchievementsDialog {...props} key={dialog.id}/>);
 
@@ -167,9 +166,6 @@ export default function DialogInstances() {
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);
-
-                    case "view-issues":
-                        return (<ViewIssuesDialog {...props} key={dialog.id}/>);
 
                     case "edit-shop-page":
                         return (<EditShopPageDialog {...props} key={dialog.id}/>);
