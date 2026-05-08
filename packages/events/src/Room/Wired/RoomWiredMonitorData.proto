@@ -17,8 +17,8 @@ message RoomWiredMonitorData {
     RoomWiredMonitorStatisticsData statistics = 2;
 
     message RoomWiredMonitorLogData {
-        string type = 1;
-        string category = 2;
+        string category = 1;
+        string level = 2;
         uint32 amount = 3;
         optional string latest_occurrence = 4;
     }

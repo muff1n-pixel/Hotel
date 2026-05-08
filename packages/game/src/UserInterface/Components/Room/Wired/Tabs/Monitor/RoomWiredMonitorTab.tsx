@@ -52,10 +52,10 @@ export default function RoomWiredMonitorTab() {
                     flex={[2, 1, 1, 2]}
                     columns={[getWiredTranslation("monitor.type"), getWiredTranslation("monitor.category"), getWiredTranslation("monitor.amount"), getWiredTranslation("monitor.latest_occurrence")]}
                     items={monitor?.logs.map((log) => ({
-                        id: log.type,
+                        id: log.category,
                         values: [
-                            log.type,
                             log.category,
+                            log.level,
                             log.amount,
                             (log.latestOccurrence)?(new Date(log.latestOccurrence).toLocaleTimeString()):('-')
                         ]

@@ -71,9 +71,9 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
             },
 
             logs: roomUser.room.wired.getLogCategories().map((log) => ({
-                type: log.level,
-                amount: log.amount,
                 category: log.category,
+                level: log.level,
+                amount: log.amount,
                 latestOccurrence: log.latestTimestamp
             }))
         }));
