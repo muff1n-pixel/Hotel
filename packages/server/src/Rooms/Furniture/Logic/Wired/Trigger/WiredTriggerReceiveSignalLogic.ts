@@ -8,15 +8,32 @@ export default class WiredTriggerReceiveSignalLogic extends WiredTriggerLogic {
     }
 
     public async handleWiredSignal(roomFurniture: RoomFurniture, options?: WiredTriggerOptions): Promise<void> {
-        if(this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource === "list") {
-            const signalFurnitureId = this.roomFurniture.model.data.wiredFurnitureSelection?.furnitureIds.find((furnitureId) => roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && roomFurniture.model.data?.wiredFurnitureSelection?.furnitureIds.includes(furnitureId));
-            
-            if(signalFurnitureId) {
-                const signalFurniture = this.roomFurniture.room.getRoomFurniture(signalFurnitureId);
+        this.handleExecution(options);
+    }
 
-                await this.setActive();
-                this.handleTrigger({ ...options, signalFurniture }).catch(console.error);
-            }
+    public shouldTrigger(options?: WiredTriggerOptions): boolean {
+        if(this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource !== "list") {
+            return false;
         }
+        
+        const signalFurnitureId = this.roomFurniture.model.data.wiredFurnitureSelection?.furnitureIds.find((furnitureId) => options?.roomFurniture?.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && options?.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureIds.includes(furnitureId));
+        
+        if(!signalFurnitureId) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public handleTrigger(options?: WiredTriggerOptions, ...args: any[]): Promise<void> {
+        const signalFurnitureId = this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureIds.find((furnitureId) => options?.roomFurniture?.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && options?.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureIds.includes(furnitureId));
+        
+        if(!signalFurnitureId) {
+            throw new Error("Signal furniture id does not exist.");
+        }
+
+        const roomFurniture = this.roomFurniture.room.getRoomFurniture(signalFurnitureId);
+
+        return super.handleTrigger({ ...options, roomFurniture });
     }
 }

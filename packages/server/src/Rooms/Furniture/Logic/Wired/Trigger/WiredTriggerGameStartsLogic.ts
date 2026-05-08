@@ -8,8 +8,6 @@ export default class WiredTriggerGameStartsLogic extends WiredTriggerLogic {
     }
     
     public async handleGameStarts(game: RoomGame): Promise<void> {
-        await this.setActive();
-            
-        await this.handleTrigger();
+        this.handleExecution();
     }
 }

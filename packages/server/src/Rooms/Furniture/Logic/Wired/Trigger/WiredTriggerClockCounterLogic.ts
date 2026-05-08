@@ -1,4 +1,5 @@
 import RoomFurniture from "../../../RoomFurniture";
+import { WiredTriggerOptions } from "../WiredLogic";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 
 export default class WiredTriggerClockCounterLogic extends WiredTriggerLogic {
@@ -7,19 +8,29 @@ export default class WiredTriggerClockCounterLogic extends WiredTriggerLogic {
     }
 
     public async handleClockCounter(roomFurniture: RoomFurniture, seconds: number) {
-        console.log(`Handling clock counter for furniture ${roomFurniture.model.id} with ${seconds} seconds.`);
-        
-        if(!this.roomFurniture.model.data?.wiredTriggerClockCounter?.selection?.furnitureIds.includes(roomFurniture.model.id)) {
-            return;
+        this.handleExecution({ roomFurniture }, seconds);
+    }
+
+    public shouldTrigger(options: WiredTriggerOptions, seconds?: number): boolean {
+        if(!options.roomFurniture) {
+            return false;
+        }
+
+        if(seconds === undefined) {
+            return false;
+        }
+
+        if(!this.roomFurniture.model.data?.wiredTriggerClockCounter?.selection?.furnitureIds.includes(options.roomFurniture.model.id)) {
+            return false;
         }
 
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
 
-        if(this.roomFurniture.model.data?.wiredTriggerClockCounter?.minute === minutes && this.roomFurniture.model.data?.wiredTriggerClockCounter?.second === remainingSeconds) {
-            await this.setActive();
-            
-            await this.handleTrigger({ roomFurniture });
+        if(this.roomFurniture.model.data?.wiredTriggerClockCounter?.minute !== minutes || this.roomFurniture.model.data?.wiredTriggerClockCounter?.second !== remainingSeconds) {
+            return false;
         }
+
+        return true;
     }
 }

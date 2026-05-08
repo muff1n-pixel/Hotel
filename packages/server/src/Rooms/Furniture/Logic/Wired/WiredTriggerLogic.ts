@@ -10,8 +10,14 @@ export default class WiredTriggerLogic extends WiredLogic {
     
     handleBeforeUserWalksOffFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
     handleUserWalksOffFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
+
+    shouldTrigger(options?: WiredTriggerOptions): boolean {
+        return false;
+    };
     
-    public async handleTrigger(options?: WiredTriggerOptions) {
+    public async handleTrigger(options?: WiredTriggerOptions, ...args: any[]) {
+        await this.setActive();
+
         const wiredStackFurniture = this.roomFurniture.room.furnitures.filter((furniture) =>
             furniture.model.position.row === this.roomFurniture.model.position.row
             && furniture.model.position.column === this.roomFurniture.model.position.column
@@ -38,5 +44,20 @@ export default class WiredTriggerLogic extends WiredLogic {
 
             await logic.handleTrigger?.(options);
         }));
+    }
+
+    public handleExecution(options?: WiredTriggerOptions, ...args: any[]) {
+        this.roomWired.startExecution(
+            new Promise<void>((resolve, reject) => {
+                if(!this.shouldTrigger(options)) {
+                    return resolve();
+                }
+
+                this.handleTrigger(options, ...args)
+                    .then(resolve)
+                    .catch(reject);
+            })
+        )
+            .catch(console.error);
     }
 }

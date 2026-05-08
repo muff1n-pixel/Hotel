@@ -1,6 +1,7 @@
 import RoomFurniture from "../../../RoomFurniture";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 import RoomUser from "../../../../Users/RoomUser";
+import { WiredTriggerOptions } from "../WiredLogic";
 
 export default class WiredTriggerUserWalksOffFurnitureLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {
@@ -8,12 +9,20 @@ export default class WiredTriggerUserWalksOffFurnitureLogic extends WiredTrigger
     }
 
     public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void> {
+        this.handleExecution({ roomUser, roomFurniture });
+    }
+
+    public shouldTrigger(options?: WiredTriggerOptions): boolean {
+        if(!options?.roomFurniture) {
+            return false;
+        }
+
         if(this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureSource === "list" && this.roomFurniture.model.data?.wiredFurnitureSelection?.furnitureIds.length) {
-            if(this.roomFurniture.model.data.wiredFurnitureSelection.furnitureIds.includes(roomFurniture.model.id)) {
-                await this.setActive();
-                
-                this.handleTrigger({ roomUser }).catch(console.error);
+            if(this.roomFurniture.model.data.wiredFurnitureSelection.furnitureIds.includes(options.roomFurniture.model.id)) {
+                return true;
             }
         }
+
+        return false;
     }
 }

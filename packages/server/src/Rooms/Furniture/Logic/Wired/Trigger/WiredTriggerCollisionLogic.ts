@@ -8,8 +8,6 @@ export default class WiredTriggerCollisionLogic extends WiredTriggerLogic {
     }
 
     public async handleUserFurnitureCollission(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void> {
-        await this.setActive();
-        
-        this.handleTrigger({ roomUser, roomFurniture }).catch(console.error);
+        this.handleExecution({ roomUser, roomFurniture });
     }
 }

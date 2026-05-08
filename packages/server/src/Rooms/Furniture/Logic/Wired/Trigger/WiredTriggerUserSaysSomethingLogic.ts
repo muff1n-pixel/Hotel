@@ -2,6 +2,7 @@ import { RoomFurnitureHandleUserChatResult } from "../../Interfaces/RoomFurnitur
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
 import WiredTriggerLogic from "../WiredTriggerLogic";
+import { WiredTriggerOptions } from "../WiredLogic";
 
 export default class WiredTriggerUserSaysSomethingLogic extends WiredTriggerLogic {
     constructor(roomFurniture: RoomFurniture) {
@@ -9,27 +10,41 @@ export default class WiredTriggerUserSaysSomethingLogic extends WiredTriggerLogi
     }
 
     public async handleUserChat(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult> {
+        if(this.shouldTrigger({ roomUser }, message)) {
+            this.handleExecution({ roomUser }, message);
+            
+            return {
+                blockUserChat: this.roomFurniture.model.data?.wiredTriggerUserSaysSomething?.hideMessage === true
+            };
+        }
+
+        return null;
+    }
+
+    public shouldTrigger(options?: WiredTriggerOptions, message?: string): boolean {
+        if(!options?.roomUser) {
+            return false;
+        }
+
+        if(!message) {
+            return false;
+        }
+
         if(!this.roomFurniture.model.data) {
-            return null;
+            return false;
         }
 
         if(this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.onlyRoomOwner) {
-            if(roomUser.user.model.id !== roomUser.room.model.owner.id) {
-                return null;
+            if(options.roomUser.user.model.id !== options.roomUser.room.model.owner.id) {
+                return false;
             }
         }
 
         if(!this.isMessageMatched(message)) {
-            return null;
+            return false;
         }
 
-        await this.setActive();
-
-        this.handleTrigger({ roomUser }).catch(console.error);
-
-        return {
-            blockUserChat: this.roomFurniture.model.data.wiredTriggerUserSaysSomething?.hideMessage === true
-        };
+        return true;
     }
 
     private isMessageMatched(message: string) {

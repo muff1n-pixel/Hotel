@@ -1,4 +1,5 @@
 import RoomFurniture from "../../../RoomFurniture";
+import { WiredTriggerOptions } from "../WiredLogic";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 
 export default class WiredTriggerAtGivenTimeLogic extends WiredTriggerLogic {
@@ -21,22 +22,28 @@ export default class WiredTriggerAtGivenTimeLogic extends WiredTriggerLogic {
     public async handleActionsInterval(): Promise<void> {
         await super.handleActionsInterval();
 
+        this.handleExecution();
+    }
+
+    public shouldTrigger(options?: WiredTriggerOptions): boolean {
         if(this.hasTriggered) {
-            return;
+            return false;
         }
 
         if(!this.roomFurniture.model.data?.wiredTriggerAtSetTime?.seconds) {
-            return;
+            return false;
         }
 
         if(performance.now() < this.readyAtTimestamp + (this.roomFurniture.model.data.wiredTriggerAtSetTime.seconds * 1000)) {
-            return;
+            return false;
         }
 
+        return true;
+    }
+
+    public handleTrigger(options?: WiredTriggerOptions): Promise<void> {
         this.hasTriggered = true;
 
-        await this.setActive();
-            
-        await this.handleTrigger();
+        return super.handleTrigger(options);
     }
 }

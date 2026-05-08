@@ -7,21 +7,18 @@ export default class WiredTriggerPeriodicallyLogic extends WiredTriggerLogic {
     }
 
     public async handleActionsInterval(): Promise<void> {
-        const elapsed = performance.now() - this.lastTriggered;
+        await super.handleActionsInterval();
         
-        if(elapsed >= (this.roomFurniture.model.data?.wiredTriggerPeriodically?.seconds ?? 5) * 1000) {
-            await this.roomWired.startExecution(
-                new Promise((resolve, reject) => {
-                    Promise.allSettled([
-                        this.setActive(),
-                        this.handleTrigger()
-                    ])
-                    .then(resolve)
-                    .catch(reject);
-                })
-            );
+        this.handleExecution();
+    }
+
+    public shouldTrigger() {
+        const elapsed = performance.now() - this.lastTriggered;
+
+        if(elapsed < (this.roomFurniture.model.data?.wiredTriggerPeriodically?.seconds ?? 5) * 1000) {
+            return false;
         }
 
-        return await super.handleActionsInterval();
+        return true;
     }
 }

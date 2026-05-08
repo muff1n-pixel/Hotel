@@ -1,6 +1,6 @@
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
-import WiredLogic from "../WiredLogic";
+import { WiredTriggerOptions } from "../WiredLogic";
 import WiredTriggerLogic from "../WiredTriggerLogic";
 
 export default class WiredTriggerUserEntersRoomLogic extends WiredTriggerLogic {
@@ -9,17 +9,22 @@ export default class WiredTriggerUserEntersRoomLogic extends WiredTriggerLogic {
     }
 
     public async handleUserEnteredRoom(roomUser: RoomUser): Promise<void> {
+        this.handleExecution({ roomUser });
+    }
+
+    public shouldTrigger(options?: WiredTriggerOptions): boolean {
+        if(!options?.roomUser) {
+            return false;
+        }
+
         if(this.roomFurniture.model.data?.wiredUserSpecifier?.match === "user") {
-            if(roomUser.user.model.name === this.roomFurniture.model.data?.wiredUserSpecifier.matchUser) {
-                await this.setActive();
-                
-                this.handleTrigger({ roomUser }).catch(console.error);
+            if(options.roomUser.user.model.name === this.roomFurniture.model.data?.wiredUserSpecifier.matchUser) {
+                return true;
             }
+       
+            return false;
         }
-        else {
-            await this.setActive();
-            
-            this.handleTrigger({ roomUser }).catch(console.error);
-        }
+
+        return true;
     }
 }
