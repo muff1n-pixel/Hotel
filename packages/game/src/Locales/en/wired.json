@@ -22,5 +22,11 @@
             "permanent_user_vars": "Permanent user vars",
             "permanent_global_vars": "Permanent global vars"
         }
+    },
+
+    "logs": {
+        "filter": "Filter",
+        "search": "Search here...",
+        "all_levels": "All levels"
     }
 }

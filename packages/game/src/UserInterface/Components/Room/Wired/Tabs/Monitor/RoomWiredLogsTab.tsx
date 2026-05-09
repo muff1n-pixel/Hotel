@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function RoomWiredLogsTab() {
+    const [getCommonTranslation] = useTranslation("common");
     const [getWiredTranslation] = useTranslation("wired");
 
     const [page, setPage] = useState(0);
@@ -19,16 +20,16 @@ export default function RoomWiredLogsTab() {
         <FlexLayout flex={1} direction="column">
             <FlexLayout flex={1} direction="column" gap={5}>
                 <FlexLayout direction="row" align="center">
-                    <b>Filter:</b>
+                    <b>{getWiredTranslation("logs.filter")}:</b>
 
-                    <Input style={{ width: "100%" }} placeholder="Search..." value={search} onChange={setSearch}/>
+                    <Input style={{ width: "100%" }} placeholder={getWiredTranslation("logs.search")} value={search} onChange={setSearch}/>
                     
-                    <b>Level:</b>
+                    <b>{getWiredTranslation("monitor.level")}:</b>
                     
                     <Selection style={{ width: 100 }} value={level} onChange={setLevel} items={[
                         {
                             value: "",
-                            label: "All levels"
+                            label: getWiredTranslation("logs.all_levels")
                         },
                         {
                             value: "INFO",
@@ -69,7 +70,7 @@ export default function RoomWiredLogsTab() {
                 <FlexLayout direction="row" justify="space-between" align="center">
                     <div style={{ cursor: "pointer" }} onClick={() => setPage(Math.max(page - 1, 0))}><b>{"<"}</b></div>
 
-                    <div>Page {page + 1} / {(logs?.maxPages ?? 0) + 1}</div>
+                    <div>{getCommonTranslation("page")} {page + 1} / {(logs?.maxPages ?? 0) + 1}</div>
 
                     <div style={{ cursor: "pointer" }} onClick={() => setPage(Math.min(page + 1, logs?.maxPages ?? 0))}><b>{">"}</b></div>
                 </FlexLayout>
