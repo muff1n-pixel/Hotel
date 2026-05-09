@@ -16,8 +16,6 @@ export default class WiredTriggerLogic extends WiredLogic {
     };
     
     public async handleTrigger(options?: WiredTriggerOptions, ...args: any[]) {
-        this.roomWired.addLog("INFO", "EXECUTION", `Executing stack at row ${this.roomFurniture.model.position.row} column ${this.roomFurniture.model.position.column}`);
-
         await this.setActive();
 
         const wiredStackFurniture = this.roomFurniture.room.furnitures.filter((furniture) =>

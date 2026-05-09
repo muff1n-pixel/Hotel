@@ -60,6 +60,7 @@ import WiredConditionMatchToPositionStateDialog from "@UserInterface/Components/
 import WiredConditionUserOnFurnitureDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionUserOnFurnitureDialog";
 import WiredConditionFurniHasUsersDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionFurniHasUsersDialog";
 import RoomFurnitureExternalImageDialog from "@UserInterface/Components/Room/Furniture/Logic/ExternalImage/RoomFurnitureExternalImageDialog";
+import WiredActionLogDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionLogDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -213,6 +214,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
 
         case "wf_act_bot_clothes":
             return (<WiredActionBotChangeClothesDialog {...props}/>);
+
+        case "wf_act_log":
+            return (<WiredActionLogDialog {...props}/>);
 
         // Wired triggers
 
