@@ -47,8 +47,8 @@ export default function AdministrationSettingsTab() {
             
             {(activeSetting) && (
                 <FlexLayout direction="row">
-                    <FlexLayout justify="center" align="center">
-                        Changing {activeSetting.id}
+                    <FlexLayout justify="center" align="center" style={{ fontSize: 12 }}>
+                        Changing <br/> {activeSetting.id}
                     </FlexLayout>
 
                     <div style={{ flex: 1 }}/>

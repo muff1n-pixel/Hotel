@@ -21,6 +21,13 @@ export default class RoomFurniture<T = unknown> {
         }
 
         this.logic = RoomFurnitureLogicFactory.getLogic(this);
+
+        if(model.furniture.placement === "wall") {
+            this.room.wallFurnitureCount++;
+        }
+        else {
+            this.room.floorFurnitureCount++;
+        }
     }
 
     public static async place(room: Room, userFurniture: UserFurnitureModel, position: RoomPositionData, direction: number | null) {
@@ -74,6 +81,13 @@ export default class RoomFurniture<T = unknown> {
     public async pickup(splice: boolean = true) {
         if(splice) {
             this.room.furnitures.splice(this.room.furnitures.indexOf(this), 1);
+        }
+
+        if(this.model.furniture.placement === "wall") {
+            this.room.wallFurnitureCount--;
+        }
+        else {
+            this.room.floorFurnitureCount--;
         }
 
         this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.model.position), this.getDimensions());

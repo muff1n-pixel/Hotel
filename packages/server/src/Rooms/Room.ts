@@ -28,6 +28,9 @@ export default class Room {
     public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
 
+    public floorFurnitureCount: number = 0;
+    public wallFurnitureCount: number = 0;
+
     public clickConfiguration: RoomClickConfigurationData | undefined = undefined;
 
     public games: RoomGames = new RoomGames(this);

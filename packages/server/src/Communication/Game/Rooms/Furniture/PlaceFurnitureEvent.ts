@@ -2,7 +2,9 @@ import User from "../../../../Users/User.js";
 import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { PlaceRoomFurnitureData } from "@pixel63/events";
+import { PlaceRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
+import { game } from "../../../../index.js";
+import { randomUUID } from "crypto";
 
 export default class PlaceFurnitureEvent implements ProtobuffListener<PlaceRoomFurnitureData> {
     async handle(user: User, payload: PlaceRoomFurnitureData) {
@@ -29,6 +31,27 @@ export default class PlaceFurnitureEvent implements ProtobuffListener<PlaceRoomF
 
         if(!userFurniture) {
             throw new Error("User does not have a user furniture by this id.");
+        }
+
+        if(userFurniture.furniture.placement === "floor") {
+            if(roomUser.room.floorFurnitureCount >= game.hotelSettings.roomMaxFloorFurniture) {
+                user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `Maximum floor furniture count has been reached!`
+                }));
+
+                return;
+            }
+        }
+        else {
+            if(roomUser.room.wallFurnitureCount >= game.hotelSettings.roomMaxWallFurniture) {
+                user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    id: randomUUID(),
+                    text: `Maximum wall furniture count has been reached!`
+                }));
+
+                return;
+            }
         }
 
         if(!payload.position) {

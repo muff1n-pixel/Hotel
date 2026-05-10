@@ -44,4 +44,24 @@ export async function seedHotelSettings() {
             value: 180
         }
     });
+    
+    await HotelSettingModel.findOrCreate({
+        where: {
+            id: "room.max_floor_furniture"
+        },
+
+        defaults: {
+            value: 4000
+        }
+    });
+    
+    await HotelSettingModel.findOrCreate({
+        where: {
+            id: "room.max_wall_furniture"
+        },
+
+        defaults: {
+            value: 4000
+        }
+    });
 }
