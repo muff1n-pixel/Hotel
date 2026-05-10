@@ -8,9 +8,10 @@ import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { webSocketClient } from "../../../../../..";
-import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
+import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRelationshipData, UpdateUserFriendRequestData } from "@pixel63/events";
 import useFriends from "@UserInterface/Hooks/useFriends";
 import { useTranslation } from "react-i18next";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type RoomUserContextMenuProps = {
     item: RoomFigureItem;
@@ -25,7 +26,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
     const { friends, incomingRequests, outgoingRequests } = useFriends();
 
     const [targetUser, setTargetUser] = useState(room?.users.find((user) => user.item.id === item.id));
-    const [tab, setTab] = useState<null | "dance">(null);
+    const [tab, setTab] = useState<null | "dance" | "relationship">(null);
 
     useEffect(() => {
         setTargetUser(room?.users.find((user) => user.item.id === item.id));
@@ -80,11 +81,15 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                         }));
                                     }}/>
                                 ):(
-                                    (!friends?.some((friend) => friend.id === targetUser.data.id)) && (
+                                    (!friends?.some((friend) => friend.id === targetUser.data.id))?(
                                         <UserContextMenuButton text={getTranslation("item.context_menu.friends.ask_to_be_friends")} style={{ fontSize: 10 }} onClick={() => {
                                             webSocketClient.sendProtobuff(SendUserFriendRequestData, SendUserFriendRequestData.create({
                                                 userId: targetUser.data.id
                                             }));
+                                        }}/>
+                                    ):(
+                                        <UserContextMenuButton text={getTranslation("item.context_menu.friends.relationship")} style={{ fontSize: 11 }} onClick={() => {
+                                            setTab("relationship");
                                         }}/>
                                     )
                                 )
@@ -142,6 +147,52 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                     <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_the_rollie")} onClick={() => {
                         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                             message: ":dance 4"
+                        }));
+
+                        setTab(null);
+                    }}/>
+                    
+                    <UserContextMenuButton text={getTranslation("item.context_menu.back")} hasBack onClick={() => {
+                        setTab(null);
+                    }}/>
+                </UserContextMenuList>
+            )}
+
+            {(tab === "relationship") && (
+                <UserContextMenuList>
+                    <FlexLayout direction="row" gap={0}>
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_users_relationships_heart"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(UpdateUserFriendRelationshipData, UpdateUserFriendRelationshipData.create({
+                                userId: targetUser.data.id,
+                                relationship: "love"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                        
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_users_relationships_smile"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(UpdateUserFriendRelationshipData, UpdateUserFriendRelationshipData.create({
+                                userId: targetUser.data.id,
+                                relationship: "smile"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                        
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_users_relationships_bobba"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(UpdateUserFriendRelationshipData, UpdateUserFriendRelationshipData.create({
+                                userId: targetUser.data.id,
+                                relationship: "bobba"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                    </FlexLayout>
+                    
+                    <UserContextMenuButton text={getTranslation("item.context_menu.friends.clear_relationship")} style={{ fontSize: 10 }} onClick={() => {
+                        webSocketClient.sendProtobuff(UpdateUserFriendRelationshipData, UpdateUserFriendRelationshipData.create({
+                            userId: targetUser.data.id,
+                            relationship: undefined
                         }));
 
                         setTab(null);

@@ -32,7 +32,9 @@
             "friends": {
                 "revoke_request": "Återkalla vänförfrågan",
                 "accept_request": "Acceptera vänförfrågan",
-                "ask_to_be_friends": "Be om att få vara vänner"
+                "ask_to_be_friends": "Be om att få vara vänner",
+                "relationship": "Relation",
+                "clear_relationship": "Ta bort relation"
             },
 
             "ask_to_trade": "Begär att byta",

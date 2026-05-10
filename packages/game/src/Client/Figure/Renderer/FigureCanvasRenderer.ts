@@ -25,7 +25,7 @@ export default class FigureCanvasRenderer {
     public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
         const canvasKey = this.getCanvasKey(options);
 
-        if(FigureAssets.figureCanvasCache.has(canvasKey)) {
+        if(!headOnly && FigureAssets.figureCanvasCache.has(canvasKey)) {
             return FigureAssets.figureCanvasCache.get(canvasKey)!;
         }
 
@@ -138,7 +138,9 @@ export default class FigureCanvasRenderer {
                 effects: effectSprites
             };
 
-            FigureAssets.figureCanvasCache.set(canvasKey, result);
+            if(!headOnly) {
+                FigureAssets.figureCanvasCache.set(canvasKey, result);
+            }
 
             return result;
         })();

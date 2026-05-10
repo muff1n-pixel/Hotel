@@ -1,8 +1,8 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 import "./UserContextMenuButton.css";
 
 export type UserContextMenuButtonProps = {
-    text: string;
+    text: ReactNode;
     onClick: () => void;
     hasDropdown?: boolean;
     hasBack?: boolean;

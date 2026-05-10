@@ -8,6 +8,7 @@ import { useUser } from "@UserInterface/Hooks/useUser";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import UserProfileRelationships from "@UserInterface/Components/Users/UserProfileRelationships";
 
 export type UserProfileDialogProps = {
     data: string;
@@ -30,7 +31,10 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                 <FlexLayout direction="row">
                     <FlexLayout flex={1} direction="column">
                         <FlexLayout flex={1} direction="row">
-                            <FlexLayout flex={1} align="center" justify="center">
+                            <FlexLayout flex={1} align="center" justify="center" style={{
+                                width: 64,
+                                height: 100
+                            }}>
                                 <FigureImage figureConfiguration={profile.figureConfiguration} cropped direction={2}/>
                             </FlexLayout>
 
@@ -70,7 +74,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                             </FlexLayout>
                         )}
 
-                        {(profile.badges.length > 0) && (
+                        {(profile.badges.length > 0)?(
                             <FlexLayout flex={1} gap={5} align="center" justify="space-between" direction="row" style={{
                                 background: "#AEAEAE",
                                 borderRadius: 6,
@@ -80,6 +84,8 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                     <BadgeImage badge={badge}/>
                                 ))}
                             </FlexLayout>
+                        ):(
+                            <div style={{ flex: 1 }}/>
                         )}
                     </FlexLayout>
 
@@ -88,6 +94,34 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                     <div style={{ flex: 1 }}>
                         <FlexLayout gap={5}>
                             <div><b>Friends:</b> {profile.friendsCount}</div>
+
+                            <FlexLayout justify="space-between">
+                                <div><b>Relationships:</b></div>
+
+                                <FlexLayout direction="row" gap={0}>
+                                    <div style={{ padding: 5 }}>
+                                        <div className="sprite_users_relationships_heart"/>
+                                    </div>
+
+                                    <UserProfileRelationships relationships={profile.loveRelationships}/>
+                                </FlexLayout>
+
+                                <FlexLayout direction="row" gap={0}>
+                                    <div style={{ padding: 5 }}>
+                                        <div className="sprite_users_relationships_smile"/>
+                                    </div>
+
+                                    <UserProfileRelationships relationships={profile.smileRelationships}/>
+                                </FlexLayout>
+
+                                <FlexLayout direction="row" gap={0}>
+                                    <div style={{ padding: 5 }}>
+                                        <div className="sprite_users_relationships_bobba"/>
+                                    </div>
+
+                                    <UserProfileRelationships relationships={profile.bobbaRelationships}/>
+                                </FlexLayout>
+                            </FlexLayout>
                         </FlexLayout>
                     </div>
                 </FlexLayout>

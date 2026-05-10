@@ -38,8 +38,6 @@ export default class RoomFigureItem extends RoomItem {
         this.frame++;
 
         if(this.figureRenderer.shouldRender(this.frame)) {
-            console.log("Render");
-
             this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
                 this.sprites = [
                     new RoomFigureSprite(this, result.figure),

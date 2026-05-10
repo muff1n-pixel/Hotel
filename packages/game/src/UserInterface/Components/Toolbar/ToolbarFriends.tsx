@@ -74,6 +74,10 @@ export default function ToolbarFriends() {
                                 }));
                             }}
 
+                            onProfileClick={() => {
+                                dialogs.addUniqueDialog("user-profile", friend.id, friend.id)
+                            }}
+
                             name={friend.name}
                             figureConfiguration={friend.figureConfiguration}/>
                     ))}

@@ -15,9 +15,10 @@ export type FriendsPanelProps = {
 
     onChatClick?: () => void;
     onRoomClick?: () => void;
+    onProfileClick?: () => void;
 };
 
-export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand, onChatClick, onRoomClick }: FriendsPanelProps) {
+export default function FriendsPanel({ figureConfiguration, name, roomId, expanded, onExpand, onChatClick, onRoomClick, onProfileClick }: FriendsPanelProps) {
     const [getTranslation] = useTranslation("toolbar");
 
     const elementRef = useRef<HTMLDivElement>(null);
@@ -104,7 +105,7 @@ export default function FriendsPanel({ figureConfiguration, name, roomId, expand
                             )}
                         </div>
 
-                        <div className="friends-panel-button">
+                        <div className="friends-panel-button" onClick={onProfileClick}>
                             <div className="sprite_friends_friend-profile"/>
                         </div>                        
                     </div>

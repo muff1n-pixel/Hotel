@@ -31,7 +31,7 @@ import PingEvent from "../Communication/Game/Users/PingEvent.js";
 import GetRoomCategoriesEvent from "../Communication/Game/Navigator/GetRoomCategoriesEvent.js";
 import GetInventoryBadgesEvent from "../Communication/Game/Inventory/GetInventoryBadgesEvent.js";
 import UpdateUserBadgeEvent from "../Communication/Game/Inventory/UpdateUserBadgeEvent.js";
-import GetUserBadgesEvent from "../Communication/Game/Rooms/User/GetUserProfileEvent.js";
+import GetUserBadgesEvent from "../Communication/Game/Rooms/User/GetUserBadgesEvent.js";
 import SetMottoEvent from "../Communication/Game/Users/SetMottoEvent.js";
 import UpdateShopPageEvent from "../Communication/Game/Shop/Development/UpdateShopPageEvent.js";
 import UpdateShopFurnitureEvent from "../Communication/Game/Shop/Development/UpdateShopFurnitureEvent.js";
@@ -50,7 +50,7 @@ import UpdateRoomBotEvent from "../Communication/Game/Rooms/Bots/UpdateRoomBotEv
 import GetRoomBotSpeechEvent from "../Communication/Game/Rooms/Bots/GetRoomBotSpeechEvent.js";
 import RoomReadyEvent from "../Communication/Game/Rooms/RoomReadyEvent.js";
 import RoomClickEvent from "../Communication/Game/Rooms/RoomClickEvent.js";
-import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteRoomMapData, DeleteShopFurnitureData, DeleteShopMembershipData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetHotelSettingsData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPageLinkData, GetShopPageMembershipsData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserInventorySongDisksData, GetUserInventorySoundSetsData, GetUserProfileData, HotelAlertData, InsertRoomFurnitureTraxSongData, LeaveRoomData, MessageType, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseRoomCameraPhotoData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopMembershipData, PurchaseShopPetData, RemoveUserFriendData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdateHotelSettingData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomMapData, UpdateRoomStructureData, UpdateRoomUserTradingData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopMembershipData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData } from "@pixel63/events";
+import { BurnRoomFurnitureTraxSongData, CreateRoomData, DeleteRoomFurnitureTraxSongData, DeleteRoomMapData, DeleteShopFurnitureData, DeleteShopMembershipData, EnterRoomBellQueueData, EnterRoomData, ExitRoomBellQueueData, GetAchievementsCategoriesData, GetAchievementsData, GetBadgeBrowserData, GetFurnitureBrowserData, GetFurnitureCrackableData, GetFurnitureTypesData, GetHotelFeedbackData, GetHotelSettingsData, GetNavigatorData, GetPetBreedsData, GetPetBrowserData, GetRoomCategoriesData, GetRoomChatStylesData, GetRoomMapsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetShopFurnitureLinkData, GetShopPageBotsData, GetShopPageBundleFurnitureData, GetShopPageFurnitureData, GetShopPageLinkData, GetShopPageMembershipsData, GetShopPagePetsData, GetShopPagesData, GetUserBadgesData, GetUserBotSpeechData, GetUserClothesData, GetUserData, GetUserEffectsData, GetUserFiguresData, GetUserFriendRelationshipsData, GetUserFriendsData, GetUserInventoryBadgesData, GetUserInventoryBotsData, GetUserInventoryFurnitureData, GetUserInventoryPetsData, GetUserInventorySongDisksData, GetUserInventorySoundSetsData, GetUserProfileData, HotelAlertData, InsertRoomFurnitureTraxSongData, LeaveRoomData, MessageType, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PingData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, PurchaseRoomCameraPhotoData, PurchaseShopBotData, PurchaseShopBundleData, PurchaseShopFurnitureData, PurchaseShopMembershipData, PurchaseShopPetData, RemoveUserFriendData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomFurnitureImportData, RoomReadyData, SearchUserFriendsData, SendHotelFeedbackData, SendRoomChatMessageData, SendRoomUserWalkData, SendUserFriendMessageData, SendUserFriendRequestData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, SetUserFigureConfigurationData, SetUserHomeRoomData, SetUserMottoData, SetUserRoomChatStyleData, UpdateBadgeData, UpdateClothingData, UpdateFurnitureCrackableData, UpdateFurnitureData, UpdateHotelSettingData, UpdatePetData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomMapData, UpdateRoomStructureData, UpdateRoomUserTradingData, UpdateShopBotData, UpdateShopFeatureData, UpdateShopFurnitureData, UpdateShopMembershipData, UpdateShopPageData, UpdateShopPetData, UpdateUserBadgeData, UpdateUserFriendRelationshipData, UpdateUserFriendRequestData, UserFigureData, UseRoomFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../Communication/Interfaces/ProtobuffListener.js";
 import GetShopPagePetsEvent from "../Communication/Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "../Communication/Game/Shop/Development/UpdateShopPetEvent.js";
@@ -114,6 +114,8 @@ import GetHotelSettingsEvent from "../Communication/Game/Hotel/Settings/GetHotel
 import UpdateHotelSettingEvent from "../Communication/Game/Hotel/Settings/UpdateHotelSettingEvent.js";
 import GetRoomWiredMonitorEvent from "../Communication/Game/Rooms/Wired/GetRoomWiredMonitorEvent.js";
 import GetRoomWiredLogsEvent from "../Communication/Game/Rooms/Wired/GetRoomWiredLogsEvent.js";
+import UpdateUserFriendRelationshipEvent from "../Communication/Game/Users/Friends/UpdateUserFriendRelationshipEvent.js";
+import GetUserFriendRelationshipsEvent from "../Communication/Game/Users/Friends/GetUserFriendRelationshipsEvent.js";
 
 export default class EventHandler extends EventEmitter {
     constructor() {
@@ -256,6 +258,7 @@ export default class EventHandler extends EventEmitter {
 
         // User profile events
         this.addProtobuffListener(GetUserProfileData, new GetUserProfileEvent());
+        this.addProtobuffListener(GetUserFriendRelationshipsData, new GetUserFriendRelationshipsEvent());
 
         // Room pet events
         this.addProtobuffListener(PlaceRoomPetData, new PlaceRoomPetEvent());
@@ -270,6 +273,7 @@ export default class EventHandler extends EventEmitter {
         this.addProtobuffListener(GetUserFriendsData, new GetUserFriendsEvent());
         this.addProtobuffListener(SendUserFriendRequestData, new SendUserFriendRequestEvent());
         this.addProtobuffListener(UpdateUserFriendRequestData, new UpdateUserFriendRequestEvent());
+        this.addProtobuffListener(UpdateUserFriendRelationshipData, new UpdateUserFriendRelationshipEvent());
         this.addProtobuffListener(RemoveUserFriendData, new RemoveUserFriendEvent());
         this.addProtobuffListener(SearchUserFriendsData, new SearchUserFriendsEvent());
 

@@ -207,6 +207,9 @@
 .sprite_currencies_diamonds { background-image: url('./spritesheet.png'); background-position: -255px -791px; width: 15px; height: 15px; }
 .sprite_currencies_duckets { background-image: url('./spritesheet.png'); background-position: -270px -791px; width: 15px; height: 15px; }
 .sprite_dialog_trax_cd { background-image: url('./spritesheet.png'); background-position: -285px -791px; width: 15px; height: 15px; }
+.sprite_users_relationships_bobba { background-image: url('./spritesheet.png'); background-position: -602px -756px; width: 16px; height: 14px; }
+.sprite_users_relationships_heart { background-image: url('./spritesheet.png'); background-position: -618px -756px; width: 16px; height: 14px; }
+.sprite_users_relationships_smile { background-image: url('./spritesheet.png'); background-position: -634px -756px; width: 16px; height: 14px; }
 .sprite_room_camera_save { background-image: url('./spritesheet.png'); background-position: -300px -791px; width: 14px; height: 15px; }
 .sprite_room_lock_bell { background-image: url('./spritesheet.png'); background-position: -675px -822px; width: 13px; height: 16px; }
 .sprite_room_lock_invisible { background-image: url('./spritesheet.png'); background-position: -688px -822px; width: 13px; height: 16px; }
@@ -214,8 +217,8 @@
 .sprite_users_profile_check { background-image: url('./spritesheet.png'); background-position: -626px -447px; width: 16px; height: 13px; }
 .sprite_refresh { background-image: url('./spritesheet.png'); background-position: -642px -447px; width: 17px; height: 12px; }
 .sprite_dialog_trax_add { background-image: url('./spritesheet.png'); background-position: -869px -563px; width: 17px; height: 12px; }
-.sprite_dialog_wired_action { background-image: url('./spritesheet.png'); background-position: -602px -756px; width: 13px; height: 14px; }
-.sprite_dialog_wired_trigger { background-image: url('./spritesheet.png'); background-position: -615px -756px; width: 13px; height: 14px; }
+.sprite_dialog_wired_action { background-image: url('./spritesheet.png'); background-position: -650px -756px; width: 13px; height: 14px; }
+.sprite_dialog_wired_trigger { background-image: url('./spritesheet.png'); background-position: -663px -756px; width: 13px; height: 14px; }
 .sprite_dialog_wired_rotations_rotate_ccw { background-image: url('./spritesheet.png'); background-position: -886px -563px; width: 15px; height: 12px; }
 .sprite_dialog_wired_rotations_rotate_cw { background-image: url('./spritesheet.png'); background-position: -901px -563px; width: 15px; height: 12px; }
 .sprite_remove { background-image: url('./spritesheet.png'); background-position: -715px -599px; width: 13px; height: 13px; }

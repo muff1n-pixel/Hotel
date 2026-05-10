@@ -1,4 +1,4 @@
-import { BadgeData, GetUserProfileData, UserProfileData } from "@pixel63/events";
+import { BadgeData, GetUserFriendRelationshipsData, GetUserProfileData, UserFriendRelationshipsData, UserProfileData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { UserModel } from "../../../../Database/Models/Users/UserModel";
@@ -8,32 +8,13 @@ import { Op } from "sequelize";
 import { game } from "../../../..";
 import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
 
-export default class GetUserProfileEvent implements ProtobuffListener<GetUserProfileData> {
+export default class GetUserFriendRelationshipsEvent implements ProtobuffListener<GetUserFriendRelationshipsData> {
     minimumDurationBetweenEvents?: number = 500;
 
-    async handle(user: User, payload: GetUserProfileData): Promise<void> {
-        const targetUser = await UserModel.findByPk(payload.userId);
-
-        if(!targetUser) {
-            throw new Error("Target user does not exist.");
-        }
-
-        const badges = await UserBadgeModel.findAll({
-            where: {
-                userId: targetUser.id,
-                equipped: true
-            },
-            include: [
-                {
-                    model: BadgeModel,
-                    as: "badge"
-                }
-            ]
-        });
-
+    async handle(user: User, payload: GetUserFriendRelationshipsData): Promise<void> {
         const friends = await UserFriendModel.findAll({
             where: {
-                userId: targetUser.id,
+                userId: payload.userId,
                 relationship: {
                     [Op.not]: null
                 }
@@ -46,26 +27,8 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
             ]
         });
 
-        user.sendProtobuff(UserProfileData, UserProfileData.create({
-            id: targetUser.id,
-
-            name: targetUser.name,
-            motto: targetUser.motto ?? undefined,
-
-            figureConfiguration: targetUser.figureConfiguration,
-
-            badges: badges.map((userBadge) => BadgeData.fromJSON(userBadge.badge)),
-
-            online: game.users.some((user) => user.model.id === targetUser.id),
-            lastOnlineAt: targetUser.lastLogin?.toISOString(),
-
-            createdAt: targetUser.createdAt.toISOString(),
-
-            friendsCount: await UserFriendModel.count({
-                where: {
-                    userId: targetUser.id
-                }
-            }),
+        user.sendProtobuff(UserFriendRelationshipsData, UserFriendRelationshipsData.create({
+            userId: payload.userId,
 
             loveRelationships: friends.filter((friend) => friend.relationship === "love").map((friend) => {
                 return {

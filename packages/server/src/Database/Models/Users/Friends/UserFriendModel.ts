@@ -3,6 +3,7 @@ import { UserModel } from "../UserModel.js";
 
 export class UserFriendModel extends Model {
     declare id: string;
+    declare relationship?: string;
 
     declare user: NonAttribute<UserModel>;
     declare friend: NonAttribute<UserModel>;
@@ -15,6 +16,11 @@ export function initializeUserFriendModel(sequelize: Sequelize) {
                 type: DataTypes.UUID,
                 primaryKey: true,
             },
+            relationship: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            }
         },
         {
             tableName: 'user_friends',

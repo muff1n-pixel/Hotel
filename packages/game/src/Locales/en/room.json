@@ -32,7 +32,9 @@
             "friends": {
                 "revoke_request": "Revoke request",
                 "accept_request": "Accept request",
-                "ask_to_be_friends": "Ask to be friends"
+                "ask_to_be_friends": "Ask to be friends",
+                "relationship": "Relationship",
+                "clear_relationship": "Clear relationship"
             },
 
             "ask_to_trade": "Ask to trade",

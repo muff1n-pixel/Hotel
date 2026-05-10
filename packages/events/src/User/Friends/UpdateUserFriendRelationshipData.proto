@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message UpdateUserFriendRelationshipData {
+    string user_id = 1;
+
+    optional string relationship = 2;
+}

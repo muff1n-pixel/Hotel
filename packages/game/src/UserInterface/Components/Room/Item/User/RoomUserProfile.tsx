@@ -10,6 +10,9 @@ import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import { useTranslation } from "react-i18next";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useUserFriendRelationships } from "@UserInterface/Hooks/useUserFriendRelationships";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -17,7 +20,7 @@ export type RoomUserProfileProps = {
 
 export default function RoomUserProfile({ user: targetUser }: RoomUserProfileProps) {
     const room = useRoomInstance();
-
+    const dialogs = useDialogs();
     const user = useUser();
     
     const [getCarryItemTranslation] = useTranslation("carryitems");
@@ -45,6 +48,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
     }, [user, room]);
 
     const badges = useUserBadges(targetUser.id);
+    const relationships = useUserFriendRelationships(targetUser.id);
 
     const handleMottoChange = useCallback((motto: string) => {
         if(targetUser.id !== user?.id) {
@@ -95,7 +99,9 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                     boxSizing: "border-box",
 
                     width: 67,
-                    height: 130
+                    height: 130,
+
+                    pointerEvents: "none"
                 }}>
                     {(targetUser.figureConfiguration) && (
                         <FigureImage figureConfiguration={targetUser.figureConfiguration} direction={2}/>
@@ -129,6 +135,48 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             }}/>
 
             <RoomUserProfileMotto canEdit={user.id == targetUser.id} value={targetUser.motto ?? ""} onChange={handleMottoChange}/>
+
+            {(relationships && relationships.loveRelationships.length > 0) && (
+                <FlexLayout align="center" gap={5} direction="row">
+                    <div className="sprite_users_relationships_heart"/>
+
+                    <div style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => dialogs.addUniqueDialog("user-profile", relationships.loveRelationships[0].userId, relationships.loveRelationships[0].userId)}>
+                        {(relationships.loveRelationships.length === 1)?(
+                            relationships.loveRelationships[0].name
+                        ):(
+                            relationships.loveRelationships[0].name + " and " + (relationships.loveRelationships.length - 1) + "others"
+                        )}
+                    </div>
+                </FlexLayout>
+            )}
+
+            {(relationships && relationships.smileRelationships.length > 0) && (
+                <FlexLayout align="center" gap={5} direction="row">
+                    <div className="sprite_users_relationships_smile"/>
+
+                    <div style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => dialogs.addUniqueDialog("user-profile", relationships.smileRelationships[0].userId, relationships.smileRelationships[0].userId)}>
+                        {(relationships.smileRelationships.length === 1)?(
+                            relationships.smileRelationships[0].name
+                        ):(
+                            relationships.smileRelationships[0].name + " and " + (relationships.smileRelationships.length - 1) + "others"
+                        )}
+                    </div>
+                </FlexLayout>
+            )}
+
+            {(relationships && relationships.bobbaRelationships.length > 0) && (
+                <FlexLayout align="center" gap={5} direction="row">
+                    <div className="sprite_users_relationships_bobba"/>
+
+                    <div style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => dialogs.addUniqueDialog("user-profile", relationships.bobbaRelationships[0].userId, relationships.bobbaRelationships[0].userId)}>
+                        {(relationships.bobbaRelationships.length === 1)?(
+                            relationships.bobbaRelationships[0].name
+                        ):(
+                            relationships.bobbaRelationships[0].name + " and " + (relationships.bobbaRelationships.length - 1) + "others"
+                        )}
+                    </div>
+                </FlexLayout>
+            )}
 
             {(carryItemId) && (
                 <div style={{
