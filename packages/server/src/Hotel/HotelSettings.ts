@@ -5,6 +5,7 @@ export default class HotelSettings {
     public roomUserTradeCompletionSeconds: number = 5;
     public roomMaxFloorFurniture: number = 4000;
     public roomMaxWallFurniture: number = 4000;
+    public roomWiredMaxUsage: number = 3125;
 
     constructor() {
 
@@ -18,6 +19,8 @@ export default class HotelSettings {
         
         this.roomMaxFloorFurniture = this.findSetting(settings, "room.max_floor_furniture") ?? this.roomMaxFloorFurniture;
         this.roomMaxWallFurniture = this.findSetting(settings, "room.max_wall_furniture") ?? this.roomMaxWallFurniture;
+        
+        this.roomWiredMaxUsage = this.findSetting(settings, "room.wired.max_usage") ?? this.roomWiredMaxUsage;
 
         return settings;
     }

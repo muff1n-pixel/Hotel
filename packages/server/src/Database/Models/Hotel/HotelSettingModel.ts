@@ -64,4 +64,14 @@ export async function seedHotelSettings() {
             value: 4000
         }
     });
+    
+    await HotelSettingModel.findOrCreate({
+        where: {
+            id: "room.wired.max_usage"
+        },
+
+        defaults: {
+            value: 3125
+        }
+    });
 }

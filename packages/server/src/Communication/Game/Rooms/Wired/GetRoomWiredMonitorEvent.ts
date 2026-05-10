@@ -1,6 +1,7 @@
 import { GetRoomWiredMonitorData, RoomWiredMonitorData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import User from "../../../../Users/User.js";
+import { game } from "../../../../index.js";
 
 export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRoomWiredMonitorData> {
     minimumDurationBetweenEvents?: number = 1000;
@@ -18,18 +19,6 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
 
         const room = user.room;
 
-        let floorFurnitureCount = 0;
-        let wallFurnitureCount = 0;
-
-        for(const furniture of room.furnitures) {
-            if(furniture.model.furniture.placement === "floor") {
-                floorFurnitureCount++;
-            }
-            else {
-                wallFurnitureCount++;
-            }
-        }
-
         user.sendProtobuff(RoomWiredMonitorData, RoomWiredMonitorData.create({
             roomId: user.room.model.id,
 
@@ -40,17 +29,17 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
                     {
                         type: "wired_usage",
                         value: room.wired.executions.length,
-                        maxValue: 3125
+                        maxValue: game.hotelSettings.roomWiredMaxUsage
                     },
                     {
                         type: "floor_furni",
-                        value: floorFurnitureCount,
-                        maxValue: 4000
+                        value: room.floorFurnitureCount,
+                        maxValue: game.hotelSettings.roomMaxFloorFurniture
                     },
                     {
                         type: "wall_furni",
-                        value: wallFurnitureCount,
-                        maxValue: 4000
+                        value: room.wallFurnitureCount,
+                        maxValue: game.hotelSettings.roomMaxWallFurniture
                     },
                     {
                         type: "permanent_furni_vars",
