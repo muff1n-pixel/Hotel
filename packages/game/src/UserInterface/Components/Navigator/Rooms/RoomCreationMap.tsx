@@ -52,7 +52,7 @@ export default function RoomCreationMap({ activeRoomMap, roomMap, editMode, onSe
 
             cursor: "pointer"
         }} onClick={handleClick}>
-            <RoomMapImage width={180} height={120} structure={RoomStructureData.create({
+            <RoomMapImage staticImage width={180} height={120} structure={RoomStructureData.create({
                 grid: roomMap.grid,
                 door: roomMap.door,
                 floor: {
