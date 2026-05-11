@@ -201,22 +201,37 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private sortSprites() {
-        this.sortedSprites = this.items
-            .filter(item => !item.disabled)
-            .flatMap(item => item.sprites)
-            .sort((a, b) => {
-                const priorityA = a.item.calculatedPriority + a.priority;
-                const priorityB = b.item.calculatedPriority + b.priority;
-                return priorityA - priorityB;
-            });
+        const sprites: { sprite: RoomSprite; priority: number }[] = [];
+
+        for(const item of this.items) {
+            if(item.disabled) {
+                continue;
+            }
+
+            const itemPriority = item.calculatedPriority;
+
+            for(const sprite of item.sprites) {
+                sprites.push({
+                    sprite,
+                    priority: itemPriority + sprite.priority,
+                });
+            }
+        }
+
+        this.sortedSprites = sprites.sort((a, b) => a.priority - b.priority).map((item) => item.sprite);
     }
 
     private drawSprites(context: CanvasRenderingContext2D, sprites: RoomSprite[]) {
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];
 
-            context.globalCompositeOperation = "source-over";
-            context.globalAlpha = sprite.item.alpha;
+            if(context.globalCompositeOperation !== "source-over") {
+                context.globalCompositeOperation = "source-over";
+            }
+
+            if(context.globalAlpha !== (sprite.item.alpha ?? 1)) {
+                context.globalAlpha = sprite.item.alpha ?? 1;
+            }
 
             sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
         }

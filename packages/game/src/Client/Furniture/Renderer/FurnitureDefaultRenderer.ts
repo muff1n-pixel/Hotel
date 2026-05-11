@@ -86,17 +86,51 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     }
 
     private getLayerFrames(options: FurnitureRenderOptions) {
-        if(!this.visualization) {
+        const visualization = this.visualization;
+
+        if(!visualization) {
             return [];
         }
 
-        const result: { animationLayerId: number, frameSequenceIndex: number, left?: number, top?: number, animationFrameOffset?: FurnitureAnimationLayerFrameOffset | undefined, spriteFrame: number, maxLayerFrames: number | null }[] = [];
+        const result: {
+            animationLayerId: number;
+            frameSequenceIndex: number;
+            left?: number;
+            top?: number;
+            animationFrameOffset?: FurnitureAnimationLayerFrameOffset;
+            spriteFrame: number;
+            maxLayerFrames: number | null;
+        }[] = [];
+
+        const addedLayers = new Set<number>();
+
+        const layersByTag = new Map<string, typeof visualization.layers>();
+
+        if(visualization.layers) {
+            for(const layer of visualization.layers) {
+                if(!layer.tag) {
+                    continue;
+                }
+
+                if(!layersByTag.has(layer.tag)) {
+                    layersByTag.set(layer.tag, []);
+                }
+
+                layersByTag.get(layer.tag)!.push(layer);
+            }
+        }
 
         if(options.animationTags) {
             for(const animationTag of options.animationTags) {
-                const layers = this.visualization.layers?.filter((layer) => layer.tag === animationTag.tag);
+                const layers = layersByTag.get(animationTag.tag);
+
+                if(!layers) {
+                    continue;
+                }
 
                 for(const layer of layers) {
+                    addedLayers.add(layer.id);
+
                     result.push({
                         animationLayerId: layer.id,
                         frameSequenceIndex: 0,
@@ -107,68 +141,90 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
-        const animationData = this.visualization.animations?.find((animationData) => animationData.id === ((this.animationTransitioned === options!.animation)?(this.animationTransitionedTo):(options!.animation)));
+        const animationId = (this.animationTransitioned === options.animation)?(this.animationTransitionedTo):(options.animation);
 
-        for(let layer = 0; layer < this.visualization.layerCount; layer++) {
-            if(result.some((result) => result.animationLayerId === layer)) {
+        const animationData = visualization.animations?.find(a => a.id === animationId);
+
+        const animationLayerMap = new Map<number, FurnitureVisualization["visualizations"][0]["animations"][0]["layers"][0]>();
+
+        if(animationData?.layers) {
+            for(const layer of animationData.layers) {
+                animationLayerMap.set(layer.id, layer);
+            }
+        }
+
+        for(let layerId = 0; layerId < visualization.layerCount; layerId++) {
+            if(addedLayers.has(layerId)) {
                 continue;
             }
 
-            const animationLayer = animationData?.layers?.find((animationLayer) => animationLayer.id === layer);
+            const animationLayer = animationLayerMap.get(layerId);
 
-            let maxLayerFrames = null;
+            if(!animationLayer?.frameSequence?.length) {
+                continue;
+            }
 
-            if(animationLayer?.frameSequence?.length) {
-                let frameSequenceIndex = options.frame % animationLayer.frameSequence.length;
-                const loopCount = (animationLayer.loopCount === undefined)?(1):(animationLayer.loopCount);
+            const frameSequence = animationLayer.frameSequence;
+            const sequenceLength = frameSequence.length;
 
-                if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
-                    maxLayerFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat);
+            const loopCount = animationLayer.loopCount ?? 1;
 
-                    const maxFrames = (animationLayer.frameSequence.length * animationLayer.frameRepeat) * loopCount;
+            let frameSequenceIndex = options.frame % sequenceLength;
+            let maxLayerFrames: number | null = null;
 
-                    if(options.frame >= maxFrames && loopCount !== 0) {
-                        if(animationData?.transitionTo !== undefined) {
-                            this.animationTransitioned = animationData.id;
-                            this.animationTransitionedTo = animationData.transitionTo;
-                        }
+            if(animationLayer.frameRepeat && animationLayer.frameRepeat > 1) {
+                const repeatedLength = sequenceLength * animationLayer.frameRepeat;
 
-                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
+                maxLayerFrames = repeatedLength;
+
+                const maxFrames = repeatedLength * loopCount;
+
+                if(options.frame >= maxFrames && loopCount !== 0) {
+                    if(animationData?.transitionTo !== undefined) {
+                        this.animationTransitioned = animationData.id;
+                        this.animationTransitionedTo = animationData.transitionTo;
                     }
-                    else {
-                        frameSequenceIndex = Math.floor((options.frame % (animationLayer.frameSequence.length * animationLayer.frameRepeat)) / animationLayer.frameRepeat);
-                    }
+
+                    frameSequenceIndex = sequenceLength - 1;
                 }
                 else {
-                    maxLayerFrames = animationLayer.frameSequence.length;
-
-                    const maxFrames = animationLayer.frameSequence.length * loopCount;
-
-                    if(options.frame >= maxFrames && loopCount !== 0) {
-                        if(animationData?.transitionTo !== undefined) {
-                            this.animationTransitioned = animationData.id;
-                            this.animationTransitionedTo = animationData.transitionTo;
-                        }
-
-                        frameSequenceIndex = animationLayer.frameSequence.length - 1;
-                    }
-                }
-
-                if(!animationLayer?.frameSequence[frameSequenceIndex]) {
-                    FigureLogger.warn("Animation layer does not exist for " + this.type + ", frame index " + frameSequenceIndex);                    
-                }
-                else {
-                    result.push({
-                        animationLayerId: animationLayer.id,
-                        frameSequenceIndex,
-                        left: animationLayer?.frameSequence[frameSequenceIndex].left,
-                        top: animationLayer?.frameSequence[frameSequenceIndex].top,
-                        animationFrameOffset: animationLayer?.frameSequence[frameSequenceIndex].offsets?.find((offset) => offset.direction === options!.direction),
-                        spriteFrame: animationLayer?.frameSequence[frameSequenceIndex].id,
-                        maxLayerFrames
-                    });
+                    frameSequenceIndex = Math.floor((options.frame % repeatedLength) / animationLayer.frameRepeat);
                 }
             }
+            else {
+                maxLayerFrames = sequenceLength;
+
+                const maxFrames = sequenceLength * loopCount;
+
+                if(options.frame >= maxFrames && loopCount !== 0) {
+                    if(animationData?.transitionTo !== undefined) {
+                        this.animationTransitioned = animationData.id;
+                        this.animationTransitionedTo = animationData.transitionTo;
+                    }
+
+                    frameSequenceIndex = sequenceLength - 1;
+                }
+            }
+
+            const frame = frameSequence[frameSequenceIndex];
+
+            if(!frame) {
+                FigureLogger.warn(`Animation layer does not exist for ${this.type}, frame index ${frameSequenceIndex}`);
+
+                continue;
+            }
+
+            const offset = frame.offsets?.find((offset) => offset.direction === options.direction);
+
+            result.push({
+                animationLayerId: animationLayer.id,
+                frameSequenceIndex,
+                left: frame.left,
+                top: frame.top,
+                animationFrameOffset: offset,
+                spriteFrame: frame.id,
+                maxLayerFrames
+            });
         }
 
         return result;

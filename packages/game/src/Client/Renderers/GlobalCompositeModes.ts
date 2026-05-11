@@ -26,7 +26,7 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): GlobalCompos
             return "luminosity";
 
         case "copy":
-            return "source-over";
+            return undefined;
 
         case "difference":
         case "overlay":

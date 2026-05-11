@@ -63,20 +63,6 @@ export default class RoomFurnitureSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(this.item.furnitureRenderer.type === "tile_cursor" && this.sprite.zIndex === 101) {
-            if(this.item.position) {
-                const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.item.position, undefined, this.item.id);
-
-                if(upmostFurniture?.item.position && upmostFurniture.furnitureData.flags?.walkable) {
-                   top += -((upmostFurniture.item.position.depth + upmostFurniture.getDimensionDepth()) * 32);
-                   top += this.item.position.depth * 32;
-                }
-                else {
-                    return;
-                }
-            }
-        }
-
         if(this.sprite.ink) {
             context.globalCompositeOperation = this.sprite.ink;
         }
