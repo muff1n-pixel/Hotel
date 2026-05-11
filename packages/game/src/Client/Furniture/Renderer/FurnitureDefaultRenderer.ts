@@ -306,7 +306,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
                 zIndex: (directionLayerData?.zIndex ?? layerData?.zIndex ?? 0) + (layer ?? 0),
                 alpha: layerData?.alpha ?? ((layerCode === "sd")?(0.15 * 255):(undefined)),
-                ignoreMouse: layerData?.ignoreMouse
+                ignoreMouse: layerData?.ignoreMouse,
+
+                layerCode
             };
 
             sprites.push(assetSprite);

@@ -1,3 +1,39 @@
+export type FurnitureParticleSystemData = {
+    size: number;
+    canvasId: number;
+    offsetY: number;
+    blend: number;
+
+    emitters: {
+        id: number;
+        spriteId: number;
+        fuseTime: number;
+        name: string;
+        maxNumberParticles: number;
+        particlesPerFrame: number;
+        burstPulse: number;
+
+        simulation: {
+            force: number;
+            direction: number;
+            energy: number;
+            shape: string;
+            gravity: number;
+            airFriction: number;
+        };
+
+        particles: {
+            isEmitter: boolean;
+            lifetime: number;
+            fade: boolean;
+
+            frames: {
+                name: string;
+            }[];
+        }[];
+    }[];
+}
+
 export type FurnitureLogic = {
     type: string;
 
@@ -12,4 +48,6 @@ export type FurnitureLogic = {
             id: number;
         }[];
     };
+
+    particleSystems: FurnitureParticleSystemData[];
 };

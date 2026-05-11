@@ -44,70 +44,11 @@ function moveMessagesUp(messages: RoomChatMessage[], bottomMessage: RoomChatMess
 
 export default function RoomChat() {
     const room = useRoomInstance();
-    const user = useUser();
 
     const rootRef = useRef<HTMLDivElement>(null);
 
     const messages = useRef<RoomChatMessage[]>([]);
     const [latestMessage, setLatestMessage] = useState<number>();
-
-    useEffect(() => {
-        if(!room) {
-            return;
-        }
-
-        if(!messages) {
-            return;
-        }
-
-        if(messages.current.length !== 0) {
-            return;
-        }
-
-        (async () => {
-            if(!user.figureConfiguration) {
-                return;
-            }
-
-            const roomUser = room.getUserById(user.id);
-
-            const image = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Welcome to Pixel63, this is a live demo that may contain bugs and glitches.", {
-                $type: "RoomActorChatOptionsData",
-                hideUsername: true,
-                italic: true,
-                transparent: true
-            });
-
-            const image2 = await RoomChatRenderer.render("generic", user.name, user.figureConfiguration, "Please feel free to report issues in the top left corner, or join our Discord to participate in discussions!", {
-                $type: "RoomActorChatOptionsData",
-                hideUsername: true,
-                italic: true,
-                transparent: true
-            });
-
-            if(messages.current.length !== 0) {
-                return;
-            }
-
-            const position = room.roomRenderer.getCoordinatePosition(roomUser.data.position!);
-
-            messages.current.push({
-                id: Math.random(),
-                image,
-                left: position.left - (image.width / 2) + 64,
-                index: 1
-            });
-
-            messages.current.push({
-                id: Math.random(),
-                image: image2,
-                left: position.left - (image2.width / 2) + 64,
-                index: 0
-            });
-
-            setLatestMessage(performance.now());
-        })();
-    }, [room, user, messages]);
 
     useEffect(() => {
         if(!room) {

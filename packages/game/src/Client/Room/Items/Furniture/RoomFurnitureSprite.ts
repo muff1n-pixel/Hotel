@@ -75,7 +75,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             context.globalCompositeOperation = this.sprite.ink;
         }
 
-        if(this.sprite.alpha) {
+        if(this.sprite.alpha !== undefined) {
             context.globalAlpha = this.sprite.alpha / 255;
         }
 

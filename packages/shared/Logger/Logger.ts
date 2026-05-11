@@ -24,9 +24,16 @@ export class ConsoleLogger {
             border-radius: 2px;
         `;
     }
+
+    public withTag(tag: string) {
+        return new ConsoleLogger(`${this.label}:${tag}`, this.backgroundColor);
+    }
 }
 
 export const Logger = new ConsoleLogger();
 export const FigureLogger = new ConsoleLogger("Figure", "lightgreen");
 export const RoomLogger = new ConsoleLogger("Room", "lightblue");
 export const EventsLogger = new ConsoleLogger("Events", "orange");
+
+export const FurnitureLogger = new ConsoleLogger("Furniture", "lightblue");
+export const FurnitureParticleSystemLogger = FurnitureLogger.withTag("ParticleSystem");

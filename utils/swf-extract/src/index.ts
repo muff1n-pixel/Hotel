@@ -103,7 +103,7 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
 
             console.log("Extracting " + assetName);
 
-            //try {
+            try {
                 if(!assetName) {
                     throw new Error("Argument is missing for asset name.");
                 }
@@ -283,11 +283,9 @@ let assetNames = process.argv.slice(2).filter((argument) => !argument.startsWith
                 }
 
                 console.log("Exported " + assetName);
-            /*}
+            }
             catch(error) {
                 console.error(error);
-
-                reject();
-            }*/
+            }
         });
 })();

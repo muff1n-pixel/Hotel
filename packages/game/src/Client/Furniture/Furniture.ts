@@ -9,6 +9,7 @@ import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag } 
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
+import FurnitureParticleSystem from "@Client/Furniture/Renderer/ParticleSystems/FurnitureParticleSystem";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -33,6 +34,8 @@ export type FurnitureRendererSprite = {
     alpha?: number;
     ignoreMouse?: boolean;
 
+    layerCode: string;
+
     tag?: string;
 }
 
@@ -47,6 +50,7 @@ export default class Furniture {
     public externalImage: string | undefined = undefined;
 
     public readonly renderer: FurnitureRenderer;
+    public particleSystem?: FurnitureParticleSystem;
 
     public grayscaled: AssetSpriteGrayscaledProperties | undefined = undefined;
 
@@ -141,6 +145,10 @@ export default class Furniture {
     }
 
     public shouldRender() {
+        if(this.particleSystem?.shouldRender(this.getOptions())) {
+            return true;
+        }
+
         return this.renderer.shouldRender(this.getOptions());
     }
 
@@ -155,7 +163,14 @@ export default class Furniture {
     public async render() {
         if(!this.data) {
             this.data = await FurnitureAssets.getFurnitureData(this.type);
+
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+            
+            const particleSystemData = this.data.logic.particleSystems.find((particleSystem) => particleSystem.size == this.size);
+
+            if(particleSystemData) {
+                this.particleSystem = new FurnitureParticleSystem(this, particleSystemData);
+            }
         }
 
         if(this.direction === undefined) {
@@ -169,7 +184,11 @@ export default class Furniture {
 
         this.placement = this.data.visualization.placement;
 
-        const result = await this.renderer.render(this.data, this.getOptions());
+        const options = this.getOptions();
+
+        const result = [...await this.renderer.render(this.data, options)];
+
+        await this.particleSystem?.render(result, options);
 
         return result;
     }
