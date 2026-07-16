@@ -92,6 +92,15 @@ export default class RoomRenderer extends EventTarget {
             background: "#000000",
             resizeTo: this.parent,
         });
+        
+        this.clientInstance?.settings.subscribe((value) => {
+            if(value.limitRoomFrames) {
+                this.application.ticker.maxFPS = 60;
+            }
+            else {
+                this.application.ticker.maxFPS = 0;
+            }
+        });
 
         this.application.ticker.add((time) => {
             const shouldProcessTick = this.frameCounter.shouldProcessTick();
