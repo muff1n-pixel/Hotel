@@ -6,7 +6,7 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 
 export default class RoomWallItem extends RoomItem {
-    constructor(public roomRenderer: RoomRenderer, public readonly wallRenderer: WallRenderer, private readonly resolve: () => void) {
+    constructor(public roomRenderer: RoomRenderer, public readonly wallRenderer: WallRenderer, private readonly resolve?: () => void) {
         super(roomRenderer, "wall");
 
         this.render();
@@ -25,7 +25,7 @@ export default class RoomWallItem extends RoomItem {
                 this.sprites.push(new RoomDoorMaskSprite(this, this.renderWithLighting(doorMask)));
             }
 
-            this.resolve();
+            this.resolve?.();
         });
     }
     

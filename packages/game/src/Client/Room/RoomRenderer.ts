@@ -24,6 +24,7 @@ import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprit
 import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
 import { Application, Container, Sprite, Texture } from "pixi.js";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
+import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -43,7 +44,13 @@ export default class RoomRenderer extends EventTarget {
     //public itemSpritesChanged: boolean = true;
 
     public scale: number = 1;
-    public previewScale: number = 1;
+
+    private _previewScale: number = 1;
+    public set previewScale(scale: number) {
+        this._previewScale = scale;
+
+        this.container.scale = scale;
+    }
 
     public size: number = 64;
     private currentSize: number = 64;
@@ -65,7 +72,9 @@ export default class RoomRenderer extends EventTarget {
             throw new Error();
         }
 
-        this.application = new Application();
+        this.application = new Application({
+            antialias: false
+        });
         this.container = new Container();
 
         this.structure = structure;
@@ -444,17 +453,17 @@ export default class RoomRenderer extends EventTarget {
 
             const dimensions = item.furnitureRenderer.getDimensions();
 
-            /*const position = this.getCoordinatePosition({
+            const position = this.getCoordinatePosition(RoomPositionData.create({
                 row: item.position.row - dimensions.row,
                 column: item.position.column - dimensions.column,
                 depth: item.position.depth - dimensions.depth,
-            });
+            }));
             
-            this.camera.cameraPosition.left = position.left + 64;
-            this.camera.cameraPosition.top = position.top / 2;*/
+            //this.camera.cameraPosition.left = position.left + 64;
+            //this.camera.cameraPosition.top = position.top / 2;
 
-            this.camera.cameraPosition.left = Math.round((Math.max(dimensions.row - 1, 0) * 16) + (Math.max(dimensions.column - 1, 0) * -16) + offset.left);
-            this.camera.cameraPosition.top = Math.round((Math.max(dimensions.row - 1, 0) * -8) + (Math.max(dimensions.column - 1, 0) * -8) + offset.top);
+            this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + (Math.max(dimensions.row - 1, 0) * 16) + (Math.max(dimensions.column - 1, 0) * -16) + offset.left);
+            this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) - (Math.max(dimensions.row - 1, 0) * -8) + (Math.max(dimensions.column - 1, 0) * -8) + offset.top);
         }
         else  {
             if(!item.position) {
@@ -514,6 +523,64 @@ export default class RoomRenderer extends EventTarget {
         );*/
 
         return canvas;
+    }
+
+    public updatePreviewScale() {
+        const furnitureItem = this.items.find(
+            (item): item is RoomFurnitureItem => item instanceof RoomFurnitureItem
+        );
+
+        if(!furnitureItem) {
+            this.previewScale = 1;
+            return;
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let hasSprites = false;
+
+        for(const roomSprite of furnitureItem.sprites) {
+            if(!(roomSprite instanceof RoomFurnitureSprite)) {
+                continue;
+            }
+
+            const s = roomSprite.sprite;
+
+            const offset = RoomFurnitureOffsets.getDefaultOffsetPosition(furnitureItem.furnitureRenderer, roomSprite.furnitureSprite, 1);
+
+            minX = Math.min(minX, offset.left);
+            minY = Math.min(minY, offset.top);
+            maxX = Math.max(maxX, offset.left + s.width);
+            maxY = Math.max(maxY, offset.top + s.height);
+            hasSprites = true;
+        }
+
+        if(!hasSprites) {
+            return;
+        }
+
+        const furnitureWidth = maxX - minX;
+        const furnitureHeight = maxY - minY;
+
+        const canvasWidth = this.application.screen.width;
+        const canvasHeight = this.application.screen.height;
+
+        if(canvasWidth <= 0 || canvasHeight <= 0 || furnitureWidth <= 0 || furnitureHeight <= 0) {
+            return;
+        }
+
+        const padding = 20;
+        const scaleX = (canvasWidth - padding) / furnitureWidth;
+        const scaleY = (canvasHeight - padding) / furnitureHeight;
+        this.previewScale = Math.min(scaleX, scaleY, 1);
+
+        if(this.previewScale < 1 && furnitureItem.position) {
+            const screenPos = this.getCoordinatePosition(furnitureItem.position);
+            const spriteCenterX = (minX + maxX) / 2;
+            const spriteCenterY = (minY + maxY) / 2;
+
+            this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + -(screenPos.left + spriteCenterX));
+            this.camera.cameraPosition.top = Math.round(-(screenPos.top + spriteCenterY));
+        }
     }
 
     public captureItems(element: HTMLElement, width: number, height: number) {

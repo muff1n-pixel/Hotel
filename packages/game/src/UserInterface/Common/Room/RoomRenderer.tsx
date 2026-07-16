@@ -33,10 +33,12 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
         const renderer = new ClientRoomRenderer(elementRef.current, undefined, undefined, structure);
 
         renderer.addEventListener("render", () => {
-            //renderer.updatePreviewScale();
+            renderer.updatePreviewScale();
         });
 
-        setRoomRenderer(renderer);
+        renderer.init().then(() => {
+            setRoomRenderer(renderer);
+        });
 
         return () => {
             roomRenderer?.terminate();

@@ -42,38 +42,41 @@ export default class RoomFurnitureRenderer {
             }
         });
 
+        this.wallRenderer = new WallRenderer(roomStructure, roomStructure.wall?.id ?? "default", 64);
+
         this.roomRenderer = new RoomRenderer(element, undefined, undefined, roomStructure);
 
-        this.roomRenderer.addEventListener("render", () => {
-            if(this.roomRenderer && this.roomItem && (this.roomItem instanceof RoomFurnitureItem)) {
-                if(this.roomItem.furnitureRenderer.placement === "floor") {
-                    this.roomRenderer.panToItem(this.roomItem, {
-                        left: 0,
-                        top: (options.withoutWalls)?(-16):(0)
-                    });
-                }
-                else {
-                    this.roomRenderer.panToItem(this.roomItem, {
-                        left: (Math.max(1, this.roomItem.position?.row ?? 0) * 16),
-                        top: (this.roomItem.position?.depth ?? 0) * 32
-                    });
-                }
-
-                this.roomRenderer.updatePreviewScale();
-            }
-        });
-
-        this.wallRenderer = new WallRenderer(roomStructure, roomStructure.wall?.id ?? "default", 64);
         this.wallItem = new RoomWallItem(this.roomRenderer, this.wallRenderer);
-
-        if(!options.withoutWalls) {
-            this.roomRenderer.addItem(this.wallItem);
-        }
 
         this.floorRenderer = new FloorRenderer(roomStructure, roomStructure.floor?.id ?? "default", 64);
         this.floorItem = new RoomFloorItem(this.roomRenderer, this.floorRenderer);
     
-        this.roomRenderer.addItem(this.floorItem);
+        this.roomRenderer.init().then(() => {
+            this.roomRenderer.addEventListener("render", () => {
+                if(this.roomRenderer && this.roomItem && (this.roomItem instanceof RoomFurnitureItem)) {
+                    if(this.roomItem.furnitureRenderer.placement === "floor") {
+                        this.roomRenderer.panToItem(this.roomItem, {
+                            left: 0,
+                            top: (options.withoutWalls)?(-16):(0)
+                        });
+                    }
+                    else {
+                        this.roomRenderer.panToItem(this.roomItem, {
+                            left: (Math.max(1, this.roomItem.position?.row ?? 0) * 16),
+                            top: (this.roomItem.position?.depth ?? 0) * 32
+                        });
+                    }
+
+                    this.roomRenderer.updatePreviewScale();
+                }
+            });
+
+            if(!options.withoutWalls) {
+                this.roomRenderer.addItem(this.wallItem);
+            }
+
+            this.roomRenderer.addItem(this.floorItem);
+        });
     }
 
     async setFigure(figureConfiguration: FigureConfigurationData, actions?: string[], position?: RoomPositionData) {
