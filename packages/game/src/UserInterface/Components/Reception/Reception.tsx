@@ -92,7 +92,7 @@ export default function Reception() {
                         left: 32,
                         bottom: -32
                     }}>
-                        <FigureImage figureConfiguration={user.figureConfiguration} direction={2}/>
+                        <FigureImage figureConfiguration={user.figureConfiguration} direction={2} cropped={false}/>
                     </div>
                 )}
             </div>
