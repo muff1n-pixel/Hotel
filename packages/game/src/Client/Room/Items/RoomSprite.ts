@@ -26,8 +26,10 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             y: this.item.screenPosition.top + offset.top,
             alpha: alpha ?? this.item.alpha,
             blendMode,
-            zIndex: this.item.calculatedPriority + this.priority
+            zIndex: this.item.calculatedPriority + this.priority,
         });
+
+        this.sprite.texture.source.scaleMode = "nearest";
 
         this.item.roomRenderer.container.addChild(this.sprite);
     }

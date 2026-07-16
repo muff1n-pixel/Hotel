@@ -90,7 +90,7 @@ export default class RoomRenderer extends EventTarget {
         await this.application.init({
             antialias: false,
             background: "#000000",
-            resizeTo: this.parent
+            resizeTo: this.parent,
         });
 
         this.application.ticker.add((time) => {
