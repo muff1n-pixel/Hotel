@@ -12,6 +12,7 @@ import FigureCanvasRenderer from "@Client/Figure/Renderer/FigureCanvasRenderer";
 import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectData";
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
+import { BLEND_MODES } from "pixi.js";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -33,7 +34,7 @@ export type FigureRendererSprite = {
 
     alpha?: number;
 
-    ink?: GlobalCompositeOperation;
+    ink?: BLEND_MODES;
 }
 
 export type SpriteConfiguration = {

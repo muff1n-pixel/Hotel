@@ -12,7 +12,7 @@ export default class RoomBot {
         this.item = new RoomFigureItem(this.instance.roomRenderer, this.figure, this.data.position);
         this.item.type = "bot";
 
-        this.instance.roomRenderer.items.push(this.item);
+        this.instance.roomRenderer.addItem(this.item);
 
         this.updateData(data);
     }

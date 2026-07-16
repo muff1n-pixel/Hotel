@@ -95,10 +95,6 @@ export default class RoomUser implements RoomActor {
 
             hasRights: this.hasRights()
         }))
-        
-        this.user.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
-            user: this.getRoomUserData()
-        }));
 
         this.path = new RoomActorPath(this);
 
@@ -121,7 +117,7 @@ export default class RoomUser implements RoomActor {
         this.user.friends.updateFriends();
     }
     
-    private getRoomUserData(): RoomUserData {
+    public getRoomUserData(): RoomUserData {
         return {
             $type: "RoomUserData",
 

@@ -11,7 +11,7 @@ export default class RoomPet {
         this.pet = new Pet(this.data.pet!.type, this.data.pet?.palettes);
         this.item = new RoomPetItem(this.instance.roomRenderer, this.pet, this.data.position);
 
-        this.instance.roomRenderer.items.push(this.item);
+        this.instance.roomRenderer.addItem(this.item);
 
         this.updateData(data);
     }

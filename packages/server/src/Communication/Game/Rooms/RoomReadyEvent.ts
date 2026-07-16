@@ -1,3 +1,4 @@
+import { RoomUserEnteredData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 
@@ -16,6 +17,10 @@ export default class RoomReadyEvent implements IncomingEvent {
         }
 
         roomUser.ready = true;
+
+        roomUser.user.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
+            user: roomUser.getRoomUserData()
+        }));
 
         const furnitureWithUserEntersLogic = roomUser.room.furnitures.filter((furniture) => furniture.logic?.handleUserEnteredRoom !== undefined);
 

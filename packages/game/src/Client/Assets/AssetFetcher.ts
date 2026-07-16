@@ -132,7 +132,7 @@ export default class AssetFetcher {
             };
         }
 
-        console.log("Creating non-existant sprite", url);
+        //console.log("Creating non-existant sprite", url);
 
         /*if(properties.flipHorizontal && !properties.ignoreImageData) {
             const existingNonFlippedSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, ignoreImageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);

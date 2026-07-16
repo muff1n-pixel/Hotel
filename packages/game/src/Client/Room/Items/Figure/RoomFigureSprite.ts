@@ -5,25 +5,26 @@ import { FigureRendererSpriteResult } from "@Client/Figure/Renderer/FigureRender
 import { RoomPositionWithDirectionData } from "@pixel63/events";
 
 export default class RoomFigureSprite extends RoomSprite {
-    public offset: MousePosition;
-
-    constructor(public readonly item: RoomFigureItem, public readonly sprite: FigureRendererSpriteResult) {
-        super(item);
-
-        this.priority = this.sprite.index;
-
-        this.offset = {
-            left: this.sprite.x - 64,
-            top: this.sprite.y - 144
-        };
+    constructor(public readonly item: RoomFigureItem, public readonly furnitureSprite: FigureRendererSpriteResult) {
+        super(
+            item,
+            {
+                left: furnitureSprite.x - 64,
+                top: furnitureSprite.y - 144
+            },
+            furnitureSprite.index,
+            undefined,
+            undefined,
+            furnitureSprite.image
+        );
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
+        context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {
-        if(!this.sprite.imageData) {
+        if(!this.furnitureSprite.imageData) {
             return null;
         }
         
@@ -36,13 +37,13 @@ export default class RoomFigureSprite extends RoomSprite {
             return null;
         }
 
-        if(relativePosition.left >= this.sprite.image.width || relativePosition.top >= this.sprite.image.height) {
+        if(relativePosition.left >= this.furnitureSprite.image.width || relativePosition.top >= this.furnitureSprite.image.height) {
             return null;
         }
 
-        const pixel = ((relativePosition.left + relativePosition.top * this.sprite.image.width) * 4) + 3;
+        const pixel = ((relativePosition.left + relativePosition.top * this.furnitureSprite.image.width) * 4) + 3;
 
-        if(this.sprite.imageData[pixel] < 50) {
+        if(this.furnitureSprite.imageData[pixel] < 50) {
             return null;
         }
 

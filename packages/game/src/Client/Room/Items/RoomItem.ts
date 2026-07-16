@@ -5,23 +5,21 @@ import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import { Container } from "pixi.js";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
     
-    _position?: RoomPositionData;
-    _priority: number = 0;
-    
     screenPosition: MousePosition = { left: 0, top: 0 };
 
+    private _priority: number = 0;
     public get priority() {
         return this._priority;
     }
-
     public set priority(priority: number) {
         this._priority = priority;
 
-        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+        this.updateSprites();
     }
 
     private _sprites: RoomSprite[] = [];
@@ -30,74 +28,50 @@ export default class RoomItem implements RoomItemInterface {
         return this._sprites;
     }
 
-    public set sprites(sprites: RoomSprite[]) {
-        this._sprites = sprites;
-        
-        //this.roomRenderer.itemSpritesChanged = true;
-    }
-
     private _disabled: boolean = false;
-
-    public set disabled(value: boolean) {
-        this._disabled = value;
-
-        //this.roomRenderer.itemSpritesChanged = true;
-    }
-
     public get disabled() {
         return this._disabled;
     }
 
-    alpha: number = 1;
+    private _alpha: number = 1;
+    public get alpha() {
+        return this._alpha;
+    }
+    public set alpha(alpha: number) {
+        this._alpha = alpha;
+        
+        this.updateSprites();
+    }
 
     public calculatedPriority: number = 0;
 
+    private _position?: RoomPositionData;
     public get position() {
         return this._position;
     }
 
-    public set position(position: RoomPositionData | undefined) {
-        const dimensions = this.getDimensions();
-
-        const maxDimensionUnit = Math.max(dimensions.row, dimensions.column);
-
-        if(this._position) {
-            for(let row = this._position.row; row < this._position.row + maxDimensionUnit; row++) {
-                for(let column = this._position.column; column < this._position.column + maxDimensionUnit; column++) {
-                    const existingPositionMap = this.roomRenderer.itemPositionMap.get(`${row}x${column}`) ?? [];
-
-                    const existingIndex = existingPositionMap.indexOf(this);
-
-                    if(existingIndex !== -1) {
-                        existingPositionMap.splice(existingIndex, 1);
-
-                        this.roomRenderer.itemPositionMap.set(`${row}x${column}`, existingPositionMap);
-                    }
-                }
-            }
-        }
-
-        if(position) {
-            for(let row = position.row; row < position.row + maxDimensionUnit; row++) {
-                for(let column = position.column; column < position.column + maxDimensionUnit; column++) {
-                    const existingPositionMap = this.roomRenderer.itemPositionMap.get(`${row}x${column}`) ?? [];
-
-                    existingPositionMap.push(this);
-
-                    // TODO: sort by depth immediately?
-                    this.roomRenderer.itemPositionMap.set(`${row}x${column}`, existingPositionMap);
-                }
-            }
-        }
-
-        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
-        this._position = position;
-
-        this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
+    constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
+        this._sprites = sprites;
     }
 
-    constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
-        this.sprites = sprites;
+    public setSprites(sprites: RoomSprite[]) {
+        for(const sprite of this._sprites) {
+            if(sprites.includes(sprite)) {
+                sprite.update();
+                
+                continue;
+            }
+            
+            sprite.destroy();
+        }
+
+        this._sprites = sprites;
+    }
+
+    public updateSprites() {
+        for(const sprite of this._sprites) {
+            sprite.update();
+        }
     }
 
     public getDimensions(): RoomPositionData {
@@ -113,8 +87,22 @@ export default class RoomItem implements RoomItemInterface {
 
     public setPosition(position: RoomPositionData | undefined, index: number = 0) {
         //this.data.position = { row, column, depth };
-        this.position = position;
-        this.priority = index;
+        
+        this._position = position;
+        this._priority = index;
+        
+        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+        this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
+
+        this.updateSprites();
+    }
+
+    public set disabled(disabled: boolean) {
+        this._disabled = disabled;
+
+        for(const sprite of this.sprites) {
+            sprite.sprite.visible = !disabled;
+        }
     }
 
     public positionPathData?: {
@@ -220,5 +208,11 @@ export default class RoomItem implements RoomItemInterface {
 
         this.positionPathData = undefined;
         this.setPosition(position);
+    }
+
+    public destroy() {
+        for(const sprite of this.sprites) {
+            sprite.destroy();
+        }
     }
 }

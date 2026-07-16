@@ -2,11 +2,9 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../../RoomSprite";
 import RoomFigureItem from "../RoomFigureItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
+import { Texture } from "pixi.js";
 
 export default class RoomFigureIdlingSprite extends RoomSprite {
-    private offset: MousePosition = { left: 0, top: 0 };
-    private image?: ImageBitmap;
-
     private currentAssetName?: string;
     private currentAssetFrame: number = 0;
     private lastAssetFrameChange: number = performance.now();
@@ -40,7 +38,11 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
                 this.offset.left -= 64;
             }
 
-            AssetFetcher.fetchImage(`/assets/figure/sprites/${this.getAssetName()}.png`).then((image) => this.image = image);
+            AssetFetcher.fetchImage(`/assets/figure/sprites/${this.getAssetName()}.png`).then((image) => {
+                this.sprite.texture = Texture.from(image);
+
+                this.update();
+            });
         }
     }
 
@@ -55,11 +57,6 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(!this.image) {
-            return;
-        }
-
-        context.drawImage(this.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover() {

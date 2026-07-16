@@ -3,7 +3,6 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 export default class RoomRendererFrameCounter {
     public tick: number = 0;
 
-    private frames: number[] = [];
     public frameRate: number = 0;
 
     private lastTickTimestamp: number = 0;
@@ -33,6 +32,8 @@ export default class RoomRendererFrameCounter {
 
     public shouldProcessFrame(): boolean {
         if(!this.roomRenderer.clientInstance?.settings.value?.limitRoomFrames) {
+            this.lastFrameTimestamp = performance.now();
+            
             return true;
         }
         
@@ -41,16 +42,9 @@ export default class RoomRendererFrameCounter {
         if(millisecondsElapsedSinceLastFrame < this.cappedMillisecondsPerFrame) {
             return false;
         }
-
-        return true;
-    }
-
-    public updateFrameRate() {
+        
         this.lastFrameTimestamp = performance.now();
 
-        this.frames = this.frames.filter((frame) => frame >= (this.lastFrameTimestamp - 1000));
-        this.frames.push(this.lastFrameTimestamp);
-
-        this.frameRate = this.frames.length;
+        return true;
     }
 }

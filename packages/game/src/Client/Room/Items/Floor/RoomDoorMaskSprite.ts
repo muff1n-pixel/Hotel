@@ -1,25 +1,21 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomMapItem from "../Map/RoomWallItem";
+import { Sprite } from "pixi.js";
 
 export default class RoomDoorMaskSprite extends RoomSprite {
-    priority = -100;
-
-    private readonly offset: MousePosition;
-
     constructor(public readonly item: RoomMapItem, private readonly image: OffscreenCanvas) {
-        super(item);
-
-        /*this.priority = RoomRenderer.getPositionPriority({
-            row: item.wallRenderer!.structure.door!.row,
-            column: item.wallRenderer!.structure.door!.column,
-            depth: parseInt(item.wallRenderer!.structure.grid[item.wallRenderer!.structure.door!.row][item.wallRenderer!.structure.door!.column])
-        });*/
-
-        this.offset = {
-            left: -(this.item.wallRenderer!.rows * 32),
-            top: -((this.item.wallRenderer!.depth + 3.5) * 32) - item.wallRenderer!.structure.wall!.thickness
-        }
+        super(
+            item,
+            {
+                left: -(item.wallRenderer!.rows * 32) - item.wallRenderer!.structure.wall!.thickness,
+                top: -((item.wallRenderer!.depth + 3.5) * 32) - item.wallRenderer!.structure.wall!.thickness
+            },
+            -100,
+            undefined,
+            undefined,
+            image
+        );
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {

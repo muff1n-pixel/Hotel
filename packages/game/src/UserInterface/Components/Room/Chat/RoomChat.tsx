@@ -114,7 +114,7 @@ export default function RoomChat() {
                 return;
             }
 
-            rootRef.current.style.transform = `translateX(${room.roomRenderer.renderedOffset.left}px)`;
+            rootRef.current.style.transform = `translateX(${room.roomRenderer.camera.cameraPosition.left}px)`;
         };
 
         room.roomRenderer.addEventListener("render", renderListener);

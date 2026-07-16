@@ -8,6 +8,7 @@ import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigure
 import { RoomPositionData } from "@pixel63/events";
 import RoomFigureHealthSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureHealthSprite";
 import { FigureRendererSpriteResult } from "@Client/Figure/Renderer/FigureRenderer";
+import RoomSprite from "@Client/Room/Items/RoomSprite";
 
 export default class RoomFigureItem extends RoomItem {
     private typingSprite: RoomFigureTypingSprite | null = null;
@@ -44,20 +45,28 @@ export default class RoomFigureItem extends RoomItem {
             this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
                 this.figureSprite = result.figure;
 
-                this.sprites = [
+                this.setSprites([
                     new RoomFigureSprite(this, result.figure),
                     ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
-                ];
+                ]);
 
-                this.updateSprites();
+                this.updateFigureSprites();
             });
         }
         else {
-            this.updateSprites();
+            this.updateFigureSprites();
         }
     }
 
-    private updateSprites() {
+    public setSprites(sprites: RoomSprite[]): void {
+        super.setSprites(sprites);
+
+        this.healthSprite = null;
+        this.typingSprite = null;
+        this.idlingSprite = null;
+    }
+
+    private updateFigureSprites() {
         if(!this.figureSprite) {
             return;
         }

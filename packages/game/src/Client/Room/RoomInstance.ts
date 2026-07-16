@@ -8,7 +8,7 @@ import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomActorIdentifierData, RoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomReadyData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
@@ -56,7 +56,7 @@ export default class RoomInstance {
     public hasRights: boolean;
     public isOwner: boolean;
 
-    constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData) {
+    constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData, ready?: () => void) {
         this.id = event.id;
         
         if(event.information) {
@@ -69,27 +69,33 @@ export default class RoomInstance {
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 
-        if(event.structure) {
-            this.setStructure(event.structure);
-        }
+        this.roomRenderer.init().then(async () => {
+            if(event.structure) {
+                await this.setStructure(event.structure);
+            }
 
-        for(const user of event.users) {
-            this.users.push(this.addUser(user as Required<RoomUserData>));
-        }
+            for(const user of event.users) {
+                this.users.push(this.addUser(user as Required<RoomUserData>));
+            }
 
-        for(const bot of event.bots) {
-            this.bots.push(new RoomBot(this, bot));
-        }
+            for(const bot of event.bots) {
+                this.bots.push(new RoomBot(this, bot));
+            }
 
-        for(const pet of event.pets) {
-            this.pets.push(new RoomPet(this, pet));
-        }
+            for(const pet of event.pets) {
+                this.pets.push(new RoomPet(this, pet));
+            }
 
-        this.registerEventListeners();
+            this.registerEventListeners();
+
+            webSocketClient.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
+
+            ready?.();
+        });
     }
 
-    public setStructure(structure: RoomStructureData) {
-        this.roomRenderer.setStructure(structure);
+    public async setStructure(structure: RoomStructureData) {
+        await this.roomRenderer.setStructure(structure);
 
         this.clientInstance.roomInstance.update();
     }
@@ -206,7 +212,7 @@ export default class RoomInstance {
             item.figureRenderer.addAction("Sleep");
         }
 
-        this.roomRenderer.items.push(item);
+        this.roomRenderer.addItem(item);
 
         return {
             data: userData,
@@ -217,7 +223,7 @@ export default class RoomInstance {
     public removeUser(userId: string) {
         const user = this.getUserById(userId);
 
-        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(user.item), 1);
+        this.roomRenderer.removeItem(user.item);
         this.users.splice(this.users.indexOf(user), 1);
         
         if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
@@ -306,7 +312,7 @@ export default class RoomInstance {
     public removePet(petId: string) {
         const pet = this.getPetById(petId);
 
-        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(pet.item), 1);
+        this.roomRenderer.removeItem(pet.item);
         this.pets.splice(this.pets.indexOf(pet), 1);
 
         if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
@@ -350,7 +356,7 @@ export default class RoomInstance {
             this.clientInstance.flyingFurnitureIcons.update();
         }
 
-        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(furniture.item), 1);
+        this.roomRenderer.removeItem(furniture.item);
         this.furnitures.splice(this.furnitures.indexOf(furniture), 1);
 
         if(this.clientInstance.dialogs.value) {
@@ -375,7 +381,7 @@ export default class RoomInstance {
     public removeBot(botId: string) {
         const bot = this.getBotById(botId);
 
-        this.roomRenderer.items.splice(this.roomRenderer.items.indexOf(bot.item), 1);
+        this.roomRenderer.removeItem(bot.item);
         this.bots.splice(this.bots.indexOf(bot), 1);
 
         if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {

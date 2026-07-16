@@ -3,35 +3,37 @@ import RoomSprite from "../../RoomSprite";
 import RoomFurnitureItem from "./../RoomFurnitureItem";
 
 export default class RoomFurnitureBackgroundSprite extends RoomSprite {
-    private readonly offset: MousePosition = {
-        left: 0,
-        top: 0
-    };
-
     constructor(public readonly item: RoomFurnitureItem, public readonly image: ImageBitmap, public readonly position?: { x: number; y: number; z: number; }) {
-        super(item);
-
-        this.priority = this.position?.z ?? 0;
+        const offset: MousePosition = { left: 0, top: 0 };
 
         if(item.furnitureRenderer.placement === "floor") {
-            this.offset.left += 64;
-            this.offset.top += 16;
+            offset.left += 64;
+            offset.top += 16;
         }
         else {
             if(item.furnitureRenderer.direction === 2) {
-                this.offset.left += 96;
+                offset.left += 96;
             }
             else {
-                this.offset.left += 32;
+                offset.left += 32;
             }
 
-            this.offset.top -= 16;
+            offset.top -= 16;
         }
 
-        if(this.position) {
-            this.offset.left += this.position.x;
-            this.offset.top += this.position.y;
+        if(position) {
+            offset.left += position.x;
+            offset.top += position.y;
         }
+
+        super(
+            item,
+            offset,
+            position?.z ?? 0,
+            undefined,
+            undefined,
+            image
+        );
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {

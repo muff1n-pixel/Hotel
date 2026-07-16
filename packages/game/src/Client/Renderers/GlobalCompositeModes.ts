@@ -1,9 +1,10 @@
 import { Logger } from "@pixel63/shared/Logger/Logger";
+import { BLEND_MODES } from "pixi.js";
 
-export function getGlobalCompositeModeFromInkNumber(ink: number): GlobalCompositeOperation | undefined {
+export function getGlobalCompositeModeFromInkNumber(ink: number): BLEND_MODES | undefined {
     switch(ink) {
-        case 33: // ADD
-            return "lighter";
+        case 33: // ADD / LIGHTER
+            return "add";
 
         case 8:
             return undefined;
@@ -15,12 +16,13 @@ export function getGlobalCompositeModeFromInkNumber(ink: number): GlobalComposit
     }
 }
 
-export function getGlobalCompositeModeFromInk(initialInk?: string): GlobalCompositeOperation | undefined {
+export function getGlobalCompositeModeFromInk(initialInk?: string): BLEND_MODES | undefined {
     const ink = initialInk?.toLowerCase();
 
     switch(ink) {
         case "add":
-            return "lighter";
+        case "lighter":
+            return "add";
 
         case "subtract":
             return "luminosity";
@@ -31,7 +33,6 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): GlobalCompos
         case "difference":
         case "overlay":
         case "saturation":
-        case "lighter":
         case "lighten":
         case "darken":
         case "screen":

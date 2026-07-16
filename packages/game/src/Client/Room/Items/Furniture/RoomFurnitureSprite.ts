@@ -1,77 +1,34 @@
-import Furniture, { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
-import { clientInstance } from "@Game/index";
+import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 
 export default class RoomFurnitureSprite extends RoomSprite {
-    public readonly offset: MousePosition = {
-        left: 0,
-        top: 0
-    };
-
     public readonly defaultOffset: MousePosition = {
         left: 0,
         top: 0
     };
 
-    public static getDefaultOffsetPosition(furniture: Furniture, sprite: FurnitureRendererSprite, scale: number) {
-        const offset: MousePosition = {
-            left: 0,
-            top: 0
-        };
+    constructor(public readonly item: RoomFurnitureItem, public readonly furnitureSprite: FurnitureRendererSprite) {
+        super(
+            item,
+            RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
+            furnitureSprite.zIndex,
+            (furnitureSprite.alpha)?(furnitureSprite.alpha / 255):(undefined),
+            furnitureSprite.ink,
+            furnitureSprite.image,
+            furnitureSprite.imageData ?? undefined
+        );
 
-        if(furniture.placement === "floor") {
-            offset.left += 64;
-            offset.top += 16;
-        }
-        else {
-            if(furniture.direction === 2) {
-                offset.left += 96;
-            }
-            else {
-                offset.left += 32;
-            }
+        this.priority = this.furnitureSprite.zIndex;
+        this.tag = furnitureSprite.tag;
 
-            offset.top -= 16;
-        }
-
-        if(furniture.type !== "tile_cursor") {
-            offset.left *= scale;
-            offset.top *= scale;
-        }
-
-        offset.left += sprite.x;
-        offset.top += sprite.y;
-
-        return offset;
-    }
-
-    constructor(public readonly item: RoomFurnitureItem, public readonly sprite: FurnitureRendererSprite) {
-        super(item);
-
-        this.priority = this.sprite.zIndex;
-        this.tag = sprite.tag;
-
-        this.defaultOffset = RoomFurnitureSprite.getDefaultOffsetPosition(item.furnitureRenderer, sprite, 1);
-        this.offset = {...this.defaultOffset};
-
-        if(this.item.furnitureRenderer.type === "tile_cursor" && this.sprite.zIndex === 101) {
+        if(this.item.furnitureRenderer.type === "tile_cursor" && this.furnitureSprite.zIndex === 101) {
             this.priority = 100000;
+            this.sprite.eventMode = "none";
         }
-    }
-
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(this.sprite.ink) {
-            context.globalCompositeOperation = this.sprite.ink;
-        }
-
-        if(this.sprite.alpha !== undefined) {
-            context.globalAlpha = this.sprite.alpha / 255;
-        }
-
-        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -83,11 +40,11 @@ export default class RoomFurnitureSprite extends RoomSprite {
             return null;
         }
 
-        if(this.sprite.ignoreMouse) {
+        if(this.furnitureSprite.ignoreMouse) {
             return null;
         }
 
-        if(!this.sprite.imageData) {
+        if(!this.furnitureSprite.imageData) {
             return null;
         }
         
@@ -100,13 +57,13 @@ export default class RoomFurnitureSprite extends RoomSprite {
             return null;
         }
 
-        if(relativePosition.left > this.sprite.image.width || relativePosition.top > this.sprite.image.height) {
+        if(relativePosition.left > this.furnitureSprite.image.width || relativePosition.top > this.furnitureSprite.image.height) {
             return null;
         }
 
-        const pixel = ((relativePosition.left + relativePosition.top * this.sprite.imageData.width) * 4) + 3;
+        const pixel = ((relativePosition.left + relativePosition.top * this.furnitureSprite.imageData.width) * 4) + 3;
 
-        if(this.sprite.imageData.data[pixel] < 50) {
+        if(this.furnitureSprite.imageData.data[pixel] < 50) {
             return null;
         }
 
@@ -126,7 +83,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             return false;
         }
 
-        if(!this.sprite.imageData) {
+        if(!this.furnitureSprite.imageData) {
             return false;
         }
         
@@ -144,7 +101,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             return false;
         }
 
-        if(relativeStartPosition.left > this.sprite.image.width || relativeStartPosition.top > this.sprite.image.height) {
+        if(relativeStartPosition.left > this.furnitureSprite.image.width || relativeStartPosition.top > this.furnitureSprite.image.height) {
             return false;
         }
 

@@ -6,16 +6,18 @@ import { RoomPositionWithDirectionData } from "@pixel63/events";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class RoomFurniturePlaceholderSprite extends RoomSprite {
-    private readonly offset: MousePosition = {
-        left: 0,
-        top: 0
-    };
-
     constructor(public readonly item: RoomFurnitureItem) {
-        super(item);
-
-        this.offset.left += 32;
-        this.offset.top -= 32;
+        super(
+            item,
+            {
+                left: 32,
+                top: -32
+            },
+            undefined,
+            undefined,
+            undefined,
+            FurnitureAssets.placeholder.image
+        );
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {

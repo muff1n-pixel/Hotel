@@ -15,23 +15,21 @@ export default function registerRoomEvents(clientInstance: ClientInstance) {
                 //throw new Error("TODO: room is already loaded!!");
             }
 
-            clientInstance.roomInstance.value = new RoomInstance(clientInstance, payload);
+            clientInstance.roomInstance.value = new RoomInstance(clientInstance, payload, () => {
+                for(const furniture of payload.furniture) {
+                    const furnitureData = payload.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
 
-            for(const furniture of payload.furniture) {
-                const furnitureData = payload.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
+                    if(!furnitureData) {
+                        RoomLogger.error("Server did not send furniture data for user furniture!", {
+                            furniture
+                        });
 
-                if(!furnitureData) {
-                    RoomLogger.error("Server did not send furniture data for user furniture!", {
-                        furniture
-                    });
+                        continue;
+                    }
 
-                    continue;
+                    clientInstance.roomInstance.value!.furnitures.push(new RoomFurniture(clientInstance.roomInstance.value!, furnitureData, furniture));
                 }
-
-                clientInstance.roomInstance.value.furnitures.push(new RoomFurniture(clientInstance.roomInstance.value, furnitureData, furniture));
-            }
-
-            webSocketClient.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
+            });
         },
     })
 }

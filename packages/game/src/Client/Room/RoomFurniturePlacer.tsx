@@ -90,12 +90,10 @@ export default class RoomFurniturePlacer {
             this.roomInstance.roomRenderer.cursor.cursorDisabled = true;
         }
 
-        if(!this.roomInstance.roomRenderer.items.includes(this.roomFurnitureItem)) {
-            this.roomInstance.roomRenderer.items.push(this.roomFurnitureItem);
-        }
+        this.roomInstance.roomRenderer.addItem(this.roomFurnitureItem);
 
         this.roomInstance.roomRenderer.addEventListener("render", this.renderListener);
-        this.roomInstance.roomRenderer.element.addEventListener("click", this.clickListener);
+        this.roomInstance.roomRenderer.application.canvas.addEventListener("click", this.clickListener);
         document.addEventListener("wheel", this.scrollListener);
 
         this.iconElement = document.createElement("canvas");
@@ -301,7 +299,7 @@ export default class RoomFurniturePlacer {
 
         if(!entity || !position || this.roomFurnitureItem.disabled) {
             if(this.originalPosition) {
-               this.roomFurnitureItem.position = this.originalPosition;
+               this.roomFurnitureItem.setPosition(this.originalPosition);
             }
 
             if(this.originalDirection && isFurniture) {
@@ -351,15 +349,11 @@ export default class RoomFurniturePlacer {
         this.iconElement.remove();
 
         this.roomInstance.roomRenderer.removeEventListener("render", this.renderListener);
-        this.roomInstance.roomRenderer.element.removeEventListener("click", this.clickListener);
+        this.roomInstance.roomRenderer.application.canvas.removeEventListener("click", this.clickListener);
         document.removeEventListener("wheel", this.scrollListener);
 
         if(this.temporaryFurniture) {
-            const index = this.roomInstance.roomRenderer.items.indexOf(this.roomFurnitureItem);
-
-            if(index !== -1) {
-                this.roomInstance.roomRenderer.items.splice(index, 1);
-            }
+            this.roomInstance.roomRenderer.removeItem(this.roomFurnitureItem);
         }
         else {
             this.roomFurnitureItem.alpha = 1;

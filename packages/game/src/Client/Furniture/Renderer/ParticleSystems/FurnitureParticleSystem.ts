@@ -14,6 +14,10 @@ export default class FurnitureParticleSystem {
     }
 
     public async render(result: FurnitureRendererSprite[], options: FurnitureRenderOptions) {
+        if(!this.data.emitters) {
+            return;
+        }
+        
         for(const emitterData of this.data.emitters) {
             const existingEmitter = this.emitters.find((emitter) => emitter.id === emitterData.id);
 

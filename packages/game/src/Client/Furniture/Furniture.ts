@@ -10,6 +10,7 @@ import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
 import FurnitureParticleSystem from "@Client/Furniture/Renderer/ParticleSystems/FurnitureParticleSystem";
+import { BLEND_MODES } from "pixi.js";
 
 export type FurnitureRenderToCanvasOptions = {
     spritesWithoutInkModes?: boolean;
@@ -28,7 +29,7 @@ export type FurnitureRendererSprite = {
     x: number;
     y: number;
 
-    ink?: GlobalCompositeOperation;
+    ink?: BLEND_MODES;
 
     zIndex: number;
     alpha?: number;
@@ -166,7 +167,7 @@ export default class Furniture {
 
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
             
-            const particleSystemData = this.data.logic.particleSystems.find((particleSystem) => particleSystem.size == this.size);
+            const particleSystemData = this.data.logic.particleSystems?.find((particleSystem) => particleSystem.size == this.size);
 
             if(particleSystemData) {
                 this.particleSystem = new FurnitureParticleSystem(this, particleSystemData);

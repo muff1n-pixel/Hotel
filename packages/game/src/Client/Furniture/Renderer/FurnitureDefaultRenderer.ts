@@ -463,7 +463,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             context.save();
 
             if(sprite.ink) {
-                context.globalCompositeOperation = sprite.ink;
+                //context.globalCompositeOperation = sprite.ink;
             }
 
             if(sprite.alpha) {

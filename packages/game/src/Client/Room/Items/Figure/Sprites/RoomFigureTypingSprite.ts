@@ -2,28 +2,24 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../../RoomSprite";
 import RoomFigureItem from "../RoomFigureItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
+import { Texture } from "pixi.js";
 
 export default class RoomFigureTypingSprite extends RoomSprite {
-    private offset: MousePosition;
-    private image?: ImageBitmap;
-
     constructor(public readonly item: RoomFigureItem, public figureOffsets: MousePosition) {
-        super(item);
+        super(
+            item,
+            {
+                left: figureOffsets.left + 64 + 16,
+                top: figureOffsets.top + -80 + 16
+            }
+        );
 
-        this.offset = {
-            left: 64 + 16,
-            top: -80 + 16
-        };
-
-        AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => this.image = image);
+        AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => {
+            this.sprite.texture = Texture.from(image);
+        });
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(!this.image) {
-            return;
-        }
-
-        context.drawImage(this.image, left + this.figureOffsets.left + this.offset.left, top + this.figureOffsets.top + this.offset.top);
     }
 
     mouseover() {

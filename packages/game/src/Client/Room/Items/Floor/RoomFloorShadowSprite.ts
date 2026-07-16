@@ -6,6 +6,8 @@ export default class RoomFloorShadowSprite extends RoomFloorSprite {
         super(item, image);
 
         this.priority = -5000;
+
+        this.update();
     }
 
     mouseover() {

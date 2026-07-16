@@ -33,7 +33,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
         const renderer = new ClientRoomRenderer(elementRef.current, undefined, undefined, structure);
 
         renderer.addEventListener("render", () => {
-            renderer.updatePreviewScale();
+            //renderer.updatePreviewScale();
         });
 
         setRoomRenderer(renderer);
@@ -58,11 +58,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
 
         for(const [id, item] of roomChildrenItems.current.entries()) {
             if(!furniture?.some((furniture) => furniture.id === id)) {
-                const index = roomRenderer.items.indexOf(item);
-
-                if(index !== -1) {
-                    roomRenderer.items.splice(index, 1);
-                }
+                roomRenderer.removeItem(item);
 
                 roomChildrenItems.current.delete(id);
             }
@@ -78,12 +74,12 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                     furnitureItem.position
                 );
 
-                roomRenderer.items.push(item);
+                roomRenderer.addItem(item);
 
                 roomChildrenItems.current.set(furnitureItem.id, item);
             }
             else {
-                item.position = furnitureItem.position;
+                item.setPosition(furnitureItem.position);
             }
             
             item.furnitureRenderer.figureConfiguration = furnitureItem.figureConfiguration;
@@ -106,7 +102,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                             })
                         );
 
-                        item.position = position;
+                        item.setPosition(position);
 
                         if(furnitureItem.panToItem) {
                             if(item.furnitureRenderer.placement === "floor") {

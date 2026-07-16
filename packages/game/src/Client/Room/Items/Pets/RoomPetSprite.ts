@@ -10,29 +10,29 @@ export default class RoomPetSprite extends RoomSprite {
         top: 0
     };
 
-    constructor(public readonly item: RoomPetItem, public readonly sprite: FurnitureRendererSprite) {
+    constructor(public readonly item: RoomPetItem, public readonly furnitureSprite: FurnitureRendererSprite) {
         super(item);
 
-        this.priority = this.sprite.zIndex;
-        this.tag = sprite.tag;
+        this.priority = this.furnitureSprite.zIndex;
+        this.tag = furnitureSprite.tag;
 
         this.offset.left += 64;
         this.offset.top += 16;
 
-        this.offset.left += this.sprite.x;
-        this.offset.top += this.sprite.y;
+        this.offset.left += this.furnitureSprite.x;
+        this.offset.top += this.furnitureSprite.y;
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(this.sprite.ink) {
-            context.globalCompositeOperation = this.sprite.ink;
+        if(this.furnitureSprite.ink) {
+            context.globalCompositeOperation = this.furnitureSprite.ink;
         }
 
-        if(this.sprite.alpha) {
-            context.globalAlpha = this.sprite.alpha / 255;
+        if(this.furnitureSprite.alpha) {
+            context.globalAlpha = this.furnitureSprite.alpha / 255;
         }
 
-        context.drawImage(this.sprite.image, left + this.offset.left, top + this.offset.top);
+        context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {
@@ -44,11 +44,11 @@ export default class RoomPetSprite extends RoomSprite {
             return null;
         }
 
-        if(this.sprite.ignoreMouse) {
+        if(this.furnitureSprite.ignoreMouse) {
             return null;
         }
 
-        if(!this.sprite.imageData) {
+        if(!this.furnitureSprite.imageData) {
             return null;
         }
         
@@ -61,13 +61,13 @@ export default class RoomPetSprite extends RoomSprite {
             return null;
         }
 
-        if(relativePosition.left > this.sprite.image.width || relativePosition.top > this.sprite.image.height) {
+        if(relativePosition.left > this.furnitureSprite.image.width || relativePosition.top > this.furnitureSprite.image.height) {
             return null;
         }
 
-        const pixel = ((relativePosition.left + relativePosition.top * this.sprite.imageData.width) * 4) + 3;
+        const pixel = ((relativePosition.left + relativePosition.top * this.furnitureSprite.imageData.width) * 4) + 3;
 
-        if(this.sprite.imageData.data[pixel] < 50) {
+        if(this.furnitureSprite.imageData.data[pixel] < 50) {
             return null;
         }
 

@@ -11,7 +11,7 @@ type FloorRectangle = {
     height: number;
 };
 
-type FloorTile = {
+export type FloorTile = {
     row: number;
     column: number;
     depth: number;

@@ -6,7 +6,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 import RoomFloorShadowSprite from "@Client/Room/Items/Floor/RoomFloorShadowSprite";
 
 export default class RoomFloorItem extends RoomItem {
-    constructor(public roomRenderer: RoomRenderer, public readonly floorRenderer: FloorRenderer) {
+    constructor(public roomRenderer: RoomRenderer, public readonly floorRenderer: FloorRenderer, private readonly resolve: () => void) {
         super(roomRenderer, "floor");
 
         this.render();
@@ -17,7 +17,7 @@ export default class RoomFloorItem extends RoomItem {
 
     render() {
         this.floorRenderer.renderOffScreen().then(({ floor, elevatedFloor, shadow }) => {
-            this.sprites = [];
+            this.setSprites([]);
 
             this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(floor)));
 
@@ -28,6 +28,8 @@ export default class RoomFloorItem extends RoomItem {
             if(shadow) {
                 this.sprites.push(new RoomFloorShadowSprite(this, shadow));
             }
+
+            this.resolve();
         });
     }
         

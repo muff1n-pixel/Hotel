@@ -9,7 +9,7 @@ import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pi
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 export default class RoomCursor extends EventTarget {
-    private readonly furnitureItem: RoomFurnitureItem;
+    public readonly furnitureItem: RoomFurnitureItem;
 
     public cursorDisabled: boolean = false;
 
@@ -26,13 +26,13 @@ export default class RoomCursor extends EventTarget {
 
         this.furnitureItem.disabled = true;
 
-        this.roomRenderer.items.push(this.furnitureItem);
+        this.roomRenderer.addItem(this.furnitureItem);
 
         this.roomRenderer.addEventListener("render", this.render.bind(this));
         this.roomRenderer.addEventListener("frame", this.frame.bind(this));
-        this.roomRenderer.element.addEventListener("mousedown", this.mousedown.bind(this));
-        this.roomRenderer.element.addEventListener("dblclick", this.doubleclick.bind(this));
-        this.roomRenderer.element.addEventListener("click", this.click.bind(this));
+        this.roomRenderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
+        this.roomRenderer.application.canvas.addEventListener("dblclick", this.doubleclick.bind(this));
+        this.roomRenderer.application.canvas.addEventListener("click", this.click.bind(this));
     }
 
     private mousedown(event: MouseEvent) {
@@ -107,12 +107,12 @@ export default class RoomCursor extends EventTarget {
         }
 
         if(!entity) {
-            this.roomRenderer.element.style.cursor = "default";
+            //this.roomRenderer.element.style.cursor = "default";
 
             return;
         }
 
-        this.roomRenderer.element.style.cursor = "pointer";
+        //this.roomRenderer.element.style.cursor = "pointer";
     }
 
     private click(event: MouseEvent) {

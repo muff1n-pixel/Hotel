@@ -2,7 +2,6 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomCamera from "./RoomCamera";
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomCursor from "./Cursor/RoomCursor";
 import RoomSprite from "./Items/RoomSprite";
 import RoomFrameEvent from "@Client/Events/RoomFrameEvent";
@@ -23,12 +22,15 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
+import { Application, Container, Sprite, Texture } from "pixi.js";
+import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 
 export default class RoomRenderer extends EventTarget {
-    public readonly element: HTMLCanvasElement;
-    private readonly context: CanvasRenderingContext2D;
+    public readonly application: Application;
+    public readonly container: Container;
+
     public readonly camera: RoomCamera;
-    public readonly cursor?: RoomCursor;
+    public cursor?: RoomCursor;
 
     public readonly frameCounter = new RoomRendererFrameCounter(this);
 
@@ -36,12 +38,9 @@ export default class RoomRenderer extends EventTarget {
 
     public furniturePlacer?: RoomFurniturePlacer;
 
-    public readonly items: RoomItem[] = [];
+    private readonly items: RoomItem[] = [];
 
     //public itemSpritesChanged: boolean = true;
-    private sortedSprites: RoomSprite[] = [];
-
-    private terminated = false;
 
     public scale: number = 1;
     public previewScale: number = 1;
@@ -52,14 +51,7 @@ export default class RoomRenderer extends EventTarget {
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
 
-    public itemPositionMap: Map<string, RoomItem[]> = new Map();
-
     private center: MousePosition = {
-        left: 0,
-        top: 0
-    };
-
-    public renderedOffset: MousePosition = {
         left: 0,
         top: 0
     };
@@ -73,31 +65,85 @@ export default class RoomRenderer extends EventTarget {
             throw new Error();
         }
 
+        this.application = new Application();
+        this.container = new Container();
+
         this.structure = structure;
-
-        this.element = document.createElement("canvas");
-        this.element.classList.add("renderer");
-
-        this.updateCanvasSize();
-
-        this.context = this.element.getContext("2d", {
-            alpha: false
-        })!;
 
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
+    }
 
-        if(roomInstance) {
+    public async init() {
+        await this.application.init({
+            background: "#000000",
+            resizeTo: this.parent
+        });
+
+        this.application.ticker.add((time) => {
+            const shouldProcessTick = this.frameCounter.shouldProcessTick();
+
+            if(shouldProcessTick) {
+                this.processTick();
+            }
+            
+            if(this.frameCounter.shouldProcessFrame()) {
+                this.processFrame();
+            }
+        });
+
+        if(this.roomInstance) {
             this.cursor = new RoomCursor(this);
         }
 
-        this.parent.appendChild(this.element);
+        this.camera.cameraPosition.left = Math.round(this.application.screen.width / 2);
+        this.camera.cameraPosition.top = Math.round(this.application.screen.height / 2);
+        //this.camera.cameraPosition.top -= (this.structure.grid.length + this.structure.grid[0]?.length) * 6;
 
-        window.requestAnimationFrame(this.render.bind(this));
+        const background = new Sprite(Texture.WHITE);
+
+        background.width = this.application.screen.width;
+        background.height = this.application.screen.height;
+
+        background.tint = 0x00;
+    
+        background.interactive = true;
+
+        background.addListener("click", () => {
+            this.focusedItem.value = null;
+        });
+
+        this.application.stage.addChild(background);
+
+        this.application.stage.addChild(this.container);
+
+        this.application.canvas.classList.add("renderer");
+
+        this.parent.appendChild(this.application.canvas);
+    }
+
+    public addItem(item: RoomItem) {
+        if(this.items.includes(item)) {
+            return;
+        }
+        
+        this.items.push(item);
+    }
+
+    public removeItem(item: RoomItem) {
+        const index = this.items.indexOf(item);
+        
+        if(index === -1) {
+            return;
+        }
+        
+        this.items.splice(index, 1);
+
+        item.destroy();
     }
 
     public setCanvasScale(scale: number) {
-        this.scale = scale;
+        /*this.scale = scale;
 
         if(this.scale === 1) {
             this.element.style.removeProperty("transform");
@@ -113,13 +159,11 @@ export default class RoomRenderer extends EventTarget {
         this.element.style.transform = `scale(${scale})`;
         this.element.style.transformOrigin = `0 0`;
 
-        this.parent.style.overflow = "hidden";
+        this.parent.style.overflow = "hidden";*/
     }
 
     public terminate() {
-        this.terminated = true;
-
-        this.element.remove();
+        this.application.destroy();
     }
 
     /*public getSizeScale() {
@@ -131,19 +175,22 @@ export default class RoomRenderer extends EventTarget {
             this.items[index].process(this.frameCounter.tick);
         }
 
-        this.sortSprites();
-
         this.dispatchEvent(new RoomFrameEvent());
     }
 
     private processFrame() {
+        this.container.x = this.camera.cameraPosition.left;
+        this.container.y = this.camera.cameraPosition.top;
+
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].processPositionPath();
         }
+
+        this.dispatchEvent(new RoomRenderEvent());
     }
 
     private updateCanvasSize() {
-        // Automatically clears the context
+        /*// Automatically clears the context
         if(this.element.width === this.parent.clientWidth && this.element.height === this.parent.clientHeight) {
             //this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         }
@@ -155,11 +202,11 @@ export default class RoomRenderer extends EventTarget {
                 left: Math.floor(this.element.width / 2),
                 top: Math.floor(this.element.height / 2)
             };
-        }
+        }*/
     }
 
     private render() {
-        if(this.terminated) {
+        /*if(this.terminated) {
             return;
         }
 
@@ -185,56 +232,12 @@ export default class RoomRenderer extends EventTarget {
 
         this.renderOffScreen(this.context);
 
-        window.requestAnimationFrame(this.render.bind(this));
+        window.requestAnimationFrame(this.render.bind(this));*/
     }
 
     private drawBackground(context: CanvasRenderingContext2D) {
         context.fillStyle = this.lighting.backgroundToner?.color ?? "#000000";
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    }
-
-    private updateRenderedOffset() {
-        this.renderedOffset = {
-            left: Math.round((this.center.left + this.camera.cameraPosition.left) / this.scale),
-            top: Math.round((this.center.top + this.camera.cameraPosition.top) / this.scale)
-        };
-    }
-
-    private sortSprites() {
-        const sprites: { sprite: RoomSprite; priority: number }[] = [];
-
-        for(const item of this.items) {
-            if(item.disabled) {
-                continue;
-            }
-
-            const itemPriority = item.calculatedPriority;
-
-            for(const sprite of item.sprites) {
-                sprites.push({
-                    sprite,
-                    priority: itemPriority + sprite.priority,
-                });
-            }
-        }
-
-        this.sortedSprites = sprites.sort((a, b) => a.priority - b.priority).map((item) => item.sprite);
-    }
-
-    private drawSprites(context: CanvasRenderingContext2D, sprites: RoomSprite[]) {
-        for(let index = 0; index < sprites.length; index++) {
-            const sprite = sprites[index];
-
-            if(context.globalCompositeOperation !== "source-over") {
-                context.globalCompositeOperation = "source-over";
-            }
-
-            if(context.globalAlpha !== (sprite.item.alpha ?? 1)) {
-                context.globalAlpha = sprite.item.alpha ?? 1;
-            }
-
-            sprite.render(context as any as OffscreenCanvasRenderingContext2D, this.renderedOffset.left + sprite.item.screenPosition.left, this.renderedOffset.top + sprite.item.screenPosition.top);
-        }
     }
 
     private drawLightingForeground(context: CanvasRenderingContext2D) {
@@ -243,7 +246,7 @@ export default class RoomRenderer extends EventTarget {
         }
     }
 
-    private renderOffScreen(context: CanvasRenderingContext2D) {
+    /*private renderOffScreen(context: CanvasRenderingContext2D) {
         this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
         this.drawBackground(context);
@@ -266,7 +269,7 @@ export default class RoomRenderer extends EventTarget {
         this.drawLightingForeground(context);
 
         this.dispatchEvent(new RoomRenderEvent());
-    }
+    }*/
 
     public getMouseOffsetPosition() {
         if(!this.camera.mousePosition) {
@@ -274,8 +277,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         const result = {
-            left: Math.round((this.camera.mousePosition.left / this.scale) - this.renderedOffset.left),
-            top: Math.round((this.camera.mousePosition.top / this.scale) - this.renderedOffset.top)
+            left: Math.round((this.camera.mousePosition.left / this.scale) - this.camera.cameraPosition.left),
+            top: Math.round((this.camera.mousePosition.top / this.scale) - this.camera.cameraPosition.top)
         };
 
         return result;
@@ -379,7 +382,6 @@ export default class RoomRenderer extends EventTarget {
             else {
                 priority += RoomRenderer.getPositionPriority(item.position);
 
-                
                 if(item.type === "figure" && item.positionPathData) {
                     priority += 1000;
                 }
@@ -396,8 +398,8 @@ export default class RoomRenderer extends EventTarget {
     public getItemScreenPosition(item: RoomItem): MousePosition {
         if(!item.position) {
             return {
-                left: (this.renderedOffset.left * this.scale),
-                top: (this.renderedOffset.top * this.scale)
+                left: (this.camera.cameraPosition.left * this.scale),
+                top: (this.camera.cameraPosition.top * this.scale)
             };
         }
 
@@ -421,7 +423,7 @@ export default class RoomRenderer extends EventTarget {
             const furnitureSprites = item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite);
 
             if(furnitureSprites.length) {
-                const minOffset = Math.max(...furnitureSprites.map(({ sprite }) => sprite.y), 0);
+                const minOffset = Math.max(...furnitureSprites.map(({ furnitureSprite: sprite }) => sprite.y), 0);
 
                 translatePosition.top += minOffset;
                 translatePosition.top -= 24;
@@ -429,8 +431,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         return {
-            left: (this.renderedOffset.left + translatePosition.left) * this.scale,
-            top: (this.renderedOffset.top + translatePosition.top) * this.scale
+            left: (this.camera.cameraPosition.left + translatePosition.left) * this.scale,
+            top: (this.camera.cameraPosition.top + translatePosition.top) * this.scale
         };
     }
 
@@ -463,67 +465,6 @@ export default class RoomRenderer extends EventTarget {
             
             this.camera.cameraPosition.left = position.left + 64 + offset.left;
             this.camera.cameraPosition.top = -position.top + offset.top;
-        }
-    }
-
-    public updatePreviewScale() {
-        const furnitureItem = this.items.find(
-            (item): item is RoomFurnitureItem => item instanceof RoomFurnitureItem
-        );
-
-        if(!furnitureItem) {
-            this.previewScale = 1;
-            return;
-        }
-
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        let hasSprites = false;
-
-        for(const roomSprite of furnitureItem.sprites) {
-            if(!(roomSprite instanceof RoomFurnitureSprite)) {
-                continue;
-            }
-
-            const s = roomSprite.sprite;
-            if(!s.image) {
-                continue;
-            }
-
-            const offset = RoomFurnitureSprite.getDefaultOffsetPosition(furnitureItem.furnitureRenderer, s, 1);
-
-            minX = Math.min(minX, offset.left);
-            minY = Math.min(minY, offset.top);
-            maxX = Math.max(maxX, offset.left + s.image.width);
-            maxY = Math.max(maxY, offset.top + s.image.height);
-            hasSprites = true;
-        }
-
-        if(!hasSprites) {
-            return;
-        }
-
-        const furnitureWidth = maxX - minX;
-        const furnitureHeight = maxY - minY;
-
-        const canvasWidth = this.element.width;
-        const canvasHeight = this.element.height;
-
-        if(canvasWidth <= 0 || canvasHeight <= 0 || furnitureWidth <= 0 || furnitureHeight <= 0) {
-            return;
-        }
-
-        const padding = 20;
-        const scaleX = (canvasWidth - padding) / furnitureWidth;
-        const scaleY = (canvasHeight - padding) / furnitureHeight;
-        this.previewScale = Math.min(scaleX, scaleY, 1);
-
-        if(this.previewScale < 1 && furnitureItem.position) {
-            const screenPos = this.getCoordinatePosition(furnitureItem.position);
-            const spriteCenterX = (minX + maxX) / 2;
-            const spriteCenterY = (minY + maxY) / 2;
-
-            this.camera.cameraPosition.left = Math.round(-(screenPos.left + spriteCenterX));
-            this.camera.cameraPosition.top = Math.round(-(screenPos.top + spriteCenterY));
         }
     }
 
@@ -566,11 +507,11 @@ export default class RoomRenderer extends EventTarget {
             throw new Error("Bounding client rectangle is not available.");
         }
 
-        context.drawImage(
+        /*context.drawImage(
             this.element,
             Math.round(clientRectangle.left), Math.round(clientRectangle.top), width, height,
             0, 0, width, height
-        );
+        );*/
 
         return canvas;
     }
@@ -586,8 +527,8 @@ export default class RoomRenderer extends EventTarget {
         const minimumTop = Math.floor(clientRectangle.top);
 
         const offsetMousePosition = {
-            left: minimumLeft - this.renderedOffset.left,
-            top: minimumTop - this.renderedOffset.top
+            left: minimumLeft - this.camera.cameraPosition.left,
+            top: minimumTop - this.camera.cameraPosition.top
         };
 
         const scale = 1; /*this.getSizeScale()*/;
@@ -612,8 +553,8 @@ export default class RoomRenderer extends EventTarget {
         });
 
         return ShopFeatureRoomConfigurationData.create({
-            renderedOffsetLeft: this.renderedOffset.left,
-            renderedOffsetTop: this.renderedOffset.top,
+            renderedOffsetLeft: this.camera.cameraPosition.left,
+            renderedOffsetTop: this.camera.cameraPosition.top,
 
             roomFurniture: filteredItems.filter((item) => item instanceof RoomFurnitureItem).map((item) => {
                 return {
@@ -639,35 +580,39 @@ export default class RoomRenderer extends EventTarget {
             this.floorItem = undefined;
         }
 
-        this.floorItem = new RoomFloorItem(
-            this,
-            new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
-        );
+        const floorPromise = new Promise<void>((resolve) => {
+            this.floorItem = new RoomFloorItem(
+                this,
+                new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
+                resolve
+            );
 
-        this.items.push(this.floorItem);
+            this.items.push(this.floorItem);
+        });
 
         if(this.wallItem) {
             this.items.splice(this.items.indexOf(this.wallItem), 1);
             this.wallItem = undefined;
         }
 
-        if(!structure.wall?.hidden) {
-            this.wallItem = new RoomWallItem(
-                this,
-                new WallRenderer(structure, structure.wall?.id ?? "default", 64)
-            );
+        const wallPromise = new Promise<void>((resolve) => {
+            if(!structure.wall?.hidden) {
+                this.wallItem = new RoomWallItem(
+                    this,
+                    new WallRenderer(structure, structure.wall?.id ?? "default", 64),
+                    resolve
+                );
 
-            this.items.push(this.wallItem);
-        }
-    }
+                this.items.push(this.wallItem);
+            }
+            else {
+                resolve();
+            }
+        });
 
-    public getSortedFurnitureAtPosition(position: RoomPositionData) {
-        const items = this.itemPositionMap.get(`${position.row}x${position.column}`);
-
-        if(!items) {
-            return [];
-        }
-
-        return items.filter((item) => item instanceof RoomFurnitureItem).toSorted((a, b) => (b.position?.depth ?? 0) - (a.position?.depth ?? 0));
+        return Promise.allSettled([
+            wallPromise,
+            floorPromise
+        ]);
     }
 }
