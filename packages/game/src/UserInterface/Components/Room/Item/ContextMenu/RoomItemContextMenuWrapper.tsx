@@ -3,6 +3,7 @@ import { ReactNode, useCallback, useState } from "react";
 import useRoomItemScreenPosition from "../../Users/Hooks/useRoomItemScreenPosition";
 import UserContextMenuElement from "../../Users/UserContextMenuElement";
 import "./RoomItemContextMenuWrapper.css";
+import { useRoomScale } from "@UserInterface/Hooks/useRoomScale";
 
 export type RoomItemContextMenuWrapperProps = {
     item: RoomItem;
@@ -11,12 +12,17 @@ export type RoomItemContextMenuWrapperProps = {
 
 export default function RoomItemContextMenuWrapper({ item, children }: RoomItemContextMenuWrapperProps) {
     const position = useRoomItemScreenPosition(item);
+    const roomScale = useRoomScale();
 
     const [folded, setFolded] = useState(false);
 
     const handleFold = useCallback(() => {
         setFolded(!folded);
     }, [folded]);
+
+    if(roomScale === undefined) {
+        return;
+    }
     
     return (
         <div style={{
@@ -26,7 +32,7 @@ export default function RoomItemContextMenuWrapper({ item, children }: RoomItemC
             left: position?.left,
             top: position?.top,
             
-            transform: `translate(${(64 * item.roomRenderer.scale)}px, -${(58 * item.roomRenderer.scale)}px) scale(${item.roomRenderer.scale})`,
+            transform: `translate(${(64 * roomScale)}px, -${(58 * roomScale)}px) scale(${roomScale})`,
         }}>
             <div className="arrow" style={{
                 display: "flex",

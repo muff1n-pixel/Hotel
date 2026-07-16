@@ -417,7 +417,7 @@ export default class RoomRenderer extends EventTarget {
             };
         }
 
-        const translatePosition = this.getCoordinatePosition(item.position);
+        const translatePosition = RoomRenderer.getCoordinatePosition(item.position, this.scale.value);
 
         if(item instanceof RoomFigureItem) {
             const figureSprite = item.sprites.find<RoomFigureSprite>((sprite) => sprite instanceof RoomFigureSprite);
@@ -445,8 +445,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         return {
-            left: (this.camera.cameraPosition.left + translatePosition.left) * this.scale.value,
-            top: (this.camera.cameraPosition.top + translatePosition.top) * this.scale.value
+            left: (this.camera.cameraPosition.left + (translatePosition.left)),
+            top: (this.camera.cameraPosition.top + (translatePosition.top))
         };
     }
 
