@@ -51,7 +51,7 @@ export default class RoomFurnitureItem extends RoomItem {
 
     public setPosition(position: RoomPositionData | undefined, index?: number): void {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
-            //this.position = undefined;
+            super.setPosition(undefined);
             //this.priority = 0;
 
             return;
@@ -68,7 +68,7 @@ export default class RoomFurnitureItem extends RoomItem {
         if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
             // TODO: don't update the sprite if we don't have to
             if(this.data?.background?.imageUrl) {
-                //this.position = undefined;
+                this.setPosition(undefined);
                 //this.priority = 0;
 
                 AssetFetcher.fetchImage(this.data.background.imageUrl).then((image) => {
