@@ -19,7 +19,6 @@ export default class RoomFurnitureSprite extends RoomSprite {
             (furnitureSprite.alpha)?(furnitureSprite.alpha / 255):(undefined),
             furnitureSprite.ink,
             furnitureSprite.image,
-            furnitureSprite.imageData ?? undefined
         );
 
         this.priority = this.furnitureSprite.zIndex;

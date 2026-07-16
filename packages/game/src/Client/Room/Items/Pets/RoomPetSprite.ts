@@ -21,10 +21,6 @@ export default class RoomPetSprite extends RoomSprite {
         this.tag = furnitureSprite.tag;
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
-    }
-
     mouseover(position: MousePosition) {
         if(this.item.disabled) {
             return null;

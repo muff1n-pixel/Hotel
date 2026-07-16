@@ -17,8 +17,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         public priority: number = 0,
         public alpha: number | undefined = undefined,
         public blendMode: BLEND_MODES = "normal",
-        image?: TextureSourceLike,
-        imageData?: ImageData
+        image?: TextureSourceLike
     ) {
         this.sprite = new Sprite({
             texture: (image)?(Texture.from(image)):(undefined),
@@ -48,10 +47,6 @@ export default class RoomSprite implements RoomItemSpriteInterface {
 
     destroy(): void {
         this.sprite.destroy();
-    }
-
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number): void {
-        
     }
 
     mouseover(position: MousePosition): RoomPositionWithDirectionData | null {

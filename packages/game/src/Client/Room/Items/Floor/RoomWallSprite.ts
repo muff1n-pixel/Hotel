@@ -16,12 +16,7 @@ export default class RoomWallSprite extends RoomSprite {
             undefined,
             undefined,
             image,
-            undefined
         );
-    }
-
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.image, left + this.offset.left - this.item.wallRenderer.structure.wall!.thickness, top + this.offset.top);
     }
 
     mouseover(position: MousePosition) {

@@ -85,20 +85,20 @@ export default function ToolbarRoomInfo() {
                                 onClick: () => {
                                     switch(roomScale) {
                                         case 0.5: {
-                                            room.roomRenderer.setCanvasScale(1);
+                                            room.roomRenderer.scale.value = 1;
 
                                             break;
                                         }
 
                                         case 1: 
                                         default: {
-                                            room.roomRenderer.setCanvasScale(2);
+                                            room.roomRenderer.scale.value = 2;
 
                                             break;
                                         }
 
                                         case 2: {
-                                            room.roomRenderer.setCanvasScale(0.5);
+                                            room.roomRenderer.scale.value = 0.5;
 
                                             break;
                                         }

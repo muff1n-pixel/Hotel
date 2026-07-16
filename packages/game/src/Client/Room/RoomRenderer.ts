@@ -22,7 +22,7 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
-import { Application, Container, Rectangle, Sprite, Texture } from "pixi.js";
+import { Application, Container, Rectangle } from "pixi.js";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
@@ -42,8 +42,6 @@ export default class RoomRenderer extends EventTarget {
 
     private readonly items: RoomItem[] = [];
 
-    //public itemSpritesChanged: boolean = true;
-
     public scale = new ObservableRequiredProperty<number>(1);
 
     private _previewScale: number = 1;
@@ -58,11 +56,6 @@ export default class RoomRenderer extends EventTarget {
     
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
-
-    private center: MousePosition = {
-        left: 0,
-        top: 0
-    };
 
     public structure: RoomStructureData;
 
@@ -120,7 +113,6 @@ export default class RoomRenderer extends EventTarget {
 
         this.camera.cameraPosition.left = Math.round(this.application.screen.width / 2);
         this.camera.cameraPosition.top = Math.round(this.application.screen.height / 2);
-        //this.camera.cameraPosition.top -= (this.structure.grid.length + this.structure.grid[0]?.length) * 6;
 
         this.lighting.init();
 
@@ -155,34 +147,9 @@ export default class RoomRenderer extends EventTarget {
         item.destroy();
     }
 
-    public setCanvasScale(scale: number) {
-        this.scale.value = scale;
-        /*this.scale = scale;
-
-        if(this.scale === 1) {
-            this.element.style.removeProperty("transform");
-        }
-
-        if(this.scale >= 2) {
-            this.element.style.imageRendering = "pixelated";
-        }
-        else {
-            this.element.style.imageRendering = "auto";
-        }
-
-        this.element.style.transform = `scale(${scale})`;
-        this.element.style.transformOrigin = `0 0`;
-
-        this.parent.style.overflow = "hidden";*/
-    }
-
     public terminate() {
         this.application.destroy();
     }
-
-    /*public getSizeScale() {
-        return this.currentSize / 64;
-    }*/
 
     private processTick() {
         for(let index = 0; index < this.items.length; index++) {
@@ -202,88 +169,6 @@ export default class RoomRenderer extends EventTarget {
 
         this.dispatchEvent(new RoomRenderEvent());
     }
-
-    private updateCanvasSize() {
-        /*// Automatically clears the context
-        if(this.element.width === this.parent.clientWidth && this.element.height === this.parent.clientHeight) {
-            //this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-        }
-        else {
-            this.element.width = this.parent.clientWidth;
-            this.element.height = this.parent.clientHeight;
-            
-            this.center = {
-                left: Math.floor(this.element.width / 2),
-                top: Math.floor(this.element.height / 2)
-            };
-        }*/
-    }
-
-    private render() {
-        /*if(this.terminated) {
-            return;
-        }
-
-        const shouldProcessTick = this.frameCounter.shouldProcessTick();
-
-        if(shouldProcessTick) {
-            this.processTick();
-        }
-
-        if(!this.frameCounter.shouldProcessFrame()) {
-            window.requestAnimationFrame(this.render.bind(this));
-
-            return;
-        }
-
-        if(shouldProcessTick) {
-            this.updateCanvasSize();
-        }
-
-        this.frameCounter.updateFrameRate();
-
-        this.processFrame();
-
-        this.renderOffScreen(this.context);
-
-        window.requestAnimationFrame(this.render.bind(this));*/
-    }
-
-    private drawBackground(context: CanvasRenderingContext2D) {
-        context.fillStyle = this.lighting.backgroundToner?.color ?? "#000000";
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    }
-
-    private drawLightingForeground(context: CanvasRenderingContext2D) {
-        if(!this.lighting.moodlight?.backgroundOnly) {
-            this.lighting.render(context);
-        }
-    }
-
-    /*private renderOffScreen(context: CanvasRenderingContext2D) {
-        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-
-        this.drawBackground(context);
-
-        this.updateRenderedOffset();
-
-        if(this.previewScale !== 1) {
-            context.save();
-            context.translate(this.center.left, this.center.top);
-            context.scale(this.previewScale, this.previewScale);
-            context.translate(-this.center.left, -this.center.top);
-        }
-
-        this.drawSprites(context, this.sortedSprites);
-
-        if(this.previewScale !== 1) {
-            context.restore();
-        }
-
-        this.drawLightingForeground(context);
-
-        this.dispatchEvent(new RoomRenderEvent());
-    }*/
 
     public getMouseOffsetPosition() {
         if(!this.camera.mousePosition) {
@@ -457,15 +342,6 @@ export default class RoomRenderer extends EventTarget {
             }
 
             const dimensions = item.furnitureRenderer.getDimensions();
-
-            const position = this.getCoordinatePosition(RoomPositionData.create({
-                row: item.position.row - dimensions.row,
-                column: item.position.column - dimensions.column,
-                depth: item.position.depth - dimensions.depth,
-            }));
-            
-            //this.camera.cameraPosition.left = position.left + 64;
-            //this.camera.cameraPosition.top = position.top / 2;
 
             this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + (Math.max(dimensions.row - 1, 0) * 16) + (Math.max(dimensions.column - 1, 0) * -16) + offset.left);
             this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) - (Math.max(dimensions.row - 1, 0) * -8) + (Math.max(dimensions.column - 1, 0) * -8) + offset.top);

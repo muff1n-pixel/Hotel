@@ -19,9 +19,6 @@ export default class RoomFigureTypingSprite extends RoomSprite {
         });
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-    }
-
     mouseover() {
         return null;
     }

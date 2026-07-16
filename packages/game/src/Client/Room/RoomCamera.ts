@@ -29,10 +29,10 @@ export default class RoomCamera {
 
     private wheel(event: WheelEvent) {
         if(event.deltaY < 0) {
-            this.renderer.setCanvasScale(Math.min(5, this.renderer.scale + 0.1));
+            this.renderer.scale.value = (Math.min(5, this.renderer.scale.value + 0.1));
         }
         else {
-            this.renderer.setCanvasScale(Math.max(1, this.renderer.scale - 0.1));
+            this.renderer.scale.value = (Math.max(1, this.renderer.scale.value - 0.1));
         }
     }
 

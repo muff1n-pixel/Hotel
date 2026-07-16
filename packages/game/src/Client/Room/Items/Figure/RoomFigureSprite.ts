@@ -19,10 +19,6 @@ export default class RoomFigureSprite extends RoomSprite {
         );
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
-    }
-
     mouseover(position: MousePosition) {
         if(!this.furnitureSprite.imageData) {
             return null;

@@ -14,14 +14,9 @@ export default class RoomFigureEffectSprite extends RoomSprite {
             undefined,
             furnitureSprite.ink,
             furnitureSprite.image,
-            furnitureSprite.imageData ?? undefined
         );
 
         console.log(furnitureSprite, furnitureSprite.ink);
-    }
-
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
     }
 
     mouseover() {

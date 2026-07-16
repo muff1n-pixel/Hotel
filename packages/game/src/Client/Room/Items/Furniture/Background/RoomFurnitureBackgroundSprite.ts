@@ -36,10 +36,6 @@ export default class RoomFurnitureBackgroundSprite extends RoomSprite {
         );
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.image, left + this.offset.left, top + this.offset.top);
-    }
-
     mouseover() {
         return null;
     }

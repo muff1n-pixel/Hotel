@@ -81,14 +81,6 @@ export default class RoomFloorSprite extends RoomSprite {
         });
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(!this.image) {
-            return;
-        }
-        
-        context.drawImage(this.image, left + this.offset.left - (this.item.floorRenderer.structure.wall?.thickness ?? 0), top + this.offset.top);
-    }
-
     mouseover(position: MousePosition) {
         if(!this.image) {
             return null;

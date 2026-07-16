@@ -56,9 +56,6 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
         return `idle_${direction}_${this.currentAssetFrame + 1}`;
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-    }
-
     mouseover() {
         return null;
     }

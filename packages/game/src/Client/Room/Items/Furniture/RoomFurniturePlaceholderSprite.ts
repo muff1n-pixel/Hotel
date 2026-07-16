@@ -20,20 +20,6 @@ export default class RoomFurniturePlaceholderSprite extends RoomSprite {
         );
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        const placeholder = FurnitureAssets.placeholder;
-
-        if(!placeholder) {
-            RoomLogger.warn("Furniture placeholder is not loaded.");
-
-            return;
-        }
-
-        if(placeholder.image) {
-            context.drawImage(placeholder.image, left + this.offset.left, top + this.offset.top);
-        }
-    }
-
     mouseover(position: MousePosition) {
         const placeholder = (this.item.roomRenderer.size === 64)?(FurnitureAssets.placeholder):(FurnitureAssets.placeholder32);
 

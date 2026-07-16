@@ -18,10 +18,6 @@ export default class RoomDoorMaskSprite extends RoomSprite {
         );
     }
 
-    render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        context.drawImage(this.image, left + this.offset.left - this.item.wallRenderer!.structure.wall!.thickness, top + this.offset.top);
-    }
-
     mouseover() {
         return null;
     }
