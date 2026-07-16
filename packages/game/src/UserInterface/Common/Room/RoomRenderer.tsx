@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ClientRoomRenderer from "@Client/Room/RoomRenderer";
-import { RoomPositionData, RoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, RoomStructureFloorData, RoomStructureWallData } from "@pixel63/events";
 import { RoomRendererFurnitureProps } from "@UserInterface/Common/Room/Furniture/RoomRendererFurniture";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
@@ -70,6 +70,30 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             let item: RoomFurnitureItem = roomChildrenItems.current.get(furnitureItem.id) as RoomFurnitureItem;
 
             if(!item) {
+                console.log({ furnitureItem });
+                if(furnitureItem.furniture.type === "floor") {
+                    roomRenderer.setStructure({
+                        ...roomRenderer.structure,
+                        floor: RoomStructureFloorData.create({
+                            ...roomRenderer.structure.floor,
+                            id: furnitureItem.furniture.color?.toString()
+                        })
+                    });
+
+                    continue;
+                }
+                else if(furnitureItem.furniture.type === "wallpaper") {
+                    roomRenderer.setStructure({
+                        ...roomRenderer.structure,
+                        wall: RoomStructureWallData.create({
+                            ...roomRenderer.structure.wall,
+                            id: furnitureItem.furniture.color?.toString()
+                        })
+                    });
+
+                    continue;
+                }
+
                 item = new RoomFurnitureItem(
                     roomRenderer, 
                     new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),

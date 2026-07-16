@@ -528,7 +528,8 @@ export default class RoomRenderer extends EventTarget {
         this.structure = structure;
 
         if(this.floorItem) {
-            this.items.splice(this.items.indexOf(this.floorItem), 1);
+            this.removeItem(this.floorItem);
+
             this.floorItem = undefined;
         }
 
@@ -543,7 +544,8 @@ export default class RoomRenderer extends EventTarget {
         });
 
         if(this.wallItem) {
-            this.items.splice(this.items.indexOf(this.wallItem), 1);
+            this.removeItem(this.wallItem);
+
             this.wallItem = undefined;
         }
 
