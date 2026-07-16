@@ -23,9 +23,9 @@ export default function RoomCameraRenderer({ canvasRef, width, height }: RoomCam
                 throw new ContextNotAvailableError();
             }
 
-            const image = room.roomRenderer.captureCroppedImage(canvasRef.current!, width, height);
-
-            context.drawImage(image, 0, 0);
+            room.roomRenderer.captureCroppedImage(canvasRef.current!, width, height).then((image) => {
+                context.drawImage(image, 0, 0);
+            });
         };
 
         room.roomRenderer.addEventListener("render", listener);

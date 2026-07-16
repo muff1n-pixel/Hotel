@@ -22,7 +22,7 @@ import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
-import { Application, Container, Sprite, Texture } from "pixi.js";
+import { Application, Container, Rectangle, Sprite, Texture } from "pixi.js";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 
@@ -501,7 +501,7 @@ export default class RoomRenderer extends EventTarget {
         return false;
     }
 
-    public captureCroppedImage(element: HTMLElement, width: number, height: number) {
+    public async captureCroppedImage(element: HTMLElement, width: number, height: number) {
         const canvas = new OffscreenCanvas(width, height);
 
         const context = canvas.getContext("2d");
@@ -516,11 +516,12 @@ export default class RoomRenderer extends EventTarget {
             throw new Error("Bounding client rectangle is not available.");
         }
 
-        /*context.drawImage(
-            this.element,
-            Math.round(clientRectangle.left), Math.round(clientRectangle.top), width, height,
-            0, 0, width, height
-        );*/
+        const extracted = this.application.renderer.extract.canvas({
+            target: this.application.stage,
+            frame: new Rectangle(Math.round(clientRectangle.left), Math.round(clientRectangle.top), width, height),
+        });
+
+        context.drawImage(extracted as HTMLCanvasElement, 0, 0);
 
         return canvas;
     }
