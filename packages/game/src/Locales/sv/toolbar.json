@@ -7,7 +7,8 @@
         "inventory": "Förråd",
         "wardrobe": "Garderob",
         "achievements": "Prestationer",
-        "room_camera": "Rumskamera"
+        "room_camera": "Rumskamera",
+        "profile": "Profile"
     },
 
     "chatbar": {

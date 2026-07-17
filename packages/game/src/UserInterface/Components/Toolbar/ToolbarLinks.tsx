@@ -88,6 +88,14 @@ export default function ToolbarLinks() {
                 <ToolbarTab
                     items={[
                         {
+                            spriteClass: "sprite_toolbar_me_profile",
+                            onClick: () => {
+                                addUniqueDialog("user-profile", user.id, user.id);
+                                setTab(undefined);
+                            },
+                            tooltip: getTranslation("links.profile")
+                        },
+                        {
                             spriteClass: "sprite_toolbar_me_clothing",
                             onClick: () => {
                                 addUniqueDialog("wardrobe");
