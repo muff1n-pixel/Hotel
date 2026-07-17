@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message GroupIdentityData {
+    string name = 1;
+    string description = 2;
+    string homeroom_id = 3;
+}

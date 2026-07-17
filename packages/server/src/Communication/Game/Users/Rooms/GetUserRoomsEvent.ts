@@ -17,7 +17,8 @@ export default class GetUserRoomsEvent implements ProtobuffListener<GetUserRooms
             rooms: rooms.map((room) => {
                 return {
                     id: room.id,
-                    name: room.name
+                    name: room.name,
+                    groupId: room.groupId
                 };
             })
         }));

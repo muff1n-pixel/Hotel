@@ -8,6 +8,7 @@ export type SelectionProps = {
     items: {
         value: any;
         label: ReactNode;
+        disabled?: boolean;
     }[];
 
     onChange: (value: any) => void;
@@ -122,10 +123,15 @@ export default function Selection({ disabled, style, value, items, onChange }: S
 
                                 alignItems: "center",
 
-                                cursor: "pointer"
+                                cursor: (item.disabled)?("not-allowed"):("pointer"),
+                                opacity: (item.disabled)?(0.5):(undefined),
+                                fontStyle: (item.disabled)?("italic"):(undefined)
                             }} onClick={() => {
                                 setExpanded(false);
-                                onChange(item.value);
+
+                                if(!item.disabled) {
+                                    onChange(item.value);
+                                }
                             }}>
                                 {item.label}
                             </div>

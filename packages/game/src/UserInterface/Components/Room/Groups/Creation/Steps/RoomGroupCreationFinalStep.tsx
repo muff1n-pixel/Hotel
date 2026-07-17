@@ -1,21 +1,19 @@
 import { webSocketClient } from "@Game/index";
-import { GroupBadgeData, GroupColorsData, PurchaseShopMembershipData, ShopPageData } from "@pixel63/events";
+import { GroupBadgeData, GroupColorsData, GroupCreationData, GroupIdentityData, PurchaseShopMembershipData, ShopPageData } from "@pixel63/events";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
-import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import MembershipIcon from "@UserInterface/Common/Memberships/MembershipIcon";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
-import { RoomGroupCreationIdentityData } from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationIdentityStep";
 import useShopPageMemberships from "@UserInterface/Components/Shop/Pages/Hooks/useShopPageMemberships";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 
 export type RoomGroupCreationFinalStepProps = {
-    identityData?: RoomGroupCreationIdentityData;
+    identityData?: GroupIdentityData;
     badgeData?: GroupBadgeData;
     colorsData?: GroupColorsData;
     page: ShopPageData;
@@ -114,8 +112,15 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
                                 || (membership.diamonds ?? 0) > user.diamonds
                             )} style={{ flex: 1 }} onClick={() => {
                                 webSocketClient.sendProtobuff(PurchaseShopMembershipData, PurchaseShopMembershipData.create({
-                                    id: membership.id
+                                    id: membership.id,
+                                    group: GroupCreationData.create({
+                                        identity: identityData,
+                                        badge: badgeData,
+                                        colors: colorsData
+                                    })
                                 }));
+
+                                dialogs.closeDialog("room-group-creation");
                             }}>
                                 Purchase
                             </DialogButton>

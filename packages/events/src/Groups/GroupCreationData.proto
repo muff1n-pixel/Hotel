@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Groups/GroupIdentityData.proto";
+import "Groups/GroupBadgeData.proto";
+import "Groups/GroupColorsData.proto";
+
+message GroupCreationData {
+    GroupIdentityData identity = 1;
+    GroupBadgeData badge = 2;
+    GroupColorsData colors = 3;
+}

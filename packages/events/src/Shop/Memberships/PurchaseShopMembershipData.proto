@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+import "Groups/GroupCreationData.proto";
+
 message PurchaseShopMembershipData {
     string id = 1;
+
+    optional GroupCreationData group = 2;
 }

@@ -48,6 +48,7 @@ import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectMode
 import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
 import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembershipModel.js";
 import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/HotelSettingModel.js";
+import { initializeRoomGroupModel } from "./Models/Rooms/Groups/RoomGroupModel.js";
 
 export const sequelize = new Sequelize(config.database);
 
@@ -71,6 +72,7 @@ export async function initializeModels() {
 
     initializeRoomMapModel(sequelize);
     initializeRoomCategoryModel(sequelize);
+    initializeRoomGroupModel(sequelize);
 
     initializeUserModel(sequelize);
     initializeUserTokenModel(sequelize);

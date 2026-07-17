@@ -2,16 +2,17 @@ import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
 import DialogStepsContent from "@UserInterface/Common/Dialog/Components/Step/DialogStepsContent";
 import { Fragment, useCallback, useState } from "react";
-import RoomGroupCreationIdentityStep, { RoomGroupCreationIdentityData } from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationIdentityStep";
+import RoomGroupCreationIdentityStep from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationIdentityStep";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import RoomGroupCreationBadgeStep from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationBadgeStep";
-import { GroupBadgeData, GroupColorsData, ShopPageData } from "@pixel63/events";
+import { GroupBadgeData, GroupColorsData, ShopPageData, GroupIdentityData } from "@pixel63/events";
 import RoomGroupCreationColorsStep from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationColorsStep";
 import RoomGroupCreationFinalStep from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationFinalStep";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
+import { useUser } from "@UserInterface/Hooks/useUser";
 
 export type RoomGroupCreationDialogProps = {
     data?: {
@@ -23,14 +24,16 @@ export type RoomGroupCreationDialogProps = {
 }
 
 export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomGroupCreationDialogProps) {
+    const user = useUser();
     const hasEditShopPermission = usePermissionAction("shop:edit");
     const roomInstance = useRoomInstance();
 
     const [currentStep, setCurrentStep] = useState(0);
 
-    const [identityData, setIdentityData] = useState<RoomGroupCreationIdentityData>({
+    const [identityData, setIdentityData] = useState<GroupIdentityData>(GroupIdentityData.create({
+        name: `${user.name}'s group`,
         homeroomId: (roomInstance?.isOwner)?(roomInstance.information?.id):(undefined)
-    });
+    }));
 
     const [badgeData, setBadgeData] = useState<GroupBadgeData>();
     const [colorsData, setColorsData] = useState<GroupColorsData>();
@@ -108,7 +111,7 @@ export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomG
                             }
                             
                             case 3: {
-                                return (<RoomGroupCreationFinalStep editMode={editMode} page={data.page} badgeData={badgeData} colorsData={colorsData} goBack={() => setCurrentStep(currentStep - 1)}/>);
+                                return (<RoomGroupCreationFinalStep editMode={editMode} page={data.page} identityData={identityData} badgeData={badgeData} colorsData={colorsData} goBack={() => setCurrentStep(currentStep - 1)}/>);
                             }
                         }
                     })()
