@@ -38,7 +38,9 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
     
     return (
         <RoomItemContextMenuWrapper item={item}>
-            <UserContextMenuElement position="top">
+            <UserContextMenuElement position="top" onClick={() => {
+                dialogs.addUniqueDialog("user-profile", targetUser.data.id, targetUser.data.id);
+            }}>
                 {targetUser.data.name}
             </UserContextMenuElement>
 
