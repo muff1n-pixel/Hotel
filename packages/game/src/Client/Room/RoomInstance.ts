@@ -8,7 +8,7 @@ import { clientInstance, webSocketClient } from "../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
-import { RoomActorIdentifierData, RoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomInformationData, RoomLoadData, RoomPositionData, RoomReadyData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { RoomActorIdentifierData, RoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomGroupData, RoomInformationData, RoomLoadData, RoomPositionData, RoomReadyData, RoomStructureData, RoomUserData, SendRoomUserWalkData, UpdateRoomFurnitureData, UserFurnitureData, UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
@@ -50,6 +50,7 @@ export default class RoomInstance {
     public pets: RoomPet[] = [];
 
     public traxmachine = new ObservableProperty<RoomFurniture>();
+    public group = new ObservableProperty<RoomGroupData>();
 
     public information?: RoomInformationData;
     

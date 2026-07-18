@@ -10,6 +10,7 @@ import { UserPetModel } from "../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../Database/Models/Pets/PetBreedModel.js";
 import { FurnitureCrackableModel } from "../Database/Models/Furniture/Crackable/FurnitureCrackableModel.js";
+import { RoomGroupModel } from "../Database/Models/Rooms/Groups/RoomGroupModel.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -42,6 +43,10 @@ export default class RoomManager {
                 {
                     model: UserModel,
                     as: "owner"
+                },
+                {
+                    model: RoomGroupModel,
+                    as: "group"
                 },
                 {
                     model: RoomRightsModel,

@@ -6,6 +6,7 @@ import { clientInstance } from "@Game/index";
 import RoomClickConfigurationWidget from "@UserInterface/Components/Room/Widget/RoomClickConfigurationWidget";
 import { useState } from "react";
 import WidgetSettings from "@UserInterface/Components/Widget/WidgetSettings";
+import RoomGroupWidget from "@UserInterface/Components/Room/Widget/RoomGroupWidget";
 
 export default function FlowInstance() {
     const widgetNotifications = useWidgetNotifications();
@@ -28,6 +29,8 @@ export default function FlowInstance() {
             <Widget onSettingsClick={() => setSettingsExpanded(!settingsExpanded)}/>
 
             <WidgetSettings settingsExpanded={settingsExpanded} onSettingsExpanded={setSettingsExpanded}/>
+
+            <RoomGroupWidget/>
 
             <RoomTraxMachineWidget/>
 

@@ -1,4 +1,4 @@
-import { RoomUserEnteredData } from "@pixel63/events";
+import { RoomGroupData, RoomUserEnteredData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 

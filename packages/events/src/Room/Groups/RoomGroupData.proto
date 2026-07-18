@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Groups/GroupData.proto";
+
+message RoomGroupData {
+    string room_id = 1;
+
+    optional GroupData group = 2;
+}

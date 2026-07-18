@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "Groups/GroupBadgeData.proto";
+
+message GroupData {
+    string id = 1;
+
+    string name = 3;
+    string description = 4;
+
+    string primary_color = 5;
+    string secondary_color = 6;
+    
+    GroupBadgeData badge = 7;
+}
