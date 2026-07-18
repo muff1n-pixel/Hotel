@@ -34,7 +34,9 @@ export default class GetGroupMembersEvent implements ProtobuffListener<GetGroupM
         user.sendProtobuff(GroupMembersData, GroupMembersData.create({
             groupId: payload.id,
 
-            members: userGroups.map((userGroup) => {
+            members: userGroups.sort((a, b) => {
+                return (((b.owner)?(1):(0)) + ((b.admin)?(1):(0))) - (((a.owner)?(1):(0)) + ((a.admin)?(1):(0)));
+            }).map((userGroup) => {
                 return {
                     userId: userGroup.userId,
                     admin: userGroup.admin,
