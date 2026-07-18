@@ -4,6 +4,7 @@ import DialogListContainer from "../../../Common/Dialog/Components/List/DialogLi
 import RoomThumbnail from "../../Room/Thumbnail/RoomThumbnail";
 import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type NavigatorRoomListProps = {
     title: string;
@@ -42,19 +43,29 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                             cursor: "pointer"
                         }} onClick={() => onClick(room)}>
                             <RoomThumbnail roomId={room.id} thumbnail={room.thumbnail} disallowEdit>
-                                <div style={{
-                                    flex: 1,
+                                <FlexLayout flex={1}>
+                                    {(room.group) && (
+                                        <div style={{
+                                            padding: 2
+                                        }}>
+                                            <div className="sprite_groups_icon"/>
+                                        </div>
+                                    )}
 
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "flex-end",
+                                    <div style={{
+                                        flex: 1,
 
-                                    padding: 4
-                                }}>
-                                    <div>
-                                        <NavigatorRoomUsersCount users={room.users} maxUsers={room.maxUsers}/>
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "flex-end",
+
+                                        padding: 4
+                                    }}>
+                                        <div>
+                                            <NavigatorRoomUsersCount users={room.users} maxUsers={room.maxUsers}/>
+                                        </div>
                                     </div>
-                                </div>
+                                </FlexLayout>
                             </RoomThumbnail>
 
                             <div style={{ fontSize: 12, maxWidth: 112 }}>{room.name}</div>
