@@ -3,6 +3,7 @@ import DialogTabs from "../../../Common/Dialog/Components/Tabs/DialogTabs";
 import RoomSettingsBasicTab from "./Tabs/RoomSettingsBasicTab";
 import RoomSettingsCustomizeTab from "./Tabs/RoomSettingsCustomizeTab";
 import RoomSettingsAccessTab from "@UserInterface/Components/Room/Settings/Tabs/RoomSettingsAccessTab";
+import RoomSettingsRightsTab from "@UserInterface/Components/Room/Settings/Tabs/RoomSettingsRightsTab";
 
 export type RoomSettingsDialogProps = {
     hidden?: boolean;
@@ -23,7 +24,7 @@ export default function RoomSettingsDialog({ hidden, onClose }: RoomSettingsDial
                 },
                 {
                     icon: "Rights",
-                    element: (<div style={{ flex: 1 }}/>),
+                    element: (<RoomSettingsRightsTab/>),
                 },
                 {
                     icon: "Customize",
