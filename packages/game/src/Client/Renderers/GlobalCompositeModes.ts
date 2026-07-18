@@ -53,3 +53,11 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): BLEND_MODES 
             return undefined;
     }
 }
+
+export function getGlobalCompositeModeFromBlendMode(blendMode: BLEND_MODES): GlobalCompositeOperation {
+    if(blendMode === "add") {
+        return "lighter";
+    }
+
+    return blendMode as GlobalCompositeOperation;
+}

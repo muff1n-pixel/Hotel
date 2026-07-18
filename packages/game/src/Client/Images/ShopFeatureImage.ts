@@ -1,5 +1,7 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import Furniture from "@Client/Furniture/Furniture";
+import { getGlobalCompositeModeFromBlendMode } from "@Client/Renderers/GlobalCompositeModes";
+import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
@@ -199,7 +201,7 @@ export default class ShopFeatureImage {
             context.save();
 
             if(sprite.ink) {
-                context.globalCompositeOperation = sprite.ink;
+                context.globalCompositeOperation = getGlobalCompositeModeFromBlendMode(sprite.ink);
             }
 
             if(sprite.alpha) {
@@ -210,7 +212,7 @@ export default class ShopFeatureImage {
 
             context.translate(Math.floor(translatePosition.left), Math.floor(translatePosition.top));
 
-            const offset = RoomFurnitureSprite.getDefaultOffsetPosition(sprite.furniture, sprite, 1);
+            const offset = RoomFurnitureOffsets.getDefaultOffsetPosition(sprite.furniture, sprite, 1);
 
             context.drawImage(sprite.image, Math.floor(offset.left), Math.floor(offset.top), sprite.image.width, sprite.image.height);
 
