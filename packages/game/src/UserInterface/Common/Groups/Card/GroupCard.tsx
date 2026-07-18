@@ -46,6 +46,10 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
                     <b>{data?.name}</b>
 
                     <div>Created <TimeSinceDate date={new Date(data.createdAt)}/> by <UserLink id={data.owner?.id} name={data.owner?.name} reversed/></div>
+
+                    {(data.description) && (
+                        <p>{data.description}</p>
+                    )}
                 </FlexLayout>
             </FlexLayout>
             
