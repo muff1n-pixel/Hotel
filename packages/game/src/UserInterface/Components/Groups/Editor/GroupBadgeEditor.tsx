@@ -1,14 +1,11 @@
 import { GroupBadgeData } from "@pixel63/events";
-import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import GroupBadgeBaseEditor, { groupBadgeBases } from "@UserInterface/Components/Groups/GroupBadgeBaseEditor";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
-import GroupBadgePosition from "@UserInterface/Components/Groups/GroupBadgePosition";
-import GroupBadgeSymbolEditor, { groupBadgeSymbols } from "@UserInterface/Components/Groups/GroupBadgeSymbolEditor";
+import GroupBadgeSymbolEditor, { groupBadgeSymbols } from "@UserInterface/Components/Groups/Editor/GroupBadgeSymbolEditor";
 import { useEffect, useState } from "react";
+import GroupBadgeBaseEditor, { groupBadgeBases } from "@UserInterface/Components/Groups/Editor/GroupBadgeBaseEditor";
 
 export type GroupBadgeEditorProps = {
     data?: GroupBadgeData;

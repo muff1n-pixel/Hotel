@@ -2,7 +2,7 @@ import { GroupBadgeData } from "@pixel63/events";
 import { GroupBadgeBaseData } from "@pixel63/events/build/Groups/GroupBadgeData";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import GroupBadgeColor from "@UserInterface/Components/Groups/GroupBadgeColor";
+import GroupBadgeColor from "@UserInterface/Components/Groups/Editor/GroupBadgeColor";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 
 export type GroupBadgeBaseEditorProps = {

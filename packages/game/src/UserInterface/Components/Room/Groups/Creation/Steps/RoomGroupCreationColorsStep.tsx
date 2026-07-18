@@ -1,5 +1,5 @@
 import { GroupColorsData } from "@pixel63/events";
-import GroupColorEditor from "@UserInterface/Components/Groups/GroupColorEditor";
+import GroupColorEditor from "@UserInterface/Components/Groups/Editor/GroupColorEditor";
 
 export type RoomGroupCreationColorsStepProps = {
     data?: GroupColorsData;

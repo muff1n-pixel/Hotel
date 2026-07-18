@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 message UserGroupData {
-    bool admin = 1;
-    bool owner = 2;
+    string group_id = 1;
+
+    bool admin = 2;
+    bool owner = 3;
 }

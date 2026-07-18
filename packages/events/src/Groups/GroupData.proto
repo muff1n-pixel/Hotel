@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Groups/GroupBadgeData.proto";
+import "Room/Information/RoomInformationOwnerData.proto";
 
 message GroupData {
     string id = 1;
@@ -16,4 +17,7 @@ message GroupData {
     string type = 8;
 
     string created_at = 9;
+
+    uint32 members_count = 10;
+    RoomInformationOwnerData owner = 11;
 }

@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { UserModel } from "../UserModel";
 import { GroupModel } from "../../Groups/RoomGroupModel";
 
@@ -8,6 +8,10 @@ export class UserGroupModel extends Model {
 
     declare owner: boolean;
     declare admin: boolean;
+
+    declare createdAt: string;
+
+    declare user: NonAttribute<UserModel>;
 }
 
 export function initializeUserGroupModel(sequelize: Sequelize) {

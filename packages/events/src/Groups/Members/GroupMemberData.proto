@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "Figure/FigureConfigurationData.proto";
+
+message GroupMemberData {
+    string user_id = 1;
+    
+    bool admin = 2;
+    bool owner = 3;
+
+    string created_at = 4;
+
+    string name = 5;
+    FigureConfigurationData figure_configuration = 6;
+}

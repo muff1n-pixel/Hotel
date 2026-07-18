@@ -4,10 +4,11 @@ import { GroupBadgeData } from "@pixel63/events";
 import GroupBadgeRenderer from "@Client/Groups/GroupBadgeRenderer";
 
 export type GroupBadgeImageProps = {
+    scale?: number;
     data?: GroupBadgeData;
 }
 
-export default function GroupBadgeImage({ data }: GroupBadgeImageProps) {
+export default function GroupBadgeImage({ scale, data }: GroupBadgeImageProps) {
     const [image, setImage] = useState<ImageBitmap>();
 
     useEffect(() => {
@@ -27,6 +28,6 @@ export default function GroupBadgeImage({ data }: GroupBadgeImageProps) {
     }
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image}/>
+        <OffscreenCanvasRender offscreenCanvas={image} scale={scale}/>
     );
 }

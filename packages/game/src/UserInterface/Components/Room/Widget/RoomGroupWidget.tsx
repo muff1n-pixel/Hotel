@@ -1,14 +1,12 @@
-import { FurnitureTraxSongMetaData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
-import useTraxPlayer from "@UserInterface/Components/Room/Widget/Hooks/useTraxPlayer";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
-import { useRoomTraxmachine } from "@UserInterface/Hooks/useRoomTraxmachine";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function RoomGroupWidget() {
     const roomGroup = useRoomGroup();
+    const dialogs = useDialogs();
 
     if(!roomGroup?.group) {
         return null;
@@ -61,6 +59,9 @@ export default function RoomGroupWidget() {
 
             <FlexLayout direction="row" style={{
                 padding: "8px 16px 8px 8px",
+                cursor: "pointer"
+            }} onClick={() => {
+                dialogs.addUniqueDialog("group", roomGroup.group?.id, roomGroup.group?.id);
             }}>
                 <FlexLayout align="center" justify="center">
                     <GroupBadgeImage data={roomGroup.group.badge}/>

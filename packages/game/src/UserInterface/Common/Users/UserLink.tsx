@@ -1,13 +1,17 @@
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type UserLinkProps = {
-    id: string;
-    name: string;
+    id?: string;
+    name?: string;
     reversed?: boolean;
 };
 
 export default function UserLink({ id, name, reversed }: UserLinkProps) {
     const dialogs = useDialogs();
+
+    if(!id || !name) {
+        return null;
+    }
 
     return (
         <div style={{

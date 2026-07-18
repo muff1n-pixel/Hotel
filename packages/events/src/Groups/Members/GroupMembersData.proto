@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Groups/Members/GroupMemberData.proto";
+
+message GroupMembersData {
+    string group_id = 1;
+
+    repeated GroupMemberData members = 2;
+}
