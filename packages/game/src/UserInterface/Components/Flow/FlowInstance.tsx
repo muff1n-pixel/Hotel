@@ -23,7 +23,7 @@ export default function FlowInstance() {
 
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            gap: 6,
             justifyContent: "flex-end"
         }}>
             <Widget onSettingsClick={() => setSettingsExpanded(!settingsExpanded)}/>
