@@ -104,7 +104,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
 
                 width: "33vw",
 
-                background: "rgba(28, 28, 26, .9)",
+                background: "rgba(32, 32, 27, 0.84)",
                 borderRight: "2px solid rgba(64, 64, 64, .75)",
             }}>
                 <div style={{

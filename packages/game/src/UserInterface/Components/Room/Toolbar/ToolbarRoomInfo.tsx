@@ -45,7 +45,7 @@ export default function ToolbarRoomInfo() {
                     padding: 8,
                     paddingLeft: 26,
 
-                    background: "rgba(28, 28, 26, .9)",
+                    background: "rgba(32, 32, 27, 0.84)",
 
                     fontSize: 12,
                     color: "#9A9A99",
