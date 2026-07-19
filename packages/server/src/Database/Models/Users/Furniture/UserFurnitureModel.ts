@@ -4,6 +4,7 @@ import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
 import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureColorTag, UserFurnitureCustomData } from "@pixel63/events";
+import { GroupModel } from "../../Groups/RoomGroupModel.js";
 
 export class UserFurnitureModel extends Model {
     declare id: string;
@@ -32,6 +33,9 @@ export class UserFurnitureModel extends Model {
 
     declare trax: NonAttribute<UserFurnitureModel | null>;
     declare traxId: NonAttribute<string | null>;
+
+    declare group: NonAttribute<GroupModel | null>;
+    declare groupId: NonAttribute<string | null>;
 }
 
 export function initializeUserFurnitureModel(sequelize: Sequelize) {
@@ -136,6 +140,12 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
     UserFurnitureModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId",
+        constraints: false
+    });
+
+    UserFurnitureModel.belongsTo(GroupModel, {
+        as: "group",
+        foreignKey: "groupId",
         constraints: false
     });
 

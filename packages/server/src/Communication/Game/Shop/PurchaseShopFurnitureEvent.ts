@@ -115,6 +115,8 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 data: null,
 
                 ...(group && {
+                    groupId: group.id,
+                    
                     colorTags: [
                         UserFurnitureColorTag.create({
                             tag: "COLOR1",
