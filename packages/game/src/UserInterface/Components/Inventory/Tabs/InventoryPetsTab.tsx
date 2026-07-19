@@ -190,7 +190,7 @@ export default function InventoryPetsTab() {
                             <b>{activePet?.name}</b>
                         </div>
 
-                        <DialogButton disabled={!room || (room.hasRights || room.information?.allowPets)} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton disabled={!room || (!room.hasRights || !room.information?.allowPets)} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
                     </Fragment>
                 )}
             </div>
