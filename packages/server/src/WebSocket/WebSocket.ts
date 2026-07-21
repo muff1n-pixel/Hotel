@@ -12,6 +12,7 @@ import UserFriends from "../Users/Friends/UserFriends.js";
 
 export default class WebSocket {
     private readonly server: WebSocketServer;
+    private readonly ReadySign = Buffer.from("READY");
 
     constructor() {
         this.server = new WebSocketServer({
@@ -108,6 +109,8 @@ export default class WebSocket {
                 webSocket.on("message", (rawData) => {
                     game.eventHandler.decodeAndDispatchMessages(user, rawData);
                 });
+
+                webSocket.send(this.ReadySign);
 
                 webSocket.on("close", () => {
                     (async () => {

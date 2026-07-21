@@ -6,57 +6,87 @@ import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    constructor(secure: boolean, hostname: string, port: number, options: Record<string, string>) {
+    private readyOutgoingMessages: Array<{ message: MessageType; payload: UnknownMessage }> = [];
+    private isReady: boolean = false;
+    private readonly ReadySign = "READY";
+
+    constructor(
+        secure: boolean,
+        hostname: string,
+        port: number,
+        options: Record<"userId" | "accessToken", string>,
+    ) {
         super();
 
-        this.socket = new WebSocket(`${(secure)?("wss"):("ws")}://${hostname}:${port}?${new URLSearchParams(options).toString()}`);
+        this.socket = new WebSocket(
+            `${secure ? "wss" : "ws"}://${hostname}:${port}?${new URLSearchParams(options).toString()}`,
+        );
 
         this.socket.binaryType = "arraybuffer";
 
         this.socket.addEventListener("message", (event) => {
             try {
                 const data = new Uint8Array(event.data);
+                
+                if (!this.isReady){
+                    const decoded = new TextDecoder().decode(data);
+                    if (decoded === this.ReadySign) {
+                        this.isReady = true;
 
+                        for (const outgoingMessage of this.readyOutgoingMessages) {
+                            this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                        }
+
+                        this.readyOutgoingMessages = [];
+
+                        return;
+                    }
+                }
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
 
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
-            }
-            catch(error) {
+            } catch (error) {
                 EventsLogger.error("Failed to decode message", error);
             }
         });
 
-        if(this.socket.readyState === this.socket.OPEN) {
+        if (this.socket.readyState === this.socket.OPEN) {
             this.dispatchEvent(new Event("open"));
-        }
-        else {
+        } else {
             this.socket.addEventListener("open", () => {
                 this.dispatchEvent(new Event("open"));
             });
         }
-        
+
         this.socket.addEventListener("close", () => {
             this.dispatchEvent(new Event("close"));
         });
 
         setInterval(() => {
-            if(this.socket.readyState === this.socket.OPEN) {
+            if (this.socket.readyState === this.socket.OPEN) {
                 this.sendProtobuff(PingData, PingData.create({}));
             }
         }, 30 * 1000);
     }
 
-    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(
+        message: MessageType,
+        payload: Message,
+    ) {
+        if (!this.isReady) {
+            this.readyOutgoingMessages.push({ message, payload });
+
+            return;
+        }
         EventsLogger.log(`Sending ${message.$type}`, payload);
 
         let encoded;
 
         try {
             encoded = message.encode(payload).finish();
-        }
-        catch(error) {
+        } catch (error) {
             EventsLogger.error("Failed to encode Protobuff", error);
 
             return;
@@ -75,8 +105,7 @@ export default class WebSocketClient extends EventTarget {
             message.set(encoded, typeBytes.length);
 
             this.socket.send(message);
-        }
-        catch(error) {
+        } catch (error) {
             EventsLogger.error("Failed to send encoded Protobuff", error);
         }
     }
@@ -85,7 +114,11 @@ export default class WebSocketClient extends EventTarget {
         this.socket.close();
     }
 
-    addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<T>, options?: AddEventListenerOptions | boolean) {
+    addProtobuffListener<T>(
+        message: MessageType,
+        protobuffListener: ProtobuffListener<T>,
+        options?: AddEventListenerOptions | boolean,
+    ) {
         const listener = (event: WebSocketEvent<Uint8Array>) => {
             try {
                 const payload = message.decode(event.data) as T;
@@ -93,8 +126,7 @@ export default class WebSocketClient extends EventTarget {
                 EventsLogger.log(`Received ${message.$type}`, payload);
 
                 protobuffListener.handle(payload);
-            }
-            catch(error) {
+            } catch (error) {
                 EventsLogger.error("Failed to handle Protobuf", error);
             }
         };
@@ -104,17 +136,36 @@ export default class WebSocketClient extends EventTarget {
         return listener;
     }
 
-    removeProtobuffListener(message: MessageType, listener: (event: WebSocketEvent<Uint8Array<ArrayBufferLike>>) => void) {
+    removeProtobuffListener(
+        message: MessageType,
+        listener: (event: WebSocketEvent<Uint8Array<ArrayBufferLike>>) => void,
+    ) {
         this.removeEventListener(message.$type, listener);
     }
 
-    addEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: AddEventListenerOptions | boolean): void {
-        super.addEventListener(type, callback as (EventListenerOrEventListenerObject | null), options);
+    addEventListener<T>(
+        type: string,
+        callback: ((event: T) => void) | null,
+        options?: AddEventListenerOptions | boolean,
+    ): void {
+        super.addEventListener(
+            type,
+            callback as EventListenerOrEventListenerObject | null,
+            options,
+        );
     }
 
-    removeEventListener<T>(type: string, callback: ((event: T) => void) | null, options?: EventListenerOptions | boolean): void {
-        super.removeEventListener(type, callback as (EventListenerOrEventListenerObject | null), options);
+    removeEventListener<T>(
+        type: string,
+        callback: ((event: T) => void) | null,
+        options?: EventListenerOptions | boolean,
+    ): void {
+        super.removeEventListener(
+            type,
+            callback as EventListenerOrEventListenerObject | null,
+            options,
+        );
     }
-};
+}
 
 (window as any).WebSocketClient = WebSocketClient;
