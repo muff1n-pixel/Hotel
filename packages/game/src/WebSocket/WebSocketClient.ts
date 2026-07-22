@@ -1,14 +1,13 @@
 import ProtobuffListener from "@Client/Communications/ProtobuffListener.js";
 import WebSocketEvent from "../../../shared/WebSocket/Events/WebSocketEvent.js";
-import { MessageType, PingData, UnknownMessage } from "@pixel63/events";
+import { MessageType, PingData, UnknownMessage, UserReadyData } from "@pixel63/events";
 import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    private readyOutgoingMessages: Array<{ message: MessageType; payload: UnknownMessage }> = [];
+    private pendingOutgoingMessages: Array<{ message: MessageType; payload: UnknownMessage }> = [];
     private isReady: boolean = false;
-    private readonly ReadySign = "READY";
 
     constructor(
         secure: boolean,
@@ -24,24 +23,22 @@ export default class WebSocketClient extends EventTarget {
 
         this.socket.binaryType = "arraybuffer";
 
+        this.addProtobuffListener(UserReadyData, {
+            handle: async (payload) => {
+                this.isReady = true;
+
+                for (const outgoingMessage of this.pendingOutgoingMessages) {
+                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                }
+
+                this.pendingOutgoingMessages = [];
+            },
+        });
+
         this.socket.addEventListener("message", (event) => {
             try {
                 const data = new Uint8Array(event.data);
                 
-                if (!this.isReady){
-                    const decoded = new TextDecoder().decode(data);
-                    if (decoded === this.ReadySign) {
-                        this.isReady = true;
-
-                        for (const outgoingMessage of this.readyOutgoingMessages) {
-                            this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
-                        }
-
-                        this.readyOutgoingMessages = [];
-
-                        return;
-                    }
-                }
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
@@ -76,10 +73,11 @@ export default class WebSocketClient extends EventTarget {
         payload: Message,
     ) {
         if (!this.isReady) {
-            this.readyOutgoingMessages.push({ message, payload });
+            this.pendingOutgoingMessages.push({ message, payload });
 
             return;
         }
+        
         EventsLogger.log(`Sending ${message.$type}`, payload);
 
         let encoded;
