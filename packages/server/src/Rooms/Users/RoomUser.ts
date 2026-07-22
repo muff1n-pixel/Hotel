@@ -88,6 +88,7 @@ export default class RoomUser implements RoomActor {
             
             information: this.room.getInformationData(),
             clickConfiguration: this.room.clickConfiguration,
+            event: this.room.event.getEventData(),
             
             structure: this.room.model.structure,
 
@@ -120,8 +121,6 @@ export default class RoomUser implements RoomActor {
         }
         
         this.user.friends.updateFriends();
-        
-        this.user.sendProtobuff(RoomEventData, this.room.event.getEventData());
     }
     
     public getRoomUserData(): RoomUserData {

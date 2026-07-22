@@ -6,7 +6,7 @@ export default class RoomUserGroup {
     public userGroup: UserGroupModel | null = null;
 
     constructor(private readonly roomUser: RoomUser) {
-        this.refreshUserGroup().catch(console.error);
+
     }
 
     public async refreshUserGroup() {

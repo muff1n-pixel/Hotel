@@ -4,6 +4,7 @@ import "Room/Information/RoomInformationData.proto";
 import "Room/Configuration/RoomClickConfigurationData.proto";
 
 import "Room/Users/RoomUserData.proto";
+import "Room/Events/RoomEventData.proto";
 
 import "Room/Structure/RoomStructureData.proto";
 
@@ -17,6 +18,7 @@ message RoomLoadData {
     string id = 1;
 
     RoomInformationData information = 2;
+    RoomEventData event = 11;
 
     RoomStructureData structure = 3;
     RoomClickConfigurationData click_configuration = 10;

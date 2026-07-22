@@ -27,6 +27,8 @@ export default class RoomReadyEvent implements IncomingEvent {
         for(const furniture of furnitureWithUserEntersLogic) {
             await furniture.logic?.handleUserEnteredRoom?.(roomUser);
         }
+
+        await roomUser.group.refreshUserGroup();
     }
 }
 
