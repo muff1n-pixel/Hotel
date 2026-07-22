@@ -1,4 +1,4 @@
-import { RoomGroupData, RoomUserEnteredData } from "@pixel63/events";
+import { RoomEventData, RoomGroupData, RoomUserEnteredData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 
@@ -29,6 +29,8 @@ export default class RoomReadyEvent implements IncomingEvent {
         }
 
         await roomUser.group.refreshUserGroup();
+
+        user.sendProtobuff(RoomEventData, roomUser.room.event.getEventData());
     }
 }
 

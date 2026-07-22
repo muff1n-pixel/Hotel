@@ -65,8 +65,6 @@ export default class RoomInstance {
             this.information = event.information;
         }
 
-        this.event.value = event.event;
-
         this.hasRights = event.hasRights;
         this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         this.clickConfiguration.value = event.clickConfiguration;

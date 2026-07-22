@@ -88,7 +88,6 @@ export default class RoomUser implements RoomActor {
             
             information: this.room.getInformationData(),
             clickConfiguration: this.room.clickConfiguration,
-            event: this.room.event.getEventData(),
             
             structure: this.room.model.structure,
 
