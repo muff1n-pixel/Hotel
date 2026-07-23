@@ -24,7 +24,7 @@ export default class WebSocketClient extends EventTarget {
         this.socket.binaryType = "arraybuffer";
 
         this.addProtobuffListener(UserReadyData, {
-            handle: async (payload) => {
+            handle: async () => {
                 this.isReady = true;
 
                 for (const outgoingMessage of this.pendingOutgoingMessages) {
