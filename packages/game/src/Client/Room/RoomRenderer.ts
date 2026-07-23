@@ -26,6 +26,7 @@ import { Application, Container, Rectangle } from "pixi.js";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
+import RoomStructure from "@Client/Room/Structure/RoomStructure";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -37,6 +38,7 @@ export default class RoomRenderer extends EventTarget {
     public readonly frameCounter = new RoomRendererFrameCounter(this);
 
     public lighting: RoomLighting;
+    public structure: RoomStructure;
 
     public furniturePlacer?: RoomFurniturePlacer;
 
@@ -57,8 +59,6 @@ export default class RoomRenderer extends EventTarget {
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
 
-    public structure: RoomStructureData;
-
     constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, structure?: RoomStructureData) {
         super();
 
@@ -69,7 +69,7 @@ export default class RoomRenderer extends EventTarget {
         this.application = new Application();
         this.container = new Container();
 
-        this.structure = structure;
+        this.structure = new RoomStructure(structure);
 
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
@@ -118,10 +118,10 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.camera.cameraPosition.left = Math.round(this.application.screen.width / 2);
-        this.camera.cameraPosition.left -= (this.structure.grid.length ) * 3;
+        this.camera.cameraPosition.left -= (this.structure.data.grid.length ) * 3;
         
         this.camera.cameraPosition.top = Math.round(this.application.screen.height / 2);
-        this.camera.cameraPosition.top -= (this.structure.grid.length + this.structure.grid[0]?.length) * 6;
+        this.camera.cameraPosition.top -= (this.structure.data.grid.length + this.structure.data.grid[0]?.length) * 6;
 
         this.lighting.init();
 
@@ -269,7 +269,7 @@ export default class RoomRenderer extends EventTarget {
         let priority = item.priority;
 
         if(item.position) {
-            if(Math.floor(item.position.row) === this.structure.door?.row && Math.floor(item.position.column) === this.structure.door.column) {
+            if(Math.floor(item.position.row) === this.structure.data.door?.row && Math.floor(item.position.column) === this.structure.data.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
                     priority = -2000;
                     priority += (item.position.depth * 100);
@@ -373,7 +373,7 @@ export default class RoomRenderer extends EventTarget {
     public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
-                if(this.structure.grid[row]?.[column] === undefined || this.structure.grid[row]?.[column] === 'X') {
+                if(this.structure.data.grid[row]?.[column] === undefined || this.structure.data.grid[row]?.[column] === 'X') {
                     return false;
                 }
             }   
@@ -534,7 +534,7 @@ export default class RoomRenderer extends EventTarget {
     private wallItem?: RoomWallItem;
     
     public setStructure(structure: RoomStructureData) {
-        this.structure = structure;
+        this.structure = new RoomStructure(structure);
 
         if(this.floorItem) {
             this.removeItem(this.floorItem);
@@ -545,7 +545,7 @@ export default class RoomRenderer extends EventTarget {
         const floorPromise = new Promise<void>((resolve) => {
             this.floorItem = new RoomFloorItem(
                 this,
-                new FloorRenderer(structure, structure.floor?.id ?? "default", 64),
+                new FloorRenderer(this.structure, structure.floor?.id ?? "default", 64),
                 resolve
             );
 
@@ -562,7 +562,7 @@ export default class RoomRenderer extends EventTarget {
             if(!structure.wall?.hidden) {
                 this.wallItem = new RoomWallItem(
                     this,
-                    new WallRenderer(structure, structure.wall?.id ?? "default", 64),
+                    new WallRenderer(this.structure, structure.wall?.id ?? "default", 64),
                     resolve
                 );
 

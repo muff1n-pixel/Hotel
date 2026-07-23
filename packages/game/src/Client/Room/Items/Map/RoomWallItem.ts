@@ -21,7 +21,7 @@ export default class RoomWallItem extends RoomItem {
             
             this.sprites.push(new RoomWallSprite(this, this.renderWithLighting(wall)));
 
-            if(this.wallRenderer!.structure.door) {
+            if(this.wallRenderer!.structure.data.door) {
                 this.sprites.push(new RoomDoorMaskSprite(this, this.renderWithLighting(doorMask)));
             }
 

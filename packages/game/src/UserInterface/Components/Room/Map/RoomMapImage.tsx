@@ -3,6 +3,7 @@ import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { RoomStructureData } from "@pixel63/events";
+import RoomStructure from "@Client/Room/Structure/RoomStructure";
 
 export type RoomMapImageProps = {
     size?: number;
@@ -24,13 +25,15 @@ export default function RoomMapImage({ staticImage, size = 6, width, height, sty
             return;
         }
 
+        const roomStructure = new RoomStructure(structure);
+
         rendered.current = true;
         
         (async () => {
             const fullSize = size / 2;
 
-            const floorRenderer = new FloorRenderer(structure, structure.floor?.id ?? "default", size, true, true);
-            const wallRenderer = new WallRenderer(structure, structure.wall?.id ?? "default", size, true);
+            const floorRenderer = new FloorRenderer(roomStructure, structure.floor?.id ?? "default", size, true, true);
+            const wallRenderer = new WallRenderer(roomStructure, structure.wall?.id ?? "default", size, true);
 
             const [ [ floor, elevatedFloor ], [wallImage, doorMaskImage] ] = await Promise.all([
                 (async () => {
@@ -77,16 +80,16 @@ export default function RoomMapImage({ staticImage, size = 6, width, height, sty
                 canvas.height = height;
             }
 
-            context.translate(Math.floor(translateLeft + (floorRenderer.rows * fullSize)), Math.floor(translateTop + (wallRenderer.depth + 3.5) * fullSize));
+            context.translate(Math.floor(translateLeft + (roomStructure.rows * fullSize)), Math.floor(translateTop + (roomStructure.wallDepth + 3.5) * fullSize));
 
-            context.drawImage(wallImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.wallThickness);
-            context.drawImage(floor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - floorRenderer.wallThickness);
+            context.drawImage(wallImage, -(roomStructure.rows * fullSize), -((roomStructure.wallDepth + 3.5) * fullSize) - wallRenderer.wallThickness);
+            context.drawImage(floor, -(roomStructure.rows * fullSize), -(roomStructure.depth * fullSize) - fullSize - floorRenderer.wallThickness);
             
             if(elevatedFloor) {
-                context.drawImage(elevatedFloor, -(floorRenderer.rows * fullSize), -(floorRenderer.depth * fullSize) - fullSize - floorRenderer.wallThickness);
+                context.drawImage(elevatedFloor, -(roomStructure.rows * fullSize), -(roomStructure.depth * fullSize) - fullSize - floorRenderer.wallThickness);
             }
 
-            context.drawImage(doorMaskImage, -(wallRenderer.rows * fullSize), -((wallRenderer.depth + 3.5) * fullSize) - wallRenderer.wallThickness);
+            context.drawImage(doorMaskImage, -(roomStructure.rows * fullSize), -((roomStructure.wallDepth + 3.5) * fullSize) - wallRenderer.wallThickness);
 
             setDataUrl(canvas.toDataURL("image/png"));
 

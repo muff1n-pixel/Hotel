@@ -13,8 +13,8 @@ export default class RoomFloorSprite extends RoomSprite {
         super(
             item,
             {
-                left: -(item.floorRenderer.rows * 32) - (item.floorRenderer.structure.wall?.thickness ?? 0),
-                top: -(item.floorRenderer.depth * 32) - 32 - (item.floorRenderer.structure.wall?.thickness ?? 0)
+                left: -(item.floorRenderer.structure.rows * 32) - (item.floorRenderer.structure.data.wall?.thickness ?? 0),
+                top: -(item.floorRenderer.structure.depth * 32) - 32 - (item.floorRenderer.structure.data.wall?.thickness ?? 0)
             },
             elevated ? -50 : -3000,
             undefined,
@@ -32,7 +32,7 @@ export default class RoomFloorSprite extends RoomSprite {
                     throw new ContextNotAvailableError();
                 }
                 
-                context.setTransform(1, .5, -1, .5, (this.item.floorRenderer.rows * 32) + (item.floorRenderer.structure.wall?.thickness ?? 0), -this.offset.top);
+                context.setTransform(1, .5, -1, .5, (this.item.floorRenderer.structure.rows * 32) + (item.floorRenderer.structure.data.wall?.thickness ?? 0), -this.offset.top);
 
                 for(let path = this.item.floorRenderer.tiles.length - 1; path != -1; path--) {
                     if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, x, y)) {
@@ -92,7 +92,7 @@ export default class RoomFloorSprite extends RoomSprite {
             throw new ContextNotAvailableError();
         }
         
-        context.setTransform(1, .5, -1, .5, this.offset.left + (this.item.floorRenderer.rows * 32), 0);
+        context.setTransform(1, .5, -1, .5, this.offset.left + (this.item.floorRenderer.structure.rows * 32), 0);
 
         for(let path = this.item.floorRenderer.tiles.length - 1; path != -1; path--) {
             if(!context.isPointInPath(this.item.floorRenderer.tiles[path].path, position.left, position.top)) {

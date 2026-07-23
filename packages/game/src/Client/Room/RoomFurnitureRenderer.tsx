@@ -32,23 +32,23 @@ export default class RoomFurnitureRenderer {
         const roomStructure: RoomStructureData = RoomStructureData.create({
             grid: new Array(options.rows ?? 7).fill(null).map((_) => new Array(options.columns ?? 7).fill(null).map(() => '0').join('')),
             floor: {
-                id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.data.floor?.id ?? "111",
                 thickness: 8
             },
             wall: {
-                id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
                 thickness: 8,
                 hidden: false
             }
         });
 
-        this.wallRenderer = new WallRenderer(roomStructure, roomStructure.wall?.id ?? "default", 64);
-
         this.roomRenderer = new RoomRenderer(element, undefined, undefined, roomStructure);
+
+        this.wallRenderer = new WallRenderer(this.roomRenderer.structure, roomStructure.wall?.id ?? "default", 64);
 
         this.wallItem = new RoomWallItem(this.roomRenderer, this.wallRenderer);
 
-        this.floorRenderer = new FloorRenderer(roomStructure, roomStructure.floor?.id ?? "default", 64);
+        this.floorRenderer = new FloorRenderer(this.roomRenderer.structure, roomStructure.floor?.id ?? "default", 64);
         this.floorItem = new RoomFloorItem(this.roomRenderer, this.floorRenderer);
     
         this.roomRenderer.init().then(() => {

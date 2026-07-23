@@ -9,8 +9,8 @@ export default class RoomWallSprite extends RoomSprite {
         super(
             item,
             {
-                left: -(item.wallRenderer.rows * 32) - item.wallRenderer.structure.wall!.thickness,
-                top: -((item.wallRenderer.depth + 3.5) * 32) - item.wallRenderer.structure.wall!.thickness
+                left: -(item.wallRenderer.structure.rows * 32) - item.wallRenderer.structure.data.wall!.thickness,
+                top: -((item.wallRenderer.structure.depth + 3.5) * 32) - item.wallRenderer.structure.data.wall!.thickness
             },
             -3100,
             undefined,
@@ -30,7 +30,7 @@ export default class RoomWallSprite extends RoomSprite {
             throw new ContextNotAvailableError();
         }
 
-        context.setTransform(1, -.5, 0, 1, this.offset.left + this.item.wallRenderer.rows * 32, this.offset.top + (this.item.wallRenderer.depth * 16) + this.item.wallRenderer.structure.wall!.thickness);
+        context.setTransform(1, -.5, 0, 1, this.offset.left + this.item.wallRenderer.structure.rows * 32, this.offset.top + (this.item.wallRenderer.structure.wallDepth * 16) + this.item.wallRenderer.structure.data.wall!.thickness);
 
         for(let path = this.item.wallRenderer.leftWalls.length - 1; path != -1; path--) {
             if(!context.isPointInPath(this.item.wallRenderer.leftWalls[path].path, position.left, position.top)) {
@@ -56,7 +56,7 @@ export default class RoomWallSprite extends RoomSprite {
             });
         }
 
-        context.setTransform(1, .5, 0, 1, this.offset.left + this.item.wallRenderer.rows * 32, this.offset.top + (this.item.wallRenderer.depth * 16) + this.item.wallRenderer.structure.wall!.thickness);        
+        context.setTransform(1, .5, 0, 1, this.offset.left + this.item.wallRenderer.structure.rows * 32, this.offset.top + (this.item.wallRenderer.structure.depth * 16) + this.item.wallRenderer.structure.data.wall!.thickness);        
 
         for(let path = this.item.wallRenderer.rightWalls.length - 1; path != -1; path--) {
             if(!context.isPointInPath(this.item.wallRenderer.rightWalls[path].path, position.left, position.top)) {

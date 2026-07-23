@@ -1,6 +1,6 @@
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomAssets from "@Client/Assets/RoomAssets";
-import { RoomStructureData } from "@pixel63/events";
+import RoomStructure from "@Client/Room/Structure/RoomStructure";
 
 type FloorRectangle = {
     row: number;
@@ -22,10 +22,6 @@ export type FloorTile = {
 export default class FloorRenderer {
     public tiles: FloorTile[] = [];
 
-    public rows: number;
-    public columns: number;
-    public depth: number;
-
     private fullSize: number;
     private halfSize: number;
 
@@ -35,52 +31,16 @@ export default class FloorRenderer {
     private leftOutlinePaths: Path2D[] = [];
     private rightOutlinePaths: Path2D[] = [];
 
-    public readonly structure: RoomStructureData;
-
-    constructor(structure: RoomStructureData | undefined, public floorId: string, private readonly size: number, private readonly outline: boolean = false, private readonly hideDoor: boolean = false) {
+    constructor(public readonly structure: RoomStructure, public floorId: string, private readonly size: number, private readonly outline: boolean = false, private readonly hideDoor: boolean = false) {
         if(!structure) {
             throw new Error();
-        }
-
-        this.structure = structure;
-
-        this.rows = this.structure.grid.length;
-        this.columns = Math.max(...this.structure.grid.map((row) => row.length));
-        this.depth = 0;
-
-        for(let row = 0; row < this.structure.grid.length; row++) {
-            for(let column = 0; column < this.structure.grid[row].length; column++) {
-                const depth = this.parseDepth(this.structure.grid[row][column]);
-
-                if(depth === 'X') {
-                    continue;
-                }
-
-                if(this.depth > depth) {
-                    continue;
-                }
-
-                this.depth = depth;
-            }
         }
 
         this.fullSize = size / 2;
         this.halfSize = this.fullSize / 2;
 
-        this.wallThickness = ((this.structure.wall?.thickness ?? 8) / 32) * this.fullSize;
-        this.floorThickness = ((this.structure.floor?.thickness ?? 8) / 32) * this.fullSize;
-    }
-
-    private parseDepth(character: string): number | 'X' {
-        if(character === 'X') {
-            return character;
-        }
-
-        if (character >= '0' && character <= '9') {
-            return parseInt(character);
-        } else {
-            return character.charCodeAt(0) - 55;
-        }
+        this.wallThickness = ((this.structure.data.wall?.thickness ?? 8) / 32) * this.fullSize;
+        this.floorThickness = ((this.structure.data.floor?.thickness ?? 8) / 32) * this.fullSize;
     }
 
     public async renderOffScreen() {
@@ -159,8 +119,8 @@ export default class FloorRenderer {
             rotate: 90
         });
 
-        const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.wallThickness) * 2);
-        const height = (this.rows * this.halfSize) + (this.columns * this.halfSize) + (this.depth * this.fullSize) + (((this.wallThickness) + (this.floorThickness)) * 2) + this.halfSize;
+        const width = (this.structure.rows * this.fullSize) + (this.structure.columns * this.fullSize) + ((this.wallThickness) * 2);
+        const height = (this.structure.rows * this.halfSize) + (this.structure.columns * this.halfSize) + (this.structure.depth * this.fullSize) + (((this.wallThickness) + (this.floorThickness)) * 2) + this.halfSize;
 
         const canvas = new OffscreenCanvas(width, height);
 
@@ -179,15 +139,10 @@ export default class FloorRenderer {
 
         this.tiles = [];
 
-        const doorDepth = this.structure.door
-            ? this.parseDepth(this.getTileDepth(this.structure.door.row, this.structure.door.column))
-            : 0;
-        const groundLevel = doorDepth === 'X' ? 0 : doorDepth;
+        const groundRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) <= this.structure.groundLevel);
+        const elevatedRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) > this.structure.groundLevel);
 
-        const groundRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) <= groundLevel);
-        const elevatedRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) > groundLevel);
-
-        for(let currentDepth = 0; currentDepth <= groundLevel; currentDepth++) {
+        for(let currentDepth = 0; currentDepth <= this.structure.groundLevel; currentDepth++) {
             const currentRectangles = groundRectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
 
             this.renderLeftEdges(context, currentRectangles, leftEdgeImage.image);
@@ -199,14 +154,14 @@ export default class FloorRenderer {
             context.strokeStyle = "black";
             context.imageSmoothingEnabled = false;
 
-            context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
+            context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
             context.translate(0.5, 0.5);
 
             for(const outlinePath of this.rightOutlinePaths) {
                 context.stroke(outlinePath);
             }
             
-            context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
+            context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
             context.translate(0.5, 0.5);
 
             for(const outlinePath of this.leftOutlinePaths) {
@@ -228,7 +183,7 @@ export default class FloorRenderer {
                 throw new ContextNotAvailableError();
             }
 
-            for(let currentDepth = groundLevel + 1; currentDepth <= this.depth; currentDepth++) {
+            for(let currentDepth = this.structure.groundLevel + 1; currentDepth <= this.structure.depth; currentDepth++) {
                 const currentRectangles = elevatedRectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
 
                 this.renderLeftEdges(elevatedContext, currentRectangles, leftEdgeImage.image);
@@ -240,13 +195,13 @@ export default class FloorRenderer {
                 elevatedContext.strokeStyle = "black";
                 elevatedContext.imageSmoothingEnabled = false;
 
-                elevatedContext.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
+                elevatedContext.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize + 0.5, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
 
                 for(const outlinePath of this.rightOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
                 }
 
-                elevatedContext.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize + 0.5, ((this.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
+                elevatedContext.setTransform(1, .5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize + 0.5, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness) + 0.5);
 
                 for(const outlinePath of this.leftOutlinePaths) {
                     elevatedContext.stroke(outlinePath);
@@ -282,7 +237,7 @@ export default class FloorRenderer {
 
     private renderLeftEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
+        context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -293,7 +248,7 @@ export default class FloorRenderer {
 
             if(this.outline && Math.floor(rectangle.row) === rectangle.row) {
                 if(!rectangles.some(x => (Math.floor(x.row) === Math.floor(rectangle.row) - 1 && Math.floor(x.column) === Math.floor(rectangle.column)))) {
-                    if(!this.hideDoor || (rectangle.row - 1 !== this.structure.door?.row && rectangle.column !== this.structure.door?.column)) {
+                    if(!this.hideDoor || (rectangle.row - 1 !== this.structure.data.door?.row && rectangle.column !== this.structure.data.door?.column)) {
                         const outlinePath = new Path2D();
 
                         outlinePath.moveTo(left + this.fullSize, top - this.fullSize);
@@ -334,7 +289,7 @@ export default class FloorRenderer {
 
     private renderRightEdges(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
+        context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
 
         for(const index in rectangles) {
@@ -348,7 +303,7 @@ export default class FloorRenderer {
 
             if(this.outline && Math.floor(column) === column) {
                 if(!rectangles.some(x => (Math.floor(x.row) === Math.floor(rectangle.row) && Math.floor(x.column) === Math.floor(rectangle.column) - 1))) {
-                    if(this.hideDoor || (rectangle.row !== this.structure.door?.row && rectangle.column - 1 !== this.structure.door?.column)) {
+                    if(this.hideDoor || (rectangle.row !== this.structure.data.door?.row && rectangle.column - 1 !== this.structure.data.door?.column)) {
                         const outlinePath = new Path2D();
 
                         outlinePath.moveTo(left - this.fullSize, top - this.fullSize);
@@ -390,7 +345,7 @@ export default class FloorRenderer {
 
     private renderTiles(context: OffscreenCanvasRenderingContext2D, rectangles: FloorRectangle[], image: ImageBitmap) {
         context.beginPath();
-        context.setTransform(1, .5, -1, .5, (this.wallThickness) + this.rows * this.fullSize, ((this.depth + 1) * this.fullSize) + (this.wallThickness));
+        context.setTransform(1, .5, -1, .5, (this.wallThickness) + this.structure.rows * this.fullSize, ((this.structure.depth + 1) * this.fullSize) + (this.wallThickness));
         context.fillStyle = context.createPattern(image, "repeat")!;
                 
         const tiles = new Path2D();
@@ -398,7 +353,7 @@ export default class FloorRenderer {
         for(const index in rectangles) {
             const rectangle = rectangles[index];
 
-            if(this.hideDoor && rectangle.row === this.structure.door?.row && rectangle.column === this.structure.door.column) {
+            if(this.hideDoor && rectangle.row === this.structure.data.door?.row && rectangle.column === this.structure.data.door.column) {
                 continue;
             }
 
@@ -420,15 +375,15 @@ export default class FloorRenderer {
     private getRectangles() {
         const rectangles: FloorRectangle[] = [];
 
-        for(let row = 0; row < this.structure.grid.length; row++) {
-            for(let column = 0; column < this.structure.grid[row].length; column++) {
-                const currentDepth = this.parseDepth(this.structure.grid[row][column]);
+        for(let row = 0; row < this.structure.data.grid.length; row++) {
+            for(let column = 0; column < this.structure.data.grid[row].length; column++) {
+                const currentDepth = this.structure.parseDepth(this.structure.data.grid[row][column]);
                 
                 if(currentDepth === 'X') {
                     continue;
                 }
 
-                if(this.parseDepth(this.getTileDepth(row, column - 1)) === currentDepth + 1) {
+                if(this.structure.parseDepth(this.structure.getTileDepth(row, column - 1)) === currentDepth + 1) {
                     for(let step = 0; step < 4; step++) {
                         rectangles.push({
                             row,
@@ -442,7 +397,7 @@ export default class FloorRenderer {
                     continue;
                 }
 
-                if(this.parseDepth(this.getTileDepth(row - 1, column)) === currentDepth + 1) {
+                if(this.structure.parseDepth(this.structure.getTileDepth(row - 1, column)) === currentDepth + 1) {
                     for(let step = 0; step < 4; step++) {
                         rectangles.push({
                             row: row + (step * .25),
@@ -468,13 +423,5 @@ export default class FloorRenderer {
         }
 
         return rectangles;
-    }
-
-    private getTileDepth(row: number, column: number): string {
-        if(this.structure.grid[row] && this.structure.grid[row][column]) {
-            return this.structure.grid[row][column];
-        }
-   
-        return 'X';
     }
 }
