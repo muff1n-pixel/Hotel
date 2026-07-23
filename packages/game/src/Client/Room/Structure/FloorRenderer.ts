@@ -154,7 +154,9 @@ export default class FloorRenderer {
             destinationHeight: Math.min((this.fullSize * (spriteData.height / 32)), (this.fullSize * ((material.width * 2) / 32))),
 
             color: [visualization.color, "AAA"],
-            flipHorizontal: assetData.flipHorizontal
+            flipHorizontal: assetData.flipHorizontal,
+
+            rotate: 90
         });
 
         const width = (this.rows * this.fullSize) + (this.columns * this.fullSize) + ((this.wallThickness) * 2);

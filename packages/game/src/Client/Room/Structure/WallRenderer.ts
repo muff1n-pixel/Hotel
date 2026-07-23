@@ -181,7 +181,22 @@ export default class WallRenderer {
             flipHorizontal: assetData.flipHorizontal
         });
 
-        const topWallImage = await RoomAssets.getRoomSprite("HabboRoomContent", {
+        const topLeftWallImage = await RoomAssets.getRoomSprite("HabboRoomContent", {
+            x: spriteData.x,
+            y: spriteData.y,
+
+            width: spriteData.width,
+            height: spriteData.height,
+
+            destinationHeight: Math.min(spriteData.height, material.width * 2),
+
+            color: [visualization.color, "AAA"],
+            flipHorizontal: assetData.flipHorizontal,
+
+            rotate: 90
+        });
+
+        const topRightWallImage = await RoomAssets.getRoomSprite("HabboRoomContent", {
             x: spriteData.x,
             y: spriteData.y,
 
@@ -222,7 +237,7 @@ export default class WallRenderer {
 
             this.renderLeftWalls(context, currentRectangles, leftWallImage.image);
             this.renderRightWalls(context, currentRectangles, rightWallImage.image);
-            this.renderWallTops(context, rectangles, topWallImage.image);
+            this.renderWallTops(context, rectangles, topLeftWallImage.image, topRightWallImage.image);
 
             context.globalCompositeOperation = "destination-out";
 
@@ -459,10 +474,12 @@ export default class WallRenderer {
         context.closePath();
     }
 
-    private renderWallTops(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], image: ImageBitmap) {
+    private renderWallTops(context: OffscreenCanvasRenderingContext2D, rectangles: WallRectangle[], leftImage: ImageBitmap, rightImage: ImageBitmap) {
         context.beginPath();
         context.setTransform(1, .5, -1, .5, (this.wallThickness) + this.rows * this.fullSize, (this.depth * this.halfSize) + (this.wallThickness));     
-        context.fillStyle = context.createPattern(image, "repeat")!;
+
+        const leftPath = new Path2D();
+        const rightPath = new Path2D();
 
         for(const index in rectangles) {
             const rectangle = rectangles[index];
@@ -482,25 +499,31 @@ export default class WallRenderer {
 
                 left -= (this.wallThickness);
                 top -= (this.wallThickness);
+
+                leftPath.rect(left, top, width, height);
             }
             else if(rectangle.direction == 2) {
                 width = (this.wallThickness);
 
                 left -= (this.wallThickness);
+
+                leftPath.rect(left, top, width, height);
             }
             else if(rectangle.direction == 4) {
                 height = (this.wallThickness);
 
                 top -= (this.wallThickness);
-            }
-            else {
-                continue;
-            }
 
-            context.rect(left, top, width, height);
+                rightPath.rect(left, top, width, height);
+            }
         }
+        
+        context.fillStyle = context.createPattern(rightImage, "repeat")!;
+        context.fill(rightPath);
 
-        context.fill();
+        context.fillStyle = context.createPattern(leftImage, "repeat")!;
+        context.fill(leftPath);
+
         context.closePath();
     }
 

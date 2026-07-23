@@ -22,6 +22,8 @@ export type AssetSpriteProperties = {
 
     flipHorizontal?: boolean;
 
+    rotate?: number;
+
     grayscaled?: AssetSpriteGrayscaledProperties;
 
     source?: string;
@@ -121,7 +123,7 @@ export default class AssetFetcher {
             this.sprites[url] = [];
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink && grayscaled?.alpha === properties.grayscaled?.alpha)) && (!properties.requireImageData || imageData));
+        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, rotate, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.rotate === rotate && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink && grayscaled?.alpha === properties.grayscaled?.alpha)) && (!properties.requireImageData || imageData));
 
         if(existingSprite) {
             const output = await existingSprite.result;
@@ -307,11 +309,24 @@ export default class AssetFetcher {
         try {
             const image = await this.fetchImage(url);
 
-            const canvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+            const destinationWidth = properties.destinationWidth ?? properties.width ?? image.width;
+            const destinationHeight = properties.destinationHeight ?? properties.height ?? image.height;
+
+            const imageWidth = properties.width ?? image.width;
+            const imageHeight = properties.height ?? image.height;
+
+            const canvas = new OffscreenCanvas(destinationWidth, destinationHeight);
             const context = canvas.getContext("2d");
 
             if(!context) {
                 throw new ContextNotAvailableError();
+            }
+
+            if(properties.rotate) {
+                const angle = properties.rotate * Math.PI / 180;
+
+                context.rotate(angle);
+                context.translate(0, -imageWidth);
             }
 
             if(properties.flipHorizontal) {
@@ -320,17 +335,17 @@ export default class AssetFetcher {
                 context.scale(-1, 1);
             }
 
-            context.drawImage(image, properties.x, properties.y, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height, 0, 0, properties.width ?? image.width, properties.height ?? image.height);
+            context.drawImage(image, properties.x, properties.y, destinationWidth, destinationHeight, 0, 0, imageWidth, imageHeight);
 
             if(properties.color) {
-                const colorCanvas = new OffscreenCanvas(properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+                const colorCanvas = new OffscreenCanvas(destinationWidth, destinationHeight);
                 const colorContext = colorCanvas.getContext("2d");
 
                 if(!colorContext) {
                     throw new ContextNotAvailableError();
                 }
 
-                colorContext.drawImage(image, properties.x, properties.y, properties.width ?? image.width, properties.height ?? image.height, 0, 0, properties.destinationWidth ?? properties.width ?? image.width, properties.destinationHeight ?? properties.height ?? image.height);
+                colorContext.drawImage(image, properties.x, properties.y, imageWidth, imageHeight, 0, 0, destinationWidth, destinationHeight);
 
                 const colors = (Array.isArray(properties.color))?(properties.color):([properties.color]);
 
