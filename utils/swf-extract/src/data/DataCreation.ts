@@ -425,6 +425,79 @@ export function createRoomVisualizationData(collection: SwfExtractionCollection)
                     assetName: texture["bitmap"]["@_assetName"]
                 };
             })
+        },
+        landscapeData: {
+            landscapes: getValueAsArray(document["visualizationData"]["landscapeData"]["landscapes"]["landscape"]).map((landscape: any) => {
+                return {
+                    id: landscape["@_id"],
+
+                    visualizations: getValueAsArray(landscape["animatedVisualization"]).map((visualization: any) => {
+                        return {
+                            size: parseInt(visualization["@_size"]),
+                            visualizationLayers: getValueAsArray(visualization["visualizationLayer"]).map((layer: any) => {
+                                return {
+                                    materialId: layer["@_materialId"],
+                                    align: layer["@_align"],
+                                    color: layer["@_color"]
+                                };
+                            }),
+                            animationLayers: getValueAsArray(visualization["animationLayer"]?.["animationItem"]).map((animationItem: any) => {
+                                return {
+                                    id: parseInt(animationItem["@_id"]),
+                                    assetId: animationItem["@_assetId"],
+                                    speedX: (animationItem["@_speedX"])?(parseFloat(animationItem["@_speedX"])):(undefined),
+                                    speedY: (animationItem["@_speedY"])?(parseFloat(animationItem["@_speedY"])):(undefined),
+                                    randomX: (animationItem["@_randomX"])?(parseFloat(animationItem["@_randomX"])):(undefined),
+                                    randomY: (animationItem["@_randomY"])?(parseFloat(animationItem["@_randomY"])):(undefined),
+                                };
+                            })
+                        }
+                    })
+                };
+            }),
+
+            materials: getValueAsArray(document["visualizationData"]["landscapeData"]["materials"]["material"]).map((material: any) => {
+                return {
+                    id: material["@_id"],
+                    cellMatrixes: getValueAsArray(material["materialCellMatrix"]).map((cellMatrix: any) => {
+                        return {
+                            repeatMode: cellMatrix["@_repeatMode"],
+                            align: cellMatrix["@_align"],
+                            normalMinX: parseFloat(cellMatrix["@_normalMinX"]),
+
+                            cellColumns: getValueAsArray(cellMatrix["materialCellColumn"]).map((cellColumn: any) => {
+                                return {
+                                    width: parseInt(cellColumn["@_width"]),
+                                    repeatMode: cellColumn["@_repeatMode"],
+
+                                    cells: getValueAsArray(cellColumn["materialCell"]).map((cell: any) => {
+                                        return {
+                                            textureId: cell["@_textureId"],
+
+                                            extraItemData: (cell["extraItemData"])?({
+                                                limitMax: parseInt(cell["extraItemData"]["@_limitMax"]),
+                                                types: getValueAsArray(cell["extraItemData"]["extraItemTypes"]["extraItemType"]).map((extraItemType: any) => {
+                                                    return {
+                                                        assetName: extraItemType["@_assetName"]
+                                                    };
+                                                }),
+
+                                                offsets: getValueAsArray(cell["extraItemData"]["offsets"]["offset"]).map((offset: any) => {
+                                                    return {
+                                                        id: parseInt(offset["@_id"]),
+                                                        x: parseInt(offset["@_x"]),
+                                                        y: parseInt(offset["@_y"]),
+                                                    }
+                                                })
+                                            }):(undefined)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                };
+            })
         }
     } satisfies RoomVisualization;
 }
