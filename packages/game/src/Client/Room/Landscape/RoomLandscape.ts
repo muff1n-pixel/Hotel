@@ -28,10 +28,6 @@ export default class RoomLandscape {
     public async render() {
         this.frame = (this.frame + 1) % 24;
 
-        if(this.image && (this.frame % 2) === 0) {
-            return;
-        }
-
         this.image = await this.renderer.renderOffScreen();
 
         this.sprite?.updateLandscape();

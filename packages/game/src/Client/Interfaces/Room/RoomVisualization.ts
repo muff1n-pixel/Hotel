@@ -109,5 +109,14 @@ export type RoomVisualization = {
                 }[];
             }[];
         }[];
+
+        textures: {
+            id: string;
+
+            assets: {
+                assetName: string;
+                normalMinX: number;
+            }[];
+        }[];
     };
 };

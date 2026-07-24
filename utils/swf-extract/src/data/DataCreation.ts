@@ -500,6 +500,19 @@ export function createRoomVisualizationData(collection: SwfExtractionCollection)
                         }
                     })
                 };
+            }),
+
+            textures: getValueAsArray(document["visualizationData"]["landscapeData"]["textures"]["texture"]).map((texture: any) => {
+                return {
+                    id: texture["@_id"],
+
+                    assets: getValueAsArray(texture["bitmap"]).map((bitmap: any) => {
+                        return {
+                            assetName: bitmap["@_assetName"],
+                            normalMinX: parseFloat(bitmap["@_normalMinX"])
+                        };
+                    })
+                }
             })
         }
     } satisfies RoomVisualization;

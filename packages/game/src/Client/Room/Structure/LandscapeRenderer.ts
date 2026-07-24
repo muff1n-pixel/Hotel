@@ -14,6 +14,9 @@ export type LandscapeAnimationLayer = {
 
     left: number;
     top: number;
+
+    timestamp: number;
+    image: ImageBitmap;
 };
 
 export default class LandscapeRenderer {
@@ -128,7 +131,7 @@ export default class LandscapeRenderer {
             throw new ContextNotAvailableError();
         }
 
-        context.imageSmoothingEnabled = false;
+        //context.imageSmoothingEnabled = false;
 
         const data = await RoomAssets.getRoomData("HabboRoomContent");
 
@@ -140,60 +143,63 @@ export default class LandscapeRenderer {
         }
 
         for(const visualizationLayer of visualization.visualizationLayers) {
-            const material = this.getMaterial(data, visualizationLayer.materialId);
+            const material = await this.getVisualizationLayer(data, visualizationLayer);
 
-            for(const matrix of material.cellMatrixes) {
-                for(const column of matrix.cellColumns) {
-                    for(const cell of column.cells) {
-                        //
-                    }
-                }
+            if(material) {
+                console.log("draw");
+
+                context.drawImage(material, 0, 0);
             }
         }
 
         if(visualization.animationLayers.length && !this.animationLayers.length) {
-            this.animationLayers = visualization.animationLayers.map((animationLayer) => {
+            this.animationLayers = await Promise.all(visualization.animationLayers.map(async (animationLayer) => {
+                const assetData = data.assets.find((asset) => asset.name === animationLayer.assetId);
+        
+                if(!assetData) {
+                    throw new Error("Room asset data does not exist.");
+                }
+        
+                const spriteData = data.sprites.find((sprite) => sprite.name === (assetData.source ?? assetData.name));
+        
+                if(!spriteData) {
+                    throw new Error("Sprite data does not exist for room texture.");
+                }
+
+                const { image } = await RoomAssets.getRoomSprite("HabboRoomContent", {
+                    x: spriteData.x,
+                    y: spriteData.y,
+        
+                    width: spriteData.width,
+                    height: spriteData.height,
+
+                    ignoreImageData: true
+                });
+
                 return {
                     ...animationLayer,
 
                     speedX: animationLayer.speedX ?? 0,
 
-                    left: (Math.random() * ((animationLayer.randomX ?? 100) / 100)) * this.rectangles.length,
-                    top: (Math.random() * ((animationLayer.randomY ?? 100) / 100)) * height
+                    left: Math.random() * 100,
+                    top: Math.random() * (animationLayer.randomY ?? 100),
+
+                    timestamp: performance.now(),
+
+                    image
                 };
-            });
+            }));
         }
 
         for(const animationLayer of this.animationLayers) {
-            animationLayer.left += animationLayer.speedX / 10;
+            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 500) * animationLayer.speedX;
+            animationLayer.timestamp = performance.now();
 
-            if(animationLayer.left > this.rectangles.length) {
-                animationLayer.left = -1;
+            if(animationLayer.left > 100) {
+                animationLayer.left = -10;
             }
 
-            const assetData = data.assets.find((asset) => asset.name === animationLayer.assetId);
-    
-            if(!assetData) {
-                throw new Error("Room asset data does not exist.");
-            }
-    
-            const spriteData = data.sprites.find((sprite) => sprite.name === (assetData.source ?? assetData.name));
-    
-            if(!spriteData) {
-                throw new Error("Sprite data does not exist for room texture.");
-            }
-    
-            const { image } = await RoomAssets.getRoomSprite("HabboRoomContent", {
-                x: spriteData.x,
-                y: spriteData.y,
-    
-                width: spriteData.width,
-                height: spriteData.height,
-
-                ignoreImageData: true
-            });
-
-            context.drawImage(image, Math.round(animationLayer.left * this.fullSize), Math.round(animationLayer.top));
+            context.drawImage(animationLayer.image, Math.round((animationLayer.left / 100) * width), Math.round((animationLayer.top / 100) * height));
         }
 
         return canvas;
@@ -218,5 +224,123 @@ export default class LandscapeRenderer {
         }
 
         return material;
+    }
+
+    private visualizationLayers: Map<string, OffscreenCanvas> = new Map();
+
+    private async getVisualizationLayer(data: RoomData, visualizationLayer: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0]["visualizationLayers"][0]) {
+        if(this.visualizationLayers.has(visualizationLayer.materialId)) {
+            return this.visualizationLayers.get(visualizationLayer.materialId);
+        }
+
+        const material = this.getMaterial(data, visualizationLayer.materialId);
+
+        const width = this.rectangles.length * this.fullSize;
+        const height = (this.structure.wallDepth * this.fullSize) + (this.size * 2);
+
+        const canvas = new OffscreenCanvas(width, height);
+
+        const context = canvas.getContext("2d");
+
+        if(!context) {
+            throw new ContextNotAvailableError();
+        }
+
+        for(const matrix of material.cellMatrixes) {
+            for(const column of matrix.cellColumns) {
+                for(const cell of column.cells) {
+                    if(cell.extraItemData?.types.length) {
+                        for(let left = 0; left < width; left += column.width) {
+                            const usedOffsetIds: number[] = [];
+
+                            for(let index = 0; index < (cell.extraItemData.limitMax ?? cell.extraItemData.offsets.length); index++) {
+                                const offset = cell.extraItemData.offsets[Math.floor(Math.random() * cell.extraItemData.offsets.length)];
+
+                                if(!offset) {
+                                    continue;
+                                }
+
+                                if(usedOffsetIds.includes(offset.id)) {
+                                    continue;
+                                }
+
+                                usedOffsetIds.push(offset.id);
+
+                                const type = cell.extraItemData.types[Math.floor(Math.random() * cell.extraItemData.types.length)];
+
+                                if(!type) {
+                                    continue;
+                                }
+
+                                const texture = await this.getTexture(data, type.assetName);
+                                
+                                context.drawImage(texture,
+                                    0, 0, texture.width, texture.height,
+                                    left + offset.x, offset.y, texture.width, texture.height);
+                            }
+                        }
+                    }
+                    else {
+                        const textureData = data.visualization.landscapeData.textures.find((texture) => texture.id === cell.textureId);
+
+                        if(!textureData) {
+                            continue;
+                        }
+
+                        const textureAsset = textureData.assets[0];
+
+                        if(!textureAsset) {
+                            continue;
+                        }
+
+                        const texture = await this.getTexture(data, textureAsset.assetName);
+
+                        if(!texture) {
+                            continue;
+                        }
+
+                        if(matrix.align === "bottom") {
+                            context.translate(0, height - texture.height);
+                        }
+
+                        for(let left = 0; left < width; left += column.width) {
+                            context.drawImage(texture,
+                                0, 0, texture.width, texture.height,
+                                left, 0, column.width, texture.height);
+                        }
+                    }
+                }
+            }
+        }
+
+        this.visualizationLayers.set(visualizationLayer.materialId, canvas);
+
+        return canvas;
+    }
+
+    private async getTexture(data: RoomData, assetName: string) {
+        const assetData = data.assets.find((asset) => asset.name === assetName);
+        
+        if(!assetData) {
+            throw new Error("Room asset data " + assetName + " does not exist.");
+        }
+
+        const spriteData = data.sprites.find((sprite) => sprite.name === (assetData.source ?? assetData.name));
+
+        if(!spriteData) {
+            throw new Error("Sprite data does not exist for room texture.");
+        }
+
+        const { image } = await RoomAssets.getRoomSprite("HabboRoomContent", {
+            x: spriteData.x,
+            y: spriteData.y,
+
+            width: spriteData.width,
+            height: spriteData.height,
+
+            ignoreImageData: true
+        });
+
+        return image;
     }
 }
