@@ -3,7 +3,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
-import { Graphics } from "pixi.js";
+import { Texture } from "pixi.js";
 
 export default class RoomFurnitureMaskSprite extends RoomSprite {
     public readonly defaultOffset: MousePosition = {
@@ -40,6 +40,12 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
             inverse: false,
             channel: "alpha"
         });
+    }
+
+    public updateLandscape() {
+        if(this.item.roomRenderer.landscape.image) {
+            this.sprite.texture = Texture.from(this.item.roomRenderer.landscape.image);
+        }
     }
 
     update(): void {

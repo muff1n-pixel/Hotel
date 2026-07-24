@@ -4,6 +4,7 @@ export type LocalSettings = {
     autoScaleRooms?: boolean;
     
     debugRoomRendering?: boolean;
+    debugRoomLandscapes?: boolean;
 
     systemAudioVolume?: number;
     traxAudioVolume?: number;

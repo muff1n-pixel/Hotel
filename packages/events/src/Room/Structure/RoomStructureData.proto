@@ -3,6 +3,7 @@ syntax = "proto3";
 import "Room/Structure/RoomStructureDoorData.proto";
 import "Room/Structure/RoomStructureWallData.proto";
 import "Room/Structure/RoomStructureFloorData.proto";
+import "Room/Structure/RoomStructureLandscapeData.proto";
 
 message RoomStructureData {
     repeated string grid = 1;
@@ -10,4 +11,5 @@ message RoomStructureData {
     RoomStructureDoorData door = 2;
     RoomStructureWallData wall = 3;
     RoomStructureFloorData floor = 4;
+    RoomStructureLandscapeData landscape = 5;
 }

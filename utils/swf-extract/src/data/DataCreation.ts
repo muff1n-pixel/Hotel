@@ -432,9 +432,12 @@ export function createRoomVisualizationData(collection: SwfExtractionCollection)
                     id: landscape["@_id"],
 
                     visualizations: getValueAsArray(landscape["animatedVisualization"]).map((visualization: any) => {
+                        const color = getValueAsArray(visualization["visualizationLayer"]).find((layer: any) => layer["@_color"]);
+
                         return {
                             size: parseInt(visualization["@_size"]),
-                            visualizationLayers: getValueAsArray(visualization["visualizationLayer"]).map((layer: any) => {
+                            color: (color)?(new String(color["@_color"]).replace('0x', '#')):(undefined),
+                            visualizationLayers: getValueAsArray(visualization["visualizationLayer"]).filter((layer: any) => !layer["@_color"]).map((layer: any) => {
                                 return {
                                     materialId: layer["@_materialId"],
                                     align: layer["@_align"],

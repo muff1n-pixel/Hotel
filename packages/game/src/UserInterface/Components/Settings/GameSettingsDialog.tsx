@@ -13,7 +13,7 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
     const settings = useSettings();
 
     return (
-        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={140} initialPosition="center">
+        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={160} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -40,6 +40,11 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
                         clientInstance.settings.value!.debugRoomRendering = !settings?.debugRoomRendering;
                         clientInstance.settings.update();
                     }} label="Debug room rendering"/>
+                    
+                    <Checkbox value={settings?.debugRoomLandscapes === true} onChange={() => {
+                        clientInstance.settings.value!.debugRoomLandscapes = !settings?.debugRoomLandscapes;
+                        clientInstance.settings.update();
+                    }} label="Debug room landscape"/>
                 </div>
             </DialogContent>
         </Dialog>

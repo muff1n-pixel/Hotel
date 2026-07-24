@@ -3,7 +3,7 @@ import RoomAssets from "@Client/Assets/RoomAssets";
 import { RoomData } from "@Client/Interfaces/Room/RoomData";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
 
-type WallRectangle = {
+export type WallRectangle = {
     row: number;
     column: number;
     depth: number;
@@ -195,7 +195,7 @@ export default class WallRenderer {
         this.leftWalls = [];
         this.rightWalls = [];
 
-        const rectangles = this.getRectangles();
+        const rectangles = WallRenderer.getRectangles(this.structure);
 
         for(let currentDepth = 0; currentDepth <= this.structure.wallDepth; currentDepth++) {
             const currentRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
@@ -577,26 +577,26 @@ export default class WallRenderer {
         }
     }
 
-    private getRectangles() {
+    public static getRectangles(structure: RoomStructure) {
         const rectangles: WallRectangle[] = [];
 
         // right walls
-        for(let row = 0; row < this.structure.data.grid.length; row++) {
-            for(let column = 0; column < this.structure.data.grid[row].length; column++) {
-                if(this.structure.data.grid[row][column] === 'X') {
+        for(let row = 0; row < structure.data.grid.length; row++) {
+            for(let column = 0; column < structure.data.grid[row].length; column++) {
+                if(structure.data.grid[row][column] === 'X') {
                     continue;
                 }
 
-                if(this.structure.data.door?.row === row && this.structure.data.door?.column === column) {
+                if(structure.data.door?.row === row && structure.data.door?.column === column) {
                     continue;
                 }
 
                 let hasPrevious = false;
 
                 for(let previousRow = row - 1; previousRow >= 0; previousRow--) {
-                    if(this.getTileDepth(previousRow, column) === 'X') {
+                    if(structure.getTileDepth(previousRow, column) === 'X') {
                         for(let previousColumn = column - 1; previousColumn >= 0; previousColumn--) {
-                            if(this.getTileDepth(previousRow, previousColumn) == 'X')
+                            if(structure.getTileDepth(previousRow, previousColumn) == 'X')
                                 continue;
         
                             hasPrevious = true;
@@ -619,32 +619,32 @@ export default class WallRenderer {
                     continue;
                 }
 
-                rectangles.push({ row, column, depth: this.parseDepth(this.structure.data.grid[row][column]), direction: 4 });
+                rectangles.push({ row, column, depth: structure.parseStaticDepth(structure.data.grid[row][column]), direction: 4 });
             }
         }
 
         // left walls
-        for(let row = 0; row < this.structure.data.grid.length; row++) {
-            for(let column = 0; column < this.structure.data.grid[row].length; column++) {
-                if(this.structure.data.grid[row][column] === 'X') {
+        for(let row = 0; row < structure.data.grid.length; row++) {
+            for(let column = 0; column < structure.data.grid[row].length; column++) {
+                if(structure.data.grid[row][column] === 'X') {
                     continue;
                 }
 
-                if(this.structure.data.door?.row === row && this.structure.data.door?.column === column) {
+                if(structure.data.door?.row === row && structure.data.door?.column === column) {
                     continue;
                 }
 
                 let hasPrevious = false;
 
                 for(let previousColumn = column - 1; previousColumn >= 0; previousColumn--) {
-                    if(this.getTileDepth(row, previousColumn) !== 'X') {
+                    if(structure.getTileDepth(row, previousColumn) !== 'X') {
                         hasPrevious = true;
 
                         break;
                     }
 
                     for(let previousRow = row - 1; previousRow >= 0; previousRow--) {
-                        if(this.getTileDepth(previousRow, previousColumn) !== 'X') {
+                        if(structure.getTileDepth(previousRow, previousColumn) !== 'X') {
                             hasPrevious = true;
     
                             break;
@@ -656,7 +656,7 @@ export default class WallRenderer {
                     continue;
                 }
 
-                rectangles.push({ row, column, depth: this.parseDepth(this.getTileDepth(row, column)), direction: 2 });
+                rectangles.push({ row, column, depth: structure.parseStaticDepth(structure.getTileDepth(row, column)), direction: 2 });
             }
         }
 

@@ -57,10 +57,11 @@ export type RoomVisualization = {
             visualizations: {
                 size: number;
 
+                color?: string;
+
                 visualizationLayers: {
                     materialId: string;
                     align: string;
-                    color: string;
                 }[];
 
                 animationLayers: {

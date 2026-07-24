@@ -41,7 +41,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
     return (
         <FloorPlanDialog
             data={{
-                structure: room.roomRenderer.structure,
+                structure: room.roomRenderer.structure.data,
                 onSave: (structure, offset) => handleApply(structure, offset)
             }}
             hidden={hidden}

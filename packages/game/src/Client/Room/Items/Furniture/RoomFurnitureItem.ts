@@ -14,6 +14,8 @@ import RoomFurnitureMaskSprite from "@Client/Room/Items/Furniture/RoomFurnitureM
 
 export default class RoomFurnitureItem extends RoomItem {
     public readonly id = Math.random();
+    
+    private mask?: RoomFurnitureMaskSprite;
 
     constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
         super(roomRenderer, "furniture");
@@ -127,6 +129,15 @@ export default class RoomFurnitureItem extends RoomItem {
                 }
             });
         }
+        else {
+            this.mask?.updateLandscape();
+        }
+    }
+
+    public setSprites(sprites: RoomSprite[]): void {
+        this.mask = sprites.find((sprite) => sprite instanceof RoomFurnitureMaskSprite);
+
+        return super.setSprites(sprites);
     }
 
     setData(data: UserFurnitureCustomData) {

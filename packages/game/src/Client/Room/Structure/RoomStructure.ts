@@ -54,7 +54,20 @@ export default class RoomStructure {
         }
     }
 
-    public getTileDepth(row: number, column: number): string {
+
+    public parseStaticDepth(character: string) {
+        if (character >= '0' && character <= '9') {
+            return parseInt(character);
+        } else {
+            return character.charCodeAt(0) - 55;
+        }
+    }
+
+    public getTileDepth(row: number, column: number, excludeDoor: boolean = true): string {
+        if(excludeDoor && this.data.door?.row === row && this.data.door?.column === column) {
+            return 'X';
+        }
+
         if(this.data.grid[row] && this.data.grid[row][column]) {
             return this.data.grid[row][column];
         }
