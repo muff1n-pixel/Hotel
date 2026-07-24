@@ -9,6 +9,21 @@ import { FurnitureAnimationLayerFrameOffset, FurnitureVisualization } from "@Cli
 import { getGlobalCompositeModeFromInk } from "@Client/Renderers/GlobalCompositeModes";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
+export type LayerData = {
+    layer: number | undefined;
+    layerCode: string;
+};
+
+export type LayerFrameData = {
+    animationLayerId: number;
+    frameSequenceIndex: number;
+    left?: number;
+    top?: number;
+    animationFrameOffset?: FurnitureAnimationLayerFrameOffset;
+    spriteFrame: number;
+    maxLayerFrames: number | null;
+};
+
 export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     private animated: boolean = false;
     private previousLayerFrames: string = "";
@@ -92,22 +107,14 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return `${this.type}_${options.animation}_[${layerFrames}]_${options.direction}_${options.color}_[${grayscaled}]_${options.size}_[${tags}]_[${colorTags}]`;
     }
 
-    private getLayerFrames(options: FurnitureRenderOptions) {
+    private getLayerFrames(options: FurnitureRenderOptions): LayerFrameData[] {
         const visualization = this.visualization;
 
         if(!visualization) {
             return [];
         }
 
-        const result: {
-            animationLayerId: number;
-            frameSequenceIndex: number;
-            left?: number;
-            top?: number;
-            animationFrameOffset?: FurnitureAnimationLayerFrameOffset;
-            spriteFrame: number;
-            maxLayerFrames: number | null;
-        }[] = [];
+        const result: LayerFrameData[] = [];
 
         const addedLayers = new Set<number>();
 
@@ -254,10 +261,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             this.animated = existingRender.animated;
             this.previousLayerFrames = existingRender.layerFrames;
 
-            return existingRender.sprites;
+            return existingRender;
         }
-        
-        const sprites: FurnitureRendererSprite[] = [];
 
         this.visualization = data.visualization.visualizations.find((visualization) => visualization.size == options.size);
 
@@ -273,7 +278,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         this.animated = false;
 
-        const layers = Array(this.visualization.layerCount).fill(null).map((_, index) => ({
+        const layers: LayerData[] = Array(this.visualization.layerCount).fill(null).map((_, index) => ({
             layer: index as (number | undefined),
             layerCode: String.fromCharCode(97 + index)
         }));
@@ -284,6 +289,37 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 layerCode: "sd"
             });
         }
+
+        const sprites: FurnitureRendererSprite[] = await this.getSprites(data, options, layers, animationFrames, directionData);
+        const mask: FurnitureRendererSprite | null = await this.getMask(data, options);
+
+        if(!this.hasImageData) {
+            this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
+        }
+
+        const result: FurnitureRenderResult = {
+            sprites,
+            mask,
+            layerFrames: this.previousLayerFrames,
+            animated: this.animated
+        };
+
+        if(this.hasImageData && this.shouldCacheResults) {
+            const frameCounts = animationFrames.map((frame) => frame.maxLayerFrames ?? 0);
+            const maxFrames = Math.max(...frameCounts);
+
+            const canCacheAllSprites = frameCounts.every((frames) => maxFrames % frames === 0);
+
+            if(canCacheAllSprites) {
+                FurnitureDefaultRenderer.renderMap.set(renderOptions, result);
+            }
+        }
+
+        return result;
+    }
+
+    private async getSprites(data: FurnitureData, options: FurnitureRenderOptions, layers: LayerData[], animationFrames: LayerFrameData[], directionData: FurnitureVisualization["visualizations"][0]["directions"][0] | undefined) {
+        const sprites: FurnitureRendererSprite[] = [];
 
         for(const { layer, layerCode } of layers) {
             const animationFrame = animationFrames.find((frame) => frame.animationLayerId === layer);
@@ -314,9 +350,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 continue;
             }
 
-            const colorData = this.visualization.colors?.find((visualizationColor) => visualizationColor.id === options.color);
+            const colorData = this.visualization!.colors?.find((visualizationColor) => visualizationColor.id === options.color);
 
-            const layerData = this.visualization.layers.find((layerData) => layerData.id === layer);
+            const layerData = this.visualization!.layers.find((layerData) => layerData.id === layer);
 
             if(options.tags && (layerData?.tag && !options.tags.includes(layerData?.tag))) {
                 continue;
@@ -326,7 +362,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const color = colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color ?? colorTag?.color;
 
-            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
+            const { image, imageData } = await this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
 
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
@@ -381,26 +417,54 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             sprites.push(assetSprite);
         }
 
-        if(!this.hasImageData) {
-            this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
-        }
-
-        if(this.hasImageData && this.shouldCacheResults) {
-            const frameCounts = animationFrames.map((frame) => frame.maxLayerFrames ?? 0);
-            const maxFrames = Math.max(...frameCounts);
-
-            const canCacheAllSprites = frameCounts.every((frames) => maxFrames % frames === 0);
-
-            if(canCacheAllSprites) {
-                FurnitureDefaultRenderer.renderMap.set(renderOptions, {
-                    animated: this.animated,
-                    layerFrames: this.previousLayerFrames,
-                    sprites
-                });
-            }
-        }
-
         return sprites;
+    }
+
+    private async getMask(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite | null> {
+        if(!data.logic.mask) {
+            return null;
+        }
+
+        const assetName = `${this.type}_${options.size}_${options.direction}_mask`;
+
+        const assetData = data.assets.find((asset) => asset.name === assetName);
+
+        if(!assetData) {
+            return null;
+        }
+
+        const spriteData = data.sprites.find((sprite) => sprite.name === (assetData?.source ?? assetName));
+        
+        if(!spriteData) {
+            FigureLogger.warn("Failed to find sprite data for " + assetName + " (source " + assetData.source + ")");
+
+            return null;
+        }
+
+        const { image, imageData } = await this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, undefined, undefined, undefined, assetData.usesPalette);
+
+        let x = assetData.x;
+
+        if(assetData.flipHorizontal) {
+            x = (assetData.x * -1) - spriteData.width;
+        }
+
+        return {
+            image,
+            imageData,
+            
+            x,
+            y: assetData.y,
+
+            ink: undefined,
+            tag: undefined,
+
+            zIndex: 0,
+            alpha: undefined,
+            ignoreMouse: true,
+
+            layerCode: "mask"
+        };
     }
 
     public async getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, _tag: string | undefined, _usesPalette: boolean) {
@@ -424,7 +488,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
     public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions) {
         const immutableSprites = await this.render(data, options);
 
-        const sprites = immutableSprites.map((sprite) => {
+        const sprites = immutableSprites.sprites.map((sprite) => {
             return {...sprite}
         });
         

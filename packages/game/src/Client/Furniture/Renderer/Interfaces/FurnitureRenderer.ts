@@ -1,5 +1,5 @@
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
-import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FigureConfigurationData, UserFurnitureAnimationTag, UserFurnitureColorTag } from "@pixel63/events";
 
@@ -21,7 +21,7 @@ export default interface FurnitureRenderer {
     animationTransitioned?: number;
     animationTransitionedTo?: number;
 
-    render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]>;
+    render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult>;
     renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap>;
 
     shouldRender(options: FurnitureRenderOptions): boolean;

@@ -1,0 +1,54 @@
+import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { MousePosition } from "@Client/Interfaces/MousePosition";
+import RoomSprite from "../RoomSprite";
+import RoomFurnitureItem from "./RoomFurnitureItem";
+import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
+import { Graphics } from "pixi.js";
+
+export default class RoomFurnitureMaskSprite extends RoomSprite {
+    public readonly defaultOffset: MousePosition = {
+        left: 0,
+        top: 0
+    };
+
+    private readonly mask: RoomSprite;
+
+    constructor(public readonly item: RoomFurnitureItem, public readonly furnitureSprite: FurnitureRendererSprite) {
+        super(
+            item,
+            undefined,
+            -100,
+            undefined,
+            undefined,
+            item.roomRenderer.landscape.image,
+        );
+
+        this.sprite.x = -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness;
+        this.sprite.y = -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness;
+
+        this.mask = new RoomSprite(
+            item,
+            RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
+            -99,
+            undefined,
+            furnitureSprite.ink,
+            furnitureSprite.image,
+        );
+
+        this.sprite.setMask({
+            mask: this.mask.sprite,
+            inverse: false,
+            channel: "alpha"
+        });
+    }
+
+    update(): void {
+        this.mask.update();
+    }
+
+    destroy(): void {
+        super.destroy();
+
+        this.mask.destroy();
+    }
+}

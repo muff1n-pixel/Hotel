@@ -49,5 +49,7 @@ export type FurnitureLogic = {
         }[];
     };
 
+    mask: string;
+
     particleSystems: FurnitureParticleSystemData[];
 };

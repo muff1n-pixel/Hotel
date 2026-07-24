@@ -27,7 +27,8 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
                     y: 0,
                     image: await createImageBitmap(image),
                     imageData: new ImageData(1, 1),
-                    zIndex: 0
+                    zIndex: 0,
+                    layerCode: ""
                 };
 
                 FurnitureAssets.assetSprites.set(`${this.type}_${options.color}`, sprite);

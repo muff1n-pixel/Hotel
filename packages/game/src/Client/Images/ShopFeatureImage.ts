@@ -182,9 +182,9 @@ export default class ShopFeatureImage {
         const furnitureSprites = await Promise.all(furnitureItems.flatMap(async (furnitureItem) => {
             const furniture = new Furniture(furnitureItem.type, 64, furnitureItem.direction, furnitureItem.animation, furnitureItem.color);
 
-            const sprites = await furniture.render();
+            const result = await furniture.render();
 
-            return sprites.map((sprite) => {
+            return result.sprites.map((sprite) => {
                 return {
                     ...sprite,
                     furniture,

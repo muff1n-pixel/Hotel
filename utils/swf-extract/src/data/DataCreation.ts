@@ -146,6 +146,7 @@ export function createLogicData(collection: SwfExtractionCollection): FurnitureL
                 } satisfies FurnitureLogic["model"]["directions"][0]
             })
         },
+        mask: document["objectData"]["mask"]?.["@_type"] ?? undefined,
         particleSystems: getValueAsArray(document["objectData"]["particlesystems"]?.["particlesystem"]).filter((particleSystem: any) => particleSystem["@_size"] !== '1').map((particleSystem: any) => {
             return {
                 size: parseInt(particleSystem["@_size"]),

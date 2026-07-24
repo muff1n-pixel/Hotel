@@ -18,6 +18,7 @@ export type FurnitureRenderToCanvasOptions = {
 
 export type FurnitureRenderResult = {
     sprites: FurnitureRendererSprite[];
+    mask: FurnitureRendererSprite | null;
     animated: boolean;
     layerFrames: string;
 };
@@ -190,9 +191,9 @@ export default class Furniture {
 
         const options = this.getOptions();
 
-        const result = [...await this.renderer.render(this.data, options)];
+        const result = await this.renderer.render(this.data, options);
 
-        await this.particleSystem?.render(result, options);
+        await this.particleSystem?.render([...result.sprites], options);
 
         return result;
     }

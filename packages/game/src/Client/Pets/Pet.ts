@@ -27,7 +27,8 @@ export default class Pet {
             color: this.color ?? 0,
             frame: this.frame,
             grayscaled: this.grayscaled,
-            tags: (this.headonly)?(["head", "hair"]):(undefined)
+            tags: (this.headonly)?(["head", "hair"]):(undefined),
+            colorTags: undefined
         });
     }
     
@@ -43,7 +44,8 @@ export default class Pet {
             color: this.color ?? 0,
             frame: this.frame,
             grayscaled: this.grayscaled,
-            tags: (this.headonly)?(["head", "hair"]):(undefined)
+            tags: (this.headonly)?(["head", "hair"]):(undefined),
+            colorTags: undefined
         });
     }
 
@@ -67,7 +69,8 @@ export default class Pet {
             color: this.color ?? 0,
             frame: this.frame,
             grayscaled: this.grayscaled,
-            tags: (this.headonly)?(["head", "hair"]):(undefined)
+            tags: (this.headonly)?(["head", "hair"]):(undefined),
+            colorTags: undefined
         });
     }
 

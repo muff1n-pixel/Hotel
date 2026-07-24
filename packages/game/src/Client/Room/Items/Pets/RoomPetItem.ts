@@ -38,9 +38,9 @@ export default class RoomPetItem extends RoomItem {
                 //this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
 
-            this.pet.render().then((sprites) => {
-                if(sprites.length) {
-                    this.setSprites(sprites.map((sprite) => new RoomPetSprite(this, sprite)));
+            this.pet.render().then((result) => {
+                if(result.sprites.length) {
+                    this.setSprites(result.sprites.map((sprite) => new RoomPetSprite(this, sprite)));
                 }
             });
         }

@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
@@ -9,7 +9,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
 
     public frame: number = 0;
 
-    public render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
+    public render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         for(const visualization of data.visualization.visualizations) {
             if(!visualization.layers.length) {
                 continue;

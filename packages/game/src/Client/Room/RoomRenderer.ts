@@ -27,6 +27,7 @@ import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
+import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -39,6 +40,7 @@ export default class RoomRenderer extends EventTarget {
 
     public lighting: RoomLighting;
     public structure: RoomStructure;
+    public landscape: RoomLandscape;
 
     public furniturePlacer?: RoomFurniturePlacer;
 
@@ -70,6 +72,7 @@ export default class RoomRenderer extends EventTarget {
         this.container = new Container();
 
         this.structure = new RoomStructure(structure);
+        this.landscape = new RoomLandscape(this);
 
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
@@ -575,7 +578,8 @@ export default class RoomRenderer extends EventTarget {
 
         return Promise.allSettled([
             wallPromise,
-            floorPromise
+            floorPromise,
+            this.landscape.render()
         ]);
     }
 }

@@ -9,6 +9,8 @@ import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import { clientInstance } from "@Game/index";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
+import RoomSprite from "@Client/Room/Items/RoomSprite";
+import RoomFurnitureMaskSprite from "@Client/Room/Items/Furniture/RoomFurnitureMaskSprite";
 
 export default class RoomFurnitureItem extends RoomItem {
     public readonly id = Math.random();
@@ -113,9 +115,15 @@ export default class RoomFurnitureItem extends RoomItem {
                 //this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
 
-            this.furnitureRenderer.render().then((sprites) => {
-                if(sprites.length) {
-                    this.setSprites(sprites.map((sprite) => new RoomFurnitureSprite(this, sprite)));
+            this.furnitureRenderer.render().then((result) => {
+                if(result.sprites.length) {
+                    const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
+
+                    if(result.mask) {
+                        sprites.push(new RoomFurnitureMaskSprite(this, result.mask));
+                    }
+
+                    this.setSprites(sprites);
                 }
             });
         }

@@ -1,6 +1,6 @@
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import PetAssets from "@Client/Assets/PetAssets";
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
@@ -18,7 +18,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         super(type);
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
+    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         return super.render(data, options);
     }
 

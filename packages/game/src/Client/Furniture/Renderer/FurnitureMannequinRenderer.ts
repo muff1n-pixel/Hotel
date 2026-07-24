@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
@@ -35,10 +35,10 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
         return super.shouldRender(options);
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
+    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         const result = await super.render(data, options);
 
-        const avatarImageSprite = result.find((sprite) => sprite.tag === "avatar_image");
+        const avatarImageSprite = result.sprites.find((sprite) => sprite.tag === "avatar_image");
 
         if(avatarImageSprite) {
             const figureConfiguration = FigureConfigurationData.create({

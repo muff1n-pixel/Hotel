@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
+import { FurnitureRendererSprite, FurnitureRenderResult } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
@@ -19,10 +19,10 @@ export default class FurnitureExternalImageRenderer extends FurnitureDefaultRend
         return super.shouldRender(options);
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite[]> {
+    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         const result = await super.render(data, options);
 
-        const thumbnailImageSprite = result.find((sprite) => sprite.tag === "THUMBNAIL");
+        const thumbnailImageSprite = result.sprites.find((sprite) => sprite.tag === "THUMBNAIL");
 
         if(thumbnailImageSprite && options.externalImage) {
             const externalImage = await AssetFetcher.fetchImage(options.externalImage);
