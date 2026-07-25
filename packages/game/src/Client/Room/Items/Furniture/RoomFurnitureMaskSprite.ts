@@ -50,6 +50,13 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
 
     update(): void {
         this.mask.update();
+
+        this.sprite.zIndex = this.item.calculatedPriority + this.priority;
+
+        this.sprite.blendMode = this.blendMode;
+        this.sprite.alpha = this.alpha ?? this.item.alpha;
+
+        this.sprite.visible = !this.item.disabled || !this.disabled;
     }
 
     destroy(): void {
