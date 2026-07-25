@@ -293,9 +293,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         const sprites: FurnitureRendererSprite[] = await this.getSprites(data, options, layers, animationFrames, directionData);
         const mask: FurnitureRendererSprite | null = await this.getMask(data, options);
 
-        if(!this.hasImageData) {
-            this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
-        }
+        this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
 
         const result: FurnitureRenderResult = {
             sprites,
