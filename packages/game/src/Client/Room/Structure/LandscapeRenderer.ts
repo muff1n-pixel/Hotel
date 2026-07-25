@@ -190,7 +190,7 @@ export default class LandscapeRenderer {
         }
 
         for(const animationLayer of this.animationLayers) {
-            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 100) * animationLayer.speedX;
+            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 500) * animationLayer.speedX;
             animationLayer.timestamp = performance.now();
 
             animationLayer.left %= 100;
