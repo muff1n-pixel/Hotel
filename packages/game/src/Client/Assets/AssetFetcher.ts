@@ -50,12 +50,14 @@ export type AssetSpriteResult = {
 export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
     private static images: Map<string, Promise<ImageBitmap>> = new Map();
-    private static sprites: Record<string, (AssetSpriteProperties & AssetSpriteResult)[]> = {};
+    private static spritesCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
+    private static imageDataCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
 
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
     public static clearMemory() {
-        this.sprites = {};
+        this.spritesCache.clear();
+        this.imageDataCache.clear();
 
         FurnitureDefaultRenderer.renderMap.clear();
     }
@@ -118,14 +120,46 @@ export default class AssetFetcher {
         return result;
     }
 
+    private static createSpriteKey(properties: AssetSpriteProperties): string {
+        return [
+            properties.x,
+            properties.y,
+            properties.width,
+            properties.height,
+            properties.rotate ?? 0,
+            properties.flipHorizontal ? 1 : 0,
+            properties.color ?? "",
+            properties.destinationWidth ?? "",
+            properties.destinationHeight ?? "",
+            (properties.grayscaled)?(`${properties.grayscaled.background},${properties.grayscaled.foreground},${properties.grayscaled.ink},${properties.grayscaled.alpha}`):(""),
+            properties.requireImageData ? 1 : 0
+        ].join("|");
+    }
+
+    private static createImageDataKey(properties: AssetSpriteProperties): string {
+        return [
+            properties.x,
+            properties.y,
+            properties.width,
+            properties.height,
+            properties.flipHorizontal ? 1 : 0,
+            properties.destinationWidth ?? "",
+            properties.destinationHeight ?? ""
+        ].join("|");
+    }
+
     public static async fetchImageSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
-        if(!this.sprites[url]) {
-            this.sprites[url] = [];
+        if(!this.spritesCache.has(url)) {
+            this.spritesCache.set(url, new Map<string, AssetSpriteResult>());
         }
 
-        const existingSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, rotate, color, destinationWidth, destinationHeight, grayscaled, imageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.rotate === rotate && properties.flipHorizontal === flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && (Boolean(grayscaled) === Boolean(properties.grayscaled) && (grayscaled?.background === properties.grayscaled?.background && grayscaled?.foreground === properties.grayscaled?.foreground && grayscaled?.ink === properties.grayscaled?.ink && grayscaled?.alpha === properties.grayscaled?.alpha)) && (!properties.requireImageData || imageData));
+        const urlSprites = this.spritesCache.get(url)!;
 
-        if(existingSprite) {
+        const spriteKey = this.createSpriteKey(properties);
+
+        if(urlSprites.has(spriteKey)) {
+            const existingSprite = urlSprites.get(spriteKey)!;
+
             const output = await existingSprite.result;
 
             return {
@@ -195,11 +229,19 @@ export default class AssetFetcher {
                 ...properties
             };
 
-            this.sprites[url].push(result);
+            urlSprites.set(spriteKey, result);
 
             let output = await result.result;
 
-            const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData, grayscaled }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData && !grayscaled);
+            const imageDataKey = this.createImageDataKey(properties);
+
+            if(!this.imageDataCache.has(url)) {
+                this.imageDataCache.set(url, new Map<string, AssetSpriteResult>());
+            }
+
+            const imageDataUrl = this.imageDataCache.get(url)!;
+
+            const existingSpriteWithImageData = imageDataUrl.get(imageDataKey);
 
             if(existingSpriteWithImageData?.imageData) {
                 result.imageData = existingSpriteWithImageData.imageData;
@@ -219,6 +261,8 @@ export default class AssetFetcher {
                         output = this.drawGrayscaledImage(imageData, properties.grayscaled);
                         result.result = Promise.resolve(output);
                     }
+
+                    imageDataUrl.set(imageDataKey, result);
                 });
 
                 if(properties.requireImageData) {
