@@ -190,14 +190,21 @@ export default class LandscapeRenderer {
         }
 
         for(const animationLayer of this.animationLayers) {
-            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 500) * animationLayer.speedX;
+            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 100) * animationLayer.speedX;
             animationLayer.timestamp = performance.now();
 
-            if(animationLayer.left > 100) {
-                animationLayer.left = -10;
-            }
+            animationLayer.left %= 100;
 
-            context.drawImage(animationLayer.image, Math.round((animationLayer.left / 100) * width), Math.round((animationLayer.top / 100) * height));
+            const left = Math.round((animationLayer.left / 100) * width);
+            const top = Math.round((animationLayer.top / 100) * height);
+
+            context.drawImage(animationLayer.image, left, top);
+
+            if(left > (width - animationLayer.image.width)) {
+                const overlappingWidth = (left + animationLayer.image.width) - width;
+
+                context.drawImage(animationLayer.image, -animationLayer.image.width + overlappingWidth, top);
+            }
         }
 
         return canvas;
