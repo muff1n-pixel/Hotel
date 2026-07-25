@@ -17,15 +17,11 @@ export default class WebSocketClient extends EventTarget {
     ) {
         super();
 
-        this.socket = new WebSocket(
-            `${secure ? "wss" : "ws"}://${hostname}:${port}?${new URLSearchParams(options).toString()}`,
-        );
-
-        this.socket.binaryType = "arraybuffer";
-
         this.addProtobuffListener(UserReadyData, {
             handle: async () => {
                 this.isReady = true;
+                
+                this.dispatchEvent(new Event("open"));
 
                 for (const outgoingMessage of this.pendingOutgoingMessages) {
                     this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
@@ -34,6 +30,12 @@ export default class WebSocketClient extends EventTarget {
                 this.pendingOutgoingMessages = [];
             },
         });
+
+        this.socket = new WebSocket(
+            `${secure ? "wss" : "ws"}://${hostname}:${port}?${new URLSearchParams(options).toString()}`,
+        );
+
+        this.socket.binaryType = "arraybuffer";
 
         this.socket.addEventListener("message", (event) => {
             try {
@@ -48,14 +50,6 @@ export default class WebSocketClient extends EventTarget {
                 EventsLogger.error("Failed to decode message", error);
             }
         });
-
-        if (this.socket.readyState === this.socket.OPEN) {
-            this.dispatchEvent(new Event("open"));
-        } else {
-            this.socket.addEventListener("open", () => {
-                this.dispatchEvent(new Event("open"));
-            });
-        }
 
         this.socket.addEventListener("close", () => {
             this.dispatchEvent(new Event("close"));

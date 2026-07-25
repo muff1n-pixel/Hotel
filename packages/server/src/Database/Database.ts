@@ -51,7 +51,10 @@ import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/H
 import { initializeGroupModel } from "./Models/Groups/RoomGroupModel.js";
 import { initializeUserGroupModel } from "./Models/Users/Groups/UserGroupModel.js";
 
-export const sequelize = new Sequelize(config.database);
+export const sequelize = new Sequelize({
+    ...config.database,
+    logging: false
+});
 
 export async function initializeModels() {
     initializeBadgeModel(sequelize);

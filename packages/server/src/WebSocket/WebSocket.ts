@@ -100,6 +100,8 @@ export default class WebSocket {
 
                 game.users.push(user);
 
+                console.log("User " + user.model.name + " connected.");
+
                 user.friends.updateFriends();
 
                 webSocket.on("error", console.error);
@@ -112,6 +114,8 @@ export default class WebSocket {
 
                 webSocket.on("close", () => {
                     (async () => {
+                        console.log("User " + user.model.name + " disconnected.");
+
                         const index = game.users.indexOf(user);
                         
                         if(index !== -1) {
