@@ -180,12 +180,17 @@ export default class Furniture {
         }
 
         if(this.direction === undefined) {
-            const directionPriority = [4, 2];
+            if(this.data.visualization.placement === "wall") {
+                this.direction = 2;
+            }
+            else {
+                const directionPriority = [4, 2];
 
-            const sortedDirections = this.visualization?.directions?.toSorted((a, b) => directionPriority.indexOf(b?.id) - directionPriority.indexOf(a?.id));
-            const firstDirection = sortedDirections?.[0];
+                const sortedDirections = this.visualization?.directions?.toSorted((a, b) => directionPriority.indexOf(b?.id) - directionPriority.indexOf(a?.id));
+                const firstDirection = sortedDirections?.[0];
 
-            this.direction = this.data.visualization.defaultDirection ?? firstDirection?.id ?? 0;
+                this.direction = this.data.visualization.defaultDirection ?? firstDirection?.id ?? 0;
+            }
         }
 
         this.placement = this.data.visualization.placement;
