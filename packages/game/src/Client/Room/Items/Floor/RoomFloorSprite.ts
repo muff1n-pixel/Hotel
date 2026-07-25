@@ -16,7 +16,7 @@ export default class RoomFloorSprite extends RoomSprite {
                 left: -(item.floorRenderer.structure.rows * 32) - (item.floorRenderer.structure.data.wall?.thickness ?? 0),
                 top: -(item.floorRenderer.structure.depth * 32) - 32 - (item.floorRenderer.structure.data.wall?.thickness ?? 0)
             },
-            elevated ? -50 : -3000,
+            elevated ? -50 : -4000,
             undefined,
             undefined,
             image

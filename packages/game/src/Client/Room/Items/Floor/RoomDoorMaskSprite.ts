@@ -9,7 +9,7 @@ export default class RoomDoorMaskSprite extends RoomSprite {
                 left: -(item.wallRenderer!.structure.rows * 32) - item.wallRenderer!.structure.data.wall!.thickness,
                 top: -((item.wallRenderer!.structure.depth + 3.5) * 32) - item.wallRenderer!.structure.data.wall!.thickness
             },
-            -100,
+            -3100,
             undefined,
             undefined,
             image

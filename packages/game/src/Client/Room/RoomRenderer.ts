@@ -274,9 +274,9 @@ export default class RoomRenderer extends EventTarget {
         let priority = item.priority;
 
         if(item.position) {
-            if(Math.floor(item.position.row) === this.structure.data.door?.row && Math.floor(item.position.column) === this.structure.data.door.column) {
+            if(Math.round(item.position.row) === this.structure.data.door?.row && Math.round(item.position.column) === this.structure.data.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
-                    priority = -2000;
+                    priority = -4000;
                     priority += (item.position.depth * 100);
                 
                     return priority;

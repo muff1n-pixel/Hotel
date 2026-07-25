@@ -58,7 +58,7 @@ export default function RoomSettingsCustomizeTab() {
             }}>
                 <b>Floor and walls</b>
 
-                <Selection value={room.roomRenderer.structure.floor?.thickness} items={[
+                <Selection value={room.roomRenderer.structure.data.floor?.thickness} items={[
                     {
                         value: 0,
                         label: "Thinnest floor"
@@ -81,7 +81,7 @@ export default function RoomSettingsCustomizeTab() {
                     }
                 ]} onChange={(value) => handleFloorThickness(value as number)}/>
                 
-                <Selection value={room.roomRenderer.structure.wall?.thickness} items={[
+                <Selection value={room.roomRenderer.structure.data.wall?.thickness} items={[
                     {
                         value: 0,
                         label: "Thinnest walls"
@@ -104,7 +104,7 @@ export default function RoomSettingsCustomizeTab() {
                     }
                 ]} onChange={(value) => handleWallThickness(value as number)}/>
 
-                <Checkbox label="Hide room walls" value={room.roomRenderer.structure.wall?.hidden ?? false} onChange={handleWallHidden}/>
+                <Checkbox label="Hide room walls" value={room.roomRenderer.structure.data.wall?.hidden ?? false} onChange={handleWallHidden}/>
             </div>
             
             <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>Edit room floorplan</DialogButton>
