@@ -27,6 +27,8 @@ export default class LandscapeRenderer {
     public floorThickness: number;
 
     private rectangles: WallRectangle[];
+    private leftRectangles: WallRectangle[];
+    private rightRectangles: WallRectangle[];
 
     private animationLayers: LandscapeAnimationLayer[] = [];
 
@@ -43,6 +45,9 @@ export default class LandscapeRenderer {
 
             return ((bRow - b.column) - (aRow - a.column));
         });
+
+        this.leftRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 2);
+        this.rightRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 4);
     }
 
     public async renderOffScreen() {
@@ -61,16 +66,13 @@ export default class LandscapeRenderer {
 
         const texture = await this.renderTexture();
 
-        const leftRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 2);
-        const rightRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 4);
-
         context.drawImage(texture, 0, 0);
 
         context.textAlign = "center";
 
         context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, (this.structure.wallDepth * this.halfSize) + (this.wallThickness));
 
-        for(const rectangle of leftRectangles) {
+        for(const rectangle of this.leftRectangles) {
             const width = this.fullSize;
             const height = Math.ceil((3.5 + (this.structure.wallDepth - rectangle.depth)) * this.fullSize) + 1;
 
@@ -94,7 +96,7 @@ export default class LandscapeRenderer {
         
         context.setTransform(1, .5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, (this.structure.wallDepth * this.halfSize) + (this.wallThickness));        
         
-        for(const rectangle of rightRectangles) {
+        for(const rectangle of this.rightRectangles) {
             const row = rectangle.row;
             const column = rectangle.column;  
 
