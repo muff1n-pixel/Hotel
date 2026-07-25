@@ -158,7 +158,7 @@ export default class WallRenderer {
             color: [visualization.color, "AAA"],
             flipHorizontal: assetData.flipHorizontal,
 
-            rotate: 90
+            rotate: -90
         });
 
         const topRightWallImage = await RoomAssets.getRoomSprite("HabboRoomContent", {

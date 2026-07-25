@@ -315,18 +315,11 @@ export default class AssetFetcher {
             const imageWidth = properties.width ?? image.width;
             const imageHeight = properties.height ?? image.height;
 
-            const canvas = new OffscreenCanvas(destinationWidth, destinationHeight);
+            let canvas = new OffscreenCanvas(destinationWidth, destinationHeight);
             const context = canvas.getContext("2d");
 
             if(!context) {
                 throw new ContextNotAvailableError();
-            }
-
-            if(properties.rotate) {
-                const angle = properties.rotate * Math.PI / 180;
-
-                context.rotate(angle);
-                context.translate(0, -imageWidth);
             }
 
             if(properties.flipHorizontal) {
@@ -357,6 +350,10 @@ export default class AssetFetcher {
 
                 context.globalCompositeOperation = "source-in";
                 context.drawImage(colorCanvas, 0, 0);
+            }
+
+            if(properties.rotate) {
+                canvas = this.rotateCanvas(canvas, properties.rotate);
             }
 
             const imageData: ImageData | null = null;
@@ -419,5 +416,33 @@ export default class AssetFetcher {
 
             throw error;
         }
+    }
+
+    private static rotateCanvas(sourceCanvas: OffscreenCanvas, degrees: number) {
+        const radians = degrees * Math.PI / 180;
+
+        const sourceWidth = sourceCanvas.width;
+        const sourceHeight = sourceCanvas.height;
+
+        const cos = Math.abs(Math.cos(radians));
+        const sin = Math.abs(Math.sin(radians));
+
+        const destinationWidth = Math.floor(sourceWidth * cos + sourceHeight * sin);
+        const destinationHeight = Math.floor(sourceWidth * sin + sourceHeight * cos);
+
+        const canvas = new OffscreenCanvas(destinationWidth, destinationHeight);
+        const context = canvas.getContext("2d");
+
+        if(!context) {
+            throw new ContextNotAvailableError();
+        }
+
+        context.translate(destinationWidth / 2, destinationHeight / 2);
+
+        context.rotate(radians);
+
+        context.drawImage(sourceCanvas, -sourceWidth / 2, -sourceHeight / 2);
+
+        return canvas;
     }
 }
