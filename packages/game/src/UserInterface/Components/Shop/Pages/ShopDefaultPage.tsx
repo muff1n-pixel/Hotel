@@ -173,11 +173,11 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                     structure={RoomStructureData.create({
                         grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
                         floor: {
-                            id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.floor?.id ?? "111",
                             thickness: 8
                         },
                         wall: {
-                            id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
                             thickness: 8,
                             hidden: false
                         }

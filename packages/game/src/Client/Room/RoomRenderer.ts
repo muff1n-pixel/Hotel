@@ -375,6 +375,11 @@ export default class RoomRenderer extends EventTarget {
         }
     }
 
+    public panToOffset(offset: MousePosition) {
+        this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + offset.left);
+        this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) + offset.top);
+    }
+
     public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {

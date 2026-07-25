@@ -92,6 +92,11 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                         })
                     });
 
+                    roomRenderer.panToOffset({
+                        left: 0,
+                        top: 32
+                    });
+
                     continue;
                 }
 
