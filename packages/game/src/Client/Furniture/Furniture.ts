@@ -95,6 +95,7 @@ export default class Furniture {
 
         switch(this.type) {
             case "wallpaper":
+            case "landscape":
             case "floor": {
                 if(color !== '0') {
                     this.renderer = new FurnitureRoomContentRenderer(this.type);

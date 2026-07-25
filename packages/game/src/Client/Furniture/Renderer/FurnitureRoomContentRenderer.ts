@@ -44,6 +44,10 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
                 case "floor":
                     image.src = `/assets/shop/floors/th_floor_${options.color}.png`; 
                     break;
+                    
+                case "landscape":
+                    image.src = `/assets/shop/landscapes/th_landscape_${options.color.replace('.', '_')}_001.png`; 
+                    break;
             }
         });
     }
