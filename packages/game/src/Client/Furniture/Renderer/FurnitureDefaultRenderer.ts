@@ -459,7 +459,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             zIndex: 0,
             alpha: undefined,
-            ignoreMouse: true,
+            ignoreMouse: false,
 
             layerCode: "mask"
         };
