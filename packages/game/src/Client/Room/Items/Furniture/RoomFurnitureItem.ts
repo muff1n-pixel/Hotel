@@ -17,7 +17,6 @@ export default class RoomFurnitureItem extends RoomItem {
     
     private mask?: RoomFurnitureMaskSprite;
 
-    private currentFrameRender: number = -1;
     private rendering: boolean = false;
 
     constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
@@ -112,8 +111,6 @@ export default class RoomFurnitureItem extends RoomItem {
 
         this.furnitureRenderer.frame++;
         
-        const currentFrame = this.furnitureRenderer.frame;
-
         if(!this.rendering && this.furnitureRenderer.shouldRender()) {
             if(clientInstance.settings.value?.debugRoomRendering) {
                 //this.sprites.push(new RoomTextSprite(this, "Rendering"));
@@ -124,12 +121,6 @@ export default class RoomFurnitureItem extends RoomItem {
             this.furnitureRenderer.render().then((result) => {
                 this.rendering = false;
                 
-                if(this.currentFrameRender > currentFrame) {
-                    return;
-                }
-
-                this.currentFrameRender = currentFrame;
-
                 if(result.sprites.length) {
                     const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
 
@@ -139,6 +130,8 @@ export default class RoomFurnitureItem extends RoomItem {
 
                     this.setSprites(sprites);
                 }
+            }).catch(() => {
+                this.rendering = false;
             });
         }
         else {
