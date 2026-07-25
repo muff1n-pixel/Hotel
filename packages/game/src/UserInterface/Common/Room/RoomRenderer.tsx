@@ -74,9 +74,9 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             if(!item) {
                 if(furnitureItem.furniture.type === "floor") {
                     roomRenderer.setStructure({
-                        ...roomRenderer.structure,
+                        ...roomRenderer.structure.data,
                         floor: RoomStructureFloorData.create({
-                            ...roomRenderer.structure.floor,
+                            ...roomRenderer.structure.data.floor,
                             id: furnitureItem.furniture.color?.toString()
                         })
                     });
@@ -85,9 +85,9 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                 }
                 else if(furnitureItem.furniture.type === "wallpaper") {
                     roomRenderer.setStructure({
-                        ...roomRenderer.structure,
+                        ...roomRenderer.structure.data,
                         wall: RoomStructureWallData.create({
-                            ...roomRenderer.structure.wall,
+                            ...roomRenderer.structure.data.wall,
                             id: furnitureItem.furniture.color?.toString()
                         })
                     });
