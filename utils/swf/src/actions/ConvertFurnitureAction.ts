@@ -1,6 +1,8 @@
 import { confirm, input, select } from "@inquirer/prompts";
+import { PromisePool } from "@supercharge/promise-pool";
 import { readdirSync } from "fs";
 import path from "path";
+import FurnitureExtraction from "../extractions/FurnitureExtraction.ts";
 
 export default class ConvertFurnitureAction {
     public async run() {
@@ -72,6 +74,23 @@ export default class ConvertFurnitureAction {
     }
 
     private async handleAssetNames(assetNames: string[]) {
+        await PromisePool
+            .withConcurrency(30)
+            .for(assetNames)
+            .process(async (assetName) => {
+                try {
+                    console.time("> Extracting " + assetName);
 
+                    const extraction = new FurnitureExtraction(assetName);
+
+                    await extraction.execute();
+                 
+                    console.timeEnd("> Extracting " + assetName);
+                }
+                catch(error) {
+                    console.error(error);
+                }
+            })
+            .catch((error) => console.error(error));
     }
 }
