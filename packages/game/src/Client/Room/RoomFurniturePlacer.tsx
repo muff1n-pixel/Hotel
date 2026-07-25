@@ -269,8 +269,6 @@ export default class RoomFurniturePlacer {
             const sprite: RoomFurnitureSprite | undefined = this.roomFurnitureItem.sprites.find<RoomFurnitureSprite>((sprite) => sprite instanceof RoomFurnitureSprite);
 
             if(sprite) {
-                console.log(entity.direction);
-
                 const filteredWallFurniture = this.roomInstance.roomRenderer.getFilteredItems((item) => item.id !== this.roomFurnitureItem.id && item instanceof RoomFurnitureItem && item.furnitureRenderer.placement === "wall" && item.furnitureRenderer.direction === entity.position?.direction);
 
                 function getSquaredDistance(item: RoomItem) {
