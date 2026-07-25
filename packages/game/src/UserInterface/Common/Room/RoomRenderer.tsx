@@ -149,7 +149,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                     item.furnitureRenderer.getData().then((data) => {
                         const position = (data.visualization.placement === "wall") ? (
                             RoomPositionData.create({
-                                row: 1 + Math.max(1, item.furnitureRenderer.getDimensions(true).row),
+                                row: 2 + Math.max(1, Math.round(item.furnitureRenderer.getDimensions(true).row / 2)),
                                 column: 0,
                                 depth: 1.5
                             })
@@ -173,7 +173,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                             else {
                                 roomRenderer.panToItem(item, {
                                     left: (Math.max(1, item.position?.row ?? 0) * 16),
-                                    top: (item.position?.depth ?? 0) * 32
+                                    top: 0
                                 });
                             }
                         }
