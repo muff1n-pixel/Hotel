@@ -3,6 +3,7 @@ import ChangeEnvironmentSettingsAction from "./actions/ChangeEnvironmentSettings
 import ConvertFurnitureAction from "./actions/ConvertFurnitureAction.ts";
 import EnvironmentSettings from "./core/EnvironmentSettings.ts";
 import ExtractAction from "./actions/ExtractAction.ts";
+import ConvertHabboRoomContentAction from "./actions/ConvertHabboRoomContentAction.ts";
 
 if (!EnvironmentSettings.read()) {
     const action = new ChangeEnvironmentSettingsAction();
@@ -48,6 +49,14 @@ export async function runApplication() {
 
         case "furniture": {
             const action = new ConvertFurnitureAction();
+
+            await action.run();
+
+            break;
+        }
+
+        case "roomcontent": {
+            const action = new ConvertHabboRoomContentAction();
 
             await action.run();
 

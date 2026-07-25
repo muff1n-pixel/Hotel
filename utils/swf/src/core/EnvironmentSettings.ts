@@ -25,6 +25,7 @@ export default class EnvironmentSettings {
     private static updateFallbackPaths() {
         process.env.ASSETS_OUTPUT_PATH ??= path.join("..", "..", "assets");
         process.env.FURNITURE_INPUT_PATH ??= path.join("..", "swf-extract", "assets", "furniture");
+        process.env.ASSETS_INPUT_PATH ??= path.join("..", "swf-extract", "assets");
 
         this.write();
     }
@@ -33,6 +34,7 @@ export default class EnvironmentSettings {
         const content = stringify({
             ASSETS_OUTPUT_PATH: process.env.ASSETS_OUTPUT_PATH,
             FURNITURE_INPUT_PATH: process.env.FURNITURE_INPUT_PATH,
+            ASSETS_INPUT_PATH: process.env.ASSETS_INPUT_PATH,
         });
 
         writeFileSync(".env", content, {
