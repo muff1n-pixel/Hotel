@@ -92,6 +92,8 @@ export default class RoomRenderer extends EventTarget {
         for(const subscription of this.subscriptions) {
             subscription?.();
         }
+
+        this.cursor?.destroy();
     }
 
     public async init() {

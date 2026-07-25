@@ -5,10 +5,13 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData, UserFurnitureData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData, RoomPositionOffsetData, RoomPositionWithDirectionData, UserFurnitureData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
+import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
+import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -197,8 +200,9 @@ export default class RoomFurniturePlacer {
         const placement = (isFloorPlacement)?("floor"):("wall");
 
         const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const position = this.getPlacementPosition(entity, placement);
 
-        if(entity?.position) {
+        if(entity?.position && position) {
             const dimensions = (
                 (isFurniture)?(
                     this.roomFurnitureItem.furnitureRenderer.getDimensions()
@@ -211,13 +215,13 @@ export default class RoomFurniturePlacer {
                 )
             );
 
-            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(entity.position), dimensions)));
-            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(RoomPositionData.fromJSON(entity.position), dimensions, this.roomFurnitureItem)));
+            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(position), dimensions)));
+            const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(RoomPositionData.fromJSON(position), dimensions, this.roomFurnitureItem)));
 
             const furnitureAtPosition = (isFloorPlacement)?(this.roomInstance.getFurnitureAtUpmostPosition(
                     RoomPositionData.create({
-                        row: entity.position.row,
-                        column: entity.position.column
+                        row: position.row,
+                        column: position.column
                     }),
                     dimensions,
                     (isFurniture)?(this.roomFurnitureItem.id):(undefined)
@@ -225,14 +229,14 @@ export default class RoomFurniturePlacer {
 
             if(entity && isPositionInsideStructure && (furnitureAtPosition?.getLogic() instanceof RoomFurnitureStackHelperLogic || !isPositionInsideFigure)) {
                 if(!furnitureAtPosition || furnitureAtPosition.furnitureData.flags?.stackable) {
-                    if(isFurniture && entity.position.direction !== undefined) {
-                        this.roomFurnitureItem.furnitureRenderer.direction = entity.position.direction;
+                    if(isFurniture && position.direction !== undefined) {
+                        this.roomFurnitureItem.furnitureRenderer.direction = position.direction;
                     }
 
                     this.roomFurnitureItem.setPosition(RoomPositionData.create({
-                        row: entity.position.row,
-                        column: entity.position.column,
-                        depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+                        row: position.row,
+                        column: position.column,
+                        depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(position.depth)
                     }));
 
                     this.roomFurnitureItem.disabled = false;
@@ -250,6 +254,108 @@ export default class RoomFurniturePlacer {
             this.iconElement.style.left = `${Math.round(this.roomInstance.roomRenderer.camera.mousePosition.left)}px`;
             this.iconElement.style.top = `${Math.round(this.roomInstance.roomRenderer.camera.mousePosition.top)}px`;
         }
+    }
+
+    private getPlacementPosition(entity: RoomPointerPosition | null, placement: "wall" | "floor"): RoomPositionWithDirectionData | null {
+        if(!entity?.position) {
+            return null;
+        }
+
+        if(placement === "floor") {
+            return entity.position;
+        }
+
+        if(this.roomInstance.roomRenderer.cursor?.shiftKey) {
+            const sprite: RoomFurnitureSprite | undefined = this.roomFurnitureItem.sprites.find<RoomFurnitureSprite>((sprite) => sprite instanceof RoomFurnitureSprite);
+
+            if(sprite) {
+                console.log(entity.direction);
+
+                const filteredWallFurniture = this.roomInstance.roomRenderer.getFilteredItems((item) => item.id !== this.roomFurnitureItem.id && item instanceof RoomFurnitureItem && item.furnitureRenderer.placement === "wall" && item.furnitureRenderer.direction === entity.position?.direction);
+
+                function getSquaredDistance(item: RoomItem) {
+                    const dr = item.position!.row - entity!.position!.row;
+                    const dc = item.position!.column - entity!.position!.column;
+                    const dd = item.position!.depth - entity!.position!.depth;
+
+                    return dr * dr + dc * dc + dd * dd;
+                };
+
+                const closestWallFurniture: RoomFurnitureItem | null = (filteredWallFurniture as RoomFurnitureItem[]).reduce((previousValue: RoomFurnitureItem | null, current: RoomFurnitureItem) => {
+                    if(!previousValue) {
+                        return current;
+                    }
+
+                    return getSquaredDistance(current) < getSquaredDistance(previousValue) ? current : previousValue;
+                }, null);
+
+                if(closestWallFurniture) {
+                    const closestWallFurnitureDimensions = closestWallFurniture.getDimensions();
+
+                    const snapDistance = 1;
+
+                    let row = closestWallFurniture.position!.row;
+
+                    if(closestWallFurniture.furnitureRenderer.direction === 2) {
+                        const leftRow = closestWallFurniture.position!.row - closestWallFurnitureDimensions.row;
+                        const rightRow = closestWallFurniture.position!.row + closestWallFurnitureDimensions.row;
+
+                        const middleRow = closestWallFurniture.position!.row;
+
+                        const snappedRow =
+                            Math.abs(entity.position!.row - leftRow) < Math.abs(entity.position!.row - rightRow)
+                                ? leftRow
+                                : rightRow;
+
+                        row = Math.abs(entity.position!.row - snappedRow) <= snapDistance
+                            ? snappedRow
+                            : middleRow;
+                    }
+
+                    let column = closestWallFurniture.position!.column;
+
+                    if(closestWallFurniture.furnitureRenderer.direction === 4) {
+                        const leftColumn = closestWallFurniture.position!.column - closestWallFurnitureDimensions.column;
+                        const rightColumn = closestWallFurniture.position!.column + closestWallFurnitureDimensions.column;
+
+                        const middleColumn = closestWallFurniture.position!.column;
+
+                        const snappedColumn =
+                            Math.abs(entity.position!.column - leftColumn) < Math.abs(entity.position!.column - rightColumn)
+                                ? leftColumn
+                                : rightColumn;
+
+                        column = Math.abs(entity.position!.column - snappedColumn) <= snapDistance
+                            ? snappedColumn
+                            : middleColumn;
+                    }
+
+                    const frontDepth = closestWallFurniture.position!.depth - closestWallFurnitureDimensions.depth;
+                    const backDepth = closestWallFurniture.position!.depth + closestWallFurnitureDimensions.depth;
+
+                    const middleDepth = closestWallFurniture.position!.depth;
+
+                    const snappedDepth =
+                        Math.abs(entity.position!.depth - frontDepth) < Math.abs(entity.position!.depth - backDepth)
+                            ? frontDepth
+                            : backDepth;
+
+                    return RoomPositionWithDirectionData.create({
+                        row,
+                        column,
+
+                        depth: Math.abs(entity.position!.depth - snappedDepth) <= snapDistance
+                            ? snappedDepth
+                            : middleDepth,
+
+                        direction: closestWallFurniture.furnitureRenderer.direction
+                    });
+                }
+            }
+            
+        }
+
+        return entity.position;
     }
 
     private click() {
@@ -270,6 +376,7 @@ export default class RoomFurniturePlacer {
         const placement = (isFloorPlacement)?("floor"):("wall");
 
         const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const placementPosition = this.getPlacementPosition(entity, placement);
 
         const dimensions = (
             (isFurniture)?(
@@ -283,19 +390,19 @@ export default class RoomFurniturePlacer {
             )
         );
         
-        const furnitureAtPosition = (entity?.position && isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
+        const furnitureAtPosition = (placementPosition && isFloorPlacement) && this.roomInstance.getFurnitureAtUpmostPosition(
             RoomPositionData.create({
-                row: entity.position.row,
-                column: entity.position.column
+                row: placementPosition.row,
+                column: placementPosition.column
             }),
             RoomPositionData.create(dimensions),
             (isFurniture)?(this.roomFurnitureItem.id):(undefined)
         );
 
-        const position = (entity?.position)?(RoomPositionData.create({
-            row: entity.position.row,
-            column: entity.position.column,
-            depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(entity.position.depth)
+        const position = (placementPosition)?(RoomPositionData.create({
+            row: placementPosition.row,
+            column: placementPosition.column,
+            depth: (furnitureAtPosition && furnitureAtPosition.item.position)?(furnitureAtPosition.item.position.depth + furnitureAtPosition.getDimensionDepth() + 0.0001):(placementPosition.depth)
         })):(null);
 
         if(!entity || !position || this.roomFurnitureItem.disabled) {

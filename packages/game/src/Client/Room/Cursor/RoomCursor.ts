@@ -13,6 +13,8 @@ export default class RoomCursor extends EventTarget {
 
     public cursorDisabled: boolean = false;
 
+    public shiftKey: boolean = false;
+
     constructor(private readonly roomRenderer: RoomRenderer) {
         super();
 
@@ -28,11 +30,29 @@ export default class RoomCursor extends EventTarget {
 
         this.roomRenderer.addItem(this.furnitureItem);
 
+        document.addEventListener("keydown", this.keydownListener);
+        document.addEventListener("keyup", this.keyupListener);
+
         this.roomRenderer.addEventListener("render", this.render.bind(this));
         this.roomRenderer.addEventListener("frame", this.frame.bind(this));
         this.roomRenderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
         this.roomRenderer.application.canvas.addEventListener("dblclick", this.doubleclick.bind(this));
         this.roomRenderer.application.canvas.addEventListener("click", this.click.bind(this));
+    }
+
+    public destroy() {
+        document.removeEventListener("keydown", this.keydownListener);
+        document.removeEventListener("keyup", this.keyupListener);
+    }
+
+    private keydownListener = this.keydown.bind(this);
+    private keydown(event: KeyboardEvent) {
+        this.shiftKey = event.shiftKey;
+    }
+
+    private keyupListener = this.keyup.bind(this);
+    private keyup(event: KeyboardEvent) {
+        this.shiftKey = event.shiftKey;
     }
 
     private mousedown(event: MouseEvent) {
