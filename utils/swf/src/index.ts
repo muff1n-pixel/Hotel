@@ -2,6 +2,7 @@ import { select, Separator } from "@inquirer/prompts";
 import ChangeEnvironmentSettingsAction from "./actions/ChangeEnvironmentSettingsAction.ts";
 import ConvertFurnitureAction from "./actions/ConvertFurnitureAction.ts";
 import EnvironmentSettings from "./core/EnvironmentSettings.ts";
+import ExtractAction from "./actions/ExtractAction.ts";
 
 if (!EnvironmentSettings.read()) {
     const action = new ChangeEnvironmentSettingsAction();
@@ -47,6 +48,14 @@ export async function runApplication() {
 
         case "furniture": {
             const action = new ConvertFurnitureAction();
+
+            await action.run();
+
+            break;
+        }
+
+        case "extract": {
+            const action = new ExtractAction();
 
             await action.run();
 
