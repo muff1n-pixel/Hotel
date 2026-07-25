@@ -47,6 +47,8 @@ export default class RoomRenderer extends EventTarget {
     private readonly items: RoomItem[] = [];
 
     public scale = new ObservableRequiredProperty<number>(1);
+    private scaleSubscription: () => void;
+    private subscriptions: ((() => void) | undefined)[] = [];
 
     private _previewScale: number = 1;
     public set previewScale(scale: number) {
@@ -77,9 +79,19 @@ export default class RoomRenderer extends EventTarget {
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
 
-        this.scale.subscribe((value) => {
+        this.scaleSubscription = this.scale.subscribe((value) => {
             this.container.scale = value;
         });
+    }
+
+    public terminate() {
+        this.application.destroy(true, true);
+
+        this.scaleSubscription();
+
+        for(const subscription of this.subscriptions) {
+            subscription?.();
+        }
     }
 
     public async init() {
@@ -89,14 +101,14 @@ export default class RoomRenderer extends EventTarget {
             resizeTo: this.parent,
         });
 
-        this.clientInstance?.settings.subscribe((value) => {
+        this.subscriptions.push(this.clientInstance?.settings.subscribe((value) => {
             if(value.limitRoomFrames) {
                 this.application.ticker.maxFPS = 60;
             }
             else {
                 this.application.ticker.maxFPS = 0;
             }
-        });
+        }));
 
         if(window.screen.width > 1920) {
             if(this.clientInstance?.settings.value.autoScaleRooms) {
@@ -157,10 +169,6 @@ export default class RoomRenderer extends EventTarget {
         this.items.splice(index, 1);
 
         item.destroy();
-    }
-
-    public terminate() {
-        this.application.destroy(true, true);
     }
 
     private processTick() {
