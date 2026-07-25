@@ -1,0 +1,32 @@
+{
+  "name": "swf-extract",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@gizeta/swf-reader": "^1.0.0",
+    "@types/ini": "^4.1.1",
+    "@types/jimp": "^0.2.1",
+    "@types/node": "^25.0.3",
+    "@types/node-sprite-generator": "^0.10.6",
+    "fast-xml-parser": "^5.3.3",
+    "node-sprite-generator": "^0.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.5.2",
+    "@supercharge/promise-pool": "^3.2.0",
+    "dotenv": "^17.4.2",
+    "ini": "^6.0.0",
+    "jimp": "^1.6.0",
+    "music-metadata": "^11.12.3",
+    "sqlite3": "^5.1.7"
+  }
+}
