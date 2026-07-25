@@ -8,7 +8,7 @@ import RoomBot from "./Bots/RoomBot.js";
 import RoomActor from "./Actor/RoomActor.js";
 import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
 import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
-import { MessageType, RoomClickConfigurationData, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
+import { MessageType, RoomClickConfigurationData, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, RoomStructureLandscapeData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
 import RoomPet from "./Pets/RoomPet.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
@@ -413,7 +413,7 @@ export default class Room {
         return furniture.model.position.depth + furniture.model.furniture.dimensions.depth;
     }
 
-    public async setFloorId(id: number) {
+    public async setFloorId(id: string) {
         const structure = RoomStructureData.create(this.model.structure);
         structure.floor!.id = id.toString();
 
@@ -422,7 +422,20 @@ export default class Room {
         this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
     }
 
-    public async setWallId(id: number) {
+    public async setLandscapeId(id: string) {
+        const structure = RoomStructureData.create(this.model.structure);
+
+        structure.landscape = RoomStructureLandscapeData.create({
+            ...structure.landscape,
+            id
+        });
+
+        await this.model.update({ structure });
+
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
+    }
+
+    public async setWallId(id: string) {
         const structure = RoomStructureData.create(this.model.structure);
         structure.wall!.id = id.toString();
 

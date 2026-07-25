@@ -168,7 +168,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
             return;
         }
 
-        if(userFurniture.furniture?.type === "wallpaper" || userFurniture.furniture?.type === "floor") {
+        if(userFurniture.furniture?.type === "wallpaper" || userFurniture.furniture?.type === "floor" || userFurniture.furniture?.type === "landscape") {
             webSocketClient.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
                 id: userFurniture.id,
                 furnitureId: userFurniture.furniture?.id,
@@ -327,13 +327,16 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                                     structure={RoomStructureData.create({
                                         grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
                                         floor: {
-                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.floor?.id ?? "111",
                                             thickness: 8
                                         },
                                         wall: {
-                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
                                             thickness: 8,
                                             hidden: false
+                                        },
+                                        landscape: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.landscape?.id ?? "default",
                                         }
                                     })}
                                     furniture={

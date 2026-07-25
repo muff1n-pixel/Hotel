@@ -12,7 +12,7 @@ export class FurnitureModel extends Model {
     declare directions: number[];
     declare animations: number[];
     declare interactionType: string;
-    declare color?: number;
+    declare color?: string;
     declare category: string;
     declare flags: FurnitureFlagsData;
     declare customParams: string[] | null;
@@ -92,7 +92,7 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
                 defaultValue: JSON.stringify([])
             },
             color: {
-                type: DataTypes.DOUBLE,
+                type: DataTypes.STRING,
                 defaultValue: null
             },
             flags: {

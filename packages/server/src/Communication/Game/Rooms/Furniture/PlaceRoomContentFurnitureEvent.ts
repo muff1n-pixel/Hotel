@@ -54,6 +54,17 @@ export default class PlaceRoomContentFurnitureEvent implements ProtobuffListener
 
             await inventory.deleteFurniture(userFurniture);
         }
+        else if(userFurniture.furniture.type === "landscape") {
+            if(userFurniture.furniture.color === undefined) {
+                throw new Error("User room content furniture does not have a color.");
+            }
+
+            await user.room.setLandscapeId(userFurniture.furniture.color);
+
+            await userFurniture.destroy();
+
+            await inventory.deleteFurniture(userFurniture);
+        }
         else {
             throw new Error("User furniture is not of room content type.");
         }

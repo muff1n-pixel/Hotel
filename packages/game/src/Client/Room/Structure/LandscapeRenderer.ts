@@ -146,8 +146,6 @@ export default class LandscapeRenderer {
             const material = await this.getVisualizationLayer(data, visualizationLayer);
 
             if(material) {
-                console.log("draw");
-
                 context.drawImage(material, 0, 0);
             }
         }
@@ -254,7 +252,7 @@ export default class LandscapeRenderer {
                             const usedOffsetIds: number[] = [];
 
                             for(let index = 0; index < (cell.extraItemData.limitMax ?? cell.extraItemData.offsets.length); index++) {
-                                const offset = cell.extraItemData.offsets[Math.floor(Math.random() * cell.extraItemData.offsets.length)];
+                                /*const offset = cell.extraItemData.offsets[Math.floor(Math.random() * cell.extraItemData.offsets.length)];
 
                                 if(!offset) {
                                     continue;
@@ -264,7 +262,7 @@ export default class LandscapeRenderer {
                                     continue;
                                 }
 
-                                usedOffsetIds.push(offset.id);
+                                usedOffsetIds.push(offset.id);*/
 
                                 const type = cell.extraItemData.types[Math.floor(Math.random() * cell.extraItemData.types.length)];
 
@@ -272,11 +270,32 @@ export default class LandscapeRenderer {
                                     continue;
                                 }
 
-                                const texture = await this.getTexture(data, type.assetName);
-                                
+                                const typeParts = type.assetName.split('_');
+                                const typePart = typeParts[typeParts.length - 1];
+
+                                const textureData = data.visualization.landscapeData.textures.find((texture) => texture.id === cell.textureId);
+
+                                if(!textureData) {
+                                    continue;
+                                }
+
+                                const textureAsset = textureData.assets.find((asset) => asset.assetName.endsWith(typePart));
+
+                                if(!textureAsset) {
+                                    continue;
+                                }
+
+                                const texture = await this.getTexture(data, textureAsset.assetName);
+
+                                if(matrix.align === "bottom") {
+                                    context.translate(0, height - texture.height);
+                                }
+
                                 context.drawImage(texture,
                                     0, 0, texture.width, texture.height,
-                                    left + offset.x, offset.y, texture.width, texture.height);
+                                    left, 0, texture.width, texture.height);
+
+                                context.resetTransform();
                             }
                         }
                     }
