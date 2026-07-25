@@ -103,7 +103,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                             
                             <b>Furniture color</b>
 
-                            <Input value={(color)?(color.toString()):(undefined)} onChange={(value) => setColor((value.length)?(parseInt(value)):(undefined))}/>
+                            <Input value={color} onChange={(value) => setColor((value.length)?(value):(undefined))}/>
 
                             {(interactionType === "crackable") && (
                                 <div>

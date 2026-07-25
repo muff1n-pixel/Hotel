@@ -546,6 +546,8 @@ export default class RoomRenderer extends EventTarget {
     public setStructure(structure: RoomStructureData) {
         this.structure = new RoomStructure(structure);
 
+        this.landscape.recreate();
+
         if(this.floorItem) {
             this.removeItem(this.floorItem);
 

@@ -9,7 +9,7 @@ message ShopFeatureFurnitureConfigurationData {
     uint32 direction = 3;
 
     uint32 animation = 4;
-    optional uint32 color = 5;
+    optional string color = 5;
 
     uint32 priority = 6;
 }

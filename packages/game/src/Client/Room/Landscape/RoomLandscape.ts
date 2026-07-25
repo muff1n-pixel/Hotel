@@ -4,7 +4,7 @@ import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
 
 export default class RoomLandscape {
-    private readonly renderer: LandscapeRenderer;
+    private renderer: LandscapeRenderer;
 
     public image?: OffscreenCanvas;
     private frame: number = 0;
@@ -23,6 +23,10 @@ export default class RoomLandscape {
                 this.deleteSprite();
             }
         });
+    }
+
+    public recreate() {
+        this.renderer = new LandscapeRenderer(this.roomRenderer.structure, this.roomRenderer.size);
     }
 
     public async render() {

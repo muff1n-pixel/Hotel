@@ -16,7 +16,7 @@ message UpdateFurnitureData {
     float depth = 7;
 
     string type = 8;
-    optional uint32 color = 9;
+    optional string color = 9;
     
     string placement = 10;
 }

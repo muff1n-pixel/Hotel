@@ -9,7 +9,7 @@ export default class Pet {
     public frame: number = 0;
     public direction: number = 2;
     public size: number = 64;
-    private color: number = 0;
+    private color: string = '0';
     private grayscaled: AssetSpriteGrayscaledProperties | undefined = undefined;
 
     private readonly renderer: PetDefaultRenderer;
@@ -24,7 +24,7 @@ export default class Pet {
             direction: this.direction,
             size: this.size, 
             animation: this.getAnimationId(), 
-            color: this.color ?? 0,
+            color: this.color ?? '0',
             frame: this.frame,
             grayscaled: this.grayscaled,
             tags: (this.headonly)?(["head", "hair"]):(undefined),
@@ -41,7 +41,7 @@ export default class Pet {
             direction: this.direction,
             size: this.size, 
             animation: this.getAnimationId(), 
-            color: this.color ?? 0,
+            color: this.color ?? '0',
             frame: this.frame,
             grayscaled: this.grayscaled,
             tags: (this.headonly)?(["head", "hair"]):(undefined),
@@ -66,7 +66,7 @@ export default class Pet {
             direction: this.direction,
             size: this.size, 
             animation: this.getAnimationId(), 
-            color: this.color ?? 0,
+            color: this.color ?? '0',
             frame: this.frame,
             grayscaled: this.grayscaled,
             tags: (this.headonly)?(["head", "hair"]):(undefined),

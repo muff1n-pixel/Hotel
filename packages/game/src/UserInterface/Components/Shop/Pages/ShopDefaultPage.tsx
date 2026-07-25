@@ -180,6 +180,9 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                             id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
                             thickness: 8,
                             hidden: false
+                        },
+                        landscape: {
+                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.landscape?.id ?? "default",
                         }
                     })}
                     furniture={

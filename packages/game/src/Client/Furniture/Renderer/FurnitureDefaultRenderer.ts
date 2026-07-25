@@ -350,7 +350,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 continue;
             }
 
-            const colorData = this.visualization!.colors?.find((visualizationColor) => visualizationColor.id === options.color);
+            const colorData = this.visualization!.colors?.find((visualizationColor) => visualizationColor.id === parseInt(options.color));
 
             const layerData = this.visualization!.layers.find((layerData) => layerData.id === layer);
 

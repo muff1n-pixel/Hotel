@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ClientRoomRenderer from "@Client/Room/RoomRenderer";
-import { RoomPositionData, RoomStructureData, RoomStructureFloorData, RoomStructureWallData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData, RoomStructureFloorData, RoomStructureLandscapeData, RoomStructureWallData } from "@pixel63/events";
 import { RoomRendererFurnitureProps } from "@UserInterface/Common/Room/Furniture/RoomRendererFurniture";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
@@ -99,16 +99,40 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
 
                     continue;
                 }
+                else if(furnitureItem.furniture.type === "landscape") {
+                    roomRenderer.setStructure({
+                        ...roomRenderer.structure.data,
+                        landscape: RoomStructureLandscapeData.create({
+                            ...roomRenderer.structure.data.landscape,
+                            id: furnitureItem.furniture.color?.toString()
+                        })
+                    });
+                    
+                    item = new RoomFurnitureItem(
+                        roomRenderer, 
+                        new Furniture('window_double_default', 64),
+                        RoomPositionData.create({
+                            row: -1,
+                            column: 0,
+                            depth: 1
+                        })
+                    );
 
-                item = new RoomFurnitureItem(
-                    roomRenderer, 
-                    new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),
-                    furnitureItem.position
-                );
+                    roomRenderer.addItem(item);
 
-                roomRenderer.addItem(item);
+                    roomChildrenItems.current.set(furnitureItem.id, item);
+                }
+                else {
+                    item = new RoomFurnitureItem(
+                        roomRenderer, 
+                        new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),
+                        furnitureItem.position
+                    );
 
-                roomChildrenItems.current.set(furnitureItem.id, item);
+                    roomRenderer.addItem(item);
+
+                    roomChildrenItems.current.set(furnitureItem.id, item);
+                }
             }
             else {
                 item.setPosition(furnitureItem.position);

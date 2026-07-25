@@ -84,9 +84,9 @@ export default class Furniture {
 
     public figureConfiguration?: FigureConfigurationData;
 
-    constructor(type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: number | undefined = undefined) {
+    constructor(type: string, public size: number, public direction: number | undefined = undefined, animation: number = 0, public color: string | undefined = undefined) {
         if(this.color === undefined) {
-            this.color = 0;
+            this.color = '0';
         }
 
         this.type = type;
@@ -96,7 +96,7 @@ export default class Furniture {
         switch(this.type) {
             case "wallpaper":
             case "floor": {
-                if(color !== 0) {
+                if(color !== '0') {
                     this.renderer = new FurnitureRoomContentRenderer(this.type);
                 }
                 else {
@@ -140,7 +140,7 @@ export default class Furniture {
             animation: this.animation,
             animationTags: this.animationTags,
             colorTags: this.colorTags,
-            color: this.color ?? 0, 
+            color: this.color ?? '0', 
             frame: this.frame,
             grayscaled: this.grayscaled,
             tags: undefined,

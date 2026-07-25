@@ -92,7 +92,7 @@ export function initializeFurnitureModel(sequelize: Sequelize) {
                 defaultValue: JSON.stringify([])
             },
             color: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.DOUBLE,
                 defaultValue: null
             },
             flags: {
