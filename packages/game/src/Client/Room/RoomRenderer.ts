@@ -94,6 +94,7 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.cursor?.destroy();
+        this.landscape.destroy();
     }
 
     public async init() {

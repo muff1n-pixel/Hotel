@@ -6,16 +6,18 @@ import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
 
-    public image?: OffscreenCanvas;
+    public image?: ImageBitmap;
     private frame: number = 0;
 
     private item?: RoomItem;
     private sprite?: RoomLandscapeDebugSprite;
 
+    private settingsListener?: () => void;
+
     constructor(private readonly roomRenderer: RoomRenderer) {
         this.renderer = new LandscapeRenderer(roomRenderer.structure, roomRenderer.size);
 
-        roomRenderer.clientInstance?.settings.subscribe((settings) => {
+        this.settingsListener = roomRenderer.clientInstance?.settings.subscribe((settings) => {
             if(settings.debugRoomLandscapes) {
                 this.createSprite();
             }
@@ -23,6 +25,10 @@ export default class RoomLandscape {
                 this.deleteSprite();
             }
         });
+    }
+
+    public destroy() {
+        this.settingsListener?.();
     }
 
     public recreate() {
