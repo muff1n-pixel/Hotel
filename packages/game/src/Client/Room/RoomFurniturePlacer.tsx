@@ -289,7 +289,7 @@ export default class RoomFurniturePlacer {
                     return getSquaredDistance(current) < getSquaredDistance(previousValue) ? current : previousValue;
                 }, null);
 
-                if(closestWallFurniture) {
+                if(closestWallFurniture && getSquaredDistance(closestWallFurniture) < 2) {
                     const closestWallFurnitureDimensions = closestWallFurniture.getDimensions();
 
                     const snapDistance = 1;
