@@ -87,6 +87,9 @@ export default class RoomFigureItem extends RoomItem {
 
             this.sprites.push(this.healthSprite);
         }
+        else if(this.healthSprite) {
+            this.destroySprite(this.healthSprite);
+        }
 
         if(this.typing) {
             if(!this.typingSprite) {
@@ -104,23 +107,32 @@ export default class RoomFigureItem extends RoomItem {
 
             this.sprites.push(this.typingSprite);
         }
-        else if(this.idling) {
-            if(!this.idlingSprite) {
-                this.idlingSprite = new RoomFigureIdlingSprite(this, {
-                    left: this.figureSprite.x,
-                    top: this.figureSprite.y,
-                });
-            }
-            else {
-                this.idlingSprite.figureOffsets = {
-                    left: this.figureSprite.x,
-                    top: this.figureSprite.y,
-                };
-
-                this.idlingSprite.process();
+        else {
+            if(this.typingSprite) {
+                this.destroySprite(this.typingSprite);
             }
 
-            this.sprites.push(this.idlingSprite);
+            if(this.idling) {
+                if(!this.idlingSprite) {
+                    this.idlingSprite = new RoomFigureIdlingSprite(this, {
+                        left: this.figureSprite.x,
+                        top: this.figureSprite.y,
+                    });
+                }
+                else {
+                    this.idlingSprite.figureOffsets = {
+                        left: this.figureSprite.x,
+                        top: this.figureSprite.y,
+                    };
+
+                    this.idlingSprite.process();
+                }
+
+                this.sprites.push(this.idlingSprite);
+            }
+            else if(this.idlingSprite) {
+                this.destroySprite(this.idlingSprite);
+            }
         }
     }
 

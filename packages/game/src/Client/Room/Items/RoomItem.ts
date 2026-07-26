@@ -68,6 +68,16 @@ export default class RoomItem implements RoomItemInterface {
         this._sprites = sprites;
     }
 
+    public destroySprite(sprite: RoomSprite) {
+        const index = this._sprites.indexOf(sprite);
+
+        if(index !== -1) {
+            this._sprites.splice(index, 1);
+        }
+            
+        sprite.destroy();
+    }
+
     public updateSprites() {
         for(const sprite of this._sprites) {
             sprite.update();
