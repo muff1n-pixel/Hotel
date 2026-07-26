@@ -199,8 +199,6 @@ export default class RoomInstance {
             return;
         }
 
-        console.log(event);
-
         if(!event.shiftKey && !event.ctrlKey && !event.altKey) {
             if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
                 webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
