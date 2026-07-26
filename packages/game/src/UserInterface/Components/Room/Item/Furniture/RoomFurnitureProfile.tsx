@@ -37,7 +37,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-end",
-            gap: 5
+            gap: 10
         }}>
             <div style={{
                 background: "rgba(61, 61, 61, .95)",
