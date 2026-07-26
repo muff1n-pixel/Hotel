@@ -28,6 +28,8 @@ export default class RoomLandscape {
     }
 
     public destroy() {
+        this.image?.close();
+
         this.settingsListener?.();
     }
 
@@ -35,10 +37,24 @@ export default class RoomLandscape {
         this.renderer = new LandscapeRenderer(this.roomRenderer.structure, this.roomRenderer.size);
     }
 
+    private rendering: boolean = false;
+
     public async render() {
+        if(this.rendering) {
+            return;
+        }
+
+        this.rendering = true;
+
         this.frame = (this.frame + 1) % 24;
 
-        this.image = await this.renderer.renderOffScreen();
+        const image = await this.renderer.renderOffScreen();
+
+        this.image?.close();
+
+        this.image = image;
+
+        this.rendering = false;
 
         this.sprite?.updateLandscape();
     }

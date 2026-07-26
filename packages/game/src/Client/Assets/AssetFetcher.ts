@@ -51,11 +51,19 @@ export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
     private static images: Map<string, Promise<ImageBitmap>> = new Map();
     private static spritesCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
-    private static imageDataCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
+    private static imageDataCache: Map<string, Map<string, ImageData>> = new Map<string, Map<string, ImageData>>();
 
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
     public static clearMemory() {
+        for(const urlCache of this.spritesCache.values()) {
+            for(const cachedSprite of urlCache.values()) {
+                cachedSprite.result.then((result) => {
+                    result.image.close();
+                });
+            }
+        }
+
         this.spritesCache.clear();
         this.imageDataCache.clear();
 
@@ -236,19 +244,19 @@ export default class AssetFetcher {
             const imageDataKey = this.createImageDataKey(properties);
 
             if(!this.imageDataCache.has(url)) {
-                this.imageDataCache.set(url, new Map<string, AssetSpriteResult>());
+                this.imageDataCache.set(url, new Map<string, ImageData>());
             }
 
             const imageDataUrl = this.imageDataCache.get(url)!;
 
             const existingSpriteWithImageData = imageDataUrl.get(imageDataKey);
 
-            if(existingSpriteWithImageData?.imageData) {
-                result.imageData = existingSpriteWithImageData.imageData;
-                output.imageData = existingSpriteWithImageData.imageData;
+            if(existingSpriteWithImageData) {
+                result.imageData = existingSpriteWithImageData;
+                output.imageData = existingSpriteWithImageData;
 
                 if(properties.grayscaled) {
-                    output = this.drawGrayscaledImage(existingSpriteWithImageData.imageData, properties.grayscaled);
+                    output = this.drawGrayscaledImage(existingSpriteWithImageData, properties.grayscaled);
                     result.result = Promise.resolve(output);
                 }
             }
@@ -262,7 +270,7 @@ export default class AssetFetcher {
                         result.result = Promise.resolve(output);
                     }
 
-                    imageDataUrl.set(imageDataKey, result);
+                    imageDataUrl.set(imageDataKey, imageData);
                 });
 
                 if(properties.requireImageData) {

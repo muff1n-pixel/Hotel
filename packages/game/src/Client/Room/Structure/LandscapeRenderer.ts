@@ -33,6 +33,7 @@ export default class LandscapeRenderer {
     private animationLayers: LandscapeAnimationLayer[] = [];
 
     private canvas: OffscreenCanvas;
+    private textureCanvas: OffscreenCanvas;
 
     constructor(public readonly structure: RoomStructure, public readonly size: number) {
         this.fullSize = this.size / 2;
@@ -55,6 +56,11 @@ export default class LandscapeRenderer {
         const height = (this.structure.rows * this.halfSize) + (this.structure.columns * this.halfSize) + (this.structure.wallDepth * this.fullSize) + (this.wallThickness) + this.floorThickness + (this.size * 2);
 
         this.canvas = new OffscreenCanvas(width, height);
+        
+        const textureWidth = this.rectangles.length * this.fullSize;
+        const textureHeight = (this.structure.wallDepth * this.fullSize) + (this.size * 2);
+
+        this.textureCanvas = new OffscreenCanvas(textureWidth, textureHeight);
     }
 
     public async renderOffScreen() {
@@ -128,12 +134,7 @@ export default class LandscapeRenderer {
     private visualization?: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0];
 
     private async renderTexture() {
-        const width = this.rectangles.length * this.fullSize;
-        const height = (this.structure.wallDepth * this.fullSize) + (this.size * 2);
-
-        const canvas = new OffscreenCanvas(width, height);
-
-        const context = canvas.getContext("2d");
+        const context = this.textureCanvas.getContext("2d");
 
         if(!context) {
             throw new ContextNotAvailableError();
@@ -147,7 +148,7 @@ export default class LandscapeRenderer {
 
         if(this.visualization.color) {
             context.fillStyle = this.visualization.color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillRect(0, 0, this.textureCanvas.width, this.textureCanvas.height);
         }
 
         for(const visualizationLayer of this.visualization.visualizationLayers) {
@@ -197,26 +198,29 @@ export default class LandscapeRenderer {
             }));
         }
 
+        const now = performance.now();
+
         for(const animationLayer of this.animationLayers) {
-            animationLayer.left += ((performance.now() - animationLayer.timestamp) / 500) * animationLayer.speedX;
-            animationLayer.timestamp = performance.now();
+            animationLayer.left += ((now - animationLayer.timestamp) / 500) * animationLayer.speedX;
+            animationLayer.timestamp = now;
 
             animationLayer.left %= 100;
 
-            const left = Math.round((animationLayer.left / 100) * width);
-            const top = Math.round((animationLayer.top / 100) * height);
+            const left = Math.round((animationLayer.left / 100) * this.textureCanvas.width);
+            const top = Math.round((animationLayer.top / 100) * this.textureCanvas.height);
 
             context.drawImage(animationLayer.image, left, top);
 
-            if(left > (width - animationLayer.image.width)) {
-                const overlappingWidth = (left + animationLayer.image.width) - width;
+            if(left > (this.textureCanvas.width - animationLayer.image.width)) {
+                const overlappingWidth = (left + animationLayer.image.width) - this.textureCanvas.width;
 
                 context.drawImage(animationLayer.image, -animationLayer.image.width + overlappingWidth, top);
             }
         }
 
-        return canvas;
+        return this.textureCanvas;
     }
+
     private getLandscapeData(data: RoomData) {
         const landscape = data.visualization.landscapeData.landscapes.find((landscape) => landscape.id === (this.structure.data.landscape?.id ?? "default"));
         const visualization = landscape?.visualizations.find(((visualization) => visualization.size === 64));
