@@ -84,13 +84,9 @@ export default class WebSocket {
                 const existingUser = game.users.find((user) => user.model.id === model.id);
 
                 if(existingUser) {
-                    console.warn("User is already connected.");
+                    console.warn("User " + model.name + " is already connected, disconnecting existing user.");
 
-                    existingUser.webSocket.close();
-                    
-                    webSocket.close();
-
-                    return;
+                    existingUser.disconnect();
                 }
 
                 await model.update({

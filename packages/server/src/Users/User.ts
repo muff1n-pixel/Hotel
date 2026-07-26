@@ -40,6 +40,16 @@ export default class User extends EventEmitter {
         }).catch(console.error);
     }
 
+    public disconnect() {
+        if(this.room) {
+            const roomUser = this.room.getRoomUser(this);
+
+            roomUser.disconnect();
+        }
+
+        this.webSocket.close();
+    }
+
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
         try {
             const encoded = message.encode(payload).finish();
