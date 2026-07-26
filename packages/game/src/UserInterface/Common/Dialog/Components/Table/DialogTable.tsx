@@ -144,7 +144,7 @@ export default function DialogTable({ empty, style, activeId, flex, columns, ite
                                 gap: 5,
                             }}>
                                 {item.values.map((value, index) => (
-                                    <div key={value?.toString()} style={{
+                                    <div key={index?.toString()} style={{
                                         flex: flex?.[index] ?? 1,
                                     }}>
                                         <div style={{

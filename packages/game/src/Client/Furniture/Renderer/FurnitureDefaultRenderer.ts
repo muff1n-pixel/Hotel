@@ -1,5 +1,6 @@
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import DataStats from "@Client/DataStats";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderResult, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
@@ -483,7 +484,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return { image, imageData };
     }
     
-    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions) {
+    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<OffscreenCanvas> {
         const immutableSprites = await this.render(data, options);
 
         const sprites = immutableSprites.sprites.map((sprite) => {
@@ -568,6 +569,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
-        return canvas.transferToImageBitmap();
+        return canvas;
     }
 }

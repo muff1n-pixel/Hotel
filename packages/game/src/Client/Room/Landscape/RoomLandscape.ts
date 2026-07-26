@@ -1,7 +1,9 @@
+import DataStats from "@Client/DataStats";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
+import { clientInstance } from "@Game/index";
 
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
@@ -28,7 +30,11 @@ export default class RoomLandscape {
     }
 
     public destroy() {
-        this.image?.close();
+        if(this.image) {
+            this.image.close();
+
+            DataStats.landscapeImageBitmapsClosed++;
+        }
 
         this.settingsListener?.();
     }
@@ -48,11 +54,15 @@ export default class RoomLandscape {
 
         this.frame = (this.frame + 1) % 24;
 
-        const image = await this.renderer.renderOffScreen();
+        const imageBitmap = await this.renderer.renderOffScreen();
 
-        this.image?.close();
+        if(this.image) {
+            this.image.close();
+            
+            DataStats.landscapeImageBitmapsClosed++;
+        }
 
-        this.image = image;
+        this.image = imageBitmap;
 
         this.rendering = false;
 

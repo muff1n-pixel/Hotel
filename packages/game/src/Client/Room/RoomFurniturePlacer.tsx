@@ -12,6 +12,7 @@ import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurn
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
+import DataStats from "@Client/DataStats";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;

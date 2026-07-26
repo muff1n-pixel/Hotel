@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Furniture from "@Client/Furniture/Furniture";
 import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
+import DataStats from "@Client/DataStats";
 
 export type FurnitureImageProps = {
     figureConfiguration?: FigureConfigurationData;
@@ -14,12 +15,20 @@ export type FurnitureImageProps = {
 }
 
 export default function FurnitureImage({ externalImage, figureConfiguration, frame = 0, direction, animation = 0, furnitureData, spritesWithoutInkModes = true }: FurnitureImageProps) {
-    const [image, setImage] = useState<ImageBitmap>();
+    const rendering = useRef<boolean>(false);
+
+    const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         if(!furnitureData?.type) {
             return;
         }
+
+        if(rendering.current) {
+            return;
+        }
+
+        rendering.current = true;
 
         const furnitureRenderer = new Furniture(furnitureData.type, 64, direction, animation, furnitureData.color);
         furnitureRenderer.frame = frame;
@@ -27,6 +36,8 @@ export default function FurnitureImage({ externalImage, figureConfiguration, fra
         furnitureRenderer.figureConfiguration = figureConfiguration;
 
         furnitureRenderer.renderToCanvas({ spritesWithoutInkModes }).then((image) => {
+            rendering.current = false;
+
             setImage(image);
         });
     }, [ furnitureData, animation, frame, direction, spritesWithoutInkModes, externalImage, figureConfiguration ]);

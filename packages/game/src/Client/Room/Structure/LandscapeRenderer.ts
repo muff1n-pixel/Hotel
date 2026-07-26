@@ -1,4 +1,5 @@
 import RoomAssets from "@Client/Assets/RoomAssets";
+import DataStats from "@Client/DataStats";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { RoomData } from "@Client/Interfaces/Room/RoomData";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
@@ -128,7 +129,11 @@ export default class LandscapeRenderer {
 
         context.resetTransform();
 
-        return this.canvas.transferToImageBitmap();
+        const imageBitmap = this.canvas.transferToImageBitmap();
+
+        DataStats.landscapeImageBitmapsOpened++;
+
+        return imageBitmap;
     }
 
     private visualization?: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0];

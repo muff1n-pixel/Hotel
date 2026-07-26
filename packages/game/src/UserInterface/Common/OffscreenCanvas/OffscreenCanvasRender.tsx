@@ -9,10 +9,10 @@ export type OffscreenCanvasRenderProps = {
     offsets?: MousePosition;
     imageSmoothingEnabled?: boolean;
 } & ({
-    offscreenCanvas: ImageBitmap | Promise<ImageBitmap>;
+    offscreenCanvas: OffscreenCanvas | ImageBitmap | Promise<ImageBitmap>;
     placeholderImage?: ImageBitmap;
 }| {
-    offscreenCanvas?: ImageBitmap | Promise<ImageBitmap>;
+    offscreenCanvas?: OffscreenCanvas | ImageBitmap | Promise<ImageBitmap>;
     placeholderImage: ImageBitmap;
 });
 
@@ -60,9 +60,14 @@ export default function OffscreenCanvasRender({ ref, offscreenCanvas, placeholde
 
             if(offsets) {
                 context.translate(offsets.left, offsets.top);
-            } 
+            }
 
-            context.drawImage(image, 0, 0, image.width, image.height, 0, 0, actualRef.current.width, actualRef.current.height);
+            try {
+                context.drawImage(image, 0, 0, image.width, image.height, 0, 0, actualRef.current.width, actualRef.current.height);
+            }
+            catch(error) {
+                console.error(error);
+            }
         })();
     }, [ref, canvasRef, offscreenCanvas, placeholderImage, imageSmoothingEnabled]);
 

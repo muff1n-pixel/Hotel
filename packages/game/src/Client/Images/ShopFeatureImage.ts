@@ -1,4 +1,5 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
+import DataStats from "@Client/DataStats";
 import Furniture from "@Client/Furniture/Furniture";
 import { getGlobalCompositeModeFromBlendMode } from "@Client/Renderers/GlobalCompositeModes";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";

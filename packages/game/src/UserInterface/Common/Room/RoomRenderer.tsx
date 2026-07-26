@@ -41,11 +41,13 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             
             setRoomRenderer(renderer);
         });
+    }, [elementRef]);
 
+    useEffect(() => {
         return () => {
             roomRenderer?.terminate();
         };
-    }, [elementRef]);
+    }, [roomRenderer]);
 
     useEffect(() => {
         if(!roomRenderer) {
@@ -56,7 +58,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
     }, [roomRenderer, structure]);
 
     useEffect(() => {
-        if(!roomRenderer) {
+        if(!roomRenderer || roomRenderer.terminated) {
             return;
         }
 

@@ -3,6 +3,7 @@ import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageData
 import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
+import DataStats from "@Client/DataStats";
 
 export type AssetSpriteGrayscaledProperties = {
     ink?: number;
@@ -56,9 +57,16 @@ export default class AssetFetcher {
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
     public static clearMemory() {
-        for(const urlCache of this.spritesCache.values()) {
+        for(const [url, urlCache] of this.spritesCache.entries()) {
             for(const cachedSprite of urlCache.values()) {
                 cachedSprite.result.then((result) => {
+                    if(url.startsWith('/assets/furniture')) {
+                        DataStats.furnitureImageBitmapsClosed++;
+                    }
+                    else if(url.startsWith('/assets/figure')) {
+                        DataStats.figureImageBitmapsClosed++;
+                    }
+
                     result.image.close();
                 });
             }
@@ -256,7 +264,7 @@ export default class AssetFetcher {
                 output.imageData = existingSpriteWithImageData;
 
                 if(properties.grayscaled) {
-                    output = this.drawGrayscaledImage(existingSpriteWithImageData, properties.grayscaled);
+                    output = this.drawGrayscaledImage(url, existingSpriteWithImageData, properties.grayscaled);
                     result.result = Promise.resolve(output);
                 }
             }
@@ -266,7 +274,7 @@ export default class AssetFetcher {
                     output.imageData = imageData;
 
                     if(properties.grayscaled) {
-                        output = this.drawGrayscaledImage(imageData, properties.grayscaled);
+                        output = this.drawGrayscaledImage(url, imageData, properties.grayscaled);
                         result.result = Promise.resolve(output);
                     }
 
@@ -282,7 +290,7 @@ export default class AssetFetcher {
         })();
     }
 
-    private static drawGrayscaledImage(imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
+    private static drawGrayscaledImage(url: string, imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
         const mutatedImageData = new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
         const canvas = new OffscreenCanvas(mutatedImageData.width, mutatedImageData.height);
 
@@ -351,8 +359,17 @@ export default class AssetFetcher {
 
         context.putImageData(mutatedImageData, 0, 0);
 
+        const imageBitmap = canvas.transferToImageBitmap();
+
+        if(url.startsWith('/assets/furniture')) {
+            DataStats.furnitureImageBitmapsOpened++;
+        }
+        else if(url.startsWith('/assets/figure')) {
+            DataStats.figureImageBitmapsOpened++;
+        }
+
         return {
-            image: canvas.transferToImageBitmap(),
+            image: imageBitmap,
             imageData
         };
     }
@@ -456,8 +473,17 @@ export default class AssetFetcher {
                 imageData = new ImageData(canvas.width, canvas.height);
             }*/
 
+            const imageBitmap = canvas.transferToImageBitmap();
+
+            if(url.startsWith('/assets/furniture')) {
+                DataStats.furnitureImageBitmapsOpened++;
+            }
+            else if(url.startsWith('/assets/figure')) {
+                DataStats.figureImageBitmapsOpened++;
+            }
+
             return {
-                image: canvas.transferToImageBitmap(),
+                image: imageBitmap,
                 imageData
             };
         }

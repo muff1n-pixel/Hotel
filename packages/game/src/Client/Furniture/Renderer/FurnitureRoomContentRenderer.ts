@@ -1,4 +1,5 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
@@ -8,13 +9,15 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
     public placement?: "wall" | "floor" | undefined;
 
     public frame: number = 0;
+    
+    private static cache: Map<string, OffscreenCanvas> = new Map();
 
-    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, _data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap> {
+    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, _data: FurnitureData, options: FurnitureRenderOptions): Promise<OffscreenCanvas> {
         if(FurnitureAssets.assetSprites.has(`${this.type}_${options.color}`)) {
-            const assetSprite = FurnitureAssets.assetSprites.get(`${this.type}_${options.color}`);
+            const offscreenCanvas = FurnitureRoomContentRenderer.cache.get(`${this.type}_${options.color}`);
 
-            if(assetSprite) {
-                return assetSprite.image;
+            if(offscreenCanvas) {
+                return offscreenCanvas;
             }
         }
 
@@ -22,18 +25,19 @@ export default class FurnitureRoomContentRenderer extends FurnitureDefaultRender
             const image = new Image();
 
             image.onload = async () => {
-                const sprite: FurnitureRendererSprite = {
-                    x: 0,
-                    y: 0,
-                    image: await createImageBitmap(image),
-                    imageData: new ImageData(1, 1),
-                    zIndex: 0,
-                    layerCode: ""
-                };
+                const canvas = new OffscreenCanvas(image.width, image.height);
 
-                FurnitureAssets.assetSprites.set(`${this.type}_${options.color}`, sprite);
+                const context = canvas.getContext("2d");
 
-                resolve(sprite.image);
+                if(!context) {
+                    throw new ContextNotAvailableError();
+                }
+
+                context.drawImage(image, 0, 0);
+
+                FurnitureRoomContentRenderer.cache.set(`${this.type}_${options.color}`, canvas);
+
+                resolve(canvas);
             }
 
             switch(this.type) {

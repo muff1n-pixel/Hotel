@@ -84,8 +84,17 @@ export default class RoomRenderer extends EventTarget {
         });
     }
 
+    public terminated: boolean = false;
+
     public terminate() {
-        this.application.destroy(true, true);
+        if(this.terminated) {
+            return;
+        }
+
+        this.terminated = true;
+
+        this.cursor?.destroy();
+        this.landscape.destroy();
 
         this.scaleSubscription();
 
@@ -93,8 +102,9 @@ export default class RoomRenderer extends EventTarget {
             subscription?.();
         }
 
-        this.cursor?.destroy();
-        this.landscape.destroy();
+        this.application.renderer.destroy({
+            removeView: true
+        });
     }
 
     public async init() {
@@ -120,6 +130,10 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.application.ticker.add(() => {
+            if(this.terminated) {
+                return;
+            }
+
             const shouldProcessTick = this.frameCounter.shouldProcessTick();
 
             if(shouldProcessTick) {
