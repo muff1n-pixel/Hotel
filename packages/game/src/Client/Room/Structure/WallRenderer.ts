@@ -499,6 +499,8 @@ export default class WallRenderer {
 
         const extraTile = (overlappingWalls === 1)?(1):(0);
 
+        this.hasDoorWall = false;
+
         if(rectangles.some((rectangle) => rectangle.row === this.structure.data.door!.row && rectangle.column === this.structure.data.door!.column + 1 && rectangle.direction === 2)) {
             context.setTransform(1, -.5, 0, 1, (this.wallThickness) + this.structure.rows * this.fullSize, (this.structure.wallDepth * this.halfSize) + (this.wallThickness));
 

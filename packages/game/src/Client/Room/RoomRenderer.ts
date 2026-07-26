@@ -566,7 +566,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private floorItem?: RoomFloorItem;
-    private wallItem?: RoomWallItem;
+    public wallItem?: RoomWallItem;
     
     public setStructure(structure: RoomStructureData) {
         this.structure = new RoomStructure(structure);
