@@ -18,7 +18,7 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
         super(
             item,
             undefined,
-            -100,
+            -4000,
             undefined,
             undefined,
             item.roomRenderer.landscape.image,
