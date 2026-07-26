@@ -67,6 +67,8 @@ export default class RoomFurniturePlacer {
             this.roomInstance.roomRenderer.furniturePlacer.destroy();
         }
 
+        this.roomInstance.roomRenderer.furniturePlacer = this;
+
         if(roomFurnitureItem.position) {
             this.originalPosition = RoomPositionData.create({
                 row: roomFurnitureItem.position.row,
@@ -168,6 +170,13 @@ export default class RoomFurniturePlacer {
 
                 if(this.roomFurnitureItem.furnitureRenderer.direction !== nextDirection) {
                     this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
+                }
+            }
+            else {
+                const previousDirection = this.roomFurnitureItem.furnitureRenderer.getPreviousDirection();
+
+                if(this.roomFurnitureItem.furnitureRenderer.direction !== previousDirection) {
+                    this.roomFurnitureItem.furnitureRenderer.direction = previousDirection;
                 }
             }
         }
@@ -448,6 +457,8 @@ export default class RoomFurniturePlacer {
     }
 
     public destroy() {
+        this.roomInstance.roomRenderer.furniturePlacer = undefined;
+
         if(this.roomInstance.roomRenderer.cursor) {
             this.roomInstance.roomRenderer.cursor.cursorDisabled = false;
         }

@@ -28,6 +28,10 @@ export default class RoomCamera {
     }
 
     private wheel(event: WheelEvent) {
+        if(this.renderer.furniturePlacer) {
+            return;
+        }
+        
         if(event.deltaY < 0) {
             this.renderer.scale.value = (Math.min(5, this.renderer.scale.value + 0.1));
         }

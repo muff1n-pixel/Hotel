@@ -280,6 +280,28 @@ export default class Furniture {
         return this.visualization.directions[currentIndex + 1].id;
     }
 
+    public getPreviousDirection() {
+        if(!this.visualization) {
+            return this.direction;
+        }
+
+        if(this.placement === "wall") {
+            return this.direction;
+        }
+
+        const currentIndex = this.visualization.directions.findIndex((direction) => direction.id === this.direction);
+
+        if(currentIndex === -1) {
+            return this.direction;
+        }
+
+        if(!this.visualization.directions[currentIndex - 1]) {
+            return this.visualization.directions[this.visualization.directions.length - 1].id;
+        }
+
+        return this.visualization.directions[currentIndex - 1].id;
+    }
+
     public getColors() {
         if(!this.visualization) {
             return [];
