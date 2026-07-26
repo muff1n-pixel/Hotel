@@ -58,6 +58,10 @@ export default class AssetFetcher {
 
     public static clearMemory() {
         for(const [url, urlCache] of this.spritesCache.entries()) {
+            if(url.includes("placeholder")) {
+                continue;
+            }
+
             for(const cachedSprite of urlCache.values()) {
                 cachedSprite.result.then((result) => {
                     if(url.startsWith('/assets/furniture')) {
