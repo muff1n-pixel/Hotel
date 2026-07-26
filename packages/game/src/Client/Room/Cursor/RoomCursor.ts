@@ -143,7 +143,7 @@ export default class RoomCursor extends EventTarget {
         if(this.roomRenderer.camera.dragging) {
             return;
         }
-        
+
         const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
         const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
 
@@ -175,7 +175,7 @@ export default class RoomCursor extends EventTarget {
             }
         }
 
-        this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity));
+        this.dispatchEvent(new RoomClickEvent(floorEntity, otherEntity, event.shiftKey, event.ctrlKey, event.altKey));
 
         if(otherEntity?.item instanceof RoomFurnitureItem && !this.canClickFurniture()) {
             return;

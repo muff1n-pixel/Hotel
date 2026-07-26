@@ -199,10 +199,14 @@ export default class RoomInstance {
             return;
         }
 
-        if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
-            webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
-                target: RoomPositionData.fromJSON(event.floorEntity.position)
-            }));
+        console.log(event);
+
+        if(!event.shiftKey && !event.ctrlKey && !event.altKey) {
+            if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
+                webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
+                    target: RoomPositionData.fromJSON(event.floorEntity.position)
+                }));
+            }
         }
     }
 
