@@ -47,6 +47,7 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
     public updateLandscape() {
         if(this.item.roomRenderer.landscape.image) {
             this.sprite.texture = Texture.from(this.item.roomRenderer.landscape.image);
+            this.sprite.texture.source.scaleMode = "nearest";
         }
     }
 
