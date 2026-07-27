@@ -89,7 +89,6 @@ export default class WallRenderer {
     }
 
     public async renderOffScreen(leftWallColor?: string[]) {
-        console.log("render");
         const data = await RoomAssets.getRoomData("HabboRoomContent");
         const visualization = data.visualization.wallData.walls.find((wall) => wall.id === this.wallId)?.visualizations.find((visualization) => visualization.size === 64);
         
@@ -199,8 +198,6 @@ export default class WallRenderer {
         const rectangles = WallRenderer.getRectangles(this.structure);
 
         this.hasDoorWall = (!this.structure.data.door || !rectangles.some((rectangle) => rectangle.row === this.structure.data.door?.row && rectangle.column === this.structure.data.door.column));
-
-        console.log(rectangles);
 
         for(let currentDepth = 0; currentDepth <= this.structure.wallDepth; currentDepth++) {
             const currentRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
