@@ -169,6 +169,8 @@ export default class RoomRenderer extends EventTarget {
         this.application.canvas.classList.add("renderer");
 
         this.parent.appendChild(this.application.canvas);
+
+        await this.setStructure(this.structure.data);
     }
 
     public addItem(item: RoomItem) {

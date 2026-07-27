@@ -72,10 +72,6 @@ export default class RoomInstance {
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 
         this.roomRenderer.init().then(async () => {
-            if(event.structure) {
-                await this.setStructure(event.structure);
-            }
-
             for(const user of event.users) {
                 this.users.push(this.addUser(user as Required<RoomUserData>));
             }
