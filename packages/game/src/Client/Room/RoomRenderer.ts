@@ -113,7 +113,13 @@ export default class RoomRenderer extends EventTarget {
             antialias: false,
             background: "#000000",
             resizeTo: this.parent,
+            roundPixels: true,
+
+            resolution: window.devicePixelRatio,
+            autoDensity: true,
         });
+
+        this.application.canvas.style.imageRendering = "pixelated";
 
         this.subscriptions.push(this.clientInstance?.settings.subscribe((value) => {
             if(value.limitRoomFrames) {
