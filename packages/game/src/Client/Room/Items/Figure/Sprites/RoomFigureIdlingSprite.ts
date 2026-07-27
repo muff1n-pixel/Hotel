@@ -40,6 +40,7 @@ export default class RoomFigureIdlingSprite extends RoomSprite {
 
             AssetFetcher.fetchImage(`/assets/figure/sprites/${this.getAssetName()}.png`).then((image) => {
                 this.sprite.texture = Texture.from(image);
+                this.sprite.texture.source.scaleMode = "nearest";
 
                 this.update();
             });

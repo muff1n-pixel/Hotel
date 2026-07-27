@@ -10,6 +10,7 @@ export default class RoomFigureHealthSprite extends RoomSprite {
 
         AssetFetcher.fetchImage(`/assets/figure/sprites/health/number_${this.health}.png`).then((image) => {
             this.sprite.texture = Texture.from(image);
+            this.sprite.texture.source.scaleMode = "nearest";
 
             this.offset = {
                 left: this.figureOffsets.left + 64 - (Math.floor(image.width / 2)),
