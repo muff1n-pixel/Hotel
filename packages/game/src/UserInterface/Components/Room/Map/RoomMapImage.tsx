@@ -97,6 +97,10 @@ export default function RoomMapImage({ staticImage, size = 6, width, height, sty
         })();
     }, [ structure, size ]);
 
+    if(!dataUrl) {
+        return null;
+    }
+
     return (
         <img src={dataUrl} style={{
             objectFit: "contain",
