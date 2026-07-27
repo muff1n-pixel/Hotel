@@ -52,6 +52,8 @@ export default class RoomItem implements RoomItemInterface {
 
     constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
         this._sprites = sprites;
+
+        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
     }
 
     public setSprites(sprites: RoomSprite[]) {

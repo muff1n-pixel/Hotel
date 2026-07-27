@@ -4,6 +4,7 @@ import RoomSprite from "../RoomSprite";
 import RoomFloorItem from "../Map/RoomFloorItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
 import { FloorTile } from "@Client/Room/Structure/FloorRenderer";
+import RoomPriority from "../RoomPriority";
 
 export default class RoomFloorSprite extends RoomSprite {
     private tile: FloorTile | null = null;
@@ -15,7 +16,7 @@ export default class RoomFloorSprite extends RoomSprite {
                 left: -(item.floorRenderer.structure.rows * 32) - (item.floorRenderer.structure.data.wall?.thickness ?? 0),
                 top: -(item.floorRenderer.structure.depth * 32) - 32 - (item.floorRenderer.structure.data.wall?.thickness ?? 0)
             },
-            elevated ? -50 : -4000,
+            elevated ? RoomPriority.FLOOR_ELEVATED_SPRITE_PRIORITY : RoomPriority.FLOOR_SPRITE_PRIORITY,
             undefined,
             undefined,
             image

@@ -28,6 +28,7 @@ import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffs
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
 import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
+import RoomPriority from "./Items/RoomPriority";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -301,8 +302,7 @@ export default class RoomRenderer extends EventTarget {
         if(item.position) {
             if(Math.round(item.position.row) === this.structure.data.door?.row && Math.round(item.position.column) === this.structure.data.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
-                    priority = -4000;
-                    priority += 1 + (item.position.depth * 100);
+                    priority = RoomPriority.getDoorPositionPriority(item.position);
                 
                     return priority;
                 }

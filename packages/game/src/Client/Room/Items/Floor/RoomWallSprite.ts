@@ -3,6 +3,7 @@ import RoomSprite from "../RoomSprite";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomWallItem from "../Map/RoomWallItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import RoomPriority from "../RoomPriority";
 
 export default class RoomWallSprite extends RoomSprite {
     constructor(public readonly item: RoomWallItem, private readonly image: OffscreenCanvas) {
@@ -12,7 +13,7 @@ export default class RoomWallSprite extends RoomSprite {
                 left: -(item.wallRenderer.structure.rows * 32) - item.wallRenderer.structure.data.wall!.thickness,
                 top: -((item.wallRenderer.structure.depth + 3.5) * 32) - item.wallRenderer.structure.data.wall!.thickness
             },
-            -3100,
+            RoomPriority.WALL_SPRITE_PRIORITY,
             undefined,
             undefined,
             image,

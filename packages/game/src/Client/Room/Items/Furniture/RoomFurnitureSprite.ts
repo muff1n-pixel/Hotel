@@ -28,6 +28,9 @@ export default class RoomFurnitureSprite extends RoomSprite {
             this.priority = 100000;
             this.sprite.eventMode = "none";
         }
+        else if(this.item.furnitureRenderer.type === "tile_cursor") {
+            this.priority = -1;
+        }
     }
 
     mouseover(position: MousePosition) {

@@ -5,6 +5,7 @@ import RoomFurnitureItem from "./RoomFurnitureItem";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import { Texture } from "pixi.js";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import RoomPriority from "../RoomPriority";
 
 export default class RoomFurnitureMaskSprite extends RoomSprite {
     public readonly defaultOffset: MousePosition = {
@@ -18,7 +19,7 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
         super(
             item,
             undefined,
-            -4000,
+            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
             undefined,
             undefined,
             item.roomRenderer.landscape.image,
