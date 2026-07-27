@@ -31,7 +31,7 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
         this.mask = new RoomSprite(
             item,
             RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
-            -99,
+            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
             undefined,
             furnitureSprite.ink,
             furnitureSprite.image,

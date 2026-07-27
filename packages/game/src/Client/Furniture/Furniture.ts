@@ -21,6 +21,7 @@ export type FurnitureRenderResult = {
     mask: FurnitureRendererSprite | null;
     animated: boolean;
     layerFrames: string;
+    visualization: FurnitureVisualization["visualizations"][0];
 };
 
 export type FurnitureRendererSprite = {

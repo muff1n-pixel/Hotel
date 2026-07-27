@@ -261,6 +261,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         if(existingRender) {
             this.animated = existingRender.animated;
             this.previousLayerFrames = existingRender.layerFrames;
+            this.hasImageData = true;
+            this.visualization = existingRender.visualization;
 
             return existingRender;
         }
@@ -295,11 +297,12 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         const mask: FurnitureRendererSprite | null = await this.getMask(data, options);
 
         this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
-
+        
         const result: FurnitureRenderResult = {
             sprites,
             mask,
             layerFrames: this.previousLayerFrames,
+            visualization: this.visualization,
             animated: this.animated
         };
 

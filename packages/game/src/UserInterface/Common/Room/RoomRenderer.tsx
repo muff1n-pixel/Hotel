@@ -55,14 +55,6 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
     }, [roomRenderer]);
 
     useEffect(() => {
-        if(!roomRenderer) {
-            return;
-        }
-
-        roomRenderer.setStructure(structure);
-    }, [roomRenderer, structure]);
-
-    useEffect(() => {
         if(!roomRenderer || roomRenderer.terminated) {
             return;
         }

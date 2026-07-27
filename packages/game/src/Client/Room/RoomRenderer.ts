@@ -195,12 +195,12 @@ export default class RoomRenderer extends EventTarget {
         item.destroy();
     }
 
-    private processTick() {
-        this.landscape.render();
-        
+    private processTick() {        
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].process(this.frameCounter.tick);
         }
+
+        this.landscape.render();
 
         this.dispatchEvent(new RoomFrameEvent());
     }
