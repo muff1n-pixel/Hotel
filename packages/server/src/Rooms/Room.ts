@@ -406,8 +406,10 @@ export default class Room {
             return furniture.model.position.depth;
         }
 
-        if(furniture.model.furniture.interactionType === "multiheight" && furniture.model.furniture.customParams?.[0]) {
-            return furniture.model.position.depth + furniture.model.furniture.dimensions.depth + (parseFloat(furniture.model.furniture.customParams[0]) * Math.max(0, furniture.model.animation - 1));
+        if(furniture.model.furniture.interactionType === "multiheight" && furniture.model.furniture.customParams?.length && furniture.model.animation !== 0) {
+            const index = furniture.model.animation % furniture.model.furniture.customParams.length;
+
+            return furniture.model.furniture.dimensions.depth + parseFloat(furniture.model.furniture.customParams[index] ?? '0');
         }
 
         return furniture.model.position.depth + furniture.model.furniture.dimensions.depth;

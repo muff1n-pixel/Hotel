@@ -115,8 +115,10 @@ export default class RoomFurniture {
             throw new Error();
         }
 
-        if(this.furnitureData.interactionType === "multiheight" && this.furnitureData.customParams?.[0]) {
-            return this.furnitureData.dimensions.depth + (parseFloat(this.furnitureData.customParams[0]) * Math.max(0, this.furniture.animation - 1));
+        if(this.furnitureData.interactionType === "multiheight" && this.furnitureData.customParams.length && this.furniture.animation !== 0) {
+            const index = this.furniture.animation % this.furnitureData.customParams.length;
+
+            return this.furnitureData.dimensions.depth + parseFloat(this.furnitureData.customParams[index]);
         }
 
         return this.furnitureData.dimensions?.depth;
