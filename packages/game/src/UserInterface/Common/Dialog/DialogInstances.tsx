@@ -64,6 +64,7 @@ import GroupDialog from "@UserInterface/Components/Groups/GroupDialog";
 import GroupMembersDialog from "@UserInterface/Components/Groups/GroupMembersDialog";
 import GroupSettingsDialog from "@UserInterface/Components/Groups/GroupSettingsDialog";
 import RoomLinkDialog from "@UserInterface/Components/Room/Link/RoomLinkDialog";
+import ShopPurchaseFurnitureDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchaseFurnitureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -109,6 +110,9 @@ export default function DialogInstances() {
 
                     case "shop":
                         return (<ShopDialog {...props} key={dialog.id}/>);
+
+                    case "shop-purchase-furniture":
+                        return (<ShopPurchaseFurnitureDialog {...props} key={dialog.id}/>);
                         
                     case "inventory":
                         return (<InventoryDialog {...props} key={dialog.id}/>);

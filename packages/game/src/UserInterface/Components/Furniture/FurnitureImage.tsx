@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Furniture from "@Client/Furniture/Furniture";
 import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
@@ -12,9 +12,10 @@ export type FurnitureImageProps = {
     direction?: number;
     furnitureData?: FurnitureData;
     spritesWithoutInkModes?: boolean;
+    style?: CSSProperties;
 }
 
-export default function FurnitureImage({ externalImage, figureConfiguration, frame = 0, direction, animation = 0, furnitureData, spritesWithoutInkModes = true }: FurnitureImageProps) {
+export default function FurnitureImage({ externalImage, figureConfiguration, frame = 0, direction, animation = 0, furnitureData, spritesWithoutInkModes = true, style }: FurnitureImageProps) {
     const rendering = useRef<boolean>(false);
 
     const [image, setImage] = useState<OffscreenCanvas>();
@@ -47,6 +48,6 @@ export default function FurnitureImage({ externalImage, figureConfiguration, fra
     }
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style}/>
     );
 }

@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 
 export type DialogCurrencyPanelProps = {
+    multiplier?: number;
+
     credits?: number;
     duckets?: number;
     diamonds?: number;
 }
 
-export default function DialogCurrencyPanel({ credits, diamonds, duckets }: DialogCurrencyPanelProps) {
+export default function DialogCurrencyPanel({ multiplier, credits, diamonds, duckets }: DialogCurrencyPanelProps) {
     const [color, setColor] = useState<DialogPanelProps["color"]>("silver");
 
     useEffect(() => {
@@ -34,7 +36,7 @@ export default function DialogCurrencyPanel({ credits, diamonds, duckets }: Dial
         <DialogPanel color={color} style={{
             borderColor: "black"
         }}>
-            <CurrencyPanel credits={credits} duckets={duckets} diamonds={diamonds}/>
+            <CurrencyPanel multiplier={multiplier} credits={credits} duckets={duckets} diamonds={diamonds}/>
         </DialogPanel>
     )
 }

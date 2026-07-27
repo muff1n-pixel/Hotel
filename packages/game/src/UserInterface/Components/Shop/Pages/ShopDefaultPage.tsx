@@ -38,52 +38,18 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
             return;
         }
 
-        // TODO: disable dialog
-        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
-            async handle(payload: ShopFurniturePurchaseData) {
-                if(!payload.success) {
-                    return;
-                }
+        dialogs.setDialogHidden("shop", true);
 
-                if(purchasableItem.placing) {
-                    stopPlacing?.();
-
-                    return;
-                }
-
-                if(position) {
-                    return;
-                }
-
-                if(activeFurnitureRef.current && activeFurniture.furniture) {
-                    for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
-                        clientInstance.flyingFurnitureIcons.value!.push({
-                            id: Math.random().toString(),
-                            furniture: activeFurniture.furniture,
-                            position: activeFurnitureRef.current.getBoundingClientRect(),
-                            targetElementId: "toolbar-inventory"
-                        });
-
-                        clientInstance.flyingFurnitureIcons.update();
-
-                        await new Promise((resolve) => setTimeout(resolve, 50));
-                    }
-                }
-            },
-        }, {
-            once: true
-        });
-
-        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
-            id: activeFurniture.id,
-
+        dialogs.openUniqueDialog("shop-purchase-furniture", {
+            activeFurniture,
             position,
             direction,
-
-            groupId: group?.id,
-
-            quantity: (purchasableItem.placing)?(1):(quantity)
-        }));
+            stopPlacing,
+            purchasableItem,
+            group,
+            quantity,
+            activeFurnitureElement: activeFurnitureRef.current
+        });
     }, [activeFurniture, activeFurnitureRef, quantity, group]);
 
     const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
@@ -232,7 +198,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
                         padding: 10,
                     }}>
-                        <DialogCurrencyPanel credits={activeFurniture.credits} duckets={activeFurniture.duckets} diamonds={activeFurniture.diamonds}/>
+                        <DialogCurrencyPanel multiplier={quantity} credits={activeFurniture.credits} duckets={activeFurniture.duckets} diamonds={activeFurniture.diamonds}/>
                     </div>
                 )}
 

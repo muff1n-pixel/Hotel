@@ -4,9 +4,11 @@ export type CurrencyPanelProps = {
     credits?: number;
     duckets?: number;
     diamonds?: number;
+
+    multiplier?: number;
 }
 
-export default function CurrencyPanel({ credits, diamonds, duckets }: CurrencyPanelProps) {
+export default function CurrencyPanel({ multiplier, credits, diamonds, duckets }: CurrencyPanelProps) {
     if(!credits && !diamonds && !duckets) {
         return null;
     }
@@ -24,9 +26,9 @@ export default function CurrencyPanel({ credits, diamonds, duckets }: CurrencyPa
 
             padding: 4
         }}>
-            {(Boolean(credits)) && (
+            {(credits !== undefined) && (
                 <Fragment>
-                    <b>{credits}</b>
+                    <b>{(multiplier ?? 1) * credits}</b>
 
                     <div className="sprite_currencies_credits"/>
                 </Fragment>
@@ -38,9 +40,9 @@ export default function CurrencyPanel({ credits, diamonds, duckets }: CurrencyPa
                 </div>
             )}
 
-            {(Boolean(duckets)) && (
+            {(duckets !== undefined) && (
                 <Fragment>
-                    <b>{duckets}</b>
+                    <b>{(multiplier ?? 1) * duckets}</b>
 
                     <div className="sprite_currencies_duckets"/>
                 </Fragment>
@@ -52,9 +54,9 @@ export default function CurrencyPanel({ credits, diamonds, duckets }: CurrencyPa
                 </div>
             )}
 
-            {(Boolean(diamonds)) && (
+            {(diamonds !== undefined) && (
                 <Fragment>
-                    <b>{diamonds}</b>
+                    <b>{(multiplier ?? 1) * diamonds}</b>
 
                     <div className="sprite_currencies_diamonds"/>
                 </Fragment>
