@@ -6,7 +6,7 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import { useState } from "react";
 import { useNavigator } from "../../Hooks/useNavigator";
 import Input from "../../Common/Form/Components/Input";
-import { EnterRoomData } from "@pixel63/events";
+import { EnterRandomRoomData, EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import NavigatorSearch from "./NavigatorSearch";
 
@@ -167,6 +167,8 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                         background: "#FFFFFF",
                         padding: 1,
                         cursor: "pointer"
+                    }} onClick={() => {
+                        webSocketClient.sendProtobuff(EnterRandomRoomData, EnterRandomRoomData.create({}));
                     }}>
                         <div className="sprite_navigator_banner-random" style={{
                             borderRadius: 5
