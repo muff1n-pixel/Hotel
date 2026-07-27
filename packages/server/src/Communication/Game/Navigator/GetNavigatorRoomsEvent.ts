@@ -7,54 +7,49 @@ import { GetNavigatorData, GroupData, NavigatorData, NavigatorRoomData } from "@
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
 import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
+import { WhereOptions } from "sequelize";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: GetNavigatorData): Promise<void> {
-        if(payload.search) {
+        if(payload.search?.length) {
             let roomModels;
 
-            if(payload.category === "mine") {
-                roomModels = await RoomModel.findAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${payload.search}%`
-                        },
+            switch(payload.category) {
+                case "mine": {
+                    roomModels = await this.getRoomModels(user, payload, {
                         ownerId: user.model.id
-                    },
-                    include: [
-                        {
-                            model: UserModel,
-                            as: "owner"
-                        },
-                        {
-                            model: GroupModel,
-                            as: "group"
+                    }, undefined);
+                    
+                    break;
+                }
+
+                case "public": {
+                    roomModels = await this.getRoomModels(user, payload, {
+                        type: {
+                            [Op.in]: ["public", "bundle"]
                         }
-                    ]
-                });
-            }
-            else {
-                roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${payload.search}%`
-                        },
-                        type: (payload.category === "public")?("public"):("private"),
-                    },
-                    include: [
-                        {
-                            model: UserModel,
-                            as: "owner"
-                        },
-                        {
-                            model: GroupModel,
-                            as: "group"
+                    });
+
+                    break;
+                }
+
+                case "events": {
+                    roomModels = await this.getRoomModels(user, payload, {
+                        eventExpiresAt: {
+                            [Op.gt]: new Date().toISOString()
                         }
-                    ],
-                    limit: 20
-                });
+                    });
+
+                    break;
+                }
+
+                default: {
+                    roomModels = await this.getRoomModels(user, payload);
+
+                    break;
+                }
             }
 
             user.sendProtobuff(NavigatorData, NavigatorData.create({
@@ -246,6 +241,99 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
             thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined),
 
             group: (roomModel.group)?(GroupData.fromJSON(roomModel.group)):(undefined)
+        });
+    }
+
+    private getRoomWhereOptions(payload: GetNavigatorData): WhereOptions<any> | undefined {
+        if(!payload.search?.length) {
+            return undefined;
+        }
+
+        switch(payload.filter) {
+            case undefined:
+            case "name": {
+                return {
+                    name: {
+                        [Op.like]: `%${payload.search}%`
+                    }
+                };
+            }
+
+            default: {
+                return undefined;
+            }
+        }
+    }
+
+    private getOwnerWhereOptions(payload: GetNavigatorData): WhereOptions<any> | undefined {
+        if(!payload.search?.length) {
+            return undefined;
+        }
+
+        switch(payload.filter) {
+            case "owner": {
+                return {
+                    name: {
+                        [Op.like]: `%${payload.search}%`
+                    }
+                };
+            }
+
+            default: {
+                return undefined;
+            }
+        }
+    }
+
+    private getGroupWhereOptions(payload: GetNavigatorData): WhereOptions<any> | undefined {
+        if(!payload.search?.length) {
+            return undefined;
+        }
+
+        switch(payload.filter) {
+            case "group":  {
+                return {
+                    name: {
+                        [Op.like]: `%${payload.search}%`
+                    }
+                };
+            }
+
+            default: {
+                return undefined;
+            }
+        }
+    }
+
+    private async getRoomModels(user: User, payload: GetNavigatorData, whereOptions: WhereOptions<any> | undefined = undefined, limit: number | undefined = 20) {
+        const roomWhereOptions = this.getRoomWhereOptions(payload);
+        const ownerWhereOptions = this.getOwnerWhereOptions(payload);
+        const groupWhereOptions = this.getGroupWhereOptions(payload);
+        
+        return await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
+            ...((whereOptions || roomWhereOptions) && {
+                where: {
+                    ...whereOptions,
+                    ...roomWhereOptions
+                }
+            }),
+            include: [
+                {
+                    model: UserModel,
+                    as: "owner",
+                    ...(ownerWhereOptions && {
+                        where: ownerWhereOptions
+                    }),
+                },
+                {
+                    model: GroupModel,
+                    as: "group",
+                    ...(groupWhereOptions && {
+                        where: groupWhereOptions
+                    }),
+                }
+            ],
+            limit
         });
     }
 

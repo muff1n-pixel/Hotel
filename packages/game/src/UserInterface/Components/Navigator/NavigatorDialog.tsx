@@ -8,6 +8,7 @@ import { useNavigator } from "../../Hooks/useNavigator";
 import Input from "../../Common/Form/Components/Input";
 import { EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import NavigatorSearch from "./NavigatorSearch";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -18,9 +19,10 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
     const { addUniqueDialog, closeDialog } = useDialogs();
 
     const [tab, setTab] = useState("all");
+    const [filter, setFilter] = useState<string | undefined>(undefined);
     const [search, setSearch] = useState("");
 
-    const navigator = useNavigator(tab, search);
+    const navigator = useNavigator(tab, filter, search);
 
     return (
         <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={430} height={530} style={{
@@ -29,6 +31,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
             <DialogTabs initialActiveIndex={1} withoutHeader onChange={(index) => {
                 setTab(["public", "all", "events", "mine"][index]);
                 setSearch("");
+                setFilter(undefined);
             }} tabs={[
                 {
                     icon: "Public",
@@ -41,9 +44,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
-                                <div className="sprite_room_user_motto_pen"/>
-                            </Input>
+                            <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
                             <DialogScrollArea>
                                 {navigator?.map((navigator) => (
@@ -70,9 +71,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
-                                <div className="sprite_room_user_motto_pen"/>
-                            </Input>
+                            <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
                             <DialogScrollArea>
                                 {navigator?.map((navigator) => (
@@ -99,9 +98,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
-                                <div className="sprite_room_user_motto_pen"/>
-                            </Input>
+                            <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
                             <DialogScrollArea>
                                 {navigator?.map((navigator) => (
@@ -128,9 +125,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
 
                             gap: 5
                         }}>
-                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
-                                <div className="sprite_room_user_motto_pen"/>
-                            </Input>
+                            <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
                             
                             <DialogScrollArea>
                                 {navigator?.map((navigator) => (
