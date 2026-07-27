@@ -173,6 +173,9 @@ export default class RoomActorPath {
             return false;
         }
 
+        this.path = undefined;
+        this.pathOnCancel?.();
+
         this.path = path;
         this.pathOnFinish = onFinish;
         this.pathOnCancel = onCancel;
