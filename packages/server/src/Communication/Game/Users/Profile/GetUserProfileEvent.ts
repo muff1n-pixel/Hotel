@@ -9,6 +9,7 @@ import { game } from "../../../..";
 import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
 import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
 import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
+import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel";
 
 export default class GetUserProfileEvent implements ProtobuffListener<GetUserProfileData> {
     minimumDurationBetweenEvents?: number = 500;
@@ -50,11 +51,17 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
 
         const userGroups = await UserGroupModel.findAll({
             where: {
-                userId: user.model.id
+                userId: targetUser.id
             },
             include: {
                 model: GroupModel,
                 as: "group"
+            }
+        });
+
+        const achievementScore = await UserAchievementModel.sum("score", {
+            where: {
+                userId: targetUser.id
             }
         });
 
@@ -103,7 +110,9 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
                 }
             }),
 
-            groups: userGroups.map((userGroup) => GroupData.fromJSON(userGroup.group))
+            groups: userGroups.map((userGroup) => GroupData.fromJSON(userGroup.group)),
+
+            achievementScore
         }));
     }
 }

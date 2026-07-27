@@ -31,4 +31,6 @@ message UserProfileData {
     repeated UserProfileFriendRelationshipsData bobba_relationships = 12;
 
     repeated GroupData groups = 13;
+
+    uint32 achievement_score = 14;
 }

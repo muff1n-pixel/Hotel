@@ -11,6 +11,7 @@ import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
 import { Op } from "sequelize";
+import { UserAchievementModel } from "../../Database/Models/Users/Achievements/UserAchievementModel.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -239,7 +240,14 @@ export default class UserInventory {
             order: [['updatedAt', 'DESC']]
         });
 
+        const achievementScore = await UserAchievementModel.sum("score", {
+            where: {
+                userId: this.user.model.id
+            }
+        });
+
         this.user.sendProtobuff(UserInventoryBadgesData, UserInventoryBadgesData.create({
+            achievementScore,
             badges: userBadges.map((userBadge) => {
                 return {
                     id: userBadge.id,

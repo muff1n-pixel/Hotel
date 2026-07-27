@@ -67,6 +67,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
 
                                 <div><b>{getUserTranslation("profile.created")}:</b> <TimeSinceDate date={new Date(profile.createdAt)}/></div>
                                 <div><b>{getUserTranslation("profile.last_login")}:</b> {(profile.lastOnlineAt)?(<TimeSinceDate date={new Date(profile.lastOnlineAt)}/>):("Never")}</div>
+                                <div><b>{getUserTranslation("profile.achievement_score")}:</b> {profile.achievementScore.toLocaleString("en-US")}</div>
 
                                 <FlexLayout direction="row" align="center">
                                     {(profile.online) && (

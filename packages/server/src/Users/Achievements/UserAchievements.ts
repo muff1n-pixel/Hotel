@@ -20,7 +20,6 @@ export default class UserAchievements {
         }
 
         const userAchievement = await this.getUserAchievement(achievementId);
-
         
         let nextLevel = userAchievement.level;
         let nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
@@ -45,7 +44,6 @@ export default class UserAchievements {
         }
         
         const userAchievement = await this.getUserAchievement(achievementId);
-
 
         await userAchievement.update({
             score: userAchievement.score + score

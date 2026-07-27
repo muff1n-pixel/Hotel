@@ -4,4 +4,5 @@ import "User/Badges/UserBadgeData.proto";
 
 message UserInventoryBadgesData {
     repeated UserBadgeData badges = 1;
+    uint32 achievement_score = 2;
 }

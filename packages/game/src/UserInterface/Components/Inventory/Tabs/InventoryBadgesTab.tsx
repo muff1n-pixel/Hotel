@@ -9,6 +9,7 @@ import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScr
 export default function InventoryBadgesTab() {
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
     const [userBadges, setUserBadges] = useState<UserInventoryBadgesData["badges"]>([]);
+    const [achievementScore, setAchievementScore] = useState<number>(0);
 
     const userBadgesRequested = useRef<boolean>(false);
 
@@ -26,6 +27,7 @@ export default function InventoryBadgesTab() {
         const listener = webSocketClient.addProtobuffListener(UserInventoryBadgesData, {
             async handle(payload: UserInventoryBadgesData) {
                 setUserBadges(payload.badges);
+                setAchievementScore(payload.achievementScore);
             },
         });
 
@@ -209,6 +211,16 @@ export default function InventoryBadgesTab() {
                     </div>
                 </div>
             )}
+
+            <div style={{
+                background: "#1C8BB5",
+                borderRadius: 6,
+                textAlign: "center",
+                color: "#FFFFFF",
+                padding: 2
+            }}>
+                <b>Achievement score: {achievementScore.toLocaleString('en-US')}</b>
+            </div>
         </div>
     );
 }
