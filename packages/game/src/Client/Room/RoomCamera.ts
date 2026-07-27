@@ -41,7 +41,7 @@ export default class RoomCamera {
     }
 
     private mousedown(event: MouseEvent) {
-        if(event.ctrlKey || event.shiftKey || event.altKey) {
+        if(event.ctrlKey || event.shiftKey || (event.altKey || event.metaKey)) {
             return;
         }
 
