@@ -188,58 +188,6 @@ export default class AssetFetcher {
             };
         }
 
-        //console.log("Creating non-existant sprite", url);
-
-        /*if(properties.flipHorizontal && !properties.ignoreImageData) {
-            const existingNonFlippedSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, ignoreImageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
-
-            if(existingNonFlippedSprite && existingNonFlippedSprite.color?.length) {
-                const sprite = await existingNonFlippedSprite.sprite;
-
-                console.log("Existing non-flipped sprite", existingNonFlippedSprite.color, properties.color);
-
-                const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
-
-                for (let y = 0; y < newImageData.height; y++) {
-                    for (let x = 0; x < newImageData.width / 2; x++) {
-                        const left = (y * newImageData.width + x) * 4;
-                        const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
-
-                        for (let i = 0; i < 4; i++) {
-                            const temp = newImageData.data[left + i];
-                            newImageData.data[left + i] = newImageData.data[right + i];
-                            newImageData.data[right + i] = temp;
-                        }
-                    }
-                }
-
-                const canvas = new OffscreenCanvas(newImageData.width, newImageData.height);
-                const context = canvas.getContext("2d");
-
-                if(!context) {
-                    throw new ContextNotAvailableError();
-                }
-
-                context.translate(canvas.width, 0);
-
-                context.scale(-1, 1);
-
-                context.drawImage(sprite.image, 0, 0);
-
-                const result: AssetSpriteProperties & { sprite: Promise<{ image: ImageBitmap, imageData: ImageData }> } = {
-                    sprite: Promise.resolve({
-                        image: await createImageBitmap(canvas),
-                        imageData: newImageData
-                    }),
-                    ...properties
-                };
-
-                this.sprites[url].push(result);
-
-                return await result.sprite;
-            }
-        }*/
-
         return (async () => {
             properties.id ??= Math.random();
 
@@ -430,52 +378,6 @@ export default class AssetFetcher {
             }
 
             const imageData: ImageData | null = null;
-
-            /*if(!properties.ignoreImageData) {
-                const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
-
-                if(existingSpriteWithImageData && !properties.ignoreExistingImageData) {
-                    imageData = (await existingSpriteWithImageData.result).imageData;
-                }
-                else if(!properties.ignoreExistingImageData) {
-                    const existingNonFlippedSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
-                    
-                    if(existingNonFlippedSpriteWithImageData) {
-                        console.log("Flip image data");
-
-                        const sprite = await existingNonFlippedSpriteWithImageData.result;
-                        const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
-
-                        for (let y = 0; y < newImageData.height; y++) {
-                            for (let x = 0; x < newImageData.width / 2; x++) {
-                                const left = (y * newImageData.width + x) * 4;
-                                const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
-
-                                for (let i = 0; i < 4; i++) {
-                                    const temp = newImageData.data[left + i];
-                                    newImageData.data[left + i] = newImageData.data[right + i];
-                                    newImageData.data[right + i] = temp;
-                                }
-                            }
-                        }
-
-                        imageData = newImageData;
-                    }
-                    else {
-                        console.log("New image data");
-
-                        imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                    }
-                }
-                else {
-                    console.log("New image data");
-
-                    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                }
-            }
-            else {
-                imageData = new ImageData(canvas.width, canvas.height);
-            }*/
 
             const imageBitmap = canvas.transferToImageBitmap();
 

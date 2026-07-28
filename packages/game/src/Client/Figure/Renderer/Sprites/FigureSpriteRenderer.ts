@@ -126,7 +126,9 @@ export default class FigureSpriteRenderer {
             const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === spriteConfiguration.colorPaletteId);
             const paletteColor = palette?.colors.find((color) => color.id === spriteConfiguration.colors[spriteConfiguration.colorIndex - 1]);
 
+            console.time("Rendering figure sprite " + assetType);
             const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
+            console.timeEnd("Rendering figure sprite " + assetType);
 
             if(result) {
                 if(spriteConfiguration.type === "sd") {
@@ -176,8 +178,7 @@ export default class FigureSpriteRenderer {
 
             color: (spriteConfiguration.colorable && spriteConfiguration.colors[spriteConfiguration.colorIndex - 1] && type !== "ey")?(color):(undefined),
 
-            ignoreImageData: false,
-            requireImageData: (grayscaled !== undefined)
+            ignoreImageData: false
         });
 
         const priorityTypes: Partial<Record<string, string>> = {
