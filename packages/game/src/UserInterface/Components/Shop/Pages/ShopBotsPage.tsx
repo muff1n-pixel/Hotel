@@ -2,12 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
-import { PurchaseShopBotData, ShopBotData } from "@pixel63/events";
+import { ShopBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
@@ -16,7 +15,7 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
 
     const bots = useShopPageBots(page.id);
 
-    const activeBotRef = useRef<HTMLCanvasElement>(null);
+    const activeBotRef = useRef<HTMLDivElement>(null);
 
     const [activeBot, setActiveBot] = useState<ShopBotData>();
 
@@ -31,10 +30,13 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        webSocketClient.sendProtobuff(PurchaseShopBotData, PurchaseShopBotData.create({
-            id: activeBot.id
-        }));
-    }, [activeBot, activeBotRef]);
+        dialogs.setDialogHidden("shop", true);
+
+        dialogs.openUniqueDialog("shop-purchase-bot", {
+            activeBot,
+            activeBotElement: activeBotRef.current
+        });
+    }, [dialogs, activeBot, activeBotRef]);
 
     return (
         <div style={{
@@ -142,7 +144,7 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
 
                                 position: "relative"
                             }}>
-                                <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div ref={activeBotRef} style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
                                     <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
                                 </div>
 

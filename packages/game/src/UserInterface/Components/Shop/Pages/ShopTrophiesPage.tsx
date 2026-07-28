@@ -11,7 +11,7 @@ import FurnitureImage from "../../Furniture/FurnitureImage";
 import TextArea from "../../../Common/Form/Components/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
-import { PurchaseShopFurnitureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { PurchaseShopFurnitureData, ShopFurnitureData, ShopPurchaseData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -84,8 +84,8 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
         }
 
         // TODO: disable dialog
-        webSocketClient.addProtobuffListener(ShopFurniturePurchaseData, {
-            async handle(payload: ShopFurniturePurchaseData) {
+        webSocketClient.addProtobuffListener(ShopPurchaseData, {
+            async handle(payload: ShopPurchaseData) {
                 if(!payload.success) {
                     return;
                 }

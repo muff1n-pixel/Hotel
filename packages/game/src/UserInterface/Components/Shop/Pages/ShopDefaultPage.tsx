@@ -9,7 +9,7 @@ import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
-import { GroupData, PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureColorTag, UserFurnitureData } from "@pixel63/events";
+import { GroupData, PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, UserFurnitureColorTag, UserFurnitureData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";

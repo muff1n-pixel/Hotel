@@ -6,7 +6,7 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { HotelAlertData, PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
@@ -32,7 +32,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         }
 
         if(!shopFurniture) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -40,7 +40,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         }
 
         if((shopFurniture.credits && user.model.credits < (shopFurniture.credits * quantity))) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -48,7 +48,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         }
 
         if((shopFurniture.duckets && user.model.duckets < (shopFurniture.duckets * quantity))) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -56,7 +56,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         }
 
         if((shopFurniture.diamonds && user.model.diamonds < (shopFurniture.diamonds * quantity))) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -210,8 +210,9 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             }
         }
 
-        user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+        user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
             success: true,
+            itemId: payload.id,
             quantity
         }));
     }

@@ -1,4 +1,4 @@
-import { BadgeData, PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurniturePurchaseData, WidgetNotificationData } from "@pixel63/events";
+import { BadgeData, PurchaseShopBundleData, ShopBundlePurchaseData, ShopPurchaseData, WidgetNotificationData } from "@pixel63/events";
 import User from "../../../../Users/User";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel";
@@ -41,7 +41,7 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         });
 
         if(!bundle?.room) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -49,7 +49,7 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         }
 
         if((bundle.credits && user.model.credits < bundle.credits)) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -57,7 +57,7 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         }
 
         if((bundle.duckets && user.model.duckets < bundle.duckets)) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 
@@ -65,7 +65,7 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         }
 
         if((bundle.diamonds && user.model.diamonds < bundle.diamonds)) {
-            user.sendProtobuff(ShopFurniturePurchaseData, ShopFurniturePurchaseData.create({
+            user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
                 success: false
             }));
 

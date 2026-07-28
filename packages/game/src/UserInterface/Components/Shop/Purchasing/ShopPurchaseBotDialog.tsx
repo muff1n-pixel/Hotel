@@ -1,32 +1,24 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
-import { GroupData, PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopPurchaseData } from "@pixel63/events";
+import { PurchaseShopBotData, ShopBotData, ShopPurchaseData } from "@pixel63/events";
 import { useCallback } from "react";
 import { clientInstance, webSocketClient } from "@Game/index";
-import { PurchasableItem } from "../Pages/Hooks/usePurchasableItem";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
-export type ShopPurchaseFurnitureDialogProps = {
+export type ShopPurchaseBotDialogProps = {
     hidden?: boolean;
     data: {
-        activeFurniture: ShopFurnitureData;
-        activeFurnitureElement: HTMLCanvasElement | null;
-
-        purchasableItem?: PurchasableItem;
-        group?: GroupData;
-        position?: RoomPositionData;
-        direction?: number;
-        quantity: number;
-        stopPlacing?: () => void;
+        activeBot: ShopBotData;
+        activeBotElement: HTMLCanvasElement | null;
     }
     onClose?: () => void;
 }
 
-export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: ShopPurchaseFurnitureDialogProps) {
+export default function ShopPurchaseBotDialog({ data, hidden, onClose }: ShopPurchaseBotDialogProps) {
     const dialogs = useDialogs();
 
     const handlePurchase = useCallback(() => {
@@ -40,20 +32,12 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
                     return;
                 }
 
-                if(data.purchasableItem?.placing) {
-                    data.stopPlacing?.();
-                }
-
-                if(data.position) {
-                    return;
-                }
-
-                if(data.activeFurnitureElement && data.activeFurniture.furniture) {
+                if(data.activeBotElement && data.activeBot.figureConfiguration) {
                     for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
                         clientInstance.flyingFurnitureIcons.value!.push({
                             id: Math.random().toString(),
-                            furniture: data.activeFurniture.furniture,
-                            position: data.activeFurnitureElement.getBoundingClientRect(),
+                            figureConfiguration: data.activeBot.figureConfiguration,
+                            position: data.activeBotElement.getBoundingClientRect(),
                             targetElementId: "toolbar-inventory"
                         });
 
@@ -67,15 +51,8 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
             once: true
         });
 
-        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
-            id: data.activeFurniture.id,
-
-            position: data.position,
-            direction: data.direction,
-
-            groupId: data.group?.id,
-
-            quantity: (data.purchasableItem?.placing)?(1):(data.quantity)
+        webSocketClient.sendProtobuff(PurchaseShopBotData, PurchaseShopBotData.create({
+            id: data.activeBot.id
         }));
     }, [data, dialogs, onClose]);
 
@@ -102,34 +79,22 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
 
                         position: "relative"
                     }}>
-                        <FurnitureImage furnitureData={data.activeFurniture.furniture} style={{
+                        <FigureImage figureConfiguration={data.activeBot.figureConfiguration} direction={2} cropped style={{
                             maxHeight: "100%",
                             maxWidth: "100%"
                         }}/>
-
-                        {(data.quantity > 1) && (
-                            <div style={{
-                                color: "#0B0B0B",
-
-                                position: "absolute",
-
-                                left: 0,
-                                bottom: 0,
-                                
-                                padding: 5
-                            }}>
-                                Quantity: {data.quantity}
-                            </div>
-                        )}
                     </FlexLayout>
 
                     <FlexLayout direction="column" justify="center">
-                        <b>{data.activeFurniture.furniture?.name}</b>
-                        <p>{data.activeFurniture.furniture?.description}</p>
+                        <b>{data.activeBot.name}</b>
+
+                        {(data.activeBot.motto) && (
+                            <p>{data.activeBot.motto}</p>
+                        )}
 
                         <FlexLayout direction="row" align="center" gap={0}>
                             <div style={{ color: "#0B0B0B" }}>Price:</div>
-                            <CurrencyPanel multiplier={data.quantity} credits={data.activeFurniture.credits} duckets={data.activeFurniture.duckets} diamonds={data.activeFurniture.diamonds}/>
+                            <CurrencyPanel credits={data.activeBot.credits} duckets={data.activeBot.duckets} diamonds={data.activeBot.diamonds}/>
                         </FlexLayout>
                     </FlexLayout>
                 </FlexLayout>

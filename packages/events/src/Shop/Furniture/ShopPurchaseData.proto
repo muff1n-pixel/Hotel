@@ -1,6 +1,7 @@
 syntax = "proto3";
 
-message ShopFurniturePurchaseData {
+message ShopPurchaseData {
     bool success = 1;
     uint32 quantity = 2;
+    string item_id = 3;
 }

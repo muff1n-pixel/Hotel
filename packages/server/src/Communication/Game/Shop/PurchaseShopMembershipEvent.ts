@@ -1,12 +1,6 @@
 import User from "../../../Users/User.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { PurchaseShopFurnitureData, PurchaseShopMembershipData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { PurchaseShopMembershipData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPageMembershipModel } from "../../../Database/Models/Shop/ShopPageMembershipModel.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";

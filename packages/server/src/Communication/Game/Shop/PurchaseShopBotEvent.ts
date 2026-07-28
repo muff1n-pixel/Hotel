@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { ShopPageBotModel } from "../../../Database/Models/Shop/ShopPageBotModel.js";
 import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { PurchaseShopBotData } from "@pixel63/events";
+import { PurchaseShopBotData, ShopPurchaseData } from "@pixel63/events";
 
 export default class PurchaseShopBotEvent implements ProtobuffListener<PurchaseShopBotData> {
     minimumDurationBetweenEvents?: number = 200;
@@ -61,5 +61,11 @@ export default class PurchaseShopBotEvent implements ProtobuffListener<PurchaseS
         await user.getInventory().addBot(userBot);
 
         user.sendUserData();
+        
+        user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
+            success: true,
+            itemId: payload.id,
+            quantity: 1
+        }));
     }
 }

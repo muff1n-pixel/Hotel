@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { PurchaseShopPetData, RoomPositionData, ShopFurniturePurchaseData, UserFurnitureCustomData } from "@pixel63/events";
+import { PurchaseShopPetData, RoomPositionData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
