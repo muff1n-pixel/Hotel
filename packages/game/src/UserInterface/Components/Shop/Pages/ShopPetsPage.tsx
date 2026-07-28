@@ -23,7 +23,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
 
     const pets = useShopPagePets(page.id);
 
-    const activePetRef = useRef<HTMLCanvasElement>(null);
+    const activePetRef = useRef<HTMLDivElement>(null);
 
     const [activePet, setActivePet] = useState<ShopPetData>();
     const [activeFilteredPets, setActiveFilteredPets] = useState<FilteredShopPet[]>([]);
@@ -96,12 +96,15 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        webSocketClient.sendProtobuff(PurchaseShopPetData, PurchaseShopPetData.create({
-            id: activePet.id,
-            name
-        }));
-
         dialogs.closeDialog("edit-pet");
+
+        dialogs.setDialogHidden("shop", true);
+
+        dialogs.openUniqueDialog("shop-purchase-pet", {
+            activePet,
+            activePetElement: activePetRef.current,
+            name
+        });
     }, [activePet, activePetRef, name]);
 
     return (
@@ -271,7 +274,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
 
                                     position: "relative",
                                 }}>
-                                    <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <div ref={activePetRef} style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }}>
                                         <PetImage data={pet.pet} headOnly/>
                                     </div>
 

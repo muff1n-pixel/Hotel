@@ -197,7 +197,9 @@ export default class AssetFetcher {
                 ...properties
             };
 
-            urlSprites.set(spriteKey, result);
+            if(!properties.requireImageData) {
+                urlSprites.set(spriteKey, result);
+            }
 
             let output = await result.result;
 
@@ -219,23 +221,27 @@ export default class AssetFetcher {
                     output = this.drawGrayscaledImage(url, existingSpriteWithImageData, properties.grayscaled);
                     result.result = Promise.resolve(output);
                 }
+
+                return output;
             }
-            else {
-                const promise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
-                    result.imageData = imageData;
-                    output.imageData = imageData;
+                
+            const imageDataPromise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
+                result.imageData = imageData;
+                output.imageData = imageData;
 
-                    if(properties.grayscaled) {
-                        output = this.drawGrayscaledImage(url, imageData, properties.grayscaled);
-                        result.result = Promise.resolve(output);
-                    }
-
-                    imageDataUrl.set(imageDataKey, imageData);
-                });
-
-                if(properties.requireImageData) {
-                    await promise;
+                if(properties.grayscaled) {
+                    output = this.drawGrayscaledImage(url, imageData, properties.grayscaled);
+                    result.result = Promise.resolve(output);
                 }
+
+                imageDataUrl.set(imageDataKey, imageData);
+                urlSprites.set(spriteKey, result);
+
+                return imageData;
+            });
+
+            if(properties.requireImageData) {
+                await imageDataPromise;
             }
 
             return output;

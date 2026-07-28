@@ -1,12 +1,14 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import { useEffect, useRef } from "react";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, PetData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import PetImage from "@UserInterface/Components/Pets/PetImage";
 
 export type FlyingFurnitureIconData = {
     id: string;
     furniture?: FurnitureData;
+    pet?: PetData;
     figureConfiguration?: FigureConfigurationData;
 
     position: MousePosition;
@@ -70,6 +72,10 @@ export default function FlyingFurnitureIcon({ data, onFinish }: FlyingFurnitureI
 
             {(data.figureConfiguration) && (
                 <FigureImage direction={2} figureConfiguration={data.figureConfiguration} headOnly cropped/>
+            )}
+
+            {(data.pet) && (
+                <PetImage data={data.pet} headOnly/>
             )}
         </div>
     );

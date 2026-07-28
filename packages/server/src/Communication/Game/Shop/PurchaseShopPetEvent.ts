@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { PurchaseShopPetData, RoomPositionData } from "@pixel63/events";
+import { PurchaseShopPetData, RoomPositionData, ShopPurchaseData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
@@ -76,5 +76,11 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
         await user.getInventory().addPet(userPet);
 
         user.sendUserData();
+                
+        user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
+            success: true,
+            itemId: payload.id,
+            quantity: 1
+        }));
     }
 }

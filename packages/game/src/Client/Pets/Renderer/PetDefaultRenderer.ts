@@ -18,6 +18,11 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         super(type);
     }
 
+    public getRenderOptionsKey(options: FurnitureRenderOptions) {
+        const renderOptionsKey = super.getRenderOptionsKey(options);
+        return `${renderOptionsKey}_${this.palettes?.map((palette) => `${palette.paletteId}-${palette.color}-${palette.tags.join('-')}`)?.join('_')}`;
+    }
+
     public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         return super.render(data, options);
     }
@@ -42,7 +47,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return hexToRgb(palette.color);
     }
 
-    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, tag: string | undefined, usesPalette: boolean) {
+    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, tag: string | undefined, usesPalette: boolean): Promise<{ image: ImageBitmap; imageData: ImageData | null; }> {
         const { image, imageData } = await PetAssets.getSprite(type, {
             x: spriteData.x,
             y: spriteData.y,
@@ -59,7 +64,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
 
             color,
 
-            requireImageData: true
+            requireImageData: true,
+            ignoreImageData: false
         });
 
         if(imageData && usesPalette) {
