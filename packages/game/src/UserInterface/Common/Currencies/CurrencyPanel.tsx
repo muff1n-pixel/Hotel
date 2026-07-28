@@ -26,7 +26,7 @@ export default function CurrencyPanel({ multiplier, credits, diamonds, duckets }
 
             padding: 4
         }}>
-            {(credits !== undefined) && (
+            {(credits !== undefined && credits > 0) && (
                 <Fragment>
                     <b>{(multiplier ?? 1) * credits}</b>
 
@@ -40,7 +40,7 @@ export default function CurrencyPanel({ multiplier, credits, diamonds, duckets }
                 </div>
             )}
 
-            {(duckets !== undefined) && (
+            {(duckets !== undefined && duckets > 0) && (
                 <Fragment>
                     <b>{(multiplier ?? 1) * duckets}</b>
 
@@ -54,7 +54,7 @@ export default function CurrencyPanel({ multiplier, credits, diamonds, duckets }
                 </div>
             )}
 
-            {(diamonds !== undefined) && (
+            {(diamonds !== undefined && diamonds > 0) && (
                 <Fragment>
                     <b>{(multiplier ?? 1) * diamonds}</b>
 
