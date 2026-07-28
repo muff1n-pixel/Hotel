@@ -318,7 +318,7 @@ export default class RoomRenderer extends EventTarget {
 
             if(item instanceof RoomFurnitureItem) {
                 if(item.furnitureRenderer.placement === "wall") {
-                    priority = 0;
+                    priority = RoomPriority.WALL_FURNITURE_SPRITE_PRIORITY + RoomRenderer.getPositionPriority(item.position, !item.positionPathData);
                     priority += (item.position.depth * 100);
                 }
                 else {

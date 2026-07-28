@@ -120,6 +120,10 @@ export default class RoomFurnitureItem extends RoomItem {
 
             this.furnitureRenderer.render().then((result) => {
                 this.rendering = false;
+
+                if(this.furnitureRenderer.placement === "wall") {
+                    this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+                }        
                 
                 if(result.sprites.length) {
                     const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
