@@ -311,14 +311,14 @@ export default class Furniture {
         return this.visualization.colors.map((color) => color.layers[0].color);
     }
 
-    public getColor(colorId: number) {
+    public getColor(colorId: string) {
         if(!this.data) {
             return null;
         }
         
         const visualization = this.getVisualizationData(this.data);
 
-        const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === colorId);
+        const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === parseInt(colorId));
 
         return colorData?.layers[0].color ?? null;
     }

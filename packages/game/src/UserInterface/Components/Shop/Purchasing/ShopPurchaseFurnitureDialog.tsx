@@ -1,6 +1,6 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
-import { GroupData, PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopPurchaseData } from "@pixel63/events";
+import { GroupData, PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopPurchaseData, UserFurnitureCustomData } from "@pixel63/events";
 import { useCallback } from "react";
 import { clientInstance, webSocketClient } from "@Game/index";
 import { PurchasableItem } from "../Pages/Hooks/usePurchasableItem";
@@ -16,11 +16,13 @@ export type ShopPurchaseFurnitureDialogProps = {
         activeFurniture: ShopFurnitureData;
         activeFurnitureElement: HTMLCanvasElement | null;
 
+        data?: UserFurnitureCustomData;
+
         purchasableItem?: PurchasableItem;
         group?: GroupData;
         position?: RoomPositionData;
         direction?: number;
-        quantity: number;
+        quantity?: number;
         stopPlacing?: () => void;
     }
     onClose?: () => void;
@@ -75,7 +77,9 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
 
             groupId: data.group?.id,
 
-            quantity: (data.purchasableItem?.placing)?(1):(data.quantity)
+            quantity: (data.purchasableItem?.placing)?(1):(data.quantity),
+
+            data: data.data
         }));
     }, [data, dialogs, onClose]);
 
@@ -107,7 +111,7 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
                             maxWidth: "100%"
                         }}/>
 
-                        {(data.quantity > 1) && (
+                        {(data.quantity && data.quantity > 1) && (
                             <div style={{
                                 color: "#0B0B0B",
 

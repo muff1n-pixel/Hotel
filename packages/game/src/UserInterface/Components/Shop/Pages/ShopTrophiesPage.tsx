@@ -41,7 +41,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                 continue;
             }
 
-            const filteredFurniture = shopFurniture.find((unfilteredFurniture) => unfilteredFurniture.furniture?.type === furniture.furniture?.type && unfilteredFurniture.furniture?.color === 1) ?? furniture;
+            const filteredFurniture = shopFurniture.find((unfilteredFurniture) => unfilteredFurniture.furniture?.type === furniture.furniture?.type && unfilteredFurniture.furniture?.color === '1') ?? furniture;
 
             filteredShopFurniture.push(filteredFurniture);
         }
@@ -60,7 +60,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
 
         Promise.all(shopFurniture
             .filter((furniture) => furniture.furniture?.type === activeFurniture.furniture?.type)
-            .sort((a, b) => (a.furniture?.color ?? 0) - (b.furniture?.color ?? 0))
+            .sort((a, b) => parseInt(a.furniture?.color ?? '0') - parseInt(b.furniture?.color ?? '0'))
             .map(async (shopFurniture) => {
                 if(!shopFurniture.furniture) {
                     throw new Error("Shop furniture does not have furniture data.");
@@ -72,7 +72,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
 
                 return {
                     furniture: shopFurniture,
-                    color: '#' + (furniture.getColor(shopFurniture.furniture?.color ?? 0) ?? "FFFFFF")
+                    color: '#' + (furniture.getColor(shopFurniture.furniture?.color ?? '0') ?? "FFFFFF")
                 };
             }))
             .then(setActiveFilteredFurniture);
@@ -83,37 +83,18 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        // TODO: disable dialog
-        webSocketClient.addProtobuffListener(ShopPurchaseData, {
-            async handle(payload: ShopPurchaseData) {
-                if(!payload.success) {
-                    return;
-                }
+        dialogs.setDialogHidden("shop", true);
 
-                if(activeFurnitureRef.current && activeFurniture.furniture) {
-                    clientInstance.flyingFurnitureIcons.value!.push({
-                        id: Math.random().toString(),
-                        furniture: activeFurniture.furniture,
-                        position: activeFurnitureRef.current.getBoundingClientRect(),
-                        targetElementId: "toolbar-inventory"
-                    });
-
-                    clientInstance.flyingFurnitureIcons.update();
-                }
-            },
-        }, {
-            once: true
-        });
-
-        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
-            id: activeFurniture.id,
-
+        dialogs.openUniqueDialog("shop-purchase-furniture", {
+            activeFurniture,
+            activeFurnitureElement: activeFurnitureRef.current,
+            
             data: {
                 trophy: {
                     engraving
                 }
             }
-        }));
+        });
     }, [activeFurniture, engraving, activeFurnitureRef]);
 
     return (
