@@ -119,6 +119,8 @@ export default class RoomRenderer extends EventTarget {
             autoDensity: true,
         });
 
+        this.camera.init();
+
         this.application.canvas.style.imageRendering = "pixelated";
 
         this.subscriptions.push(this.clientInstance?.settings.subscribe((value) => {
