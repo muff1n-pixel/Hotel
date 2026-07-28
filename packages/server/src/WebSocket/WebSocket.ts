@@ -1,4 +1,4 @@
-import { WebSocketServer } from "ws";
+import WebSocketConnection, { WebSocketServer } from "ws";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
 import User from "../Users/User.js";
@@ -9,8 +9,16 @@ import { UserBadgeModel } from "../Database/Models/Users/Badges/UserBadgeModel.j
 import { randomBytes, randomUUID } from "node:crypto";
 import { UserReadyData } from "@pixel63/events";
 
+export type PendingConnection = {
+    user: UserModel;
+    websocket: WebSocketConnection;
+    url: URL;
+};
+
 export default class WebSocket {
     private readonly server: WebSocketServer;
+
+    private readonly pendingConnections: PendingConnection[] = [];
 
     constructor() {
         this.server = new WebSocketServer({
@@ -89,98 +97,176 @@ export default class WebSocket {
                     existingUser.disconnect();
                 }
 
-                await model.update({
-                    online: true,
-                    lastLogin: new Date()
-                });
+                const existingPendingConnection = this.pendingConnections.find((pendingConnection) => pendingConnection.user.id === model.id);
 
-                const user = new User(webSocket, model);
+                if(existingPendingConnection) {
+                    console.warn("User " + model.name + " is already connecting, disconnecting pending connection.");
 
-                await user.friends.loadFriends();
+                    existingPendingConnection.websocket.close();
 
-                game.users.push(user);
+                    const index = this.pendingConnections.indexOf(existingPendingConnection);
 
-                console.log("User " + user.model.name + " connected.");
+                    if(index !== -1) {
+                        this.pendingConnections.slice(index, 1);
+                    }
+                }
 
-                user.friends.updateFriends();
+                const pendingConnection: PendingConnection = {
+                    user: model,
+                    websocket: webSocket,
+                    url
+                };
 
-                webSocket.on("error", console.error);
+                this.pendingConnections.push(pendingConnection);
 
-                webSocket.on("message", (rawData) => {
-                    game.eventHandler.decodeAndDispatchMessages(user, rawData);
-                });
+                webSocket.addListener("error", console.error);
 
-                user.sendProtobuff(UserReadyData, UserReadyData.create({}));
-
-                webSocket.on("close", () => {
+                webSocket.addListener("message", (data) => this.handleMessageListener(pendingConnection, data));
+                
+                webSocket.addListener("close", () => {
                     (async () => {
-                        console.log("User " + user.model.name + " disconnected.");
+                        console.log("User " + model.name + " disconnected before estabilishing connection.");
 
-                        const index = game.users.indexOf(user);
+                        const index = this.pendingConnections.indexOf(pendingConnection);
                         
                         if(index !== -1) {
-                            game.users.splice(index, 1);
+                            this.pendingConnections.slice(index, 1);
                         }
-
-                        user.emit("close", user);
-
-                        await model.update({
-                            online: false
-                        });
-
-                        await game.hotelInformation.updateUsersCount();
-
-                        user.friends.updateFriends();
                     })().catch(console.error);
                 });
+            })().catch(console.error);
+        });
+    }
 
-                if(url.searchParams.has("roomId")) {
-                    const room = await game.roomManager.getOrLoadRoomInstance(url.searchParams.get("roomId")!);
+    private handleMessageListener = this.handleMessage.bind(this);
+    private handleMessage(pendingConnection: PendingConnection, data: WebSocketConnection.RawData) {
+        try {
+            let buffer: Buffer;
 
-                    room?.addUserClient(user);
-                }
-                else if(user.model.homeRoomId) {
-                    const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
+            if (typeof data === "string") {
+                buffer = Buffer.from(data);
+            } else if (data instanceof Buffer) {
+                buffer = data;
+            } else if (data instanceof ArrayBuffer) {
+                buffer = Buffer.from(data);
+            } else if (Array.isArray(data)) {
+                buffer = Buffer.concat(data);
+            } else {
+                throw new Error("Unsupported RawData type");
+            }
 
-                    room?.addUserClient(user);
-                }
+            const sep = buffer.indexOf("|".charCodeAt(0));
+            const type = buffer.subarray(0, sep).toString("utf-8");
+            const payload = buffer.subarray(sep + 1);
 
-                const userBadgesCount = await UserBadgeModel.count({
-                    where: {
-                        userId: user.model.id
-                    }
-                });
+            console.log("Received " + type);
 
-                const defaultBadges = ["CCF01", "CCF04", "CCF13", "CCF16", "CCF17", "CCF18", "CCF19", "CCF20", "CCF21", "CCF22", "CCF23", "CCF25"];
+            if(type === UserReadyData.$type) {
+                this.handleUserReady(pendingConnection);
+            }
+        }
+        catch(error) {
+            console.error("Failed to process Protobuff", error);
+        }
+    }
 
-                if(!userBadgesCount) {
-                    await UserBadgeModel.bulkCreate(defaultBadges.map((badgeId) => {
-                        return {
-                            id: randomUUID(),
-                            userId: user.model.id,
-                            badgeId,
-                            equipped: false
-                        };
-                    }));
-                }
+    private async handleUserReady(pendingConnection: PendingConnection) {
+        pendingConnection.websocket.removeAllListeners("message");
+
+        const user = new User(pendingConnection.websocket, pendingConnection.user);
+
+        pendingConnection.websocket.addListener("message", (rawData) => {
+            game.eventHandler.decodeAndDispatchMessages(user, rawData);
+        });
+
+        pendingConnection.websocket.addListener("close", () => {
+            (async () => {
+                console.log("User " + user.model.name + " disconnected.");
+
+                const index = game.users.indexOf(user);
                 
-                if(userBadgesCount === 0 || userBadgesCount === defaultBadges.length) {
-                    await UserBadgeModel.bulkCreate(["PX63B", "PX631", "PX632", "PX633", "PX634"].map((badgeId) => {
-                        return {
-                            id: randomUUID(),
-                            userId: user.model.id,
-                            badgeId,
-                            equipped: false
-                        };
-                    }));
+                if(index !== -1) {
+                    game.users.splice(index, 1);
                 }
+
+                user.emit("close", user);
+
+                await user.model.update({
+                    online: false
+                });
 
                 await game.hotelInformation.updateUsersCount();
 
-                const daysSinceRegistration = Math.floor((new Date().getTime() - user.model.createdAt.getTime()) / 86400000);
-
-                await user.achievements.addTotalAchievementScore("TrueHabbo", daysSinceRegistration);
+                user.friends.updateFriends();
             })().catch(console.error);
         });
+
+        await pendingConnection.user.update({
+            online: true,
+            lastLogin: new Date()
+        });
+
+        await user.friends.loadFriends();
+
+        const index = this.pendingConnections.indexOf(pendingConnection);
+        
+        if(index !== -1) {
+            this.pendingConnections.slice(index, 1);
+        }
+
+        game.users.push(user);
+
+        console.log("User " + user.model.name + " connected.");
+
+        user.friends.updateFriends();
+
+        if(pendingConnection.url.searchParams.has("roomId")) {
+            const room = await game.roomManager.getOrLoadRoomInstance(pendingConnection.url.searchParams.get("roomId")!);
+
+            room?.addUserClient(user);
+        }
+        else if(user.model.homeRoomId) {
+            const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
+
+            room?.addUserClient(user);
+        }
+
+        const userBadgesCount = await UserBadgeModel.count({
+            where: {
+                userId: user.model.id
+            }
+        });
+
+        const defaultBadges = ["CCF01", "CCF04", "CCF13", "CCF16", "CCF17", "CCF18", "CCF19", "CCF20", "CCF21", "CCF22", "CCF23", "CCF25"];
+
+        if(!userBadgesCount) {
+            await UserBadgeModel.bulkCreate(defaultBadges.map((badgeId) => {
+                return {
+                    id: randomUUID(),
+                    userId: user.model.id,
+                    badgeId,
+                    equipped: false
+                };
+            }));
+        }
+        
+        if(userBadgesCount === 0 || userBadgesCount === defaultBadges.length) {
+            await UserBadgeModel.bulkCreate(["PX63B", "PX631", "PX632", "PX633", "PX634"].map((badgeId) => {
+                return {
+                    id: randomUUID(),
+                    userId: user.model.id,
+                    badgeId,
+                    equipped: false
+                };
+            }));
+        }
+
+        await game.hotelInformation.updateUsersCount();
+
+        const daysSinceRegistration = Math.floor((new Date().getTime() - user.model.createdAt.getTime()) / 86400000);
+
+        await user.achievements.addTotalAchievementScore("TrueHabbo", daysSinceRegistration);
+
+        user.sendProtobuff(UserReadyData, UserReadyData.create({}));
     }
 }

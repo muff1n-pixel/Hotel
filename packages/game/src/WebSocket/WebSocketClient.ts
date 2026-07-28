@@ -17,25 +17,16 @@ export default class WebSocketClient extends EventTarget {
     ) {
         super();
 
-        this.addProtobuffListener(UserReadyData, {
-            handle: async () => {
-                this.isReady = true;
-                
-                this.dispatchEvent(new Event("open"));
-
-                for (const outgoingMessage of this.pendingOutgoingMessages) {
-                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
-                }
-
-                this.pendingOutgoingMessages = [];
-            },
-        });
-
         this.socket = new WebSocket(
             `${secure ? "wss" : "ws"}://${hostname}:${port}?${new URLSearchParams(options).toString()}`,
         );
 
         this.socket.binaryType = "arraybuffer";
+
+        this.socket.addEventListener("open", () => {
+            console.log("Sending user ready");
+            this.sendProtobuff(UserReadyData, UserReadyData.create({}));
+        });
 
         this.socket.addEventListener("message", (event) => {
             try {
@@ -55,6 +46,20 @@ export default class WebSocketClient extends EventTarget {
             this.dispatchEvent(new Event("close"));
         });
 
+        this.addProtobuffListener(UserReadyData, {
+            handle: async () => {
+                this.isReady = true;
+                
+                this.dispatchEvent(new Event("open"));
+
+                for (const outgoingMessage of this.pendingOutgoingMessages) {
+                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                }
+
+                this.pendingOutgoingMessages = [];
+            },
+        });
+
         setInterval(() => {
             if (this.socket.readyState === this.socket.OPEN) {
                 this.sendProtobuff(PingData, PingData.create({}));
@@ -66,7 +71,7 @@ export default class WebSocketClient extends EventTarget {
         message: MessageType,
         payload: Message,
     ) {
-        if (!this.isReady) {
+        if (!this.isReady && message.$type !== UserReadyData.$type) {
             this.pendingOutgoingMessages.push({ message, payload });
 
             return;
