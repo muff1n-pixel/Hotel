@@ -13,10 +13,14 @@ export default class FurnitureExtraction {
     private readonly assetPath: string;
     private readonly tempPath: string;
 
-    constructor(assetName: string) {
+    private readonly furnitureDataExtraction: FurnitureDataExtraction;
+
+    constructor(assetName: string, furnitureDataExtraction: FurnitureDataExtraction) {
         this.assetName = assetName;
         this.assetPath = path.join(process.env.FURNITURE_INPUT_PATH!, `${assetName}.swf`);
         this.tempPath = path.join("temp", assetName);
+
+        this.furnitureDataExtraction = furnitureDataExtraction;
     }
 
     public async execute() {
@@ -46,16 +50,12 @@ export default class FurnitureExtraction {
             throw new Error("Index data is missing.");
         }
 
-        const furnitureDataExtraction = new FurnitureDataExtraction(this.assetName);
-
-        await furnitureDataExtraction.prepare();
-
         const manifestVisualizationExtraction = new ManifestVisualizationExtraction(swfResult.data.visualization);
         const manifestAssetsExtraction = new ManifestAssetsExtraction(swfResult.data.assets);
         const manifestLogicExtraction = new ManifestLogicExtraction(swfResult.data.logic);
         const manifestIndexExtraction = new ManifestIndexExtraction(swfResult.data.index);
 
-        const furnitureData = await furnitureDataExtraction.execute();
+        const furnitureData = await this.furnitureDataExtraction.execute(this.assetName);
 
         const visualization = await manifestVisualizationExtraction.execute(furnitureData);
         const assets = await manifestAssetsExtraction.execute();

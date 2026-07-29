@@ -200,7 +200,16 @@ export default class Furniture {
 
         const result = await this.renderer.render(this.data, options);
 
-        await this.particleSystem?.render([...result.sprites], options);
+        if(this.particleSystem) {
+            const particleSystemResult = {
+                ...result,
+                sprites: [...result.sprites]
+            };
+            
+            await this.particleSystem.render(particleSystemResult.sprites, options);
+
+            return particleSystemResult;
+        }
 
         return result;
     }

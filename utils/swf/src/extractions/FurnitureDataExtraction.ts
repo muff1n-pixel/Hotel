@@ -1,37 +1,34 @@
 import { XMLParser } from "fast-xml-parser";
 import { readFileSync } from "node:fs";
-import sqlite3 from "sqlite3";
 
 export default class FurnitureDataExtraction {
-    private readonly assetName: string;
-    private readonly database: sqlite3.Database;
+    private furniture: any[];
 
-    constructor(assetName: string) {
-        this.assetName = assetName;
-
-        this.database = new sqlite3.Database(":memory:");
-    }
-
-    public async prepare() {
-        await new Promise<void>((resolve) => {
-            this.database.serialize(() => {
-                this.database.exec(readFileSync("./furniture.sql", {encoding: "utf-8"}), () => resolve());
-            })
+    constructor() {
+        const content = readFileSync("./furniture.json", {
+            encoding: "utf-8"
         });
+
+        this.furniture = JSON.parse(content);
     }
 
-    public async execute() {
+    private getFurnitureData(assetName: string) {
+        return this.furniture.find((row) => row.type.split('*')[0] === assetName);
+    }
+
+    public async execute(assetName: string) {
         const parser = new XMLParser({
             ignoreAttributes: false
         });
 
         const document = parser.parse(readFileSync("furnidata2.xml", { encoding: "utf-8" }), false);
+        const furnitureData = this.getFurnitureData(assetName);
 
-        let furniTypes = document["furnidata"]["roomitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === this.assetName);
+        let furniTypes = document["furnidata"]["roomitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
         let isWallFurniture = false;
 
         if (!furniTypes.length) {
-            furniTypes = document["furnidata"]["wallitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === this.assetName);
+            furniTypes = document["furnidata"]["wallitemtypes"]["furnitype"].filter((furniType: any) => furniType["@_classname"].split('*')[0] === assetName);
             
             if(furniTypes.length) {
                 isWallFurniture = true;
@@ -39,11 +36,11 @@ export default class FurnitureDataExtraction {
         }
 
         if (!furniTypes.length) {
-            console.error("Failed to find furni type in furnidata for " + this.assetName);
+            console.error("Failed to find furni type in furnidata for " + assetName);
 
             furniTypes = [
                 {
-                    "@_classname": this.assetName
+                    "@_classname": assetName
                 }
             ];
         }
@@ -53,17 +50,13 @@ export default class FurnitureDataExtraction {
 
             const hasDescription = furniType["description"] && !furniType["description"].endsWith(" desc");
 
-            const result: any = await new Promise((resolve) => {
-                this.database.get("SELECT * FROM items_base WHERE item_name = '" + furniType["@_classname"] + "' LIMIT 1", (error, row) => {
-                    resolve(row);
-                });
-            });
-
             let customParams: unknown[] | null = (furniType["customparams"]) ? (furniType["customparams"].toString().split(',').map((value: string) => parseFloat(value))) : (null);
 
-            if (result?.interaction_type === "vendingmachine" && result?.vending_ids) {
-                customParams = result.vending_ids.split(',').map((id: string) => parseInt(id));
-            }
+            const stackable = furnitureData?.stackable ?? false;
+            const inventoryStackable = furnitureData?.inventory_stackable ?? false;
+            const giftable = furnitureData?.giftable ?? false;
+            const recyclable = furnitureData?.recyclable ?? false;
+            const sellable = furnitureData?.sellable ?? false;
 
             return {
                 name: furniType["name"],
@@ -75,18 +68,18 @@ export default class FurnitureDataExtraction {
                 defaultDirection: (furniType["defaultdir"]) ? (parseInt(furniType["defaultdir"])) : (undefined),
 
                 category: furniType["category"],
-                interactionType: result?.interaction_type ?? "default",
+                interactionType: furnitureData?.interaction_type ?? "default",
 
                 flags: {
-                    stackable: (result?.allow_stack ?? 1) === 1,
-                    sitable: (result?.allow_sit ?? 0) === 1,
-                    layable: (result?.allow_lay ?? 0) === 1,
-                    walkable: (result?.allow_walk ?? 0) === 1,
-                    giftable: (result?.allow_gift ?? 1) === 1,
-                    tradable: (result?.allow_trade ?? 1) === 1,
-                    recyclable: (result?.allow_recycle ?? 1) === 1,
-                    sellable: (result?.allow_marketplace_sell ?? 1) === 1,
-                    inventoryStackable: (result?.allow_inventory_stack ?? 1) === 1
+                    stackable,
+                    sitable: (furniType["cansiton"] ?? '0') === '1',
+                    layable: (furniType["canlayon"] ?? '0') === '1',
+                    walkable: (furniType["canstandon"] ?? '1') === '1',
+                    giftable,
+                    tradable: (furniType["tradable"] ?? '1') === '1',
+                    recyclable,
+                    sellable,
+                    inventoryStackable
                 },
 
                 customParams

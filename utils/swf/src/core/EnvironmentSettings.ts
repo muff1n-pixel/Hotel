@@ -1,4 +1,4 @@
-import { parse } from "dotenv";
+import { config } from "dotenv";
 import { stringify } from "ini";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -6,11 +6,7 @@ import path from "path";
 export default class EnvironmentSettings {
     public static read() {
         if(existsSync(".env")) {
-            const content = readFileSync(".env", {
-                encoding: "utf-8"
-            });
-
-            parse(content);
+            config();
 
             this.updateFallbackPaths();
 

@@ -3,6 +3,7 @@ import { PromisePool } from "@supercharge/promise-pool";
 import { readdirSync } from "fs";
 import path from "path";
 import FurnitureExtraction from "../extractions/FurnitureExtraction.ts";
+import FurnitureDataExtraction from "../extractions/FurnitureDataExtraction.ts";
 
 export default class ConvertFurnitureAction {
     public async run() {
@@ -54,7 +55,7 @@ export default class ConvertFurnitureAction {
                 });
 
                 const assetNames = readdirSync(process.env.FURNITURE_INPUT_PATH!, { withFileTypes: true })
-                    .filter((file) => file.isFile() && path.basename(file.name)[method](assetName))
+                    .filter((file) => file.isFile() && path.basename(file.name).endsWith(".swf") && path.basename(file.name)[method](assetName))
                     .map((file) => path.basename(file.name, ".swf"));
 
                 console.log("? Furniture found matching filter:");
@@ -74,6 +75,8 @@ export default class ConvertFurnitureAction {
     }
 
     private async handleAssetNames(assetNames: string[]) {
+        const furnitureDataExtraction = new FurnitureDataExtraction();
+
         await PromisePool
             .withConcurrency(30)
             .for(assetNames)
@@ -81,7 +84,7 @@ export default class ConvertFurnitureAction {
                 try {
                     console.time("> Extracting " + assetName);
 
-                    const extraction = new FurnitureExtraction(assetName);
+                    const extraction = new FurnitureExtraction(assetName, furnitureDataExtraction);
 
                     await extraction.execute();
                  

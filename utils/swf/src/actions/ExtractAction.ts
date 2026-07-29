@@ -55,7 +55,7 @@ export default class ExtractAction {
                 });
 
                 const assetNames = readdirSync(process.env.FURNITURE_INPUT_PATH!, { withFileTypes: true })
-                    .filter((file) => file.isFile() && path.basename(file.name)[method](assetName))
+                    .filter((file) => file.isFile() && path.basename(file.name).endsWith(".swf") && path.basename(file.name)[method](assetName))
                     .map((file) => path.basename(file.name, ".swf"));
 
                 console.log("? Furniture found matching filter:");
