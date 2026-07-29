@@ -2,19 +2,19 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { ReactNode } from "react";
 
 export type WidgetPanelProps = {
-    header: ReactNode;
+    title: string;
     children?: ReactNode;
 }
 
-export default function WidgetPanel({ header, children }: WidgetPanelProps) {
+export default function WidgetPanel({ title, children }: WidgetPanelProps) {
     return (
         <div style={{
             borderRadius: 6,
 
             pointerEvents: "auto",
 
-            border: "2px solid rgba(109, 109, 109, 0.9)",
-            background: "rgba(39, 39, 39, 0.8)",
+            border: "2px solid rgba(61, 61, 61, .95)",
+            background: "rgba(0, 0, 0, 0.64)",
 
             width: 220,
             boxSizing: "border-box",
@@ -28,18 +28,22 @@ export default function WidgetPanel({ header, children }: WidgetPanelProps) {
             flexDirection: "column"
         }}>
             <div style={{
-                padding: (children)?("5px 8px 8px"):("2px 5px"),
-                background: "rgba(109, 109, 109, 0.9)",
+                padding: "5px 8px 8px",
+                background: "rgba(61, 61, 61, .95)",
                 fontSize: 13,
 
                 textAlign: "center",
 
                 position: "relative"
             }}>
-                {header}
+                <b>{title}</b>
             </div>
 
-            {children}
+            <FlexLayout direction="row" style={{
+                padding: 8,
+            }}>
+                {children}
+            </FlexLayout>
         </div>
     );
 }

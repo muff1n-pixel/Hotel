@@ -1,5 +1,6 @@
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
 import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 import { useRoomEvent } from "@UserInterface/Hooks/useRoomEvent";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
@@ -10,53 +11,26 @@ export default function RoomEventWidget() {
 
     const { openShopPage } = useShopPageLink("roomevent");
 
+    console.log({ roomEvent, isOwner: room?.isOwner});
+
     if(!roomEvent && !room?.isOwner) {
         return null;
     }
 
     return (
-        <div style={{
-            borderRadius: 6,
+        <WidgetPanel header={(
+            <FlexLayout direction="row" align="center">
+                <div className="sprite_navigator_event"/>
 
-            pointerEvents: "auto",
-
-            border: (!roomEvent)?("none"):("2px solid rgba(109, 109, 109, 0.9)"),
-            background: "rgba(39, 39, 39, 0.8)",
-
-            width: 220,
-            boxSizing: "border-box",
-
-            alignSelf: "flex-end",
-
-            fontSize: 12,
-            color: "white",
-
-            display: "flex",
-            flexDirection: "column"
-        }}>
-            <div style={{
-                padding: "5px 8px 8px",
-                background: "rgba(109, 109, 109, 0.9)",
-                borderRadius: (!roomEvent)?(8):(3),
-                fontSize: 13,
-
-                textAlign: "center",
-
-                position: "relative"
-            }}>
-                <FlexLayout direction="row" align="center">
-                    <div className="sprite_navigator_event"/>
-
-                    {(roomEvent)?(
-                        <div>{roomEvent.name}</div>
-                    ):(
-                        <DialogLink onClick={openShopPage}>
-                            <b>Promote room</b>
-                        </DialogLink>
-                    )}
-                </FlexLayout>
-            </div>
-            
+                {(roomEvent)?(
+                    <div>{roomEvent.name}</div>
+                ):(
+                    <DialogLink onClick={openShopPage}>
+                        <b>Promote room</b>
+                    </DialogLink>
+                )}
+            </FlexLayout>
+        )}>
             {(roomEvent) && (
                 <FlexLayout direction="row" style={{
                     padding: "8px 16px 8px 8px"
@@ -64,6 +38,6 @@ export default function RoomEventWidget() {
                     <div>{roomEvent?.description}</div>
                 </FlexLayout>
             )}
-        </div>
+        </WidgetPanel>
     );
 }

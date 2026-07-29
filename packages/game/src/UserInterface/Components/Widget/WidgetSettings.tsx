@@ -1,6 +1,6 @@
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
+import WidgetGamePanel from "@UserInterface/Common/Widgets/WidgetGamePanel";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +19,7 @@ export default function WidgetSettings({ settingsExpanded, onSettingsExpanded }:
     }
 
     return (
-        <WidgetPanel title={getTranslation("settings.title")}>
+        <WidgetGamePanel title={getTranslation("settings.title")}>
             <FlexLayout direction="column">
                 <DialogLink onClick={() => {
                     onSettingsExpanded(false);
@@ -37,6 +37,6 @@ export default function WidgetSettings({ settingsExpanded, onSettingsExpanded }:
                     {getTranslation("settings.game_settings")}
                 </DialogLink>
             </FlexLayout>
-        </WidgetPanel>
+        </WidgetGamePanel>
     );
 }

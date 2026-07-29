@@ -56,17 +56,17 @@ export default class RoomInstance {
     public information?: RoomInformationData;
     
     public hasRights: boolean;
-    public isOwner: boolean;
+    public isOwner: boolean = false;
 
     constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData, ready?: () => void) {
         this.id = event.id;
         
         if(event.information) {
             this.information = event.information;
+            this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         }
 
         this.hasRights = event.hasRights;
-        this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         this.clickConfiguration.value = event.clickConfiguration;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);

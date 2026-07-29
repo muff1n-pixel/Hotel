@@ -9,6 +9,7 @@ export default class RoomInformationEvent implements ProtobuffListener<RoomInfor
         }
         
         clientInstance.roomInstance.value.information = payload;
+        clientInstance.roomInstance.value.isOwner = payload.owner?.id === clientInstance.user.value?.id;
         clientInstance.roomInstance.update();
     }
 }
