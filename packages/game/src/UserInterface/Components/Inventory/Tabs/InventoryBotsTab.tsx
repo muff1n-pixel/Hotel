@@ -1,5 +1,5 @@
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
@@ -10,11 +10,13 @@ import { useUser } from "../../../Hooks/useUser";
 import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryBotsData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useUserBotNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBotNotifications";
 
 export default function InventoryBotsTab() {
     const user = useUser();
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
+    const userBotNotifications = useUserBotNotifications();
 
     const [activeBot, setActiveBot] = useState<UserBotData>();
     const [bots, setBots] = useState<UserBotData[]>([]);
@@ -32,6 +34,16 @@ export default function InventoryBotsTab() {
 
         webSocketClient.sendProtobuff(GetUserInventoryBotsData, GetUserInventoryBotsData.create({}));
     }, []);
+
+    useEffect(() => {
+        if(!activeBot) {
+            return;
+        }
+
+        if(userBotNotifications.hasUserBotNotification(activeBot.id)) {
+            userBotNotifications.removeUserBotNotification(activeBot.id);
+        }
+    }, [activeBot, userBotNotifications]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryBotsData, {
@@ -127,6 +139,34 @@ export default function InventoryBotsTab() {
         setRoomFurniturePlacer(RoomFurniturePlacer.fromFigureConfiguration(clientInstance.roomInstance.value, activeBot.figureConfiguration));
         roomFurniturePlacerId.current = activeBot?.id;
     }, [roomFurniturePlacer, activeBot]);
+    
+    const botItems = useMemo(() => {
+        return bots.map((bot) => {
+            const notification = userBotNotifications.hasUserBotNotification(bot.id);
+            
+            return (
+                <DialogItem
+                    key={bot.id}
+                    width={44}
+                    active={activeBot?.id === bot.id}
+                    onClick={() => setActiveBot(bot)}
+                    style={{
+                        ...(notification && {
+                            background: "#9BCA64"
+                        })
+                    }}>
+                        <div style={{
+                            width: 40,
+                            height: 40
+                        }}>
+                            {bot.figureConfiguration && (
+                                <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
+                            )}
+                        </div>
+                </DialogItem>
+            );
+        });
+    }, [userBotNotifications, bots]);
 
     if(!bots.length) {
         return (<InventoryEmptyTab/>);
@@ -153,22 +193,7 @@ export default function InventoryBotsTab() {
 
                     overflowY: "scroll"
                 }}>
-                    {bots?.map((bot) => (
-                        <DialogItem
-                            key={bot.id}
-                            width={44}
-                            active={activeBot?.id === bot.id}
-                            onClick={() => setActiveBot(bot)}>
-                                <div style={{
-                                    width: 40,
-                                    height: 40
-                                }}>
-                                    {bot.figureConfiguration && (
-                                        <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
-                                    )}
-                                </div>
-                        </DialogItem>
-                    ))}
+                    {botItems}
                 </div>
             </DialogScrollArea>
 

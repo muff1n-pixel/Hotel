@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import NotificationIcon from "@UserInterface/Common/Notifications/NotificationIcon";
 import { useUserFurnitureNotifications } from "@UserInterface/Hooks/User/Notifications/useUserFurnitureNotifications";
+import { useUserBotNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBotNotifications";
+import { useUserPetNotifications } from "@UserInterface/Hooks/User/Notifications/useUserPetNotifications";
 
 export type InventoryDialogProps = {
     data?: {
@@ -21,6 +23,8 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
     const [getTranslation] = useTranslation("inventory");
 
     const userFurnitureNotifications = useUserFurnitureNotifications();
+    const userPetNotifications = useUserPetNotifications();
+    const userBotNotifications = useUserBotNotifications();
 
     return (
         <Dialog title={getTranslation("title")} width={500} height={350} hidden={hidden} onClose={onClose}>
@@ -36,7 +40,13 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
                     element: (<InventoryFurnitureTab allowPlacingInRoom/>)
                 },
                 {
-                    icon: getTranslation("tabs.pets"),
+                    icon: (
+                        <FlexLayout direction="row" gap={5} align="center">
+                            {getTranslation("tabs.pets")}
+
+                            <NotificationIcon count={userPetNotifications.notifications.length}/>
+                        </FlexLayout>
+                    ),
                     element: (<InventoryPetsTab/>)
                 },
                 {
@@ -44,7 +54,13 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
                     element: (<InventoryBadgesTab/>)
                 },
                 {
-                    icon: getTranslation("tabs.bots"),
+                    icon: (
+                        <FlexLayout direction="row" gap={5} align="center">
+                            {getTranslation("tabs.bots")}
+
+                            <NotificationIcon count={userBotNotifications.notifications.length}/>
+                        </FlexLayout>
+                    ),
                     element: (<InventoryBotsTab/>)
                 }
             ]}/>

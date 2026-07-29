@@ -1,6 +1,7 @@
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
-import { UserFurnitureNotificationData } from "@pixel63/events";
 
 export default class UserNotifications {
-    public userFurnitureNotifications = new ObservableRequiredProperty<UserFurnitureNotificationData[]>([]);
+    public userFurnitureNotifications = new ObservableRequiredProperty<string[]>([]);
+    public userPetNotifications = new ObservableRequiredProperty<string[]>([]);
+    public userBotNotifications = new ObservableRequiredProperty<string[]>([]);
 }

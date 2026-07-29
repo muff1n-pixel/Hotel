@@ -6,7 +6,7 @@ import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
 import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
-import { UserFurnitureNotificationData, UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
+import { UserNotificationData, UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
 import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
@@ -121,7 +121,7 @@ export default class UserInventory {
     }
 
     public async addFurniture(userFurniture: UserFurnitureModel) {
-        this.user.sendProtobuff(UserFurnitureNotificationData, UserFurnitureNotificationData.create({
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
             userFurnitureId: (userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)
         }));
 
@@ -141,6 +141,10 @@ export default class UserInventory {
     }
 
     public async addBot(userBot: UserBotModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userBotId: userBot.id
+        }));
+
         this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.fromJSON({
             updatedUserBots: [
                 userBot
@@ -323,6 +327,10 @@ export default class UserInventory {
     }
 
     public async addPet(userPet: UserPetModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userPetId: userPet.id
+        }));
+
         this.user.sendProtobuff(UserInventoryPetsData, UserInventoryPetsData.fromJSON({
             updatedUserPets: [
                 userPet

@@ -13,11 +13,11 @@ export function useUserFurnitureNotifications() {
     }, []);
 
     const removeUserFurnitureNotification = useCallback((userFurnitureId: string) => {
-        clientInstance.notifications.userFurnitureNotifications.value = notifications.filter((notification) => notification.userFurnitureId !== userFurnitureId);
+        clientInstance.notifications.userFurnitureNotifications.value = notifications.filter((notificationId) => notificationId !== userFurnitureId);
     }, [notifications]);
 
     const hasUserFurnitureNotification = useCallback((userFurnitureId: string) => {
-        return notifications.some((notification) => notification.userFurnitureId === userFurnitureId);
+        return notifications.some((notificationId) => notificationId === userFurnitureId);
     }, [notifications]);
 
     return {
