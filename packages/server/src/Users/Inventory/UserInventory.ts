@@ -236,6 +236,14 @@ export default class UserInventory {
         }));
     }
 
+    public async addBadge(badge: UserBadgeModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userBadgeId: badge.id
+        }));
+
+        await this.sendBadges();
+    }
+
     public async sendBadges() {
         const userBadges = await UserBadgeModel.findAll({
             where: {

@@ -10,6 +10,7 @@ import NotificationIcon from "@UserInterface/Common/Notifications/NotificationIc
 import { useUserFurnitureNotifications } from "@UserInterface/Hooks/User/Notifications/useUserFurnitureNotifications";
 import { useUserBotNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBotNotifications";
 import { useUserPetNotifications } from "@UserInterface/Hooks/User/Notifications/useUserPetNotifications";
+import { useUserBadgeNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBadgeNotifications";
 
 export type InventoryDialogProps = {
     data?: {
@@ -25,6 +26,7 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
     const userFurnitureNotifications = useUserFurnitureNotifications();
     const userPetNotifications = useUserPetNotifications();
     const userBotNotifications = useUserBotNotifications();
+    const userBadgeNotifications = useUserBadgeNotifications();
 
     return (
         <Dialog title={getTranslation("title")} width={500} height={350} hidden={hidden} onClose={onClose}>
@@ -50,7 +52,13 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
                     element: (<InventoryPetsTab/>)
                 },
                 {
-                    icon: getTranslation("tabs.badges"),
+                    icon: (
+                        <FlexLayout direction="row" gap={5} align="center">
+                            {getTranslation("tabs.badges")}
+
+                            <NotificationIcon count={userBadgeNotifications.notifications.length}/>
+                        </FlexLayout>
+                    ),
                     element: (<InventoryBadgesTab/>)
                 },
                 {

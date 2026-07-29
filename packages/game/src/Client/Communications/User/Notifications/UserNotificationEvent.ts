@@ -18,5 +18,10 @@ export default class UserNotificationEvent implements ProtobuffListener<UserNoti
             clientInstance.notifications.userBotNotifications.value!.push(payload.userBotId);
             clientInstance.notifications.userBotNotifications.update();
         }
+        
+        if(payload.userBadgeId) {
+            clientInstance.notifications.userBadgeNotifications.value!.push(payload.userBadgeId);
+            clientInstance.notifications.userBadgeNotifications.update();
+        }
     }
 }

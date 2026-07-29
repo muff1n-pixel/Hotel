@@ -1,17 +1,30 @@
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { webSocketClient } from "../../../..";
 import InventoryEmptyTab from "./InventoryEmptyTab";
 import BadgeImage from "../../../Common/Badges/BadgeImage";
 import { GetUserInventoryBadgesData, UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
+import { useUserBadgeNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBadgeNotifications";
 
 export default function InventoryBadgesTab() {
+    const userBadgeNotifications = useUserBadgeNotifications();
+
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
     const [userBadges, setUserBadges] = useState<UserInventoryBadgesData["badges"]>([]);
     const [achievementScore, setAchievementScore] = useState<number>(0);
 
     const userBadgesRequested = useRef<boolean>(false);
+
+    useEffect(() => {
+        if(!activeBadge) {
+            return;
+        }
+
+        if(userBadgeNotifications.hasUserBadgeNotification(activeBadge.id)) {
+            userBadgeNotifications.removeUserBadgeNotification(activeBadge.id);
+        }
+    }, [activeBadge, userBadgeNotifications]);
 
     useEffect(() => {
         if(userBadgesRequested.current) {
@@ -61,6 +74,50 @@ export default function InventoryBadgesTab() {
         }));
     }, [activeBadge]);
 
+    const filteredUnequippedBadges = useMemo(() => {
+        return userBadges?.filter((userBadge) => !userBadge.equipped).map((userBadge) => {
+            const notification = userBadgeNotifications.hasUserBadgeNotification(userBadge.id);
+            
+            return (
+                <div key={userBadge.id} style={{
+                    display: "flex",
+
+                    width: 46,
+                    height: 46,
+
+
+                    border: "1px solid black",
+                    borderRadius: 6,
+
+                    cursor: "pointer",
+
+                    position: "relative"
+                }} onClick={() => setActiveBadge(userBadge)}>
+                    <div style={{
+                        flex: 1,
+
+                        border: (activeBadge?.id === userBadge.id)?("2px solid white"):("2px solid transparent"),
+                        borderRadius: 6,
+
+                        boxSizing: "border-box",
+
+                        background: "#CBCBCB",
+
+                        ...(notification && {
+                            background: "#9BCA64"
+                        }),
+
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <BadgeImage badge={userBadge.badge}/>
+                    </div>
+                </div>
+            );
+        });
+    }, [userBadges, activeBadge, userBadgeNotifications]);
+
     if(!userBadges.length) {
         return (<InventoryEmptyTab/>);
     }
@@ -94,39 +151,7 @@ export default function InventoryBadgesTab() {
 
                         overflowY: "scroll"
                     }}>
-                        {userBadges?.filter((userBadge) => !userBadge.equipped).map((userBadge) => (
-                            <div key={userBadge.id} style={{
-                                display: "flex",
-
-                                width: 46,
-                                height: 46,
-
-
-                                border: "1px solid black",
-                                borderRadius: 6,
-
-                                cursor: "pointer",
-
-                                position: "relative"
-                            }} onClick={() => setActiveBadge(userBadge)}>
-                                <div style={{
-                                    flex: 1,
-
-                                    border: (activeBadge?.id === userBadge.id)?("2px solid white"):("2px solid transparent"),
-                                    borderRadius: 6,
-
-                                    boxSizing: "border-box",
-
-                                    background: "#CBCBCB",
-
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}>
-                                    <BadgeImage badge={userBadge.badge}/>
-                                </div>
-                            </div>
-                        ))}
+                        {filteredUnequippedBadges}
                     </div>
                 </DialogScrollArea>
 

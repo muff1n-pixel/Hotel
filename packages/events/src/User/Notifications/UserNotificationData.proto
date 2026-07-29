@@ -4,4 +4,5 @@ message UserNotificationData {
     optional string user_furniture_id = 1;
     optional string user_pet_id = 2;
     optional string user_bot_id = 3;
+    optional string user_badge_id = 4;
 }

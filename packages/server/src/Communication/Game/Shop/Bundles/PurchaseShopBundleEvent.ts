@@ -125,7 +125,7 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
             });
 
             if(created) {
-                await user.getInventory().sendBadges();
+                await user.getInventory().addBadge(badge);
 
                 user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
