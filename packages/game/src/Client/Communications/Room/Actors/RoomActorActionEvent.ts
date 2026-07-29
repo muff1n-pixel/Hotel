@@ -27,6 +27,12 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
                     actor.item.figureRenderer.removeAction(action);
                 }
             }
+            
+            if(payload.actor?.user?.userId) {
+                const roomUser = clientInstance.roomInstance.value.getUserById(payload.actor?.user?.userId);
+                
+                roomUser.data.actions = actor.item.figureRenderer.actions;
+            }
 
             clientInstance.roomInstance.value.roomRenderer.focusedItem.update();
         }
