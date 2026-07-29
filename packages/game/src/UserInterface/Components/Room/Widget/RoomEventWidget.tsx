@@ -11,8 +11,6 @@ export default function RoomEventWidget() {
 
     const { openShopPage } = useShopPageLink("roomevent");
 
-    console.log({ roomEvent, isOwner: room?.isOwner});
-
     if(!roomEvent && !room?.isOwner) {
         return null;
     }

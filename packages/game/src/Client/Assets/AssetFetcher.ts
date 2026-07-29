@@ -50,7 +50,7 @@ export type AssetSpriteResult = {
 
 export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
-    private static images: Map<string, Promise<ImageBitmap>> = new Map();
+    private static images: Map<string, Promise<HTMLImageElement>> = new Map();
     private static spritesCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
     private static imageDataCache: Map<string, Map<string, ImageData>> = new Map<string, Map<string, ImageData>>();
 
@@ -115,25 +115,19 @@ export default class AssetFetcher {
             return await this.images.get(url)!;
         }
 
-        const result = (async () => {
-            const response = await fetch(url, {
-                method: "GET"
-            });
+        const result = new Promise<HTMLImageElement>((resolve, reject) => {
+            const image = new Image();
 
-            if(!response.ok) {
-                throw new Error("Response is not ok.")
-            }
+            image.onload = () => {
+                resolve(image);
+            };
 
-            if(response.status !== 200) {
-                throw new Error("Response is not ok.")
-            }
+            image.onerror = () => {
+                reject();
+            };
 
-            const blob = await response.blob();
-
-            const image = await createImageBitmap(blob);
-
-            return image;
-        })();
+            image.src = url;
+        });
 
         this.images.set(url, result);
 
