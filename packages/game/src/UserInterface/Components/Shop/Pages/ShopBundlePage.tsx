@@ -19,28 +19,12 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
     const shopFurniture = useShopPageFurniture(page.id, page.type);
 
     const handlePurchaseFurniture = useCallback(() => {
-        webSocketClient.addProtobuffListener(ShopBundlePurchaseData, {
-            async handle(payload: ShopBundlePurchaseData) {
-                if(!payload.success) {
-                    return;
-                }
-
-                if(payload.roomId) {
-                    dialogs.closeDialog("shop");
-
-                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
-                        id: payload.roomId
-                    }));
-                }
-            },
-        }, {
-            once: true
+        dialogs.setDialogHidden("shop", true);
+        dialogs.openUniqueDialog("shop-purchase-bundle", {
+            shopFurniture,
+            page
         });
-
-        webSocketClient.sendProtobuff(PurchaseShopBundleData, PurchaseShopBundleData.create({
-            id: page.bundle?.id
-        }));
-    }, [page, shopFurniture, shopFurnitureRefs]);
+    }, [page, dialogs, shopFurniture, shopFurnitureRefs]);
 
     return (
         <div style={{

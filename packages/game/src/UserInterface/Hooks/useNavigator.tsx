@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { clientInstance, webSocketClient } from "../..";
 import { GetNavigatorData } from "@pixel63/events";
 
-export function useNavigator(category: string, search?: string) {
+export function useNavigator(category: string, filter?: string, search?: string) {
     const [navigator, setNavigator] = useState(clientInstance.navigator.value);
     const [_state, setState] = useState(clientInstance.navigator.state);
 
@@ -14,18 +14,12 @@ export function useNavigator(category: string, search?: string) {
     }, []);
 
     useEffect(() => {
-        if (search?.length) {
-            webSocketClient.sendProtobuff(GetNavigatorData, GetNavigatorData.create({
-                search,
-                category
-            }));
-        }
-        else {
-            webSocketClient.sendProtobuff(GetNavigatorData, GetNavigatorData.create({
-                category
-            }));
-        }
-    }, [category, search]);
+        webSocketClient.sendProtobuff(GetNavigatorData, GetNavigatorData.create({
+            category,
+            filter,
+            search
+        }));
+    }, [category, filter, search]);
 
     return navigator;
 }

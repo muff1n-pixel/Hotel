@@ -20,7 +20,6 @@ export default class UserAchievements {
         }
 
         const userAchievement = await this.getUserAchievement(achievementId);
-
         
         let nextLevel = userAchievement.level;
         let nextLevelScore = userAchievement.achievement.levels[userAchievement.level];
@@ -45,7 +44,6 @@ export default class UserAchievements {
         }
         
         const userAchievement = await this.getUserAchievement(achievementId);
-
 
         await userAchievement.update({
             score: userAchievement.score + score
@@ -93,7 +91,7 @@ export default class UserAchievements {
         const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
 
         if(badge) {
-            const userBadge = await UserBadgeModel.findOne({
+            let userBadge = await UserBadgeModel.findOne({
                 where: {
                     userId: this.userId,
                     badgeId: `${userAchievement.achievement.badgePrefix}${userAchievement.level - 1}`
@@ -101,7 +99,7 @@ export default class UserAchievements {
             });
 
             if(!userBadge) {
-                await UserBadgeModel.create({
+                userBadge = await UserBadgeModel.create({
                     id: randomUUID(),
                     userId: this.userId,
                     badgeId: badge.id,
@@ -116,7 +114,7 @@ export default class UserAchievements {
             const user = game.getUserById(this.userId);
 
             if(user) {
-                await user.getInventory().sendBadges();
+                await user.getInventory().addBadge(userBadge);
                 
                 for(let level = lastLevel + 1; level <= nextLevel; level++) {
                     user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({

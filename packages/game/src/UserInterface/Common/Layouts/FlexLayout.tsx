@@ -7,7 +7,7 @@ export type FlexLayoutProps = {
     gap?: number;
     align?: string;
     justify?: string;
-    flex?: number;
+    flex?: string | number;
     style?: CSSProperties;
 
     children?: ReactNode;

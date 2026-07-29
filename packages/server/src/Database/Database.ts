@@ -45,13 +45,15 @@ import { initializeUserClothingModel } from "./Models/Users/Clothes/UserClothing
 import { initializeClothingModel } from "./Models/Clothes/ClothesModel.js";
 import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureModel.js";
 import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectModel.js";
-import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
 import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembershipModel.js";
 import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/HotelSettingModel.js";
 import { initializeGroupModel } from "./Models/Groups/RoomGroupModel.js";
 import { initializeUserGroupModel } from "./Models/Users/Groups/UserGroupModel.js";
 
-export const sequelize = new Sequelize(config.database);
+export const sequelize = new Sequelize({
+    ...config.database,
+    logging: false
+});
 
 export async function initializeModels() {
     initializeBadgeModel(sequelize);
@@ -114,7 +116,6 @@ export async function initializeModels() {
     initializeUserClothingModel(sequelize);
     initializeUserEffectModel(sequelize);
     initializeUserFigureModel(sequelize);
-    initializeUserNotificationModel(sequelize);
 
     await sequelize.sync();
 

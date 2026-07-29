@@ -3,8 +3,8 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
-import { Texture } from "pixi.js";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
+import RoomPriority from "../RoomPriority";
 
 export default class RoomFurnitureMaskSprite extends RoomSprite {
     public readonly defaultOffset: MousePosition = {
@@ -17,35 +17,32 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
     constructor(public readonly item: RoomFurnitureItem, public readonly furnitureSprite: FurnitureRendererSprite) {
         super(
             item,
-            undefined,
-            -100,
+            {
+                left: -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness,
+                top: -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness
+            },
+            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
             undefined,
             undefined,
             item.roomRenderer.landscape.image,
+            false
         );
-
-        this.sprite.x = -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness;
-        this.sprite.y = -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness;
 
         this.mask = new RoomSprite(
             item,
             RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
-            -99,
+            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
             undefined,
             furnitureSprite.ink,
             furnitureSprite.image,
         );
 
-        this.sprite.setMask({
-            mask: this.mask.sprite,
-            inverse: false,
-            channel: "alpha"
-        });
+        this.setMask(this.mask);
     }
 
     public updateLandscape() {
         if(this.item.roomRenderer.landscape.image) {
-            this.sprite.texture = Texture.from(this.item.roomRenderer.landscape.image);
+            this.setTexture(this.item.roomRenderer.landscape.image);
         }
     }
 
@@ -93,14 +90,9 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
     }
 
     update(): void {
+        super.update();
+
         this.mask.update();
-
-        this.sprite.zIndex = this.item.calculatedPriority + this.priority;
-
-        this.sprite.blendMode = this.blendMode;
-        this.sprite.alpha = this.alpha ?? this.item.alpha;
-
-        this.sprite.visible = !this.item.disabled || !this.disabled;
     }
 
     destroy(): void {

@@ -1,21 +1,25 @@
+import DataStats from "@Client/DataStats";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
+import { clientInstance } from "@Game/index";
 
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
 
-    public image?: OffscreenCanvas;
+    public image?: ImageBitmap;
     private frame: number = 0;
 
     private item?: RoomItem;
     private sprite?: RoomLandscapeDebugSprite;
 
+    private settingsListener?: () => void;
+
     constructor(private readonly roomRenderer: RoomRenderer) {
         this.renderer = new LandscapeRenderer(roomRenderer.structure, roomRenderer.size);
 
-        roomRenderer.clientInstance?.settings.subscribe((settings) => {
+        this.settingsListener = roomRenderer.clientInstance?.settings.subscribe((settings) => {
             if(settings.debugRoomLandscapes) {
                 this.createSprite();
             }
@@ -25,14 +29,42 @@ export default class RoomLandscape {
         });
     }
 
+    public destroy() {
+        if(this.image) {
+            this.image.close();
+
+            DataStats.landscapeImageBitmapsClosed++;
+        }
+
+        this.settingsListener?.();
+    }
+
     public recreate() {
         this.renderer = new LandscapeRenderer(this.roomRenderer.structure, this.roomRenderer.size);
     }
 
+    private rendering: boolean = false;
+
     public async render() {
+        if(this.rendering) {
+            return;
+        }
+
+        this.rendering = true;
+
         this.frame = (this.frame + 1) % 24;
 
-        this.image = await this.renderer.renderOffScreen();
+        const imageBitmap = await this.renderer.renderOffScreen();
+
+        if(this.image) {
+            this.image.close();
+            
+            DataStats.landscapeImageBitmapsClosed++;
+        }
+
+        this.image = imageBitmap;
+
+        this.rendering = false;
 
         this.sprite?.updateLandscape();
     }

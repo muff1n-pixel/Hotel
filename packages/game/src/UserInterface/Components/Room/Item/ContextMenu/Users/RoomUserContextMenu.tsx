@@ -52,8 +52,8 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                 dialogs.addUniqueDialog("wardrobe");
                             }}/>
                             
-                            <UserContextMenuButton text={item.figureRenderer.hasAction("Dance")?(getTranslation("item.context_menu.stop_dancing")):(getTranslation("item.context_menu.dance"))} hasDropdown={!item.figureRenderer.hasAction("Dance")} onClick={() => {
-                                if(item.figureRenderer.hasAction("Dance")) {
+                            <UserContextMenuButton text={targetUser.data.actions.some((action) => action.startsWith("Dance"))?(getTranslation("item.context_menu.stop_dancing")):(getTranslation("item.context_menu.dance"))} hasDropdown={!targetUser.data.actions.some((action) => action.startsWith("Dance"))} onClick={() => {
+                                if(targetUser.data.actions.some((action) => action.startsWith("Dance"))) {
                                     webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                         message: ":dance 0"
                                     }));

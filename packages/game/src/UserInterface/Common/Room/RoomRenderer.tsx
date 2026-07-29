@@ -5,17 +5,22 @@ import { RoomRendererFurnitureProps } from "@UserInterface/Common/Room/Furniture
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
 import Furniture from "@Client/Furniture/Furniture";
+import { RoomRendererFigureProps } from "./Furniture/RoomRendererFigure";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import { Figure } from "@Game/library";
 
 export type RoomRendererProps = {
     hidden?: boolean;
     structure: RoomStructureData;
     furniture?: RoomRendererFurnitureProps[];
+    figure?: RoomRendererFigureProps[];
 }
 
-export default function RoomRenderer({ hidden, structure, furniture }: RoomRendererProps) {
+export default function RoomRenderer({ hidden, structure, furniture, figure }: RoomRendererProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
-    const roomChildrenItems = useRef<Map<string, RoomItem>>(new Map());
+    const roomFurnitureItems = useRef<Map<string, RoomItem>>(new Map());
+    const roomFigureItems = useRef<Map<string, RoomItem>>(new Map());
 
     const [roomRenderer, setRoomRenderer] = useState<ClientRoomRenderer>();
 
@@ -41,35 +46,29 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             
             setRoomRenderer(renderer);
         });
-
-        return () => {
-            roomRenderer?.terminate();
-        };
     }, [elementRef]);
 
     useEffect(() => {
-        if(!roomRenderer) {
-            return;
-        }
-
-        roomRenderer.setStructure(structure);
-    }, [roomRenderer, structure]);
+        return () => {
+            roomRenderer?.terminate();
+        };
+    }, [roomRenderer]);
 
     useEffect(() => {
-        if(!roomRenderer) {
+        if(!roomRenderer || roomRenderer.terminated) {
             return;
         }
 
-        for(const [id, item] of roomChildrenItems.current.entries()) {
+        for(const [id, item] of roomFurnitureItems.current.entries()) {
             if(!furniture?.some((furniture) => furniture.id === id)) {
                 roomRenderer.removeItem(item);
 
-                roomChildrenItems.current.delete(id);
+                roomFurnitureItems.current.delete(id);
             }
         }
 
         for(const furnitureItem of furniture ?? []) {
-            let item: RoomFurnitureItem = roomChildrenItems.current.get(furnitureItem.id) as RoomFurnitureItem;
+            let item: RoomFurnitureItem = roomFurnitureItems.current.get(furnitureItem.id) as RoomFurnitureItem;
 
             if(!item) {
                 if(furnitureItem.furniture.type === "floor") {
@@ -120,7 +119,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
 
                     roomRenderer.addItem(item);
 
-                    roomChildrenItems.current.set(furnitureItem.id, item);
+                    roomFurnitureItems.current.set(furnitureItem.id, item);
                 }
                 else {
                     item = new RoomFurnitureItem(
@@ -131,7 +130,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
 
                     roomRenderer.addItem(item);
 
-                    roomChildrenItems.current.set(furnitureItem.id, item);
+                    roomFurnitureItems.current.set(furnitureItem.id, item);
                 }
             }
             else {
@@ -149,7 +148,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                     item.furnitureRenderer.getData().then((data) => {
                         const position = (data.visualization.placement === "wall") ? (
                             RoomPositionData.create({
-                                row: 1 + Math.max(1, item.furnitureRenderer.getDimensions(true).row),
+                                row: 2 + Math.max(1, Math.round(item.furnitureRenderer.getDimensions(true).row / 2)),
                                 column: 0,
                                 depth: 1.5
                             })
@@ -173,7 +172,7 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
                             else {
                                 roomRenderer.panToItem(item, {
                                     left: (Math.max(1, item.position?.row ?? 0) * 16),
-                                    top: (item.position?.depth ?? 0) * 32
+                                    top: 0
                                 });
                             }
                         }
@@ -182,6 +181,49 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             }
         }
     }, [roomRenderer, furniture]);
+
+    useEffect(() => {
+        if(!roomRenderer || roomRenderer.terminated) {
+            return;
+        }
+
+        for(const [id, item] of roomFigureItems.current.entries()) {
+            if(!figure?.some((figure) => figure.id === id)) {
+                roomRenderer.removeItem(item);
+
+                roomFigureItems.current.delete(id);
+            }
+        }
+
+        for(const figureItem of figure ?? []) {
+            let item: RoomFigureItem = roomFigureItems.current.get(figureItem.id) as RoomFigureItem;
+
+            if(!item) {
+                item = new RoomFigureItem(
+                    roomRenderer,
+                    new Figure(figureItem.figureConfiguration, 2, figureItem.actions),
+                    figureItem.position
+                );
+
+                roomRenderer.addItem(item);
+
+                roomFigureItems.current.set(figureItem.id, item);
+            }
+            else {
+                item.setPosition(figureItem.position);
+            }
+            
+            item.figureRenderer.configuration = figureItem.figureConfiguration;
+            item.figureRenderer.setActions(figureItem.actions ?? []);
+
+            if(figureItem.panToItem) {
+                roomRenderer.panToItem(item, {
+                    left: 0,
+                    top: 0
+                });
+            }
+        }
+    }, [roomRenderer, figure]);
 
     return (
         <div ref={elementRef} style={{

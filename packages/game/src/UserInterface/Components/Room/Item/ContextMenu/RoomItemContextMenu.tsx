@@ -19,6 +19,8 @@ export default function RoomItemContextMenu() {
     const [focusedItem, setFocusedItem] = useState<RoomItem | null>();
     const [hoveredItem, setHoveredItem] = useState<RoomItem | null>();
 
+    const [_state, setState] = useState<number>();
+
     const focusedFurniture = useMemo(() => {
         if(!room) {
             return null;
@@ -44,8 +46,15 @@ export default function RoomItemContextMenu() {
             return;
         }
 
-        const unsubscribeFocusedItem = room.roomRenderer.focusedItem.subscribe(setFocusedItem);
-        const unsubscribeHoveredItem = room.roomRenderer.hoveredItem.subscribe(setHoveredItem);
+        const unsubscribeFocusedItem = room.roomRenderer.focusedItem.subscribe((value) => {
+            setFocusedItem(value);
+            setState(room.roomRenderer.focusedItem.state);
+        });
+
+        const unsubscribeHoveredItem = room.roomRenderer.hoveredItem.subscribe((value) => {
+            setHoveredItem(value);
+            setState(room.roomRenderer.focusedItem.state);
+        });
 
         return () => {
             unsubscribeFocusedItem();

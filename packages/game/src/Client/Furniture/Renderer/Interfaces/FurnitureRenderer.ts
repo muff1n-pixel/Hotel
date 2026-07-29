@@ -22,7 +22,7 @@ export default interface FurnitureRenderer {
     animationTransitionedTo?: number;
 
     render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult>;
-    renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<ImageBitmap>;
+    renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<OffscreenCanvas>;
 
     shouldRender(options: FurnitureRenderOptions): boolean;
 }

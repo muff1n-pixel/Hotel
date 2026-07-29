@@ -23,16 +23,9 @@ export default class WebSocketClient extends EventTarget {
 
         this.socket.binaryType = "arraybuffer";
 
-        this.addProtobuffListener(UserReadyData, {
-            handle: async () => {
-                this.isReady = true;
-
-                for (const outgoingMessage of this.pendingOutgoingMessages) {
-                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
-                }
-
-                this.pendingOutgoingMessages = [];
-            },
+        this.socket.addEventListener("open", () => {
+            console.log("Sending user ready");
+            this.sendProtobuff(UserReadyData, UserReadyData.create({}));
         });
 
         this.socket.addEventListener("message", (event) => {
@@ -49,16 +42,22 @@ export default class WebSocketClient extends EventTarget {
             }
         });
 
-        if (this.socket.readyState === this.socket.OPEN) {
-            this.dispatchEvent(new Event("open"));
-        } else {
-            this.socket.addEventListener("open", () => {
-                this.dispatchEvent(new Event("open"));
-            });
-        }
-
         this.socket.addEventListener("close", () => {
             this.dispatchEvent(new Event("close"));
+        });
+
+        this.addProtobuffListener(UserReadyData, {
+            handle: async () => {
+                this.isReady = true;
+                
+                this.dispatchEvent(new Event("open"));
+
+                for (const outgoingMessage of this.pendingOutgoingMessages) {
+                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                }
+
+                this.pendingOutgoingMessages = [];
+            },
         });
 
         setInterval(() => {
@@ -72,7 +71,7 @@ export default class WebSocketClient extends EventTarget {
         message: MessageType,
         payload: Message,
     ) {
-        if (!this.isReady) {
+        if (!this.isReady && message.$type !== UserReadyData.$type) {
             this.pendingOutgoingMessages.push({ message, payload });
 
             return;

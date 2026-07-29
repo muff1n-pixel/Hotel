@@ -9,12 +9,15 @@ import { useUser } from "@UserInterface/Hooks/useUser";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import { useTranslation } from "react-i18next";
+import NotificationIcon from "@UserInterface/Common/Notifications/NotificationIcon";
+import { useUserInventoryNotifications } from "@UserInterface/Hooks/User/Notifications/useUserInventoryNotifications";
 
 export default function ToolbarLinks() {
     const [getTranslation] = useTranslation("toolbar");
 
     const user = useUser();
     const room = useRoomInstance();
+    const userInventoryNotifications = useUserInventoryNotifications();
 
     const { addUniqueDialog } = useDialogs();
 
@@ -73,7 +76,7 @@ export default function ToolbarLinks() {
             </ToolbarItem>
 
             {(room) && (
-                <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip={getTranslation("links.inventory")}>
+                <ToolbarItem onClick={() => addUniqueDialog("inventory")} tooltip={getTranslation("links.inventory")} notification={<NotificationIcon count={userInventoryNotifications}/>}>
                     <div id="toolbar-inventory" className="sprite_toolbar_inventory"/>
                 </ToolbarItem>
             )}

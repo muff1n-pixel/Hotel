@@ -1,5 +1,5 @@
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
@@ -9,6 +9,7 @@ import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { GetUserInventoryPetsData, PlaceRoomPetData, UserInventoryPetsData, UserPetData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import PetImage from "../../Pets/PetImage";
+import { useUserPetNotifications } from "@UserInterface/Hooks/User/Notifications/useUserPetNotifications";
 
 export default function InventoryPetsTab() {
     const { setDialogHidden } = useDialogs();
@@ -17,6 +18,7 @@ export default function InventoryPetsTab() {
     const [activePet, setActivePet] = useState<UserPetData>();
     const [userPets, setUserPets] = useState<UserPetData[]>([]);
     const userPetsRequested = useRef<boolean>(false);
+    const userPetNotifications = useUserPetNotifications();
 
     const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
     const roomFurniturePlacerId = useRef<string>(undefined);
@@ -30,6 +32,16 @@ export default function InventoryPetsTab() {
 
         webSocketClient.sendProtobuff(GetUserInventoryPetsData, GetUserInventoryPetsData.create({}));
     }, []);
+
+    useEffect(() => {
+        if(!activePet) {
+            return;
+        }
+
+        if(userPetNotifications.hasUserPetNotification(activePet.id)) {
+            userPetNotifications.removeUserPetNotification(activePet.id);
+        }
+    }, [activePet, userPetNotifications]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryPetsData, {
@@ -124,6 +136,28 @@ export default function InventoryPetsTab() {
         setRoomFurniturePlacer(RoomFurniturePlacer.fromPetData(clientInstance.roomInstance.value, activePet.pet));
         roomFurniturePlacerId.current = activePet?.id;
     }, [roomFurniturePlacer, activePet]);
+        
+    const petItems = useMemo(() => {
+        return userPets.map((userPet) => {
+            const notification = userPetNotifications.hasUserPetNotification(userPet.id);
+            
+            return (
+                <DialogItem
+                    key={userPet.id}
+                    active={activePet?.id === userPet.id}
+                    onClick={() => setActivePet(userPet)}
+                    width={46}
+                    style={{
+                        overflow: "hidden",
+                        ...(notification && {
+                            background: "#9BCA64"
+                        })
+                    }}>
+                    <PetImage data={userPet.pet} headOnly/>
+                </DialogItem>
+            );
+        });
+    }, [userPetNotifications, userPets]);
 
     if(!userPets.length) {
         return (<InventoryEmptyTab/>);
@@ -150,18 +184,7 @@ export default function InventoryPetsTab() {
                     alignContent: "start",
                     gap: 4
                 }}>
-                    {userPets?.map((userPet) => (
-                        <DialogItem
-                            key={userPet.id}
-                            active={activePet?.id === userPet.id}
-                            onClick={() => setActivePet(userPet)}
-                            width={46}
-                            style={{
-                                overflow: "hidden"
-                            }}>
-                            <PetImage data={userPet.pet} headOnly/>
-                        </DialogItem>
-                    ))}
+                    {petItems}
                 </div>
             </DialogScrollArea>
 

@@ -56,26 +56,22 @@ export default class RoomInstance {
     public information?: RoomInformationData;
     
     public hasRights: boolean;
-    public isOwner: boolean;
+    public isOwner: boolean = false;
 
     constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData, ready?: () => void) {
         this.id = event.id;
         
         if(event.information) {
             this.information = event.information;
+            this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         }
 
         this.hasRights = event.hasRights;
-        this.isOwner = event.information?.owner?.id === clientInstance.user.value?.id;
         this.clickConfiguration.value = event.clickConfiguration;
         
         this.roomRenderer = new RoomRenderer(clientInstance.element, clientInstance, this, event.structure);
 
         this.roomRenderer.init().then(async () => {
-            if(event.structure) {
-                await this.setStructure(event.structure);
-            }
-
             for(const user of event.users) {
                 this.users.push(this.addUser(user as Required<RoomUserData>));
             }
@@ -199,10 +195,12 @@ export default class RoomInstance {
             return;
         }
 
-        if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
-            webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
-                target: RoomPositionData.fromJSON(event.floorEntity.position)
-            }));
+        if(!event.shiftKey && !event.ctrlKey && !event.altKey) {
+            if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
+                webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
+                    target: RoomPositionData.fromJSON(event.floorEntity.position)
+                }));
+            }
         }
     }
 

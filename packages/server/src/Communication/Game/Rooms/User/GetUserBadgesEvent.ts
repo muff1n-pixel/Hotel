@@ -4,6 +4,7 @@ import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import { GetUserBadgesData, UserBadgesData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
+import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel.js";
 
 export default class GetUserBadgesEvent implements ProtobuffListener<GetUserBadgesData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -32,9 +33,16 @@ export default class GetUserBadgesEvent implements ProtobuffListener<GetUserBadg
                 }
             ]
         });
+        
+        const achievementScore = await UserAchievementModel.sum("score", {
+            where: {
+                userId: targetUser.id
+            }
+        });
 
         user.sendProtobuff(UserBadgesData, UserBadgesData.create({
             userId: payload.id,
+            achievementScore,
             badges: equippedBadges.map((userBadge) => {
                 return {
                     id: userBadge.badge.id,

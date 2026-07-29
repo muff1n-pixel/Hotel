@@ -5,4 +5,5 @@ import "Badge/BadgeData.proto";
 message UserBadgesData {
     string user_id = 1;
     repeated BadgeData badges = 2;
+    uint32 achievement_score = 3;
 }

@@ -2,11 +2,12 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import Dialog from "../../Common/Dialog/Dialog";
 import { useUser } from "../../Hooks/useUser";
 import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
-import RoomRenderer from "../Room/Renderer/RoomRenderer";
 import { useState } from "react";
 import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
-import { RoomPositionData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData } from "@pixel63/events";
 import { useTranslation } from "react-i18next";
+import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
+import { clientInstance } from "@Game/index";
 
 export type FigureCatalogDialogProps = {
     hidden?: boolean;
@@ -37,24 +38,35 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
 
                             gap: 10
                         }}>
-                            <div>
+                            <div style={{ height: 240 }}>
                                 <RoomRenderer
-                                    figureData={{
-                                        figureConfiguration: user.figureConfiguration,
-                                        actions: (action)?([action]):(undefined),
-                                        position: RoomPositionData.create({
-                                            row: 10,
-                                            column: 10,
-                                            depth: 1
-                                        })
-                                    }}
-                                    options={{
-                                        rows: 20,
-                                        columns: 20
-                                    }}
-                                    style={{
-                                        height: 240
-                                    }}/>
+                                    figure={[
+                                        {
+                                            id: "user",
+                                            figureConfiguration: user.figureConfiguration,
+                                            actions: (action)?([action]):(undefined),
+                                            position: RoomPositionData.create({
+                                                row: 10,
+                                                column: 10,
+                                                depth: 1
+                                            })
+                                        }
+                                    ]}
+                                    structure={RoomStructureData.create({
+                                        grid: new Array(20).fill(null).map((_) => new Array(20).fill(null).map(() => '0').join('')),
+                                        floor: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.floor?.id ?? "111",
+                                            thickness: 8
+                                        },
+                                        wall: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
+                                            thickness: 8,
+                                            hidden: false
+                                        },
+                                        landscape: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.landscape?.id ?? "default",
+                                        }
+                                    })}/>
                             </div>
 
                             <DialogTable activeId={action?.split('.')[1]} columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
@@ -78,24 +90,35 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
 
                             gap: 10
                         }}>
-                            <div>
+                            <div style={{ height: 240 }}>
                                 <RoomRenderer
-                                    figureData={{
-                                        figureConfiguration: user.figureConfiguration,
-                                        actions: (action)?([action]):(undefined),
-                                        position: RoomPositionData.create({
-                                            row: 10,
-                                            column: 10,
-                                            depth: 1
-                                        })
-                                    }}
-                                    options={{
-                                        rows: 20,
-                                        columns: 20
-                                    }}
-                                    style={{
-                                        height: 240
-                                    }}/>
+                                    figure={[
+                                        {
+                                            id: "user",
+                                            figureConfiguration: user.figureConfiguration,
+                                            actions: (action)?([action]):(undefined),
+                                            position: RoomPositionData.create({
+                                                row: 10,
+                                                column: 10,
+                                                depth: 1
+                                            })
+                                        }
+                                    ]}
+                                    structure={RoomStructureData.create({
+                                        grid: new Array(20).fill(null).map((_) => new Array(20).fill(null).map(() => '0').join('')),
+                                        floor: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.floor?.id ?? "111",
+                                            thickness: 8
+                                        },
+                                        wall: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.wall?.id ?? "201",
+                                            thickness: 8,
+                                            hidden: false
+                                        },
+                                        landscape: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.data.landscape?.id ?? "default",
+                                        }
+                                    })}/>
                             </div>
 
                             <DialogTable activeId={action?.split('.')[1]} columns={["Item ID", "Name"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {

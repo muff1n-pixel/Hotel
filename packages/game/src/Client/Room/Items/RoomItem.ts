@@ -52,6 +52,8 @@ export default class RoomItem implements RoomItemInterface {
 
     constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
         this._sprites = sprites;
+
+        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
     }
 
     public setSprites(sprites: RoomSprite[]) {
@@ -66,6 +68,16 @@ export default class RoomItem implements RoomItemInterface {
         }
 
         this._sprites = sprites;
+    }
+
+    public destroySprite(sprite: RoomSprite) {
+        const index = this._sprites.indexOf(sprite);
+
+        if(index !== -1) {
+            this._sprites.splice(index, 1);
+        }
+            
+        sprite.destroy();
     }
 
     public updateSprites() {
@@ -101,7 +113,7 @@ export default class RoomItem implements RoomItemInterface {
         this._disabled = disabled;
 
         for(const sprite of this.sprites) {
-            sprite.sprite.visible = !disabled;
+            sprite.setDisabled(disabled);
         }
     }
 

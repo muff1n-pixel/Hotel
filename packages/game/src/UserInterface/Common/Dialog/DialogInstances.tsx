@@ -64,6 +64,10 @@ import GroupDialog from "@UserInterface/Components/Groups/GroupDialog";
 import GroupMembersDialog from "@UserInterface/Components/Groups/GroupMembersDialog";
 import GroupSettingsDialog from "@UserInterface/Components/Groups/GroupSettingsDialog";
 import RoomLinkDialog from "@UserInterface/Components/Room/Link/RoomLinkDialog";
+import ShopPurchaseFurnitureDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchaseFurnitureDialog";
+import ShopPurchaseBotDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchaseBotDialog";
+import ShopPurchaseBundleDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchaseBundleDialog";
+import ShopPurchasePetDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchasePetDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -109,6 +113,18 @@ export default function DialogInstances() {
 
                     case "shop":
                         return (<ShopDialog {...props} key={dialog.id}/>);
+
+                    case "shop-purchase-furniture":
+                        return (<ShopPurchaseFurnitureDialog {...props} key={dialog.id}/>);
+
+                    case "shop-purchase-bot":
+                        return (<ShopPurchaseBotDialog {...props} key={dialog.id}/>);
+
+                    case "shop-purchase-pet":
+                        return (<ShopPurchasePetDialog {...props} key={dialog.id}/>);
+
+                    case "shop-purchase-bundle":
+                        return (<ShopPurchaseBundleDialog {...props} key={dialog.id}/>);
                         
                     case "inventory":
                         return (<InventoryDialog {...props} key={dialog.id}/>);

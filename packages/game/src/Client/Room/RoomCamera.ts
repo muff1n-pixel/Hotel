@@ -16,18 +16,26 @@ export default class RoomCamera {
     };
 
     constructor(private readonly renderer: RoomRenderer) {
-        if(renderer.roomInstance) {
-            setTimeout(() => {
-            renderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
-            renderer.application.canvas.addEventListener("mousemove", this.mousemove.bind(this));
-            renderer.application.canvas.addEventListener("mouseup", this.mouseup.bind(this));
-            renderer.application.canvas.addEventListener("mouseleave", this.mouseleave.bind(this));
-            renderer.application.canvas.addEventListener("wheel", this.wheel.bind(this));
-            }, 1000);
-        }
+        
+    }
+
+    public init() {
+        this.renderer.application.canvas.addEventListener("touchstart", this.touchstart.bind(this));
+        this.renderer.application.canvas.addEventListener("touchmove", this.touchmove.bind(this));
+        this.renderer.application.canvas.addEventListener("touchend", this.touchend.bind(this));
+
+        this.renderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
+        this.renderer.application.canvas.addEventListener("mousemove", this.mousemove.bind(this));
+        this.renderer.application.canvas.addEventListener("mouseup", this.mouseup.bind(this));
+        this.renderer.application.canvas.addEventListener("mouseleave", this.mouseleave.bind(this));
+        this.renderer.application.canvas.addEventListener("wheel", this.wheel.bind(this));
     }
 
     private wheel(event: WheelEvent) {
+        if(this.renderer.furniturePlacer) {
+            return;
+        }
+        
         if(event.deltaY < 0) {
             this.renderer.scale.value = (Math.min(5, this.renderer.scale.value + 0.1));
         }
@@ -37,7 +45,7 @@ export default class RoomCamera {
     }
 
     private mousedown(event: MouseEvent) {
-        if(event.ctrlKey || event.shiftKey || event.altKey) {
+        if(event.ctrlKey || event.shiftKey || (event.altKey || event.metaKey)) {
             return;
         }
 
@@ -88,5 +96,57 @@ export default class RoomCamera {
 
     private mouseleave() {
         this.mousePosition = null;
+    }
+
+    private touchstart(event: TouchEvent) {
+        if(event.ctrlKey || event.shiftKey || (event.altKey || event.metaKey)) {
+            return;
+        }
+
+        this.moving = true;
+        this.dragging = false;
+
+        const touch = event.touches[0];
+
+        this.lastPosition = {
+            left: touch.pageX,
+            top: touch.pageY
+        };
+    }
+
+    private touchmove(event: TouchEvent) {
+        const touch = event.touches[0];
+
+        this.mousePosition = {
+            left: touch.pageX,
+            top: touch.pageY
+        };
+
+        if(!this.moving || !this.lastPosition) {
+            return;
+        }
+
+        const relativePosition: MousePosition = {
+            left: touch.pageX - this.lastPosition.left,
+            top: touch.pageY - this.lastPosition.top,
+        };
+
+        this.cameraPosition.left += relativePosition.left;
+        this.cameraPosition.top += relativePosition.top;
+
+        if(Math.abs(relativePosition.left) > 2 || Math.abs(relativePosition.top) > 2) {
+            this.dragging = true;
+        }
+
+        this.lastPosition = {
+            left: touch.pageX,
+            top: touch.pageY
+        };
+    }
+
+    private touchend(event: TouchEvent) {
+        this.moving = false;
+        this.lastPosition = null;
+        this.dragging = false;
     }
 }

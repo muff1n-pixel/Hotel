@@ -6,11 +6,12 @@ import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
 import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
-import { UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
+import { UserNotificationData, UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
 import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
 import { Op } from "sequelize";
+import { UserAchievementModel } from "../../Database/Models/Users/Achievements/UserAchievementModel.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {
@@ -120,6 +121,10 @@ export default class UserInventory {
     }
 
     public async addFurniture(userFurniture: UserFurnitureModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userFurnitureId: (userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)
+        }));
+
         this.user.sendProtobuff(UserInventoryFurnitureCollectionData, UserInventoryFurnitureCollectionData.fromJSON({
             updatedUserFurniture: [
                 {
@@ -136,6 +141,10 @@ export default class UserInventory {
     }
 
     public async addBot(userBot: UserBotModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userBotId: userBot.id
+        }));
+
         this.user.sendProtobuff(UserInventoryBotsData, UserInventoryBotsData.fromJSON({
             updatedUserBots: [
                 userBot
@@ -227,6 +236,14 @@ export default class UserInventory {
         }));
     }
 
+    public async addBadge(badge: UserBadgeModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userBadgeId: badge.id
+        }));
+
+        await this.sendBadges();
+    }
+
     public async sendBadges() {
         const userBadges = await UserBadgeModel.findAll({
             where: {
@@ -239,7 +256,14 @@ export default class UserInventory {
             order: [['updatedAt', 'DESC']]
         });
 
+        const achievementScore = await UserAchievementModel.sum("score", {
+            where: {
+                userId: this.user.model.id
+            }
+        });
+
         this.user.sendProtobuff(UserInventoryBadgesData, UserInventoryBadgesData.create({
+            achievementScore,
             badges: userBadges.map((userBadge) => {
                 return {
                     id: userBadge.id,
@@ -311,6 +335,10 @@ export default class UserInventory {
     }
 
     public async addPet(userPet: UserPetModel) {
+        this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
+            userPetId: userPet.id
+        }));
+
         this.user.sendProtobuff(UserInventoryPetsData, UserInventoryPetsData.fromJSON({
             updatedUserPets: [
                 userPet

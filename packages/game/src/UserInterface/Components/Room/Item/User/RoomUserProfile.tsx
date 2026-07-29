@@ -47,7 +47,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
         return carryItemId;
     }, [user, room]);
 
-    const badges = useUserBadges(targetUser.id);
+    const { badges, achievementScore } = useUserBadges(targetUser.id);
     const relationships = useUserFriendRelationships(targetUser.id);
 
     const handleMottoChange = useCallback((motto: string) => {
@@ -178,12 +178,16 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                 </FlexLayout>
             )}
 
-            {(carryItemId) && (
+            {(carryItemId || achievementScore > 0) && (
                 <div style={{
                     width: "100%",
                     height: 1,
                     background: "#333333"
                 }}/>
+            )}
+
+            {(achievementScore > 0) && (
+                <div>Achievement score: {achievementScore.toLocaleString("en-US")}</div>
             )}
 
             {(carryItemId) && (

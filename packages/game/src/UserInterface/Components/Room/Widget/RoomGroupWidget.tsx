@@ -2,6 +2,7 @@ import { webSocketClient } from "@Game/index";
 import { JoinGroupData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
@@ -24,50 +25,13 @@ export default function RoomGroupWidget() {
     }
 
     return (
-        <div style={{
-            borderRadius: 6,
+        <WidgetPanel header={(
+            <FlexLayout direction="row" align="center">
+                <div className="sprite_groups_icon"/>
 
-            pointerEvents: "auto",
-
-            border: "2px solid rgba(109, 109, 109, 0.9)",
-            background: "rgba(39, 39, 39, 0.8)",
-
-            width: 220,
-            boxSizing: "border-box",
-
-            alignSelf: "flex-end",
-
-            fontSize: 12,
-            color: "white",
-
-            display: "flex",
-            flexDirection: "column"
-        }}>
-            <div style={{
-                padding: "5px 8px 8px",
-                background: "rgba(109, 109, 109, 0.9)",
-                fontSize: 13,
-
-                textAlign: "center",
-
-                position: "relative"
-            }}>
-                <FlexLayout direction="row" align="center">
-                    <div className="sprite_groups_icon"/>
-
-                    <b>Group homeroom</b>
-                </FlexLayout>
-
-                <FlexLayout direction="row" align="center" style={{
-                    position: "absolute",
-
-                    right: 6,
-                    top: 0,
-                    bottom: 2
-                }}>
-                </FlexLayout>
-            </div>
-
+                <b>Group homeroom</b>
+            </FlexLayout>
+        )}>
             <FlexLayout direction="row" style={{
                 padding: "8px 16px 8px 8px",
                 cursor: "pointer"
@@ -100,6 +64,6 @@ export default function RoomGroupWidget() {
                     <DialogButton style={{ flex: 1 }} onClick={handleJoin}>Request to join</DialogButton>
                 </FlexLayout>
             )}
-        </div>
+        </WidgetPanel>
     );
 }

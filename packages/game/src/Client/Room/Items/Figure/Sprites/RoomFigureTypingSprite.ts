@@ -15,7 +15,7 @@ export default class RoomFigureTypingSprite extends RoomSprite {
         );
 
         AssetFetcher.fetchImage("/assets/figure/sprites/typing.png").then((image) => {
-            this.sprite.texture = Texture.from(image);
+            this.setTexture(image);
         });
     }
 

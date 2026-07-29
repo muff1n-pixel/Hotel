@@ -3,6 +3,7 @@ import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import AdministrationFeedbackTab from "@UserInterface/Components/Administration/AdministrationFeedbackTab";
 import AdministrationOverviewTab from "@UserInterface/Components/Administration/AdministrationOverviewTab";
 import AdministrationSettingsTab from "@UserInterface/Components/Administration/AdministrationSettingsTab";
+import AdministrationDebugTab from "./AdministrationDebugTab";
 
 export type AdministrationDialogProps = {
     hidden?: boolean;
@@ -26,6 +27,10 @@ export default function AdministrationDialog({ hidden, onClose }: Administration
                     {
                         icon: "Feedback",
                         element: (<AdministrationFeedbackTab/>)
+                    },
+                    {
+                        icon: "Debug",
+                        element: (<AdministrationDebugTab/>)
                     }
                 ]}
                 />

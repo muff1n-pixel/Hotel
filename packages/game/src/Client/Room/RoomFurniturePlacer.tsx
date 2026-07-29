@@ -12,6 +12,7 @@ import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurn
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
+import DataStats from "@Client/DataStats";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;
@@ -66,6 +67,8 @@ export default class RoomFurniturePlacer {
         if(this.roomInstance.roomRenderer.furniturePlacer) {
             this.roomInstance.roomRenderer.furniturePlacer.destroy();
         }
+
+        this.roomInstance.roomRenderer.furniturePlacer = this;
 
         if(roomFurnitureItem.position) {
             this.originalPosition = RoomPositionData.create({
@@ -170,6 +173,13 @@ export default class RoomFurniturePlacer {
                     this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
                 }
             }
+            else {
+                const previousDirection = this.roomFurnitureItem.furnitureRenderer.getPreviousDirection();
+
+                if(this.roomFurnitureItem.furnitureRenderer.direction !== previousDirection) {
+                    this.roomFurnitureItem.furnitureRenderer.direction = previousDirection;
+                }
+            }
         }
         else if((this.roomFurnitureItem instanceof RoomFigureItem)) {
             if(event.deltaY < 0) {
@@ -262,6 +272,10 @@ export default class RoomFurniturePlacer {
         }
 
         if(placement === "floor") {
+            if(this.roomInstance.roomRenderer.wallItem?.wallRenderer.hasDoorWall && entity.position.row === this.roomInstance.roomRenderer.structure.data.door?.row && entity.position.column === this.roomInstance.roomRenderer.structure.data.door?.column) {
+                return null;
+            }
+            
             return entity.position;
         }
 
@@ -448,6 +462,8 @@ export default class RoomFurniturePlacer {
     }
 
     public destroy() {
+        this.roomInstance.roomRenderer.furniturePlacer = undefined;
+
         if(this.roomInstance.roomRenderer.cursor) {
             this.roomInstance.roomRenderer.cursor.cursorDisabled = false;
         }

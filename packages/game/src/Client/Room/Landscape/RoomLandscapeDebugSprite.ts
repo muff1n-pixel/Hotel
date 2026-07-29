@@ -12,20 +12,21 @@ export default class RoomLandscapeDebugSprite extends RoomSprite {
     constructor(public readonly item: RoomItem) {
         super(
             item,
-            undefined,
+            {
+                left: -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness,
+                top: -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness
+            },
             -99,
             undefined,
             undefined,
             item.roomRenderer.landscape?.image,
+            false
         );
-
-        this.sprite.x = -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness;
-        this.sprite.y = -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness;
     }
 
     public updateLandscape() {
         if(this.item.roomRenderer.landscape.image) {
-            this.sprite.texture = Texture.from(this.item.roomRenderer.landscape.image);
+            this.setTexture(this.item.roomRenderer.landscape.image);
         }
     }
 

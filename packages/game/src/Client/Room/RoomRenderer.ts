@@ -28,6 +28,7 @@ import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffs
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
 import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
+import RoomPriority from "./Items/RoomPriority";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -84,8 +85,17 @@ export default class RoomRenderer extends EventTarget {
         });
     }
 
+    public terminated: boolean = false;
+
     public terminate() {
-        this.application.destroy(true, true);
+        if(this.terminated) {
+            return;
+        }
+
+        this.terminated = true;
+
+        this.cursor?.destroy();
+        this.landscape.destroy();
 
         this.scaleSubscription();
 
@@ -93,7 +103,9 @@ export default class RoomRenderer extends EventTarget {
             subscription?.();
         }
 
-        this.cursor?.destroy();
+        this.application.renderer.destroy({
+            removeView: true
+        });
     }
 
     public async init() {
@@ -101,7 +113,15 @@ export default class RoomRenderer extends EventTarget {
             antialias: false,
             background: "#000000",
             resizeTo: this.parent,
+            roundPixels: true,
+
+            resolution: Math.max(1, Math.floor(window.devicePixelRatio)),
+            autoDensity: true,
         });
+
+        this.camera.init();
+
+        this.application.canvas.style.imageRendering = "pixelated";
 
         this.subscriptions.push(this.clientInstance?.settings.subscribe((value) => {
             if(value.limitRoomFrames) {
@@ -119,6 +139,10 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.application.ticker.add(() => {
+            if(this.terminated) {
+                return;
+            }
+
             const shouldProcessTick = this.frameCounter.shouldProcessTick();
 
             if(shouldProcessTick) {
@@ -147,6 +171,8 @@ export default class RoomRenderer extends EventTarget {
         this.application.canvas.classList.add("renderer");
 
         this.parent.appendChild(this.application.canvas);
+
+        await this.setStructure(this.structure.data);
     }
 
     public addItem(item: RoomItem) {
@@ -173,12 +199,12 @@ export default class RoomRenderer extends EventTarget {
         item.destroy();
     }
 
-    private processTick() {
-        this.landscape.render();
-        
+    private processTick() {        
         for(let index = 0; index < this.items.length; index++) {
             this.items[index].process(this.frameCounter.tick);
         }
+
+        this.landscape.render();
 
         this.dispatchEvent(new RoomFrameEvent());
     }
@@ -286,8 +312,7 @@ export default class RoomRenderer extends EventTarget {
         if(item.position) {
             if(Math.round(item.position.row) === this.structure.data.door?.row && Math.round(item.position.column) === this.structure.data.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
-                    priority = -4000;
-                    priority += (item.position.depth * 100);
+                    priority = RoomPriority.getDoorPositionPriority(item.position);
                 
                     return priority;
                 }
@@ -295,7 +320,7 @@ export default class RoomRenderer extends EventTarget {
 
             if(item instanceof RoomFurnitureItem) {
                 if(item.furnitureRenderer.placement === "wall") {
-                    priority = 0;
+                    priority = RoomPriority.WALL_FURNITURE_SPRITE_PRIORITY + RoomRenderer.getPositionPriority(item.position, !item.positionPathData);
                     priority += (item.position.depth * 100);
                 }
                 else {
@@ -551,7 +576,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     private floorItem?: RoomFloorItem;
-    private wallItem?: RoomWallItem;
+    public wallItem?: RoomWallItem;
     
     public setStructure(structure: RoomStructureData) {
         this.structure = new RoomStructure(structure);

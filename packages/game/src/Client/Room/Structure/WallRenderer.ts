@@ -197,6 +197,8 @@ export default class WallRenderer {
 
         const rectangles = WallRenderer.getRectangles(this.structure);
 
+        this.hasDoorWall = (!this.structure.data.door || !rectangles.some((rectangle) => rectangle.row === this.structure.data.door?.row && rectangle.column === this.structure.data.door.column));
+
         for(let currentDepth = 0; currentDepth <= this.structure.wallDepth; currentDepth++) {
             const currentRectangles = rectangles.filter((rectangle) => Math.ceil(rectangle.depth) === currentDepth);
 
@@ -524,8 +526,6 @@ export default class WallRenderer {
                 context.drawImage(image, left, top, image.width, image.height + 1);
             }
 
-            this.hasDoorWall = true;
-
             if(this.outline && overlappingWalls === 0) {
                 const outlinePath = new Path2D();
                 
@@ -562,8 +562,6 @@ export default class WallRenderer {
                 context.drawImage(image, left - image.width, top, image.width, image.height + 1);
             }
 
-            this.hasDoorWall = true;
-
             if(this.outline && overlappingWalls === 0) {
                 const outlinePath = new Path2D();
                 
@@ -578,16 +576,12 @@ export default class WallRenderer {
     }
 
     public static getRectangles(structure: RoomStructure) {
-        const rectangles: WallRectangle[] = [];
+        let rectangles: WallRectangle[] = [];
 
         // right walls
         for(let row = 0; row < structure.data.grid.length; row++) {
             for(let column = 0; column < structure.data.grid[row].length; column++) {
                 if(structure.data.grid[row][column] === 'X') {
-                    continue;
-                }
-
-                if(structure.data.door?.row === row && structure.data.door?.column === column) {
                     continue;
                 }
 
@@ -630,10 +624,6 @@ export default class WallRenderer {
                     continue;
                 }
 
-                if(structure.data.door?.row === row && structure.data.door?.column === column) {
-                    continue;
-                }
-
                 let hasPrevious = false;
 
                 for(let previousColumn = column - 1; previousColumn >= 0; previousColumn--) {
@@ -657,6 +647,15 @@ export default class WallRenderer {
                 }
 
                 rectangles.push({ row, column, depth: structure.parseStaticDepth(structure.getTileDepth(row, column)), direction: 2 });
+            }
+        }
+
+        if(structure.data.door) {
+            if(rectangles.some((rectangle) => rectangle.row === structure.data.door!.row && rectangle.column === structure.data.door!.column + 1 && rectangle.direction === 2)) {
+                rectangles = rectangles.filter((rectangle) => rectangle.row !== structure.data.door?.row || rectangle.column !== structure.data.door.column);
+            }
+            else if(rectangles.some((rectangle) => rectangle.row === structure.data.door!.row + 1 && rectangle.column === structure.data.door!.column && rectangle.direction === 4)) {
+                rectangles = rectangles.filter((rectangle) => rectangle.row !== structure.data.door?.row || rectangle.column !== structure.data.door.column);
             }
         }
 

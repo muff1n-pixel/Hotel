@@ -3,4 +3,5 @@ syntax = "proto3";
 message GetNavigatorData {
     optional string category = 1;
     optional string search = 2;
+    optional string filter = 3;
 }

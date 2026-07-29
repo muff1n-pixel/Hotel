@@ -76,7 +76,6 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
                 allowNull: true,
                 defaultValue: null
             },
-
             animation: {
                 type: DataTypes.INTEGER,
                 defaultValue: 0,

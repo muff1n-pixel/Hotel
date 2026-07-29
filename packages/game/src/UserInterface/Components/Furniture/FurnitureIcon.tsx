@@ -1,8 +1,9 @@
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Furniture from "@Client/Furniture/Furniture";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FurnitureData, UserFurnitureColorTag } from "@pixel63/events";
+import DataStats from "@Client/DataStats";
 
 export type FurnitureIconProps = {
     ref?: RefObject<HTMLCanvasElement | null>;
@@ -11,18 +12,28 @@ export type FurnitureIconProps = {
 }
 
 export default function FurnitureIcon({ ref, furnitureData, colorTags }: FurnitureIconProps) {
-    const [image, setImage] = useState<ImageBitmap>();
+    const rendering = useRef<boolean>(false);
+
+    const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         if(!furnitureData) {
             return;
         }
+
+        if(rendering.current) {
+            return;
+        }
+
+        rendering.current = true;
         
         const furnitureRenderer = new Furniture(furnitureData.type, 1, 0, 0, furnitureData.color);
 
         furnitureRenderer.colorTags = colorTags;
 
         furnitureRenderer.renderToCanvas().then((image) => {
+            rendering.current = false;
+
             setImage(image);
         });
     }, [ furnitureData, colorTags ]);

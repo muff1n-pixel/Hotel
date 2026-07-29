@@ -21,6 +21,7 @@ export type FurnitureRenderResult = {
     mask: FurnitureRendererSprite | null;
     animated: boolean;
     layerFrames: string;
+    visualization: FurnitureVisualization["visualizations"][0];
 };
 
 export type FurnitureRendererSprite = {
@@ -280,6 +281,28 @@ export default class Furniture {
         return this.visualization.directions[currentIndex + 1].id;
     }
 
+    public getPreviousDirection() {
+        if(!this.visualization) {
+            return this.direction;
+        }
+
+        if(this.placement === "wall") {
+            return this.direction;
+        }
+
+        const currentIndex = this.visualization.directions.findIndex((direction) => direction.id === this.direction);
+
+        if(currentIndex === -1) {
+            return this.direction;
+        }
+
+        if(!this.visualization.directions[currentIndex - 1]) {
+            return this.visualization.directions[this.visualization.directions.length - 1].id;
+        }
+
+        return this.visualization.directions[currentIndex - 1].id;
+    }
+
     public getColors() {
         if(!this.visualization) {
             return [];
@@ -288,14 +311,14 @@ export default class Furniture {
         return this.visualization.colors.map((color) => color.layers[0].color);
     }
 
-    public getColor(colorId: number) {
+    public getColor(colorId: string) {
         if(!this.data) {
             return null;
         }
         
         const visualization = this.getVisualizationData(this.data);
 
-        const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === colorId);
+        const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === parseInt(colorId));
 
         return colorData?.layers[0].color ?? null;
     }

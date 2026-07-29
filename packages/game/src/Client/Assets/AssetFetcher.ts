@@ -3,6 +3,7 @@ import ImageDataWorkerInterface from "@Client/Figure/Worker/Interfaces/ImageData
 import ImageDataWorkerMainThreadClient from "@Client/Figure/Worker/ImageDataWorkerMainThreadClient";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
+import DataStats from "@Client/DataStats";
 
 export type AssetSpriteGrayscaledProperties = {
     ink?: number;
@@ -49,13 +50,32 @@ export type AssetSpriteResult = {
 
 export default class AssetFetcher {
     private static json: Map<string, Promise<unknown>> = new Map();
-    private static images: Map<string, Promise<ImageBitmap>> = new Map();
+    private static images: Map<string, Promise<HTMLImageElement>> = new Map();
     private static spritesCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
-    private static imageDataCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
+    private static imageDataCache: Map<string, Map<string, ImageData>> = new Map<string, Map<string, ImageData>>();
 
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
 
     public static clearMemory() {
+        for(const [url, urlCache] of this.spritesCache.entries()) {
+            if(url.includes("placeholder")) {
+                continue;
+            }
+
+            for(const cachedSprite of urlCache.values()) {
+                cachedSprite.result.then((result) => {
+                    if(url.startsWith('/assets/furniture')) {
+                        DataStats.furnitureImageBitmapsClosed++;
+                    }
+                    else if(url.startsWith('/assets/figure')) {
+                        DataStats.figureImageBitmapsClosed++;
+                    }
+
+                    result.image.close();
+                });
+            }
+        }
+
         this.spritesCache.clear();
         this.imageDataCache.clear();
 
@@ -95,25 +115,19 @@ export default class AssetFetcher {
             return await this.images.get(url)!;
         }
 
-        const result = (async () => {
-            const response = await fetch(url, {
-                method: "GET"
-            });
+        const result = new Promise<HTMLImageElement>((resolve, reject) => {
+            const image = new Image();
 
-            if(!response.ok) {
-                throw new Error("Response is not ok.")
-            }
+            image.onload = () => {
+                resolve(image);
+            };
 
-            if(response.status !== 200) {
-                throw new Error("Response is not ok.")
-            }
+            image.onerror = () => {
+                reject();
+            };
 
-            const blob = await response.blob();
-
-            const image = await createImageBitmap(blob);
-
-            return image;
-        })();
+            image.src = url;
+        });
 
         this.images.set(url, result);
 
@@ -168,58 +182,6 @@ export default class AssetFetcher {
             };
         }
 
-        //console.log("Creating non-existant sprite", url);
-
-        /*if(properties.flipHorizontal && !properties.ignoreImageData) {
-            const existingNonFlippedSprite = this.sprites[url].find(({ x, y, width, height, flipHorizontal, color, destinationWidth, destinationHeight, ignoreImageData }) => properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.color === color && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
-
-            if(existingNonFlippedSprite && existingNonFlippedSprite.color?.length) {
-                const sprite = await existingNonFlippedSprite.sprite;
-
-                console.log("Existing non-flipped sprite", existingNonFlippedSprite.color, properties.color);
-
-                const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
-
-                for (let y = 0; y < newImageData.height; y++) {
-                    for (let x = 0; x < newImageData.width / 2; x++) {
-                        const left = (y * newImageData.width + x) * 4;
-                        const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
-
-                        for (let i = 0; i < 4; i++) {
-                            const temp = newImageData.data[left + i];
-                            newImageData.data[left + i] = newImageData.data[right + i];
-                            newImageData.data[right + i] = temp;
-                        }
-                    }
-                }
-
-                const canvas = new OffscreenCanvas(newImageData.width, newImageData.height);
-                const context = canvas.getContext("2d");
-
-                if(!context) {
-                    throw new ContextNotAvailableError();
-                }
-
-                context.translate(canvas.width, 0);
-
-                context.scale(-1, 1);
-
-                context.drawImage(sprite.image, 0, 0);
-
-                const result: AssetSpriteProperties & { sprite: Promise<{ image: ImageBitmap, imageData: ImageData }> } = {
-                    sprite: Promise.resolve({
-                        image: await createImageBitmap(canvas),
-                        imageData: newImageData
-                    }),
-                    ...properties
-                };
-
-                this.sprites[url].push(result);
-
-                return await result.sprite;
-            }
-        }*/
-
         return (async () => {
             properties.id ??= Math.random();
 
@@ -229,52 +191,58 @@ export default class AssetFetcher {
                 ...properties
             };
 
-            urlSprites.set(spriteKey, result);
+            if(!properties.requireImageData) {
+                urlSprites.set(spriteKey, result);
+            }
 
             let output = await result.result;
 
             const imageDataKey = this.createImageDataKey(properties);
 
             if(!this.imageDataCache.has(url)) {
-                this.imageDataCache.set(url, new Map<string, AssetSpriteResult>());
+                this.imageDataCache.set(url, new Map<string, ImageData>());
             }
 
             const imageDataUrl = this.imageDataCache.get(url)!;
 
             const existingSpriteWithImageData = imageDataUrl.get(imageDataKey);
 
-            if(existingSpriteWithImageData?.imageData) {
-                result.imageData = existingSpriteWithImageData.imageData;
-                output.imageData = existingSpriteWithImageData.imageData;
+            if(existingSpriteWithImageData) {
+                result.imageData = existingSpriteWithImageData;
+                output.imageData = existingSpriteWithImageData;
 
                 if(properties.grayscaled) {
-                    output = this.drawGrayscaledImage(existingSpriteWithImageData.imageData, properties.grayscaled);
+                    output = this.drawGrayscaledImage(url, existingSpriteWithImageData, properties.grayscaled);
                     result.result = Promise.resolve(output);
                 }
+
+                return output;
             }
-            else {
-                const promise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
-                    result.imageData = imageData;
-                    output.imageData = imageData;
+                
+            const imageDataPromise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
+                result.imageData = imageData;
+                output.imageData = imageData;
 
-                    if(properties.grayscaled) {
-                        output = this.drawGrayscaledImage(imageData, properties.grayscaled);
-                        result.result = Promise.resolve(output);
-                    }
-
-                    imageDataUrl.set(imageDataKey, result);
-                });
-
-                if(properties.requireImageData) {
-                    await promise;
+                if(properties.grayscaled) {
+                    output = this.drawGrayscaledImage(url, imageData, properties.grayscaled);
+                    result.result = Promise.resolve(output);
                 }
+
+                imageDataUrl.set(imageDataKey, imageData);
+                urlSprites.set(spriteKey, result);
+
+                return imageData;
+            });
+
+            if(properties.requireImageData) {
+                await imageDataPromise;
             }
 
             return output;
         })();
     }
 
-    private static drawGrayscaledImage(imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
+    private static drawGrayscaledImage(url: string, imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
         const mutatedImageData = new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
         const canvas = new OffscreenCanvas(mutatedImageData.width, mutatedImageData.height);
 
@@ -343,8 +311,17 @@ export default class AssetFetcher {
 
         context.putImageData(mutatedImageData, 0, 0);
 
+        const imageBitmap = canvas.transferToImageBitmap();
+
+        if(url.startsWith('/assets/furniture')) {
+            DataStats.furnitureImageBitmapsOpened++;
+        }
+        else if(url.startsWith('/assets/figure')) {
+            DataStats.figureImageBitmapsOpened++;
+        }
+
         return {
-            image: canvas.transferToImageBitmap(),
+            image: imageBitmap,
             imageData
         };
     }
@@ -402,54 +379,17 @@ export default class AssetFetcher {
 
             const imageData: ImageData | null = null;
 
-            /*if(!properties.ignoreImageData) {
-                const existingSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && properties.flipHorizontal === flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
+            const imageBitmap = canvas.transferToImageBitmap();
 
-                if(existingSpriteWithImageData && !properties.ignoreExistingImageData) {
-                    imageData = (await existingSpriteWithImageData.result).imageData;
-                }
-                else if(!properties.ignoreExistingImageData) {
-                    const existingNonFlippedSpriteWithImageData = this.sprites[url].find(({ id, x, y, width, height, flipHorizontal, destinationWidth, destinationHeight, ignoreImageData }) => properties.id !== id && properties.x === x && properties.y === y && properties.width === width && properties.height === height && !flipHorizontal && properties.destinationWidth === destinationWidth && properties.destinationHeight === destinationHeight && !ignoreImageData);
-                    
-                    if(existingNonFlippedSpriteWithImageData) {
-                        console.log("Flip image data");
-
-                        const sprite = await existingNonFlippedSpriteWithImageData.result;
-                        const newImageData = new ImageData(new Uint8ClampedArray(sprite.imageData.data), sprite.imageData.width, sprite.imageData.height);
-
-                        for (let y = 0; y < newImageData.height; y++) {
-                            for (let x = 0; x < newImageData.width / 2; x++) {
-                                const left = (y * newImageData.width + x) * 4;
-                                const right = (y * newImageData.width + (newImageData.width - x - 1)) * 4;
-
-                                for (let i = 0; i < 4; i++) {
-                                    const temp = newImageData.data[left + i];
-                                    newImageData.data[left + i] = newImageData.data[right + i];
-                                    newImageData.data[right + i] = temp;
-                                }
-                            }
-                        }
-
-                        imageData = newImageData;
-                    }
-                    else {
-                        console.log("New image data");
-
-                        imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                    }
-                }
-                else {
-                    console.log("New image data");
-
-                    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                }
+            if(url.startsWith('/assets/furniture')) {
+                DataStats.furnitureImageBitmapsOpened++;
             }
-            else {
-                imageData = new ImageData(canvas.width, canvas.height);
-            }*/
+            else if(url.startsWith('/assets/figure')) {
+                DataStats.figureImageBitmapsOpened++;
+            }
 
             return {
-                image: canvas.transferToImageBitmap(),
+                image: imageBitmap,
                 imageData
             };
         }

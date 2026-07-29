@@ -37,7 +37,7 @@ export default class RoomStructure {
         }
 
         this.doorDepth = this.data.door
-            ? this.parseDepth(this.getTileDepth(this.data.door.row, this.data.door.column))
+            ? this.parseDepth(this.getTileDepth(this.data.door.row, this.data.door.column, false))
             : 0;
         this.groundLevel = this.doorDepth === 'X' ? 0 : this.doorDepth;
     }

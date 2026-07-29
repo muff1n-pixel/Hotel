@@ -43,7 +43,7 @@ export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) 
                             )}
 
                             {monitor?.statistics?.variables.map((variable) => (
-                                <div>{getWiredTranslation(`monitor.variables.${variable.type}`)}: <span style={{ color: "#2B8B2A" }}>{variable.value}/{variable.maxValue}</span></div>
+                                <div key={variable.type}>{getWiredTranslation(`monitor.variables.${variable.type}`)}: <span style={{ color: "#2B8B2A" }}>{variable.value}/{variable.maxValue}</span></div>
                             ))}
                         </FlexLayout>
                     </div>

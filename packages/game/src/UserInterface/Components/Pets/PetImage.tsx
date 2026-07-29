@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Pet from "@Client/Pets/Pet";
 import { PetData } from "@pixel63/events";
@@ -6,10 +6,11 @@ import { PetData } from "@pixel63/events";
 export type PetImageProps = {
     data?: PetData;
     headOnly?: boolean;
+    style?: CSSProperties;
 }
 
-export default function PetImage({ data, headOnly }: PetImageProps) {
-    const [image, setImage] = useState<ImageBitmap>();
+export default function PetImage({ data, headOnly, style }: PetImageProps) {
+    const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         if(!data?.type) {
@@ -28,6 +29,6 @@ export default function PetImage({ data, headOnly }: PetImageProps) {
     }
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style}/>
     );
 }

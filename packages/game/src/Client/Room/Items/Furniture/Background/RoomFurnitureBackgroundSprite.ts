@@ -3,7 +3,7 @@ import RoomSprite from "../../RoomSprite";
 import RoomFurnitureItem from "./../RoomFurnitureItem";
 
 export default class RoomFurnitureBackgroundSprite extends RoomSprite {
-    constructor(public readonly item: RoomFurnitureItem, public readonly image: ImageBitmap, public readonly position?: { x: number; y: number; z: number; }) {
+    constructor(public readonly item: RoomFurnitureItem, public readonly image: HTMLImageElement, public readonly position?: { x: number; y: number; z: number; }) {
         const offset: MousePosition = { left: 0, top: 0 };
 
         if(item.furnitureRenderer.placement === "floor") {

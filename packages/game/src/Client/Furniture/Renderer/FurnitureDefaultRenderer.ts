@@ -1,5 +1,6 @@
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import DataStats from "@Client/DataStats";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { FurnitureRendererSprite, FurnitureRenderResult, FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
@@ -92,7 +93,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return false;
     }
 
-    private getRenderOptionsKey(options: FurnitureRenderOptions) {
+    public getRenderOptionsKey(options: FurnitureRenderOptions) {
         const layerFramesData = this.getLayerFrames(options);
         const layerFrames = Array(this.visualization?.layerCount ?? 0).fill(null).map((_, layer) => {
             const data = layerFramesData.find((layerFrameData) => layerFrameData.animationLayerId === layer);
@@ -260,6 +261,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         if(existingRender) {
             this.animated = existingRender.animated;
             this.previousLayerFrames = existingRender.layerFrames;
+            this.hasImageData = true;
+            this.visualization = existingRender.visualization;
 
             return existingRender;
         }
@@ -294,11 +297,12 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         const mask: FurnitureRendererSprite | null = await this.getMask(data, options);
 
         this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
-
+        
         const result: FurnitureRenderResult = {
             sprites,
             mask,
             layerFrames: this.previousLayerFrames,
+            visualization: this.visualization,
             animated: this.animated
         };
 
@@ -483,7 +487,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return { image, imageData };
     }
     
-    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions) {
+    public async renderToCanvas(canvasOptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<OffscreenCanvas> {
         const immutableSprites = await this.render(data, options);
 
         const sprites = immutableSprites.sprites.map((sprite) => {
@@ -568,6 +572,6 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             }
         }
 
-        return canvas.transferToImageBitmap();
+        return canvas;
     }
 }
