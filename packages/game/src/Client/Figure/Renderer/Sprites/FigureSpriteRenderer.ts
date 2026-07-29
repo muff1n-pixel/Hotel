@@ -176,7 +176,8 @@ export default class FigureSpriteRenderer {
 
             color: (spriteConfiguration.colorable && spriteConfiguration.colors[spriteConfiguration.colorIndex - 1] && type !== "ey")?(color):(undefined),
 
-            ignoreImageData: false
+            ignoreImageData: false,
+            requireImageData: (grayscaled !== undefined)
         });
 
         const priorityTypes: Partial<Record<string, string>> = {
