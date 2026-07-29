@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UserFurnitureNotificationData {
+    string user_furniture_id = 1;
+}

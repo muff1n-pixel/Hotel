@@ -5,6 +5,9 @@ import InventoryBotsTab from "./Tabs/InventoryBotsTab";
 import InventoryFurnitureTab from "./Tabs/InventoryFurnitureTab";
 import InventoryPetsTab from "./Tabs/InventoryPetsTab";
 import { useTranslation } from "react-i18next";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import NotificationIcon from "@UserInterface/Common/Notifications/NotificationIcon";
+import { useUserFurnitureNotifications } from "@UserInterface/Hooks/User/Notifications/useUserFurnitureNotifications";
 
 export type InventoryDialogProps = {
     data?: {
@@ -17,11 +20,19 @@ export type InventoryDialogProps = {
 export default function InventoryDialog({ data, hidden, onClose }: InventoryDialogProps) {
     const [getTranslation] = useTranslation("inventory");
 
+    const userFurnitureNotifications = useUserFurnitureNotifications();
+
     return (
         <Dialog title={getTranslation("title")} width={500} height={350} hidden={hidden} onClose={onClose}>
             <DialogTabs initialActiveIndex={["furniture", "pets", "badges", "bots"].indexOf(data?.tab ?? "furniture")} withoutHeader tabs={[
                 {
-                    icon: getTranslation("tabs.furniture"),
+                    icon: (
+                        <FlexLayout direction="row" gap={5} align="center">
+                            {getTranslation("tabs.furniture")}
+
+                            <NotificationIcon count={userFurnitureNotifications.notifications.length}/>
+                        </FlexLayout>
+                    ),
                     element: (<InventoryFurnitureTab allowPlacingInRoom/>)
                 },
                 {

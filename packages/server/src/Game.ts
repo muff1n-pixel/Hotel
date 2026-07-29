@@ -1,5 +1,4 @@
 import CommandHandler from "./Commands/CommandHandler.js";
-import { UserModel } from "./Database/Models/Users/UserModel.js";
 import EventHandler from "./Events/EventHandler.js";
 import RoomNavigatorManager from "./Rooms/Navigator/RoomNavigatorManager.js";
 import RoomManager from "./Rooms/RoomManager.js";
@@ -7,7 +6,6 @@ import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
-import UserNotifications from "./Users/Notifications/UserNotifications.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
 
 export default class Game {
@@ -50,11 +48,5 @@ export default class Game {
         const user = this.getUserById(userId);
 
         return user?.achievements ?? new UserAchievements(userId);
-    }
-
-    public getUserNotifications(userId: string) {
-        const user = this.getUserById(userId);
-
-        return user?.notifications ?? new UserNotifications(userId);
     }
 }

@@ -1,22 +1,18 @@
 import type WebSocket from "ws";
-import OutgoingEvent from "../Events/Interfaces/OutgoingEvent.js";
 import { UserModel } from "../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "./Inventory/UserInventory.js";
 import Room from "../Rooms/Room.js";
-import { debugTimestamps } from "../Database/Database.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
 import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
-import UserNotifications from "./Notifications/UserNotifications.js";
 import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
     public friends: UserFriends;
     public achievements: UserAchievements;
-    public notifications: UserNotifications;
     public permissions: UserPermissions;
 
     public spamProtection: UserSpamProtection;
@@ -31,7 +27,6 @@ export default class User extends EventEmitter {
         this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this.model.id);
-        this.notifications = new UserNotifications(this.model.id);
         
         this.permissions.loadPermissions().then(() => {
             this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({

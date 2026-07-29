@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
+import { useUserFurnitureNotifications } from "@UserInterface/Hooks/User/Notifications/useUserFurnitureNotifications";
 
 export type InventoryFurnitureTabProps = {
     allowPlacingInRoom: boolean;
@@ -26,6 +27,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
 
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
+    const userFurnitureNotifications = useUserFurnitureNotifications();
 
     const [activeFurniture, setActiveFurniture] = useState<UserInventoryFurnitureData>();
 
@@ -66,6 +68,18 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
             trading
         }));
     }, [trading]);
+
+    useEffect(() => {
+        if(!activeFurniture) {
+            return;
+        }
+
+        const userFurnitureId = (activeFurniture.furniture?.flags?.inventoryStackable)?(activeFurniture.furniture?.id):(activeFurniture.id);
+
+        if(userFurnitureNotifications.hasUserFurnitureNotification(userFurnitureId)) {
+            userFurnitureNotifications.removeUserFurnitureNotification(userFurnitureId);
+        }
+    }, [activeFurniture, userFurnitureNotifications]);
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserInventoryFurnitureCollectionData, {
@@ -217,6 +231,46 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
         });
     }, [ setDialogHidden, room, activeFurniture, roomFurniturePlacer, allowPlacingInRoom ]);
 
+    const filteredUserFurnitureItems = useMemo(() => {
+        return filteredUserFurniture.map((userFurniture) => {
+            const notification = userFurnitureNotifications.hasUserFurnitureNotification((userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id));
+            
+            return (
+                <DialogItem
+                    key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
+                    active={activeFurniture?.id === userFurniture.id}
+                    onClick={() => setActiveFurniture(userFurniture)}
+                    onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}
+                    style={{
+                        ...(notification && {
+                            background: "#9BCA64"
+                        })
+                    }}>
+                        <FurnitureIcon furnitureData={userFurniture.furniture} colorTags={userFurniture.userFurniture?.colorTags}/>
+
+                        {(userFurniture.quantity > 1) && (
+                            <div style={{
+                                position: "absolute",
+
+                                right: 2,
+                                top: 2,
+
+                                border: "1px solid #2F6982",
+                                background: "#FFF",
+                                color: "#306A83",
+
+                                fontSize: 10,
+
+                                padding: "0px 2px"
+                            }}>
+                                {userFurniture.quantity}
+                            </div>
+                        )}
+                </DialogItem>
+            );
+        });
+    }, [userFurnitureNotifications, filteredUserFurniture, activeFurniture]);
+
     if(!userFurniture.length) {
         return (<InventoryEmptyTab/>);
     }
@@ -280,34 +334,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                         alignContent: "start",
                         gap: 4
                     }}>
-                        {filteredUserFurniture.map((userFurniture) => (
-                            <DialogItem
-                                key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
-                                active={activeFurniture?.id === userFurniture.id}
-                                onClick={() => setActiveFurniture(userFurniture)}
-                                onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}>
-                                    <FurnitureIcon furnitureData={userFurniture.furniture} colorTags={userFurniture.userFurniture?.colorTags}/>
-
-                                    {(userFurniture.quantity > 1) && (
-                                        <div style={{
-                                            position: "absolute",
-
-                                            right: 2,
-                                            top: 2,
-
-                                            border: "1px solid #2F6982",
-                                            background: "#FFF",
-                                            color: "#306A83",
-
-                                            fontSize: 10,
-
-                                            padding: "0px 2px"
-                                        }}>
-                                            {userFurniture.quantity}
-                                        </div>
-                                    )}
-                            </DialogItem>
-                        ))}
+                        {filteredUserFurnitureItems}
                     </div>
                 </DialogScrollArea>
                     
