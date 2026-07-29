@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-message UserNotificationData {
-    string type = 1;
-    uint32 count = 2;
-}

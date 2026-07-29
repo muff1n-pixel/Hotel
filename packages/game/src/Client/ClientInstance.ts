@@ -64,7 +64,7 @@ export default class ClientInstance extends EventTarget {
 
     public flyingFurnitureIcons = new ObservableProperty<FlyingFurnitureIconData[]>([]);
     public widgetNotifications = new ObservableProperty<WidgetNotificationData[]>([]);
-    
+
     public roomCategories = new ObservableProperty<RoomCategoryData[]>([]);
 
     public roomUserTrading = new ObservableProperty<RoomUserTradingData>();

@@ -1,4 +1,3 @@
-import { game } from "../../../../index.js";
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PickupRoomFurnitureData } from "@pixel63/events";
@@ -21,9 +20,5 @@ export default class PickupRoomFurnitureEvent implements ProtobuffListener<Picku
         }
 
         await roomFurniture.pickup();
-
-        if(roomFurniture.model.userId && roomFurniture.model.userId !== user.model.id) {
-            await game.getUserNotifications(roomFurniture.model.userId).addNotification("furniture");
-        }
     }
 }

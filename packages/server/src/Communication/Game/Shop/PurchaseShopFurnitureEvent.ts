@@ -1,6 +1,4 @@
 import User from "../../../Users/User.js";
-import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
-import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
