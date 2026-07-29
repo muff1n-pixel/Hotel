@@ -157,7 +157,11 @@ export default function InventoryBotsTab() {
                     }}>
                         <div style={{
                             width: 40,
-                            height: 40
+                            height: 40,
+
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
                         }}>
                             {bot.figureConfiguration && (
                                 <FigureImage headOnly direction={3} figureConfiguration={bot.figureConfiguration}/>
