@@ -115,7 +115,7 @@ export default class RoomRenderer extends EventTarget {
             resizeTo: this.parent,
             roundPixels: true,
 
-            resolution: window.devicePixelRatio,
+            resolution: Math.max(1, Math.floor(window.devicePixelRatio)),
             autoDensity: true,
         });
 
