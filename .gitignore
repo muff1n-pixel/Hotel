@@ -6,8 +6,6 @@ build/game/*
 !build/web/
 build/web/*
 
-utils/swf/
-
 bin/
 
 !build/game/index.html
