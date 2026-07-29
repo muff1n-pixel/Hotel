@@ -113,7 +113,7 @@ export default class RoomItem implements RoomItemInterface {
         this._disabled = disabled;
 
         for(const sprite of this.sprites) {
-            sprite.sprite.visible = !disabled;
+            sprite.setDisabled(disabled);
         }
     }
 

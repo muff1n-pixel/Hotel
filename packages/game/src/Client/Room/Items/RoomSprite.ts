@@ -11,7 +11,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
 
     private sprite: Sprite;
 
-    public disabled: boolean = false;
+    private disabled: boolean = false;
     
     constructor(
         public item: RoomItem,
@@ -65,6 +65,10 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         this.sprite.texture.source.scaleMode = "nearest";
 
         this.update();
+    }
+
+    public setDisabled(disabled: boolean) {
+        this.sprite.visible = !disabled;
     }
 
     update(): void {
