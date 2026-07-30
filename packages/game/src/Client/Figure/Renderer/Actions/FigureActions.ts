@@ -195,4 +195,14 @@ export default class FigureActions {
 
         return param.value;
     }
+
+    public getActionId(actions: string[], actionId: string) {
+        const actionName = actions.find((action) => action.split('.')[0] === actionId);
+
+        if(!actionName) {
+            return null;
+        }
+
+        return actionName.split('.')[1];
+    }
 }

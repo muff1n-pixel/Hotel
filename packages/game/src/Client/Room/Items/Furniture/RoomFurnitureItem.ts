@@ -117,7 +117,6 @@ export default class RoomFurnitureItem extends RoomItem {
             }
 
             this.rendering = true;
-                    console.log("rendering");
 
             this.furnitureRenderer.render().then((result) => {
                 this.rendering = false;

@@ -7,6 +7,31 @@ import SwfExtraction from "../extractions/SwfExtraction.ts";
 
 export default class ExtractAction {
     public async run() {
+        const path = await select({
+            message: "Choose asset path",
+            choices: [
+                {
+                    name: "ASSETS_INPUT_PATH",
+                    value: process.env.ASSETS_INPUT_PATH!,
+                    description: process.env.ASSETS_INPUT_PATH!,
+                },
+                {
+                    name: "FURNITURE_INPUT_PATH",
+                    value: process.env.FURNITURE_INPUT_PATH!,
+                    description: process.env.FURNITURE_INPUT_PATH!,
+                },
+                {
+                    name: "FIGURE_INPUT_PATH",
+                    value: process.env.FIGURE_INPUT_PATH!,
+                    description: process.env.FIGURE_INPUT_PATH!,
+                },
+            ],
+        });
+
+        await this.handlePath(path);
+    }
+
+    private async handlePath(path: string) {
         const method = await select({
             message: "Extract asset",
             choices: [
@@ -28,11 +53,10 @@ export default class ExtractAction {
             ],
         });
 
-
-        await this.handleMethod(method);
+        await this.handleMethod(path, method);
     }
 
-    private async handleMethod(method: "assetName" | "includes" | "startsWith") {
+    private async handleMethod(assetsPath: string, method: "assetName" | "includes" | "startsWith") {
         switch(method) {
             case "assetName": {
                 const assetNames = await input({
@@ -41,7 +65,7 @@ export default class ExtractAction {
                     required: true,
                 });
 
-                await this.handleAssetNames(assetNames.split(' '));
+                await this.handleAssetNames(assetsPath, assetNames.split(' '));
 
                 break;
             }
@@ -54,7 +78,7 @@ export default class ExtractAction {
                     required: true,
                 });
 
-                const assetNames = readdirSync(process.env.FURNITURE_INPUT_PATH!, { withFileTypes: true })
+                const assetNames = readdirSync(assetsPath, { withFileTypes: true })
                     .filter((file) => file.isFile() && path.basename(file.name).endsWith(".swf") && path.basename(file.name)[method](assetName))
                     .map((file) => path.basename(file.name, ".swf"));
 
@@ -66,7 +90,7 @@ export default class ExtractAction {
                 });
 
                 if(confirmation) {
-                    await this.handleAssetNames(assetNames);
+                    await this.handleAssetNames(assetsPath, assetNames);
                 }
 
                 break;
@@ -74,7 +98,7 @@ export default class ExtractAction {
         }
     }
 
-    private async handleAssetNames(assetNames: string[]) {
+    private async handleAssetNames(assetsPath: string, assetNames: string[]) {
         await PromisePool
             .withConcurrency(30)
             .for(assetNames)
@@ -82,7 +106,7 @@ export default class ExtractAction {
                 try {
                     console.time("> Extracting " + assetName);
 
-                    const assetPath = path.join(process.env.FURNITURE_INPUT_PATH!, `${assetName}.swf`);
+                    const assetPath = path.join(assetsPath, `${assetName}.swf`);
                     const tempPath = path.join("temp", assetName);
                     
                     if(existsSync(tempPath)) {

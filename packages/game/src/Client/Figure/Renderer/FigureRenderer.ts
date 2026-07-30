@@ -185,6 +185,21 @@ export default class FigureRenderer {
             });
         }
 
+        const signId = this.figureActions.getActionId(mutatedActions, "Sign");
+
+        if(signId) {
+            spritesFromConfiguration.push({
+                id: signId.toString(),
+                assetId: "hh_human_item",
+                colorable: false,
+                colorIndex: 0,
+                colorPaletteId: 0,
+                type: "li",
+                index: 0,
+                colors: []
+            });
+        }
+
         const effectAvatar = effects.find((effect) => effect.data.animation?.avatar);
 
         const grayscaled: AssetSpriteGrayscaledProperties | undefined = (effectAvatar?.data.animation?.avatar)?({
