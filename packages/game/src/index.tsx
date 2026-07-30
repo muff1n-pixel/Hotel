@@ -5,9 +5,9 @@ import FigureAssets from "@Client/Assets/FigureAssets";
 import LoaderInstance from "./Loader";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import Cookies from "js-cookie";
-
 import "./Polyfills/OffscreenCanvas";
 import i18n from "@Game/Locales/i18n";
+import "./Polyfills/Extensions";
 
 const clientElement = document.getElementById("client");
 const interfaceElement = document.getElementById("interface");

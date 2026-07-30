@@ -9,7 +9,7 @@ import { BLEND_MODES, Sprite, Texture, TextureSourceLike } from "pixi.js";
 export default class RoomSprite implements RoomItemSpriteInterface {
     tag?: string;
 
-    private sprite: Sprite;
+    public _sprite: Sprite;
 
     private disabled: boolean = false;
     
@@ -34,7 +34,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             y = this.offset.top;
         }
         
-        this.sprite = new Sprite({
+        this._sprite = new Sprite({
             texture: (image)?(Texture.from(image)):(undefined),
             x,
             y,
@@ -43,13 +43,13 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             zIndex: this.item.calculatedPriority + this.priority,
         });
 
-        this.sprite.texture.source.scaleMode = "nearest";
+        this._sprite.texture.source.scaleMode = "nearest";
 
-        this.item.roomRenderer.container.addChild(this.sprite);
+        this.item.roomRenderer.container.addChild(this._sprite);
     }
 
     public setMask(sprite: RoomSprite) {
-        this.sprite.setMask({
+        this._sprite.setMask({
             mask: sprite.getMask(),
             inverse: false,
             channel: "alpha"
@@ -57,40 +57,40 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     }
 
     public getMask() {
-        return this.sprite;
+        return this._sprite;
     }
 
     public setTexture(texture: TextureSourceLike) {
-        this.sprite.texture = Texture.from(texture);
-        this.sprite.texture.source.scaleMode = "nearest";
+        this._sprite.texture = Texture.from(texture);
+        this._sprite.texture.source.scaleMode = "nearest";
 
         this.update();
     }
 
     public setDisabled(disabled: boolean) {
-        this.sprite.visible = !disabled;
+        this._sprite.visible = !disabled;
     }
 
     update(): void {
         if(this.inheritOffset) {
-            this.sprite.x = this.item.screenPosition.left + this.offset.left;
-            this.sprite.y = this.item.screenPosition.top + this.offset.top;
+            this._sprite.x = this.item.screenPosition.left + this.offset.left;
+            this._sprite.y = this.item.screenPosition.top + this.offset.top;
         }
         else {
-            this.sprite.x = this.offset.left;
-            this.sprite.y = this.offset.top;
+            this._sprite.x = this.offset.left;
+            this._sprite.y = this.offset.top;
         }
 
-        this.sprite.zIndex = this.item.calculatedPriority + this.priority;
+        this._sprite.zIndex = this.item.calculatedPriority + this.priority;
 
-        this.sprite.blendMode = this.blendMode;
-        this.sprite.alpha = this.alpha ?? this.item.alpha;
+        this._sprite.blendMode = this.blendMode;
+        this._sprite.alpha = this.alpha ?? this.item.alpha;
 
-        this.sprite.visible = !this.item.disabled || !this.disabled;
+        this._sprite.visible = !this.item.disabled || !this.disabled;
     }
 
     destroy(): void {
-        this.sprite.destroy();
+        this._sprite.destroy();
     }
 
     mouseover(position: MousePosition): RoomPositionWithDirectionData | null {

@@ -9,7 +9,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
 
     public frame: number = 0;
 
-    public render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
+    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
         for(const visualization of data.visualization.visualizations) {
             if(!visualization.layers.length) {
                 continue;
@@ -22,11 +22,11 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
             visualization.layerCount = 12;
 
             visualization.layers.find((layer) => layer.id === 1)!.ink = "difference";
-            visualization.layers.find((layer) => layer.id === 2)!.ink = "subtract";
+            visualization.layers.find((layer) => layer.id === 2)!.ink = "luminosity";
             visualization.layers.find((layer) => layer.id === 4)!.ink = "difference";
-            visualization.layers.find((layer) => layer.id === 5)!.ink = "subtract";
-            visualization.layers.find((layer) => layer.id === 6)!.ink = "lighter";
-            visualization.layers.find((layer) => layer.id === 7)!.ink = "lighter";
+            visualization.layers.find((layer) => layer.id === 5)!.ink = "luminosity";
+            visualization.layers.find((layer) => layer.id === 6)!.ink = "negation";
+            visualization.layers.find((layer) => layer.id === 7)!.ink = "negation";
 
             visualization.layers.push({
                 id: 8,
@@ -46,7 +46,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
             
             visualization.layers.push({
                 id: 10,
-                ink: "saturation",
+                ink: "soft-light",
                 zIndex: -1
             });
 
@@ -54,14 +54,18 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
             
             visualization.layers.push({
                 id: 11,
-                ink: "saturation",
+                ink: "soft-light",
                 zIndex: 999
             });
 
             this.addAsset(data, visualization, 'l', 'e');
         }
 
-        return super.render(data, options);
+        const result = await super.render(data, options);
+
+        console.log(result.sprites);
+
+        return result;
     }
 
     private addAsset(data: FurnitureData, visualization: FurnitureVisualization["visualizations"][0], newLayerId: string, sourceLayerId: string) {

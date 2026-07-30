@@ -25,17 +25,19 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): BLEND_MODES 
             return "add";
 
         case "subtract":
-            return "luminosity";
+            return "subtract";
 
         case "copy":
             return undefined;
 
+        case "multiply":
         case "difference":
         case "overlay":
         case "saturation":
         case "lighten":
         case "darken":
         case "screen":
+        case "linear-dodge":
             return ink;
 
         case "div":
@@ -50,7 +52,7 @@ export function getGlobalCompositeModeFromInk(initialInk?: string): BLEND_MODES 
         default:
             Logger.warn(`Ink mode ${ink} is not recognized.`);
 
-            return undefined;
+            return ink as any;
     }
 }
 

@@ -115,6 +115,8 @@ export default class RoomRenderer extends EventTarget {
             resizeTo: this.parent,
             roundPixels: true,
 
+            useBackBuffer: true,
+
             resolution: Math.max(1, Math.floor(window.devicePixelRatio)),
             autoDensity: true,
         });
@@ -482,7 +484,7 @@ export default class RoomRenderer extends EventTarget {
                 continue;
             }
 
-            const s = roomSprite.sprite;
+            const s = roomSprite._sprite;
 
             const offset = RoomFurnitureOffsets.getDefaultOffsetPosition(furnitureItem.furnitureRenderer, roomSprite.furnitureSprite, 1);
 
