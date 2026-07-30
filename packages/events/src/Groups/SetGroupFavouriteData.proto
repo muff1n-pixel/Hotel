@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message SetGroupFavouriteData {
+    optional string group_id = 1;
+}

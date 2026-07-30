@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Groups/GroupData.proto";
+import "Groups/Members/GroupMemberData.proto";
+
+message UserGroupMemberData {
+    GroupData group = 1;
+    GroupMemberData member = 2;
+}

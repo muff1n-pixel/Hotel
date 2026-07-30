@@ -25,8 +25,8 @@ export default class UpdateUserBadgeEvent implements ProtobuffListener<UpdateUse
             }
         });
 
-        if(payload.equipped && equippedBadgesCount === 6) {
-            throw new Error("User already has 6 equipped badges.");
+        if(payload.equipped && equippedBadgesCount >= 5) {
+            throw new Error("User already has 5 equipped badges.");
         }
 
         userBadge.equipped = payload.equipped;

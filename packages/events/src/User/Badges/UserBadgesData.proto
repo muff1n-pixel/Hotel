@@ -1,9 +1,13 @@
 syntax = "proto3";
 
 import "Badge/BadgeData.proto";
+import "Groups/GroupData.proto";
 
 message UserBadgesData {
     string user_id = 1;
+    
     repeated BadgeData badges = 2;
+    optional GroupData group = 4;
+
     uint32 achievement_score = 3;
 }

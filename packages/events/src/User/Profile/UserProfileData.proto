@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "Figure/FigureConfigurationData.proto";
 import "Badge/BadgeData.proto";
-import "Groups/GroupData.proto";
+import "User/Groups/UserGroupMemberData.proto";
 
 message UserProfileData {
     string id = 1;
@@ -30,7 +30,7 @@ message UserProfileData {
     repeated UserProfileFriendRelationshipsData smile_relationships = 11;
     repeated UserProfileFriendRelationshipsData bobba_relationships = 12;
 
-    repeated GroupData groups = 13;
+    repeated UserGroupMemberData groups = 13;
 
     uint32 achievement_score = 14;
 }

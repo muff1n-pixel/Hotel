@@ -166,7 +166,46 @@ export default function InventoryBadgesTab() {
                     alignContent: "flex-start",
                     gap: 4
                 }}>
-                    {userBadges?.filter((userBadge) => userBadge.equipped).toReversed().map((userBadge) => (
+                    {userBadges?.filter((userBadge) => userBadge.equipped).toReversed().splice(0, 1).map((userBadge) => (
+                        <div key={userBadge.id} style={{
+                            display: "flex",
+
+                            width: 44,
+                            height: 44,
+
+
+                            border: "1px solid black",
+                            borderRadius: 6,
+
+                            cursor: "pointer",
+
+                            position: "relative"
+                        }} onClick={() => setActiveBadge(userBadge)}>
+                            <div style={{
+                                flex: 1,
+
+                                border: (activeBadge?.id === userBadge.id)?("2px solid white"):("2px solid transparent"),
+                                borderRadius: 6,
+
+                                boxSizing: "border-box",
+
+                                background: "#CBCBCB",
+
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <BadgeImage badge={userBadge.badge}/>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div style={{
+                        width: 44,
+                        height: 44
+                    }}/>
+                    
+                    {userBadges?.filter((userBadge) => userBadge.equipped).toReversed().splice(1).map((userBadge) => (
                         <div key={userBadge.id} style={{
                             display: "flex",
 
@@ -229,7 +268,7 @@ export default function InventoryBadgesTab() {
 
                         <div style={{
                         }}>
-                            <DialogButton onClick={handleToggleEquip} disabled={(!activeBadge.equipped && userBadges.filter((userBadge) => userBadge.equipped).length === 6)}>
+                            <DialogButton onClick={handleToggleEquip} disabled={(!activeBadge.equipped && userBadges.filter((userBadge) => userBadge.equipped).length >= 5)}>
                                 {(activeBadge.equipped)?("Clear badge"):("Wear badge")}
                             </DialogButton>
                         </div>

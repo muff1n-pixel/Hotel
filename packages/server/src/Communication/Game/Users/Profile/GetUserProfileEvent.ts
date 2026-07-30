@@ -1,4 +1,4 @@
-import { BadgeData, GetUserProfileData, GroupData, UserProfileData } from "@pixel63/events";
+import { BadgeData, GetUserProfileData, GroupData, GroupMemberData, UserGroupMemberData, UserProfileData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { UserModel } from "../../../../Database/Models/Users/UserModel";
@@ -110,7 +110,10 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
                 }
             }),
 
-            groups: userGroups.map((userGroup) => GroupData.fromJSON(userGroup.group)),
+            groups: userGroups.map((userGroup) => UserGroupMemberData.create({
+                group: GroupData.fromJSON(userGroup.group),
+                member: GroupMemberData.fromJSON(userGroup)
+            })),
 
             achievementScore
         }));

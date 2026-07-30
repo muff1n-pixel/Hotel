@@ -13,6 +13,7 @@ import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUserFriendRelationships } from "@UserInterface/Hooks/useUserFriendRelationships";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 
 export type RoomUserProfileProps = {
     user: RoomUserData;
@@ -47,7 +48,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
         return carryItemId;
     }, [user, room]);
 
-    const { badges, achievementScore } = useUserBadges(targetUser.id);
+    const { badges, group, achievementScore } = useUserBadges(targetUser.id);
     const relationships = useUserFriendRelationships(targetUser.id);
 
     const handleMottoChange = useCallback((motto: string) => {
@@ -101,7 +102,9 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                     width: 67,
                     height: 130,
 
-                    pointerEvents: "none"
+                    cursor: "pointer"
+                }} onClick={() => {
+                    dialogs.addUniqueDialog("user-profile", targetUser.id, targetUser.id);
                 }}>
                     {(targetUser.figureConfiguration) && (
                         <FigureImage figureConfiguration={targetUser.figureConfiguration} direction={2}/>
@@ -117,7 +120,30 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                     alignContent: "flex-start",
                     gap: 4
                 }}>
-                    {badges.toReversed().map((badge) => (
+                    {badges.toReversed().splice(0, 1).map((badge) => (
+                        <div style={{
+                            width: 40,
+                            height: 40
+                        }}>
+                            <BadgeImage key={badge.id} badge={badge}/>
+                        </div>
+                    ))}
+
+                    {(group)?(
+                        <div style={{
+                            width: 40,
+                            height: 40
+                        }}>
+                            <GroupBadgeImage data={group.badge}/>
+                        </div>
+                    ):(
+                        <div style={{
+                            width: 40,
+                            height: 40
+                        }}/>
+                    )}
+                    
+                    {badges.toReversed().splice(1, 4).map((badge) => (
                         <div style={{
                             width: 40,
                             height: 40

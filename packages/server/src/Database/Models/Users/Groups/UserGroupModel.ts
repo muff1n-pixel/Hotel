@@ -10,6 +10,7 @@ export class UserGroupModel extends Model {
     declare admin: boolean;
 
     declare pending: boolean;
+    declare favourite: boolean;
 
     declare createdAt: NonAttribute<Date>;
 
@@ -29,6 +30,10 @@ export function initializeUserGroupModel(sequelize: Sequelize) {
                 primaryKey: true
             },
             pending: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
+            favourite: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
             },

@@ -13,9 +13,10 @@ import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/Dia
 import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useEffect, useState } from "react";
-import { GroupData } from "@pixel63/events";
+import { SetGroupFavouriteData, UserGroupMemberData } from "@pixel63/events";
 import GroupCard from "@UserInterface/Common/Groups/Card/GroupCard";
 import { useTranslation } from "react-i18next";
+import { webSocketClient } from "@Game/index";
 
 export type UserProfileDialogProps = {
     data: string;
@@ -29,7 +30,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
     const profile = useUserProfile(data);
     const [getUserTranslation] = useTranslation("user");
     
-    const [currentGroup, setCurrentGroup] = useState<GroupData>();
+    const [currentGroup, setCurrentGroup] = useState<UserGroupMemberData>();
 
     useEffect(() => {
         if(!currentGroup) {
@@ -150,10 +151,36 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                         <div><b>{getUserTranslation("profile.groups")}:</b> {profile.groups.length}</div>
 
                         <DialogScrollArea hideInactive>
-                            <FlexLayout direction="column">
-                                {profile.groups.map((group) => (
-                                    <DialogItem width={50} key={group.id} active={currentGroup?.id === group.id} onClick={() => setCurrentGroup(group)}>
-                                        <GroupBadgeImage data={group.badge}/>
+                            <FlexLayout direction="column" style={{ paddingLeft: 5, paddingTop: 5, paddingRight: 5 }}>
+                                {profile.groups.map((data) => (
+                                    <DialogItem width={50} key={data.group!.id} active={currentGroup?.group!.id === data.group!.id} onClick={() => setCurrentGroup(data)} style={{
+                                        position: "relative",
+                                        overflow: "visible"
+                                    }} containerStyle={{ overflow: "visible"}}>
+                                        <GroupBadgeImage data={data.group!.badge}/>
+
+                                        {(profile.id === user.id) && (
+                                            <div style={{
+                                                position: "absolute",
+
+                                                left: -7,
+                                                top: -7,
+
+                                                zIndex: 100
+                                            }}>
+                                                {(data.member?.favourite)?(
+                                                    <div className="sprite_room_groups_favourite" style={{ cursor: "pointer" }} onClick={() => {
+                                                        webSocketClient.sendProtobuff(SetGroupFavouriteData, SetGroupFavouriteData.create({}));
+                                                    }}/>
+                                                ):(
+                                                    <div className="sprite_room_groups_nonfavourite" style={{ cursor: "pointer" }} onClick={() => {
+                                                        webSocketClient.sendProtobuff(SetGroupFavouriteData, SetGroupFavouriteData.create({
+                                                            groupId: data.group!.id
+                                                        }));
+                                                    }}/>
+                                                )}
+                                            </div>
+                                        )}
                                     </DialogItem>
                                 ))}
                             </FlexLayout>
@@ -165,7 +192,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                         borderRadius: 8,
                         padding: "12px 30px"
                     }}>
-                        <GroupCard data={currentGroup}/>
+                        <GroupCard data={currentGroup?.group}/>
                     </FlexLayout>
                 </FlexLayout>
             </DialogContent>

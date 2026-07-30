@@ -35,7 +35,8 @@ export default class GetUserGroupEvent implements ProtobuffListener<GetUserGroup
 
                 pending: userGroup.pending,
                 
-                createdAt: userGroup.createdAt.toISOString()
+                createdAt: userGroup.createdAt.toISOString(),
+                favourite: userGroup.favourite
             })
         }))
     }
