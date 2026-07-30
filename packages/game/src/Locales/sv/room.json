@@ -29,6 +29,8 @@
                 "dance_the_rollie": "The Rollie"
             },
 
+            "signs": "Skyltar",
+
             "friends": {
                 "revoke_request": "Återkalla vänförfrågan",
                 "accept_request": "Acceptera vänförfrågan",

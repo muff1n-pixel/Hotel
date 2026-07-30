@@ -29,6 +29,8 @@
                 "dance_the_rollie": "The Rollie"
             },
 
+            "signs": "Signs",
+
             "friends": {
                 "revoke_request": "Revoke request",
                 "accept_request": "Accept request",

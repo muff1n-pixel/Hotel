@@ -20,8 +20,6 @@ export default class SignCommand implements IncomingCommandHandler {
         roomUser.removeAction("Sign");
         roomUser.removeAction("AvatarEffect");
 
-        if(id !== 0) {
-            roomUser.addAction("Sign." + id);
-        } 
+        roomUser.addAction("Sign." + id, 5000);
     }
 }

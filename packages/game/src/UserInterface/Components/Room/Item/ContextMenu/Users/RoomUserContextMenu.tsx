@@ -26,7 +26,7 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
     const { friends, incomingRequests, outgoingRequests } = useFriends();
 
     const [targetUser, setTargetUser] = useState(room?.users.find((user) => user.item.id === item.id));
-    const [tab, setTab] = useState<null | "dance" | "relationship">(null);
+    const [tab, setTab] = useState<null | "dance" | "relationship" | "signs">(null);
 
     useEffect(() => {
         setTargetUser(room?.users.find((user) => user.item.id === item.id));
@@ -63,6 +63,10 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                 else {
                                     setTab("dance");
                                 }
+                            }}/>
+                            
+                            <UserContextMenuButton text={getTranslation("item.context_menu.signs")} hasDropdown={!targetUser.data.actions.some((action) => action.startsWith("Sign"))} onClick={() => {
+                                setTab("signs");
                             }}/>
                         </Fragment>
                     ):(
@@ -201,6 +205,106 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
 
                         setTab(null);
                     }}/>
+                    
+                    <UserContextMenuButton text={getTranslation("item.context_menu.back")} hasBack onClick={() => {
+                        setTab(null);
+                    }}/>
+                </UserContextMenuList>
+            )}
+
+            {(tab === "signs") && (
+                <UserContextMenuList>
+                    {Array(3).fill(null).map((_, row) => (
+                        <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
+                            {Array(3).fill(null).map((_, index) => (
+                                <UserContextMenuButton key={index} style={{ flex: 1 }} text={1 + (row * 3) + index} onClick={() => {
+                                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                        message: `:sign ${1 + (row * 3) + index}`
+                                    }));
+
+                                    setTab(null);
+                                }}/>
+                            ))}
+                        </FlexLayout>
+                    ))}
+
+                    <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
+                        <UserContextMenuButton style={{ flex: 1 }} text={10} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: `:sign 10`
+                            }));
+
+                            setTab(null);
+                        }}/>
+                        
+                        <UserContextMenuButton style={{ flex: 1 }} text={0} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: `:sign 0`
+                            }));
+
+                            setTab(null);
+                        }}/>
+
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_11"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 11"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                    </FlexLayout>
+
+                    <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_12"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 12"
+                            }));
+
+                            setTab(null);
+                        }}/>
+
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_13"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 13"
+                            }));
+
+                            setTab(null);
+                        }}/>
+
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_14"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 14"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                    </FlexLayout>
+                        
+                    <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_15"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 15"
+                            }));
+
+                            setTab(null);
+                        }}/>
+
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_16"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 16"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                        
+                        <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_17"/>)} onClick={() => {
+                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                                message: ":sign 17"
+                            }));
+
+                            setTab(null);
+                        }}/>
+                    </FlexLayout>
                     
                     <UserContextMenuButton text={getTranslation("item.context_menu.back")} hasBack onClick={() => {
                         setTab(null);
