@@ -12,6 +12,8 @@ import DanceCommand from "./Handlers/DanceCommand.js";
 import ActionCommand from "./Handlers/ActionCommand.js";
 import AwayFromKeyboardCommand from "./Handlers/AwayFromKeyboardCommand.js";
 import SignCommand from "./Handlers/SignCommand.js";
+import StandCommand from "./Handlers/StandCommand.js";
+import LaughCommand from "./Handlers/LaughCommand.js";
 
 export default class CommandHandler extends EventEmitter {
     constructor() {
@@ -32,8 +34,10 @@ export default class CommandHandler extends EventEmitter {
 
     private registerCommands() {
         this
+            .addCommand(new StandCommand())
             .addCommand(new SitCommand())
             .addCommand(new WaveCommand())
+            .addCommand(new LaughCommand())
             .addCommand(new ActionCommand())
             .addCommand(new EnableCommand())
             .addCommand(new DanceCommand())

@@ -51,6 +51,10 @@ export default function RoomChatCommandsDialog({ hidden, onClose }: RoomChatComm
                             values: [":sit", "Sits your Habbo down!"]
                         },
                         {
+                            id: ":stand",
+                            values: [":stand", "Stands your Habbo up!"]
+                        },
+                        {
                             id: ":wave",
                             values: [":wave", "Waves to everyone in the room!"]
                         },

@@ -29,6 +29,13 @@
                 "dance_the_rollie": "The Rollie"
             },
 
+            "actions": "Actions",
+            "actions.sit": "Sit",
+            "actions.stand": "Stand",
+            "actions.wave": "Wave",
+            "actions.laugh": "Laugh",
+            "actions.sleep": "Idle",
+
             "signs": "Signs",
 
             "friends": {
