@@ -22,12 +22,6 @@ export default function GroupBadgeEditor({ data, onChange }: GroupBadgeEditorPro
                 base: {
                     image: "badgepart_base_basic_1",
                     color: "#FFFFFF"
-                },
-
-                symbol1: {
-                    image: "badgepart_symbol_1",
-                    color: "#FFFFFF",
-                    position: 1
                 }
             }));
         }
