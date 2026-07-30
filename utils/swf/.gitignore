@@ -2,7 +2,6 @@ assets/
 temp/
 
 .env
-.env.2
 
 furnidata.xml
 furniture.sql
