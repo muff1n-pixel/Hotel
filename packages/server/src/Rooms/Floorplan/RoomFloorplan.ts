@@ -22,7 +22,7 @@ export default class RoomFloorplan {
     }
 
     private getMutableGrid() {
-        return [...this.grid];
+        return [...this.grid.map((grid) => [...grid])];
     }
 
     public updatePosition(position: RoomPositionOffsetData, dimensions: RoomPositionData = RoomPositionData.create({ row: 1, column: 1 })) {
