@@ -39,6 +39,10 @@ export default function RoomChatCommandsDialog({ hidden, onClose }: RoomChatComm
                             values: [":carry [id]", "Equips the carry item, if no provided, opens a dialog with all items."]
                         },
                         {
+                            id: ":sign",
+                            values: [":sign [id]", "Equips the sign (1-17)."]
+                        },
+                        {
                             id: ":floor",
                             values: [":floor", "Opens the floorplan editor."]
                         },

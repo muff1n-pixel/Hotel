@@ -11,8 +11,10 @@ export default class EnableCommand implements IncomingCommandHandler {
 
         const id = parseInt(inputs[0]);
 
-        roomUser.removeAction("AvatarEffect");
+        roomUser.removeAction("Dance");
         roomUser.removeAction("CarryItem");
+        roomUser.removeAction("Sign");
+        roomUser.removeAction("AvatarEffect");
 
         if(id !== 0) {
             roomUser.addAction("AvatarEffect." + id);

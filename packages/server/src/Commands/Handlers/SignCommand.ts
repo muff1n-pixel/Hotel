@@ -1,8 +1,8 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
 import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
 
-export default class DanceCommand implements IncomingCommandHandler {
-    public readonly command = "dance";
+export default class SignCommand implements IncomingCommandHandler {
+    public readonly command = "sign";
 
     async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
         if(!inputs[0]) {
@@ -11,8 +11,8 @@ export default class DanceCommand implements IncomingCommandHandler {
 
         const id = parseInt(inputs[0]);
 
-        if(id < 0 || id > 4) {
-            throw new Error("Dance doesn't exist.");
+        if(id < 0 || id > 17) {
+            throw new Error("Sign does not exist.");
         }
 
         roomUser.removeAction("Dance");
@@ -21,7 +21,7 @@ export default class DanceCommand implements IncomingCommandHandler {
         roomUser.removeAction("AvatarEffect");
 
         if(id !== 0) {
-            roomUser.addAction("Dance." + id);
+            roomUser.addAction("Sign." + id);
         } 
     }
 }
