@@ -173,8 +173,10 @@ export default class RoomActorPath {
             return false;
         }
 
-        this.path = undefined;
-        this.pathOnCancel?.();
+        if(this.path) {
+            this.path = undefined;
+            this.pathOnCancel?.();
+        }
 
         this.path = path;
         this.pathOnFinish = onFinish;
@@ -254,8 +256,10 @@ export default class RoomActorPath {
             this.actor.direction = direction;
         }
 
-        this.path = undefined;
-        this.pathOnCancel?.();
+        if(this.path) {
+            this.path = undefined;
+            this.pathOnCancel?.();
+        }
 
         this.actor.lastActivity = performance.now();
 
