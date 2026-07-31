@@ -22,7 +22,7 @@ export default class RoomFurnitureFreezeCounterLogic implements RoomFurnitureLog
         const tensDigits = Math.floor((clampedScore % 100) / 10);
         const onesDigits = clampedScore % 10;
 
-        await this.roomFurniture.setAnimationTags([
+        this.roomFurniture.setAnimationTags([
             UserFurnitureAnimationTag.create({
                 tag: "hundreds_sprite",
                 frame: hundredsDigits

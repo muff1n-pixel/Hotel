@@ -259,13 +259,9 @@ export default class RoomFurniture<T = unknown> {
         }
     }
 
-    public async setAnimationTags(animationTags: UserFurnitureAnimationTag[]) {
+    public setAnimationTags(animationTags: UserFurnitureAnimationTag[]) {
         this.model.animation = 0;
         this.model.animationTags = animationTags;
-
-        if(this.model.changed()) {
-            await this.model.save();
-        }
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [

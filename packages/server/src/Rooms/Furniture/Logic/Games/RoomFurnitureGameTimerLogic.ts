@@ -107,7 +107,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
         const tenSeconds = Math.floor(seconds / 10);
         const secondsDigit = seconds % 10;
 
-        await this.roomFurniture.setAnimationTags([
+        this.roomFurniture.setAnimationTags([
             UserFurnitureAnimationTag.create({
                 tag: "ten_minutes_sprite",
                 frame: tenMinutes
