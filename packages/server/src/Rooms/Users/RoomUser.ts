@@ -418,6 +418,10 @@ export default class RoomUser implements RoomActor {
         for(const furniture of newFurniture) {
             await this.handleWalksOnFurniture?.(furniture, previousFurniture);
         }
+
+        if(newPosition.row === this.room.model.structure.door?.row && newPosition.column === this.room.model.structure.door?.column) {
+            this.disconnect();
+        }
     }
 
     public async handleBeforeWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
