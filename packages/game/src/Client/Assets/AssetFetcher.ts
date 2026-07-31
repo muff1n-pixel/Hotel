@@ -118,6 +118,8 @@ export default class AssetFetcher {
         const result = new Promise<HTMLImageElement>((resolve, reject) => {
             const image = new Image();
 
+            image.crossOrigin = "anonymous";
+
             image.onload = () => {
                 resolve(image);
             };
