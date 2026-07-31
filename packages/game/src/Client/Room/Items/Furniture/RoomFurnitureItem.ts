@@ -19,7 +19,7 @@ export default class RoomFurnitureItem extends RoomItem {
 
     private rendering: boolean = false;
 
-    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, private data?: UserFurnitureCustomData) {
+    constructor(public roomRenderer: RoomRenderer, public readonly furnitureRenderer: Furniture, position?: RoomPositionData, public data?: UserFurnitureCustomData) {
         super(roomRenderer, "furniture");
 
         if(position) {
@@ -56,45 +56,11 @@ export default class RoomFurnitureItem extends RoomItem {
         this.render();
     }
 
-    public setPosition(position: RoomPositionData | undefined, index?: number): void {
-        if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
-            super.setPosition(undefined);
-            //this.priority = 0;
-
-            return;
-        }
-
-        return super.setPosition(position, index);
-    }
-
     public getDimensions(): RoomPositionData {
         return this.furnitureRenderer.getDimensions();
     }
 
-    render() {
-        if(this.furnitureRenderer.data?.index.logic === "furniture_bg") {
-            // TODO: don't update the sprite if we don't have to
-            if(this.data?.background?.imageUrl) {
-                this.setPosition(undefined);
-                //this.priority = 0;
-
-                AssetFetcher.fetchImage(this.data.background.imageUrl).then((image) => {
-                    this.setSprites([
-                        new RoomFurnitureBackgroundSprite(this, image, {
-                            x: this.data?.background?.left ?? 0,
-                            y: this.data?.background?.top ?? 0,
-                            z: this.data?.background?.index ?? 0,
-                        })
-                    ]);
-                });
-            }
-            else {
-                this.setSprites([]);
-            }
-
-            return;
-        }
-
+    render(forceRender?: boolean) {
         /*if(this.furnitureRenderer.type !== "tile_cursor") {
             if(this.furnitureRenderer.size !== this.roomRenderer.size) {
                 this.furnitureRenderer.size = this.roomRenderer.size;
@@ -111,7 +77,7 @@ export default class RoomFurnitureItem extends RoomItem {
 
         this.furnitureRenderer.frame++;
         
-        if(!this.rendering && this.furnitureRenderer.shouldRender()) {
+        if(!this.rendering && (this.furnitureRenderer.shouldRender() || forceRender)) {
             if(clientInstance.settings.value?.debugRoomRendering) {
                 //this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
@@ -158,6 +124,10 @@ export default class RoomFurnitureItem extends RoomItem {
 
         if(this.furnitureRenderer.renderer instanceof FurnitureExternalImageRenderer) {
             this.furnitureRenderer.externalImage = this.data.externalImage?.externalImage;
+        }
+
+        if(this.data.background) {
+            this.render(true);
         }
     }
 }

@@ -84,8 +84,10 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
             preview={(activeItems.length === 1) && (
                 <FlexLayout direction="row" align="center">
-                    <FlexLayout align="center" justify="center" style={{ flex: 1 }}>
-                        <FurnitureImage animation={animationId} frame={frame} furnitureData={activeItems[0]} spritesWithoutInkModes={false}/>
+                    <FlexLayout align="center" justify="center">
+                        <FurnitureImage animation={animationId} frame={frame} furnitureData={activeItems[0]} spritesWithoutInkModes={false} style={{
+                            maxHeight: 60
+                        }}/>
                     </FlexLayout>
 
                     <div style={{ flex: 3 }}/>

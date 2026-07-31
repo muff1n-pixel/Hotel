@@ -62,6 +62,8 @@ export default class ManifestVisualizationExtraction {
                             ignoreMouse: layer["@_ignoreMouse"] === '1',
                             tag: layer["@_tag"],
                             alpha: layer["@_alpha"] ? parseInt(layer["@_alpha"]) : undefined,
+                            x: Boolean(layer["@_x"]) && parseFloat(layer["@_x"]) ? parseFloat(layer["@_x"]) : undefined,
+                            y: Boolean(layer["@_y"]) && parseFloat(layer["@_y"]) ? parseFloat(layer["@_y"]) : undefined,
                         }
                     }),
 

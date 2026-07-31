@@ -30,6 +30,8 @@ export type FurnitureVisualization = {
             zIndex: number;
             ink?: string;
             tag?: string;
+            x?: number;
+            y?: number;
             ignoreMouse?: boolean;
             alpha?: number;
         }[];

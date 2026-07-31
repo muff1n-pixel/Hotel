@@ -368,8 +368,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
-            let x = assetData.x;
-            let y = assetData.y;
+            let x = layerData?.x ?? assetData.x;
+            let y = layerData?.y ?? assetData.y;
 
             if(assetData.flipHorizontal) {
                 x = (assetData.x * -1) - spriteData.width;

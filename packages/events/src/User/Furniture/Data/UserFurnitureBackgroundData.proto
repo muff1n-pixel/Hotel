@@ -6,4 +6,6 @@ message UserFurnitureBackgroundData {
     int32 left = 2;
     int32 top = 3;
     int32 index = 4;
+
+    bool relative_position = 5;
 }

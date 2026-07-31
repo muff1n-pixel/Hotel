@@ -32,7 +32,8 @@ export default class RoomFurnitureBackgroundSprite extends RoomSprite {
             position?.z ?? 0,
             undefined,
             undefined,
-            image
+            image,
+            false
         );
     }
 

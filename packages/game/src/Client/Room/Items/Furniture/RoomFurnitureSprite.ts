@@ -4,6 +4,7 @@ import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
+import AssetFetcher from "@Client/Assets/AssetFetcher";
 
 export default class RoomFurnitureSprite extends RoomSprite {
     public readonly defaultOffset: MousePosition = {
@@ -12,17 +13,44 @@ export default class RoomFurnitureSprite extends RoomSprite {
     };
 
     constructor(public readonly item: RoomFurnitureItem, public readonly furnitureSprite: FurnitureRendererSprite) {
+        const isBrandedImage = furnitureSprite.tag === "branded_image";
+        const hasImageUrl = isBrandedImage && Boolean(item.data?.background?.imageUrl);
+        const relativePosition = hasImageUrl && Boolean(item.data?.background?.relativePosition);
+
         super(
             item,
             RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
             furnitureSprite.zIndex,
             (furnitureSprite.alpha !== undefined)?(furnitureSprite.alpha / 255):(undefined),
             furnitureSprite.ink,
-            furnitureSprite.image,
+            furnitureSprite.image
         );
 
         this.priority = this.furnitureSprite.zIndex;
         this.tag = furnitureSprite.tag;
+
+        if(isBrandedImage && hasImageUrl) {
+            AssetFetcher.fetchImage(item.data!.background!.imageUrl).then((image) => {
+                this.inheritOffset = relativePosition;
+
+                console.log({ relativePosition });
+
+                if(!relativePosition) {
+                    this.offset.left = 64 + (item.data?.background?.left ?? 0);
+                    this.offset.top = 16 + (item.data?.background?.top ?? 0);
+                }
+
+                const priority = (item.data?.background?.index ?? 0) 
+                
+                if(priority) {
+                    this.priority = priority;
+
+                    this.inheritPriority = false;
+                }
+
+                this.setTexture(image);
+            });
+        }
     }
 
     update(): void {

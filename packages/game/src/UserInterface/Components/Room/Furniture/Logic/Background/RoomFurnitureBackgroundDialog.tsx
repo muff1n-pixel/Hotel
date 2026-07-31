@@ -7,6 +7,7 @@ import DialogContent from "../../../../../Common/Dialog/Components/DialogContent
 import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogButton";
 import Input from "../../../../../Common/Form/Components/Input";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 
 export type RoomFurnitureBackgroundDialogData = {
     furniture: RoomInstanceFurniture;
@@ -20,6 +21,8 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
     const [offsetY, setOffsetY] = useState(data.data.data?.background?.top ?? 0);
     const [offsetZ, setOffsetZ] = useState(data.data.data?.background?.index ?? 0);
 
+    const [relativePosition, setRelativePosition] = useState(data.data.data?.background?.relativePosition ?? true);
+
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
             id: data.data.id,
@@ -31,19 +34,23 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                     left: offsetX,
                     top: offsetY,
 
-                    index: offsetZ
+                    index: offsetZ,
+
+                    relativePosition
                 }
             }
         }));
-    }, [data, imageUrl, offsetX, offsetY, offsetZ]);
+    }, [data, imageUrl, offsetX, offsetY, offsetZ, relativePosition]);
 
     if(hidden) {
         return null;
     }
 
     return (
-        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} height={400} initialPosition="center">
-            <DialogContent>
+        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} assumedHeight={400} height={"auto"} initialPosition="center">
+            <DialogContent style={{
+                gap: 10
+            }}>
                 <div style={{
                     flex: 1,
                     
@@ -103,6 +110,8 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                             <Input type="number" placeholder="0" value={offsetZ.toString()} onChange={(value) => setOffsetZ(parseInt(value))} style={{ width: 0 }}/>
                         </div>
                     </div>
+
+                    <Checkbox value={relativePosition} onChange={setRelativePosition} label="Put image relative to furniture sprite"/>
                 </div>
 
                 <div style={{

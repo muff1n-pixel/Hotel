@@ -20,7 +20,8 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         public alpha: number | undefined = undefined,
         public blendMode: BLEND_MODES = "normal",
         image?: TextureSourceLike,
-        public inheritOffset: boolean = true
+        public inheritOffset: boolean = true,
+        public inheritPriority: boolean = true
     ) {
         let x: number;
         let y: number;
@@ -33,6 +34,15 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             x = this.offset.left;
             y = this.offset.top;
         }
+
+        let zIndex: number;
+
+        if(this.inheritPriority) {
+            zIndex = this.item.calculatedPriority + this.priority;
+        }
+        else {
+            zIndex = this.priority;
+        }
         
         this._sprite = new Sprite({
             texture: (image)?(Texture.from(image)):(undefined),
@@ -40,7 +50,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             y,
             alpha: alpha ?? this.item.alpha,
             blendMode,
-            zIndex: this.item.calculatedPriority + this.priority,
+            zIndex,
         });
 
         this._sprite.texture.source.scaleMode = "nearest";
@@ -80,8 +90,13 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             this._sprite.x = this.offset.left;
             this._sprite.y = this.offset.top;
         }
-
-        this._sprite.zIndex = this.item.calculatedPriority + this.priority;
+        
+        if(this.inheritPriority) {
+            this._sprite.zIndex = this.item.calculatedPriority + this.priority;
+        }
+        else {
+            this._sprite.zIndex = this.priority;
+        }
 
         this._sprite.blendMode = this.blendMode;
         this._sprite.alpha = this.alpha ?? this.item.alpha;
