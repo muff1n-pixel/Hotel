@@ -67,8 +67,6 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
     }
 
     private async handleUserCancelledEnteringTeleport(roomUser: RoomUser) {
-        console.log("Cancelled");
-        
         this.roomFurniture.setAnimation(0);
     }
 

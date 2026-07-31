@@ -239,8 +239,6 @@ export default class RoomFurniture<T = unknown> {
         this.model.animation = animation;
         this.model.animationTags = null;
 
-        console.log("Animation set to " + animation + ", new value: " + this.model.animation);
-
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
@@ -264,8 +262,6 @@ export default class RoomFurniture<T = unknown> {
     public setAnimationTags(animationTags: UserFurnitureAnimationTag[]) {
         this.model.animation = 0;
         this.model.animationTags = animationTags;
-
-        this.model.save().catch(console.error);
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
