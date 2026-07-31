@@ -213,7 +213,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             this.players.unfreezePlayer(player);
         }
 
-        await Promise.all(this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0)));
+        this.getAllExitFurniture().map((furniture) => furniture.setAnimation(0));
 
         await this.room.handleGameEnds(this);
     }
@@ -337,7 +337,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         const teamPlayers = this.players.getTeamPlayers(team);
 
         for(const furniture of this.getGateFurniture(team)) {
-            furniture.setAnimation(teamPlayers.length).catch(console.error);
+            furniture.setAnimation(teamPlayers.length);
         }
     }
 

@@ -30,7 +30,7 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
         roomUser.addAction(this.game.getTeamAvatarEffect(player));
 
         for(const furniture of this.game.getGateFurniture(team)) {
-            furniture.setAnimation(this.getTeamPlayers(team).length).catch(console.error);
+            furniture.setAnimation(this.getTeamPlayers(team).length);
         }
         
         player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildPlayerJoinedTeam(team));
@@ -60,7 +60,7 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
         roomUser.removeAction("AvatarEffect");
 
         for(const furniture of this.game.getGateFurniture(player.team)) {
-            furniture.setAnimation(this.getTeamPlayers(player.team).length).catch(console.error);
+            furniture.setAnimation(this.getTeamPlayers(player.team).length);
         }
     }
 

@@ -310,6 +310,10 @@ export default class Room {
             catch(error) {
                 console.error("Failed to handle furniture actions interval", error);
             }
+
+            if(furniture.model.changed()) {
+                furniture.model.save().catch(console.error);
+            }
         }
 
         // TODO: change so that the clients get the full path immediately, and only use this interval to cancel due to obstructions in the path?

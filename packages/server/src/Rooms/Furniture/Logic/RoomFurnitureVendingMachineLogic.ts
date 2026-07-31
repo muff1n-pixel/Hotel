@@ -23,7 +23,7 @@ export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLo
             });
         }
 
-        await this.roomFurniture.setAnimation(1);
+        this.roomFurniture.setAnimation(1);
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
@@ -33,7 +33,7 @@ export default class RoomFurnitureVendingMachineLogic implements RoomFurnitureLo
             }, 500);
         });
 
-        await this.roomFurniture.setAnimation(0);
+        this.roomFurniture.setAnimation(0);
 
         const carryItem = this.roomFurniture.model.furniture.customParams[Math.floor(Math.random() * this.roomFurniture.model.furniture.customParams.length)];
 

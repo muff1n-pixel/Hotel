@@ -5,7 +5,7 @@ import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurniturePhotostandLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(1).catch(console.error);
+        this.roomFurniture.setAnimation(1);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {

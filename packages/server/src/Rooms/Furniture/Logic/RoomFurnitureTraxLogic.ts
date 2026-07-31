@@ -15,7 +15,7 @@ export default class RoomFurnitureTraxLogic implements RoomFurnitureLogic {
         }
 
         if(this.roomFurniture.model.animation === 1) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
 
             return;
         }

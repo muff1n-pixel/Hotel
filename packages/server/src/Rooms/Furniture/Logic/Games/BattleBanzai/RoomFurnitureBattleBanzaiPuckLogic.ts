@@ -30,7 +30,7 @@ export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFoo
         const animation = 1 + (["red", "green", "blue", "yellow"].indexOf(player.team));
 
         if(this.roomFurniture.model.animation !== animation) {
-            await this.roomFurniture.setAnimation(animation);
+            this.roomFurniture.setAnimation(animation);
         }
 
         const tilesAtPosition = this.roomFurniture.room.furnitures.filter((furniture) => furniture.logic instanceof RoomFurnitureBattleBanzaiTileLogic && furniture.model.position.row === position.row && furniture.model.position.column === position.column);
@@ -46,7 +46,7 @@ export default class RoomFurnitureBattleBanzaiPuckLogic extends RoomFurnitureFoo
 
     public async handleFootballStopped(): Promise<void> {
         if(this.roomFurniture.model.animation !== 0) {
-            this.roomFurniture.setAnimation(0).catch(console.error);;
+            this.roomFurniture.setAnimation(0);
         }
     }
 }

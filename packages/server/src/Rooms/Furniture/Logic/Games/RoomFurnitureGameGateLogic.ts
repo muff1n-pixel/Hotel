@@ -6,7 +6,7 @@ import RoomUser from "../../../Users/RoomUser";
 
 export default class RoomFurnitureGameGateLogic<T> implements RoomFurnitureLogic {
     constructor(public readonly roomFurniture: RoomFurniture, public readonly team: T, public readonly game: RoomGameConstructor) {
-        this.roomFurniture.setAnimation(0).catch(console.error);
+        this.roomFurniture.setAnimation(0);
     }
 
     public isWalkable(): boolean {

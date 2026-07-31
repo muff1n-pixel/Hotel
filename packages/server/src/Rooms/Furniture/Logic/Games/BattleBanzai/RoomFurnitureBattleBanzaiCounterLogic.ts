@@ -6,14 +6,14 @@ import { RoomFreezeGameTeam } from "../../../../Games/Freeze/RoomFreezeGame.js";
 
 export default class RoomFurnitureBattleBanzaiCounterLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture, public readonly team: RoomFreezeGameTeam) {
-        this.roomFurniture.setAnimation(0).catch(console.error);
+        this.roomFurniture.setAnimation(0);
     }
 
     public async updateAnimationTags(score: number) {
         const clampedScore = Math.max(0, Math.min(999, score));
 
         if(!clampedScore) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
 
             return;
         }

@@ -44,7 +44,7 @@ export default class RoomFurnitureEnableBoxLogic implements RoomFurnitureLogic {
             }
         }
 
-        await this.roomFurniture.setAnimation(1);
+        this.roomFurniture.setAnimation(1);
 
         this.deleteAt = performance.now() + 1000;
     }

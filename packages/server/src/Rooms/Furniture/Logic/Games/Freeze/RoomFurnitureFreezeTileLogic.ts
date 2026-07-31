@@ -7,7 +7,7 @@ import RoomFurnitureFreezeBlockLogic from "./RoomFurnitureFreezeBlockLogic";
 
 export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(0).catch(console.error);
+        this.roomFurniture.setAnimation(0);
     }
 
     async handleUserDoubleClickOnTile(roomUser: RoomUser, tile: RoomPositionData): Promise<void> {
@@ -50,10 +50,10 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
         if(player.megaSnowball) {
-            await this.roomFurniture.setAnimation(6);
+            this.roomFurniture.setAnimation(6);
         }
         else {
-            await this.roomFurniture.setAnimation(Math.max(1, Math.min(4, player.radius - 3)));
+            this.roomFurniture.setAnimation(Math.max(1, Math.min(4, player.radius - 3)));
         }
 
         await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -61,7 +61,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
         player.currentSnowballs--;
 
         if(!this.roomFurniture.room.games.isGamePlaying(RoomFreezeGame)) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
 
             return;
         }
@@ -165,7 +165,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
         this.lastSnowballed = performance.now();
 
-        this.roomFurniture.setAnimation(101).catch(console.error);
+        this.roomFurniture.setAnimation(101);
 
         const hitPlayer = game.players.getPlayerAtPosition(this.roomFurniture.model.position);
 
@@ -180,7 +180,7 @@ export default class RoomFurnitureFreezeTileLogic implements RoomFurnitureLogic 
 
     async handleActionsInterval(): Promise<void> {
         if(this.roomFurniture.model.animation === 101 && performance.now() - this.lastSnowballed >= 500) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
         }
     }
 }

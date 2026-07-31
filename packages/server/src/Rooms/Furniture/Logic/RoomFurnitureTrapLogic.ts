@@ -10,7 +10,7 @@ import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 
 export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(1).catch(console.error);
+        this.roomFurniture.setAnimation(1);
     }
 
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
@@ -33,10 +33,10 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
             this.trapDeactivatedAt = performance.now();
             this.trapActivateAt = performance.now() + (Math.random() * 10) * 1000;
 
-            await this.roomFurniture.setAnimation(100);
+            this.roomFurniture.setAnimation(100);
 
             setTimeout(() => {
-                this.roomFurniture.setAnimation(1).catch(console.error);
+                this.roomFurniture.setAnimation(1);
             }, 500);
         }
         else if(this.roomFurniture.model.animation === 1) {
@@ -50,10 +50,10 @@ export default class RoomFurnitureTrapLogic implements RoomFurnitureLogic {
 
             this.trapActivatedAt = performance.now();
 
-            await this.roomFurniture.setAnimation(101);
+            this.roomFurniture.setAnimation(101);
 
             setTimeout(() => {
-                this.roomFurniture.setAnimation(0).catch(console.error);
+                this.roomFurniture.setAnimation(0);
             }, 1000);
         }
     }

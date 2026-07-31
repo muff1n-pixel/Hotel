@@ -27,13 +27,13 @@ export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
 
         // Close the dice if deactivating
         if(payload.tag === "deactivate" && this.roomFurniture.model.animation !== 0) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
 
             return;
         }
 
         console.log("Rolling");
-        await this.roomFurniture.setAnimation(-1);
+        this.roomFurniture.setAnimation(-1);
         
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -49,7 +49,7 @@ export default class RoomFurnitureDiceLogic implements RoomFurnitureLogic {
         }
 
         console.log("Rolled");
-        await this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 6));
+        this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 6));
     }
 
     async handleActionsInterval(): Promise<void> {

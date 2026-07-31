@@ -24,7 +24,7 @@ export default class WiredActionToggleStateLogic extends WiredActionLogic {
             const nextAnimation = (this.roomFurniture.model.data.wiredActionToggleState.toggleType === "next")?(furniture.getNextAnimation()):(furniture.getPreviousAnimation());
 
             if(nextAnimation !== null) {
-                furniture.setAnimation(nextAnimation).catch(console.error);
+                furniture.setAnimation(nextAnimation);
             }
         }
 

@@ -13,14 +13,14 @@ export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {
     // Animation 32 is for the initial spin
     async use(roomUser: RoomUser, payload: UseRoomFurnitureData): Promise<void> {
         if(this.roomFurniture.model.animation !== 0) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
 
             return;
         }
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
-        await this.roomFurniture.setAnimation(32);
+        this.roomFurniture.setAnimation(32);
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -36,7 +36,7 @@ export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {
 
         const randomSeat = Math.floor(Math.random() * 4);
 
-        await this.roomFurniture.setAnimation(21 + randomSeat);
+        this.roomFurniture.setAnimation(21 + randomSeat);
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -50,7 +50,7 @@ export default class RoomFurnitureFortunaLogic implements RoomFurnitureLogic {
             return;
         }
 
-        await this.roomFurniture.setAnimation(11 + randomSeat);
+        this.roomFurniture.setAnimation(11 + randomSeat);
     }
 
     async handleActionsInterval(): Promise<void> {

@@ -235,13 +235,9 @@ export default class RoomFurniture<T = unknown> {
         return RoomPositionOffsetData.fromJSON(position);
     }
 
-    public async setAnimation(animation: number) {
+    public setAnimation(animation: number) {
         this.model.animation = animation;
         this.model.animationTags = null;
-
-        if(this.model.changed()) {
-            await this.model.save();
-        }
 
         this.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [

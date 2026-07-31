@@ -21,7 +21,7 @@ export default class RoomFurnitureRollerLogic implements RoomFurnitureLogic {
         const room = this.roomFurniture.room;
 
         if(this.roomFurniture.model.animation !== 0) {
-            await this.roomFurniture.setAnimation(0);
+            this.roomFurniture.setAnimation(0);
         }
 
         if(room.model.speed === 0) {

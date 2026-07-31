@@ -30,13 +30,13 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
 
         await this.roomFurniture.room.handleUserUseFurniture(roomUser, this.roomFurniture);
 
-        await this.roomFurniture.setAnimation(1);
+        this.roomFurniture.setAnimation(1);
 
         await new Promise<void>((resolve, reject) => {
             roomUser.path.walkTo(RoomPositionOffsetData.fromJSON(this.roomFurniture.model.position), true, resolve, reject);
         });
 
-        await this.roomFurniture.setAnimation(2);
+        this.roomFurniture.setAnimation(2);
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -44,7 +44,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             }, 500);
         });
 
-        await this.roomFurniture.setAnimation(0);
+        this.roomFurniture.setAnimation(0);
 
         if(!this.roomFurniture.model.data?.teleport?.furnitureId) {
             console.warn("Teleport does not have a second furniture.");
@@ -98,7 +98,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             roomUser = targetRoom.addUserClient(roomUser.user, targetFurniture.model.position);
         }
 
-        await targetFurniture.setAnimation(2);
+        targetFurniture.setAnimation(2);
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -111,7 +111,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             depth: targetFurniture.model.position.depth + 0.01
         });
 
-        await targetFurniture.setAnimation(1);
+        targetFurniture.setAnimation(1);
 
         const targetOffsetPosition = targetFurniture.getOffsetPosition(1);
 
@@ -119,7 +119,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             roomUser.path.walkTo(targetOffsetPosition, undefined, resolve, reject);
         });
 
-        await targetFurniture.setAnimation(0);
+        targetFurniture.setAnimation(0);
     }
 
     async handleActionsInterval(): Promise<void> {

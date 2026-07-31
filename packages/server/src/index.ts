@@ -26,6 +26,8 @@ export async function startServer() {
 
     await game.hotelInformation.resetUsersOnline();
 
+    game.webSocket.ready = true;
+
     console.log("Server started");
 }
 

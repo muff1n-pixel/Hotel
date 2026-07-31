@@ -23,7 +23,7 @@ export default class WiredActionMatchToPositionStateLogic extends WiredActionLog
             }
 
             if(this.roomFurniture.model.data.common?.furnitureState.matchState) {
-                await roomFurniture.setAnimation(furniture.animation);
+                roomFurniture.setAnimation(furniture.animation);
             }
             
             if(this.roomFurniture.model.data.common?.furnitureState.matchDirection) {

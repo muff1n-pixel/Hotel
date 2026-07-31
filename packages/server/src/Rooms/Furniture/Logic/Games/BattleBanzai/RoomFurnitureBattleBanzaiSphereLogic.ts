@@ -21,7 +21,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
                 const leadingTeamAnimation = 102 + (["red", "green", "blue", "yellow"].indexOf(winningTeam.team));
 
                 if(this.roomFurniture.model.animation !== leadingTeamAnimation) {
-                    await this.roomFurniture.setAnimation(leadingTeamAnimation);
+                    this.roomFurniture.setAnimation(leadingTeamAnimation);
                 }
             }
 
@@ -30,7 +30,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
 
         if(!game.started) {
             if(this.roomFurniture.model.animation !== 0) {
-                await this.roomFurniture.setAnimation(0);
+                this.roomFurniture.setAnimation(0);
             }
 
             return;
@@ -38,7 +38,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
 
         if(game.starting) {
             if(this.roomFurniture.model.animation !== 101) {
-                await this.roomFurniture.setAnimation(101);
+                this.roomFurniture.setAnimation(101);
             }
 
             return;
@@ -46,7 +46,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
 
         if(game.paused) {
             if(this.roomFurniture.model.animation !== 3) {
-                await this.roomFurniture.setAnimation(3);
+                this.roomFurniture.setAnimation(3);
             }
 
             return;
@@ -56,7 +56,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
 
         if(!leadingTeam) {
             if(this.roomFurniture.model.animation !== 1) {
-                await this.roomFurniture.setAnimation(1);
+                this.roomFurniture.setAnimation(1);
             }
 
             return;
@@ -65,7 +65,7 @@ export default class RoomFurnitureBattleBanzaiSphereLogic implements RoomFurnitu
         const leadingTeamAnimation = 10 + (["red", "green", "blue", "yellow"].indexOf(leadingTeam.team));
 
         if(this.roomFurniture.model.animation !== leadingTeamAnimation) {
-            await this.roomFurniture.setAnimation(leadingTeamAnimation);
+            this.roomFurniture.setAnimation(leadingTeamAnimation);
         }
     }
 }

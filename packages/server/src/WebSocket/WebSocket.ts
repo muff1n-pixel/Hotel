@@ -18,6 +18,8 @@ export type PendingConnection = {
 export default class WebSocket {
     private readonly server: WebSocketServer;
 
+    public ready: boolean = false;
+
     private readonly pendingConnections: PendingConnection[] = [];
 
     constructor() {
@@ -28,6 +30,12 @@ export default class WebSocket {
 
         this.server.on("connection", (webSocket, request) => {
             (async () => {
+                if(!this.ready) {
+                    webSocket.close();
+
+                    return;
+                }
+                
                 if(!request.url) {
                     console.warn("No url provided.");
 

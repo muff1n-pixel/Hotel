@@ -28,7 +28,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
             return;
         }
 
-        await this.roomFurniture.setAnimation(1);
+        this.roomFurniture.setAnimation(1);
 
         this.activeActions.push({
             roomUser,
@@ -41,7 +41,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
         for (const action of this.activeActions) {
             switch (action.interval) {
                 case 0: {
-                    await action.targetFurniture.setAnimation(1);
+                    action.targetFurniture.setAnimation(1);
 
                     action.roomUser.path.teleportTo(
                         RoomPositionOffsetData.fromJSON(action.targetFurniture.model.position),
@@ -53,7 +53,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
 
                 case 1: {
                     if (this.roomFurniture.model.animation === 1) {
-                        await this.roomFurniture.setAnimation(0);
+                        this.roomFurniture.setAnimation(0);
                     }
 
                     break;
@@ -61,7 +61,7 @@ export default class RoomFurnitureBattleBanzaiRandomTeleportLogic implements Roo
 
                 case 2: {
                     if (action.targetFurniture.model.animation === 1) {
-                        await action.targetFurniture.setAnimation(0);
+                        action.targetFurniture.setAnimation(0);
                     }
 
                     break;

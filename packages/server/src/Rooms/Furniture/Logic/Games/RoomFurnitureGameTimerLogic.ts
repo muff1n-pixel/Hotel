@@ -53,7 +53,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             if(this.seconds === 1) {
                 this.seconds = 0;
                 
-                await this.roomFurniture.setAnimation(0);
+                this.roomFurniture.setAnimation(0);
             }
 
             return;
@@ -67,7 +67,7 @@ export default class RoomFurnitureGameTimerLogic implements RoomFurnitureLogic {
             this.seconds = game.seconds;
 
             if(this.seconds === 0) {
-                await this.roomFurniture.setAnimation(0);
+                this.roomFurniture.setAnimation(0);
             }
             else {
                 await this.updateAnimationTags();

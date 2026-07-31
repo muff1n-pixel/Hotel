@@ -33,7 +33,7 @@ export default class WiredActionToggleRandomStateLogic extends WiredActionLogic 
                 continue;
             }
 
-            await roomFurniture.setAnimation(nextState);
+            roomFurniture.setAnimation(nextState);
         }
 
         if(executed) {

@@ -43,7 +43,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
         const teamFinishAnimationId = teamStartAnimationId + 2;
 
         if (this.roomFurniture.model.animation >= teamStartAnimationId && this.roomFurniture.model.animation < teamFinishAnimationId) {
-            await this.roomFurniture.setAnimation(this.roomFurniture.model.animation + 1);
+           this.roomFurniture.setAnimation(this.roomFurniture.model.animation + 1);
 
             if (this.roomFurniture.model.animation === teamFinishAnimationId) {
                 game.teams.addTeamScore(player.team, 1);
@@ -82,7 +82,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
             return;
         }
 
-        await this.roomFurniture.setAnimation(teamStartAnimationId);
+        this.roomFurniture.setAnimation(teamStartAnimationId);
     }
 
     private getAutoFillArea(filledTileAnimation: number) {

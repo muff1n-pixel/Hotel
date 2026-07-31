@@ -20,7 +20,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
         this.room = this.roomFurniture.room;
         this.roomWired = this.roomFurniture.room.wired;
 
-        this.roomFurniture.setAnimation(0).catch(console.error);
+        this.roomFurniture.setAnimation(0);
     }
 
     public handleDataChanged?(roomUser: RoomUser): void;
@@ -30,7 +30,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
             const elapsed = performance.now() - this.lastTriggered;
 
             if(elapsed >= 1500) {
-                await this.roomFurniture.setAnimation(0);
+                this.roomFurniture.setAnimation(0);
             }
         }
     }
@@ -56,7 +56,7 @@ export default class WiredLogic implements RoomFurnitureLogic {
 
     public async setActive() {
         this.lastTriggered = performance.now();
-        await this.roomFurniture.setAnimation(101);
+        this.roomFurniture.setAnimation(101);
     }
 
     public getCommonDelayData() {

@@ -50,7 +50,7 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
         console.log("Clicked " + this.roomFurniture.model.data.crackable.clicks + " timed, required " + crackable.requiredClicks);
 
         if(this.roomFurniture.model.data.crackable.clicks === crackable.requiredClicks) {
-            await this.roomFurniture.setAnimation(14);
+            this.roomFurniture.setAnimation(14);
 
             const reward = await this.getRandomReward(crackable);
 
@@ -100,7 +100,7 @@ export default class RoomFurnitureCrackableLogic implements RoomFurnitureLogic {
             const newAnimation = (this.roomFurniture.model.data.crackable.clicks / crackable.requiredClicks) * 13;
 
             if(newAnimation !== this.roomFurniture.model.animation) {
-                await this.roomFurniture.setAnimation(newAnimation);
+                this.roomFurniture.setAnimation(newAnimation);
             }
         }
     }

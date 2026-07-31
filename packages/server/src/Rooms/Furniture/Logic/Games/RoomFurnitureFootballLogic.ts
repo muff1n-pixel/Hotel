@@ -45,7 +45,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 this.travelingVelocity = null;
                 this.travelingDirection = null;
                 
-                this.roomFurniture.setAnimation(0).catch(console.error);
+                this.roomFurniture.setAnimation(0);
 
                 this.handleFootballStopped().catch(console.error);
 
@@ -87,7 +87,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 if(!this.isPositionValid(nextOffsetPosition)) {
                     this.travelingVelocity = 0;
                 
-                    this.roomFurniture.setAnimation(0).catch(console.error);
+                    this.roomFurniture.setAnimation(0);
                 
                     this.handleFootballStopped().catch(console.error);
 
@@ -118,7 +118,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 this.travelingDirection = null;
                 this.triggeringUser = null;
                 
-                this.roomFurniture.setAnimation(0).catch(console.error);
+                this.roomFurniture.setAnimation(0);
                 
                 this.handleFootballStopped().catch(console.error);
             }
@@ -131,7 +131,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             this.handleFootballMoved(this.triggeringUser, position).catch(console.error);
 
             if(this.roomFurniture.model.animation !== 1) {
-                this.roomFurniture.setAnimation(1).catch(console.error);
+                this.roomFurniture.setAnimation(1);
             }
         }
     }

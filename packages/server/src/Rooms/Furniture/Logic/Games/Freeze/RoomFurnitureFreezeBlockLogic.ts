@@ -5,7 +5,7 @@ import RoomFreezeGame from "../../../../Games/Freeze/RoomFreezeGame";
 
 export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-        this.roomFurniture.setAnimation(0).catch(console.error);
+        this.roomFurniture.setAnimation(0);
     }
 
     public isWalkable(): boolean {
@@ -13,14 +13,14 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
     }
 
     public async handleSnowball(blockedByActor: boolean = false) {
-        await this.roomFurniture.setAnimation(101);
+        this.roomFurniture.setAnimation(101);
 
         setTimeout(() => {
             if(blockedByActor) {
-                this.roomFurniture.setAnimation(1).catch(console.error);
+                this.roomFurniture.setAnimation(1);
             }
             else {
-                this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7)).catch(console.error);
+                this.roomFurniture.setAnimation(1 + Math.floor(Math.random() * 7));
             }
         }, 500);
     }
@@ -45,12 +45,11 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
         if(this.roomFurniture.model.animation > 1 && this.roomFurniture.model.animation < 8) {
             game.givePlayerPowerup(player, this.roomFurniture.model.animation);
 
-            this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation).then(() => {
-                setTimeout(() => {
-                    this.roomFurniture.setAnimation(1).catch(console.error);
-                }, 500);
-            }).catch(console.error);
-
+            this.roomFurniture.setAnimation(110 + this.roomFurniture.model.animation);
+            
+            setTimeout(() => {
+                this.roomFurniture.setAnimation(1);
+            }, 500);
         }
     }
 
