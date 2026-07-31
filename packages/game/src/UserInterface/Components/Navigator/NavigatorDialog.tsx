@@ -9,6 +9,7 @@ import Input from "../../Common/Form/Components/Input";
 import { EnterRandomRoomData, EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import NavigatorSearch from "./NavigatorSearch";
+import useShopPageLink from "../Shop/Hooks/useShopPageLink";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -23,6 +24,7 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
     const [search, setSearch] = useState("");
 
     const navigator = useNavigator(tab, filter, search);
+    const { openShopPage } = useShopPageLink("roomevent");
 
     return (
         <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={430} height={530} style={{
@@ -153,27 +155,106 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                         overflow: "hidden",
                         background: "#FFFFFF",
                         padding: 1,
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        position: "relative"
                     }} onClick={() => addUniqueDialog("room-creation")}>
                         <div className="sprite_navigator_banner-create-room" style={{
                             borderRadius: 5
                         }}/>
+
+                        <div style={{
+                            position: "absolute",
+
+                            left: "15%",
+                            top: 0,
+
+                            display: "flex",
+
+                            width: "100%",
+                            height: "100%",
+
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            color: "#FFFFFF"
+                        }}>
+                            <b>Create a room</b>
+                        </div>
                     </div>
 
-                    <div style={{
-                        border: "1px solid black",
-                        borderRadius: 5,
-                        overflow: "hidden",
-                        background: "#FFFFFF",
-                        padding: 1,
-                        cursor: "pointer"
-                    }} onClick={() => {
-                        webSocketClient.sendProtobuff(EnterRandomRoomData, EnterRandomRoomData.create({}));
-                    }}>
-                        <div className="sprite_navigator_banner-random" style={{
-                            borderRadius: 5
-                        }}/>
-                    </div>
+                    {(["all", "public"].includes(tab))?(
+                        <div style={{
+                            border: "1px solid black",
+                            borderRadius: 5,
+                            overflow: "hidden",
+                            background: "#FFFFFF",
+                            padding: 1,
+                            cursor: "pointer",
+
+                            position: "relative"
+                        }} onClick={() => {
+                            webSocketClient.sendProtobuff(EnterRandomRoomData, EnterRandomRoomData.create({}));
+                        }}>
+                            <div className="sprite_navigator_banner-random" style={{
+                                borderRadius: 5
+                            }}/>
+
+                            <div style={{
+                                position: "absolute",
+
+                                left: "15%",
+                                top: 0,
+
+                                display: "flex",
+
+                                width: "100%",
+                                height: "100%",
+
+                                justifyContent: "center",
+                                alignItems: "center",
+
+                                color: "#FFFFFF"
+                            }}>
+                                <b>Somewhere new</b>
+                            </div>
+                        </div>
+                    ):(
+                        <div style={{
+                            border: "1px solid black",
+                            borderRadius: 5,
+                            overflow: "hidden",
+                            background: "#FFFFFF",
+                            padding: 1,
+                            cursor: "pointer",
+
+                            position: "relative"
+                        }} onClick={() => {
+                            openShopPage();
+                        }}>
+                            <div className="sprite_navigator_banner-event" style={{
+                                borderRadius: 5
+                            }}/>
+
+                            <div style={{
+                                position: "absolute",
+
+                                left: "15%",
+                                top: 0,
+
+                                display: "flex",
+
+                                width: "100%",
+                                height: "100%",
+
+                                justifyContent: "center",
+                                alignItems: "center",
+
+                                color: "#FFFFFF"
+                            }}>
+                                <b>Promote event</b>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </DialogTabs>
         </Dialog>
