@@ -21,6 +21,7 @@ import RoomFurnitureMannequinLogic from "@Client/Room/Furniture/Logic/RoomFurnit
 import RoomFurnitureTraxLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTraxLogic";
 import RoomFurnitureDialogLogic from "@Client/Room/Furniture/Logic/RoomFurnitureDialogLogic";
 import RoomFurnitureFootballGateLogic from "./Logic/RoomFurnitureFootballGateLogic";
+import RoomFurnitureGiftLogic from "./Logic/RoomFurnitureGiftLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -76,6 +77,9 @@ export default class RoomFurniture {
             case "conf_invis_control":
             case "crackable":
                 return new FurnitureMultistateLogic(this.instance, this);
+
+            case "gift":
+                return new RoomFurnitureGiftLogic(this.instance, this);
 
             case "clothing":
             case "fx_box":

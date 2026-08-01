@@ -389,7 +389,7 @@ export default class RoomInstance {
         }
 
         if(furniture.furnitureData.interactionType === "dimmer" && furniture.data.data?.moodlight?.enabled) {
-            this.setMoodlight({ $type: 'UserFurnitureMoodlightData', enabled: false, color: "", alpha: 0, backgroundOnly: false });
+            this.setMoodlight({ $type: 'UserFurnitureMoodlightData', enabled: false, color: "", backgroundOnly: false });
         }
 
         this.clientInstance.roomInstance.update();

@@ -101,6 +101,7 @@ import RoomFurnitureFootballGateLogic from "./Logic/Games/Football/RoomFurniture
 import RoomFurnitureFootballCounterLogic from "./Logic/Games/Football/RoomFurnitureFootballCounterLogic";
 import RoomFurnitureFootballTimerLogic from "./Logic/Games/Football/RoomFurnitureFootballTimerLogic";
 import RoomFurnitureFootballGoalLogic from "./Logic/Games/Football/RoomFurnitureFootballGoalLogic";
+import RoomFurnitureGiftLogic from "./Logic/RoomFurnitureGiftLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -123,6 +124,9 @@ export default class RoomFurnitureLogicFactory {
                 
             case "crackable":
                 return new RoomFurnitureCrackableLogic(roomFurniture);
+
+            case "gift":
+                return new RoomFurnitureGiftLogic(roomFurniture);
             
             case "vendingmachine":
                 return new RoomFurnitureVendingMachineLogic(roomFurniture);
