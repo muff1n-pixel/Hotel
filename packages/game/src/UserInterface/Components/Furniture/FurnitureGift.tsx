@@ -4,7 +4,7 @@ import TextArea from "@UserInterface/Common/Form/Components/TextArea";
 
 export type FurnitureGiftProps = {
     name: string;
-    message: string;
+    message?: string;
     figureConfiguration?: FigureConfigurationData;
 
     onChange?: (message: string) => void;

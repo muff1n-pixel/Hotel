@@ -73,9 +73,11 @@ export default class RoomFurnitureGiftLogic implements RoomFurnitureLogic {
             }
         }
 
-        await new Promise((resolve) => {
-            setTimeout(resolve, 500);
-        });
+        if(this.roomFurniture.model.furniture.animations.length > 1) {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 500);
+            });
+        }
 
         this.roomFurniture.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureRemoved: [

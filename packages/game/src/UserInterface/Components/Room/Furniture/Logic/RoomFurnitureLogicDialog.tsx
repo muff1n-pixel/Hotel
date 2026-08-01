@@ -61,6 +61,7 @@ import WiredConditionUserOnFurnitureDialog from "@UserInterface/Components/Room/
 import WiredConditionFurniHasUsersDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Conditions/WiredConditionFurniHasUsersDialog";
 import RoomFurnitureExternalImageDialog from "@UserInterface/Components/Room/Furniture/Logic/ExternalImage/RoomFurnitureExternalImageDialog";
 import WiredActionLogDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionLogDialog";
+import RoomFurnitureGiftDialog from "./Gift/RoomFurnitureGiftDialog";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -82,6 +83,9 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             
         case "postit":
             return (<RoomFurnitureStickiesDialog {...props}/>);
+
+        case "gift":
+            return (<RoomFurnitureGiftDialog {...props}/>);
             
         case "background_toner":
             return (<RoomFurnitureBackgroundTonerDialog {...props}/>);

@@ -2,7 +2,7 @@ import { GetUserProfileData, UserProfileData } from "@pixel63/events";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 
-export default function useUserProfile(userId: string) {
+export default function useUserProfile(userId?: string) {
     const [profile, setProfile] = useState<UserProfileData>();
 
     useEffect(() => {
