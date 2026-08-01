@@ -333,7 +333,7 @@ export default class RoomRenderer extends EventTarget {
                 priority += RoomRenderer.getPositionPriority(item.position);
 
                 if(item.type === "figure" && item.positionPathData) {
-                    priority += 1000;
+                    priority += 10;
                 }
             }
         }
@@ -342,8 +342,8 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public static getPositionPriority(position: RoomPositionData, floored: boolean = true) {
-        const row = (floored)?(Math.floor(position.row)):(position.row);
-        const column = (floored)?(Math.floor(position.column)):(position.column);
+        const row = (floored)?(Math.round(position.row)):(position.row);
+        const column = (floored)?(Math.round(position.column)):(position.column);
 
         return (row * 1000) + (column * 1000) + (position.depth * 10);
     }
