@@ -8,14 +8,20 @@ export default class RoomFurnitureBackgroundLogic implements FurnitureLogic {
     }
 
     isAvailable() {
-        return this.room.hasRights;
+        return Boolean(this.roomFurniture.data.data?.background?.linkUrl?.length);
     }
 
     use(): void {
-        if(!this.isAvailable()) {
-            return;
+        if(this.roomFurniture.data.data?.background?.linkUrl?.length) {
+            window.open(this.roomFurniture.data.data.background.linkUrl, '_blank')?.focus();
         }
+    }
 
+    canEdit(): boolean {
+        return this.room.hasRights;
+    }
+
+    edit(): void {
         clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => !(dialog.type === "room-furniture-logic" && dialog.id === this.roomFurniture.data.id)).concat({
             id: this.roomFurniture.data.id,
             type: "room-furniture-logic",

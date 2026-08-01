@@ -143,6 +143,14 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                     </div>
                 )}
 
+                {(logic.canEdit?.()) && (
+                    <div className="room-furniture-profile-button" onClick={() => {
+                        logic.edit?.();
+                    }}>
+                        {getTranslation("item.profile.edit")}
+                    </div>
+                )}
+
                 {(logic.isAvailable()) && (
                     <div className="room-furniture-profile-button" onClick={() => {
                         logic.use();

@@ -16,6 +16,7 @@ export type RoomFurnitureBackgroundDialogData = {
 
 export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const [imageUrl, setImageUrl] = useState(data.data.data?.background?.imageUrl ?? "");
+    const [linkUrl, setLinkUrl] = useState(data.data.data?.background?.linkUrl ?? "");
     
     const [offsetX, setOffsetX] = useState(data.data.data?.background?.left ?? 0);
     const [offsetY, setOffsetY] = useState(data.data.data?.background?.top ?? 0);
@@ -30,6 +31,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
             data: {
                 background: {
                     imageUrl,
+                    linkUrl,
 
                     left: offsetX,
                     top: offsetY,
@@ -40,7 +42,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                 }
             }
         }));
-    }, [data, imageUrl, offsetX, offsetY, offsetZ, relativePosition]);
+    }, [data, imageUrl, linkUrl, offsetX, offsetY, offsetZ, relativePosition]);
 
     if(hidden) {
         return null;
@@ -112,6 +114,14 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                     </div>
 
                     <Checkbox value={relativePosition} onChange={setRelativePosition} label="Put image relative to furniture sprite"/>
+
+                    <div/>
+
+                    <b>Link url</b>
+                    
+                    <p>This is only available for background furniture that has clickable sprites.</p>
+
+                    <Input placeholder="https://..." value={linkUrl} onChange={setLinkUrl}/>
                 </div>
 
                 <div style={{
