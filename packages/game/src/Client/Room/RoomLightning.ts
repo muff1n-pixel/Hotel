@@ -8,6 +8,8 @@ export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
 
     public moodlight?: UserFurnitureMoodlightData;
+    public previewMoodlight?: UserFurnitureMoodlightData;
+
     public backgroundToner?: UserFurnitureTonerData;
 
     private backgroundSprite: Sprite = new Sprite();
@@ -79,26 +81,44 @@ export default class RoomLighting {
 
         this.moodlight = moodlight;
 
+        this.updateMoodlightData(shouldRerender);
+    }
+
+    public updateMoodlightData(shouldRerender: boolean = true) {
         if(shouldRerender) {
             const backgroundItems = this.roomRenderer.getFilteredItems((item) => item.type === "wall" || item.type === "floor");
 
             for(const item of backgroundItems) {
                 if(item instanceof RoomWallItem || item instanceof RoomFloorItem) {
-                    item.render();
+                    item.renderSpritesWithLighting();
                 }
             }
         }
+
+        const moodlight = this.previewMoodlight ?? this.moodlight;
         
-        if(this.moodlight?.enabled && !this.moodlight.backgroundOnly) {
+        if(moodlight?.enabled && !moodlight.backgroundOnly) {
             this.lightSprite.blendMode = "multiply";
             this.lightSprite.alpha = 1;
-            this.lightSprite.tint = this.moodlight.color;
+            this.lightSprite.tint = moodlight.color;
 
             this.lightSprite.visible = true;
         }
         else {
             this.lightSprite.visible = false;
         }
+    }
+
+    public setPreviewMoodlightData(moodlight?: UserFurnitureMoodlightData) {
+        this.previewMoodlight = moodlight;
+
+        this.updateMoodlightData();
+    }
+
+    public shouldRenderBackground() {
+        const moodlight = this.previewMoodlight ?? this.moodlight;
+
+        return moodlight?.enabled && moodlight?.backgroundOnly;
     }
 
     public render(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
@@ -110,14 +130,16 @@ export default class RoomLighting {
     }
 
     public drawLight(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
-        if(!this.moodlight) {
+        const moodlight = this.previewMoodlight ?? this.moodlight;
+
+        if(!moodlight) {
             return;
         }
 
         context.save();
         
         context.globalCompositeOperation = "multiply";
-        context.fillStyle = this.moodlight.color;
+        context.fillStyle = moodlight.color;
         
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
         

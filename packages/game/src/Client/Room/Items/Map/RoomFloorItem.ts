@@ -4,8 +4,13 @@ import RoomFloorSprite from "../Floor/RoomFloorSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomFloorShadowSprite from "@Client/Room/Items/Floor/RoomFloorShadowSprite";
+import RoomSprite from "../RoomSprite";
 
 export default class RoomFloorItem extends RoomItem {
+    private floorImage?: OffscreenCanvas;
+    private elevatedFloorImage?: OffscreenCanvas;
+    private shadow?: OffscreenCanvas;
+
     constructor(public roomRenderer: RoomRenderer, public readonly floorRenderer: FloorRenderer, private readonly resolve?: () => void) {
         super(roomRenderer, "floor");
 
@@ -17,24 +22,36 @@ export default class RoomFloorItem extends RoomItem {
 
     render() {
         this.floorRenderer.renderOffScreen().then(({ floor, elevatedFloor, shadow }) => {
-            this.setSprites([]);
+            this.floorImage = floor;
+            this.elevatedFloorImage = elevatedFloor;
+            this.shadow = shadow;
 
-            this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(floor)));
-
-            if(elevatedFloor) {
-                this.sprites.push(new RoomFloorSprite(this, this.renderWithLighting(elevatedFloor), true));
-            }
-
-            if(shadow) {
-                this.sprites.push(new RoomFloorShadowSprite(this, shadow));
-            }
+            this.renderSpritesWithLighting();
 
             this.resolve?.();
         });
     }
+
+    public renderSpritesWithLighting() {
+        const sprites: RoomSprite[] = [];
+
+        if(this.floorImage) {
+            sprites.push(new RoomFloorSprite(this, this.renderWithLighting(this.floorImage)));
+        }
+
+        if(this.elevatedFloorImage) {
+            sprites.push(new RoomFloorSprite(this, this.renderWithLighting(this.elevatedFloorImage), true));
+        }
+
+        if(this.shadow) {
+            sprites.push(new RoomFloorShadowSprite(this, this.shadow));
+        }
+
+        this.setSprites(sprites);
+    }
         
     private renderWithLighting(image: OffscreenCanvas) {
-        if(this.roomRenderer.lighting.moodlight?.enabled && this.roomRenderer.lighting.moodlight?.backgroundOnly) {
+        if(this.roomRenderer.lighting.shouldRenderBackground()) {
             const canvas = new OffscreenCanvas(image.width, image.height);
 
             const context = canvas.getContext("2d");

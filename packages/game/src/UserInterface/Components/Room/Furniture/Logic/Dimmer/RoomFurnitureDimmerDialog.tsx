@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
 import { webSocketClient } from "../../../../../..";
 import Dialog from "../../../../../Common/Dialog/Dialog";
@@ -8,12 +8,16 @@ import { UpdateRoomFurnitureData } from "@pixel63/events";
 import DialogHSLPicker from "@UserInterface/Common/Dialog/Components/ColorPicker/DialogHSLPicker";
 import Colors from "@UserInterface/Utils/Colors";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
+import useRoomMoodlightPreview from "@UserInterface/Hooks/Room/useRoomMoodlightPreview";
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const [enabled, setEnabled] = useState(data.data.data?.moodlight?.enabled ?? false);
     const [backgroundOnly, setBackgroundOnly] = useState(data.data.data?.moodlight?.backgroundOnly ?? false);
-
     const [color, setColor] = useState(Colors.hexToHSL(data.data.data?.moodlight?.color ?? "#FF0000"));
+
+    const hex = useMemo(() => Colors.hslToHex(color), [color]);
+
+    useRoomMoodlightPreview(enabled, hex, backgroundOnly);
 
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);

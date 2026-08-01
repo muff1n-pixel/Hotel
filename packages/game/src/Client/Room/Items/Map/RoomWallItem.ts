@@ -4,8 +4,12 @@ import RoomWallSprite from "../Floor/RoomWallSprite";
 import RoomDoorMaskSprite from "../Floor/RoomDoorMaskSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import RoomSprite from "../RoomSprite";
 
 export default class RoomWallItem extends RoomItem {
+    private wallImage?: OffscreenCanvas;
+    private wallDoorImage?: OffscreenCanvas;
+
     constructor(public roomRenderer: RoomRenderer, public readonly wallRenderer: WallRenderer, private readonly resolve?: () => void) {
         super(roomRenderer, "wall");
 
@@ -18,19 +22,32 @@ export default class RoomWallItem extends RoomItem {
     render() {
         this.wallRenderer?.renderOffScreen().then(({ wall, doorMask }) => {
             this.setSprites([]);
-            
-            this.sprites.push(new RoomWallSprite(this, this.renderWithLighting(wall)));
 
-            if(this.wallRenderer!.structure.data.door) {
-                this.sprites.push(new RoomDoorMaskSprite(this, this.renderWithLighting(doorMask)));
-            }
+            this.wallImage = wall;
+            this.wallDoorImage = doorMask;
+
+            this.renderSpritesWithLighting();
 
             this.resolve?.();
         });
     }
+
+    public renderSpritesWithLighting() {
+        const sprites: RoomSprite[] = [];
+
+        if(this.wallImage) {
+            sprites.push(new RoomWallSprite(this, this.renderWithLighting(this.wallImage)));
+        }
+
+        if(this.wallRenderer!.structure.data.door && this.wallDoorImage) {
+            sprites.push(new RoomDoorMaskSprite(this, this.renderWithLighting(this.wallDoorImage)));
+        }
+
+        this.setSprites(sprites);
+    }
     
     private renderWithLighting(image: OffscreenCanvas) {
-        if(this.roomRenderer.lighting.moodlight?.enabled && this.roomRenderer.lighting.moodlight?.backgroundOnly) {
+        if(this.roomRenderer.lighting.shouldRenderBackground()) {
             const canvas = new OffscreenCanvas(image.width, image.height);
 
             const context = canvas.getContext("2d");
