@@ -20,6 +20,7 @@ import RoomFurnitureClothingLogic from "@Client/Room/Furniture/Logic/RoomFurnitu
 import RoomFurnitureMannequinLogic from "@Client/Room/Furniture/Logic/RoomFurnitureMannequinLogic";
 import RoomFurnitureTraxLogic from "@Client/Room/Furniture/Logic/RoomFurnitureTraxLogic";
 import RoomFurnitureDialogLogic from "@Client/Room/Furniture/Logic/RoomFurnitureDialogLogic";
+import RoomFurnitureFootballGateLogic from "./Logic/RoomFurnitureFootballGateLogic";
 
 export default class RoomFurniture {
     public readonly furniture: Furniture;
@@ -82,6 +83,9 @@ export default class RoomFurniture {
 
             case "mannequin":
                 return new RoomFurnitureMannequinLogic(this.instance, this);
+
+            case "football_gate":
+                return new RoomFurnitureFootballGateLogic(this.instance, this);
 
             case "freeze_timer":
             case "battlebanzai_timer":

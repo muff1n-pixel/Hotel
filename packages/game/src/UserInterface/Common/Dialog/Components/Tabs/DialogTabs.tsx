@@ -26,6 +26,7 @@ export type DialogTabsProps = PropsWithChildren & {
     tabs: {
         icon: ReactNode;
         element: ReactNode;
+        hidden?: boolean;
         header?: DialogTabHeaderProps;
         transparent?: boolean;
         alignSelf?: string;
@@ -37,8 +38,8 @@ export type DialogTabsProps = PropsWithChildren & {
     style?: CSSProperties;
 };
 
-export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeader, height = 119, tabs, header, withLargeTabs = false, children, style, onChange }: DialogTabsProps) {
-    const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+export default function DialogTabs({ index, initialActiveIndex = undefined, withoutHeader, height = 119, tabs, header, withLargeTabs = false, children, style, onChange }: DialogTabsProps) {
+    const [activeIndex, setActiveIndex] = useState(initialActiveIndex ?? tabs.findIndex((tab) => !tab.hidden) ?? 0);
 
     useEffect(() => {
         if(index !== undefined) {
@@ -163,84 +164,90 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
                     flexDirection: "row",
                     transform: "translate(0px, 1px)",
                 }}>
-                    {tabs.map(({ icon, transparent, alignSelf, element, onClick: onTabClick }, index) => (
-                        (!transparent)?(
-                            <div key={index} style={{
-                                display: "flex",
+                    {tabs.map(({ hidden, icon, transparent, alignSelf, element, onClick: onTabClick }, index) => {
+                        if(hidden) {
+                            return null;
+                        }
 
-                                flex: (withLargeTabs)?(1):(undefined),
+                        return (
+                            (!transparent)?(
+                                <div key={index} style={{
+                                    display: "flex",
 
-                                height: 31,
-                                minWidth: 52,
+                                    flex: (withLargeTabs)?(1):(undefined),
 
-                                border: (activeIndex === index)?("2px solid black"):("1px solid #272E31"),
-                                borderBottom: (activeIndex === index)?("none"):("1px solid #272E31"),
-                                
-                                borderTopLeftRadius: 8,
-                                borderTopRightRadius: 8,
-                                overflow: "hidden"
-                            }}>
-                                <div style={{
-                                    flex: 1,
+                                    height: 31,
+                                    minWidth: 52,
 
-                                    background: (activeIndex === index)?("#ECEAE0"):(inactiveBackgroundColor),
-
-                                    borderLeft: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
-                                    borderTop: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
-                                    borderRight: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                    border: (activeIndex === index)?("2px solid black"):("1px solid #272E31"),
+                                    borderBottom: (activeIndex === index)?("none"):("1px solid #272E31"),
                                     
                                     borderTopLeftRadius: 8,
                                     borderTopRightRadius: 8,
+                                    overflow: "hidden"
+                                }}>
+                                    <div style={{
+                                        flex: 1,
 
-                                    minWidth: 30,
+                                        background: (activeIndex === index)?("#ECEAE0"):(inactiveBackgroundColor),
 
-                                    padding: (withLargeTabs)?("6px 10px"):((activeIndex === index)?("0 9px"):("0 10px")),
+                                        borderLeft: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                        borderTop: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                        borderRight: (activeIndex === index)?("2px solid white"):("2px solid " + inactiveBackgroundColor),
+                                        
+                                        borderTopLeftRadius: 8,
+                                        borderTopRightRadius: 8,
 
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
+                                        minWidth: 30,
 
-                                    overflow: "hidden",
+                                        padding: (withLargeTabs)?("6px 10px"):((activeIndex === index)?("0 9px"):("0 10px")),
+
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+
+                                        overflow: "hidden",
+
+                                        cursor: "pointer",
+
+                                        color: "black",
+                                        fontSize: 13
+                                    }} onClick={() => {
+                                        onChange?.(index);
+                                        setActiveIndex(index);
+                                    }}>
+                                        {icon}
+                                    </div>
+                                </div>
+                            ):(
+                                <div key={index} style={{
+                                    height: 31,
+                                    minWidth: 52,
 
                                     cursor: "pointer",
 
-                                    color: "black",
-                                    fontSize: 13
+                                    display: "flex",
+
+                                    marginLeft: (alignSelf === "flex-end")?("auto"):(undefined),
+
+                                    opacity: (activeIndex === index)?(1):(0.6),
+
+                                    justifyContent: "center"
                                 }} onClick={() => {
+                                    onTabClick?.();
+                                    
+                                    if(!element) {
+                                        return;
+                                    }
+
                                     onChange?.(index);
                                     setActiveIndex(index);
                                 }}>
                                     {icon}
                                 </div>
-                            </div>
-                        ):(
-                            <div key={index} style={{
-                                height: 31,
-                                minWidth: 52,
-
-                                cursor: "pointer",
-
-                                display: "flex",
-
-                                marginLeft: (alignSelf === "flex-end")?("auto"):(undefined),
-
-                                opacity: (activeIndex === index)?(1):(0.6),
-
-                                justifyContent: "center"
-                            }} onClick={() => {
-                                onTabClick?.();
-                                
-                                if(!element) {
-                                    return;
-                                }
-
-                                onChange?.(index);
-                                setActiveIndex(index);
-                            }}>
-                                {icon}
-                            </div>
-                        )
-                    ))}
+                            )
+                        );
+                    })}
                 </div>
             </div>
 

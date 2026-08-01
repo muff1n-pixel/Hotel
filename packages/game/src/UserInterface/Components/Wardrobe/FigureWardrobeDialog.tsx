@@ -12,6 +12,7 @@ import WardrobeHotlooks from "@UserInterface/Components/Wardrobe/Components/Ward
 
 const wardrobeTabs = [
     {
+        tab: "head",
         spriteName: "sprite_wardrobe_head_tab",
         tabs: [
             {
@@ -37,6 +38,7 @@ const wardrobeTabs = [
         ]
     },
     {
+        tab: "torso",
         spriteName: "sprite_wardrobe_torso_tab",
         tabs: [
             {
@@ -58,6 +60,7 @@ const wardrobeTabs = [
         ]
     },
     {
+        tab: "legs",
         spriteName: "sprite_wardrobe_legs_tab",
         tabs: [
             {
@@ -86,10 +89,12 @@ export type FigureWardrobeDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
 
+    hiddenTabs?: string[];
+
     children: ReactNode;
 };
 
-export default function FigureWardrobeDialog({ title, header, figureConfiguration, onFigureConfigurationChange, hidden, onClose, children }: FigureWardrobeDialogProps) {
+export default function FigureWardrobeDialog({ hiddenTabs, title, header, figureConfiguration, onFigureConfigurationChange, hidden, onClose, children }: FigureWardrobeDialogProps) {
     const hasClothingEditPermissions = usePermissionAction("clothing:edit");
 
     const [editMode, setEditMode] = useState(false);
@@ -98,9 +103,10 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
     return (
         <Dialog title={title} hidden={hidden} onClose={onClose} width={520 + ((figuresExpanded)?(166):(0))} height={530} editMode={editMode} onEditClick={(hasClothingEditPermissions) && (() => setEditMode(!editMode))}>
             <FlexLayout flex={1} direction="row" gap={0}>
-                <DialogTabs initialActiveIndex={0} header={{ title: header }} tabs={[
+                <DialogTabs header={{ title: header }} tabs={[
                     {
                         icon: (<div className="sprite_wardrobe_generic_tab"/>),
+                        hidden: hiddenTabs?.includes("generic"),
                         element: (
                             <div style={{
                                 flex: 1,
@@ -142,6 +148,7 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
                     ...wardrobeTabs.map((wardrobeTab) => {
                         return {
                             icon: (<div className={wardrobeTab.spriteName}/>),
+                            hidden: hiddenTabs?.includes(wardrobeTab.tab),
                             element: (
                                 <div style={{
                                     flex: 1,
@@ -170,6 +177,7 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
 
                     {
                         icon: (<div className={"sprite_wardrobe_effects_tab"}/>),
+                        hidden: hiddenTabs?.includes("effects"),
                         element: (
                             <div style={{
                                 flex: 1,
@@ -191,6 +199,7 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
 
                     {
                         icon: (<div className={"sprite_wardrobe_hotlooks_tab"}/>),
+                        hidden: hiddenTabs?.includes("hotlooks"),
                         element: (
                             <div style={{
                                 flex: 1,
@@ -211,6 +220,7 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
                     },
 
                     {
+                        hidden: hiddenTabs?.includes("wardrobe"),
                         alignSelf: "flex-end",
                         transparent: true,
                         icon: (<div className="sprite_wardrobe_wardrobe_tab"/>),

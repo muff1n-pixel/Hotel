@@ -9,7 +9,7 @@ export type WardrobeMannequinAvatarProps = {
 };
 
 export default function WardrobeMannequinAvatar({ configuration, furnitureData }: WardrobeMannequinAvatarProps) {
-    const [image, setImage] = useState<ImageBitmap>();
+    const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         const furniture = new Furniture(furnitureData.type, 64, 4, 0);
