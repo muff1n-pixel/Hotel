@@ -4,7 +4,7 @@ export type TextAreaProps = {
     placeholder?: string;
     style?: CSSProperties;
     value?: string;
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
 }
 
 export default function TextArea({ style, placeholder, value, onChange }: TextAreaProps) {
@@ -24,7 +24,7 @@ export default function TextArea({ style, placeholder, value, onChange }: TextAr
                 <textarea
                     placeholder={placeholder}
                     value={value}
-                    onChange={(event) => onChange((event.currentTarget as HTMLTextAreaElement).value)}
+                    onChange={(event) => onChange?.((event.currentTarget as HTMLTextAreaElement).value)}
                     style={{
                         flex: 1,
                         background: "none",

@@ -52,6 +52,19 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
         });
     }, [activeFurniture, activeFurnitureRef, quantity, group]);
 
+    const handleGiftFurniture = useCallback(() => {
+        if(!activeFurniture) {
+            return;
+        }
+
+        dialogs.setDialogHidden("shop", true);
+
+        dialogs.openUniqueDialog("shop-gift-furniture", {
+            activeFurniture,
+            group,
+        });
+    }, [activeFurniture, group]);
+
     const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
 
     useEffect(() => {
@@ -364,20 +377,40 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
             <div style={{
                 //height: 52,
 
+                gap: 10,
+
                 display: "flex",
                 flexDirection: "column"
             }}>
-                <div style={{ flex: 1 }}/>
-                
                 <div style={{
                     display: "flex",
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    gap: 10
                 }}>
+                    <div style={{ flex: 1 }}/>
+                    
                     <FlexLayout flex={1} direction="row" align="center">
                         <div style={{ color: "#6A6A69" }}>Quantity</div>
 
+                        <div style={{ flex: 1 }}/>
+
                         <Input style={{ width: 30 }} value={quantity.toString()} min={1} max={100} onChange={(value) => setQuantity(window.isNaN(parseInt(value))?(1):(parseInt(value)))}/>
                     </FlexLayout>
+                </div>
+                
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 10
+                }}>
+                    <DialogButton disabled={!activeFurniture || (
+                        (activeFurniture.credits ?? 0) > user.credits
+                        || (activeFurniture.duckets ?? 0) > user.duckets
+                        || (activeFurniture.diamonds ?? 0) > user.diamonds
+                        || (activeFurniture.membership === "habbogroup" && !group)
+                        || (quantity !== 1)
+                        || (!activeFurniture.furniture?.flags?.giftable)
+                    )} style={{ flex: 1 }} onClick={() => handleGiftFurniture()}>Buy as a gift</DialogButton>
 
                     <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits

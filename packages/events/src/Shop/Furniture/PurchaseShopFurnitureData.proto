@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "Room/RoomPositionData.proto";
 import "User/Furniture/UserFurnitureCustomData.proto";
+import "Shop/Gifts/PurchaseShopGiftData.proto";
 
 message PurchaseShopFurnitureData {
     string id = 1;
@@ -13,4 +14,6 @@ message PurchaseShopFurnitureData {
     optional uint32 quantity = 5;
 
     optional string group_id = 6;
+
+    optional PurchaseShopGiftData gift = 7;
 }

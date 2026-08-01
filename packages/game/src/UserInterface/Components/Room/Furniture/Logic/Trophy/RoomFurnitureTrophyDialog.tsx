@@ -27,7 +27,7 @@ export default function RoomFurnitureTrophyDialog({ data, onClose }: RoomFurnitu
             return;
         }
 
-        const imageName = ["silver", "gold", "silver", "bronze"][data.item.furnitureRenderer.color ?? 0];
+        const imageName = ["silver", "gold", "silver", "bronze"][parseInt(data.item.furnitureRenderer.color ?? '0')];
 
         AssetFetcher.fetchImage(`/assets/trophies/${imageName}.png`).then((image) => {
             const context = canvasRef.current?.getContext("2d");

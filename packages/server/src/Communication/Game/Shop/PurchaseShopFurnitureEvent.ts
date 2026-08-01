@@ -4,10 +4,12 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { FurnitureData, HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
+import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { game } from "../../../index.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -25,7 +27,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
 
         let quantity = Math.min(Math.max(payload.quantity ?? 1, 1), 100);
 
-        if(payload.position) {
+        if(payload.position || payload.gift) {
             quantity = 1;
         }
 
@@ -95,6 +97,81 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             }
         }
 
+        let userReceiver = user.model;
+        let giftId: string | undefined = undefined;
+
+        if(payload.gift) {
+            const giftRecipient = await UserModel.findOne({
+                where: {
+                    name: payload.gift.name
+                }
+            });
+
+            if(!giftRecipient) {
+                user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                    message: "There is no user with that name!"
+                }));
+
+                return;
+            }
+
+            const giftFurniture = await FurnitureModel.findByPk(payload.gift.furnitureId);
+
+            if(!giftFurniture) {
+                throw new Error("Gift furniture does not exist.");
+            }
+
+            if(giftFurniture.interactionType !== "gift") {
+                throw new Error("Gift furniture is not of gift interaction type.");
+            }
+
+            userReceiver = giftRecipient;
+
+            const giftUserFurniture = await UserFurnitureModel.create({
+                id: randomUUID(),
+                position: null,
+                direction: null,
+                animation: 0,
+                color: null,
+                data: UserFurnitureCustomData.create({
+                    gift: {
+                        senderUserId: user.model.id,
+                        message: payload.gift.message
+                    }
+                }),
+                
+                roomId: null,
+                userId: userReceiver.id,
+                furnitureId: giftFurniture.id
+            }, {
+                include: [
+                    {
+                        model: FurnitureModel,
+                        as: "furniture"
+                    }
+                ]
+            });
+
+            giftUserFurniture.user = userReceiver;
+            giftUserFurniture.furniture = giftFurniture;
+
+            await this.addUserFurniture(userReceiver, giftUserFurniture);
+
+            giftId = giftUserFurniture.id;
+
+            user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                id: randomUUID(),
+                furniture: FurnitureData.fromJSON(giftFurniture),
+                text: `You have sent a gift to ${userReceiver.name}!`
+            }));
+
+            game.getUserById(userReceiver.id)?.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                id: randomUUID(),
+                furniture: FurnitureData.fromJSON(giftFurniture),
+                text: `You have received a gift from ${user.model.name}!`
+            }));
+        }
+
         user.model.credits -= (shopFurniture.credits ?? 0) * quantity;
         user.model.duckets -= (shopFurniture.duckets ?? 0) * quantity;
         user.model.diamonds -= (shopFurniture.diamonds ?? 0) * quantity;
@@ -111,6 +188,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 animation: 0,
                 color: null,
                 data: null,
+                giftId,
 
                 ...(group && {
                     groupId: group.id,
@@ -128,7 +206,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 }),
                 
                 roomId: null,
-                userId: user.model.id,
+                userId: userReceiver.id,
                 furnitureId: shopFurniture.furniture.id
             }, {
                 include: [
@@ -139,7 +217,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 ]
             });
 
-            userFurniture.user = user.model;
+            userFurniture.user = userReceiver;
             userFurniture.furniture = shopFurniture.furniture;
 
             if(userFurniture.furniture.interactionType === "trophy" && payload.data?.trophy) {
@@ -165,9 +243,10 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                             furnitureId: userFurniture.id
                         }
                     }),
+                    giftId,
                     
                     roomId: null,
-                    userId: user.model.id,
+                    userId: userReceiver.id,
                     furnitureId: shopFurniture.furniture.id
                 }, {
                     include: [
@@ -178,7 +257,7 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                     ]
                 });
 
-                secondUserFurniture.user = user.model;
+                secondUserFurniture.user = userReceiver;
                 secondUserFurniture.furniture = shopFurniture.furniture;
 
                 await userFurniture.update({
@@ -189,21 +268,21 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                     })
                 });
 
-                await user.getInventory().addFurniture(secondUserFurniture);
+                await this.addUserFurniture(userReceiver, secondUserFurniture);
             }
 
             await userFurniture.save();
 
             const roomUser = user.room?.getRoomUser(user);
 
-            if(roomUser?.hasRights() && payload.position && payload.direction !== undefined) {
+            if(roomUser?.hasRights() && payload.position && payload.direction !== undefined && !payload.gift) {
                 await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
             }
             else {
-                await user.getInventory().addFurniture(userFurniture);
+                await this.addUserFurniture(userReceiver, userFurniture);
             }
 
-            if(userFurniture.furniture.interactionType === "sound_set") {
+            if(user.model.id === userReceiver.id && userFurniture.furniture.interactionType === "sound_set") {
                 user.achievements.addAchievementScore("MusicCollector", 1).catch(console.error);
             }
         }
@@ -213,5 +292,13 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             itemId: payload.id,
             quantity
         }));
+    }
+
+    private async addUserFurniture(userModel: UserModel, userFurniture: UserFurnitureModel) {
+        const user = game.getUserById(userModel.id);
+
+        if(user) {
+            await user.getInventory().addFurniture(userFurniture);
+        }
     }
 }

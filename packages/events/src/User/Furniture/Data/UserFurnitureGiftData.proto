@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message UserFurnitureGiftData {
+    string sender_user_id = 1;
+    string message = 2;
+}

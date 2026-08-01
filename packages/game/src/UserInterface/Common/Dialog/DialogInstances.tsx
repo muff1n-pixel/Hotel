@@ -69,6 +69,7 @@ import ShopPurchaseBotDialog from "@UserInterface/Components/Shop/Purchasing/Sho
 import ShopPurchaseBundleDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchaseBundleDialog";
 import ShopPurchasePetDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchasePetDialog";
 import WardrobeFootballDialog from "@UserInterface/Components/Wardrobe/WardrobeFootballDialog";
+import ShopGiftFurnitureDialog from "@UserInterface/Components/Shop/Pages/Gifts/ShopGiftFurnitureDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -129,6 +130,9 @@ export default function DialogInstances() {
 
                     case "shop-purchase-bundle":
                         return (<ShopPurchaseBundleDialog {...props} key={dialog.id}/>);
+                        
+                    case "shop-gift-furniture":
+                        return (<ShopGiftFurnitureDialog {...props} key={dialog.id}/>);
                         
                     case "inventory":
                         return (<InventoryDialog {...props} key={dialog.id}/>);

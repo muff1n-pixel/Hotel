@@ -20,13 +20,15 @@ export class UserFurnitureModel extends Model {
 
     declare color: number | null;
     declare data?: UserFurnitureCustomData;
-    declare hidden: boolean;
 
     declare room: NonAttribute<RoomModel | null>;
     declare roomId?: NonAttribute<string>;
 
     declare user?: NonAttribute<UserModel>;
     declare userId?: NonAttribute<string>;
+
+    declare gift?: NonAttribute<UserFurnitureModel>;
+    declare giftId?: NonAttribute<string>;
 
     declare furniture: NonAttribute<FurnitureModel>;
     declare furnitureId: NonAttribute<string>;
@@ -139,6 +141,12 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
     UserFurnitureModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId",
+        constraints: false
+    });
+
+    UserFurnitureModel.belongsTo(UserFurnitureModel, {
+        as: "gift",
+        foreignKey: "giftId",
         constraints: false
     });
 

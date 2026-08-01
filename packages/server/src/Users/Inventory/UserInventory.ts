@@ -24,7 +24,8 @@ export default class UserInventory {
                 id: userFurnitureId,
                 userId: this.user.model.id,
                 roomId: null,
-                traxId: null
+                traxId: null,
+                giftId: null
             },
             include: [
                 {
@@ -61,7 +62,8 @@ export default class UserInventory {
                 furnitureId,
                 userId: this.user.model.id,
                 roomId: null,
-                traxId: null
+                traxId: null,
+                giftId: null
             },
             include: [
                 {
@@ -82,7 +84,8 @@ export default class UserInventory {
                 furnitureId,
                 userId: this.user.model.id,
                 roomId: null,
-                traxId: null
+                traxId: null,
+                giftId: null
             }
         });
     }
@@ -121,6 +124,10 @@ export default class UserInventory {
     }
 
     public async addFurniture(userFurniture: UserFurnitureModel) {
+        if(userFurniture.giftId) {
+            return;
+        }
+        
         this.user.sendProtobuff(UserNotificationData, UserNotificationData.create({
             userFurnitureId: (userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)
         }));
@@ -165,7 +172,8 @@ export default class UserInventory {
             where: {
                 userId: this.user.model.id,
                 roomId: null,
-                traxId: null
+                traxId: null,
+                giftId: null
             },
             include: {
                 model: FurnitureModel,

@@ -15,6 +15,7 @@ import "User/Furniture/Data/UserFurnitureMannequinData.proto";
 import "User/Furniture/Data/UserFurnitureTraxData.proto";
 import "User/Furniture/Data/UserFurnitureTraxSongDiskData.proto";
 import "User/Furniture/Data/UserFurnitureExternalImageData.proto";
+import "User/Furniture/Data/UserFurnitureGiftData.proto";
 
 import "User/Furniture/Data/Wired/Common/WiredCommonDelayData.proto";
 import "User/Furniture/Data/Wired/Common/WiredCommonFurniSelectionData.proto";
@@ -80,6 +81,7 @@ message UserFurnitureCustomData {
         UserFurnitureBackgroundData background = 3;
         UserFurnitureStickyData sticky = 4;
         UserFurnitureTrophyData trophy = 5;
+        UserFurnitureGiftData gift = 52;
 
         WiredActionShowMessageData wired_action_show_message = 6;
         WiredActionTeleportToFurnitureData wired_action_teleport_to_furniture = 7;

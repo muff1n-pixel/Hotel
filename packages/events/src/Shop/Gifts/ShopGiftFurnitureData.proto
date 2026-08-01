@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Furniture/FurnitureData.proto";
+
+message ShopGiftFurnitureData {
+    repeated FurnitureData furniture = 1;
+}
