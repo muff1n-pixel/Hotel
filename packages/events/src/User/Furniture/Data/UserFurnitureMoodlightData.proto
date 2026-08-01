@@ -4,7 +4,6 @@ message UserFurnitureMoodlightData {
     bool enabled = 1;
 
     string color = 2;
-    uint32 alpha = 3;
 
     bool background_only = 4;
 }

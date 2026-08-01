@@ -11,7 +11,6 @@ export default class RoomLighting {
     public backgroundToner?: UserFurnitureTonerData;
 
     private backgroundSprite: Sprite = new Sprite();
-    private darknessSprite: Sprite = new Sprite();
     private lightSprite: Sprite = new Sprite();
 
     constructor(private roomRenderer: RoomRenderer) {
@@ -38,25 +37,6 @@ export default class RoomLighting {
         });
 
         this.roomRenderer.application.stage.addChild(this.backgroundSprite);
-
-        this.darknessSprite.visible = false;
-
-        this.darknessSprite.texture = Texture.WHITE;
-
-        this.darknessSprite.tint = 0x00;
-
-        this.darknessSprite.zIndex = 1_000_000_000;
-
-        this.darknessSprite.width = this.roomRenderer.application.screen.width;
-        this.darknessSprite.height = this.roomRenderer.application.screen.height;
-        
-        this.roomRenderer.application.renderer.on("resize", () => {
-            this.darknessSprite.width = this.roomRenderer.application.screen.width;
-            this.darknessSprite.height = this.roomRenderer.application.screen.height;
-        });
-
-        this.roomRenderer.application.stage.addChild(this.darknessSprite);
-        
 
         this.lightSprite.visible = false;
 
@@ -110,16 +90,6 @@ export default class RoomLighting {
         }
         
         if(this.moodlight?.enabled && !this.moodlight.backgroundOnly) {
-            const raw = this.moodlight.alpha;
-
-            const darkness = (1 - raw / 255) * this.MAX_DARKNESS;
-
-            this.darknessSprite.blendMode = "multiply";
-            this.darknessSprite.alpha = darkness;
-            this.darknessSprite.tint = "#000000";
-
-            this.darknessSprite.visible = true;
-
             this.lightSprite.blendMode = "multiply";
             this.lightSprite.alpha = 1;
             this.lightSprite.tint = this.moodlight.color;
@@ -127,8 +97,6 @@ export default class RoomLighting {
             this.lightSprite.visible = true;
         }
         else {
-            this.darknessSprite.visible = false;
-
             this.lightSprite.visible = false;
         }
     }
@@ -138,27 +106,7 @@ export default class RoomLighting {
             return;
         }
 
-        this.drawDarkness(context);
         this.drawLight(context);
-    }
-
-    public drawDarkness(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
-        if(!this.moodlight) {
-            return;
-        }
-
-        context.save();
-
-        const raw = this.moodlight.alpha;
-
-        const darkness = (1 - raw / 255) * this.MAX_DARKNESS;
-
-        context.globalCompositeOperation = "multiply";
-        context.globalAlpha = darkness;
-        context.fillStyle = "#000000";
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-        context.restore();
     }
 
     public drawLight(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
@@ -168,8 +116,7 @@ export default class RoomLighting {
 
         context.save();
         
-        context.globalCompositeOperation = "soft-light";
-        context.globalAlpha = 0.6;
+        context.globalCompositeOperation = "multiply";
         context.fillStyle = this.moodlight.color;
         
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);

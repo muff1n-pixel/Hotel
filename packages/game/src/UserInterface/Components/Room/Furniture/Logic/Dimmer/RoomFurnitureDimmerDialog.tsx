@@ -1,18 +1,19 @@
 import { useCallback, useState } from "react";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
-import RoomFurnitureDimmerDialogColors from "./RoomFurnitureDimmerDialogColors";
-import DimmerDialogSlider from "../../../../../Common/Dialog/Layouts/Dimmer/Components/DimmerDialogSlider";
-import DimmerDialogCheckbox from "../../../../../Common/Dialog/Layouts/Dimmer/Components/DimmerDialogCheckbox";
-import DimmerDialogButton from "../../../../../Common/Dialog/Layouts/Dimmer/Components/DimmerDialogButton";
 import { webSocketClient } from "../../../../../..";
+import Dialog from "../../../../../Common/Dialog/Dialog";
+import DialogContent from "../../../../../Common/Dialog/Components/DialogContent";
+import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogButton";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-import DimmerDialog from "@UserInterface/Common/Dialog/Layouts/Dimmer/DimmerDialog";
+import DialogHSLPicker from "@UserInterface/Common/Dialog/Components/ColorPicker/DialogHSLPicker";
+import Colors from "@UserInterface/Utils/Colors";
+import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const [enabled, setEnabled] = useState(data.data.data?.moodlight?.enabled ?? false);
-    const [color, setColor] = useState(data.data.data?.moodlight?.color ?? "#FF3333");
-    const [alpha, setAlpha] = useState(data.data.data?.moodlight?.alpha ?? 128);
     const [backgroundOnly, setBackgroundOnly] = useState(data.data.data?.moodlight?.backgroundOnly ?? false);
+
+    const [color, setColor] = useState(Colors.hexToHSL(data.data.data?.moodlight?.color ?? "#FF0000"));
 
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
@@ -23,13 +24,12 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
             data: {
                 moodlight: {
                     enabled: !enabled,
-                    color,
-                    alpha,
+                    color: Colors.hslToHex(color),
                     backgroundOnly
                 }
             }
         }));
-    }, [enabled]);
+    }, [enabled, color, backgroundOnly]);
 
     const handleApply = useCallback(() => {
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
@@ -38,68 +38,34 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
             data: {
                 moodlight: {
                     enabled,
-                    color,
-                    alpha,
+                    color: Colors.hslToHex(color),
                     backgroundOnly
                 }
             }
         }));
-    }, [enabled, color, alpha, backgroundOnly]);
+    }, [enabled, color, backgroundOnly]);
 
     if(hidden) {
         return null;
     }
 
     return (
-        <DimmerDialog title="Room dimmer" onClose={onClose}>
-            <div style={{
-                display: "flex",
-                flexDirection: "row",
+        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} assumedHeight={350} height={"auto"} initialPosition="center">
+            <DialogContent style={{
                 gap: 10
             }}>
-                <div style={{
-                    flex: 1,
+                <DialogHSLPicker value={color} onChange={setColor}/>
 
+                <Checkbox value={backgroundOnly} onChange={setBackgroundOnly} label="Background only"/>
+
+                <div style={{
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                    justifyContent: "space-evenly"
+                    gap: 10
                 }}>
-                    <RoomFurnitureDimmerDialogColors value={color} onChange={setColor}/>
-
-                    <div>
-                        <DimmerDialogSlider value={alpha} onChange={setAlpha}/>
-                    </div>
+                    <DialogButton style={{ flex: 1 }} onClick={handleToggle}>{(enabled)?("Turn off"):("Turn on")}</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleApply}>Apply</DialogButton>
                 </div>
-
-                <div style={{
-                    width: 60,
-                    height: 86,
-
-                    border: "2px solid #00ED1F",
-                    borderRadius: 3,
-
-                    background: "rgba(0, 0, 0, .2)"
-                }}>
-
-                </div>
-            </div>
-
-            <DimmerDialogCheckbox value={backgroundOnly} onChange={setBackgroundOnly} label="Background only"/>
-
-            <div style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 10
-            }}>
-                <div style={{ flex: 1 }}>
-                    <DimmerDialogButton label={(enabled)?("Turn off"):("Turn on")} onClick={handleToggle}/>
-                </div>
-                
-                <div style={{ flex: 1 }}>
-                    <DimmerDialogButton label="Apply" onClick={handleApply}/>
-                </div>
-            </div>
-        </DimmerDialog>
+            </DialogContent>
+        </Dialog>
     );
 }
