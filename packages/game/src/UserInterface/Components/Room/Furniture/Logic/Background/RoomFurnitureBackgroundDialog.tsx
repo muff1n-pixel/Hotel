@@ -61,10 +61,19 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                     gap: 8
                 }}>
                     {(imageUrl) && (
-                        <img src={imageUrl} style={{
-                            maxHeight: 180,
-                            objectFit: "contain"
-                        }}/>
+                        <div style={{
+                            display: "flex",
+                            
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            height: 180
+                        }}>
+                            <img src={imageUrl} style={{
+                                maxHeight: 180,
+                                objectFit: "contain"
+                            }}/>
+                        </div>
                     )}
 
                     <b>Image url</b>

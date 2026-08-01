@@ -32,20 +32,15 @@ export default class RoomFurnitureSprite extends RoomSprite {
         if(isBrandedImage && hasImageUrl) {
             AssetFetcher.fetchImage(item.data!.background!.imageUrl).then((image) => {
                 this.inheritOffset = relativePosition;
-
-                console.log({ relativePosition });
+                this.inheritPriority = relativePosition;
 
                 if(!relativePosition) {
                     this.offset.left = 64 + (item.data?.background?.left ?? 0);
                     this.offset.top = 16 + (item.data?.background?.top ?? 0);
-                }
 
-                const priority = (item.data?.background?.index ?? 0) 
-                
-                if(priority) {
-                    this.priority = priority;
-
-                    this.inheritPriority = false;
+                    if(item.data?.background?.index !== undefined) {
+                        this.priority = item.data.background.index;
+                    }
                 }
 
                 this.setTexture(image);
