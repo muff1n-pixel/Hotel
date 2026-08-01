@@ -165,6 +165,9 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 return;
             }
 
+            player.roomUser.user.achievements.addAchievementScore("Player", 1).catch(console.error);
+            player.roomUser.user.achievements.addAchievementScore("FootballGoalScorer", 1).catch(console.error);
+
             game?.giveTeamScore(goalAtPosition.logic.team, 1);
 
             player.roomUser.addAction("Wave", 5000);

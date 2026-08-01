@@ -64,6 +64,7 @@ export default class RoomFootballGame implements RoomGame<RoomFootballGameTeam> 
         this.paused = false;
 
         game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
+        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("FootballGoalHost", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
 
         const winningTeam = this.teams.getTeamWithMostScore();
 

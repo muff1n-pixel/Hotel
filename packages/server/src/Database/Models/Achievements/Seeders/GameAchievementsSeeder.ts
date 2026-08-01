@@ -1,6 +1,7 @@
 import { AchievementModel } from "../AchievementModel";
 import BattleBanzaiAchievementsSeeder, { BattleBanzaiAchievements } from "./Games/BattleBanzaiAchievementsSeeder";
 import BunnyRunAchievementsSeeder, { BunnyRunAchievements } from "./Games/BunnyRunAchievementsSeeder";
+import FootballAchievementsSeeder, { FootballAchievements } from "./Games/FootballAchievementsSeeder";
 import FreezeAchievementsSeeder, { FreezeAchievements } from "./Games/FreezeAchievementsSeeder";
 import IceTagAchievementsSeeder, { IceTagAchievements } from "./Games/IceTagAchievementsSeeder";
 import SkateboardAchievementsSeeder, { SkateboardAchievements } from "./Games/SkateboardAchievementsSeeder";
@@ -13,7 +14,8 @@ export type GameAchievements =
     | BattleBanzaiAchievements
     | SkateboardAchievements
     | BunnyRunAchievements
-    | SnowboardAchievements;
+    | SnowboardAchievements
+    | FootballAchievements;
 
 export default class GameAchievementsSeeder {
     public static async seedAchievements() {
@@ -34,5 +36,6 @@ export default class GameAchievementsSeeder {
         await SkateboardAchievementsSeeder.seedAchievements();
         await BunnyRunAchievementsSeeder.seedAchievements();
         await SnowboardAchievementsSeeder.seedAchievements();
+        await FootballAchievementsSeeder.seedAchievements();
     }
 }
