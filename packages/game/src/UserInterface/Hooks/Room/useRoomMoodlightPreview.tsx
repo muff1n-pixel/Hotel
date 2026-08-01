@@ -10,6 +10,16 @@ export default function useRoomMoodlightPreview(enabled: boolean, color: string,
             return;
         }
 
+        if(!backgroundOnly) {
+            room.roomRenderer.lighting.setPreviewMoodlightData(UserFurnitureMoodlightData.create({
+                enabled,
+                color,
+                backgroundOnly
+            }));
+
+            return;
+        }
+        
         let timeout: NodeJS.Timeout | undefined = setTimeout(() => {
             timeout = undefined;
 

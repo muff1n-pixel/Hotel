@@ -7,6 +7,7 @@ import DialogContent from "../../../../../Common/Dialog/Components/DialogContent
 import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogButton";
 import DialogColorPicker from "../../../../../Common/Dialog/Components/ColorPicker/DialogColorPicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import useRoomTonerPreview from "@UserInterface/Hooks/Room/useRoomTonerPreview";
 
 export type RoomFurnitureBackgroundTonerDialogData = {
     furniture: RoomInstanceFurniture;
@@ -16,6 +17,8 @@ export type RoomFurnitureBackgroundTonerDialogData = {
 export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const [enabled, setEnabled] = useState(data.data.data?.toner?.enabled ?? false);
     const [color, setColor] = useState(data.data.data?.toner?.color ?? "#000000");
+
+    useRoomTonerPreview(enabled, color);
 
     const handleApply = useCallback(() => {       
         webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({

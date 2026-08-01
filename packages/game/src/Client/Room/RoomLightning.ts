@@ -11,6 +11,7 @@ export default class RoomLighting {
     public previewMoodlight?: UserFurnitureMoodlightData;
 
     public backgroundToner?: UserFurnitureTonerData;
+    public previewToner?: UserFurnitureTonerData;
 
     private backgroundSprite: Sprite = new Sprite();
     private lightSprite: Sprite = new Sprite();
@@ -62,12 +63,21 @@ export default class RoomLighting {
     public setBackgroundTonerData(backgroundToner: UserFurnitureTonerData) {
         if(backgroundToner.enabled) {
             this.backgroundToner = backgroundToner;
-
-            this.backgroundSprite.tint = backgroundToner.color;
         }
         else {
             this.backgroundToner = undefined;
+        }
 
+        this.updateBackgroundToner();
+    }
+
+    public updateBackgroundToner() {
+        const toner = this.previewToner ?? this.backgroundToner;
+
+        if(toner?.enabled) {
+            this.backgroundSprite.tint = toner.color;
+        }
+        else {
             this.backgroundSprite.tint = 0x00;
         }
     }
@@ -113,6 +123,12 @@ export default class RoomLighting {
         this.previewMoodlight = moodlight;
 
         this.updateMoodlightData();
+    }
+
+    public setPreviewTonerData(toner?: UserFurnitureTonerData) {
+        this.previewToner = toner;
+
+        this.updateBackgroundToner();
     }
 
     public shouldRenderBackground() {
