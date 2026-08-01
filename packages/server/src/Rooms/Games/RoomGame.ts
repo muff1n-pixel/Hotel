@@ -33,7 +33,7 @@ export interface RoomGamePlayers<T = unknown> {
     getTeamPlayers(team: T): RoomGamePlayer<T>[];
 
     hasPlayer(roomUser: RoomUser): boolean;
-    addPlayer(roomUser: RoomUser, team: T): void;
+    addPlayer(roomUser: RoomUser, team?: T): void;
     removePlayer(roomUser: RoomUser): void;
 
     givePlayerScore(roomUser: RoomUser, score: number): void;

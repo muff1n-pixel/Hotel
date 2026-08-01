@@ -1,18 +1,20 @@
-import { BadgeData, FurnitureData } from "@pixel63/events";
+import { BadgeData, FigureConfigurationData, FurnitureData } from "@pixel63/events";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useEffect, useRef } from "react";
+import FigureImage from "../Figure/FigureImage";
 
 export type WidgetNotificationProps = {
     badge?: BadgeData;
     furniture?: FurnitureData;
+    figureConfiguration?: FigureConfigurationData;
     imageUrl?: string;
     text: string;
     duration: number;
     onFinish?: () => void;
 };
 
-export default function WidgetNotification({ badge, furniture, imageUrl, text, duration, onFinish }: WidgetNotificationProps) {
+export default function WidgetNotification({ badge, furniture, figureConfiguration, imageUrl, text, duration, onFinish }: WidgetNotificationProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -73,6 +75,12 @@ export default function WidgetNotification({ badge, furniture, imageUrl, text, d
             {(furniture) && (
                 <div>
                     <FurnitureImage furnitureData={furniture}/>
+                </div>
+            )}
+
+            {(figureConfiguration) && (
+                <div>
+                    <FigureImage figureConfiguration={figureConfiguration} direction={2} headOnly/>
                 </div>
             )}
 

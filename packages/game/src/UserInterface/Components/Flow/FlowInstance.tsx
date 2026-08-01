@@ -44,6 +44,7 @@ export default function FlowInstance() {
                     text={widgetNotification.text}
                     badge={widgetNotification.badge}
                     furniture={widgetNotification.furniture}
+                    figureConfiguration={widgetNotification.figureConfiguration}
                     imageUrl={widgetNotification.imageUrl}
                     duration={5000}
                     onFinish={() => {

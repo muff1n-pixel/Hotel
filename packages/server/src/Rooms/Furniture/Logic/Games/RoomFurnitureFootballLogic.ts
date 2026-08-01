@@ -1,7 +1,10 @@
-import { RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UseRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import RoomUser from "../../../Users/RoomUser.js";
 import RoomFurniture from "../../RoomFurniture.js";
 import RoomFurnitureLogic from "./../Interfaces/RoomFurnitureLogic.js";
+import RoomFootballGame from "../../../Games/Football/RoomFootballGame.js";
+import RoomFurnitureFootballGoalLogic from "./Football/RoomFurnitureFootballGoalLogic.js";
+import FootballGameNotifications from "../../../../Users/Notifications/Games/FootballGameNotifications.js";
 
 export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
     private travelingDirection: number | null = null;
@@ -137,7 +140,39 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
     }
 
     public async handleFootballMoved(user: RoomUser | null, position: RoomPositionData) {
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomFootballGame)) {
+            return;
+        }
 
+        if(!user) {
+            return;
+        }
+
+        const game = this.roomFurniture.room.games.getGame(RoomFootballGame);
+
+        const player = game?.players.getPlayer(user);
+
+        if(!player) {
+            return;
+        }
+
+        const roomPositionOffset = RoomPositionOffsetData.fromJSON(position);
+
+        const goalAtPosition = this.roomFurniture.room.furnitures.find((furniture) => furniture.logic instanceof RoomFurnitureFootballGoalLogic && furniture.isPositionInside(roomPositionOffset));
+
+        if(game && goalAtPosition) {
+            if(!(goalAtPosition.logic instanceof RoomFurnitureFootballGoalLogic)) {
+                return;
+            }
+
+            game?.giveTeamScore(goalAtPosition.logic.team, 1);
+
+            player.roomUser.addAction("Wave", 5000);
+
+            for(const player of game.players.getAllPlayers()) {
+                player.roomUser.user.sendProtobuff(WidgetNotificationData, FootballGameNotifications.buildTeamScored(player, goalAtPosition.logic.team));
+            }
+        }
     }
 
     public async handleFootballStopped() {

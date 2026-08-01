@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import { FigureConfigurationData, UpdateRoomFurnitureData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
-import WardrobeMannequinAvatar from "@UserInterface/Components/Wardrobe/WardrobeMannequinAvatar";
 import { useTranslation } from "react-i18next";
 import WardrobeAvatar from "./WardrobeAvatar";
 
@@ -20,7 +19,7 @@ export type WardrobeFootballDialogProps = {
 export default function WardrobeFootballDialog(props: WardrobeFootballDialogProps) {
     const [getWardrobeTranslation] = useTranslation("wardrobe");
 
-    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(props.data.roomFurniture.data.data?.mannequin?.figureConfiguration ?? FigureConfigurationData.create({
+    const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>((props.data.roomFurniture.data.data?.common?.[(props.data.gender === "male")?("maleFigureConfiguration"):("femaleFigureConfiguration")]) ?? FigureConfigurationData.create({
         gender: props.data.gender,
         parts: [
             {
@@ -48,8 +47,8 @@ export default function WardrobeFootballDialog(props: WardrobeFootballDialogProp
             id: props.data.roomFurniture.data.id,
 
             data: {
-                mannequin: {
-                    figureConfiguration: filteredConfiguration
+                common: {
+                    [(props.data.gender === "male")?("maleFigureConfiguration"):("femaleFigureConfiguration")]: filteredConfiguration
                 }
             }
         }));

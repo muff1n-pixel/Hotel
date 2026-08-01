@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Figure/FigureConfigurationData.proto";
+
 import "User/Furniture/Data/UserFurnitureMoodlightData.proto";
 import "User/Furniture/Data/UserFurnitureTonerData.proto";
 import "User/Furniture/Data/UserFurnitureBackgroundData.proto";
@@ -64,6 +66,10 @@ message UserFurnitureCustomData {
         WiredCommonDelayData delay = 1;
         WiredCommonFurniSelectionData furniture_selection = 2;
         WiredCommonFurniStateData furniture_state = 3;
+        
+        FigureConfigurationData figure_configuration = 4;
+        FigureConfigurationData male_figure_configuration = 5;
+        FigureConfigurationData female_figure_configuration = 6;
     }
 
     UserFurnitreCustomCommonData common = 100;

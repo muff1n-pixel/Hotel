@@ -6,7 +6,7 @@ import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomEventData, RoomGroupData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { FigureConfigurationData, LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomEventData, RoomGroupData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
 import { RoomActorAction } from "../Actor/RoomActorAction.js";
 import Directions from "../../Helpers/Directions.js";
@@ -28,6 +28,8 @@ export default class RoomUser implements RoomActor {
     public teleporting: boolean = false;
     public idling: boolean = false;
     public ready: boolean = false;
+
+    private temporaryFigureConfiguration: FigureConfigurationData | undefined = undefined;
 
     public group: RoomUserGroup;
 
@@ -130,7 +132,7 @@ export default class RoomUser implements RoomActor {
             name: this.user.model.name,
             motto: this.user.model.motto ?? undefined,
 
-            figureConfiguration: this.user.model.figureConfiguration,
+            figureConfiguration: this.temporaryFigureConfiguration ?? this.user.model.figureConfiguration,
 
             position: this.position,
             direction: this.direction,
@@ -481,5 +483,43 @@ export default class RoomUser implements RoomActor {
                 this.removeAction(effect);
             }
         }
+    }
+
+    public setTemporaryFigureConfiguration(temporaryFigureConfiguration: FigureConfigurationData, partial: boolean) {
+        const figureConfiguration = FigureConfigurationData.create({
+            gender: this.user.model.figureConfiguration.gender,
+            effect: this.user.model.figureConfiguration.effect,
+
+            parts: temporaryFigureConfiguration.parts.filter((part) => part.type !== "hd")
+        });
+
+
+        if(partial) {
+            for(const existingPart of this.user.model.figureConfiguration.parts) {
+                if(figureConfiguration.parts.some((part) => part.type === existingPart.type)) {
+                    continue;
+                }
+
+                figureConfiguration.parts.push(existingPart);
+            }
+        }
+
+        this.temporaryFigureConfiguration = figureConfiguration;
+
+        this.room.sendProtobuff(RoomUserData, this.getRoomUserData());
+    }
+
+    public resetTemporaryFigureConfiguration() {
+        if(!this.temporaryFigureConfiguration) {
+            return;
+        }
+
+        this.temporaryFigureConfiguration = undefined;
+
+        this.room.sendProtobuff(RoomUserData, this.getRoomUserData());
+    }
+
+    public getFigureConfiguration() {
+        return this.temporaryFigureConfiguration ?? this.user.model.figureConfiguration;
     }
 }

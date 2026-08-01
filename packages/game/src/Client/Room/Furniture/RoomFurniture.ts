@@ -89,6 +89,7 @@ export default class RoomFurniture {
 
             case "freeze_timer":
             case "battlebanzai_timer":
+            case "football_timer":
                 return new FurnitureMultistateLogic(this.instance, this);
 
             case "freeze_tile":

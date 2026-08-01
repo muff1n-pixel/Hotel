@@ -97,6 +97,10 @@ import WiredActionLogLogic from "./Logic/Wired/Action/WiredActionLogLogic";
 import WiredNegativeActionLogLogic from "./Logic/Wired/Action/Negative/WiredNegativeActionLogLogic";
 import WiredNegativeActionSendSignalLogic from "./Logic/Wired/Action/Negative/WiredNegativeActionSendSignalLogic";
 import WiredNegativeActionCallStacksLogic from "./Logic/Wired/Action/Negative/WiredNegativeActionCallStacksLogic";
+import RoomFurnitureFootballGateLogic from "./Logic/Games/Football/RoomFurnitureFootballGateLogic";
+import RoomFurnitureFootballCounterLogic from "./Logic/Games/Football/RoomFurnitureFootballCounterLogic";
+import RoomFurnitureFootballTimerLogic from "./Logic/Games/Football/RoomFurnitureFootballTimerLogic";
+import RoomFurnitureFootballGoalLogic from "./Logic/Games/Football/RoomFurnitureFootballGoalLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -172,6 +176,36 @@ export default class RoomFurnitureLogicFactory {
             // Football
             case "football":
                 return new RoomFurnitureFootballLogic(roomFurniture);
+
+            case "football_gate":
+                return new RoomFurnitureFootballGateLogic(roomFurniture);
+
+            case "football_timer":
+                return new RoomFurnitureFootballTimerLogic(roomFurniture);
+
+            case "football_counter_blue":
+                return new RoomFurnitureFootballCounterLogic(roomFurniture, "blue");
+
+            case "football_counter_green":
+                return new RoomFurnitureFootballCounterLogic(roomFurniture, "green");
+
+            case "football_counter_red":
+                return new RoomFurnitureFootballCounterLogic(roomFurniture, "red");
+
+            case "football_counter_yellow":
+                return new RoomFurnitureFootballCounterLogic(roomFurniture, "yellow");
+
+            case "football_goal_blue":
+                return new RoomFurnitureFootballGoalLogic(roomFurniture, "blue");
+
+            case "football_goal_green":
+                return new RoomFurnitureFootballGoalLogic(roomFurniture, "green");
+
+            case "football_goal_red":
+                return new RoomFurnitureFootballGoalLogic(roomFurniture, "red");
+
+            case "football_goal_yellow":
+                return new RoomFurnitureFootballGoalLogic(roomFurniture, "yellow");
 
             // Bunny Run
             case "bunnyrun_field":
