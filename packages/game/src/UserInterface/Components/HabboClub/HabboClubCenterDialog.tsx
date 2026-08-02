@@ -9,6 +9,7 @@ import { useUserHabboClub } from "@UserInterface/Hooks/User/HabboClub/useUserHab
 import { Fragment } from "react/jsx-runtime";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
+import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 
 export type HabboClubCenterDialogProps = {
     hidden?: boolean;
@@ -17,7 +18,7 @@ export type HabboClubCenterDialogProps = {
 
 export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCenterDialogProps) {
     const user = useUser();
-    const userHabboClub = useUserHabboClub();
+    const userHabboClub = useUserHabboClub(true);
 
     const { openShopPage } = useShopPageLink("habboclub");
 
@@ -72,44 +73,104 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                 </div>
             </div>
 
-            <DialogContent>
+            <DialogContent style={{ paddingTop: 0 }}>
                 <div style={{
                     display: "flex",
 
-                    height: 60,
-                    paddingRight: 140
+                    height: 80,
+                    paddingRight: 140,
+
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10
                 }}>
-                    <FlexLayout gap={10} direction="row" align="center">
-                        {(userHabboClub?.badge) && (
-                            <div style={{
-                                display: "flex",
+                    {(userHabboClub?.badge) && (
+                        <div style={{
+                            display: "flex",
+                            
+                            justifyContent: "center",
+                            alignItems:  "center",
+
+                            width: 60,
+                            height: 60
+                        }}>
+                            <BadgeImage badge={userHabboClub.badge}/>
+                        </div>
+                    )}
+                    
+                    <FlexLayout gap={2} direction="column">
+                        <b>Status: {(userHabboClub?.active)?("Active"):("Inactive")}</b>
+
+                        {(userHabboClub?.active)?(
+                            <FlexLayout direction="column" gap={0}>
+                                <p>Time left: <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
+
+                                <p>First joined: <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
                                 
-                                justifyContent: "center",
-                                alignItems:  "center",
-
-                                width: 60,
-                                height: 60
-                            }}>
-                                <BadgeImage badge={userHabboClub.badge}/>
-                            </div>
+                                <p>Current streak: <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
+                            </FlexLayout>
+                        ):(
+                            <p>You are not a current Habbo Club member. Check out what you're missing...</p>
                         )}
-                        
-                        <FlexLayout gap={2} direction="column">
-                            <b>Status: {(userHabboClub?.active)?("Active"):("Inactive")}</b>
-
-                            {(userHabboClub?.active)?(
-                                <FlexLayout direction="column" gap={0}>
-                                    <p>Time left: <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
-
-                                    <p>First joined: <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
-                                    
-                                    <p>Current streak: <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
-                                </FlexLayout>
-                            ):(
-                                <p>You are not a current Habbo Club member. Check out what you're missing...</p>
-                            )}
-                        </FlexLayout>
                     </FlexLayout>
+                </div>
+
+                <div style={{
+                    height: 128,
+
+                    background: "#52A2CA",
+                    color: "#FFFFFF",
+
+                    borderRadius: 6,
+
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
+                    <FlexLayout flex={1} style={{
+                        padding: 20
+                    }}>
+                        <b style={{ fontSize: 17 }}>HC Payday</b>
+
+                        <p>HC members get credits back from catalog purchases each month.</p>
+                    </FlexLayout>
+
+                    <div className="sprite_habboclub_sticker" style={{
+                        marginTop: -8,
+                        marginRight: -8,
+
+                        color: "#6B3502",
+
+                        boxSizing: "border-box",
+
+                        overflow: "hidden",
+
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 5
+                    }}>
+                        <FlexLayout gap={10} direction="column" style={{
+                            height: 80,
+                            padding: 15,
+                            paddingBottom: 0
+                        }}>
+                            <b style={{ fontSize: 17 }}>HC Payday is in:</b>
+
+                            <FlexLayout direction="row" align="center">
+                                <div className="sprite_habboclub_payday_time"/>
+
+                                <p style={{ fontSize: 14 }}>13 d.</p>
+                            </FlexLayout>
+                        </FlexLayout>
+
+                        <FlexLayout gap={0} direction="column" justify="center" style={{
+                            paddingLeft: 15,
+                            paddingBottom: 12
+                        }}>
+                            <b style={{ fontSize: 14 }}>You'll be getting:</b>
+
+                            <CurrencyPanel credits={userHabboClub?.cashback}/>
+                        </FlexLayout>
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>

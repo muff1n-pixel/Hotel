@@ -176,6 +176,8 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
         user.model.duckets -= (shopFurniture.duckets ?? 0) * quantity;
         user.model.diamonds -= (shopFurniture.diamonds ?? 0) * quantity;
 
+        user.habboClub.addCashback((shopFurniture.credits ?? 0) * quantity);
+
         user.sendUserData();
 
         await user.model.save();

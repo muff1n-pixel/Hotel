@@ -76,6 +76,8 @@ export default class PurchaseShopBundleEvent implements ProtobuffListener<Purcha
         user.model.duckets -= bundle.duckets ?? 0;
         user.model.diamonds -= bundle.diamonds ?? 0;
 
+        user.habboClub.addCashback(bundle.credits ?? 0);
+
         await user.model.save();
 
         const room = await RoomModel.create({

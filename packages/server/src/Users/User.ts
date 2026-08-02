@@ -8,12 +8,15 @@ import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotif
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
 import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
+import UserHabboClub from "./HabboClub/UserHabboClub.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
     public friends: UserFriends;
     public achievements: UserAchievements;
     public permissions: UserPermissions;
+
+    public habboClub: UserHabboClub;
 
     public spamProtection: UserSpamProtection;
     
@@ -30,6 +33,7 @@ export default class User extends EventEmitter {
         this.permissions = new UserPermissions(this);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this.model.id);
+        this.habboClub = new UserHabboClub(this);
         
         this.permissions.loadPermissions().then(() => {
             this.sendProtobuff(UserPermissionsData, UserPermissionsData.create({
@@ -102,7 +106,7 @@ export default class User extends EventEmitter {
     public hasMembership(membership: string) {
         switch(membership) {
             case "habboclub": {
-                return this.model.habboClub && new Date(this.model.habboClub) >= new Date();
+                return this.habboClub.isActive();
             }
         }
 

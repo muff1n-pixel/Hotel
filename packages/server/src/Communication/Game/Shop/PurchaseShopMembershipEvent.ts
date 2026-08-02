@@ -38,25 +38,7 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
 
         switch(shopMembership.membership) {
             case "habboclub": {
-                const date = (user.model.habboClub && new Date(user.model.habboClub) >= new Date())?(new Date(user.model.habboClub)):(new Date());
-
-                if(!user.model.habboClub || new Date(user.model.habboClub) < new Date()) {
-                    user.model.habboClubStreak = 0;
-                }
-
-                date.setDate(date.getDate() + shopMembership.days);
-
-                user.model.habboClub = date;
-                user.model.habboClubDays += shopMembership.days;
-                user.model.habboClubStreak += shopMembership.days;
-
-                if(!user.model.habboClubFirstMembership) {
-                    user.model.habboClubFirstMembership = new Date();
-                }
-
-                await user.achievements.addAchievementScore("HabboClubMember", shopMembership.days);
-
-                await new GetUserHabboClubEvent().handle(user);
+                await user.habboClub.addMembershipDays(shopMembership.days);
 
                 break;
             }
@@ -160,6 +142,8 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
         user.model.credits -= (shopMembership.credits ?? 0);
         user.model.duckets -= (shopMembership.duckets ?? 0);
         user.model.diamonds -= (shopMembership.diamonds ?? 0);
+
+        user.habboClub.addCashback(shopMembership.credits ?? 0);
 
         await user.model.save();
 

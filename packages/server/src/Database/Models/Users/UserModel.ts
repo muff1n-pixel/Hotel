@@ -23,6 +23,9 @@ export class UserModel extends Model {
     declare habboClubFirstMembership: Date | null;
     declare habboClubStreak: number;
 
+    declare habboClubCashback: number;
+    declare habboClubCashbackRedemeedAt: Date | null;
+
     declare createdAt: Date;
     
     declare roles: NonAttribute<PermissionRoleModel[]>;
@@ -121,6 +124,16 @@ export function initializeUserModel(sequelize: Sequelize) {
                 defaultValue: 0
             },
             habboClubFirstMembership: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null
+            },
+            habboClubCashback: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
+            habboClubCashbackRedemeedAt: {
                 type: DataTypes.DATE,
                 allowNull: true,
                 defaultValue: null

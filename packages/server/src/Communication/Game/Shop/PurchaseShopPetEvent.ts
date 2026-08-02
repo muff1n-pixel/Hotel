@@ -55,6 +55,8 @@ export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseS
         user.model.duckets -= shopPet.duckets ?? 0;
         user.model.diamonds -= shopPet.diamonds ?? 0;
 
+        user.habboClub.addCashback(shopPet.credits ?? 0);
+
         await user.model.save();
 
         const userPet = await UserPetModel.create({

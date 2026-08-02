@@ -11,4 +11,6 @@ message UserHabboClubData {
     optional string expires_at = 4;
 
     optional BadgeData badge = 6;
+
+    uint32 cashback = 7;
 }

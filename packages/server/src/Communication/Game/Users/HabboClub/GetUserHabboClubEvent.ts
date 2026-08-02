@@ -6,18 +6,6 @@ export default class GetUserHabboClubEvent implements ProtobuffListener<GetUserH
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User) {
-        const active = Boolean((user.model.habboClub && new Date(user.model.habboClub) >= new Date()));
-
-        const userAchievementBadge = await user.achievements.getUserAchievementBadge("HabboClubMember");
-
-        user.sendProtobuff(UserHabboClubData, UserHabboClubData.create({
-            active: active,
-            expiresAt: (active && user.model.habboClub)?(new Date(user.model.habboClub).toISOString()):(undefined),
-            memberSince: (user.model.habboClubFirstMembership)?(new Date(user.model.habboClubFirstMembership).toISOString()):(undefined),
-            membershipDays: user.model.habboClubDays,
-            membershipStreak: user.model.habboClubStreak,
-
-            badge: (userAchievementBadge)?(BadgeData.fromJSON(userAchievementBadge)):(undefined)
-        }));
+        user.habboClub.sendHabboClubData();
     }
 }
