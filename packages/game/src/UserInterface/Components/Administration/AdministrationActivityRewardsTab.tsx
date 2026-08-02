@@ -4,13 +4,19 @@ import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTab
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useHotelActivityRewards } from "@UserInterface/Hooks/Hotel/ActivityRewards/useHotelActivityRewards";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 export default function AdministrationActivityRewardsTab() {
     const dialogs = useDialogs();
     const activityRewards = useHotelActivityRewards();
 
     const [activeActivityReward, setActiveActivityReward] = useState<HotelActivityRewardData>();
+
+    useEffect(() => {
+        if(activeActivityReward && !activityRewards?.includes(activeActivityReward)) {
+            setActiveActivityReward(undefined);
+        }
+    }, [activityRewards]);
 
     return (
         <FlexLayout flex={1} direction="column">
