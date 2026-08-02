@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Badge/BadgeData.proto";
+
 message UserHabboClubData {
     bool active = 1;
     uint32 membership_days = 3;
@@ -7,4 +9,6 @@ message UserHabboClubData {
 
     optional string member_since = 2;
     optional string expires_at = 4;
+
+    optional BadgeData badge = 6;
 }

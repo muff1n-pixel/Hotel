@@ -62,7 +62,7 @@ export default class UserAchievements {
         }
     }
 
-    private async getUserAchievement(achievementId: AchievementId) {
+    public async getUserAchievement(achievementId: AchievementId) {
         const achievement = await AchievementModel.findByPk(achievementId);
 
         if(!achievement) {
@@ -79,6 +79,25 @@ export default class UserAchievements {
         userAchievement.achievement = achievement;
 
         return userAchievement;
+    }
+
+    public async getUserAchievementBadge(achievementId: AchievementId) {
+        const userAchievement = await UserAchievementModel.findOne({
+            where: {
+                userId: this.userId,
+                achievementId
+            },
+            include: {
+                model: AchievementModel,
+                as: "achievement"
+            }
+        });
+
+        if(!userAchievement) {
+            return null;
+        }
+
+        return await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
     }
 
     private async setUserAchievementLevel(userAchievement: UserAchievementModel, nextLevel: number) {

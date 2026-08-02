@@ -54,6 +54,8 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
                     user.model.habboClubFirstMembership = new Date();
                 }
 
+                await user.achievements.addAchievementScore("HabboClubMember", shopMembership.days);
+
                 await new GetUserHabboClubEvent().handle(user);
 
                 break;

@@ -1,7 +1,8 @@
 import { AchievementModel } from "../AchievementModel";
 
 export type ProfileAchievements =
-    "TrueHabbo";
+    "TrueHabbo"
+    | "HabboClubMember";
 
 export default class ProfileAchievementsSeeder {
     public static async seedAchievements() {
@@ -13,6 +14,17 @@ export default class ProfileAchievementsSeeder {
             badgePrefix: "ACH_RegistrationDuration",
             levels: [
                 1, 3, 10, 20, 30, 56, 84, 112, 168, 224, 280, 365, 548, 730, 913, 1095, 1278, 1460, 1643, 1825
+            ]
+        });
+        
+        await AchievementModel.upsert({
+            id: "HabboClubMember",
+            categoryId: "profile",
+            name: "Habbo Club Member",
+            description: "For having %score% days of Habbo Club membership.",
+            badgePrefix: "ACH_VipHC",
+            levels: [
+                14, (30 * 12), (30 * 12 * 2), (30 * 12 * 3), (30 * 12 * 4)
             ]
         });
     }

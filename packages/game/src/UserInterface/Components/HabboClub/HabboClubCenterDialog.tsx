@@ -8,6 +8,7 @@ import useShopPageLink from "../Shop/Hooks/useShopPageLink";
 import { useUserHabboClub } from "@UserInterface/Hooks/User/HabboClub/useUserHabboClub";
 import { Fragment } from "react/jsx-runtime";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 
 export type HabboClubCenterDialogProps = {
     hidden?: boolean;
@@ -74,26 +75,41 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
             <DialogContent>
                 <div style={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
 
                     height: 60,
-                    gap: 5,
                     paddingRight: 140
                 }}>
-                    <b>Status: {(userHabboClub?.active)?("Active"):("Inactive")}</b>
+                    <FlexLayout gap={10} direction="row" align="center">
+                        {(userHabboClub?.badge) && (
+                            <div style={{
+                                display: "flex",
+                                
+                                justifyContent: "center",
+                                alignItems:  "center",
 
-                    {(userHabboClub?.active)?(
-                        <FlexLayout direction="column" gap={0}>
-                            <p>Time left: <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
+                                width: 60,
+                                height: 60
+                            }}>
+                                <BadgeImage badge={userHabboClub.badge}/>
+                            </div>
+                        )}
+                        
+                        <FlexLayout gap={2} direction="column">
+                            <b>Status: {(userHabboClub?.active)?("Active"):("Inactive")}</b>
 
-                            <p>First joined: <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
-                            
-                            <p>Current streak: <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
+                            {(userHabboClub?.active)?(
+                                <FlexLayout direction="column" gap={0}>
+                                    <p>Time left: <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
+
+                                    <p>First joined: <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
+                                    
+                                    <p>Current streak: <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
+                                </FlexLayout>
+                            ):(
+                                <p>You are not a current Habbo Club member. Check out what you're missing...</p>
+                            )}
                         </FlexLayout>
-                    ):(
-                        <p>You are not a current Habbo Club member. Check out what you're missing...</p>
-                    )}
+                    </FlexLayout>
                 </div>
             </DialogContent>
         </Dialog>
