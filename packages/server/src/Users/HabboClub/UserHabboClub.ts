@@ -19,6 +19,31 @@ export default class UserHabboClub {
         this.user.model.habboClubCashback += Math.round(credits / 100 * 10);
     }
 
+    public getCashback() {
+        let credits: number = this.user.model.habboClubCashback;
+
+        if(this.user.model.habboClubStreak >= 365) {
+            credits += 30;
+        }
+        else if(this.user.model.habboClubStreak >= 180) {
+            credits += 25;
+        }
+        else if(this.user.model.habboClubStreak >= 90) {
+            credits += 20;
+        }
+        else if(this.user.model.habboClubStreak >= 60) {
+            credits += 15;
+        }
+        else if(this.user.model.habboClubStreak >= 30) {
+            credits += 10;
+        }
+        else if(this.user.model.habboClubStreak >= 7) {
+            credits += 5;
+        }
+
+        return credits;
+    }
+
     public async addMembershipDays(days: number) {
         const date = (this.user.model.habboClub && new Date(this.user.model.habboClub) >= new Date())?(new Date(this.user.model.habboClub)):(new Date());
 
@@ -53,7 +78,7 @@ export default class UserHabboClub {
             memberSince: (this.user.model.habboClubFirstMembership)?(new Date(this.user.model.habboClubFirstMembership).toISOString()):(undefined),
             membershipDays: this.user.model.habboClubDays,
             membershipStreak: this.user.model.habboClubStreak,
-            cashback: this.user.model.habboClubCashback,
+            cashback: this.getCashback(),
 
             badge: (userAchievementBadge)?(BadgeData.fromJSON(userAchievementBadge)):(undefined)
         }));
@@ -78,7 +103,7 @@ export default class UserHabboClub {
             return;
         }
 
-        this.user.model.credits += this.user.model.habboClubCashback;
+        this.user.model.credits += this.getCashback();
         
         this.user.model.habboClubCashback = 0;
         this.user.model.habboClubCashbackRedemeedAt = now;
