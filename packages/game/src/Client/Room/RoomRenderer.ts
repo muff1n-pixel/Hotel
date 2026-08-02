@@ -64,6 +64,8 @@ export default class RoomRenderer extends EventTarget {
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
 
+    private processingTick = false;
+
     constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, structure?: RoomStructureData) {
         super();
 
@@ -145,10 +147,12 @@ export default class RoomRenderer extends EventTarget {
                 return;
             }
 
-            const shouldProcessTick = this.frameCounter.shouldProcessTick();
+            if(!this.processingTick) {
+                const shouldProcessTick = this.frameCounter.shouldProcessTick();
 
-            if(shouldProcessTick) {
-                this.processTick();
+                if(shouldProcessTick) {
+                    this.processTick();
+                }
             }
             
             if(this.frameCounter.shouldProcessFrame()) {

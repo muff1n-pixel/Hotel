@@ -13,8 +13,8 @@ export default function WardrobeAvatar({ configuration }: WardrobeAvatarProps) {
     useEffect(() => {
         const figureRenderer = new Figure(configuration, 4);
         
-        figureRenderer.renderToCanvas(0, false, true).then(({ figure }) => {
-            setFigureImage(figure.image);
+        figureRenderer.loadAssets(0).then(() => {
+            setFigureImage(figureRenderer.renderToCanvas(0, false, true).figure.image as any);
         });
     }, [ configuration ]);
 

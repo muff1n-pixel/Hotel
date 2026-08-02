@@ -12,10 +12,10 @@ export default class FigureSpriteRenderer {
 
     }
     
-    public async getFigureSprites(actions: string[], frame: number, spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: FigureBodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined, headOnly?: boolean): Promise<FigureRendererSprite[]> {
+    public getFigureSprites(actions: string[], frame: number, spritesFromConfiguration: SpriteConfiguration[], actionsForBodyParts: FigureBodyPartAction[], direction: number, grayscaled: AssetSpriteGrayscaledProperties | undefined, headOnly?: boolean): FigureRendererSprite[] {
         const actionForSit = actions.some((action) => action === "Sit");
 
-        const sprites = await Promise.all(spritesFromConfiguration.map(async (spriteConfiguration) => {
+        const sprites = spritesFromConfiguration.map((spriteConfiguration) => {
             const actionForSprite = actionsForBodyParts.find((action) => action.bodyParts.includes(spriteConfiguration.type));
         
             if(!actionForSprite) {
@@ -39,8 +39,8 @@ export default class FigureSpriteRenderer {
             const flipHorizontal = (spriteDirection > 3 && spriteDirection < 7);
             const flippedDirection = (flipHorizontal)?(6 - spriteDirection):(spriteDirection);
 
-            const figureData = await FigureAssets.getFigureData(spriteConfiguration.assetId);
-
+            const figureData = FigureAssets.getFigureData(spriteConfiguration.assetId);
+            
             if(!figureData) {
                 //console.error("Figure data does not exist for " + spriteConfiguration.assetId);
 
@@ -126,7 +126,7 @@ export default class FigureSpriteRenderer {
             const palette = FigureAssets.figuredata.palettes.find((palette) => palette.id === spriteConfiguration.colorPaletteId);
             const paletteColor = palette?.colors.find((color) => color.id === spriteConfiguration.colors[spriteConfiguration.colorIndex - 1]);
 
-            const result = await this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
+            const result = this.getFigureSprite(assetType, spriteConfiguration, sprite, asset, paletteColor?.color, assetDirection, assetFlipped, grayscaled);
 
             if(result) {
                 if(spriteConfiguration.type === "sd") {
@@ -157,13 +157,13 @@ export default class FigureSpriteRenderer {
             }
 
             return null;
-        }));
+        });
 
         return sprites.filter((sprite) => sprite !== null);
     }
     
-    private async getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined): Promise<FigureRendererSprite | null> {
-        const sprite = await FigureAssets.getFigureSprite(spriteConfiguration.assetId, {
+    private getFigureSprite(type: string, spriteConfiguration: SpriteConfiguration, spriteData: FurnitureSprite, assetData: FurnitureAsset, color: string | undefined, direction: number, flipHorizontal: boolean, grayscaled: AssetSpriteGrayscaledProperties | undefined): FigureRendererSprite | null {
+        const sprite = FigureAssets.getFigureSprite(spriteConfiguration.assetId, {
             x: spriteData.x,
             y: spriteData.y,
 

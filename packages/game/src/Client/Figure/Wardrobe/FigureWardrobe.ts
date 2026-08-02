@@ -61,9 +61,7 @@ export default class FigureWardrobe {
                     ]
                 }, 2, undefined, (data.part === "hd"));
 
-                const image = new Promise<ImageBitmap>((resolve, reject) => {
-                    figureRenderer.renderToCanvas(0, true).then(({ figure }) => resolve(figure.image)).catch(reject);
-                });
+                const image = figureRenderer.loadAssets(0).then(() => figureRenderer.renderToCanvas(0, true));
 
                 return {
                     image,

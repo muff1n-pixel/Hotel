@@ -3,4 +3,5 @@ export type FigureRendererOptions = {
     actions: string[];
     direction: number;
     figureConfigurationChanged: boolean;
+    actionsChanged: boolean;
 };

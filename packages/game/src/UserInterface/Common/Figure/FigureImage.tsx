@@ -21,9 +21,10 @@ export default function FigureImage({ actions, frame = 0, headOnly, cropped = tr
     useEffect(() => {
         const furnitureRenderer = new Figure(figureConfiguration, direction, actions, headOnly);
 
-        furnitureRenderer.renderToCanvas(frame, cropped).then(({ figure }) => {
-            setImage(figure.image);
+        furnitureRenderer.loadAssets(frame).then(() => {
+            setImage(furnitureRenderer.renderToCanvas(frame, cropped) as any as ImageBitmap);
         });
+
     }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);
 
     return (

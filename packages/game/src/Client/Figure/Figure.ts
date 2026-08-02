@@ -4,6 +4,7 @@ import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/Figure
 
 export default class Figure {
     public actions: string[] = ["Default"];
+    private actionsChanged: boolean = true;
 
     private renderer: FigureRenderer;
 
@@ -28,13 +29,14 @@ export default class Figure {
         this.renderer = new FigureRenderer(this.configuration!);
     }
 
-    public async renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
+    public renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): FigureRendererResult {
         const options = this.getOptions(frame);
         
         this.renderer.configuration = this.configuration!;
         this.configurationChanged = false;
+        this.actionsChanged = false;
 
-        return await this.renderer.renderToCanvas(options, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
+        return this.renderer.renderToCanvas(options, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
     }
 
     public getConfigurationAsString(): string {
@@ -51,6 +53,7 @@ export default class Figure {
         }
 
         this.actions.push(id);
+        this.actionsChanged = true;
     }
 
     public hasAction(id: string) {
@@ -59,6 +62,7 @@ export default class Figure {
 
     public setActions(actions: string[]) {
         this.actions = actions.concat("Default");
+        this.actionsChanged = true;
     }
 
     public removeAction(id: string) {
@@ -71,6 +75,7 @@ export default class Figure {
         }
 
         this.actions.splice(actionIndex, 1);
+        this.actionsChanged = true;
     }
 
     private getOptions(frame: number): FigureRendererOptions {
@@ -79,7 +84,8 @@ export default class Figure {
 
             actions: [...this.actions],
             direction: this.direction,
-            figureConfigurationChanged: this.configurationChanged
+            figureConfigurationChanged: this.configurationChanged,
+            actionsChanged: this.actionsChanged
         };
     }
 
@@ -89,5 +95,13 @@ export default class Figure {
         }
 
         return this.renderer.shouldRender(this.getOptions(frame));
+    }
+
+    public shouldLoadAssets(frame: number) {
+        return this.renderer.shouldLoadAssets(this.getOptions(frame));
+    }
+
+    public loadAssets(frame: number) {
+        return this.renderer.loadAssets(this.getOptions(frame));
     }
 }

@@ -1,5 +1,5 @@
 import { FiguremapData } from "@Client/Interfaces/Figure/FiguremapData";
-import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult } from "./AssetFetcher";
+import AssetFetcher, { AssetSpriteProperties, AssetSpriteResult, StaticAssetSpriteResult } from "./AssetFetcher";
 import { FigureData } from "@Client/Interfaces/Figure/FigureData";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { AvatarActionsData } from "@Client/Interfaces/Figure/Avataractions";
@@ -45,7 +45,11 @@ export default class FigureAssets {
         return await AssetFetcher.fetchJson<AvatarActionsData>(`/assets/figure/avataractions.json`);
     }
 
-    public static async getFigureData(name: string) {
+    public static getFigureData(name: string) {
+        return AssetFetcher.getJson<FigureData>(`/assets/figure/clothing/${name}/${name}.json`);
+    }
+
+    public static async fetchFigureData(name: string) {
         return await AssetFetcher.fetchJson<FigureData>(`/assets/figure/clothing/${name}/${name}.json`);
     }
 
@@ -57,8 +61,20 @@ export default class FigureAssets {
         return await AssetFetcher.fetchImage(`/assets/figure/clothing/${name}/${name}.png`);
     }
 
-    public static async getFigureSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
+    public static getFigureSprite(name: string, properties: AssetSpriteProperties): StaticAssetSpriteResult {
+        return AssetFetcher.getImageSprite(`/assets/figure/clothing/${name}/${name}.png`, properties);
+    }
+
+    public static async fetchFigureSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/figure/clothing/${name}/${name}.png`, properties);
+    }
+
+    public static getFigureImage(name: string) {
+        return AssetFetcher.getImage(`/assets/figure/clothing/${name}/${name}.png`);
+    }
+
+    public static async fetchFigureImage(name: string) {
+        return await AssetFetcher.fetchImage(`/assets/figure/clothing/${name}/${name}.png`);
     }
 
     public static async getEffectSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {

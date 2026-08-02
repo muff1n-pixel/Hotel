@@ -2,6 +2,7 @@ import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectData";
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import { FigureAssets } from "@Game/library";
+import { FigureRendererOptions } from "../Interfaces/FigureRendererOptions";
 
 export default class FigureEffects {
     public effects: Record<string, FigureEffectData> = {};
@@ -10,7 +11,7 @@ export default class FigureEffects {
 
     }
 
-    public async loadEffects(actionIds: string[], actions: AvatarActionData[]) {
+    public async loadEffects(options: FigureRendererOptions, actionIds: string[], actions: AvatarActionData[]) {
         for(const action of actions) {
             if(!["AvatarEffect", "Dance"].includes(action.id)) {
                 continue;

@@ -42,16 +42,23 @@ export type AssetSpriteProperties = {
 export type AssetSpriteResult = {
     imageData: ImageData | null;
 
-    result: Promise<{
-        image: ImageBitmap;
-        imageData: ImageData | null;
-    }>;
+    result: Promise<StaticAssetSpriteResult>;
+};
+
+export type StaticAssetSpriteResult = {
+    image: ImageBitmap;
+    imageData: ImageData | null;
 };
 
 export default class AssetFetcher {
-    private static json: Map<string, Promise<unknown>> = new Map();
-    private static images: Map<string, Promise<HTMLImageElement>> = new Map();
-    private static spritesCache: Map<string, Map<string, AssetSpriteResult>> = new Map<string, Map<string, AssetSpriteResult>>();
+    private static json: Map<string, unknown> = new Map();
+    private static pendingJson: Map<string, Promise<unknown>> = new Map();
+
+    private static images: Map<string, HTMLImageElement> = new Map();
+    private static pendingImages: Map<string, Promise<HTMLImageElement>> = new Map();
+    
+    private static spritesCache: Map<string, Map<string, StaticAssetSpriteResult>> = new Map<string, Map<string, StaticAssetSpriteResult>>();
+
     private static imageDataCache: Map<string, Map<string, ImageData>> = new Map<string, Map<string, ImageData>>();
 
     public static imageDataClient: ImageDataWorkerInterface = new ImageDataWorkerMainThreadClient();
@@ -63,16 +70,14 @@ export default class AssetFetcher {
             }
 
             for(const cachedSprite of urlCache.values()) {
-                cachedSprite.result.then((result) => {
-                    if(url.startsWith('/assets/furniture')) {
-                        DataStats.furnitureImageBitmapsClosed++;
-                    }
-                    else if(url.startsWith('/assets/figure')) {
-                        DataStats.figureImageBitmapsClosed++;
-                    }
+                if(url.startsWith('/assets/furniture')) {
+                    DataStats.furnitureImageBitmapsClosed++;
+                }
+                else if(url.startsWith('/assets/figure')) {
+                    DataStats.figureImageBitmapsClosed++;
+                }
 
-                    result.image.close();
-                });
+                cachedSprite.image.close();
             }
         }
 
@@ -82,9 +87,13 @@ export default class AssetFetcher {
         FurnitureDefaultRenderer.renderMap.clear();
     }
 
+    public static getJson<T>(url: string): T | undefined {
+        return this.json.get(url) as T | undefined;
+    }
+
     public static async fetchJson<T>(url: string): Promise<T> {
-        if(this.json.has(url)) {
-            return await this.json.get(url)! as T;
+        if(this.pendingJson.has(url)) {
+            return await this.pendingJson.get(url)! as T;
         }
 
         const result = (async () => {
@@ -102,17 +111,24 @@ export default class AssetFetcher {
 
             const result = await response.json();
 
+            this.json.set(url, result);
+            this.pendingJson.delete(url);
+
             return result;
         })();
 
-        this.json.set(url, result);
+        this.pendingJson.set(url, result);
 
         return result;
     }
 
+    public static getImage(url: string): HTMLImageElement | undefined {
+        return this.images.get(url);
+    }
+
     public static async fetchImage(url: string) {
-        if(this.images.has(url)) {
-            return await this.images.get(url)!;
+        if(this.pendingImages.has(url)) {
+            return await this.pendingImages.get(url)!;
         }
 
         const result = new Promise<HTMLImageElement>((resolve, reject) => {
@@ -121,6 +137,9 @@ export default class AssetFetcher {
             image.crossOrigin = "anonymous";
 
             image.onload = () => {
+                this.images.set(url, image);
+                this.pendingImages.delete(url);
+                
                 resolve(image);
             };
 
@@ -131,7 +150,7 @@ export default class AssetFetcher {
             image.src = url;
         });
 
-        this.images.set(url, result);
+        this.pendingImages.set(url, result);
 
         return result;
     }
@@ -164,87 +183,80 @@ export default class AssetFetcher {
         ].join("|");
     }
 
-    public static async fetchImageSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
+    private static createImageData(image: ImageBitmap) {
+        const canvas = new OffscreenCanvas(image.width, image.height);
+        const context = canvas.getContext("2d");
+
+        if(!context) {
+            throw new ContextNotAvailableError();
+        }
+
+        context.drawImage(image, 0, 0);
+
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+        return imageData;
+    }
+
+    public static getImageSprite(url: string, properties: AssetSpriteProperties): StaticAssetSpriteResult {
+        const image = this.getImage(url);
+
+        if(!image) {
+            throw new Error("Image is not loaded.");
+        }
+
         if(!this.spritesCache.has(url)) {
-            this.spritesCache.set(url, new Map<string, AssetSpriteResult>());
+            this.spritesCache.set(url, new Map<string, StaticAssetSpriteResult>());
         }
 
-        const urlSprites = this.spritesCache.get(url)!;
-
+        const spritesMap = this.spritesCache.get(url)!;
         const spriteKey = this.createSpriteKey(properties);
+        let sprite = spritesMap.get(spriteKey);
 
-        if(urlSprites.has(spriteKey)) {
-            const existingSprite = urlSprites.get(spriteKey)!;
-
-            const output = await existingSprite.result;
-
-            return {
-                image: output.image,
-                imageData: existingSprite.imageData
+        if(!sprite) {
+            sprite = {
+                image: this.drawSprite(image, properties),
+                imageData: null
             };
         }
 
-        return (async () => {
-            properties.id ??= Math.random();
-
-            const result: AssetSpriteProperties & AssetSpriteResult = {
-                result: this.drawSprite(url, properties),
-                imageData: null,
-                ...properties
-            };
-
-            if(!properties.requireImageData) {
-                urlSprites.set(spriteKey, result);
-            }
-
-            let output = await result.result;
-
-            const imageDataKey = this.createImageDataKey(properties);
-
+        if(!sprite.imageData && (properties.grayscaled || properties.requireImageData || !properties.ignoreImageData)) {
             if(!this.imageDataCache.has(url)) {
                 this.imageDataCache.set(url, new Map<string, ImageData>());
             }
 
-            const imageDataUrl = this.imageDataCache.get(url)!;
+            const imageDataMap = this.imageDataCache.get(url)!;
+            const imageDataKey = this.createImageDataKey(properties);
 
-            const existingSpriteWithImageData = imageDataUrl.get(imageDataKey);
+            let imageData = imageDataMap.get(imageDataKey);
 
-            if(existingSpriteWithImageData) {
-                result.imageData = existingSpriteWithImageData;
-                output.imageData = existingSpriteWithImageData;
-
-                if(properties.grayscaled) {
-                    output = this.drawGrayscaledImage(url, existingSpriteWithImageData, properties.grayscaled);
-                    result.result = Promise.resolve(output);
-                }
-
-                return output;
-            }
-                
-            const imageDataPromise = AssetFetcher.imageDataClient.getImageData(output.image).then((imageData) => {
-                result.imageData = imageData;
-                output.imageData = imageData;
-
-                if(properties.grayscaled) {
-                    output = this.drawGrayscaledImage(url, imageData, properties.grayscaled);
-                    result.result = Promise.resolve(output);
-                }
-
-                imageDataUrl.set(imageDataKey, imageData);
-                urlSprites.set(spriteKey, result);
-
-                return imageData;
-            });
-
-            if(properties.requireImageData) {
-                await imageDataPromise;
+            if(!imageData) {
+                imageData = this.createImageData(sprite.image);
             }
 
-            return output;
-        })();
+            sprite.imageData = imageData;
+        }
+
+        if(properties.grayscaled && sprite.imageData) {
+            sprite.image = this.drawGrayscaledImage(url, sprite.imageData, properties.grayscaled);
+        }
+
+        spritesMap.set(spriteKey, sprite);
+
+        return sprite;
     }
 
-    private static drawGrayscaledImage(url: string, imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): Awaited<AssetSpriteResult["result"]> {
+    public static async fetchImageSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
+        let image = this.getImage(url);
+
+        if(!image) {
+            image = await this.fetchImage(url);
+        }
+
+        return this.getImageSprite(url, properties);
+    }
+
+    private static drawGrayscaledImage(url: string, imageData: ImageData, grayscaled: AssetSpriteGrayscaledProperties): ImageBitmap {
         const mutatedImageData = new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
         const canvas = new OffscreenCanvas(mutatedImageData.width, mutatedImageData.height);
 
@@ -322,16 +334,11 @@ export default class AssetFetcher {
             DataStats.figureImageBitmapsOpened++;
         }
 
-        return {
-            image: imageBitmap,
-            imageData
-        };
+        return imageBitmap;
     }
 
-    private static async drawSprite(url: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
+    private static drawSprite(image: HTMLImageElement, properties: AssetSpriteProperties): ImageBitmap {
         try {
-            const image = await this.fetchImage(url);
-
             const destinationWidth = properties.destinationWidth ?? properties.width ?? image.width;
             const destinationHeight = properties.destinationHeight ?? properties.height ?? image.height;
 
@@ -379,21 +386,7 @@ export default class AssetFetcher {
                 canvas = this.rotateCanvas(canvas, properties.rotate);
             }
 
-            const imageData: ImageData | null = null;
-
-            const imageBitmap = canvas.transferToImageBitmap();
-
-            if(url.startsWith('/assets/furniture')) {
-                DataStats.furnitureImageBitmapsOpened++;
-            }
-            else if(url.startsWith('/assets/figure')) {
-                DataStats.figureImageBitmapsOpened++;
-            }
-
-            return {
-                image: imageBitmap,
-                imageData
-            };
+            return canvas.transferToImageBitmap();
         }
         catch(error) {
             if(error) {

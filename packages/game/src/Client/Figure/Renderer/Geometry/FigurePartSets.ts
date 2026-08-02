@@ -48,3 +48,7 @@ export const figurePartSets = [
         parts: [ "bds", "ss", "lhs", "rhs" ]
     }
 ];
+
+export const figurePartSetById = new Map(
+    figurePartSets.map(p => [p.id, p])
+);

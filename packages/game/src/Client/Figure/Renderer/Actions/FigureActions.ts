@@ -3,132 +3,204 @@ import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectDat
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { figureGeometryTypes } from "@Client/Figure/Renderer/Geometry/FigureGeometry";
 import { figurePartSets } from "@Client/Figure/Renderer/Geometry/FigurePartSets";
-import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
+import { AvatarActionData, AvatarActionsData } from "@Client/Interfaces/Figure/Avataractions";
 import { FigureAnimationData } from "@Client/Interfaces/Figure/FigureAnimationData";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 import { FigureAssets } from "@Game/library";
+import { FigureRendererOptions } from "../Interfaces/FigureRendererOptions";
 
 export default class FigureActions {
     public effectTypeRemaps: Map<string, string> = new Map();
+    private avatarActionsData: AvatarActionsData = [];
 
     constructor(private readonly figureRenderer: FigureRenderer) {
 
     }
 
-    public getAvatarActions(actions: string[]) {
+    public getAvatarActions(options: FigureRendererOptions, actions: string[]) {
         const actionIds = new Set(actions.map((action) => action.split('.')[0]));
 
-        const avatarActionsData = FigureAssets.avataractions
-            .filter((action) => actionIds.has(action.id))
-            .sort((a, b) => a.precedence - b.precedence);
+        if(options.actionsChanged || !this.avatarActionsData.length) {
+            const avatarActionsData = FigureAssets.avataractions
+                .filter((action) => actionIds.has(action.id))
+                .sort((a, b) => a.precedence - b.precedence);
 
-        const prevented = new Set<string>();
+            const prevented = new Set<string>();
 
-        return avatarActionsData.filter((action) => {
-            const id = action.id.toLowerCase();
+            this.avatarActionsData = avatarActionsData.filter((action) => {
+                const id = action.id.toLowerCase();
 
-            if(prevented.has(id)) {
-                return false;
+                if(prevented.has(id)) {
+                    return false;
+                }
+
+                if(action.prevents) {
+                    for(const preventedId of action.prevents) {
+                        prevented.add(preventedId.toLowerCase());
+                    }
+                }
+
+                return true;
+            });
+        }
+
+        return this.avatarActionsData;
+    }
+
+    private readonly geometryById = new Map(
+        figureGeometryTypes.map(g => [g.id, g])
+    );
+
+    private readonly figurePartSetById = new Map(
+        figurePartSets.map(p => [p.id, p])
+    );
+    
+public getActionsForBodyParts(
+    frame: number,
+    actions: AvatarActionData[],
+    effects: FigureEffectData[],
+    ignoreBodyparts: string[]
+): FigureBodyPartAction[] {
+    const result: FigureBodyPartAction[] = [];
+
+    const bodyPartsRemoved = new Set(ignoreBodyparts);
+
+    this.effectTypeRemaps = new Map();
+
+    const actionsByState = new Map<string, AvatarActionData>();
+
+    for (const action of actions) {
+        actionsByState.set(action.state, action);
+    }
+
+    for (const effect of effects) {
+        const animation = effect.data.animation;
+
+        if (animation?.remove) {
+            for (const remove of animation.remove) {
+                bodyPartsRemoved.add(remove.id);
             }
+        }
 
-            if(action.prevents) {
-                for(const preventedId of action.prevents) {
-                    prevented.add(preventedId.toLowerCase());
+        const effectFrame =
+            this.figureRenderer.figureEffects.getEffectFrame(
+                frame,
+                effect
+            );
+
+        if (animation?.overrides) {
+            let bestOverride:
+                typeof animation.overrides[number] | undefined;
+
+            let bestPrecedence = Number.MAX_SAFE_INTEGER;
+
+            for (const override of animation.overrides) {
+                const action = actionsByState.get(override.type);
+
+                if (!action) {
+                    continue;
+                }
+
+                if (action.precedence < bestPrecedence) {
+                    bestPrecedence = action.precedence;
+                    bestOverride = override;
                 }
             }
 
-            return true;
+            if (bestOverride) {
+                const animationFrame =
+                    this.figureRenderer.figureAnimations
+                        .getCurrentAnimationFrame(
+                            frame,
+                            bestOverride.frames
+                        );
+
+                const overrideFrame =
+                    bestOverride.frames[animationFrame];
+
+                if (overrideFrame) {
+                    for (const bodyPart of overrideFrame.bodyParts) {
+                        for (const item of bodyPart.items) {
+                            bodyPartsRemoved.add(item.id);
+                        }
+                    }
+
+                    const additions =
+                        this.getActionsForBodyPartsFromFrames(
+                            overrideFrame,
+                            Array.from(bodyPartsRemoved)
+                        );
+
+                    // Preserve original replacement behavior
+                    for (let i = result.length - 1; i >= 0; i--) {
+                        if (additions.some(
+                            a => a.geometry.id === result[i].geometry.id
+                        )) {
+                            result.splice(i, 1);
+                        }
+                    }
+
+                    for (const addition of additions) {
+                        result.push(addition);
+                    }
+                }
+            }
+        }
+
+        if (effectFrame) {
+            const additions =
+                this.getActionsForBodyPartsFromFrames(
+                    effectFrame,
+                    Array.from(bodyPartsRemoved)
+                );
+
+            for (const addition of additions) {
+                result.push(addition);
+            }
+        }
+    }
+
+    const removedParts = bodyPartsRemoved;
+
+    for (const action of actions) {
+        if (action.id === "AvatarEffect" || action.id === "Dance") {
+            continue;
+        }
+
+        const geometry = this.geometryById.get(action.geometryType);
+
+        if (!geometry) {
+            throw new Error("Geometry is not found for action.");
+        }
+
+        const figurePartSet =
+            this.figurePartSetById.get(action.activePartSet);
+
+        if (!figurePartSet) {
+            throw new Error(
+                "Action does not have a figure part set in geometry."
+            );
+        }
+
+        const bodyParts: string[] = [];
+
+        for (const part of figurePartSet.parts) {
+            if (!removedParts.has(part)) {
+                bodyParts.push(part);
+            }
+        }
+
+        result.push({
+            actionId: action.id,
+            geometry,
+            assetPartDefinition: action.assetPartDefinition,
+            bodyParts,
+            destinationY: 0
         });
     }
-    
-    public getActionsForBodyParts(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
-        let result: FigureBodyPartAction[] = [];
-        const bodyPartsRemoved: string[] = ignoreBodyparts;
-        this.effectTypeRemaps = new Map();
 
-        for(const effect of effects) {
-            if(effect.data.animation?.remove) {
-                bodyPartsRemoved.push(...effect.data.animation.remove.map((remove) => remove.id));
-            }
-
-            const effectFrame = this.figureRenderer.figureEffects.getEffectFrame(frame, effect);
-
-            // effect says bodypart id rightarm (geometry bodypart) is used for action CarryItem
-            // CarryItem says handRight is used for activePartSet
-
-            if(effect.data.animation?.overrides) {
-                const filteredOverrides = effect.data.animation.overrides.filter((override) => actions.some((action) => action.state === override.type));
-                
-                const sortedOverrides = filteredOverrides.sort((a, b) => {
-                    const actionA = actions.find((action) => action.state === a.type);
-                    const actionB = actions.find((action) => action.state === b.type);
-
-                    return (actionA?.precedence ?? 0) - (actionB?.precedence ?? 0);
-                });
-
-                for(const override of sortedOverrides) {
-                    if(!actions.some((action) => action.state === override.type)) {
-                        continue;
-                    }
-
-                    const animationFrame = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, override.frames);
-
-                    const overrideFrame = override.frames[animationFrame];
-
-                    bodyPartsRemoved.push(...overrideFrame.bodyParts.flatMap((bodypart) => bodypart.items.map((item) => item.id)));
-
-                    if(overrideFrame) {
-                        const additions = this.getActionsForBodyPartsFromFrames(overrideFrame, bodyPartsRemoved);
-
-                        result = result.filter((result) => !additions.some((addition) => addition.geometry.id === result.geometry.id)).concat(additions);
-                    }
-
-                    break;
-                }
-            }
-
-            if(effectFrame) {
-                result.push(...this.getActionsForBodyPartsFromFrames(effectFrame, bodyPartsRemoved));
-            }
-        }
-
-        const removedParts = new Set(bodyPartsRemoved);
-
-        for(const action of actions) {
-            if(action.id === "AvatarEffect" || action.id === "Dance") {
-                continue;
-            }
-
-            const geometry = figureGeometryTypes.find((geometry) => geometry.id === action.geometryType);
-            
-            if(!geometry) {
-                throw new Error("Geometry is not found for action.");
-            }
-
-            const figurePartSet = figurePartSets.find((figurePartSet) => figurePartSet.id === action.activePartSet);
-
-            if(!figurePartSet) {
-                throw new Error("Action does not have a figure part set in geometry.");
-            }
-
-
-            result.push({
-                actionId: action.id,
-                geometry,
-                assetPartDefinition: action.assetPartDefinition,
-                bodyParts: figurePartSet.parts.filter((part) => !removedParts.has(part)),
-                destinationY: 0,//(action.assetPartDefinition === "sit")?(16):(0),
-            });
-
-            // now we know walk is occupied by Move to use `wlk`
-            // walk consists of figurePartSets->walk->["bd", ...]
-
-            // now we know figure is occupied by Default to use `std`
-            // figure consists of figurePartSets->figure->[...]
-        }
-
-        return result;
-    }
+    return result;
+}
     
     public getActionsForBodyPartsFromFrames(effectFrame: FigureAnimationData["frames"][0], bodyPartsRemoved: string[]) {
         const result: FigureBodyPartAction[] = [];

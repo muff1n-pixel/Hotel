@@ -60,3 +60,7 @@ export const figureGeometryTypes = [
         ]
     }
 ]
+
+export const geometryById = new Map(
+    figureGeometryTypes.map(g => [g.id, g])
+);

@@ -136,7 +136,11 @@ export default class RoomFurniturePlacer {
             });
         }
         else if(this.roomFurnitureItem instanceof RoomFigureItem) {
-            new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true).renderToCanvas(0, true).then((result) => {
+            const figure = new Figure(this.roomFurnitureItem.figureRenderer.configuration, 3, undefined, true);
+
+            figure.loadAssets(0).then(() => {
+                const result = figure.renderToCanvas(0, true);
+
                 this.iconElement.width = result.figure.image.width;
                 this.iconElement.height = result.figure.image.height;
 

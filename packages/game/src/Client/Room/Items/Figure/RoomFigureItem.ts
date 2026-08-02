@@ -42,20 +42,34 @@ export default class RoomFigureItem extends RoomItem {
         this.frame++;
 
         if(this.figureRenderer.shouldRender(this.frame)) {
-            this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
-                this.figureSprite = result.figure;
-
-                this.setSprites([
-                    new RoomFigureSprite(this, result.figure),
-                    ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
-                ]);
-
-                this.updateFigureSprites();
-            });
+            if(this.figureRenderer.shouldLoadAssets(this.frame)) {
+                this.figureRenderer.loadAssets(this.frame).then(() => this.renderFigure());
+            }
+            else {
+                this.renderFigure();
+            }
         }
         else {
             this.updateFigureSprites();
         }
+    }
+
+    private renderFigure() {
+        console.time("render");
+
+        const result = this.figureRenderer.renderToCanvas(this.frame, false, false, true);
+
+        console.timeEnd("render");
+
+        this.figureSprite = result.figure;
+
+        this.setSprites([
+            new RoomFigureSprite(this, result.figure),
+            ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
+        ]);
+
+        this.updateFigureSprites();
+
     }
 
     public setSprites(sprites: RoomSprite[]): void {

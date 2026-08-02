@@ -22,140 +22,140 @@ export default class FigureCanvasRenderer {
         ].join('-');
     }
 
-    public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+    public renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
         const canvasKey = this.getCanvasKey(options);
 
         //if(!headOnly && FigureAssets.figureCanvasCache.has(canvasKey)) {
         //    return FigureAssets.figureCanvasCache.get(canvasKey)!;
         //}
+        this.canvas = new OffscreenCanvas(256, 256);
+        this.context = this.canvas.getContext("2d")!;
 
-        return await (async () => {
-            const { sprites, effectSprites } = await this.figureRenderer.render(options, useConfigurationEffect || drawEffects, ignoreBodyparts, headOnly);
+        const { sprites, effectSprites } = this.figureRenderer.render(options, useConfigurationEffect || drawEffects, ignoreBodyparts, headOnly);
 
-            let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
-        
-            if(cropped) {
-                if(effectSprites.length && !drawEffects) {
-                    FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
-                }
-
-                minimumX = Infinity;
-                minimumY = Infinity;
-                maximumWidth = -Infinity;
-                maximumHeight = -Infinity;
-
-                for(const sprite of sprites) {
-                    if(sprite.x < minimumX) {
-                        minimumX = sprite.x;
-                    }
-                    
-                    if(sprite.y < minimumY) {
-                        minimumY = sprite.y;
-                    }
-
-                    if(sprite.x + sprite.image.width > maximumWidth) {
-                        maximumWidth = sprite.x + sprite.image.width;
-                    }
-
-                    if(sprite.y + sprite.image.height > maximumHeight) {
-                        maximumHeight = sprite.y + sprite.image.height;
-                    }
-                }
-
-                this.canvas.width = maximumWidth - minimumX;
-                this.canvas.height = maximumHeight - minimumY;
+        let minimumX = -128, minimumY = -128, maximumWidth = 256 + minimumX, maximumHeight = 256 + minimumY;
+    
+        if(cropped) {
+            if(effectSprites.length && !drawEffects) {
+                FigureLogger.warn("Figure render is cropped but contains effect sprites. Effect will not be applied.");
             }
 
-            const mutatedSprites = [...sprites];
-
-            if(drawEffects) {
-                mutatedSprites.push(...effectSprites.map((sprite) => {
-                    return {
-                        ...sprite,
-                        index: sprite.index * 100
-                    };
-                }));
-            }
-
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-            for(const sprite of mutatedSprites.toSorted((a, b) => a.index - b.index)) {
-                this.context.save();
-
-                if(sprite.alpha) {
-                    this.context.globalAlpha = sprite.alpha;
-                }
-
-                if(sprite.ink) {
-                    this.context.globalCompositeOperation = sprite.ink;
-                }
-
-                this.context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
-
-                this.context.restore();
-            }
-
-            if(this.figureRenderer.avatarEffect?.destinationY) {
-                minimumY -= this.figureRenderer.avatarEffect.destinationY;
-            }
-
-            //Performance.startPerformanceCheck("getImageData", 1);
-            //const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
-            //Performance.endPerformanceCheck("getImageData");
-
-            //const imageDataArray = new Uint8Array(imageData);
-            const imageDataArray = new Uint8Array(256 * 256 * 4);
+            minimumX = Infinity;
+            minimumY = Infinity;
+            maximumWidth = -Infinity;
+            maximumHeight = -Infinity;
 
             for(const sprite of sprites) {
-                const imageData = sprite.imageData;
-
-                if(!imageData) {
-                    continue;
+                if(sprite.x < minimumX) {
+                    minimumX = sprite.x;
+                }
+                
+                if(sprite.y < minimumY) {
+                    minimumY = sprite.y;
                 }
 
-                const sourceData = imageData.data;
-                const sourceWidth = imageData.width;
-                const sourceHeight = imageData.height;
+                if(sprite.x + sprite.image.width > maximumWidth) {
+                    maximumWidth = sprite.x + sprite.image.width;
+                }
 
-                const offsetX = sprite.x + 128;
-                const offsetY = sprite.y + 128;
+                if(sprite.y + sprite.image.height > maximumHeight) {
+                    maximumHeight = sprite.y + sprite.image.height;
+                }
+            }
 
-                for(let y = 0; y < sourceHeight; y++) {
-                    for(let x = 0; x < sourceWidth; x++) {
-                        const sourceIndex = (x + y * sourceWidth) * 4;
+            this.canvas.width = maximumWidth - minimumX;
+            this.canvas.height = maximumHeight - minimumY;
+        }
 
-                        if(sourceData[sourceIndex + 3] === 0) {
-                            continue;
-                        }
+        const mutatedSprites = [...sprites];
 
-                        const destinationIndex = ((x + offsetX) + (y + offsetY) * 256) * 4;
+        if(drawEffects) {
+            mutatedSprites.push(...effectSprites.map((sprite) => {
+                return {
+                    ...sprite,
+                    index: sprite.index * 100
+                };
+            }));
+        }
 
-                        imageDataArray[destinationIndex]     = sourceData[sourceIndex];
-                        imageDataArray[destinationIndex + 1] = sourceData[sourceIndex + 1];
-                        imageDataArray[destinationIndex + 2] = sourceData[sourceIndex + 2];
-                        imageDataArray[destinationIndex + 3] = sourceData[sourceIndex + 3];
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for(const sprite of mutatedSprites.toSorted((a, b) => a.index - b.index)) {
+            this.context.save();
+
+            if(sprite.alpha) {
+                this.context.globalAlpha = sprite.alpha;
+            }
+
+            if(sprite.ink) {
+                this.context.globalCompositeOperation = sprite.ink as any;
+            }
+
+            this.context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
+
+            this.context.restore();
+        }
+
+        if(this.figureRenderer.avatarEffect?.destinationY) {
+            minimumY -= this.figureRenderer.avatarEffect.destinationY;
+        }
+
+        //Performance.startPerformanceCheck("getImageData", 1);
+        //const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        //Performance.endPerformanceCheck("getImageData");
+
+        //const imageDataArray = new Uint8Array(imageData);
+        const imageDataArray = new Uint8Array(256 * 256 * 4);
+
+        for(const sprite of sprites) {
+            const imageData = sprite.imageData;
+
+            if(!imageData) {
+                continue;
+            }
+
+            const sourceData = imageData.data;
+            const sourceWidth = imageData.width;
+            const sourceHeight = imageData.height;
+
+            const offsetX = sprite.x + 128;
+            const offsetY = sprite.y + 128;
+
+            for(let y = 0; y < sourceHeight; y++) {
+                for(let x = 0; x < sourceWidth; x++) {
+                    const sourceIndex = (x + y * sourceWidth) * 4;
+
+                    if(sourceData[sourceIndex + 3] === 0) {
+                        continue;
                     }
+
+                    const destinationIndex = ((x + offsetX) + (y + offsetY) * 256) * 4;
+
+                    imageDataArray[destinationIndex]     = sourceData[sourceIndex];
+                    imageDataArray[destinationIndex + 1] = sourceData[sourceIndex + 1];
+                    imageDataArray[destinationIndex + 2] = sourceData[sourceIndex + 2];
+                    imageDataArray[destinationIndex + 3] = sourceData[sourceIndex + 3];
                 }
             }
+        }
 
-            const result = {
-                figure: {
-                    image: await createImageBitmap(this.canvas),
-                    imageData: imageDataArray,
+        const result = {
+            figure: {
+                image: this.canvas,
+                imageData: imageDataArray,
 
-                    x: 0,
-                    y: this.figureRenderer.avatarEffect?.destinationY ?? 0,
+                x: 0,
+                y: this.figureRenderer.avatarEffect?.destinationY ?? 0,
 
-                    index: 0
-                },
-                effects: effectSprites
-            };
+                index: 0
+            },
+            effects: effectSprites
+        };
 
-            if(!headOnly) {
-                FigureAssets.figureCanvasCache.set(canvasKey, result);
-            }
+        if(!headOnly) {
+            FigureAssets.figureCanvasCache.set(canvasKey, result);
+        }
 
-            return result;
-        })();
+        return result;
     }
 }
