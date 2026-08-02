@@ -8,13 +8,13 @@ export type WardrobeAvatarProps = {
 };
 
 export default function WardrobeAvatar({ configuration }: WardrobeAvatarProps) {
-    const [figureImage, setFigureImage] = useState<ImageBitmap>();
+    const [figureImage, setFigureImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         const figureRenderer = new Figure(configuration, 4);
         
         figureRenderer.loadAssets(0).then(() => {
-            setFigureImage(figureRenderer.renderToCanvas(0, false, true).figure.image as any);
+            setFigureImage(figureRenderer.renderToCanvas(0, false, true).figure.image);
         });
     }, [ configuration ]);
 

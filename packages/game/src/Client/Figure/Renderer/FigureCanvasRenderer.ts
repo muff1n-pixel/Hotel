@@ -1,4 +1,4 @@
-import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
+import FigureRenderer, { FigureCanvasRender } from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 import { FigureAssets } from "@Game/library";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
@@ -22,7 +22,7 @@ export default class FigureCanvasRenderer {
         ].join('-');
     }
 
-    public renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+    public renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean): FigureCanvasRender {
         const canvasKey = this.getCanvasKey(options);
 
         //if(!headOnly && FigureAssets.figureCanvasCache.has(canvasKey)) {

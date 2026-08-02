@@ -7,7 +7,7 @@ export default function ToolbarFigureItem() {
 
     const user = useUser();
 
-    const [figureImage, setFigureImage] = useState<ImageBitmap>();
+    const [figureImage, setFigureImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         if(!user.figureConfiguration) {
@@ -17,7 +17,7 @@ export default function ToolbarFigureItem() {
         const figureRenderer = new Figure(user.figureConfiguration, 2);
 
         figureRenderer.loadAssets(0).then(() => {
-            setFigureImage(figureRenderer.renderToCanvas(0).figure.image as any);
+            setFigureImage(figureRenderer.renderToCanvas(0).figure.image);
         });
     }, [user]);
 

@@ -29,7 +29,7 @@ export default class Figure {
         this.renderer = new FigureRenderer(this.configuration!);
     }
 
-    public renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): FigureRendererResult {
+    public renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []) {
         const options = this.getOptions(frame);
         
         this.renderer.configuration = this.configuration!;

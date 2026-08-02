@@ -16,13 +16,13 @@ export type FigureImageProps = {
 }
 
 export default function FigureImage({ actions, frame = 0, headOnly, cropped = true, figureConfiguration, direction, style, scale }: FigureImageProps) {
-    const [image, setImage] = useState<ImageBitmap>();
+    const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
         const furnitureRenderer = new Figure(figureConfiguration, direction, actions, headOnly);
 
         furnitureRenderer.loadAssets(frame).then(() => {
-            setImage(furnitureRenderer.renderToCanvas(frame, cropped) as any as ImageBitmap);
+            setImage(furnitureRenderer.renderToCanvas(frame, cropped).figure.image);
         });
 
     }, [ figureConfiguration, direction, actions, headOnly, frame, cropped ]);

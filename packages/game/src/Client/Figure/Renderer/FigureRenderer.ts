@@ -15,6 +15,23 @@ import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import { BLEND_MODES } from "pixi.js";
 import FigureBodyPartAction from "./Interfaces/FigureBodyPartAction";
 
+export type FigureCanvasRender = {
+    figure: {
+        image: OffscreenCanvas;
+        imageData?: Uint8Array;
+
+        x: number;
+        y: number;
+
+        index: number;
+
+        alpha?: number;
+
+        ink?: BLEND_MODES;
+    };
+    effects: (Omit<FigureRendererSpriteResult, "imageData"> & { imageData?: ImageData | null; })[];
+}
+
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
     effects: (Omit<FigureRendererSpriteResult, "imageData"> & { imageData?: ImageData | null; })[];

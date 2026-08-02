@@ -70,8 +70,10 @@ export default class RoomChatRenderer {
 
         if(roomChatStyle.figure) {
             const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);
+            
+            await figureRenderer.loadAssets(0);
 
-            const { figure } = await figureRenderer.renderToCanvas(0, false);
+            const { figure } = figureRenderer.renderToCanvas(0, false);
             
             context.drawImage(
                 figure.image,

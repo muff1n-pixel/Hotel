@@ -56,9 +56,11 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
 
             const figure = new Figure(figureConfiguration, options.direction ?? 0, [], false);
 
-            const figureImage = await figure.renderToCanvas(0, false, true, true, ["ey", "fc"]);
+            await figure.loadAssets(0);
 
-            avatarImageSprite.image = figureImage.figure.image as ImageBitmap;
+            const figureImage = figure.renderToCanvas(0, false, true, true, ["ey", "fc"]);
+
+            avatarImageSprite.image = figureImage.figure.image.transferToImageBitmap();
 
             if(figureImage.figure.imageData) {
                 avatarImageSprite.imageData = new ImageData(new Uint8ClampedArray(figureImage.figure.imageData), figureImage.figure.image.width, figureImage.figure.image.height);
