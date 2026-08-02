@@ -70,6 +70,7 @@ import ShopPurchaseBundleDialog from "@UserInterface/Components/Shop/Purchasing/
 import ShopPurchasePetDialog from "@UserInterface/Components/Shop/Purchasing/ShopPurchasePetDialog";
 import WardrobeFootballDialog from "@UserInterface/Components/Wardrobe/WardrobeFootballDialog";
 import ShopGiftFurnitureDialog from "@UserInterface/Components/Shop/Pages/Gifts/ShopGiftFurnitureDialog";
+import EditHotelActivityRewardDialog from "@UserInterface/Components/Hotel/ActivityRewards/EditHotelActivityRewardDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -100,6 +101,9 @@ export default function DialogInstances() {
                         
                     case "alert":
                         return (<HotelAlertDialog {...props} key={dialog.id}/>);
+
+                    case "edit-hotel-activity-reward":
+                        return (<EditHotelActivityRewardDialog {...props} key={dialog.id}/>);
 
                     case "wardrobe":
                         return (<WardrobeDialog {...props} key={dialog.id}/>);

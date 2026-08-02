@@ -49,6 +49,7 @@ import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembers
 import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/HotelSettingModel.js";
 import { initializeGroupModel } from "./Models/Groups/RoomGroupModel.js";
 import { initializeUserGroupModel } from "./Models/Users/Groups/UserGroupModel.js";
+import { initializeHotelActivityRewardModel } from "./Models/Hotel/HotelActivityRewardModel.js";
 
 export const sequelize = new Sequelize({
     ...config.database,
@@ -102,6 +103,7 @@ export async function initializeModels() {
 
     initializeHotelFeedbackModel(sequelize);
     initializeHotelSettingModel(sequelize);
+    initializeHotelActivityRewardModel(sequelize);
 
     intitializePermissionModel(sequelize);
     intitializePermissionRoleModel(sequelize);

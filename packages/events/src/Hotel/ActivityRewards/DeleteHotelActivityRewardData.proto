@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message DeleteHotelActivityRewardData {
+    string id = 1;
+}

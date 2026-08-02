@@ -30,6 +30,9 @@ export type ClothingPermissions =
 export type SettingsPermissions =
     "settings:edit";
 
+export type HotelPermissions =
+    "hotel:activity_rewards";
+
 export type PermissionAction =
     BadgePermissions
     | FurniturePermissions
@@ -39,4 +42,5 @@ export type PermissionAction =
     | CommandPermissions
     | PetPermissions
     | ClothingPermissions
-    | SettingsPermissions;
+    | SettingsPermissions
+    | HotelPermissions;

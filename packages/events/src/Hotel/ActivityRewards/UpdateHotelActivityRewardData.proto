@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message UpdateHotelActivityRewardData {
+    optional string id = 1;
+
+    uint32 interval = 2;
+
+    optional uint32 credits = 3;
+    optional uint32 duckets = 4;
+    optional uint32 diamonds = 5;
+}

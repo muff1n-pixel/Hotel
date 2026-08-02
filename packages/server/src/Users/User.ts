@@ -20,6 +20,9 @@ export default class User extends EventEmitter {
     public room?: Room;
     public roomBellQueue?: Room | undefined;
 
+    public activityRewards: Map<string, number> = new Map();
+    public readonly loggedInAt = performance.now();
+
     constructor(public readonly webSocket: WebSocket, public readonly model: UserModel) {
         super();
 

@@ -4,6 +4,7 @@ import AdministrationFeedbackTab from "@UserInterface/Components/Administration/
 import AdministrationOverviewTab from "@UserInterface/Components/Administration/AdministrationOverviewTab";
 import AdministrationSettingsTab from "@UserInterface/Components/Administration/AdministrationSettingsTab";
 import AdministrationDebugTab from "./AdministrationDebugTab";
+import AdministrationActivityRewardsTab from "./AdministrationActivityRewardsTab";
 
 export type AdministrationDialogProps = {
     hidden?: boolean;
@@ -12,7 +13,7 @@ export type AdministrationDialogProps = {
 
 export default function AdministrationDialog({ hidden, onClose }: AdministrationDialogProps) {
     return (
-        <Dialog title="Administration" hidden={hidden} onClose={onClose} width={500} height={320}>
+        <Dialog title="Administration" hidden={hidden} onClose={onClose} width={500} height={320} editMode>
             <DialogTabs
                 withoutHeader
                 tabs={[
@@ -23,6 +24,10 @@ export default function AdministrationDialog({ hidden, onClose }: Administration
                     {
                         icon: "Settings",
                         element: (<AdministrationSettingsTab/>)
+                    },
+                    {
+                        icon: "Activity Rewards",
+                        element: (<AdministrationActivityRewardsTab/>)
                     },
                     {
                         icon: "Feedback",

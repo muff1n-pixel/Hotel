@@ -7,10 +7,12 @@ import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
+import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
 
 export default class Game {
     public readonly hotelInformation;
     public readonly hotelSettings;
+    public readonly hotelActivityRewards;
 
     public readonly roomManager;
     public readonly roomNavigatorManager;
@@ -24,6 +26,7 @@ export default class Game {
     constructor() {
         this.hotelInformation = new HotelInformation();
         this.hotelSettings = new HotelSettings();
+        this.hotelActivityRewards = new HotelActivityRewards(this);
 
         this.roomNavigatorManager = new RoomNavigatorManager();
         this.roomManager = new RoomManager();
