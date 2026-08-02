@@ -13,7 +13,7 @@ export type FriendsDialogProps = {
 
 export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogProps) {
     return (
-        <Dialog title="Friends" hidden={hidden} onClose={onClose} width={270} height={380} style={{
+        <Dialog title="Friends" hidden={hidden} onClose={onClose} width={280} height={380} style={{
             overflow: "visible"
         }}>
             <DialogTabs
