@@ -14,6 +14,7 @@ import useFriends from "@UserInterface/Hooks/useFriends";
 import { useMessenger } from "@UserInterface/Hooks/useMessenger";
 import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
 export type MessengerDialogProps = {
     hidden?: boolean;
@@ -102,7 +103,7 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
     }
 
     return (
-        <Dialog title={(<UserLink id={activeTab.friend.id} name={activeTab.friend.name}/>)} hidden={hidden} initialPosition="center" onClose={onClose} width={280} height={380} style={{
+        <Dialog title={`Your open chats (${messenger.length})`} hidden={hidden} initialPosition="center" onClose={onClose} width={300} height={380} style={{
             overflow: "visible"
         }}>
             <DialogContent style={{
@@ -111,7 +112,6 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
                 gap: 5
             }}>
                 <div style={{
-                    background: "rgba(0, 0, 0, .05)",
                     borderBottom: "1px solid rgba(0, 0, 0, .05)",
                     
                     padding: 6,
@@ -141,6 +141,12 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
                                 }}/>
                         ))}
                     </div>
+
+                    <FlexLayout direction="row" gap={3} style={{
+                        marginBottom: -13
+                    }}>
+                        <p style={{ background: "#ECEAE0", padding: "0px 4px" }}>You + {activeTab.friend.name}</p>
+                    </FlexLayout>
                 </div>
 
                 <div style={{
@@ -148,7 +154,7 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
                     display: "flex",
                     flexDirection: "column",
                     gap: 5,
-                    padding: "5px"
+                    padding: "8px"
                 }}>
                     <DialogScrollArea hideInactive style={{ gap: 5 }} reversed contentStyle={{
                         display: "flex",

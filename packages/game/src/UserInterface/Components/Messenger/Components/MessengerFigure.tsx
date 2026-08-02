@@ -11,8 +11,8 @@ export type MessengerFigureProps = {
 export default function MessengerFigure({ figureConfiguration, onClick, onClose }: MessengerFigureProps) {
     return (
         <div style={{
-            width: 50,
-            height: 50,
+            width: 30,
+            height: 30,
 
             borderRadius: "100%",
 
@@ -24,8 +24,8 @@ export default function MessengerFigure({ figureConfiguration, onClick, onClose 
             position: "relative"
         }}>
             <div style={{
-                width: 50,
-                height: 50,
+                width: 25,
+                height: 25,
 
                 borderRadius: "100%",
 
@@ -35,7 +35,7 @@ export default function MessengerFigure({ figureConfiguration, onClick, onClose 
 
                 overflow: "hidden"
             }} onClick={onClick}>
-                <FigureImage figureConfiguration={figureConfiguration} direction={2}/>
+                <FigureImage figureConfiguration={figureConfiguration} direction={2} scale={0.5}/>
             </div>
 
             <div className="sprite_friends_close-button" style={{
