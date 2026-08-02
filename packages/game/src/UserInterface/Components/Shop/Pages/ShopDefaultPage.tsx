@@ -18,11 +18,13 @@ import Input from "@UserInterface/Common/Form/Components/Input";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
 import ShopGroupSelector from "@UserInterface/Components/Shop/Pages/Groups/ShopGroupSelector";
+import { useTranslation } from "react-i18next";
 
 export default function ShopDefaultPage({ search, editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const room = useRoomInstance();
+    const [getTranslation] = useTranslation("shop");
 
     const shopFurniture = useShopPageFurniture(page.id, undefined, search);
 
@@ -390,7 +392,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                     <div style={{ flex: 1 }}/>
                     
                     <FlexLayout flex={1} direction="row" align="center">
-                        <div style={{ color: "#6A6A69" }}>Quantity</div>
+                        <div style={{ color: "#6A6A69" }}>{getTranslation("quantity")}</div>
 
                         <div style={{ flex: 1 }}/>
 
@@ -410,14 +412,14 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                         || (activeFurniture.membership === "habbogroup" && !group)
                         || (quantity !== 1)
                         || (!activeFurniture.furniture?.flags?.giftable)
-                    )} style={{ flex: 1 }} onClick={() => handleGiftFurniture()}>Buy as a gift</DialogButton>
+                    )} style={{ flex: 1 }} onClick={() => handleGiftFurniture()}>{getTranslation("buy_gift")}</DialogButton>
 
                     <DialogButton color="green" disabled={!activeFurniture || (
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds
                         || (activeFurniture.membership === "habbogroup" && !group)
-                    )} style={{ flex: 1 }} onClick={() => handlePurchaseFurniture()}>Purchase</DialogButton>
+                    )} style={{ flex: 1 }} onClick={() => handlePurchaseFurniture()}>{getTranslation("purchase")}</DialogButton>
                 </div>
             </div>
         </div>

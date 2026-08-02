@@ -12,6 +12,7 @@ import FurnitureGift from "@UserInterface/Components/Furniture/FurnitureGift";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import useShopGiftFurniture from "../Hooks/useShopGiftFurniture";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
+import { useTranslation } from "react-i18next";
 
 export type ShopGiftFurnitureDialogProps = {
     hidden?: boolean;
@@ -26,6 +27,7 @@ export type ShopGiftFurnitureDialogProps = {
 export default function ShopGiftFurnitureDialog({ data, hidden, onClose }: ShopGiftFurnitureDialogProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const giftFurniture = useShopGiftFurniture();
 
@@ -68,7 +70,7 @@ export default function ShopGiftFurnitureDialog({ data, hidden, onClose }: ShopG
     }, [dialogs, onClose]);
 
     return (
-        <Dialog title="Customize your gift" hidden={hidden} onClose={handleClose} initialPosition="center" width={360} height={"auto"} assumedHeight={235} style={{
+        <Dialog title={getTranslation("gift.title")} hidden={hidden} onClose={handleClose} initialPosition="center" width={360} height={"auto"} assumedHeight={235} style={{
             overflow: "visible"
         }}>
             {/*<DialogContent style={{ flex: 1, gap: 10, background: "#FFFFFF" }}>
@@ -105,7 +107,7 @@ export default function ShopGiftFurnitureDialog({ data, hidden, onClose }: ShopG
             </DialogContent>*/}
 
             <DialogContent style={{ flex: 1, gap: 10 }}>
-                <Input placeholder="Enter recipient's name" value={name} onChange={setName}/>
+                <Input placeholder={getTranslation("gift.recipient.placeholder")} value={name} onChange={setName}/>
 
                 <FlexLayout justify="center" align="center">
                     <FurnitureGift name={user.name} figureConfiguration={user.figureConfiguration} message={message} onChange={setMessage}/>
@@ -148,11 +150,11 @@ export default function ShopGiftFurnitureDialog({ data, hidden, onClose }: ShopG
 
                 <FlexLayout direction="row" justify="space-between">
                     <div>
-                        <DialogButton onClick={handleClose}>Cancel</DialogButton>
+                        <DialogButton onClick={handleClose}>{getTranslation("cancel")}</DialogButton>
                     </div>
                     
                     <div>
-                        <DialogButton color="green" onClick={handlePurchase}>Purchase gift</DialogButton>
+                        <DialogButton color="green" onClick={handlePurchase}>{getTranslation("purchase_gift")}</DialogButton>
                     </div>
                 </FlexLayout>
             </DialogContent>

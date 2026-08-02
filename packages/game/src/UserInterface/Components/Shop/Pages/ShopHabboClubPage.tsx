@@ -11,10 +11,12 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import useShopPageMemberships from "@UserInterface/Components/Shop/Pages/Hooks/useShopPageMemberships";
 import { webSocketClient } from "@Game/index";
 import { PurchaseShopMembershipData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export default function ShopHabboClubPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const memberships = useShopPageMemberships(page.id);
 
@@ -39,14 +41,14 @@ export default function ShopHabboClubPage({ editMode, page }: ShopPageProps) {
                 )}
 
                 <FlexLayout style={{ flex: 1 }}>
-                    <b>Join the Habbo Club!</b>
+                    <b>{getTranslation("club.title")}</b>
                     
-                    <p>Get exclusive clothes, hair styles, furniture, and so much more!</p>
+                    <p>{getTranslation("club.description")}</p>
                 </FlexLayout>
             </FlexLayout>
 
             {(DateHelper.isDateInTheFuture(user.habboClub)) && (
-                <div style={{ textAlign: "center" }}><i>You have {DateHelper.getDaysBetweenDates(user.habboClub, new Date())} days left on your membership.</i></div>
+                <div style={{ textAlign: "center" }}><i>{getTranslation("club.remainder", { days: DateHelper.getDaysBetweenDates(user.habboClub, new Date()) })}</i></div>
             )}
 
             <DialogScrollArea hideInactive contentStyle={{
@@ -102,7 +104,7 @@ export default function ShopHabboClubPage({ editMode, page }: ShopPageProps) {
                                     id: membership.id
                                 }));
                             }}>
-                                Purchase
+                                {getTranslation("purchase")}
                             </DialogButton>
                         </FlexLayout>
                     </DialogPanel>

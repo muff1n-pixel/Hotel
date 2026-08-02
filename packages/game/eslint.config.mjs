@@ -34,7 +34,7 @@ export default defineConfig(
                     "caughtErrorsIgnorePattern": "^_"
                 }
             ],
-            //"i18next/no-literal-string": "warn"
+            "i18next/no-literal-string": "warn"
         }
     }
 );

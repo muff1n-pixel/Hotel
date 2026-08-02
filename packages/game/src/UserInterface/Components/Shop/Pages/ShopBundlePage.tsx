@@ -10,9 +10,11 @@ import { EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
+import { useTranslation } from "react-i18next";
 
 export default function ShopBundlePage({ page }: ShopPageProps) {
     const shopFurnitureRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [getTranslation] = useTranslation("shop");
 
     const dialogs = useDialogs();
 
@@ -96,7 +98,7 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
 
                         gap: 10
                     }}>
-                        <h3 style={{ color: "#BB3834", fontFamily: "Ubuntu Bold Italic" }}>What's included:</h3>
+                        <h3 style={{ color: "#BB3834", fontFamily: "Ubuntu Bold Italic" }}>{getTranslation("bundle.included")}</h3>
 
                         <DialogPanel contentStyle={{ display: "flex", flex: 1 }}>
                             <DialogScrollArea hideInactive>
@@ -193,13 +195,13 @@ export default function ShopBundlePage({ page }: ShopPageProps) {
                                 id: page.bundle?.roomId
                             }))
                         }}>
-                            View room bundle
+                            {getTranslation("bundle.view")}
                         </div>
                     ):(
                         <div style={{ flex: 1 }}/>
                     )}
 
-                    <DialogButton color="green" style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
+                    <DialogButton color="green" style={{ flex: 1 }} onClick={handlePurchaseFurniture}>{getTranslation("purchase")}</DialogButton>
                 </div>
             </div>
         </div>

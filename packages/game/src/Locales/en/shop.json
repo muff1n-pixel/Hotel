@@ -1,0 +1,69 @@
+{
+    "title": "Shop",
+
+    "price": "Price",
+    "cancel": "Cancel",
+    "purchase": "Purchase",
+    "purchase_gift": "Purchase gift",
+    "buy_gift": "Buy as a gift",
+    "quantity": "Quantity",
+
+    "tabs": {
+        "frontpage": "Frontpage",
+        "furniture": "Furniture",
+        "pets": "Pets",
+        "clothing": "Clothing"
+    },
+
+    "search": {
+        "title": "Search for '{{search}}'"
+    },
+
+    "trophies": {
+        "engraving": "Add your own engraving below, but be careful - it's permanent!"
+    },
+
+    "promote": {
+        "membership": "Room Event",
+
+        "title": "Promote your room for 2 hours!",
+        "category.placeholder": "Select event category...",
+        
+        "name": "Name your promotion",
+        "name.placeholder": "Enter a name...",
+        
+        "description": "Describe your promotion",
+        "description.placeholder": "Enter a description...",
+
+        "room": "Select room",
+        "room.placeholder": "Select room..."
+    },
+
+    "pet": {
+        "name": "Name your pet"
+    },
+
+    "group": {
+        "paragraph":"Habbo Groups are a great way to stay in touch with your friends and share your interests. Each Group has a homeroom that can be decorated by other Group members\nMembers can also purchase exclusive Group Furni that can be customized with your Group colors!",
+        "title": "What's so great about Habbo Groups?",
+        "items": "Get together with people you get together with!\nCo-op room decorating for group members\nShow off your group badge!\nGet some neat Furni in your group's colors!",
+        "create": "Create Habbo Group",
+        "select": "Select a group..."
+    },
+
+    "club": {
+        "title": "Join the Habbo Club!",
+        "description": "Get exclusive clothes, hair styles, furniture, and so much more!",
+        "remainder": "You have {{days}} days left on your membership."
+    },
+
+    "bundle": {
+        "included": "What's included:",
+        "view": "View room bundle"
+    },
+
+    "gift": {
+        "title": "Customize your gift",
+        "recipient.placeholder": "Enter recipients name..."
+    }
+}

@@ -5,6 +5,7 @@ import ShopDialogCategory from "./ShopDialogCategory";
 import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import { webSocketClient } from "../../..";
 import { GetShopPagesData, ShopPageData, ShopPagesData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type ShopDialogProps = {
     hidden?: boolean;
@@ -25,6 +26,7 @@ const categories = ["frontpage", "furniture", "clothing", "pets"];
 
 export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
     const hasEditShopPermission = usePermissionAction("shop:edit");
+    const [getTranslation] = useTranslation("shop");
 
     const [search, setSearch] = useState("");
     const [header, setHeader] = useState<DialogTabHeaderProps>();
@@ -76,7 +78,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
                             id: "search",
                             category,
 
-                            title: `Search for '${payload.search}'`,
+                            title: getTranslation("search.title", { search: payload.search }),
 
                             type: "default"
                         }));
@@ -127,10 +129,10 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
     }, [activeIndex, shopPages]);
 
     return (
-        <Dialog title="Shop" hidden={hidden} editMode={editMode} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={580} height={670}>
+        <Dialog title={getTranslation("title")} hidden={hidden} editMode={editMode} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={580} height={670}>
             <DialogTabs index={activeIndex} onChange={setActiveIndex} header={header} withLargeTabs tabs={[
                 {
-                    icon: "Frontpage",
+                    icon: getTranslation("tabs.frontpage"),
                     element: (
                         <ShopDialogCategory
                             category={categories[activeIndex]}
@@ -146,7 +148,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
                     ),
                 },
                 {
-                    icon: "Furniture",
+                    icon: getTranslation("tabs.furniture"),
                     element: (
                         <ShopDialogCategory
                             category={categories[activeIndex]}
@@ -162,7 +164,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
                     ),
                 },
                 {
-                    icon: "Clothing",
+                    icon: getTranslation("tabs.clothing"),
                     element: (
                         <ShopDialogCategory
                             category={categories[activeIndex]}
@@ -178,7 +180,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
                     ),
                 },
                 {
-                    icon: "Pets",
+                    icon: getTranslation("tabs.pets"),
                     element: (
                         <ShopDialogCategory
                             category={categories[activeIndex]}

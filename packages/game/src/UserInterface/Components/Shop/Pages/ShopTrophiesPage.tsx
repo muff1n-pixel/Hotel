@@ -11,10 +11,12 @@ import TextArea from "../../../Common/Form/Components/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { ShopFurnitureData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const shopFurniture = useShopPageFurniture(page.id);
 
@@ -279,7 +281,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                 flexDirection: "column",
                 gap: 5
             }}>
-                <div style={{ fontSize: 12 }}>Add your own engraving below, but be careful - it's permanent!</div>
+                <div style={{ fontSize: 12 }}>{getTranslation("trophies.engraving")}</div>
                 
                 <TextArea value={engraving} onChange={setEngraving} style={{
                     height: 90
@@ -304,7 +306,7 @@ export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds
-                    )} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>Purchase</DialogButton>
+                    )} style={{ flex: 1 }} onClick={handlePurchaseFurniture}>{getTranslation("purchase")}</DialogButton>
                 </div>
             </div>
         </div>

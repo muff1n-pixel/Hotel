@@ -8,6 +8,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import PetImage from "@UserInterface/Components/Pets/PetImage";
+import { useTranslation } from "react-i18next";
 
 export type ShopPurchasePetDialogProps = {
     hidden?: boolean;
@@ -21,6 +22,7 @@ export type ShopPurchasePetDialogProps = {
 
 export default function ShopPurchasePetDialog({ data, hidden, onClose }: ShopPurchasePetDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const handlePurchase = useCallback(() => {
         webSocketClient.addProtobuffListener(ShopPurchaseData, {
@@ -95,7 +97,7 @@ export default function ShopPurchasePetDialog({ data, hidden, onClose }: ShopPur
                         )}
 
                         <FlexLayout direction="row" align="center" gap={0}>
-                            <div style={{ color: "#0B0B0B" }}>Price:</div>
+                            <div style={{ color: "#0B0B0B" }}>{getTranslation("price")}:</div>
                             <CurrencyPanel credits={data.activePet.credits} duckets={data.activePet.duckets} diamonds={data.activePet.diamonds}/>
                         </FlexLayout>
                     </FlexLayout>
@@ -103,11 +105,11 @@ export default function ShopPurchasePetDialog({ data, hidden, onClose }: ShopPur
 
                 <FlexLayout direction="row" justify="space-between">
                     <div>
-                        <DialogButton onClick={handleClose}>Cancel</DialogButton>
+                        <DialogButton onClick={handleClose}>{getTranslation("cancel")}</DialogButton>
                     </div>
                     
                     <div>
-                        <DialogButton color="green" onClick={handlePurchase}>Purchase</DialogButton>
+                        <DialogButton color="green" onClick={handlePurchase}>{getTranslation("purchase")}</DialogButton>
                     </div>
                 </FlexLayout>
             </DialogContent>

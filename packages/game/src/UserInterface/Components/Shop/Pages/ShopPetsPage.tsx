@@ -10,6 +10,7 @@ import useShopPagePets from "./Hooks/useShopPagePets";
 import PetImage from "../../Pets/PetImage";
 import Pet from "@Client/Pets/Pet";
 import Input from "../../../Common/Form/Components/Input";
+import { useTranslation } from "react-i18next";
 
 type FilteredShopPet = {
     pet: ShopPetData;
@@ -19,6 +20,7 @@ type FilteredShopPet = {
 export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const pets = useShopPagePets(page.id);
 
@@ -316,7 +318,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                 flexDirection: "column",
                 gap: 5
             }}>
-                <div style={{ fontSize: 12 }}>Name your pet:</div>
+                <div style={{ fontSize: 12 }}>{getTranslation("pet.name")}</div>
 
                 <Input value={name} onChange={setName} maxLength={24}/>
             </div>
@@ -337,7 +339,7 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
                         (activePet.credits ?? 0) > user.credits
                         || (activePet.duckets ?? 0) > user.duckets
                         || (activePet.diamonds ?? 0) > user.diamonds
-                    )} style={{ flex: 1 }} onClick={handlePurchase}>Purchase</DialogButton>
+                    )} style={{ flex: 1 }} onClick={handlePurchase}>{getTranslation("purchase")}</DialogButton>
                 </div>
             </div>
         </div>

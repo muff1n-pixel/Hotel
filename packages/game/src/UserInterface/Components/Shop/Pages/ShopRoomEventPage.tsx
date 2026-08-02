@@ -17,11 +17,13 @@ import Input from "@UserInterface/Common/Form/Components/Input";
 import TextArea from "@UserInterface/Common/Form/Components/TextArea";
 import { useUserRooms } from "@UserInterface/Hooks/useUserRooms";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export default function ShopRoomEventPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const room = useRoomInstance();
+    const [getTranslation] = useTranslation("shop");
 
     const memberships = useShopPageMemberships(page.id);
     const roomCategories = useRoomCategories();
@@ -60,9 +62,9 @@ export default function ShopRoomEventPage({ editMode, page }: ShopPageProps) {
                 )}
 
                 <FlexLayout style={{ flex: 1 }}>
-                    <b>Promote your room for 2 hours!</b>
+                    <b>{getTranslation("promote.title")}</b>
 
-                    <Selection placeholder="Select event category..." value={categoryId} items={roomCategories?.map((category) => {
+                    <Selection placeholder={getTranslation("promote.category.placeholder")} value={categoryId} items={roomCategories?.map((category) => {
                         return {
                             value: category.id,
                             label: category.title
@@ -70,17 +72,17 @@ export default function ShopRoomEventPage({ editMode, page }: ShopPageProps) {
                     }) ?? []} onChange={(value) => setCategoryId(value as string)}/>
 
                     
-                    <p>Name your promotion</p>
+                    <p>{getTranslation("promote.name")}</p>
 
-                    <Input placeholder="Enter a name..." value={name} onChange={setName}/>
+                    <Input placeholder={getTranslation("promote.name.placeholder")} value={name} onChange={setName}/>
                     
-                    <p>Describe your promotion</p>
+                    <p>{getTranslation("promote.description")}</p>
 
-                    <TextArea placeholder="Enter a description..." value={description} onChange={setDescription} style={{ height: 60 }}/>
+                    <TextArea placeholder={getTranslation("promote.description.placeholder")} value={description} onChange={setDescription} style={{ height: 60 }}/>
                     
-                    <p>Select room</p>
+                    <p>{getTranslation("promote.room")}</p>
 
-                    <Selection placeholder="Select room..." value={roomId} items={userRooms?.map((room) => {
+                    <Selection placeholder={getTranslation("promote.room.placeholder")} value={roomId} items={userRooms?.map((room) => {
                         return {
                             value: room.id,
                             label: room.name
@@ -113,7 +115,7 @@ export default function ShopRoomEventPage({ editMode, page }: ShopPageProps) {
                         }}>
                             <MembershipIcon membership={membership.membership}/>
                             
-                            <b style={{ paddingBottom: 1, flex: 1 }}>Room Event</b>
+                            <b style={{ paddingBottom: 1, flex: 1 }}>{getTranslation("promote.membership")}</b>
 
                             {(editMode) && (
                                 <div style={{
@@ -152,7 +154,7 @@ export default function ShopRoomEventPage({ editMode, page }: ShopPageProps) {
                                     })
                                 }));
                             }}>
-                                Purchase
+                                {getTranslation("purchase")}
                             </DialogButton>
                         </FlexLayout>
                     </DialogPanel>

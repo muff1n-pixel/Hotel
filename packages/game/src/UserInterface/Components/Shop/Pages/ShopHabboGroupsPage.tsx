@@ -2,9 +2,12 @@ import { ShopPageProps } from "./ShopPage";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { useTranslation } from "react-i18next";
+import { Fragment } from "react/jsx-runtime";
 
 export default function ShopHabboGroupsPage({ page }: ShopPageProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     return (
         <div style={{
@@ -21,16 +24,14 @@ export default function ShopHabboGroupsPage({ page }: ShopPageProps) {
                 padding: "2em 0"
             }}>
                 <FlexLayout style={{ flex: 1 }}>
-                    <p>Habbo Groups are a great way to stay in touch with your friends and share your interests. Each Group has a homeroom that can be decorated by other Group members</p>
-                    <p>Members can also purchase exclusive Group Furni that can be customized with your Group colors!</p>
+                    {getTranslation("group.paragraph").split('\n').map((line) => <p key={line}>{line}</p>)}
 
-                    <b>What's so great about Habbo Groups?</b>
+                    <b>{getTranslation("group.title")}</b>
+
+                    <p>{getTranslation("group.items")}</p>
 
                     <p>
-                        * Get together with people you get together with!<br/>
-                        * Co-op room decorating for group members<br/>
-                        * Show off your group badge!<br/>
-                        * Get some neat Furni in your group's colors!
+                        {getTranslation("group.items").split('\n').map((line) => <Fragment key={line}>* {line}<br/></Fragment>)}
                     </p>
                 </FlexLayout>
 
@@ -47,7 +48,7 @@ export default function ShopHabboGroupsPage({ page }: ShopPageProps) {
                         page
                     });
                 }}>
-                    Create Habbo Group
+                    {getTranslation("group.create")}
                 </DialogButton>
             </FlexLayout>
         </div>

@@ -8,10 +8,12 @@ import useShopPageBots from "./Hooks/useShopPageBots";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import { ShopBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useTranslation } from "react-i18next";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const bots = useShopPageBots(page.id);
 
@@ -199,7 +201,7 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
                         (activeBot.credits ?? 0) > user.credits
                         || (activeBot.duckets ?? 0) > user.duckets
                         || (activeBot.diamonds ?? 0) > user.diamonds
-                    )} style={{ flex: 1 }} onClick={handlePurchase}>Purchase</DialogButton>
+                    )} style={{ flex: 1 }} onClick={handlePurchase}>{getTranslation("purchase")}</DialogButton>
                 </div>
             </div>
         </div>
