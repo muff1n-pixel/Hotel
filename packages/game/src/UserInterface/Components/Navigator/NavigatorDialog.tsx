@@ -12,14 +12,18 @@ import useShopPageLink from "../Shop/Hooks/useShopPageLink";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
+    data?: {
+        initialFilter?: string;
+    };
+
     onClose?: () => void;
 }
 
-export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProps) {
+export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDialogProps) {
     const { addUniqueDialog, closeDialog } = useDialogs();
 
     const [tab, setTab] = useState("all");
-    const [filter, setFilter] = useState<string | undefined>(undefined);
+    const [filter, setFilter] = useState<string | undefined>(data?.initialFilter);
     const [search, setSearch] = useState("");
 
     const navigator = useNavigator(tab, filter, search);

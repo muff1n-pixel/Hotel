@@ -13,7 +13,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: GetNavigatorData): Promise<void> {
-        if(payload.search?.length) {
+        if(payload.search?.length || payload.filter === "group") {
             let roomModels;
 
             switch(payload.category) {
@@ -287,7 +287,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
     private getGroupWhereOptions(payload: GetNavigatorData): WhereOptions<any> | undefined {
         if(!payload.search?.length) {
-            return undefined;
+            return {};
         }
 
         switch(payload.filter) {

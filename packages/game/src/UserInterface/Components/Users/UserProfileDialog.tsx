@@ -17,6 +17,7 @@ import { SetGroupFavouriteData, UserGroupMemberData } from "@pixel63/events";
 import GroupCard from "@UserInterface/Common/Groups/Card/GroupCard";
 import { useTranslation } from "react-i18next";
 import { webSocketClient } from "@Game/index";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 
 export type UserProfileDialogProps = {
     data: string;
@@ -192,7 +193,31 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                         borderRadius: 8,
                         padding: "12px 30px"
                     }}>
-                        <GroupCard data={currentGroup?.group}/>
+                        {(currentGroup)?(
+                            <GroupCard data={currentGroup?.group}/>
+                        ):(
+                            <FlexLayout flex={1} direction="column" align="center" justify="center">
+                                <FlexLayout direction="row" gap={10}>
+                                    <div className="sprite_groups_banner_1"/>
+                                    <div className="sprite_groups_banner_2"/>
+                                    <div className="sprite_groups_banner_3"/>
+                                </FlexLayout>
+
+                                <p>Habbo Groups are a great way to get some internet fame!</p>
+
+                                <DialogButton onClick={() => {
+                                    dialogs.openUniqueDialog("navigator", {
+                                        initialFilter: "group"
+                                    });
+                                }} contentStyle={{
+                                    gap: 5
+                                }}>
+                                    <div className="sprite_groups_icon"/>
+
+                                    Check out the hottest groups
+                                </DialogButton>
+                            </FlexLayout>
+                        )}
                     </FlexLayout>
                 </FlexLayout>
             </DialogContent>
