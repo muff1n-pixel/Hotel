@@ -9,7 +9,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
 
     public frame: number = 0;
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
+    public render(data: FurnitureData, options: FurnitureRenderOptions): FurnitureRenderResult {
         for(const visualization of data.visualization.visualizations) {
             if(!visualization.layers.length) {
                 continue;
@@ -61,7 +61,7 @@ export default class FurnitureXRayRenderer extends FurnitureDefaultRenderer {
             this.addAsset(data, visualization, 'l', 'e');
         }
 
-        const result = await super.render(data, options);
+        const result = super.render(data, options);
 
         console.log(result.sprites);
 

@@ -57,7 +57,7 @@ export default function useTraxPlayer() {
 
         const gainNode = audioContext.createGain();
 
-        const allFurniture = await Promise.all(data.song.sets.map((set) => FurnitureAssets.getFurnitureData(set.furniture!.type)));
+        const allFurniture = await Promise.all(data.song.sets.map((set) => FurnitureAssets.fetchFurnitureData(set.furniture!.type)));
         
         let maxDuration: number = 0;
 
@@ -93,7 +93,7 @@ export default function useTraxPlayer() {
                     return;
                 }
 
-                FurnitureAssets.getFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
+                FurnitureAssets.fetchFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
                     const source = audioContext.createBufferSource();
                     source.buffer = audioBuffer;
 

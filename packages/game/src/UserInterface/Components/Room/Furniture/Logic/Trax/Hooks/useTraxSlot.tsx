@@ -81,7 +81,7 @@ export default function useTraxSlot(containerRef: React.RefObject<HTMLDivElement
             return;
         }
 
-        FurnitureAssets.getFurnitureData(set.furniture.type).then((data) => {
+        FurnitureAssets.fetchFurnitureData(set.furniture.type).then((data) => {
             const sound = data.sounds?.[slot];
 
             if(!sound) {

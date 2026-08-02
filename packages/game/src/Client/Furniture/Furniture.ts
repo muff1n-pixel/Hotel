@@ -161,15 +161,19 @@ export default class Furniture {
 
     public async getData() {
         if(!this.data) {
-            this.data = await FurnitureAssets.getFurnitureData(this.type);
+            this.data = await FurnitureAssets.fetchFurnitureData(this.type);
         }
 
         return this.data;
     }
 
-    public async render() {
+    public render() {
         if(!this.data) {
-            this.data = await FurnitureAssets.getFurnitureData(this.type);
+            this.data = FurnitureAssets.getFurnitureData(this.type);
+            
+            if(!this.data) {
+                throw new Error("Furniture data is not loaded.");
+            }
 
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
             
@@ -198,7 +202,7 @@ export default class Furniture {
 
         const options = this.getOptions();
 
-        const result = await this.renderer.render(this.data, options);
+        const result = this.renderer.render(this.data, options);
 
         if(this.particleSystem) {
             const particleSystemResult = {
@@ -206,7 +210,7 @@ export default class Furniture {
                 sprites: [...result.sprites]
             };
             
-            await this.particleSystem.render(particleSystemResult.sprites, options);
+            //await this.particleSystem.render(particleSystemResult.sprites, options);
 
             return particleSystemResult;
         }
@@ -215,8 +219,17 @@ export default class Furniture {
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
+        if(this.shouldLoadAssets()) {
+            await this.loadAssets();
+        }
+
         if(!this.data) {
-            this.data = await FurnitureAssets.getFurnitureData(this.type);
+            this.data = FurnitureAssets.getFurnitureData(this.type);
+
+            if(!this.data) {
+                throw new Error("Furniture data does not exist.");
+            }
+            
             this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
         }
 
@@ -330,5 +343,28 @@ export default class Furniture {
         const colorData = visualization.colors?.find((visualizationColor) => visualizationColor.id === parseInt(colorId));
 
         return colorData?.layers[0].color ?? null;
+    }
+
+    public shouldLoadAssets() {
+        if(!this.data) {
+            return true;
+        }
+
+        const options = this.getOptions();
+
+        if(this.renderer.shouldLoadAssets?.(options)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async loadAssets() {
+        await FurnitureAssets.fetchFurnitureData(this.type);
+        await FurnitureAssets.fetchFurnitureSpritesheet(this.type);
+
+        const options = this.getOptions();
+
+        await this.renderer.loadAssets?.(options);
     }
 }

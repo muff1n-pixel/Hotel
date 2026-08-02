@@ -21,8 +21,11 @@ export default interface FurnitureRenderer {
     animationTransitioned?: number;
     animationTransitionedTo?: number;
 
-    render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult>;
+    render(data: FurnitureData, options: FurnitureRenderOptions): FurnitureRenderResult;
     renderToCanvas(canvasSptions: FurnitureRenderToCanvasOptions | undefined, data: FurnitureData, options: FurnitureRenderOptions): Promise<OffscreenCanvas>;
 
     shouldRender(options: FurnitureRenderOptions): boolean;
+
+    shouldLoadAssets?(options: FurnitureRenderOptions): boolean;
+    loadAssets?(options: FurnitureRenderOptions): Promise<void>;
 }

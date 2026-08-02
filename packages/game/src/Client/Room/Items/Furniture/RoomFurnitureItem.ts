@@ -82,29 +82,38 @@ export default class RoomFurnitureItem extends RoomItem {
 
             this.rendering = true;
 
-            this.furnitureRenderer.render().then((result) => {
-                this.rendering = false;
-
-                if(this.furnitureRenderer.placement === "wall") {
-                    this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
-                }        
-                
-                if(result.sprites.length) {
-                    const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
-
-                    if(result.mask) {
-                        sprites.push(new RoomFurnitureMaskSprite(this, result.mask));
-                    }
-
-                    this.setSprites(sprites);
-                }
-            }).catch(() => {
-                this.rendering = false;
-            });
+            if(this.furnitureRenderer.shouldLoadAssets()) {
+                this.furnitureRenderer.loadAssets().then(() => this.renderFurniture());
+            }
+            else {
+                this.renderFurniture();
+            }
         }
         else {
             this.mask?.updateLandscape();
         }
+    }
+
+    private renderFurniture() {
+        console.time("Render " + this.id);
+        const result = this.furnitureRenderer.render();
+        console.timeEnd("Render " + this.id);
+
+        if(this.furnitureRenderer.placement === "wall") {
+            this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+        }        
+        
+        if(result.sprites.length) {
+            const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
+
+            if(result.mask) {
+                sprites.push(new RoomFurnitureMaskSprite(this, result.mask));
+            }
+
+            this.setSprites(sprites);
+        }
+
+        this.rendering = false;
     }
 
     public setSprites(sprites: RoomSprite[]): void {

@@ -22,7 +22,7 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
             return;
         }
 
-        FurnitureAssets.getFurnitureData(set.furniture.type).then((furnitureData) => {
+        FurnitureAssets.fetchFurnitureData(set.furniture.type).then((furnitureData) => {
             if(audioContext.current.state !== "closed") {
                 audioContext.current.close();
             }
@@ -39,7 +39,7 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
                 return;
             }
 
-            FurnitureAssets.getFurnitureAudioBuffer(audioContext.current, furnitureData.index.type, furnitureSound.file).then((audioBuffer) => {
+            FurnitureAssets.fetchFurnitureAudioBuffer(audioContext.current, furnitureData.index.type, furnitureSound.file).then((audioBuffer) => {
                 console.log("Adding buffer");
 
                 

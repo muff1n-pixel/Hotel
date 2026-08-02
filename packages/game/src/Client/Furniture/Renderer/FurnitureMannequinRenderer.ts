@@ -35,30 +35,13 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
         return super.shouldRender(options);
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
-        const result = await super.render(data, options);
+    public render(data: FurnitureData, options: FurnitureRenderOptions): FurnitureRenderResult {
+        const result = super.render(data, options);
 
         const avatarImageSprite = result.sprites.find((sprite) => sprite.tag === "avatar_image");
 
-        if(avatarImageSprite) {
-            const figureConfiguration = FigureConfigurationData.create({
-                effect: options.figureConfiguration?.effect,
-                gender: options.figureConfiguration?.gender ?? "male",
-                parts: (options.figureConfiguration?.parts ?? []).concat([
-                    {
-                        "$type": "FigurePartData",
-                        type: "hd",
-                        setId: "180",
-                        colors: []
-                    }
-                ])
-            });
-
-            const figure = new Figure(figureConfiguration, options.direction ?? 0, [], false);
-
-            await figure.loadAssets(0);
-
-            const figureImage = figure.renderToCanvas(0, false, true, true, ["ey", "fc"]);
+        if(avatarImageSprite && this.figure) {
+            const figureImage = this.figure.renderToCanvas(0, false, true, true, ["ey", "fc"]);
 
             avatarImageSprite.image = figureImage.figure.image.transferToImageBitmap();
 
@@ -75,5 +58,52 @@ export default class FurnitureMannequinRenderer extends FurnitureDefaultRenderer
         }
 
         return result;
+    }
+
+    private figure?: Figure;
+
+    public shouldLoadAssets(options: FurnitureRenderOptions) {
+        if(options.figureConfiguration && this.options?.figureConfiguration) {
+            if(!this.figure) {
+                return true;
+            }
+
+            if((options.direction ?? 0) !== (this.options.direction ?? 0))  {
+                return true;
+            }
+
+            if(options.figureConfiguration?.gender !== this.options?.figureConfiguration?.gender) {
+                return true;
+            }
+
+            if(options.figureConfiguration?.effect !== this.options?.figureConfiguration?.effect) {
+                return true;
+            }
+
+            if(FigureConfigurationHelper.getStringFromConfiguration(options.figureConfiguration) !== FigureConfigurationHelper.getStringFromConfiguration(this.options.figureConfiguration)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public async loadAssets(options: FurnitureRenderOptions) {
+        const figureConfiguration = FigureConfigurationData.create({
+            effect: options.figureConfiguration?.effect,
+            gender: options.figureConfiguration?.gender ?? "male",
+            parts: (options.figureConfiguration?.parts ?? []).concat([
+                {
+                    "$type": "FigurePartData",
+                    type: "hd",
+                    setId: "180",
+                    colors: []
+                }
+            ])
+        });
+
+        this.figure = new Figure(figureConfiguration, options.direction ?? 0, [], false);
+
+        await this.figure.loadAssets(0);
     }
 }

@@ -43,7 +43,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
 
         const gainNode = audioContext.createGain();
 
-        const allFurniture = await Promise.all(trax.sets.map((set) => FurnitureAssets.getFurnitureData(set.furniture!.type)));
+        const allFurniture = await Promise.all(trax.sets.map((set) => FurnitureAssets.fetchFurnitureData(set.furniture!.type)));
         
         let maxDuration: number = 0;
 
@@ -79,7 +79,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     return;
                 }
 
-                FurnitureAssets.getFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
+                FurnitureAssets.fetchFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
                     console.log("Adding buffer");
                     
                     const source = audioContext.createBufferSource();

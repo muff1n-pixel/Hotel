@@ -246,7 +246,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
     public static renderMap: Map<string, FurnitureRenderResult> = new Map();
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions) {
+    public render(data: FurnitureData, options: FurnitureRenderOptions) {
         this.options = options;
 
         if(!this.type) {
@@ -292,8 +292,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             });
         }
 
-        const sprites: FurnitureRendererSprite[] = await this.getSprites(data, options, layers, animationFrames, directionData);
-        const mask: FurnitureRendererSprite | null = await this.getMask(data, options);
+        const sprites: FurnitureRendererSprite[] = this.getSprites(data, options, layers, animationFrames, directionData);
+        const mask: FurnitureRendererSprite | null = this.getMask(data, options);
 
         this.hasImageData = sprites.every((sprite) => sprite.ignoreMouse || ((sprite.image.width || sprite.image.height) && sprite.imageData));
         
@@ -319,7 +319,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return result;
     }
 
-    private async getSprites(data: FurnitureData, options: FurnitureRenderOptions, layers: LayerData[], animationFrames: LayerFrameData[], directionData: FurnitureVisualization["visualizations"][0]["directions"][0] | undefined) {
+    private getSprites(data: FurnitureData, options: FurnitureRenderOptions, layers: LayerData[], animationFrames: LayerFrameData[], directionData: FurnitureVisualization["visualizations"][0]["directions"][0] | undefined) {
         const sprites: FurnitureRendererSprite[] = [];
 
         for(const { layer, layerCode } of layers) {
@@ -363,7 +363,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
             const color = colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color ?? colorTag?.color;
 
-            const { image, imageData } = await this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
+            const { image, imageData } = this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
 
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 
@@ -421,7 +421,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         return sprites;
     }
 
-    private async getMask(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRendererSprite | null> {
+    private getMask(data: FurnitureData, options: FurnitureRenderOptions): FurnitureRendererSprite | null {
         if(!data.logic.mask) {
             return null;
         }
@@ -442,7 +442,7 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             return null;
         }
 
-        const { image, imageData } = await this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, undefined, undefined, undefined, assetData.usesPalette);
+        const { image, imageData } = this.getFurnitureSprite(data, this.type!, spriteData, assetData.flipHorizontal ?? false, undefined, undefined, undefined, assetData.usesPalette);
 
         let x = assetData.x;
 
@@ -468,8 +468,8 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         };
     }
 
-    public async getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, _tag: string | undefined, _usesPalette: boolean) {
-        const { image, imageData } = await FurnitureAssets.getFurnitureSprite(type, {
+    public getFurnitureSprite(_data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, _tag: string | undefined, _usesPalette: boolean) {
+        const { image, imageData } = FurnitureAssets.getFurnitureSprite(type, {
             x: spriteData.x,
             y: spriteData.y,
 
@@ -572,5 +572,13 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
         }
 
         return canvas;
+    }
+
+    public shouldLoadAssets(options: FurnitureRenderOptions): boolean {
+        return false;
+    }
+
+    public async loadAssets(options: FurnitureRenderOptions): Promise<void> {
+        
     }
 }

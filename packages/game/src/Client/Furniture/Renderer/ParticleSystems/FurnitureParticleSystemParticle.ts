@@ -93,7 +93,7 @@ export default class FurnitureParticleSystemParticle {
             return;
         }
 
-        const { image, imageData } = await FurnitureAssets.getFurnitureSprite(this.emitter.furniture.type, {
+        const { image, imageData } = await FurnitureAssets.fetchFurnitureSprite(this.emitter.furniture.type, {
             x: spriteData.x,
             y: spriteData.y,
 
