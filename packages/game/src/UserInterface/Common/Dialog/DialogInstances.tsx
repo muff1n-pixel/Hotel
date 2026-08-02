@@ -71,6 +71,7 @@ import ShopPurchasePetDialog from "@UserInterface/Components/Shop/Purchasing/Sho
 import WardrobeFootballDialog from "@UserInterface/Components/Wardrobe/WardrobeFootballDialog";
 import ShopGiftFurnitureDialog from "@UserInterface/Components/Shop/Pages/Gifts/ShopGiftFurnitureDialog";
 import EditHotelActivityRewardDialog from "@UserInterface/Components/Hotel/ActivityRewards/EditHotelActivityRewardDialog";
+import HabboClubCenterDialog from "@UserInterface/Components/HabboClub/HabboClubCenterDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -119,6 +120,9 @@ export default function DialogInstances() {
                        
                     case "clothing-unlocked":
                         return (<ClothingUnlockedDialog {...props} key={dialog.id}/>);
+
+                    case "habbo-club-center":
+                        return (<HabboClubCenterDialog {...props} key={dialog.id}/>);
 
                     case "shop":
                         return (<ShopDialog {...props} key={dialog.id}/>);

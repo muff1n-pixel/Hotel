@@ -8,6 +8,7 @@ import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
 import { game } from "../../../index.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
+import GetUserHabboClubEvent from "../Users/HabboClub/GetUserHabboClubEvent.js";
 
 export default class PurchaseShopMembershipEvent implements ProtobuffListener<PurchaseShopMembershipData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -39,9 +40,21 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
             case "habboclub": {
                 const date = (user.model.habboClub && new Date(user.model.habboClub) >= new Date())?(new Date(user.model.habboClub)):(new Date());
 
+                if(!user.model.habboClub || new Date(user.model.habboClub) < new Date()) {
+                    user.model.habboClubStreak = 0;
+                }
+
                 date.setDate(date.getDate() + shopMembership.days);
 
                 user.model.habboClub = date;
+                user.model.habboClubDays += shopMembership.days;
+                user.model.habboClubStreak += shopMembership.days;
+
+                if(!user.model.habboClubFirstMembership) {
+                    user.model.habboClubFirstMembership = new Date();
+                }
+
+                await new GetUserHabboClubEvent().handle(user);
 
                 break;
             }

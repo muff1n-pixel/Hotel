@@ -5,6 +5,8 @@ import WidgetCurrency from "./WidgetCurrency";
 import WidgetItem from "./WidgetItem";
 import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 import { useTranslation } from "react-i18next";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useUserHabboClub } from "@UserInterface/Hooks/User/HabboClub/useUserHabboClub";
 
 export type WidgetProps = {
     onSettingsClick?: () => void;
@@ -15,8 +17,9 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
     const [getWidgetTranslation] = useTranslation("widget");
 
     const user = useUser();
+    const userHabboClub = useUserHabboClub();
 
-    const { openShopPage } = useShopPageLink("habboclub");
+    const dialogs = useDialogs();
 
     return (
         <div style={{
@@ -79,12 +82,12 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                     width: 80
                 }}>
                     <WidgetItem onClick={() => {
-                        openShopPage();
+                        dialogs.openUniqueDialog("habbo-club-center");
                     }}>
                         <div className="sprite_currencies_club"/>
 
-                        {(DateHelper.isDateInTheFuture(user.habboClub))?(
-                            <b>{getWidgetTranslation("membership_days", { days: DateHelper.getDaysBetweenDates(user.habboClub, new Date()) })}</b>
+                        {(userHabboClub?.active)?(
+                            <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b>
                         ):(
                             <b>{getWidgetTranslation("join")}</b>
                         )}

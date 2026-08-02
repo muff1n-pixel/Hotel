@@ -1,7 +1,6 @@
 import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { PermissionRoleModel } from "../Permissions/PermissionRoleModel.js";
 import { FigureConfigurationData } from "@pixel63/events";
-import { UserBadgeModel } from "./Badges/UserBadgeModel.js";
 import { GroupModel } from "../Groups/RoomGroupModel.js";
 
 export class UserModel extends Model {
@@ -18,7 +17,11 @@ export class UserModel extends Model {
     declare homeRoomId: string | undefined;
     declare roomChatStyleId: string;
     declare online: boolean;
+
     declare habboClub: Date | null;
+    declare habboClubDays: number;
+    declare habboClubFirstMembership: Date | null;
+    declare habboClubStreak: number;
 
     declare createdAt: Date;
     
@@ -101,7 +104,23 @@ export function initializeUserModel(sequelize: Sequelize) {
                 allowNull: false,
                 defaultValue: 0
             },
+
             habboClub: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null
+            },
+            habboClubDays: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
+            habboClubStreak: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
+            habboClubFirstMembership: {
                 type: DataTypes.DATE,
                 allowNull: true,
                 defaultValue: null

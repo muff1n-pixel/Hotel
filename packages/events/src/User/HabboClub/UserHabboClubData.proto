@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message UserHabboClubData {
+    bool active = 1;
+    uint32 membership_days = 3;
+    uint32 membership_streak = 5;
+
+    optional string member_since = 2;
+    optional string expires_at = 4;
+}
