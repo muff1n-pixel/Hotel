@@ -7,16 +7,16 @@ export function useRoomFrameRate() {
     const [value, setValue] = useState<number | undefined>(0);
 
     useEffect(() => {
-        let animationFrame = window.requestAnimationFrame(updateAnimationFrame);
-
-        function updateAnimationFrame() {
-            setValue(room?.roomRenderer.application.ticker?.FPS);
-            
-            animationFrame = window.requestAnimationFrame(updateAnimationFrame);
+        if(!room) {
+            return;
         }
+        
+        const interval = setInterval(() => {
+            setValue(Math.round(room?.roomRenderer.application.ticker?.FPS ?? 0));
+        }, 100);
 
         return () => {
-            window.cancelAnimationFrame(animationFrame);
+            clearInterval(interval);
         };
     }, [room]);
 
