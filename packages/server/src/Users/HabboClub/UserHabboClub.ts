@@ -79,6 +79,7 @@ export default class UserHabboClub {
             membershipDays: this.user.model.habboClubDays,
             membershipStreak: this.user.model.habboClubStreak,
             cashback: this.getCashback(),
+            gifts: this.user.model.habboClubGifts,
 
             badge: (userAchievementBadge)?(BadgeData.fromJSON(userAchievementBadge)):(undefined)
         }));
@@ -107,6 +108,7 @@ export default class UserHabboClub {
         
         this.user.model.habboClubCashback = 0;
         this.user.model.habboClubCashbackRedemeedAt = now;
+        this.user.model.habboClubGifts++;
 
         this.user.sendUserData();
 

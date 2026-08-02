@@ -7,7 +7,7 @@ export type DialogButtonProps = {
     children: ReactNode;
     style?: CSSProperties;
     contentStyle?: CSSProperties;
-    color?: "default" | "green" | "red";
+    color?: "default" | "green" | "red" | "blue";
     onClick?: (event?: MouseEvent) => void;
 };
 

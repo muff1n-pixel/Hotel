@@ -23,6 +23,7 @@ export class UserModel extends Model {
     declare habboClubFirstMembership: Date | null;
     declare habboClubStreak: number;
 
+    declare habboClubGifts: number;
     declare habboClubCashback: number;
     declare habboClubCashbackRedemeedAt: Date | null;
 
@@ -137,7 +138,12 @@ export function initializeUserModel(sequelize: Sequelize) {
                 type: DataTypes.DATE,
                 allowNull: true,
                 defaultValue: null
-            }
+            },
+            habboClubGifts: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
         },
         {
             tableName: 'users',

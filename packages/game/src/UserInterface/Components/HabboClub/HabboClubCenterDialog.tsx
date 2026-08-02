@@ -21,6 +21,7 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
     const userHabboClub = useUserHabboClub(true);
 
     const { openShopPage } = useShopPageLink("habboclub");
+    const { openShopPage: openGiftShopPage } = useShopPageLink("habbogift");
 
     return (
         <Dialog title="Habbo Club Center" hidden={hidden} onClose={onClose} width={459} height={600} initialPosition="center">
@@ -73,7 +74,7 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                 </div>
             </div>
 
-            <DialogContent style={{ paddingTop: 0 }}>
+            <DialogContent style={{ paddingTop: 0, position: "relative" }}>
                 <div style={{
                     display: "flex",
 
@@ -146,7 +147,9 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
 
                         display: "flex",
                         flexDirection: "column",
-                        gap: 5
+                        gap: 5,
+
+                        zIndex: 1
                     }}>
                         <FlexLayout gap={10} direction="column" style={{
                             height: 80,
@@ -172,6 +175,54 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                         </FlexLayout>
                     </div>
                 </div>
+
+                <div style={{ height: 6 }}/>
+
+                <div style={{
+                    background: "#53C22D",
+                    color: "#FFFFFF",
+
+                    borderRadius: 6,
+
+                    display: "flex",
+                    flexDirection: "row",
+
+                    padding: 20
+                }}>
+                    <FlexLayout flex={1} gap={5}>
+                        <b style={{ fontSize: 17 }}>Monthly HC gift</b>
+
+                        <p>HC members get a free gift every month!</p>
+                    </FlexLayout>
+
+                    <FlexLayout align="center" justify="center">
+                        <DialogButton color="blue" onClick={openGiftShopPage}>View gifts</DialogButton>
+                    </FlexLayout>
+                </div>
+
+                <div style={{ height: 6 }}/>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+
+                    padding: "10px 20px"
+                }}>
+                    <FlexLayout flex={1} gap={5}>
+                        <b style={{ fontSize: 17, color: "#4A8EB1" }}>More HC benefits:</b>
+
+                        <p>- Massive clothing & colors selection</p>
+                        <p>- Extra dances & chat styles</p>
+                        <p>- Earn double duckets</p>
+                        <p>- Plus loads more...</p>
+                    </FlexLayout>
+                </div>
+
+                <div className="sprite_habboclub_teaser" style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0
+                }}/>
             </DialogContent>
         </Dialog>
     );

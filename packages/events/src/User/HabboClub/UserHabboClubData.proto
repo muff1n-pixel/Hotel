@@ -13,4 +13,5 @@ message UserHabboClubData {
     optional BadgeData badge = 6;
 
     uint32 cashback = 7;
+    uint32 gifts = 8;
 }
