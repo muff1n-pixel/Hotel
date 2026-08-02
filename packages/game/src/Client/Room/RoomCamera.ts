@@ -144,7 +144,7 @@ export default class RoomCamera {
         };
     }
 
-    private touchend(event: TouchEvent) {
+    private touchend() {
         this.moving = false;
         this.lastPosition = null;
         this.dragging = false;

@@ -3,8 +3,6 @@ import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFurniturePlaceholderSprite";
-import RoomFurnitureBackgroundSprite from "@Client/Room/Items/Furniture/Background/RoomFurnitureBackgroundSprite";
-import AssetFetcher from "@Client/Assets/AssetFetcher";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import { clientInstance } from "@Game/index";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";

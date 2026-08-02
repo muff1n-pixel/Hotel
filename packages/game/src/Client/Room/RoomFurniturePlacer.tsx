@@ -5,14 +5,12 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import Figure from "@Client/Figure/Figure";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData, RoomPositionOffsetData, RoomPositionWithDirectionData, UserFurnitureData } from "@pixel63/events";
+import { FigureConfigurationData, FurnitureData, PetData, RoomPositionData, RoomPositionWithDirectionData, UserFurnitureData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
-import RoomRenderer from "@Client/Room/RoomRenderer";
-import DataStats from "@Client/DataStats";
 
 export default class RoomFurniturePlacer {
     private paused: boolean = true;

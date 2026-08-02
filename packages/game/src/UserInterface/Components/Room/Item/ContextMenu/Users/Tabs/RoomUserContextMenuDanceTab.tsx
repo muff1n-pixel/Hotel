@@ -5,7 +5,7 @@ import UserContextMenuList from "@UserInterface/Components/Room/Users/UserContex
 import { useTranslation } from "react-i18next";
 import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
 
-export default function RoomUserContextMenuDanceTab({ targetUser, setTab, closeTab }: RoomUserContextMenuTabProps) {
+export default function RoomUserContextMenuDanceTab({ closeTab }: RoomUserContextMenuTabProps) {
     const [getTranslation] = useTranslation("room");
 
     return (

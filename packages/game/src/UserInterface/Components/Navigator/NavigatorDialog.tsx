@@ -5,7 +5,6 @@ import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { useState } from "react";
 import { useNavigator } from "../../Hooks/useNavigator";
-import Input from "../../Common/Form/Components/Input";
 import { EnterRandomRoomData, EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import NavigatorSearch from "./NavigatorSearch";

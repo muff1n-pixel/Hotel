@@ -272,8 +272,6 @@ export default class LandscapeRenderer {
                 for(const cell of column.cells) {
                     if(cell.extraItemData?.types.length) {
                         for(let left = 0; left < width; left += column.width) {
-                            const usedOffsetIds: number[] = [];
-
                             for(let index = 0; index < (cell.extraItemData.limitMax ?? cell.extraItemData.offsets.length); index++) {
                                 /*const offset = cell.extraItemData.offsets[Math.floor(Math.random() * cell.extraItemData.offsets.length)];
 

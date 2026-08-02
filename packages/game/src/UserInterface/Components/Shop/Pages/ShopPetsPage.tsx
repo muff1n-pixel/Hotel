@@ -5,12 +5,11 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
-import { PurchaseShopPetData, ShopPetData } from "@pixel63/events";
+import { ShopPetData } from "@pixel63/events";
 import useShopPagePets from "./Hooks/useShopPagePets";
 import PetImage from "../../Pets/PetImage";
 import Pet from "@Client/Pets/Pet";
 import Input from "../../../Common/Form/Components/Input";
-import { webSocketClient } from "../../../..";
 
 type FilteredShopPet = {
     pet: ShopPetData;

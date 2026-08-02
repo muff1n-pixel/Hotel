@@ -1,4 +1,4 @@
-import { FurnitureRendererSprite, FurnitureRenderResult } from "@Client/Furniture/Furniture";
+import { FurnitureRenderResult } from "@Client/Furniture/Furniture";
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";

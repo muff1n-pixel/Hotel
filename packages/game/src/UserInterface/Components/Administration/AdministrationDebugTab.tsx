@@ -1,5 +1,4 @@
 import DataStats from "@Client/DataStats";
-import { clientInstance } from "@Game/index";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import useAnimationFrame from "@UserInterface/Hooks/useAnimationFrame";
 import { useState } from "react";

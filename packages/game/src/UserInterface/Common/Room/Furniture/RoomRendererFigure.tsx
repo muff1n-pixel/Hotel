@@ -1,4 +1,4 @@
-import { FigureConfigurationData, FurnitureData, RoomPositionData, UserFurnitureColorTag } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData } from "@pixel63/events";
 
 export type RoomRendererFigureProps = {
     id: string;

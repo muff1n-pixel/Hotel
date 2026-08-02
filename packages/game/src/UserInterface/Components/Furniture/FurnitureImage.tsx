@@ -2,7 +2,6 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import Furniture from "@Client/Furniture/Furniture";
 import { FigureConfigurationData, FurnitureData } from "@pixel63/events";
-import DataStats from "@Client/DataStats";
 
 export type FurnitureImageProps = {
     figureConfiguration?: FigureConfigurationData;

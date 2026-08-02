@@ -2,7 +2,6 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomSprite from "../../RoomSprite";
 import RoomFigureItem from "../RoomFigureItem";
 import AssetFetcher from "@Client/Assets/AssetFetcher";
-import { Texture } from "pixi.js";
 
 export default class RoomFigureTypingSprite extends RoomSprite {
     constructor(public readonly item: RoomFigureItem, public figureOffsets: MousePosition) {

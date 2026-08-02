@@ -6,7 +6,7 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../Hooks/useDialogs";
-import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData } from "@pixel63/events";
+import { EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";

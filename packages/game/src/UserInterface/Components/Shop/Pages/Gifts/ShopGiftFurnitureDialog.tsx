@@ -1,13 +1,11 @@
 import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
-import { GroupData, PurchaseShopFurnitureData, RoomPositionData, ShopFurnitureData, ShopPurchaseData, UserFurnitureCustomData } from "@pixel63/events";
+import { GroupData, PurchaseShopFurnitureData, ShopFurnitureData, ShopPurchaseData, UserFurnitureCustomData } from "@pixel63/events";
 import { useCallback, useState } from "react";
-import { clientInstance, webSocketClient } from "@Game/index";
-import { PurchasableItem } from "../../Pages/Hooks/usePurchasableItem";
+import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
-import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import FurnitureGift from "@UserInterface/Components/Furniture/FurnitureGift";

@@ -1,13 +1,12 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
-import { EnterRoomData, PurchaseShopBotData, PurchaseShopBundleData, ShopBotData, ShopBundlePurchaseData, ShopFurnitureData, ShopPageData, ShopPurchaseData } from "@pixel63/events";
+import { EnterRoomData, PurchaseShopBundleData, ShopBundlePurchaseData, ShopFurnitureData, ShopPageData } from "@pixel63/events";
 import { useCallback } from "react";
-import { clientInstance, webSocketClient } from "@Game/index";
+import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 
 export type ShopPurchaseBundleDialogProps = {
     hidden?: boolean;

@@ -1,7 +1,6 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomSprite from "@Client/Room/Items/RoomSprite";
-import { Texture } from "pixi.js";
 
 export default class RoomLandscapeDebugSprite extends RoomSprite {
     public readonly defaultOffset: MousePosition = {

@@ -1,6 +1,6 @@
 import FurnitureLogic from "@Client/Furniture/Logic/Interfaces/FurnitureLogic";
 import RoomInstance from "@Client/Room/RoomInstance";
-import { clientInstance, webSocketClient } from "../../../..";
+import { clientInstance } from "../../../..";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 
 export default class RoomFurnitureGiftLogic implements FurnitureLogic {

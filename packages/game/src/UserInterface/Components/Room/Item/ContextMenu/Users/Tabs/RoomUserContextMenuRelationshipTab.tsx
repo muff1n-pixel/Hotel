@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 
-export default function RoomUserContextMenuRelationshipTab({ targetUser, setTab, closeTab }: RoomUserContextMenuTabProps) {
+export default function RoomUserContextMenuRelationshipTab({ targetUser, setTab }: RoomUserContextMenuTabProps) {
     const [getTranslation] = useTranslation("room");
 
     return (

@@ -1,6 +1,5 @@
 import { FigureConfigurationData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
-import TextArea from "@UserInterface/Common/Form/Components/TextArea";
 
 export type FurnitureGiftProps = {
     name: string;

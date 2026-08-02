@@ -3,7 +3,6 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import { clientInstance } from "../../../..";
 import { ReactNode } from "react";
-import RoomFurnitureMannequinContextMenu from "@UserInterface/Components/Room/Item/ContextMenu/Furniture/Mannequin/RoomFurnitureMannequinContextMenu";
 import RoomFurnitureFootballGateContextMenu from "@UserInterface/Components/Room/Item/ContextMenu/Furniture/Football/RoomFurnitureFootballGateContextMenu";
 
 export default class RoomFurnitureFootballGateLogic implements FurnitureLogic {

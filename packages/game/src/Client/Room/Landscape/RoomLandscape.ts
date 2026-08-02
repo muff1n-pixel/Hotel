@@ -3,7 +3,6 @@ import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
-import { clientInstance } from "@Game/index";
 
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;

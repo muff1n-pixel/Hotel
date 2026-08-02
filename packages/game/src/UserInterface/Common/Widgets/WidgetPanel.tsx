@@ -1,4 +1,3 @@
-import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { ReactNode } from "react";
 
 export type WidgetPanelProps = {

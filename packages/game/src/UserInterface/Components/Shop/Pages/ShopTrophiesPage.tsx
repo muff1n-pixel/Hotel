@@ -3,7 +3,6 @@ import DialogPanel from "../../../Common/Dialog/Components/Panels/DialogPanel";
 import { ShopPageProps } from "./ShopPage";
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { clientInstance, webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
@@ -11,7 +10,7 @@ import FurnitureImage from "../../Furniture/FurnitureImage";
 import TextArea from "../../../Common/Form/Components/TextArea";
 import Furniture from "@Client/Furniture/Furniture";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
-import { PurchaseShopFurnitureData, ShopFurnitureData, ShopPurchaseData } from "@pixel63/events";
+import { ShopFurnitureData } from "@pixel63/events";
 
 export default function ShopTrophiesPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();

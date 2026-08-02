@@ -3,7 +3,6 @@ import OffscreenCanvasRender from "../../Common/OffscreenCanvas/OffscreenCanvasR
 import Furniture from "@Client/Furniture/Furniture";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { FurnitureData, UserFurnitureColorTag } from "@pixel63/events";
-import DataStats from "@Client/DataStats";
 
 export type FurnitureIconProps = {
     ref?: RefObject<HTMLCanvasElement | null>;

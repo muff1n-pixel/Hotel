@@ -1,7 +1,7 @@
 import Colors, { HSL } from "@UserInterface/Utils/Colors";
 import HueSaturationLightnessSlider from "./HueSaturationLightnessSlider";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export type DialogHSLPickerProps = {
     value: HSL;
