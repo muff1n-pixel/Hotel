@@ -7,6 +7,7 @@ import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import { FurnitureSprite } from "@Client/Interfaces/Furniture/FurnitureSprites";
 import { hexToRgb } from "@Client/Utilities/ColorUtilities";
 import { PetPaletteData } from "@pixel63/events";
+import { FurnitureLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
     private palettesData: {
@@ -23,7 +24,7 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return `${renderOptionsKey}_${this.palettes?.map((palette) => `${palette.paletteId}-${palette.color}-${palette.tags.join('-')}`)?.join('_')}`;
     }
 
-    public async render(data: FurnitureData, options: FurnitureRenderOptions): Promise<FurnitureRenderResult> {
+    public render(data: FurnitureData, options: FurnitureRenderOptions): FurnitureRenderResult {
         return super.render(data, options);
     }
 
@@ -47,8 +48,8 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
         return hexToRgb(palette.color);
     }
 
-    public async getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, tag: string | undefined, usesPalette: boolean): Promise<{ image: ImageBitmap; imageData: ImageData | null; }> {
-        const { image, imageData } = await PetAssets.getSprite(type, {
+    public getFurnitureSprite(data: FurnitureData, type: string, spriteData: FurnitureSprite, flipHorizontal: boolean, color: string | undefined, grayscaled: AssetSpriteGrayscaledProperties | undefined, tag: string | undefined, usesPalette: boolean): { image: ImageBitmap; imageData: ImageData | null; } {
+        const { image, imageData } = PetAssets.getSprite(type, {
             x: spriteData.x,
             y: spriteData.y,
 
@@ -78,9 +79,17 @@ export default class PetDefaultRenderer extends FurnitureDefaultRenderer {
                     return { image, imageData };
                 }
 
+                const colors = PetAssets.getPaletteData(this.type, paletteData.source);
+
+                if(!colors) {
+                    FurnitureLogger.warn("Pet palette data is not loaded.");
+
+                    return { image, imageData };
+                }
+
                 palette = {
                     tags: paletteData.tags,
-                    colors: await PetAssets.getPaletteData(this.type, paletteData.source)
+                    colors
                 };
 
                 this.palettesData.push(palette);

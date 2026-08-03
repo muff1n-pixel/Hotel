@@ -24,6 +24,8 @@ export default class RoomPetItem extends RoomItem {
         this.render();
     }
 
+    private rendering: boolean = false;
+
     render() {
         if(this.pet.size !== this.roomRenderer.size) {
             this.pet.size = this.roomRenderer.size;
@@ -33,17 +35,30 @@ export default class RoomPetItem extends RoomItem {
 
         this.pet.frame++;
 
-        if(this.pet.shouldRender()) {
+        if(!this.rendering && this.pet.shouldRender()) {
             if(clientInstance.settings.value?.debugRoomRendering) {
                 //this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
 
-            this.pet.render().then((result) => {
-                if(result.sprites.length) {
-                    this.setSprites(result.sprites.map((sprite) => new RoomPetSprite(this, sprite)));
-                }
-            });
+            this.rendering = true;
+
+            if(this.pet.shouldLoadAssets()) {
+                this.pet.loadAssets().then(() => this.renderPet());
+            }
+            else {
+                this.renderPet();
+            }
         }
+    }
+
+    private renderPet() {
+        const result = this.pet.render();
+        
+        if(result.sprites.length) {
+            this.setSprites(result.sprites.map((sprite) => new RoomPetSprite(this, sprite)));
+        }
+
+        this.rendering = false;
     }
 
     public setPositionPath(fromPosition: RoomPositionData, toPosition: RoomPositionData | RoomPositionData[], delay: number = 0, useAction: boolean = true): void {

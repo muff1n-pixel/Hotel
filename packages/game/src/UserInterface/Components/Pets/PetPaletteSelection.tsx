@@ -16,7 +16,7 @@ export default function PetPaletteSelection({ value, onChange, type, breed, tags
     const [palettes, setPalettes] = useState<FurniturePalette[]>([]);
 
     useEffect(() => {
-        PetAssets.getData(type).then((data) => {
+        PetAssets.fetchData(type).then((data) => {
             setPalettes(data.palettes?.filter((palette) => (!breed || !palette.breed || palette.breed === breed) && ((!palette.tags || palette.tags.some((tag) => tags.includes(tag))))) ?? []);
         });
     }, [ type, tags ]);

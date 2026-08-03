@@ -17,7 +17,7 @@ export default function PetPaletteItem({ type, palette }: PetPaletteItemProps) {
             return;
         }
 
-        PetAssets.getData(type).then((data) => {
+        PetAssets.fetchData(type).then((data) => {
             const paletteData = data.palettes?.find((_palette) => _palette.id === palette.paletteId);
 
             setColors([paletteData?.color1, paletteData?.color2].filter<string>((value) => typeof value === "string"));

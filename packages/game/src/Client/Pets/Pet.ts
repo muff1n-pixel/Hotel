@@ -1,6 +1,7 @@
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import PetAssets from "@Client/Assets/PetAssets";
 import { FurnitureRenderToCanvasOptions } from "@Client/Furniture/Furniture";
+import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import { FurnitureData } from "@Client/Interfaces/Furniture/FurnitureData";
 import PetDefaultRenderer from "@Client/Pets/Renderer/PetDefaultRenderer";
 import { PetPaletteData } from "@pixel63/events";
@@ -20,7 +21,11 @@ export default class Pet {
     }
 
     public shouldRender() {
-        return this.renderer.shouldRender({
+        return this.renderer.shouldRender(this.getOptions());
+    }
+
+    public getOptions(): FurnitureRenderOptions {
+        return {
             direction: this.direction,
             size: this.size, 
             animation: this.getAnimationId(), 
@@ -29,49 +34,35 @@ export default class Pet {
             grayscaled: this.grayscaled,
             tags: (this.headonly)?(["head", "hair"]):(undefined),
             colorTags: undefined
-        });
+        };
     }
     
-    public async render() {
+    public render() {
         if(!this.data) {
-            this.data = await PetAssets.getData(this.type);
+            this.data = PetAssets.getData(this.type);
+            
+            if(!this.data) {
+                throw new Error("Pet data is not loaded.");
+            }
         }
 
-        return await this.renderer.render(this.data, {
-            direction: this.direction,
-            size: this.size, 
-            animation: this.getAnimationId(), 
-            color: this.color ?? '0',
-            frame: this.frame,
-            grayscaled: this.grayscaled,
-            tags: (this.headonly)?(["head", "hair"]):(undefined),
-            colorTags: undefined
-        });
+        return this.renderer.render(this.data, this.getOptions());
     }
 
     public async getData() {
-        if(!this.data) {
-            this.data = await PetAssets.getData(this.type);
+        if(this.shouldLoadAssets()) {
+            await this.loadAssets();
         }
 
         return this.data;
     }
 
     public async renderToCanvas(options?: FurnitureRenderToCanvasOptions) {
-        if(!this.data) {
-            this.data = await PetAssets.getData(this.type);
+        if(this.shouldLoadAssets()) {
+            await this.loadAssets();
         }
 
-        return await this.renderer.renderToCanvas(options, this.data, {
-            direction: this.direction,
-            size: this.size, 
-            animation: this.getAnimationId(), 
-            color: this.color ?? '0',
-            frame: this.frame,
-            grayscaled: this.grayscaled,
-            tags: (this.headonly)?(["head", "hair"]):(undefined),
-            colorTags: undefined
-        });
+        return await this.renderer.renderToCanvas(options, this.data!, this.getOptions());
     }
 
     private getAnimationId() {
@@ -120,5 +111,30 @@ export default class Pet {
         }
 
         return colors;
+    }
+    
+    public async loadAssets() {
+        const data = await PetAssets.fetchData(this.type);
+        await PetAssets.fetchImage(this.type);
+
+        if(data.palettes) {
+            for(const palette of data.palettes) {
+                await PetAssets.fetchPaletteData(this.type, palette.source);
+            }
+        }
+
+        const options = this.getOptions();
+
+        await this.renderer.loadAssets?.(options);
+
+        this.data = data;
+    }
+
+    public shouldLoadAssets() {
+        if(!this.data) {
+            return true;
+        }
+
+        return false;
     }
 }
