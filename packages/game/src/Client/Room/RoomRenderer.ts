@@ -117,7 +117,7 @@ export default class RoomRenderer extends EventTarget {
             antialias: false,
             background: "#000000",
             resizeTo: this.parent,
-            roundPixels: true,
+            roundPixels: resolution !== 1,
 
             useBackBuffer: true,
 
