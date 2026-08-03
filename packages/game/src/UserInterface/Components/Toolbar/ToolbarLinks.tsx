@@ -42,6 +42,51 @@ export default function ToolbarLinks() {
         };
     }, [tab]);
 
+    if(tab === "me") {
+        return (
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 14,
+                alignItems: "center"
+            }}>
+                <ToolbarToggle toggled={minimized} onToggle={setMinimized}/>
+
+                <ToolbarItem toolbarTab="me" onClick={() => setTab((tab === "me")?(undefined):("me"))}>
+                    <ToolbarFigureItem/>
+                </ToolbarItem>
+
+                <ToolbarTab
+                    items={[
+                        {
+                            spriteClass: "sprite_toolbar_me_profile",
+                            onClick: () => {
+                                addUniqueDialog("user-profile", user.id, user.id);
+                                setTab(undefined);
+                            },
+                            tooltip: getTranslation("links.profile")
+                        },
+                        {
+                            spriteClass: "sprite_toolbar_me_clothing",
+                            onClick: () => {
+                                addUniqueDialog("wardrobe");
+                                setTab(undefined);
+                            },
+                            tooltip: getTranslation("links.wardrobe")
+                        },
+                        {
+                            spriteClass: "sprite_toolbar_me_achievements",
+                            onClick: () => {
+                                addUniqueDialog("achievements");
+                                setTab(undefined);
+                            },
+                            tooltip: getTranslation("links.achievements")
+                        }
+                    ]}/>
+            </div>
+        );
+    }
+
     return (
         <div style={{
             display: "flex",
@@ -81,45 +126,15 @@ export default function ToolbarLinks() {
                 </ToolbarItem>
             )}
 
-            {(room) && (
-                <ToolbarItem toolbarTab="me" onClick={() => setTab((tab === "me")?(undefined):("me"))}>
-                    <ToolbarFigureItem/>
-                </ToolbarItem>
-            )}
-
-            {(tab === "me") && (
-                <ToolbarTab
-                    items={[
-                        {
-                            spriteClass: "sprite_toolbar_me_profile",
-                            onClick: () => {
-                                addUniqueDialog("user-profile", user.id, user.id);
-                                setTab(undefined);
-                            },
-                            tooltip: getTranslation("links.profile")
-                        },
-                        {
-                            spriteClass: "sprite_toolbar_me_clothing",
-                            onClick: () => {
-                                addUniqueDialog("wardrobe");
-                                setTab(undefined);
-                            },
-                            tooltip: getTranslation("links.wardrobe")
-                        },
-                        {
-                            spriteClass: "sprite_toolbar_me_achievements",
-                            onClick: () => {
-                                addUniqueDialog("achievements");
-                                setTab(undefined);
-                            },
-                            tooltip: getTranslation("links.achievements")
-                        }
-                    ]}/>
-            )}
+            <ToolbarItem toolbarTab="me" onClick={() => setTab((tab === "me")?(undefined):("me"))}>
+                <ToolbarFigureItem/>
+            </ToolbarItem>
 
             {(room) && (
                 <ToolbarItem onClick={() => addUniqueDialog("room-camera")} tooltip={getTranslation("links.room_camera")}>
-                    <div className="sprite_toolbar_camera"/>
+                    <div className="sprite_toolbar_camera" style={{
+                        marginBottom: -1
+                    }}/>
                 </ToolbarItem>
             )}
         </div>

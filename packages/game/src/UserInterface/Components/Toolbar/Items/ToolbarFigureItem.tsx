@@ -34,12 +34,12 @@ export default function ToolbarFigureItem() {
 
     return (
         <div style={{
-            height: 40,
-            width: 44,
+            height: 42,
+            width: 42,
 
             overflow: "hidden"
         }}>
-            <canvas ref={canvasRef} width={40} height={44}/>
+            <canvas ref={canvasRef} width={40} height={40}/>
         </div>
     );
 }

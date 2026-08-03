@@ -9,10 +9,10 @@
 }
 
 .toolbar-tab-arrow {
-    border: 1px solid #2A2928;
+    /*border: 1px solid #2A2928;*/
     border-radius: 6px;
 
-    background: #1F1E1D;
+    /*background: #1F1E1D;*/
 
     padding: 3px 6px;
 
@@ -23,7 +23,7 @@
 	position: relative;
 }
 
-.toolbar-tab-arrow:after, .toolbar-tab-arrow:before {
+/*.toolbar-tab-arrow:after, .toolbar-tab-arrow:before {
 	right: 100%;
 	top: 50%;
 	border: solid transparent;
@@ -46,4 +46,4 @@
 	border-right-color: #2A2928;
 	border-width: 6px;
 	margin-top: -6px;
-}
+}*/
