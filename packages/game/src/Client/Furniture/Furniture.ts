@@ -360,8 +360,13 @@ export default class Furniture {
     }
 
     public async loadAssets() {
-        await FurnitureAssets.fetchFurnitureData(this.type);
-        await FurnitureAssets.fetchFurnitureSpritesheet(this.type);
+        if(!FurnitureAssets.getFurnitureData(this.type)) {
+            await FurnitureAssets.fetchFurnitureData(this.type);
+        }
+
+        if(!FurnitureAssets.getFurnitureSpritesheet(this.type)) {
+            await FurnitureAssets.fetchFurnitureSpritesheet(this.type);
+        }
 
         const options = this.getOptions();
 
