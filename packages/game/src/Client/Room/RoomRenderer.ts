@@ -127,7 +127,9 @@ export default class RoomRenderer extends EventTarget {
 
         this.camera.init();
 
-        this.application.canvas.style.imageRendering = "pixelated";
+        if(resolution !== 1) {
+            this.application.canvas.style.imageRendering = "pixelated";
+        }
 
         this.subscriptions.push(this.clientInstance?.settings.subscribe((value) => {
             if(value.limitRoomFrames) {
