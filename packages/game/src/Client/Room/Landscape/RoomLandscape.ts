@@ -3,6 +3,7 @@ import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
+import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
@@ -46,6 +47,10 @@ export default class RoomLandscape {
 
     public async render() {
         if(this.rendering) {
+            return;
+        }
+
+        if(!this.roomRenderer.hasLandscapeMask()) {
             return;
         }
 

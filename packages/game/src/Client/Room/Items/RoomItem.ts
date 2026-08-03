@@ -50,6 +50,8 @@ export default class RoomItem implements RoomItemInterface {
         return this._position;
     }
 
+    public hasLandscapeMask: boolean = false;
+
     constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
         this._sprites = sprites;
 

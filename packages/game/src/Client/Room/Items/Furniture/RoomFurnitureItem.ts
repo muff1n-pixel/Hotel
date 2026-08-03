@@ -117,6 +117,8 @@ export default class RoomFurnitureItem extends RoomItem {
     public setSprites(sprites: RoomSprite[]): void {
         this.mask = sprites.find((sprite) => sprite instanceof RoomFurnitureMaskSprite);
 
+        this.hasLandscapeMask = this.mask !== undefined;
+
         return super.setSprites(sprites);
     }
 

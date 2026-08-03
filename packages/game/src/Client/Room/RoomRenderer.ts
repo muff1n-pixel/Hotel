@@ -210,7 +210,7 @@ export default class RoomRenderer extends EventTarget {
             this.items[index].process(this.frameCounter.tick);
         }
 
-        //this.landscape.render();
+        this.landscape.render();
 
         this.dispatchEvent(new RoomFrameEvent());
     }
@@ -631,5 +631,9 @@ export default class RoomRenderer extends EventTarget {
             floorPromise,
             this.landscape.render()
         ]);
+    }
+
+    public hasLandscapeMask() {
+        return this.items.some((item) => item.hasLandscapeMask);
     }
 }
