@@ -8,7 +8,7 @@ import { RoomPositionOffsetData } from "@pixel63/events";
 
 export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
-
+        this.roomFurniture.setAnimation(0);
     }
 
     private async handleUserEnterTeleporter(roomUser: RoomUser) {
