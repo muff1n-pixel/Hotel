@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 
 function getCurrencyAsString(value?: number) {
     if(!value) {
@@ -26,9 +26,10 @@ export type WidgetCurrencyProps = PropsWithChildren & {
     tooltip?: string;
     color: string;
     value: number;
+    style?: CSSProperties;
 }
 
-export default function WidgetCurrency({ tooltip, color, value, children }: WidgetCurrencyProps) {
+export default function WidgetCurrency({ style, tooltip, color, value, children }: WidgetCurrencyProps) {
     return (
         <div style={{
             display: "flex",
@@ -36,7 +37,9 @@ export default function WidgetCurrency({ tooltip, color, value, children }: Widg
             gap: 5,
             fontSize: 12,
             color,
-            alignItems: "center"
+            alignItems: "center",
+            position: "relative",
+            ...style
         }} data-tooltip={tooltip}>
             <b>{getCurrencyAsString(value)}</b>
 

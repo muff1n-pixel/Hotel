@@ -7,10 +7,19 @@ import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLin
 import { useTranslation } from "react-i18next";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUserHabboClub } from "@UserInterface/Hooks/User/HabboClub/useUserHabboClub";
+import { useEffect, useState } from "react";
+import WidgetCurrencyChange from "./WidgetCurrencyChange";
+import { webSocketClient } from "@Game/index";
+import { UserData } from "@pixel63/events";
 
 export type WidgetProps = {
     onSettingsClick?: () => void;
 }
+
+export type WidgetCurrencyChangeData = {
+    state: number;
+    value: number;
+};
 
 export default function Widget({ onSettingsClick }: WidgetProps) {
     const [getCurrencyTranslation] = useTranslation("currencies");
@@ -20,6 +29,41 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
     const userHabboClub = useUserHabboClub();
 
     const dialogs = useDialogs();
+
+    const [creditsChange, setCreditsChange] = useState<WidgetCurrencyChangeData | undefined>(undefined);
+    const [ducketsChange, setDucketsChange] = useState<WidgetCurrencyChangeData | undefined>(undefined);
+    const [diamondsChange, setDiamondsChange] = useState<WidgetCurrencyChangeData | undefined>(undefined);
+
+    useEffect(() => {
+        const listener = webSocketClient.addProtobuffListener(UserData, {
+            async handle(payload: UserData) {
+                if(user.credits !== payload.credits) {
+                    setCreditsChange({
+                        state: Math.random(),
+                        value: payload.credits - user.credits
+                    });
+                }
+
+                if(user.duckets !== payload.duckets) {
+                    setDucketsChange({
+                        state: Math.random(),
+                        value: payload.duckets - user.duckets
+                    });
+                }
+
+                if(user.diamonds !== payload.diamonds) {
+                    setDiamondsChange({
+                        state: Math.random(),
+                        value: payload.diamonds - user.diamonds
+                    });
+                }
+            },
+        });
+
+        return () => {
+            webSocketClient.removeProtobuffListener(UserData, listener);
+        };
+    }, [user]);
 
     return (
         <div style={{
@@ -64,14 +108,32 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                 }}>
                     <WidgetCurrency color="#37C8E9" value={user?.diamonds ?? 0} tooltip={getCurrencyTranslation("diamonds")}>
                         <div className="sprite_currencies_diamonds"/>
+
+                        {(diamondsChange) && (
+                            <WidgetCurrencyChange key={diamondsChange.state} data={diamondsChange} color="#37C8E9" tooltip={getCurrencyTranslation("diamonds")} onFinish={() => setDiamondsChange(undefined)}>
+                                <div className="sprite_currencies_diamonds"/>
+                            </WidgetCurrencyChange>
+                        )}
                     </WidgetCurrency>
 
                     <WidgetCurrency color="#CCA822" value={user?.credits ?? 0} tooltip={getCurrencyTranslation("credits")}>
                         <div className="sprite_currencies_credits"/>
+
+                        {(creditsChange) && (
+                            <WidgetCurrencyChange key={creditsChange.state} data={creditsChange} color="#CCA822" tooltip={getCurrencyTranslation("credits")} onFinish={() => setCreditsChange(undefined)}>
+                                <div className="sprite_currencies_credits"/>
+                            </WidgetCurrencyChange>
+                        )}
                     </WidgetCurrency>
 
                     <WidgetCurrency color="#CE82CC" value={user?.duckets ?? 0} tooltip={getCurrencyTranslation("duckets")}>
                         <div className="sprite_currencies_duckets"/>
+
+                        {(ducketsChange) && (
+                            <WidgetCurrencyChange key={ducketsChange.state} data={ducketsChange} color="#CE82CC" tooltip={getCurrencyTranslation("duckets")} onFinish={() => setDucketsChange(undefined)}>
+                                <div className="sprite_currencies_duckets"/>
+                            </WidgetCurrencyChange>
+                        )}
                     </WidgetCurrency>
                 </div>
                 
