@@ -52,6 +52,8 @@ export default class RoomItem implements RoomItemInterface {
 
     public hasLandscapeMask: boolean = false;
 
+    public initialProcessed: boolean = false;
+
     constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
         this._sprites = sprites;
 
@@ -228,5 +230,9 @@ export default class RoomItem implements RoomItemInterface {
         for(const sprite of this.sprites) {
             sprite.destroy();
         }
+    }
+
+    public isSpritesInView() {
+        return this._sprites.some((sprite) => sprite.isSpriteInView());
     }
 }

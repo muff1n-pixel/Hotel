@@ -207,7 +207,16 @@ export default class RoomRenderer extends EventTarget {
 
     private processTick() {
         for(let index = 0; index < this.items.length; index++) {
-            this.items[index].process(this.frameCounter.tick);
+            const item = this.items[index];
+
+            if(!item.initialProcessed) {
+                item.initialProcessed = true;
+            }
+            else if(!item.isSpritesInView()) {
+                continue;
+            }
+
+            item.process(this.frameCounter.tick);
         }
 
         this.landscape.render();

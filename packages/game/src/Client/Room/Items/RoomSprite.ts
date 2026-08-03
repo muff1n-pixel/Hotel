@@ -115,4 +115,16 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     isPositionInsideBounds?(startPosition: MousePosition, endPosition: MousePosition): boolean;
 
     //
+
+    isSpriteInView() {
+        const bounds = this._sprite.getBounds();
+        const screen = this.item.roomRenderer.application.screen;
+
+        return (
+            bounds.right >= 0 &&
+            bounds.left <= screen.width &&
+            bounds.bottom >= 0 &&
+            bounds.top <= screen.height
+        );
+    }
 }
