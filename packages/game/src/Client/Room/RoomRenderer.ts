@@ -111,6 +111,8 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public async init() {
+        const resolution = Math.min(2, Math.max(1, Math.floor(window.devicePixelRatio)));
+
         await this.application.init({
             antialias: false,
             background: "#000000",
@@ -119,8 +121,8 @@ export default class RoomRenderer extends EventTarget {
 
             useBackBuffer: true,
 
-            resolution: Math.min(2, Math.max(1, Math.floor(window.devicePixelRatio))),
-            autoDensity: true,
+            resolution: resolution,
+            autoDensity: resolution !== 1,
         });
 
         this.camera.init();
