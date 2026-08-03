@@ -228,10 +228,27 @@ export default class AssetFetcher {
             const imageDataMap = this.imageDataCache.get(url)!;
             const imageDataKey = this.createImageDataKey(properties);
 
-            let imageData = imageDataMap.get(imageDataKey);
+            let imageData = imageDataMap.get(imageDataKey) ?? null;
 
             if(!imageData) {
-                imageData = this.createImageData(sprite.image);
+                if(properties.requireImageData) {
+                    imageData = this.createImageData(sprite.image);
+                    imageDataMap.set(imageDataKey, imageData);
+                }
+                else {
+                    new Promise<void>((resolve, reject) => {
+                        try {
+                            const imageData = this.createImageData(sprite.image);
+    
+                            imageDataMap.set(imageDataKey, imageData);
+
+                            resolve();
+                        }
+                        catch(error) {
+                            reject(error);
+                        }
+                    });
+                }
             }
 
             sprite.imageData = imageData;
