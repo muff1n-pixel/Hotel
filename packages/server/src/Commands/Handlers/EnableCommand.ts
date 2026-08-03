@@ -1,23 +1,17 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
+import Command from "../Command";
 
-export default class EnableCommand implements IncomingCommandHandler {
-    public readonly command = "enable";
-
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        if(!inputs[0]) {
-            throw new Error("Missing enable id parameter.");
-        }
-
-        const id = parseInt(inputs[0]);
+export default class EnableCommand extends Command {
+    async handle(roomUser: RoomUser): Promise<void> {
+        const enableId = this.parseNumber("enableId");
 
         roomUser.removeAction("Dance");
         roomUser.removeAction("CarryItem");
         roomUser.removeAction("Sign");
         roomUser.removeAction("AvatarEffect");
 
-        if(id !== 0) {
-            roomUser.addAction("AvatarEffect." + id);
+        if(enableId !== 0) {
+            roomUser.addAction("AvatarEffect." + enableId);
         } 
     }
 }

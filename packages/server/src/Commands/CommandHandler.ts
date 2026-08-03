@@ -1,5 +1,3 @@
-import { EventEmitter } from "node:events";
-import IncomingCommandHandler from "./Interfaces/IncomingCommandHandler.js";
 import RoomUser from "../Rooms/Users/RoomUser.js";
 import SitCommand from "./Handlers/SitCommand.js";
 import WaveCommand from "./Handlers/WaveCommand.js";
@@ -14,39 +12,85 @@ import AwayFromKeyboardCommand from "./Handlers/AwayFromKeyboardCommand.js";
 import SignCommand from "./Handlers/SignCommand.js";
 import StandCommand from "./Handlers/StandCommand.js";
 import LaughCommand from "./Handlers/LaughCommand.js";
+import Command from "./Command.js";
+import { RoomActorChatData } from "@pixel63/events";
+import { MissingCommandParameterError } from "./Exceptions/MissingCommandParameterError.js";
+import { InvalidCommandParameterError } from "./Exceptions/InvalidCommandParameterError.js";
 
-export default class CommandHandler extends EventEmitter {
-    constructor() {
-        super();
+export type CommandAliases = {
+    command: typeof Command;
+    aliases: string[];
+};
 
-        this.registerCommands();
-    }
-    
-    public dispatchCommand(roomUser: RoomUser, command: string, inputs: string[]) {
-        this.emit(command, roomUser, inputs);
-    }
+export default class CommandHandler {
+    private readonly commands: CommandAliases[] = [
+        { command: ActionCommand, aliases: [ "action" ] },
+        { command: StandCommand, aliases: [ "stand" ]},
+        { command: SitCommand, aliases: [ "sit" ]},
+        { command: WaveCommand, aliases: [ "wave" ] },
+        { command: LaughCommand, aliases: [ "laugh" ] },
+        { command: EnableCommand, aliases: [ "enable" ] },
+        { command: DanceCommand, aliases: [ "dance" ] },
+        { command: SignCommand, aliases: [ "sign" ] },
+        { command: CarryCommand, aliases: [ "carry" ] },
+        { command: SpeedCommand, aliases: [ "speed" ] },
+        { command: AwayFromKeyboardCommand, aliases: [ "afk", "brb" ] },
+        { command: TeleportCommand, aliases: [ "teleport", "tp" ] },
+        { command: GiveCommand, aliases: [ "give" ] },
+    ];
 
-    public addCommand<T>(incomingCommandHandler: IncomingCommandHandler): this {
-        return super.addListener(incomingCommandHandler.command, (roomUser, inputs) => {
-            incomingCommandHandler.handle(roomUser, inputs).catch(console.error);
+    public async handleCommand(roomUser: RoomUser, alias: string, parameters: string): Promise<boolean> {
+        const commandAlias = this.commands.find((commandAlias) => commandAlias.aliases.includes(alias.toLowerCase()));
+
+        if(!commandAlias) {
+            return false;
+        }
+
+        const permissions = await roomUser.user.getPermissions();
+
+        const command = new commandAlias.command(roomUser.room, parameters);
+
+        if(!command.validate(roomUser, permissions)) {
+            return false;
+        }
+
+        await command.handle(roomUser).catch((error) => {
+            console.error(error);
+
+            if(error instanceof MissingCommandParameterError) {
+                roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                    actor: {
+                        user: {
+                            userId: roomUser.user.model.id
+                        }
+                    },
+
+                    message: error.message,
+                    roomChatStyleId: "notification",
+                    options: {
+                        italic: true,
+                        hideUsername: true
+                    }
+                }));
+            }
+            else if(error instanceof InvalidCommandParameterError) {
+                roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+                    actor: {
+                        user: {
+                            userId: roomUser.user.model.id
+                        }
+                    },
+
+                    message: error.message,
+                    roomChatStyleId: "notification",
+                    options: {
+                        italic: true,
+                        hideUsername: true
+                    }
+                }));
+            }
         });
-    }
 
-    private registerCommands() {
-        this
-            .addCommand(new StandCommand())
-            .addCommand(new SitCommand())
-            .addCommand(new WaveCommand())
-            .addCommand(new LaughCommand())
-            .addCommand(new ActionCommand())
-            .addCommand(new EnableCommand())
-            .addCommand(new DanceCommand())
-            .addCommand(new SignCommand())
-            .addCommand(new CarryCommand())
-            .addCommand(new SpeedCommand())
-            .addCommand(new AwayFromKeyboardCommand());
-
-        this.addCommand(new TeleportCommand());
-        this.addCommand(new GiveCommand());
+        return true;
     }
 }

@@ -1,19 +1,15 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
+import Command from "../Command";
 
-export default class ActionCommand implements IncomingCommandHandler {
-    public readonly command = "action";
+export default class ActionCommand extends Command {
+    async handle(roomUser: RoomUser): Promise<void> {
+        const action = this.parseString("actionId");
 
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        if(!inputs[0]) {
-            throw new Error("Missing action parameter.");
-        }
-
-        if(roomUser.hasAction(inputs[0])) {
-            roomUser.removeAction(inputs[0]);
+        if(roomUser.hasAction(action)) {
+            roomUser.removeAction(action);
         }
         else {
-            roomUser.addAction(inputs[0]);
+            roomUser.addAction(action);
         }
     }
 }

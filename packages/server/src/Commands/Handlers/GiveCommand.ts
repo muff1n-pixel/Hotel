@@ -1,71 +1,67 @@
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
+import { RoomActorChatData } from "@pixel63/events";
+import { game } from "../../index.js";
 import RoomUser from "../../Rooms/Users/RoomUser.js";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler.js";
+import UserPermissions from "../../Users/Permissions/UserPermissions.js";
+import Command from "../Command.js";
 
-export default class GiveCommand implements IncomingCommandHandler {
-    public readonly command = "give";
-
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        const permissions = await roomUser.user.getPermissions();
-
+export default class GiveCommand extends Command {
+    validate(roomUser: RoomUser, permissions: UserPermissions) {
         if(!permissions.hasPermission("command:give")) {
-            roomUser.sendRoomMessage(inputs.join());
-            
-            return;
+            return false;
         }
 
-        const targetInput = inputs[0];
+        return true;
+    }
 
-        if(!targetInput || !roomUser.room.users.some((user) => user.user.model.name === targetInput)) {
-            roomUser.sendRoomMessage(inputs.join());
+    async handle(roomUser: RoomUser): Promise<void> {
+        const user = await this.parseUser("user");
+        const value = this.parseNumber("value");
+        const currency = this.parseEnum("currency", ["credits", "duckets", "diamonds"] as const);
 
-            return;
-        }
+        const targetUser = game.getUserById(user.id);
 
-        const currencyInput = inputs[1];
+        if(targetUser) {
+            switch(currency) {
+                case "duckets":
+                case "diamonds":
+                case "credits": {
+                    targetUser.model[currency] += value;
 
-        if(!currencyInput || !["credits", "diamonds", "duckets"].includes(currencyInput)) {
-            roomUser.sendRoomMessage(inputs.join());
-
-            return;
-        }
-
-        const valueInput = inputs[2];
-
-        if(!valueInput || isNaN(parseInt(valueInput))) {
-            roomUser.sendRoomMessage(inputs.join());
-
-            return;
-        }
-
-        const value = parseInt(valueInput);
-
-        if(value < 0 || value > 1_000_000) {
-            roomUser.sendRoomMessage(inputs.join());
-
-            return;
-        }
-
-        const targetUser = roomUser.room.users.find((user) => user.user.model.name === targetInput);
-
-        if(!targetUser) {
-            roomUser.sendRoomMessage(inputs.join());
-
-            return;
-        }
-
-        switch(currencyInput) {
-            case "duckets":
-            case "diamonds":
-            case "credits": {
-                targetUser.user.model[currencyInput] += value;
-
-                break;
+                    break;
+                }
             }
+
+            await targetUser.model.save();
+
+            targetUser.sendUserData();
+        }
+        else {
+            switch(currency) {
+                case "duckets":
+                case "diamonds":
+                case "credits": {
+                    user[currency] += value;
+
+                    break;
+                }
+            }
+
+            await user.save();
         }
 
-        await targetUser.user.model.save();
+        roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+            actor: {
+                user: {
+                    userId: roomUser.user.model.id
+                }
+            },
 
-        targetUser.user.sendUserData();
+            message: `You have given ${user.name} ${value} ${currency}s.`,
+            roomChatStyleId: "notification",
+            options: {
+                italic: true,
+                hideUsername: true
+            }
+        }));
     }
 }

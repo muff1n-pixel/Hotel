@@ -42,8 +42,6 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
         if(payload.message[0] === ':' || payload.message[0] === '/') {
             const parts = payload.message.split(' ');
 
-            game.commandHandler.dispatchCommand(roomUser, parts[0]!.substring(1), parts.slice(1));
-
             if(roomUser.typing) {
                 roomUser.typing = false;
 
@@ -53,7 +51,9 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
                 }));
             }
 
-            return;
+            if(await game.commandHandler.handleCommand(roomUser, parts[0]!.substring(1), parts.slice(1).join(' '))) {
+                return;
+            }
         }
 
         let userChatBlocked = false;

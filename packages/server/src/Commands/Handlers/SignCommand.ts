@@ -1,18 +1,13 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
+import Command from "../Command";
+import { InvalidCommandParameterError } from "../Exceptions/InvalidCommandParameterError";
 
-export default class SignCommand implements IncomingCommandHandler {
-    public readonly command = "sign";
+export default class SignCommand extends Command {
+    async handle(roomUser: RoomUser): Promise<void> {
+        const signId = this.parseNumber("signId");
 
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        if(!inputs[0]) {
-            throw new Error("Missing id parameter.");
-        }
-
-        const id = parseInt(inputs[0]);
-
-        if(id < 0 || id > 17) {
-            throw new Error("Sign does not exist.");
+        if(signId < 0 || signId > 17) {
+            throw new InvalidCommandParameterError("Sign does not exist.");
         }
 
         roomUser.removeAction("Dance");
@@ -20,6 +15,6 @@ export default class SignCommand implements IncomingCommandHandler {
         roomUser.removeAction("Sign");
         roomUser.removeAction("AvatarEffect");
 
-        roomUser.addAction("Sign." + id, 5000);
+        roomUser.addAction("Sign." + signId, 5000);
     }
 }

@@ -1,25 +1,14 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
+import UserPermissions from "../../Users/Permissions/UserPermissions";
+import Command from "../Command";
 
-export default class SpeedCommand implements IncomingCommandHandler {
-    public readonly command = "speed";
+export default class SpeedCommand extends Command {
+    public validate(roomUser: RoomUser, permissions: UserPermissions): boolean {
+        return roomUser.hasRights();    
+    }
 
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
-        if(!roomUser.hasRights()) {
-            roomUser.sendRoomMessage(inputs.join());
-            
-            return;
-        }
-
-        const scaleInput = inputs[0];
-
-        if(!scaleInput) {
-            roomUser.sendRoomMessage(inputs.join());
-
-            return;
-        }
-
-        const scale = Math.max(0, Math.min(2, parseFloat(scaleInput)));
+    async handle(roomUser: RoomUser): Promise<void> {
+        const scale = Math.max(0, Math.min(2, this.parseFloat("scale")));
 
         roomUser.room.model.speed = scale;
 

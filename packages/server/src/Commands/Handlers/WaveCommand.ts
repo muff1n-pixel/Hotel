@@ -1,10 +1,8 @@
 import RoomUser from "../../Rooms/Users/RoomUser";
-import IncomingCommandHandler from "../Interfaces/IncomingCommandHandler";
+import Command from "../Command";
 
-export default class WaveCommand implements IncomingCommandHandler {
-    public readonly command = "wave";
-
-    async handle(roomUser: RoomUser, inputs: string[]): Promise<void> {
+export default class WaveCommand extends Command {
+    async handle(roomUser: RoomUser): Promise<void> {
         roomUser.addAction("Wave");        
     }
 }
