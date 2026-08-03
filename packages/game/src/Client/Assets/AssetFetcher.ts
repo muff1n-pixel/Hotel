@@ -92,6 +92,10 @@ export default class AssetFetcher {
     }
 
     public static async fetchJson<T>(url: string): Promise<T> {
+        if(this.json.has(url)) {
+            return this.json.get(url) as T;
+        }
+
         if(this.pendingJson.has(url)) {
             return await this.pendingJson.get(url)! as T;
         }
@@ -127,6 +131,10 @@ export default class AssetFetcher {
     }
 
     public static async fetchImage(url: string) {
+        if(this.images.has(url)) {
+            return this.images.get(url)!;
+        }
+
         if(this.pendingImages.has(url)) {
             return await this.pendingImages.get(url)!;
         }
