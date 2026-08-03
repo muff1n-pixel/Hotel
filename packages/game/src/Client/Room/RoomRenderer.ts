@@ -119,7 +119,7 @@ export default class RoomRenderer extends EventTarget {
 
             useBackBuffer: true,
 
-            resolution: Math.max(1, Math.floor(window.devicePixelRatio)),
+            resolution: Math.min(2, Math.max(1, Math.floor(window.devicePixelRatio))),
             autoDensity: true,
         });
 
