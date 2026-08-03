@@ -6,6 +6,18 @@ function getCurrencyAsString(value?: number) {
     }
 
     const numberFormat = new Intl.NumberFormat('en-US');
+    
+    if(value >= 100_000_000) {
+        return `${numberFormat.format(Math.round(value / 1_000_000))} M`;
+    }
+    
+    if(value >= 10_000_000) {
+        return `${numberFormat.format(Math.round(value / 1_000_000 * 10) / 10)} M`;
+    }
+
+    if(value >= 1_000_000) {
+        return `${numberFormat.format(Math.round(value / 1_000_000 * 100) / 100)} M`;
+    }
 
     return numberFormat.format(value);
 }

@@ -51,6 +51,7 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                 gap: 10,
 
                 display: "flex",
+                justifyContent: "space-between",
                 flexDirection: "row"
             }}>
                 <div style={{
@@ -75,13 +76,15 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                 </div>
                 
                 <div style={{
+                    flex: 1,
+
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-around",
                     gap: 6,
-                    width: 80
+                    width: 50
                 }}>
-                    <WidgetItem onClick={() => {
+                    <WidgetItem style={{ flexDirection: "column" }} onClick={() => {
                         dialogs.openUniqueDialog("habbo-club-center");
                     }}>
                         <div className="sprite_currencies_club"/>
@@ -93,14 +96,22 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
                         )}
                     </WidgetItem>
 
-                    <WidgetItem>
+                    {/*<WidgetItem>
                         <div className="sprite_currencies_earnings"/>
 
                         <b>{getWidgetTranslation("earnings")}</b>
-                    </WidgetItem>
+                    </WidgetItem>*/}
                 </div>
 
                 <div style={{
+                    height: "100%",
+                    width: 1,
+
+                    background: "rgba(102, 100, 94, 0.64)"
+                }}/>
+
+                <div style={{
+                    flex: 1,
                     display: "flex",
                     flexDirection: "column",
                     gap: 4,

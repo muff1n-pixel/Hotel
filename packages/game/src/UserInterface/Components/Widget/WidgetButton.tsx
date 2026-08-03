@@ -14,6 +14,11 @@ export default function WidgetButton({ tooltip, disabled, color, children, style
     return (
         <div className={`widget-button ${(disabled)?("disabled"):("")}`} data-tooltip={tooltip} style={{
             background: color,
+            
+            height: 16,
+            width: 48,
+
+            fontSize: 10,
 
             ...style
         }} onClick={onClick}>

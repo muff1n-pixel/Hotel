@@ -1,10 +1,11 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 
 export type WidgetItemProps = PropsWithChildren & {
+    style?: CSSProperties;
     onClick?: () => void;
 }
 
-export default function WidgetItem({ children, onClick }: WidgetItemProps) {
+export default function WidgetItem({ style, children, onClick }: WidgetItemProps) {
     return (
         <div style={{
             flex: 1,
@@ -17,8 +18,10 @@ export default function WidgetItem({ children, onClick }: WidgetItemProps) {
             gap: 6,
             fontSize: 12,
             alignItems: "center",
+            justifyContent: "center",
             lineHeight: 1,
-            cursor: (onClick)?("pointer"):("unset")
+            cursor: (onClick)?("pointer"):("unset"),
+            ...style
         }} onClick={onClick}>
             {children}
         </div>
