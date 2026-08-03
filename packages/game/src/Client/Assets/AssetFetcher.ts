@@ -202,7 +202,7 @@ export default class AssetFetcher {
         const image = this.getImage(url);
 
         if(!image) {
-            throw new Error("Image is not loaded.");
+            throw new Error("Image is not loaded: " + url);
         }
 
         if(!this.spritesCache.has(url)) {

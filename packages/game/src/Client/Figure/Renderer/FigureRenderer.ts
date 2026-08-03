@@ -169,7 +169,6 @@ export default class FigureRenderer {
     }
 
     public render(options: FigureRendererOptions, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
-        console.time("performance");
         this.previousOptions = {...options};
         
         this.rendering = true;
@@ -198,10 +197,9 @@ export default class FigureRenderer {
 
         const sprites = this.figureSpriteRenderer.getFigureSprites(mutatedActions, options.frame, spritesFromConfiguration, actionsForBodyParts, direction, grayscaled, headOnly);
 
-        const effectSprites: FigureRendererSprite[] = [];// await this.figureEffectRenderer.getEffectSprites(options.frame, actions, effects, direction);
+        const effectSprites: FigureRendererSprite[] = this.figureEffectRenderer.getEffectSprites(options.frame, actions, effects, direction);
 
         this.rendering = false;
-        console.timeEnd("performance");
 
         return {
             sprites,

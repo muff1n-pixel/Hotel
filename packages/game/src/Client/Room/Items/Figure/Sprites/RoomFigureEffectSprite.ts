@@ -15,8 +15,6 @@ export default class RoomFigureEffectSprite extends RoomSprite {
             furnitureSprite.ink,
             furnitureSprite.image,
         );
-
-        console.log(furnitureSprite, furnitureSprite.ink);
     }
 
     mouseover() {

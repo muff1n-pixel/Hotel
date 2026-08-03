@@ -36,8 +36,10 @@ export default class FigureEffects {
                     this.effects[library.id] = {
                         id: library.id,
                         library: library.library,
-                        data: await FigureAssets.getEffectData(library.library)
+                        data: await FigureAssets.fetchEffectData(library.library)
                     };
+
+                    await FigureAssets.fetchEffectImage(library.library)
                 }
             }
             else if(action.id === "Dance") {
@@ -45,7 +47,7 @@ export default class FigureEffects {
                     this.effects[`Dance${id}`] = {
                         id: id,
                         library: `Dance${id}`,
-                        data: await FigureAssets.getEffectData(`Dance${id}`)
+                        data: await FigureAssets.fetchEffectData(`Dance${id}`)
                     };
                 }
             }

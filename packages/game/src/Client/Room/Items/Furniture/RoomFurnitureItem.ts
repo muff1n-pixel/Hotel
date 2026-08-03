@@ -95,9 +95,7 @@ export default class RoomFurnitureItem extends RoomItem {
     }
 
     private renderFurniture() {
-        console.time("Render " + this.id);
         const result = this.furnitureRenderer.render();
-        console.timeEnd("Render " + this.id);
 
         if(this.furnitureRenderer.placement === "wall") {
             this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);

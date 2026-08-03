@@ -53,8 +53,16 @@ export default class FigureAssets {
         return await AssetFetcher.fetchJson<FigureData>(`/assets/figure/clothing/${name}/${name}.json`);
     }
 
-    public static async getEffectData(name: string) {
+    public static async fetchEffectData(name: string) {
         return await AssetFetcher.fetchJson<FigureData>(`/assets/figure/effects/${name}/${name}.json`);
+    }
+
+    public static async fetchEffectImage(name: string) {
+        return await AssetFetcher.fetchImage(`/assets/figure/effects/${name}/${name}.png`);
+    }
+
+    public static getEffectData(name: string) {
+        return AssetFetcher.getJson<FigureData>(`/assets/figure/effects/${name}/${name}.json`);
     }
 
     public static async getFigureSpritesheet(name: string) {
@@ -77,8 +85,12 @@ export default class FigureAssets {
         return await AssetFetcher.fetchImage(`/assets/figure/clothing/${name}/${name}.png`);
     }
 
-    public static async getEffectSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
+    public static async fetchEffectSprite(name: string, properties: AssetSpriteProperties): AssetSpriteResult["result"] {
         return await AssetFetcher.fetchImageSprite(`/assets/figure/effects/${name}/${name}.png`, properties);
+    }
+
+    public static getEffectSprite(name: string, properties: AssetSpriteProperties): StaticAssetSpriteResult {
+        return AssetFetcher.getImageSprite(`/assets/figure/effects/${name}/${name}.png`, properties);
     }
 
     public static readonly assetSprites: Map<string, FigureRendererSprite | null> = new Map();

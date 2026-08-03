@@ -55,11 +55,7 @@ export default class RoomFigureItem extends RoomItem {
     }
 
     private renderFigure() {
-        console.time("render");
-
         const result = this.figureRenderer.renderToCanvas(this.frame, false, false, true);
-
-        console.timeEnd("render");
 
         this.figureSprite = result.figure;
 

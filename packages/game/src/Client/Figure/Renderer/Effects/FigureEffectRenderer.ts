@@ -12,7 +12,7 @@ export default class FigureEffectRenderer {
 
     }
     
-    public async getEffectSprites(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], direction: number): Promise<FigureRendererSprite[]> {
+    public getEffectSprites(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], direction: number): FigureRendererSprite[] {
         const sprites: FigureRendererSprite[] = [];
 
         this.figureRenderer.avatarEffect = undefined;
@@ -59,10 +59,18 @@ export default class FigureEffectRenderer {
                         continue;
                     }
 
+                    const data = FigureAssets.getEffectData(library.library);
+
+                    if(!data) {
+                        FigureLogger.error("Effect data is not loaded.");
+
+                        continue;
+                    }
+
                     spriteEffect = {
                         id: library.id,
                         library: library.library,
-                        data: await FigureAssets.getEffectData(library.library)
+                        data
                     };
                 }
 
@@ -159,7 +167,7 @@ export default class FigureEffectRenderer {
 
                 const destinationY = sourceAsset.y;
 
-                const result = await this.getEffectSprite(spriteEffect.library, sourceAsset, spriteData, index, destinationY, sprite.ink, flipHorizontal);
+                const result = this.getEffectSprite(spriteEffect.library, sourceAsset, spriteData, index, destinationY, sprite.ink, flipHorizontal);
 
                 if(sprite.destinationY) {
                     result.y += sprite.destinationY;
@@ -190,8 +198,8 @@ export default class FigureEffectRenderer {
         return sprites;
     }
 
-    private async getEffectSprite(library: string, assetData: FurnitureAsset, spriteData: FurnitureSprite, index: number, destinationY: number, ink: number | undefined, flipHorizontal: boolean) {
-        const sprite = await FigureAssets.getEffectSprite(library, {
+    private getEffectSprite(library: string, assetData: FurnitureAsset, spriteData: FurnitureSprite, index: number, destinationY: number, ink: number | undefined, flipHorizontal: boolean) {
+        const sprite = FigureAssets.getEffectSprite(library, {
             x: spriteData.x,
             y: spriteData.y,
 
