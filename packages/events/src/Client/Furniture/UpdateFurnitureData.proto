@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/FurnitureFlagsData.proto";
+import "Client/Furniture/FurnitureFlagsData.proto";
 
 message UpdateFurnitureData {
     optional string id = 1;

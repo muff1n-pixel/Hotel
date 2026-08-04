@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Shop/Features/ShopFeaturePageData.proto";
-import "Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
+import "Client/Shop/Features/ShopFeaturePageData.proto";
+import "Client/Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
 
 message ShopFeatureData {
     string id = 1;

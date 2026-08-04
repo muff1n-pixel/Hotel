@@ -8,8 +8,8 @@ import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButt
 import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
-import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Room/Configuration/RoomClickConfigurationData";
 import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection/WiredSelection";
+import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Client/Room/Configuration/RoomClickConfigurationData";
 
 export default function WiredActionClickConfigurationDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
     const [userBehaviour, setUserBehaviour] = useState(data.data.data?.wiredActionClickConfiguration?.userBehaviour ?? RoomClickUserConfiguration.DEFAULT_USER_CLICK_BEHAVIOUR);

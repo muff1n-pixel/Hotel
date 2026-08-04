@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Furniture/FurnitureData.proto";
-import "Shop/Features/Configuration/ShopFeatureRoomConfigurationData.proto";
+import "Client/Furniture/FurnitureData.proto";
+import "Client/Shop/Features/Configuration/ShopFeatureRoomConfigurationData.proto";
 
 message ShopFeatureConfigurationData {
     string type = 1;

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Groups/GroupCreationData.proto";
-import "Room/Events/RoomEventCreationData.proto";
+import "Client/Groups/GroupCreationData.proto";
+import "Client/Room/Events/RoomEventCreationData.proto";
 
 message PurchaseShopMembershipData {
     string id = 1;

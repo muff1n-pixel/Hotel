@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "Room/RoomPositionData.proto";
-import "Room/Actors/RoomActorIdentifierData.proto";
-import "Room/Actors/RoomActorActionData.proto";
+import "Client/Room/RoomPositionData.proto";
+import "Client/Room/Actors/RoomActorIdentifierData.proto";
+import "Client/Room/Actors/RoomActorActionData.proto";
 
 message RoomActorPositionData {
     RoomActorIdentifierData actor = 1;

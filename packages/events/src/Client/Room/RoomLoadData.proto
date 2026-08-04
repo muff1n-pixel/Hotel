@@ -1,17 +1,17 @@
 syntax = "proto3";
 
-import "Room/Information/RoomInformationData.proto";
-import "Room/Configuration/RoomClickConfigurationData.proto";
+import "Client/Room/Information/RoomInformationData.proto";
+import "Client/Room/Configuration/RoomClickConfigurationData.proto";
 
-import "Room/Users/RoomUserData.proto";
+import "Client/Room/Users/RoomUserData.proto";
 
-import "Room/Structure/RoomStructureData.proto";
+import "Client/Room/Structure/RoomStructureData.proto";
 
-import "Furniture/FurnitureData.proto";
-import "User/Furniture/UserFurnitureData.proto";
+import "Client/Furniture/FurnitureData.proto";
+import "Client/User/Furniture/UserFurnitureData.proto";
 
-import "User/Bots/UserBotData.proto";
-import "User/Pets/UserPetData.proto";
+import "Client/User/Bots/UserBotData.proto";
+import "Client/User/Pets/UserPetData.proto";
 
 message RoomLoadData {
     string id = 1;

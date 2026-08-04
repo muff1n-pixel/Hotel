@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "User/Furniture/UserFurnitureCustomData.proto";
-import "Room/RoomPositionData.proto";
+import "Client/User/Furniture/UserFurnitureCustomData.proto";
+import "Client/Room/RoomPositionData.proto";
 
 message UpdateRoomFurnitureData {
     string id = 1;

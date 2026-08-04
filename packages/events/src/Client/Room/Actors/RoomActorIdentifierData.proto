@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "User/UserIdentifierData.proto";
-import "Bot/BotIdentifierData.proto";
-import "Pets/PetIdentifierData.proto";
+import "Client/User/UserIdentifierData.proto";
+import "Client/Bot/BotIdentifierData.proto";
+import "Client/Pets/PetIdentifierData.proto";
 
 message RoomActorIdentifierData {
     oneof actor {

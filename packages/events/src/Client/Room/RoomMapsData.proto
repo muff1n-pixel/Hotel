@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Maps/RoomMapData.proto";
+import "Client/Room/Maps/RoomMapData.proto";
 
 message RoomMapsData {
     repeated RoomMapData maps = 1;

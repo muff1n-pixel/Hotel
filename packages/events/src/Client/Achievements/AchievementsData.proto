@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Achievements/AchievementData.proto";
+import "Client/Achievements/AchievementData.proto";
 
 message AchievementsData {
     string category_id = 1;

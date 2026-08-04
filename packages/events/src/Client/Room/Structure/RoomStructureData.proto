@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-import "Room/Structure/RoomStructureDoorData.proto";
-import "Room/Structure/RoomStructureWallData.proto";
-import "Room/Structure/RoomStructureFloorData.proto";
-import "Room/Structure/RoomStructureLandscapeData.proto";
+import "Client/Room/Structure/RoomStructureDoorData.proto";
+import "Client/Room/Structure/RoomStructureWallData.proto";
+import "Client/Room/Structure/RoomStructureFloorData.proto";
+import "Client/Room/Structure/RoomStructureLandscapeData.proto";
 
 message RoomStructureData {
     repeated string grid = 1;

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Groups/GroupData.proto";
-import "Groups/Members/GroupMemberData.proto";
+import "Client/Groups/GroupData.proto";
+import "Client/Groups/Members/GroupMemberData.proto";
 
 message UserGroupMemberData {
     GroupData group = 1;

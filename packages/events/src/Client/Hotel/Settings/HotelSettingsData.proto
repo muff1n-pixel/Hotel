@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Hotel/Settings/HotelSettingData.proto";
+import "Client/Hotel/Settings/HotelSettingData.proto";
 
 message HotelSettingsData {
     repeated HotelSettingData settings = 1;

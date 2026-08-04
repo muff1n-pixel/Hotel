@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Friends/UserFriendData.proto";
+import "Client/User/Friends/UserFriendData.proto";
 
 message UserFriendUpdateData {
     UserFriendData friend = 1;

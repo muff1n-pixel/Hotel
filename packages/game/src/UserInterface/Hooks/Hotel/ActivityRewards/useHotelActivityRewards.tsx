@@ -1,6 +1,6 @@
 import { webSocketClient } from "@Game/index";
-import { GetHotelActivityRewardsData } from "@pixel63/events";
-import { HotelActivityRewardData, HotelActivityRewardsData } from "@pixel63/events/build/Hotel/ActivityRewards/HotelActivityRewardsData";
+import { GetHotelActivityRewardsData, HotelActivityRewardsData } from "@pixel63/events";
+import { HotelActivityRewardData } from "@pixel63/events/build/Client/Hotel/ActivityRewards/HotelActivityRewardsData";
 import { useEffect, useState } from "react";
 
 export function useHotelActivityRewards() {

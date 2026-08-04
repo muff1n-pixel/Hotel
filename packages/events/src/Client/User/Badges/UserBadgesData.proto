@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Badge/BadgeData.proto";
-import "Groups/GroupData.proto";
+import "Client/Badge/BadgeData.proto";
+import "Client/Groups/GroupData.proto";
 
 message UserBadgesData {
     string user_id = 1;

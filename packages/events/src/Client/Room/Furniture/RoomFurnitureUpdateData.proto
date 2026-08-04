@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Furniture/UserFurnitureData.proto";
+import "Client/User/Furniture/UserFurnitureData.proto";
 
 message RoomFurnitureUpdateData {
     UserFurnitureData furniture = 1;

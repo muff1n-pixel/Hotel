@@ -5,8 +5,8 @@ import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { webSocketClient } from "../../..";
 import { PickupRoomFurnitureData, RoomPositionData, UpdateRoomFurnitureData } from "@pixel63/events";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
-import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Room/Configuration/RoomClickConfigurationData";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Client/Room/Configuration/RoomClickConfigurationData";
 
 export default class RoomCursor extends EventTarget {
     public readonly furnitureItem: RoomFurnitureItem;

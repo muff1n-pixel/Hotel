@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Inventory/Furniture/UserInventoryFurnitureData.proto";
+import "Client/User/Inventory/Furniture/UserInventoryFurnitureData.proto";
 
 message UpdateRoomUserTradingData {
     string user_id = 1;

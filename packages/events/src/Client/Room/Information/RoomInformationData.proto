@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Information/RoomInformationOwnerData.proto";
+import "Client/Room/Information/RoomInformationOwnerData.proto";
 
 message RoomInformationData {
     string id = 9;

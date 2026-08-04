@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Room/RoomPositionData.proto";
-import "Pets/PetData.proto";
+import "Client/Room/RoomPositionData.proto";
+import "Client/Pets/PetData.proto";
 
 message UserPetData {
     string id = 1;

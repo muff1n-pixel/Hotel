@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Figures/UserFigureData.proto";
+import "Client/User/Figures/UserFigureData.proto";
 
 message UserFiguresData {
     repeated UserFigureData figures = 1;

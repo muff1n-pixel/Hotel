@@ -1,5 +1,5 @@
 import { GroupBadgeData } from "@pixel63/events";
-import { GroupBadgeBaseData } from "@pixel63/events/build/Groups/GroupBadgeData";
+import { GroupBadgeBaseData } from "@pixel63/events/build/Client/Groups/GroupBadgeData";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeColor from "@UserInterface/Components/Groups/Editor/GroupBadgeColor";

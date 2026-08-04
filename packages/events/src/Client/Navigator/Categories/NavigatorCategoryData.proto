@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Navigator/Rooms/NavigatorRoomData.proto";
+import "Client/Navigator/Rooms/NavigatorRoomData.proto";
 
 message NavigatorCategoryData {
     string title = 1;

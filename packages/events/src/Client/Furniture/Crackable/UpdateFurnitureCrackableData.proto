@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/Crackable/FurnitureCrackableData.proto";
+import "Client/Furniture/Crackable/FurnitureCrackableData.proto";
 
 message UpdateFurnitureCrackableData {
     string furniture_id = 1;

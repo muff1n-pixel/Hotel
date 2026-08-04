@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "Figure/FigureConfigurationData.proto";
-import "Badge/BadgeData.proto";
-import "User/Groups/UserGroupMemberData.proto";
+import "Client/Figure/FigureConfigurationData.proto";
+import "Client/Badge/BadgeData.proto";
+import "Client/User/Groups/UserGroupMemberData.proto";
 
 message UserProfileData {
     string id = 1;

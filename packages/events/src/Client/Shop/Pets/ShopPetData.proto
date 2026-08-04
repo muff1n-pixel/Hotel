@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Pets/PetData.proto";
+import "Client/Pets/PetData.proto";
 
 message ShopPetData {
     string id = 1;

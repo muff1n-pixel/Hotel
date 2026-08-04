@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Furniture/FurnitureData.proto";
-import "User/Furniture/UserFurnitureData.proto";
+import "Client/Furniture/FurnitureData.proto";
+import "Client/User/Furniture/UserFurnitureData.proto";
 
 message UserInventoryFurnitureData {
     string id = 1;

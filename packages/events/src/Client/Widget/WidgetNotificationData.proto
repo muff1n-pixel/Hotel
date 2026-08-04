@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "Badge/BadgeData.proto";
-import "Furniture/FurnitureData.proto";
-import "Figure/FigureConfigurationData.proto";
+import "Client/Badge/BadgeData.proto";
+import "Client/Furniture/FurnitureData.proto";
+import "Client/Figure/FigureConfigurationData.proto";
 
 message WidgetNotificationData {
     string id = 1;

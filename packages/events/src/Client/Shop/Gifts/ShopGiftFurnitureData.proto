@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/FurnitureData.proto";
+import "Client/Furniture/FurnitureData.proto";
 
 message ShopGiftFurnitureData {
     repeated FurnitureData furniture = 1;

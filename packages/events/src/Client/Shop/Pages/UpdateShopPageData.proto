@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Shop/Bundles/ShopBundleData.proto";
+import "Client/Shop/Bundles/ShopBundleData.proto";
 
 message UpdateShopPageData {
     optional string id = 1;

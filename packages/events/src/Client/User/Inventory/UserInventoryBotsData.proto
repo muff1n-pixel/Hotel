@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Bots/UserBotData.proto";
+import "Client/User/Bots/UserBotData.proto";
 
 message UserInventoryBotsData {
     repeated UserBotData all_user_bots = 1;

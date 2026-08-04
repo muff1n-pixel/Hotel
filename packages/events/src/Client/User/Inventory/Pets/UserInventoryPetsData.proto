@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Pets/UserPetData.proto";
+import "Client/User/Pets/UserPetData.proto";
 
 message UserInventoryPetsData {
     repeated UserPetData all_user_pets = 1;

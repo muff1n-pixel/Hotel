@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Groups/GroupBadgeData.proto";
+import "Client/Groups/GroupBadgeData.proto";
 
 message UpdateGroupData {
     string id = 1;

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Users/RoomUserData.proto";
+import "Client/Room/Users/RoomUserData.proto";
 
 message RoomUserEnteredData {
     RoomUserData user = 1;

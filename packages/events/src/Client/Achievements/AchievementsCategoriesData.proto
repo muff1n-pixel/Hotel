@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Achievements/AchievementsCategoryData.proto";
+import "Client/Achievements/AchievementsCategoryData.proto";
 
 message AchievementsCategoriesData {
     repeated AchievementsCategoryData categories = 2;

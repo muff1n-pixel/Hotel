@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Navigator/Categories/NavigatorCategoryData.proto";
+import "Client/Navigator/Categories/NavigatorCategoryData.proto";
 
 message NavigatorData {
     repeated NavigatorCategoryData categories = 1;

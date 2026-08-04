@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GetHotelFeedbackData, HotelFeedbackData } from "@pixel63/events";
-import { HotelFeedbackCollectionData } from "@pixel63/events/build/Hotel/Feedback/HotelFeedbackData";
 import { webSocketClient } from "@Game/index";
+import { HotelFeedbackCollectionData } from "@pixel63/events/build/Client/Hotel/Feedback/HotelFeedbackData";
 
 export default function AdministrationFeedbackTab() {
     const [issues, setIssues] = useState<HotelFeedbackData[]>([]);

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Actors/RoomActorIdentifierData.proto";
+import "Client/Room/Actors/RoomActorIdentifierData.proto";
 
 message RoomActorActionData {
     RoomActorIdentifierData actor = 1;

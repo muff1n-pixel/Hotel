@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Figure/FigureConfigurationData.proto";
+import "Client/Figure/FigureConfigurationData.proto";
 
 message GroupMemberData {
     string user_id = 1;

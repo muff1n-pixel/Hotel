@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/Crackable/Rewards/FurnitureCrackableRewardData.proto";
+import "Client/Furniture/Crackable/Rewards/FurnitureCrackableRewardData.proto";
 
 message FurnitureCrackableData {
     uint32 required_clicks = 1;

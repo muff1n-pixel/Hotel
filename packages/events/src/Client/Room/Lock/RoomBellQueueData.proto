@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Lock/RoomBellQueueUserData.proto";
+import "Client/Room/Lock/RoomBellQueueUserData.proto";
 
 message RoomBellQueueData {
     repeated RoomBellQueueUserData users = 1;

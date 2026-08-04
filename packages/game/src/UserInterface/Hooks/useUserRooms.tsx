@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { webSocketClient } from "../..";
 import { GetUserRoomsData } from "@pixel63/events";
-import { UserRoomData, UserRoomsData } from "@pixel63/events/build/User/Rooms/UserRoomsData";
+import { UserRoomData, UserRoomsData } from "@pixel63/events/build/Client/User/Rooms/UserRoomsData";
 
 export function useUserRooms() {
     const [value, setValue] = useState<UserRoomData[]>([]);

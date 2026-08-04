@@ -1,10 +1,10 @@
 import { GroupBadgeData } from "@pixel63/events";
-import { GroupBadgeSymbolData } from "@pixel63/events/build/Groups/GroupBadgeData";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import GroupBadgePosition from "@UserInterface/Components/Groups/Editor/GroupBadgePosition";
 import GroupBadgeColor from "@UserInterface/Components/Groups/Editor/GroupBadgeColor";
+import { GroupBadgeSymbolData } from "@pixel63/events/build/Client/Groups/GroupBadgeData";
 
 export type GroupBadgeSymbolEditorProps = {
     data?: GroupBadgeSymbolData;

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Furniture/Data/Wired/Common/WiredCommonFurniStateFurnitureData.proto";
+import "Client/User/Furniture/Data/Wired/Common/WiredCommonFurniStateFurnitureData.proto";
 
 message WiredCommonFurniStateData {
     bool match_state = 1;

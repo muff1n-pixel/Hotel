@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Room/RoomPositionOffsetData.proto";
-import "Room/Structure/RoomStructureDoorData.proto";
+import "Client/Room/RoomPositionOffsetData.proto";
+import "Client/Room/Structure/RoomStructureDoorData.proto";
 
 message UpdateRoomStructureData {
     optional RoomPositionOffsetData offset = 1;

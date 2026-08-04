@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Pets/PetPaletteData.proto";
+import "Client/Pets/PetPaletteData.proto";
 
 message UpdatePetData {
     optional string id = 1;

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Shop/Bots/ShopBotData.proto";
+import "Client/Shop/Bots/ShopBotData.proto";
 
 message ShopPageBotsData {
     string page_id = 1;

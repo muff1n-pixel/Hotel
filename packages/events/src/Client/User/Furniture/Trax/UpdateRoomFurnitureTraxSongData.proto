@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Furniture/Trax/Song/FurnitureTraxSongData.proto";
+import "Client/Furniture/Trax/Song/FurnitureTraxSongData.proto";
 
 message UpdateRoomFurnitureTraxSongData {
     string room_furniture_id = 1;

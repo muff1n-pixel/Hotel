@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
+import "Client/Shop/Features/Configuration/ShopFeatureConfigurationData.proto";
 
 message UpdateShopFeatureData {
     optional string id = 1;

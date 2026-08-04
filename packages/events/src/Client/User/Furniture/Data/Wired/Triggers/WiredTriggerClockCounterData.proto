@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
+import "Client/User/Furniture/Data/Wired/WiredFurnitureSelectionData.proto";
 
 message WiredTriggerClockCounterData {
     uint32 minute = 1;

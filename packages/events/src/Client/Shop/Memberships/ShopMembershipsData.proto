@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Shop/Memberships/ShopMembershipData.proto";
+import "Client/Shop/Memberships/ShopMembershipData.proto";
 
 message ShopMembershipsData {
     string page_id = 1;

@@ -2,7 +2,7 @@ import { GetHotelActivityRewardsData, HotelActivityRewardsData } from "@pixel63/
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { game } from "../../../..";
-import { HotelActivityRewardData } from "@pixel63/events/build/Hotel/ActivityRewards/HotelActivityRewardsData";
+import { HotelActivityRewardData } from "@pixel63/events/build/Client/Hotel/ActivityRewards/HotelActivityRewardsData";
 
 export default class GetHotelActivityRewardsEvent implements ProtobuffListener<GetHotelActivityRewardsData> {
     async handle(user: User) {

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Clothes/ClothingData.proto";
-import "User/Clothes/UserClothingData.proto";
+import "Client/Clothes/ClothingData.proto";
+import "Client/User/Clothes/UserClothingData.proto";
 
 message UserClothesData {
     string part = 1;

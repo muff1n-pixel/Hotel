@@ -1,7 +1,7 @@
 import { GetRoomRightsData } from "@pixel63/events";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
-import { RoomRightsData, RoomUserRightsData } from "@pixel63/events/build/Room/Rights/RoomRightsData";
+import { RoomRightsData, RoomUserRightsData } from "@pixel63/events/build/Client/Room/Rights/RoomRightsData";
 
 export default function useRoomRights(roomId?: string) {
     const [users, setUsers] = useState<RoomUserRightsData[]>([]);

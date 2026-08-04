@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Groups/GroupData.proto";
-import "User/Groups/UserGroupData.proto";
+import "Client/Groups/GroupData.proto";
+import "Client/User/Groups/UserGroupData.proto";
 
 message RoomGroupData {
     string room_id = 1;

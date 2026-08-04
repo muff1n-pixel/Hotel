@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-import "Room/RoomPositionData.proto";
+import "Client/Room/RoomPositionData.proto";
 
-import "User/UserNameData.proto";
+import "Client/User/UserNameData.proto";
 
-import "User/Furniture/UserFurnitureAnimationTag.proto";
-import "User/Furniture/UserFurnitureColorTag.proto";
-import "User/Furniture/UserFurnitureCustomData.proto";
+import "Client/User/Furniture/UserFurnitureAnimationTag.proto";
+import "Client/User/Furniture/UserFurnitureColorTag.proto";
+import "Client/User/Furniture/UserFurnitureCustomData.proto";
 
 message UserFurnitureData {
     string id = 1;

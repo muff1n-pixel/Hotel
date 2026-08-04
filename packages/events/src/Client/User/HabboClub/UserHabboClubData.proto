@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Badge/BadgeData.proto";
+import "Client/Badge/BadgeData.proto";
 
 message UserHabboClubData {
     bool active = 1;

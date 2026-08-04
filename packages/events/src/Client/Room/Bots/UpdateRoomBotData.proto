@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "Room/RoomPositionData.proto";
-import "Figure/FigureConfigurationData.proto";
-import "Bot/BotSpeechData.proto";
+import "Client/Room/RoomPositionData.proto";
+import "Client/Figure/FigureConfigurationData.proto";
+import "Client/Bot/BotSpeechData.proto";
 
 message UpdateRoomBotData {
     string id = 1;

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Room/Furniture/Export/RoomFurnitureExportData.proto";
+import "Client/Room/Furniture/Export/RoomFurnitureExportData.proto";
 
 message RoomFurnitureImportData {
     repeated RoomFurnitureExportData furniture = 1;

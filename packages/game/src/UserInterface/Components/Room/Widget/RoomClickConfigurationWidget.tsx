@@ -1,6 +1,6 @@
 import { webSocketClient } from "@Game/index";
 import { ResetRoomClickConfigurationData, SetRoomClickConfigurationData } from "@pixel63/events";
-import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Room/Configuration/RoomClickConfigurationData";
+import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Client/Room/Configuration/RoomClickConfigurationData";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WiredWidget from "@UserInterface/Common/Widgets/Wired/WiredWidget";
 import WiredWidgetButton from "@UserInterface/Common/Widgets/Wired/WiredWidgetButton";

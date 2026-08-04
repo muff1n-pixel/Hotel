@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "Groups/GroupIdentityData.proto";
-import "Groups/GroupBadgeData.proto";
-import "Groups/GroupColorsData.proto";
+import "Client/Groups/GroupIdentityData.proto";
+import "Client/Groups/GroupBadgeData.proto";
+import "Client/Groups/GroupColorsData.proto";
 
 message GroupCreationData {
     GroupIdentityData identity = 1;
