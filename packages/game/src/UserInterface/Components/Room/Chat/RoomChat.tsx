@@ -73,7 +73,7 @@ export default function RoomChat() {
                 let message: string = payload.message;
 
                 if(payload.messageVocals.length) {
-                    if(payload.messageVocalIndex) {
+                    if(payload.messageVocalIndex !== undefined) {
                         const texts = getVocalTranslation(payload.messageVocals, {
                             returnObjects: true
                         }) as string[];
