@@ -231,6 +231,10 @@ export default class RoomPet implements RoomActor {
     }
 
     public sendVocal(type: string) {
+        if(this.room.model.muteAllPets) {
+            return;
+        }
+
         this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
             actor: {
                 pet: {
