@@ -396,7 +396,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
                         <div style={{ flex: 1 }}/>
 
-                        <Input style={{ width: 30 }} value={quantity.toString()} min={1} max={100} onChange={(value) => setQuantity(window.isNaN(parseInt(value))?(1):(parseInt(value)))}/>
+                        <Input style={{ width: 30 }} type="number" value={quantity.toString()} min={1} max={100} onChange={(value) => setQuantity(window.isNaN(parseInt(value))?(1):(parseInt(value)))}/>
                     </FlexLayout>
                 </div>
                 

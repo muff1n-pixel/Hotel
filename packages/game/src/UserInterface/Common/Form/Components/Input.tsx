@@ -1,4 +1,7 @@
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { CSSProperties, ReactNode } from "react";
+
+import "./Input.css";
 
 export type InputProps = {
     type?: "text" | "password" | "number";
@@ -38,6 +41,7 @@ export default function Input({ style, readonly, step, type = "text", placeholde
             }}>
                 <input
                     type={type}
+                    className="input"
                     readOnly={readonly}
                     step={step}
                     placeholder={placeholder}
@@ -58,6 +62,55 @@ export default function Input({ style, readonly, step, type = "text", placeholde
                         border: "none",
                         ...style
                     }}/>
+
+                {(type === "number") && (
+                    <FlexLayout direction="column" gap={4} align="center" justify="center">
+                        <div className="sprite_forms_arrow" style={{
+                            cursor: "pointer",
+                            transform: "rotateZ(-180deg)"
+                        }} onClick={() => {
+                            const number = Number(value);
+
+                            if (Number.isNaN(number)) {
+                                return;
+                            }
+
+                            let newValue = number + (step ?? 1);
+
+                            if(min !== undefined) {
+                                newValue = Math.max(min, newValue);
+                            }
+
+                            if(max !== undefined) {
+                                newValue = Math.min(max, newValue);
+                            }
+
+                            onChange?.(newValue.toString());
+                        }}/>
+                        
+                        <div className="sprite_forms_arrow" style={{
+                            cursor: "pointer"  
+                        }} onClick={() => {
+                            const number = Number(value);
+
+                            if (Number.isNaN(number)) {
+                                return;
+                            }
+
+                            let newValue = number - (step ?? 1);
+
+                            if(min !== undefined) {
+                                newValue = Math.max(min, newValue);
+                            }
+
+                            if(max !== undefined) {
+                                newValue = Math.min(max, newValue);
+                            }
+
+                            onChange?.(newValue.toString());
+                        }}/>
+                    </FlexLayout>
+                )}
 
                 {children}
             </div>
