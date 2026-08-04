@@ -40,7 +40,7 @@ export default class Command {
     parseRoomUser(name: string): RoomUser {
         const value = this.parseString(name);
 
-        const roomUser = this.room.users.find((roomUser) => roomUser.user.model.name.toLowerCase() === name.toLowerCase());
+        const roomUser = this.room.users.find((roomUser) => roomUser.user.model.name.toLowerCase() === value.toLowerCase());
 
         if(!roomUser) {
             throw new InvalidCommandParameterError(`"${value}" is not a room user.`);
@@ -55,6 +55,18 @@ export default class Command {
         if (!value) {
             throw new MissingCommandParameterError(`Missing parameter: ${name}`);
         }
+
+        return value;
+    }
+
+    parseRemainingString(name: string, required: boolean): string {
+        const value = this.arguments.slice(this.index).join(" ");
+
+        if (!value && required) {
+            throw new MissingCommandParameterError(`Missing parameter: ${name}`);
+        }
+
+        this.index = this.arguments.length;
 
         return value;
     }

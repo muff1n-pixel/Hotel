@@ -10,17 +10,18 @@ export type HotelAlertDialogProps = {
 
 export default function HotelAlertDialog({ hidden, data, onClose }: HotelAlertDialogProps) {
     return (
-        <Dialog title="Alert" hidden={hidden} onClose={onClose} width={300} height={180} initialPosition="center">
+        <Dialog title="Notice!" hidden={hidden} onClose={onClose} width={276} height={138} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
+                    textAlign: "center"
                 }}>
                     {data?.message}
                 </div>
 
                 <div style={{
                     display: "flex",
-                    justifyContent: "flex-end"
+                    justifyContent: "center"
                 }}>
                     <DialogButton onClick={onClose}>
                         Close

@@ -82,6 +82,10 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     }
 
     update(): void {
+        if(this._sprite.destroyed) {
+            return;
+        }
+
         if(this.inheritOffset) {
             this._sprite.x = this.item.screenPosition.left + this.offset.left;
             this._sprite.y = this.item.screenPosition.top + this.offset.top;
