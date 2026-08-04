@@ -56,7 +56,7 @@ export default class GiveCommand extends Command {
                 }
             },
 
-            message: `You have given ${user.name} ${value} ${currency}s.`,
+            message: `You have given ${user.name} ${value} ${currency}.`,
             roomChatStyleId: "notification",
             options: {
                 italic: true,

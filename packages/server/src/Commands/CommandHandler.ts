@@ -43,7 +43,7 @@ export default class CommandHandler {
         { command: SoftKickCommand, aliases: [ "softkick" ]}
     ];
 
-    public async handleCommand(roomUser: RoomUser, alias: string, parameters: string): Promise<boolean> {
+    public async handleCommand(roomUser: RoomUser, alias: string, parameters: string, focusedUserId: string | undefined): Promise<boolean> {
         const commandAlias = this.commands.find((commandAlias) => commandAlias.aliases.includes(alias.toLowerCase()));
 
         if(!commandAlias) {
@@ -52,7 +52,7 @@ export default class CommandHandler {
 
         const permissions = await roomUser.user.getPermissions();
 
-        const command = new commandAlias.command(roomUser.room, parameters);
+        const command = new commandAlias.command(roomUser.room, parameters, focusedUserId);
 
         if(!command.validate(roomUser, permissions)) {
             return false;

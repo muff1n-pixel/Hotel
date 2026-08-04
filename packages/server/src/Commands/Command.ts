@@ -9,7 +9,7 @@ export default class Command {
     private readonly arguments: string[];
     private index = 0;
 
-    constructor(private readonly room: Room, input: string) {
+    constructor(private readonly room: Room, private readonly input: string, private readonly focusedUserId: string | undefined) {
         this.arguments = input.trim().split(/\s+/);
     }
 
@@ -24,11 +24,18 @@ export default class Command {
     async parseUser(name: string): Promise<UserModel> {
         const value = this.parseString(name);
 
-        const user = await UserModel.findOne({
-            where: {
-                name: value
-            }
-        });
+        let user: UserModel | null;
+
+        if(value.toLowerCase() === 'x' && this.focusedUserId) {
+            user = await UserModel.findByPk(this.focusedUserId);
+        }
+        else {
+            user = await UserModel.findOne({
+                where: {
+                    name: value
+                }
+            });
+        }
 
         if(!user) {
             throw new InvalidCommandParameterError(`"${value}" is not an existing user.`);
@@ -40,7 +47,14 @@ export default class Command {
     parseRoomUser(name: string): RoomUser {
         const value = this.parseString(name);
 
-        const roomUser = this.room.users.find((roomUser) => roomUser.user.model.name.toLowerCase() === value.toLowerCase());
+        let roomUser: RoomUser | undefined;
+
+        if(value.toLowerCase() === 'x' && this.focusedUserId) {
+            roomUser = this.room.users.find((roomUser) => roomUser.user.model.id === this.focusedUserId);
+        }
+        else {
+            roomUser = this.room.users.find((roomUser) => roomUser.user.model.name.toLowerCase() === value.toLowerCase());
+        }
 
         if(!roomUser) {
             throw new InvalidCommandParameterError(`"${value}" is not a room user.`);

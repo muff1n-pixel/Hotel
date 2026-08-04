@@ -2,4 +2,5 @@ syntax = "proto3";
 
 message SendRoomChatMessageData {
     string message = 1;
+    optional string focused_user_id = 2;
 }

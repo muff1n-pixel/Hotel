@@ -6,6 +6,7 @@ import { SendRoomChatMessageData, SetRoomChatTypingData } from "@pixel63/events"
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useTranslation } from "react-i18next";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 export type ToolbarChatbarProps = {
     style?: CSSProperties;
@@ -143,8 +144,19 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
             }
         }
 
+        let focusedUserId: string | undefined = undefined;
+
+        if(roomInstance?.roomRenderer.focusedItem.value instanceof RoomFigureItem && roomInstance.roomRenderer.focusedItem.value.type === "figure") {
+            const focusedUser = roomInstance.users.find((user) => user.item.id === roomInstance.roomRenderer.focusedItem.value?.id);
+
+            if(focusedUser) {
+                focusedUserId = focusedUser.data.id;
+            }
+        }
+
         webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
-            message: value
+            message: value,
+            focusedUserId
         }));
     }, [dialogs, value, user, roomInstance]);
 

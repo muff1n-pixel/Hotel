@@ -51,7 +51,7 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
                 }));
             }
 
-            if(await game.commandHandler.handleCommand(roomUser, parts[0]!.substring(1), parts.slice(1).join(' '))) {
+            if(await game.commandHandler.handleCommand(roomUser, parts[0]!.substring(1), parts.slice(1).join(' '), payload.focusedUserId)) {
                 return;
             }
         }
