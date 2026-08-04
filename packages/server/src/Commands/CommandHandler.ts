@@ -17,6 +17,7 @@ import { RoomActorChatData } from "@pixel63/events";
 import { MissingCommandParameterError } from "./Exceptions/MissingCommandParameterError.js";
 import { InvalidCommandParameterError } from "./Exceptions/InvalidCommandParameterError.js";
 import KickCommand from "./Handlers/KickCommand.js";
+import SoftKickCommand from "./Handlers/SoftKickCommand.js";
 
 export type CommandAliases = {
     command: typeof Command;
@@ -38,7 +39,8 @@ export default class CommandHandler {
         { command: AwayFromKeyboardCommand, aliases: [ "afk", "brb" ] },
         { command: TeleportCommand, aliases: [ "teleport", "tp" ] },
         { command: GiveCommand, aliases: [ "give" ] },
-        { command: KickCommand, aliases: [ "kick" ]}
+        { command: KickCommand, aliases: [ "kick" ]},
+        { command: SoftKickCommand, aliases: [ "softkick" ]}
     ];
 
     public async handleCommand(roomUser: RoomUser, alias: string, parameters: string): Promise<boolean> {
