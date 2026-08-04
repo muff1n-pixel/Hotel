@@ -7,6 +7,8 @@ import { RoomActorChatData } from "@pixel63/events";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { useTranslation } from "react-i18next";
 
+import "./RoomChat.css";
+
 type RoomChatMessage = {
     id: number;
     image: ImageBitmap;
@@ -101,10 +103,6 @@ export default function RoomChat() {
 
                 moveMessagesUp(messages.current, newMessage);
 
-                if(newMessage.index === 0) {
-                    newMessage.index = -1;
-                }
-
                 messages.current.push(newMessage);
 
                 setLatestMessage(performance.now());
@@ -149,10 +147,6 @@ export default function RoomChat() {
     }, [latestMessage]);
 
     useEffect(() => {
-        if(!messages.current.length) {
-            return;
-        }
-
         const timer = setInterval(() => {
             for(const message of messages.current) {
                 message.index++;
@@ -166,7 +160,7 @@ export default function RoomChat() {
         return () => {
             clearInterval(timer);
         };
-    }, [messages.current.length]);
+    }, [latestMessage]);
 
     const onClickUserMessage = useCallback((message: RoomChatMessage) => {
         if(!room) {
@@ -201,7 +195,8 @@ export default function RoomChat() {
                         bottom: message.index * 32,
                         transition: "bottom 320ms",
                         cursor: (message.userId)?("pointer"):("default"),
-                        pointerEvents: (message.userId)?("auto"):("none")
+                        pointerEvents: (message.userId)?("auto"):("none"),
+                        animation: "roomChatMessageSlideIn 320ms ease-out"
                     }} onClick={() => onClickUserMessage(message)}>
                         <OffscreenCanvasRender offscreenCanvas={message.image}/>
                     </div>
