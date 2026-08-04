@@ -129,11 +129,7 @@ export default class LandscapeRenderer {
 
         context.resetTransform();
 
-        const imageBitmap = this.canvas.transferToImageBitmap();
-
-        DataStats.landscapeImageBitmapsOpened++;
-
-        return imageBitmap;
+        return this.canvas;
     }
 
     private visualization?: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0];

@@ -90,6 +90,7 @@ export default class RoomFurnitureItem extends RoomItem {
             }
         }
         else {
+            console.log("update landscape");
             this.mask?.updateLandscape();
         }
     }

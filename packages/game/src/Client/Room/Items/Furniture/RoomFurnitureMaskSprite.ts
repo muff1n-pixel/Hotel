@@ -21,17 +21,18 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
                 left: -(item.roomRenderer.structure.rows * 32) - item.roomRenderer.structure.data.wall!.thickness,
                 top: -((item.roomRenderer.structure.depth + 3.5) * 32) - item.roomRenderer.structure.data.wall!.thickness
             },
-            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
+            furnitureSprite.zIndex,
             undefined,
             undefined,
             item.roomRenderer.landscape.image,
-            false
+            false,
+            true
         );
 
         this.mask = new RoomSprite(
             item,
             RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
-            RoomPriority.WALL_MASK_SPRITE_PRIORITY,
+            furnitureSprite.zIndex,
             undefined,
             furnitureSprite.ink,
             furnitureSprite.image,

@@ -8,7 +8,7 @@ import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
 
-    public image?: ImageBitmap;
+    public image?: OffscreenCanvas;
     private frame: number = 0;
 
     private item?: RoomItem;
@@ -30,12 +30,6 @@ export default class RoomLandscape {
     }
 
     public destroy() {
-        if(this.image) {
-            this.image.close();
-
-            DataStats.landscapeImageBitmapsClosed++;
-        }
-
         this.settingsListener?.();
     }
 
@@ -58,15 +52,7 @@ export default class RoomLandscape {
 
         this.frame = (this.frame + 1) % 24;
 
-        const imageBitmap = await this.renderer.renderOffScreen();
-
-        if(this.image) {
-            this.image.close();
-            
-            DataStats.landscapeImageBitmapsClosed++;
-        }
-
-        this.image = imageBitmap;
+        this.image = await this.renderer.renderOffScreen();
 
         this.rendering = false;
 
