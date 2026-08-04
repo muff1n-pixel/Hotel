@@ -9,56 +9,26 @@ import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import PetImage from "@UserInterface/Components/Pets/PetImage";
 import { useTranslation } from "react-i18next";
+import useShopPurchasePet, { ShopPurchasePetData } from "./Hooks/useShopPurchasePet";
 
 export type ShopPurchasePetDialogProps = {
     hidden?: boolean;
-    data: {
-        activePet: ShopPetData;
-        activePetElement: HTMLCanvasElement | null;
-        name: string;
-    }
+    data: ShopPurchasePetData;
     onClose?: () => void;
 }
 
 export default function ShopPurchasePetDialog({ data, hidden, onClose }: ShopPurchasePetDialogProps) {
     const dialogs = useDialogs();
     const [getTranslation] = useTranslation("shop");
+    const purchasePet = useShopPurchasePet();
 
     const handlePurchase = useCallback(() => {
-        webSocketClient.addProtobuffListener(ShopPurchaseData, {
-            async handle(payload: ShopPurchaseData) {
-                onClose?.();
+        purchasePet(data).then(() => {
+            onClose?.();
 
-                dialogs.setDialogHidden("shop", false);
-
-                if(!payload.success) {
-                    return;
-                }
-
-                if(data.activePetElement && data.activePet.pet) {
-                    for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
-                        clientInstance.flyingFurnitureIcons.value!.push({
-                            id: Math.random().toString(),
-                            pet: data.activePet.pet,
-                            position: data.activePetElement.getBoundingClientRect(),
-                            targetElementId: "toolbar-inventory"
-                        });
-
-                        clientInstance.flyingFurnitureIcons.update();
-
-                        await new Promise((resolve) => setTimeout(resolve, 50));
-                    }
-                }
-            },
-        }, {
-            once: true
+            dialogs.setDialogHidden("shop", false);
         });
-
-        webSocketClient.sendProtobuff(PurchaseShopPetData, PurchaseShopPetData.create({
-            id: data.activePet.id,
-            name: data.name
-        }));
-    }, [data, dialogs, onClose]);
+    }, [data, dialogs, onClose, purchasePet]);
 
     const handleClose = useCallback(() => {
         onClose?.();

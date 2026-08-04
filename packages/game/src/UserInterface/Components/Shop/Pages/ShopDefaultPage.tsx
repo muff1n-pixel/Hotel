@@ -19,12 +19,16 @@ import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
 import ShopGroupSelector from "@UserInterface/Components/Shop/Pages/Groups/ShopGroupSelector";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@UserInterface/Hooks/useSettings";
+import useShopPurchaseFurniture, { ShopPurchaseFurnitureData } from "../Purchasing/Hooks/useShopPurchaseFurniture";
 
 export default function ShopDefaultPage({ search, editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const room = useRoomInstance();
     const [getTranslation] = useTranslation("shop");
+    const settings = useSettings();
+    const purchaseFurniture = useShopPurchaseFurniture();
 
     const shopFurniture = useShopPageFurniture(page.id, undefined, search);
 
@@ -40,9 +44,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
             return;
         }
 
-        dialogs.setDialogHidden("shop", true);
-
-        dialogs.openUniqueDialog("shop-purchase-furniture", {
+        const data: ShopPurchaseFurnitureData = {
             activeFurniture,
             position,
             direction,
@@ -51,8 +53,17 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
             group,
             quantity,
             activeFurnitureElement: activeFurnitureRef.current
-        });
-    }, [activeFurniture, activeFurnitureRef, quantity, group]);
+        };
+
+        if(settings.disablePurchaseConfirmation) {
+            purchaseFurniture(data);
+        }
+        else {
+            dialogs.setDialogHidden("shop", true);
+
+            dialogs.openUniqueDialog("shop-purchase-furniture", data);
+        }
+    }, [activeFurniture, activeFurnitureRef, quantity, group, settings, purchaseFurniture]);
 
     const handleGiftFurniture = useCallback(() => {
         if(!activeFurniture) {

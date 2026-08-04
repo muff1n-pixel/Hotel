@@ -6,16 +6,20 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import useShopPageBots from "./Hooks/useShopPageBots";
 import DialogCurrencyPanel from "../../../Common/Dialog/Components/Panels/DialogCurrencyPanel";
-import { ShopBotData } from "@pixel63/events";
+import { PurchaseShopBotData, ShopBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@UserInterface/Hooks/useSettings";
+import useShopPurchaseBot, { ShopPurchaseBotData } from "../Purchasing/Hooks/useShopPurchaseBot";
 
 export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const [getTranslation] = useTranslation("shop");
+    const settings = useSettings();
 
     const bots = useShopPageBots(page.id);
+    const purchaseBot = useShopPurchaseBot();
 
     const activeBotRef = useRef<HTMLDivElement>(null);
 
@@ -32,13 +36,20 @@ export default function ShopBotsPage({ editMode, page }: ShopPageProps) {
             return;
         }
 
-        dialogs.setDialogHidden("shop", true);
-
-        dialogs.openUniqueDialog("shop-purchase-bot", {
+        const data: ShopPurchaseBotData = {
             activeBot,
             activeBotElement: activeBotRef.current
-        });
-    }, [dialogs, activeBot, activeBotRef]);
+        };
+
+        if(settings.disablePurchaseConfirmation) {
+            purchaseBot(data);
+        }
+        else {
+            dialogs.setDialogHidden("shop", true);
+
+            dialogs.openUniqueDialog("shop-purchase-bot", data);
+        }
+    }, [dialogs, activeBot, activeBotRef, settings, purchaseBot]);
 
     return (
         <div style={{

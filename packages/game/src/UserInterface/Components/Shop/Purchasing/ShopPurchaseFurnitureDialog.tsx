@@ -10,80 +10,26 @@ import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { useTranslation } from "react-i18next";
+import useShopPurchaseFurniture, { ShopPurchaseFurnitureData } from "./Hooks/useShopPurchaseFurniture";
 
 export type ShopPurchaseFurnitureDialogProps = {
     hidden?: boolean;
-    data: {
-        activeFurniture: ShopFurnitureData;
-        activeFurnitureElement: HTMLCanvasElement | null;
-
-        data?: UserFurnitureCustomData;
-
-        purchasableItem?: PurchasableItem;
-        group?: GroupData;
-        position?: RoomPositionData;
-        direction?: number;
-        quantity?: number;
-        stopPlacing?: () => void;
-    }
+    data: ShopPurchaseFurnitureData;
     onClose?: () => void;
 }
 
 export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: ShopPurchaseFurnitureDialogProps) {
     const dialogs = useDialogs();
     const [getTranslation] = useTranslation("shop");
+    const purchaseFurniture = useShopPurchaseFurniture();
 
     const handlePurchase = useCallback(() => {
-        webSocketClient.addProtobuffListener(ShopPurchaseData, {
-            async handle(payload: ShopPurchaseData) {
-                onClose?.();
+        purchaseFurniture(data).then(() => {
+            onClose?.();
 
-                dialogs.setDialogHidden("shop", false);
-
-                if(!payload.success) {
-                    return;
-                }
-
-                if(data.purchasableItem?.placing) {
-                    data.stopPlacing?.();
-                }
-
-                if(data.position) {
-                    return;
-                }
-
-                if(data.activeFurnitureElement && data.activeFurniture.furniture) {
-                    for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
-                        clientInstance.flyingFurnitureIcons.value!.push({
-                            id: Math.random().toString(),
-                            furniture: data.activeFurniture.furniture,
-                            position: data.activeFurnitureElement.getBoundingClientRect(),
-                            targetElementId: "toolbar-inventory"
-                        });
-
-                        clientInstance.flyingFurnitureIcons.update();
-
-                        await new Promise((resolve) => setTimeout(resolve, 50));
-                    }
-                }
-            },
-        }, {
-            once: true
+            dialogs.setDialogHidden("shop", false);
         });
-
-        webSocketClient.sendProtobuff(PurchaseShopFurnitureData, PurchaseShopFurnitureData.create({
-            id: data.activeFurniture.id,
-
-            position: data.position,
-            direction: data.direction,
-
-            groupId: data.group?.id,
-
-            quantity: (data.purchasableItem?.placing)?(1):(data.quantity),
-
-            data: data.data
-        }));
-    }, [data, dialogs, onClose]);
+    }, [data, dialogs, purchaseFurniture, onClose]);
 
     const handleClose = useCallback(() => {
         onClose?.();

@@ -9,54 +9,26 @@ import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useTranslation } from "react-i18next";
+import useShopPurchaseBot, { ShopPurchaseBotData } from "./Hooks/useShopPurchaseBot";
 
 export type ShopPurchaseBotDialogProps = {
     hidden?: boolean;
-    data: {
-        activeBot: ShopBotData;
-        activeBotElement: HTMLCanvasElement | null;
-    }
+    data: ShopPurchaseBotData;
     onClose?: () => void;
 }
 
 export default function ShopPurchaseBotDialog({ data, hidden, onClose }: ShopPurchaseBotDialogProps) {
     const dialogs = useDialogs();
     const [getTranslation] = useTranslation("shop");
+    const purchaseBot = useShopPurchaseBot();
 
     const handlePurchase = useCallback(() => {
-        webSocketClient.addProtobuffListener(ShopPurchaseData, {
-            async handle(payload: ShopPurchaseData) {
-                onClose?.();
+        purchaseBot(data).then(() => {
+            onClose?.();
 
-                dialogs.setDialogHidden("shop", false);
-
-                if(!payload.success) {
-                    return;
-                }
-
-                if(data.activeBotElement && data.activeBot.figureConfiguration) {
-                    for(let index = 0; index < Math.min(payload.quantity, 10); index++) {
-                        clientInstance.flyingFurnitureIcons.value!.push({
-                            id: Math.random().toString(),
-                            figureConfiguration: data.activeBot.figureConfiguration,
-                            position: data.activeBotElement.getBoundingClientRect(),
-                            targetElementId: "toolbar-inventory"
-                        });
-
-                        clientInstance.flyingFurnitureIcons.update();
-
-                        await new Promise((resolve) => setTimeout(resolve, 50));
-                    }
-                }
-            },
-        }, {
-            once: true
+            dialogs.setDialogHidden("shop", false);
         });
-
-        webSocketClient.sendProtobuff(PurchaseShopBotData, PurchaseShopBotData.create({
-            id: data.activeBot.id
-        }));
-    }, [data, dialogs, onClose]);
+    }, [data, dialogs, purchaseBot, onClose]);
 
     const handleClose = useCallback(() => {
         onClose?.();

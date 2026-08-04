@@ -13,7 +13,7 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
     const settings = useSettings();
 
     return (
-        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={160} initialPosition="center">
+        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={"auto"} assumedHeight={180} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -35,6 +35,11 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
                         clientInstance.settings.value!.hideTooltips = !settings?.hideTooltips;
                         clientInstance.settings.update();
                     }} label="Hide tooltips"/>
+                    
+                    <Checkbox value={settings?.disablePurchaseConfirmation === true} onChange={() => {
+                        clientInstance.settings.value!.disablePurchaseConfirmation = !settings?.disablePurchaseConfirmation;
+                        clientInstance.settings.update();
+                    }} label="Disable purchase confirmations"/>
                     
                     <Checkbox value={settings?.debugRoomRendering === true} onChange={() => {
                         clientInstance.settings.value!.debugRoomRendering = !settings?.debugRoomRendering;

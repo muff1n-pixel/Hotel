@@ -11,6 +11,8 @@ import PetImage from "../../Pets/PetImage";
 import Pet from "@Client/Pets/Pet";
 import Input from "../../../Common/Form/Components/Input";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@UserInterface/Hooks/useSettings";
+import useShopPurchasePet, { ShopPurchasePetData } from "../Purchasing/Hooks/useShopPurchasePet";
 
 type FilteredShopPet = {
     pet: ShopPetData;
@@ -21,6 +23,8 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
     const dialogs = useDialogs();
     const user = useUser();
     const [getTranslation] = useTranslation("shop");
+    const settings = useSettings();
+    const purchasePet = useShopPurchasePet();
 
     const pets = useShopPagePets(page.id);
 
@@ -99,14 +103,25 @@ export default function ShopPetsPage({ editMode, page }: ShopPageProps) {
 
         dialogs.closeDialog("edit-pet");
 
-        dialogs.setDialogHidden("shop", true);
-
-        dialogs.openUniqueDialog("shop-purchase-pet", {
+        const data: ShopPurchasePetData = {
             activePet,
             activePetElement: activePetRef.current,
             name
-        });
-    }, [activePet, activePetRef, name]);
+        };
+
+        if(settings.disablePurchaseConfirmation) {
+            purchasePet(data);
+        }
+        else {
+            dialogs.setDialogHidden("shop", true);
+
+            dialogs.openUniqueDialog("shop-purchase-pet", {
+                activePet,
+                activePetElement: activePetRef.current,
+                name
+            });
+        }
+    }, [activePet, activePetRef, name, purchasePet, settings]);
 
     return (
         <div style={{

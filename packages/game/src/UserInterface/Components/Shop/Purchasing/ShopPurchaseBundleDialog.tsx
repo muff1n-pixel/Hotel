@@ -8,6 +8,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { useTranslation } from "react-i18next";
+import useShopPurchaseBundle from "./Hooks/useShopPurchaseBundle";
 
 export type ShopPurchaseBundleDialogProps = {
     hidden?: boolean;
@@ -21,34 +22,15 @@ export type ShopPurchaseBundleDialogProps = {
 export default function ShopPurchaseBundleDialog({ data, hidden, onClose }: ShopPurchaseBundleDialogProps) {
     const dialogs = useDialogs();
     const [getTranslation] = useTranslation("shop");
+    const purchaseBundle = useShopPurchaseBundle();
 
     const handlePurchase = useCallback(() => {
-        webSocketClient.addProtobuffListener(ShopBundlePurchaseData, {
-            async handle(payload: ShopBundlePurchaseData) {
-                onClose?.();
+        purchaseBundle(data).then(() => {
+            onClose?.();
 
-                dialogs.setDialogHidden("shop", false);
-        
-                if(!payload.success) {
-                    return;
-                }
-
-                if(payload.roomId) {
-                    dialogs.closeDialog("shop");
-
-                    webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
-                        id: payload.roomId
-                    }));
-                }
-            },
-        }, {
-            once: true
+            dialogs.setDialogHidden("shop", false);
         });
-
-        webSocketClient.sendProtobuff(PurchaseShopBundleData, PurchaseShopBundleData.create({
-            id: data.page.bundle?.id
-        }));
-    }, [data, dialogs, onClose]);
+    }, [data, dialogs, onClose, purchaseBundle]);
 
     const handleClose = useCallback(() => {
         onClose?.();

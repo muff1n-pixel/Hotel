@@ -6,27 +6,41 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { webSocketClient } from "../../../..";
 import useShopPageFurniture from "./Hooks/useShopPageFurniture";
 import { useDialogs } from "../../../Hooks/useDialogs";
-import { EnterRoomData } from "@pixel63/events";
+import { EnterRoomData, PurchaseShopBundleData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@UserInterface/Hooks/useSettings";
+import useShopPurchaseBundle, { ShopPurchaseBundleData } from "../Purchasing/Hooks/useShopPurchaseBundle";
 
 export default function ShopBundlePage({ page }: ShopPageProps) {
     const shopFurnitureRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [getTranslation] = useTranslation("shop");
+    const settings = useSettings();
+    const purchaseBundle = useShopPurchaseBundle();
 
     const dialogs = useDialogs();
 
     const shopFurniture = useShopPageFurniture(page.id, page.type);
 
     const handlePurchaseFurniture = useCallback(() => {
-        dialogs.setDialogHidden("shop", true);
-        dialogs.openUniqueDialog("shop-purchase-bundle", {
+        const data: ShopPurchaseBundleData = {
             shopFurniture,
             page
-        });
-    }, [page, dialogs, shopFurniture, shopFurnitureRefs]);
+        };
+
+        if(settings.disablePurchaseConfirmation) {
+            purchaseBundle(data);
+        }
+        else {
+            dialogs.setDialogHidden("shop", true);
+            dialogs.openUniqueDialog("shop-purchase-bundle", {
+                shopFurniture,
+                page
+            });
+        }
+    }, [page, dialogs, shopFurniture, shopFurnitureRefs, settings, purchaseBundle]);
 
     return (
         <div style={{
