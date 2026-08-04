@@ -5,6 +5,6 @@ export default class SitCommand extends Command {
     async handle(roomUser: RoomUser): Promise<void> {        
         await roomUser.path.finishPath();
 
-        roomUser.addAction("Sit");
+        roomUser.pose.sit();
     }
 }

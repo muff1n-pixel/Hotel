@@ -10,11 +10,8 @@ export default class SignCommand extends Command {
             throw new InvalidCommandParameterError("Sign does not exist.");
         }
 
-        roomUser.removeAction("Dance");
-        roomUser.removeAction("CarryItem");
-        roomUser.removeAction("Sign");
-        roomUser.removeAction("AvatarEffect");
+        roomUser.pose.removeEffect();
 
-        roomUser.addAction("Sign." + signId, 5000);
+        roomUser.pose.setEffect("Sign." + signId);
     }
 }

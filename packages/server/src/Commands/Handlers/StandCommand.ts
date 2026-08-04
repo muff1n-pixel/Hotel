@@ -5,6 +5,6 @@ export default class StandCommand extends Command {
     async handle(roomUser: RoomUser): Promise<void> {        
         await roomUser.path.finishPath();
 
-        roomUser.removeAction("Sit");
+        roomUser.pose.stand();
     }
 }

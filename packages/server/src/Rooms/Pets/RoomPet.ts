@@ -2,8 +2,10 @@ import Room from "../Room.js";
 import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
+import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
+import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
 
 export enum RoomPetState {
     FREE = "free",
@@ -13,8 +15,6 @@ export enum RoomPetState {
 export default class RoomPet implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
-    public actions: string[] = [];
-    
     public get position(): RoomPositionData {
         return this.model.position;
     };
@@ -37,6 +37,8 @@ export default class RoomPet implements RoomActor {
 
     private state: RoomPetState = RoomPetState.FREE;
     private posture: string = "std";
+
+    public pose: RoomActorPose = new RoomPetPose(this);
 
     constructor(public readonly room: Room, public readonly model: UserPetModel) {
         this.position = model.position;
@@ -67,62 +69,6 @@ export default class RoomPet implements RoomActor {
         return roomPet;
     }
 
-    public hasAction(actionId: string): boolean {
-        return this.actions.includes(actionId);
-    }
-
-    public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null {
-        if(this.actions.includes(action)) {
-            return null;
-        }
-
-        if(action === "sit") {
-            if(this.direction % 2) {
-                this.path.setDirection((this.direction + 1) % 8);
-            }
-        }
-
-        this.actions.push(action);
-
-        const roomActorActionData = RoomActorActionData.create({
-            actor: {
-                pet: {
-                    petId: this.model.id
-                }
-            },
-            
-            actionsAdded: [action]
-        });
-
-        if(sendProtobuff) {
-            this.room.sendProtobuff(RoomActorActionData, roomActorActionData);
-        }
-
-        return roomActorActionData;
-    }
-
-    public removeAction(action: string) {
-        const actionId = action.split('.')[0]!;
-
-        const existingActionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
-
-        if(existingActionIndex === -1) {
-            return;
-        }
-
-        this.actions.splice(existingActionIndex, 1);
-
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
-            actor: {
-                pet: {
-                    petId: this.model.id
-                }
-            },
-            
-            actionsRemoved: [actionId]
-        }));
-    }
-    
     public sendWalkEvent(previousPosition: RoomPositionData): void {
         this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
             actor: {
@@ -324,5 +270,13 @@ export default class RoomPet implements RoomActor {
 
         this.setPosture("sit");
         this.sendVocal("GENERIC_NEUTRAL");
+    }
+    
+    public getActorIdentifier(): RoomActorIdentifierData {
+        return RoomActorIdentifierData.create({
+            pet: {
+                petId: this.model.id
+            }
+        })
     }
 }

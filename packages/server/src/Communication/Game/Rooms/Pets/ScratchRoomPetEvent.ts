@@ -32,7 +32,7 @@ export default class ScratchRoomPetEvent implements ProtobuffListener<ScratchRoo
 
         await roomPet.model.save();
 
-        roomUser.addAction("Wave", 3000);
+        roomUser.pose.wave();
 
         roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
             petsUpdated: [

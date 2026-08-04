@@ -27,7 +27,7 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
 
         this.players.push(player);
 
-        roomUser.addAction(this.game.getTeamAvatarEffect(player));
+        roomUser.pose.setEffect(this.game.getTeamAvatarEffect(player));
 
         for(const furniture of this.game.getGateFurniture(team)) {
             furniture.setAnimation(this.getTeamPlayers(team).length);
@@ -57,7 +57,7 @@ export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<Room
 
         this.players.splice(this.players.indexOf(player), 1);
 
-        roomUser.removeAction("AvatarEffect");
+        roomUser.pose.removeEffect();
 
         for(const furniture of this.game.getGateFurniture(player.team)) {
             furniture.setAnimation(this.getTeamPlayers(player.team).length);

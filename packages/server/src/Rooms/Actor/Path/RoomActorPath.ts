@@ -68,7 +68,7 @@ export default class RoomActorPath {
 
         const previousPosition = {...this.actor.position};
 
-        if(this.actor.hasAction("Sit")) {
+        if(this.actor.pose.isSitting()) {
             const furnitureAtPreviousPosition = this.actor.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(previousPosition));
 
             if(furnitureAtPreviousPosition?.model.furniture.flags.sitable) {
@@ -82,7 +82,7 @@ export default class RoomActorPath {
             depth: depth + 0.01
         });
 
-        this.actor.removeAction("Sit");
+        this.actor.pose.stand();
 
         this.actor.position = position;
         this.path.splice(0, 1);
@@ -201,12 +201,12 @@ export default class RoomActorPath {
         const furniture = this.actor.room.getUpmostFurnitureAtPosition(position);
 
         if(sitableFurniture) {
-            const roomActorActionsData = this.actor.addAction("Sit", undefined, false);
-
             this.actor.path.setPosition(RoomPositionData.create({
                 ...position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent, roomActorActionsData);
+            }), sitableFurniture.model.direction ?? undefined, usePath, walkEvent);
+
+            this.actor.pose.sit();
         }
         else if(furniture) {
             if(!furniture.isWalkable(true)) {
@@ -216,7 +216,7 @@ export default class RoomActorPath {
             const depth = this.actor.room.getUpmostDepthAtPosition(position, furniture);
 
             if(depth !== null) {
-                this.actor.removeAction("Sit");
+                this.actor.pose.stand();
 
                 this.setPosition(RoomPositionData.create({
                     row: position.row,
@@ -229,7 +229,7 @@ export default class RoomActorPath {
             const depth = this.actor.room.getUpmostDepthAtPosition(position);
 
             if(depth !== null) {
-                this.actor.removeAction("Sit");
+                this.actor.pose.stand();
 
                 this.setPosition(RoomPositionData.create({
                     row: position.row,
@@ -288,12 +288,12 @@ export default class RoomActorPath {
         const sitableFurniture = this.actor.room.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(this.actor.position));
 
         if(sitableFurniture) {
-            const roomActorActionsData = this.actor.addAction("Sit", undefined, false);
-
             this.actor.path.setPosition({
                 ...this.actor.position,
                 depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
-            }, sitableFurniture.model.direction ?? undefined, undefined, false, roomActorActionsData);
+            }, sitableFurniture.model.direction ?? undefined, undefined, false);
+
+            this.actor.pose.sit();
         }
 
         this.path = undefined;
@@ -410,7 +410,7 @@ export default class RoomActorPath {
         }
 
         if(!frozen) {
-            this.actor.removeAction("AvatarEffect");
+            this.actor.pose.removeEffect?.();
         }
 
         this.frozen = frozen;

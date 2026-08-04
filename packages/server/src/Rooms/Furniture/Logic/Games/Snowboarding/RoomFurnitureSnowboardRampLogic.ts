@@ -15,7 +15,7 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
             return;
         }
 
-        if(roomUser.hasAction("SnowboardOllie") || roomUser.hasAction("Snowboard360")) {
+        if(roomUser.pose.hasEffect("SnowboardOllie") || roomUser.pose.hasEffect("Snowboard360")) {
             return;
         }
 
@@ -39,10 +39,10 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
         }
 
         if(rampDepth - upmostDepth >= 3) {
-            roomUser.addAction("Snowboard360", 2000);
+            roomUser.pose.setEffect("Snowboard360");
         }
         else {
-            roomUser.addAction("SnowboardOllie", 2000);
+            roomUser.pose.setEffect("SnowboardOllie");
         }
 
         roomUser.user.achievements.addAchievementScore("SnowboardJumps", 1).catch(console.error);
@@ -56,6 +56,6 @@ export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLog
     }
 
     private isRoomUserSkating(roomUser: RoomUser) {
-        return roomUser.hasAction("AvatarEffect.97");
+        return roomUser.pose.hasEffect("AvatarEffect.97");
     }
 }

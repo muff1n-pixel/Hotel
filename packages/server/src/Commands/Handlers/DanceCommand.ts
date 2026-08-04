@@ -10,13 +10,10 @@ export default class DanceCommand extends Command {
             throw new InvalidCommandParameterError("Dance doesn't exist.");
         }
 
-        roomUser.removeAction("Dance");
-        roomUser.removeAction("CarryItem");
-        roomUser.removeAction("Sign");
-        roomUser.removeAction("AvatarEffect");
+        roomUser.pose.removeEffect();
 
         if(danceId !== 0) {
-            roomUser.addAction("Dance." + danceId);
+            roomUser.pose.setEffect("Dance." + danceId);
         } 
     }
 }

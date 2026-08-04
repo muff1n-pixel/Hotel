@@ -170,7 +170,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
 
             game?.giveTeamScore(goalAtPosition.logic.team, 1);
 
-            player.roomUser.addAction("Wave", 5000);
+            player.roomUser.pose.wave();
 
             for(const player of game.players.getAllPlayers()) {
                 player.roomUser.user.sendProtobuff(WidgetNotificationData, FootballGameNotifications.buildTeamScored(player, goalAtPosition.logic.team));

@@ -42,7 +42,7 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
 
         this.game.updateGateFurniture(team);
 
-        roomUser.addAction(this.game.getTeamAvatarEffect(player));
+        roomUser.pose.setEffect(this.game.getTeamAvatarEffect(player));
 
         roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
     }
@@ -67,7 +67,7 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
 
             this.game.updateGateFurniture(player.team);
             
-            roomUser.removeAction("AvatarEffect");
+            roomUser.pose.removeEffect();
 
             player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.game.teams[player.team].score).catch(console.error);
 
@@ -137,8 +137,8 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
     }
 
     public unfreezePlayer(player: RoomFreezeGamePlayer) {
-        player.roomUser.removeAction("AvatarEffect");
-        player.roomUser.addAction(this.game.getTeamAvatarEffect(player));
+        player.roomUser.pose.removeEffect();
+        player.roomUser.pose.setEffect(this.game.getTeamAvatarEffect(player));
 
         player.roomUser.path.setFrozen(false);
     }

@@ -77,6 +77,6 @@ export default class RoomFurnitureSkateRailLogic implements RoomFurnitureLogic {
     }
 
     private isRoomUserSkating(roomUser: RoomUser) {
-        return roomUser.hasAction("AvatarEffect.71") || roomUser.hasAction("AvatarEffect.72");
+        return roomUser.pose.hasEffect("AvatarEffect.71") || roomUser.pose.hasEffect("AvatarEffect.72");
     }
 }

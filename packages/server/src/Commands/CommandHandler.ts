@@ -7,7 +7,6 @@ import CarryCommand from "./Handlers/CarryCommand.js";
 import TeleportCommand from "./Handlers/TeleportCommand.js";
 import GiveCommand from "./Handlers/GiveCommand.js";
 import DanceCommand from "./Handlers/DanceCommand.js";
-import ActionCommand from "./Handlers/ActionCommand.js";
 import AwayFromKeyboardCommand from "./Handlers/AwayFromKeyboardCommand.js";
 import SignCommand from "./Handlers/SignCommand.js";
 import StandCommand from "./Handlers/StandCommand.js";
@@ -26,7 +25,6 @@ export type CommandAliases<T = typeof Command> = {
 
 export default class CommandHandler {
     private readonly commands: CommandAliases[] = [
-        { command: ActionCommand, aliases: [ "action" ] },
         { command: StandCommand, aliases: [ "stand" ]},
         { command: SitCommand, aliases: [ "sit" ]},
         { command: WaveCommand, aliases: [ "wave" ] },

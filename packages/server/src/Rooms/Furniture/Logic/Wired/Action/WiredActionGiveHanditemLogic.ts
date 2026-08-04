@@ -39,6 +39,6 @@ export default class WiredActionGiveHanditemLogic extends WiredActionLogic {
             }));
         }
 
-        options.roomUser.addAction(`CarryItem.${this.roomFurniture.model.data.wiredActionGiveHanditem.handitem}`);
+        options.roomUser.pose.setEffect(`CarryItem.${this.roomFurniture.model.data.wiredActionGiveHanditem.handitem}`);
     }
 }

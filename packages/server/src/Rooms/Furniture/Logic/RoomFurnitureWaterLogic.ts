@@ -11,17 +11,14 @@ export default class RoomFurnitureWaterLogic implements RoomFurnitureLogic {
     }
 
     async handleBeforeUserWalksOn(roomUser: RoomUser): Promise<void> {
-        if(roomUser.hasAction("AvatarEffect.29")) {
-            return;
-        }
+        roomUser.pose.setEffect("AvatarEffect.28");
 
-        roomUser.addAction("AvatarEffect.28");
         this.roomUsersSplashing.push(roomUser);
     }
 
     async handleBeforeUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {
         if(!newRoomFurniture.some((furniture) => (furniture.logic instanceof RoomFurnitureWaterLogic))) {
-            roomUser.removeAction("AvatarEffect");
+            roomUser.pose.removeEffect();
         }
     }
 
@@ -31,8 +28,9 @@ export default class RoomFurnitureWaterLogic implements RoomFurnitureLogic {
 
     async handleActionsInterval(): Promise<void> {
         for(const roomUser of this.roomUsersSplashing) {
-            roomUser.removeAction("AvatarEffect");
-            roomUser.addAction("AvatarEffect.29");
+            roomUser.pose.removeEffect();
+            
+            roomUser.pose.setEffect("AvatarEffect.29");
         }
 
         this.roomUsersSplashing = [];

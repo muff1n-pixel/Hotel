@@ -120,8 +120,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
                     for(const actor of actors) {
                         if(actor instanceof RoomUser && !this.players.hasPlayer(actor)) {
-                            actor.removeAction("AvatarEffect");
-                            actor.addAction("AvatarEffect.4", 1000);
+                            actor.pose.removeEffect();
+                            actor.pose.setEffect("AvatarEffect.4", 1000);
 
                             actor.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
                         }
@@ -229,8 +229,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             if(player.shield && performance.now() - player.shieldAt >= 5000) {
                 player.shield = false;
                 
-                player.roomUser.removeAction("AvatarEffect");
-                player.roomUser.addAction(this.getTeamAvatarEffect(player));
+                player.roomUser.pose.removeEffect();
+                player.roomUser.pose.setEffect(this.getTeamAvatarEffect(player));
             }
 
             if(player.roomUser.path.frozen) {
@@ -243,8 +243,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                         if(exitFurniture) {
                             this.players.removePlayer(player.roomUser);
 
-                            player.roomUser.removeAction("AvatarEffect");
-                            player.roomUser.addAction("AvatarEffect.4", 1000);
+                            player.roomUser.pose.removeEffect();
+                            player.roomUser.pose.setEffect("AvatarEffect.4", 1000);
 
                             player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
                             
@@ -299,8 +299,8 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 player.shield = true;
                 player.shieldAt = performance.now();
                 
-                player.roomUser.removeAction("AvatarEffect");
-                player.roomUser.addAction(this.getTeamAvatarEffect(player));
+                player.roomUser.pose.removeEffect();
+                player.roomUser.pose.setEffect(this.getTeamAvatarEffect(player));
 
                 player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 

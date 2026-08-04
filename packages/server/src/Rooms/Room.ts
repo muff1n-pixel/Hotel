@@ -192,7 +192,8 @@ export default class Room {
             const sitableFurniture = this.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(actor.position));
 
             if(sitableFurniture) {
-                actor.addAction("Sit");
+                actor.pose.sit();
+
                 actor.path.setPosition({
                     ...actor.position,
                     depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
@@ -202,7 +203,8 @@ export default class Room {
                 const depth = this.getUpmostDepthAtPosition(RoomPositionOffsetData.fromJSON(actor.position));
 
                 if(depth !== null) {
-                    actor.removeAction("Sit");
+                    actor.pose.stand();
+                    
                     actor.path.setPosition({
                         ...actor.position,
                         depth

@@ -3,9 +3,10 @@ import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
 import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomUser from "../Users/RoomUser.js";
-import Directions from "../../Helpers/Directions.js";
+import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
+import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -17,6 +18,8 @@ export default class RoomBot implements RoomActor {
     public path: RoomActorPath;
 
     public lastActivity: number = 0;
+
+    public pose: RoomActorPose = new RoomFigurePose(this);
 
     constructor(public readonly room: Room, public readonly model: UserBotModel) {
         this.position = model.position;
@@ -47,56 +50,6 @@ export default class RoomBot implements RoomActor {
         return roomBot;
     }
 
-    public hasAction(actionId: string): boolean {
-        return this.actions.includes(actionId);
-    }
-
-    public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean) {
-        if(this.actions.includes(action)) {
-            return null;
-        }
-
-        this.actions.push(action);
-
-        const roomActorActionData = RoomActorActionData.create({
-            actor: {
-                bot: {
-                    botId: this.model.id
-                }
-            },
-            
-            actionsAdded: [action]
-        });
-
-        if(sendProtobuff) {
-            this.room.sendProtobuff(RoomActorActionData, roomActorActionData);
-        }
-
-        return roomActorActionData;
-    }
-
-    public removeAction(action: string) {
-        const actionId = action.split('.')[0]!;
-
-        const existingActionIndex = this.actions.findIndex((action) => action.split('.')[0] === actionId);
-
-        if(existingActionIndex === -1) {
-            return;
-        }
-
-        this.actions.splice(existingActionIndex, 1);
-
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
-            actor: {
-                bot: {
-                    botId: this.model.id
-                }
-            },
-            
-            actionsRemoved: [actionId]
-        }));
-    }
-    
     public sendWalkEvent(previousPosition: RoomPositionData): void {
         this.room.sendProtobuff(RoomActorWalkToData, RoomActorWalkToData.create({
             actor: {
@@ -305,5 +258,13 @@ export default class RoomBot implements RoomActor {
         }
 
         this.path.walkTo(RoomPositionOffsetData.fromJSON(userToFollow.position));
+    }
+    
+    public getActorIdentifier(): RoomActorIdentifierData {
+        return RoomActorIdentifierData.create({
+            bot: {
+                botId: this.model.id
+            }
+        })
     }
 }

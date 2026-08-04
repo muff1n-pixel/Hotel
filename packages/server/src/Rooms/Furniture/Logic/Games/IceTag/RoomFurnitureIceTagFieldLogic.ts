@@ -10,26 +10,26 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
     }
 
     async handleUserWalksOn(roomUser: RoomUser): Promise<void> {
-        if(roomUser.hasAction("AvatarEffect.45") || roomUser.hasAction("AvatarEffect.46")) {
+        if(roomUser.pose.hasEffect("AvatarEffect.45") || roomUser.pose.hasEffect("AvatarEffect.46")) {
             const userInRadius = this.roomFurniture.room.users.find((targetRoomUser) => targetRoomUser.user.model.id !== roomUser.user.model.id && targetRoomUser.isWithinRadius(roomUser.position, 1));
 
             if(userInRadius) {
-                roomUser.removeAction("AvatarEffect");
+                roomUser.pose.removeEffect();
 
                 if(roomUser.user.model.figureConfiguration.gender === "male") {
-                    roomUser.addAction("AvatarEffect.38");
+                    roomUser.pose.setEffect("AvatarEffect.38");
                 }
                 else {
-                    roomUser.addAction("AvatarEffect.39");
+                    roomUser.pose.setEffect("AvatarEffect.39");
                 }
                 
-                userInRadius.removeAction("AvatarEffect");
+                userInRadius.pose.removeEffect();
                 
                 if(userInRadius.user.model.figureConfiguration.gender === "male") {
-                    userInRadius.addAction("AvatarEffect.45");
+                    userInRadius.pose.setEffect("AvatarEffect.45");
                 }
                 else {
-                    userInRadius.addAction("AvatarEffect.46");
+                    userInRadius.pose.setEffect("AvatarEffect.46");
                 }
 
                 await userInRadius.user.achievements.addAchievementScore("BladesOfGlory", 1);
@@ -38,12 +38,12 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
             return;
         }
 
-        if(roomUser.hasAction("AvatarEffect.38") || roomUser.hasAction("AvatarEffect.39")) {
+        if(roomUser.pose.hasEffect("AvatarEffect.38") || roomUser.pose.hasEffect("AvatarEffect.39")) {
             return;
         }
         
-        roomUser.removeAction("AvatarEffect");
-        roomUser.removeAction("CarryItem");
+        roomUser.pose.removeEffect();
+        roomUser.pose.removeEffect();
 
         const usersPlaying = this.getUsersPlaying();
         const taggedRoomUsers = this.getTaggedRoomUsers();
@@ -51,34 +51,30 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
 
         if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
             if(roomUser.user.model.figureConfiguration.gender === "male") {
-                roomUser.addAction("AvatarEffect.45");
+                roomUser.pose.setEffect("AvatarEffect.45");
             }
             else {
-                roomUser.addAction("AvatarEffect.46");
+                roomUser.pose.setEffect("AvatarEffect.46");
             }
         }
         else {
             if(roomUser.user.model.figureConfiguration.gender === "male") {
-                roomUser.addAction("AvatarEffect.38");
+                roomUser.pose.setEffect("AvatarEffect.38");
             }
             else {
-                roomUser.addAction("AvatarEffect.39");
+                roomUser.pose.setEffect("AvatarEffect.39");
             }
         }
     }
     
     async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {
         if(!newRoomFurniture.some((furniture) => (furniture.logic instanceof RoomFurnitureIceTagFieldLogic))) {
-            roomUser.removeAction("AvatarEffect.38");
-            roomUser.removeAction("AvatarEffect.39");
-
-            roomUser.removeAction("AvatarEffect.45");
-            roomUser.removeAction("AvatarEffect.46");
+            roomUser.pose.removeEffect();
         }
     }
     
     async handleUserLeftRoom(roomUser: RoomUser): Promise<void> {
-        if(roomUser.hasAction("AvatarEffect.45") || roomUser.hasAction("AvatarEffect.46")) {
+        if(roomUser.pose.hasEffect("AvatarEffect.45") || roomUser.pose.hasEffect("AvatarEffect.46")) {
             const taggedRoomUsers = this.getTaggedRoomUsers();
 
             if(!taggedRoomUsers.length) {
@@ -92,13 +88,13 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
                         const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
 
                         if(randomUser) {
-                            randomUser.removeAction("AvatarEffect");
+                            randomUser.pose.removeEffect();
 
                             if(randomUser.user.model.figureConfiguration.gender === "male") {
-                                randomUser.addAction("AvatarEffect.45");
+                                randomUser.pose.setEffect("AvatarEffect.45");
                             }
                             else {
-                                randomUser.addAction("AvatarEffect.46");
+                                randomUser.pose.setEffect("AvatarEffect.46");
                             }
                         }
                     }
@@ -125,14 +121,14 @@ export default class RoomFurnitureIceTagFieldLogic implements RoomFurnitureLogic
 
     private getUsersPlaying() {
         return this.roomFurniture.room.users.filter((user) => (
-            (user.hasAction("AvatarEffect.38") || user.hasAction("AvatarEffect.39"))
-            || (user.hasAction("AvatarEffect.45") || user.hasAction("AvatarEffect.46"))
+            (user.pose.hasEffect("AvatarEffect.38") || user.pose.hasEffect("AvatarEffect.39"))
+            || (user.pose.hasEffect("AvatarEffect.45") || user.pose.hasEffect("AvatarEffect.46"))
         ));
     }
 
     private getTaggedRoomUsers() {
         return this.roomFurniture.room.users.filter((user) => (
-            (user.hasAction("AvatarEffect.45") || user.hasAction("AvatarEffect.46"))
+            (user.pose.hasEffect("AvatarEffect.45") || user.pose.hasEffect("AvatarEffect.46"))
         ));
     }
 

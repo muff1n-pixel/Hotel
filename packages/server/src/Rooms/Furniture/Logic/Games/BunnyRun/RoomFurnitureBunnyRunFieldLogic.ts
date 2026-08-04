@@ -10,14 +10,14 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
     }
 
     async handleUserWalksOn(roomUser: RoomUser): Promise<void> {
-        if(roomUser.hasAction("AvatarEffect.68")) {
+        if(roomUser.pose.hasEffect("AvatarEffect.68")) {
             const userInRadius = this.roomFurniture.room.users.find((targetRoomUser) => targetRoomUser.user.model.id !== roomUser.user.model.id && targetRoomUser.isWithinRadius(roomUser.position, 1) && targetRoomUser.position && targetRoomUser.room.getUpmostFurnitureAtPosition(RoomPositionOffsetData.fromJSON(targetRoomUser.position))?.logic instanceof RoomFurnitureBunnyRunFieldLogic);
 
             if(userInRadius) {
-                roomUser.removeAction("AvatarEffect");
+                roomUser.pose.removeEffect();
                 
-                userInRadius.removeAction("AvatarEffect");
-                userInRadius.addAction("AvatarEffect.68");
+                userInRadius.pose.removeEffect();
+                userInRadius.pose.setEffect("AvatarEffect.68");
 
                 await userInRadius.user.achievements.addAchievementScore("BladesOfGlory", 1);
             }
@@ -30,19 +30,19 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
         const tagPoles = this.getTagPoles();
 
         if(!taggedRoomUsers.length || (taggedRoomUsers.length < tagPoles.length && usersPlaying.length > taggedRoomUsers.length)) {
-            roomUser.removeAction("AvatarEffect");
-            roomUser.addAction("AvatarEffect.68");
+            roomUser.pose.removeEffect();
+            roomUser.pose.setEffect("AvatarEffect.68");
         }
     }
     
     async handleUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {
         if(!newRoomFurniture.some((furniture) => (furniture.logic instanceof RoomFurnitureBunnyRunFieldLogic))) {
-            roomUser.removeAction("AvatarEffect.68");
+            roomUser.pose.removeEffect();
         }
     }
     
     async handleUserLeftRoom(roomUser: RoomUser): Promise<void> {
-        if(roomUser.hasAction("AvatarEffect.68")) {
+        if(roomUser.pose.hasEffect("AvatarEffect.68")) {
             const taggedRoomUsers = this.getTaggedRoomUsers();
 
             if(!taggedRoomUsers.length) {
@@ -56,8 +56,8 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
                         const randomUser = usersPlaying[Math.floor(Math.random() * usersPlaying.length)];
 
                         if(randomUser) {
-                            randomUser.removeAction("AvatarEffect");
-                            randomUser.addAction("AvatarEffect.68");
+                            randomUser.pose.removeEffect();
+                            randomUser.pose.setEffect("AvatarEffect.68");
                         }
                     }
                 }
@@ -80,7 +80,7 @@ export default class RoomFurnitureBunnyRunFieldLogic implements RoomFurnitureLog
     }
 
     private getTaggedRoomUsers() {
-        return this.roomFurniture.room.users.filter((user) => user.hasAction("AvatarEffect.68"));
+        return this.roomFurniture.room.users.filter((user) => user.pose.hasEffect("AvatarEffect.68"));
     }
 
     private getTagPoles() {

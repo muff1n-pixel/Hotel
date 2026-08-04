@@ -5,15 +5,14 @@ import { game } from "../../index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import WiredTriggerUserPerformsActionLogic from "../Furniture/Logic/Wired/Trigger/WiredTriggerUserPerformsActionLogic.js";
-import { FigureConfigurationData, LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomEventData, RoomGroupData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData, UserData } from "@pixel63/events";
+import { FigureConfigurationData, LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData } from "@pixel63/events";
 import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
-import { RoomActorAction } from "../Actor/RoomActorAction.js";
 import Directions from "../../Helpers/Directions.js";
 import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
 import RoomUserTrading from "./Trading/RoomUserTrading.js";
 import RoomUserGroup from "./Groups/RoomUserGroup.js";
 import { GroupRights, GroupType } from "../../Database/Models/Groups/RoomGroupModel.js";
+import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -23,7 +22,6 @@ export default class RoomUser implements RoomActor {
     
     public position: RoomPositionData;
     public direction: number;
-    public actions: RoomActorAction[] = [];
     public typing: boolean = false;
     public teleporting: boolean = false;
     public idling: boolean = false;
@@ -51,6 +49,8 @@ export default class RoomUser implements RoomActor {
             }));
         }
     }
+
+    public pose: RoomFigurePose = new RoomFigurePose(this);
 
     constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPositionData) {
         this.user.room = room;
@@ -138,7 +138,7 @@ export default class RoomUser implements RoomActor {
             direction: this.direction,
             
             hasRights: this.hasRights(),
-            actions: this.actions.map((action) => action.id),
+            actions: this.pose.getActions(),
             typing: this.typing,
             idling: this.idling
         };
@@ -162,15 +162,7 @@ export default class RoomUser implements RoomActor {
             }))
         }
 
-        for(const action of this.actions) {
-            if(action.expiresAt === undefined) {
-                continue;
-            }
-
-            if(performance.now() > action.expiresAt) {
-                this.removeAction(action.id);
-            }
-        }
+        this.pose.handleActionsInterval();
 
         await this.trading.handleActionsInterval();
         await this.path.handleActionsInterval();
@@ -213,73 +205,6 @@ export default class RoomUser implements RoomActor {
         }
 
         this.user.friends.updateFriends();
-    }
-
-    public hasAction(actionId: string): boolean {
-        return this.actions.some((action) => action.id === actionId);
-    }
-
-    public addAction(action: string, removeAfterMs?: number, sendProtobuff: boolean = true): RoomActorActionData | null {
-        if(this.hasAction(action)) {
-            return null;
-        }
-
-        if(action === "Sit") {
-            if(this.direction % 2) {
-                this.path.setDirection((this.direction + 1) % 8);
-            }
-        }
-
-        if(["Wave", "GestureSmile", "GestureSad", "GestureAngry", "GestureSurprised", "Laugh"].includes(action)) {
-            removeAfterMs = 2000;
-        }
-
-        this.actions.push({
-            id: action,
-            expiresAt: (removeAfterMs !== undefined)?(performance.now() + removeAfterMs):(undefined)
-        });
-
-        const roomActorActionData = RoomActorActionData.create({
-            actor: {
-                user: {
-                    userId: this.user.model.id
-                }
-            },
-            
-            actionsAdded: [action]
-        });
-
-        if(sendProtobuff) {
-            this.room.sendProtobuff(RoomActorActionData, roomActorActionData);
-        }
-
-        for(const logic of this.room.getFurnitureWithCategory(WiredTriggerUserPerformsActionLogic)) {
-            logic.handleUserAction(this, action).catch(console.error);
-        }
-
-        return roomActorActionData;
-    }
-
-    public removeAction(action: string) {
-        const actionId = action.split('.')[0]!;
-
-        const existingActionIndex = this.actions.findIndex((action) => action.id.split('.')[0] === actionId);
-
-        if(existingActionIndex === -1) {
-            return;
-        }
-
-        this.actions.splice(existingActionIndex, 1);
-
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
-            actor: {
-                user: {
-                    userId: this.user.model.id
-                }
-            },
-            
-            actionsRemoved: [actionId]
-        }));
     }
 
     public sendWalkEvent(previousPosition: RoomPositionData, jump: boolean): void {
@@ -477,10 +402,10 @@ export default class RoomUser implements RoomActor {
 
         if(effect) {
             if(frozen) {
-                this.addAction(effect);
+                this.pose.setEffect(effect);
             }
             else {
-                this.removeAction(effect);
+                this.pose.removeEffect();
             }
         }
     }
@@ -521,5 +446,13 @@ export default class RoomUser implements RoomActor {
 
     public getFigureConfiguration() {
         return this.temporaryFigureConfiguration ?? this.user.model.figureConfiguration;
+    }
+
+    public getActorIdentifier(): RoomActorIdentifierData {
+        return RoomActorIdentifierData.create({
+            user: {
+                userId: this.user.model.id
+            }
+        })
     }
 }

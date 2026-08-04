@@ -24,19 +24,19 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
         roomUser.lastActivity = performance.now();
 
         if(payload.message.includes(":)")) {
-            roomUser.addAction("GestureSmile");
+            roomUser.pose.smile();
         }
         else if(payload.message.includes(":D")) {
-            roomUser.addAction("Laugh");
+            roomUser.pose.laugh();
         }
         else if(payload.message.includes(":(")) {
-            roomUser.addAction("GestureSad");
+            roomUser.pose.sad();
         }
         else if(payload.message.includes(":@")) {
-            roomUser.addAction("GestureAngry");
+            roomUser.pose.angry();
         }
         else if(payload.message.toLowerCase().includes(":o")) {
-            roomUser.addAction("GestureSurprised");
+            roomUser.pose.surprised();
         }
 
         const parts = payload.message.split(' ');
