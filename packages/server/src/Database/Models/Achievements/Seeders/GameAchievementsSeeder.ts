@@ -27,7 +27,8 @@ export default class GameAchievementsSeeder {
             badgePrefix: "ACH_GamePlayerExperience",
             levels: [
                 100, 250, 480, 820, 1330, 2090, 3230, 4930, 7530, 12430, 21730, 39330, 72730, 136230, 256830, 485930, 921230, 1748230, 3319530, 6305030
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
 
         await BattleBanzaiAchievementsSeeder.seedAchievements();

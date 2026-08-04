@@ -14,7 +14,8 @@ export default class MusicAchievementsSeeder {
             badgePrefix: "ACH_MusicPlayer",
             levels: [
                 5, 105, 305, 605, 1005, 1505, 2105, 2805, 3605, 4605, 6605, 9605, 13605, 18605, 24605, 31605, 39605, 49605, 64605, 94605
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -25,7 +26,8 @@ export default class MusicAchievementsSeeder {
             badgePrefix: "ACH_MusicCollector",
             levels: [
                 2, 5, 9, 14, 20, 27, 35, 44, 54, 69
-            ]
+            ],
+            duckets: Array(10).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

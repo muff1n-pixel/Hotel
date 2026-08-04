@@ -13,7 +13,8 @@ export default class BunnyRunAchievementsSeeder {
             badgePrefix: "ACH_BunR",
             levels: [
                 1, 4, 9, 17, 29, 44, 62, 87, 114, 144, 186, 242, 314, 402, 498, 618, 754, 905, 1084, 1284
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

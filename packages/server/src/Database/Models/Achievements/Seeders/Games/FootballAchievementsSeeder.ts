@@ -14,7 +14,8 @@ export default class FootballAchievementsSeeder {
             badgePrefix: "ACH_FootballGoalScored",
             levels: [
                 1, 10, 100, 1000, 10000
-            ]
+            ],
+            duckets: Array(5).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -25,7 +26,8 @@ export default class FootballAchievementsSeeder {
             badgePrefix: "ACH_FootballGoalScoredInRoom",
             levels: [
                 1, 20, 400, 8000, 160000
-            ]
+            ],
+            duckets: Array(5).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

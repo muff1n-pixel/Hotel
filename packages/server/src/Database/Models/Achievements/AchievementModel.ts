@@ -19,6 +19,10 @@ export class AchievementModel extends Model {
     declare description: string;
     declare badgePrefix: string;
     declare levels: number[];
+
+    declare credits: number[];
+    declare duckets: number[];
+    declare diamonds: number[];
     
     declare category: NonAttribute<AchievementCategoryModel>;
 }
@@ -51,6 +55,39 @@ export function initializeAchievementModel(sequelize: Sequelize) {
                     this.setDataValue("levels", JSON.stringify(value));
                 },
                 allowNull: false
+            },
+            credits: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("credits"));
+                },
+                set: function (value) {
+                    this.setDataValue("credits", JSON.stringify(value));
+                },
+                allowNull: false,
+                defaultValue: JSON.stringify([])
+            },
+            duckets: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("duckets"));
+                },
+                set: function (value) {
+                    this.setDataValue("duckets", JSON.stringify(value));
+                },
+                allowNull: false,
+                defaultValue: JSON.stringify([])
+            },
+            diamonds: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("diamonds"));
+                },
+                set: function (value) {
+                    this.setDataValue("diamonds", JSON.stringify(value));
+                },
+                allowNull: false,
+                defaultValue: JSON.stringify([])
             },
         },
         {

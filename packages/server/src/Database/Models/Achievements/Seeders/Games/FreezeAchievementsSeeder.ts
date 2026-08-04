@@ -17,7 +17,8 @@ export default class FreezeAchievementsSeeder {
             badgePrefix: "ACH_EsA",
             levels: [
                 2, 5, 10, 18, 30, 50, 80, 125, 200, 300, 420, 600, 900, 1500, 2500, 3700, 5400, 8000, 12000, 20000
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -28,7 +29,8 @@ export default class FreezeAchievementsSeeder {
             badgePrefix: "ACH_FreezeWinner",
             levels: [
                 50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -39,7 +41,8 @@ export default class FreezeAchievementsSeeder {
             badgePrefix: "ACH_FreezePlayer",
             levels: [
                 50, 125, 240, 410, 655, 1045, 1615, 2465, 2765, 6215, 10865, 19665, 68115, 128415, 242965, 460615, 874115, 1659765, 3123515
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -50,7 +53,8 @@ export default class FreezeAchievementsSeeder {
             badgePrefix: "ACH_FreezePowerUp",
             levels: [
                 100, 300, 600, 1000, 1500, 2100, 2900, 3900, 5200, 6800, 8800, 11200, 14100, 17600, 22100, 28100, 36100, 48100, 66100, 96100
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

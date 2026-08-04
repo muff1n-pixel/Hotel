@@ -14,7 +14,8 @@ export default class IceTagAchievementsSeeder {
             badgePrefix: "ACH_TagB",
             levels: [
                 1, 4, 9, 17, 29, 44, 62, 87, 114, 144, 186, 242, 314, 402, 498, 618, 754, 905, 1084, 1284
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -25,7 +26,8 @@ export default class IceTagAchievementsSeeder {
             badgePrefix: "ACH_TagC",
             levels: [
                 3, 8, 16, 31, 51, 81, 121, 171, 231, 301, 381, 471, 571, 681, 801, 931, 1071, 1221, 1381, 1551
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

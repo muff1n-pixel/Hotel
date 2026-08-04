@@ -14,7 +14,8 @@ export default class SkateboardAchievementsSeeder {
             badgePrefix: "ACH_SkateBoardJump",
             levels: [
                 5, 13, 25, 45, 75, 120, 185, 300, 475, 750, 1125, 1675, 2500, 3750, 5600, 8750, 13500, 20000, 30000, 50000
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -25,7 +26,8 @@ export default class SkateboardAchievementsSeeder {
             badgePrefix: "ACH_SkateBoardSlide",
             levels: [
                 20, 50, 100, 180, 300, 480, 750, 1200, 1900, 3000, 4500, 6700, 10000, 15000, 22500, 35000, 54000, 80000, 120000, 200000
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

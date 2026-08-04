@@ -107,6 +107,24 @@ export default class UserAchievements {
             level: nextLevel
         });
 
+        const gameUser = game.getUserById(this.userId);
+
+        const user = await UserModel.findByPk(this.userId);
+
+        if(user) {
+            user.credits += userAchievement.achievement.credits[nextLevel] ?? 0;
+            user.duckets += userAchievement.achievement.duckets[nextLevel] ?? 0;
+            user.diamonds += userAchievement.achievement.diamonds[nextLevel] ?? 0;
+
+            if(user.changed()) {
+                await user.save();
+            }
+            
+            if(gameUser) {
+                gameUser.sendUserData();
+            }
+        }
+
         const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);
 
         if(badge) {
@@ -130,13 +148,11 @@ export default class UserAchievements {
                 });
             }
 
-            const user = game.getUserById(this.userId);
-
-            if(user) {
-                await user.getInventory().addBadge(userBadge);
+            if(gameUser) {
+                await gameUser.getInventory().addBadge(userBadge);
                 
                 for(let level = lastLevel + 1; level <= nextLevel; level++) {
-                    user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
+                    gameUser.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                         id: randomUUID(),
                         text: `You have unlocked the ${userAchievement.achievement.name} ${new RomanNumerals(level).toString()} achievement!`,
                         badge: BadgeData.fromJSON({

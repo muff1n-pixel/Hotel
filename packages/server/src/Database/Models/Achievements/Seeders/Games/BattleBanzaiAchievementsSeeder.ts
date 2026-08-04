@@ -15,7 +15,8 @@ export default class BattleBanzaiAchievementsSeeder {
             badgePrefix: "ACH_BattleBallTilesLocked",
             levels: [
                 25, 65, 125, 205, 335, 525, 805, 1235, 1875, 2875, 4375, 6875, 10775, 17075, 27175, 43275, 69075, 110375, 176375, 282075
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -26,7 +27,8 @@ export default class BattleBanzaiAchievementsSeeder {
             badgePrefix: "ACH_BattleBallWinner",
             levels: [
                 50, 100, 240, 410, 655, 1045, 1615, 2465, 3765, 6215, 10865, 19665, 36365, 68115, 128415, 242965, 460615, 874115, 1659765, 3152515
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -37,7 +39,8 @@ export default class BattleBanzaiAchievementsSeeder {
             badgePrefix: "ACH_BattleBallPlayer",
             levels: [
                 50, 100, 240, 410, 655, 1045, 1615, 2465, 3765, 6215, 10865, 19665, 36365, 68115, 128415, 242965, 460615, 874115, 1659765, 3152515
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }

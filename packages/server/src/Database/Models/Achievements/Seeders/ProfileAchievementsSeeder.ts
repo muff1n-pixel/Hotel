@@ -14,7 +14,8 @@ export default class ProfileAchievementsSeeder {
             badgePrefix: "ACH_RegistrationDuration",
             levels: [
                 1, 3, 10, 20, 30, 56, 84, 112, 168, 224, 280, 365, 548, 730, 913, 1095, 1278, 1460, 1643, 1825
-            ]
+            ],
+            duckets: Array(20).fill(null).map((_, index) => (index + 1) * 1000)
         });
         
         await AchievementModel.upsert({
@@ -25,7 +26,8 @@ export default class ProfileAchievementsSeeder {
             badgePrefix: "ACH_VipHC",
             levels: [
                 14, (30 * 12), (30 * 12 * 2), (30 * 12 * 3), (30 * 12 * 4)
-            ]
+            ],
+            duckets: Array(5).fill(null).map((_, index) => (index + 1) * 1000)
         });
     }
 }
