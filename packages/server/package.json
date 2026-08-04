@@ -1,13 +1,13 @@
 {
   "type": "commonjs",
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start": "tsx src/Game/index.ts",
     "build": "npx tsc",
-    "dev": "tsx --watch src/index.ts",
-    "init": "tsx src/index.ts --init",
+    "dev": "tsx --watch src/Game/index.ts",
+    "init": "tsx src/Game/index.ts --init",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:rollback": "npx sequelize-cli db:migrate:undo",
-    "lint": "npx eslint src/"
+    "lint": "npx eslint src/Game/"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
