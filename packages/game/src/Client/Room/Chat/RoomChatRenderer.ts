@@ -2,9 +2,13 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import Figure from "@Client/Figure/Figure";
 import { FigureConfigurationData, RoomActorChatOptionsData } from "@pixel63/events";
+import { RoomActor } from "../RoomInstance";
+import RoomFigureItem from "../Items/Figure/RoomFigureItem";
+import RoomPetItem from "../Items/Pets/RoomPetItem";
+import Pet from "@Client/Pets/Pet";
 
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, figureConfiguration: FigureConfigurationData, message: string, options?: RoomActorChatOptionsData) {
+    public static async render(style: string, user: string, actor: RoomActor, message: string, options?: RoomActorChatOptionsData) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);
@@ -68,8 +72,8 @@ export default class RoomChatRenderer {
 
         context.globalAlpha = 1;
 
-        if(roomChatStyle.figure) {
-            const figureRenderer = new Figure(figureConfiguration, 2, undefined, false);
+        if(roomChatStyle.figure && actor.item instanceof RoomFigureItem) {
+            const figureRenderer = new Figure(actor.item.figureRenderer.configuration, 2, undefined, false);
             
             await figureRenderer.loadAssets(0);
 
@@ -79,6 +83,29 @@ export default class RoomChatRenderer {
                 figure.image,
                 0, 0, figure.image.width, 74 * 2,
                 roomChatStyle.figure.left + -65, roomChatStyle.figure.top + -52, figure.image.width / 2, 74
+            );
+        }
+        else if(roomChatStyle.figure && actor.item instanceof RoomPetItem) {
+            console.log(actor.item);
+            const figureRenderer = new Pet(actor.item.pet.type, actor.item.pet.palettes, undefined, true);
+            
+            await figureRenderer.loadAssets();
+
+            const image = await figureRenderer.renderToCanvas();
+            
+            console.log(image);
+
+            const maxSize = 30;
+
+            const scale = Math.min(maxSize / image.width, maxSize / image.height, 1);
+
+            const drawWidth = image.width * scale;
+            const drawHeight = image.height * scale;
+
+            context.drawImage(
+                image,
+                0, 0, image.width, image.height,
+                roomChatStyle.figure.left - drawWidth / 2, roomChatStyle.figure.top - drawHeight / 2, drawWidth, drawHeight
             );
         }
 

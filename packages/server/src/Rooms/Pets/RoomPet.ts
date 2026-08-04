@@ -178,6 +178,8 @@ export default class RoomPet implements RoomActor {
     }
 
     public async handleActionsInterval() {
+        this.handleAutomaticChat();
+
         //if(this.model.relaxed) {
             await this.handleRelaxed();
         //}
@@ -210,5 +212,37 @@ export default class RoomPet implements RoomActor {
         }
 
         this.path.walkTo(targetPosition);
+    }
+
+    private lastChatMessage: number = 0;
+    private nextChatMessageTimeout: number = 20;
+
+    public handleAutomaticChat() {
+        const elapsedSinceLastChatMessage = performance.now() - this.lastChatMessage;
+
+        if(elapsedSinceLastChatMessage < this.nextChatMessageTimeout * 1000) {
+            return;
+        }
+
+        this.lastChatMessage = performance.now();
+        this.nextChatMessageTimeout = Math.round(5 + (Math.random() * 20));
+
+        this.sendVocal("PLAYFUL");
+    }
+
+    public sendVocal(type: string) {
+        this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+            actor: {
+                pet: {
+                    petId: this.model.id
+                }
+            },
+
+            message: "",
+            messageVocals: [ `pet.${this.model.pet.type}.${type}`, `pet.common.${type}` ],
+            messageVocalIndex: Math.floor(Math.random() * 100),
+
+            roomChatStyleId: "normal"
+        }));
     }
 }

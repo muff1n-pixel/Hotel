@@ -46,7 +46,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
                 
                 const user = room.getUserById(payload.actor.user.userId);
 
-                const image = await RoomChatRenderer.render(payload.roomChatStyleId, user.data.name, user.data.figureConfiguration, payload.message, {
+                const image = await RoomChatRenderer.render(payload.roomChatStyleId, user.data.name, user, payload.message, {
                     $type: "RoomActorChatOptionsData"
                 });
 

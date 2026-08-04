@@ -1,0 +1,203 @@
+{
+    "pet": {
+        "common": {
+            "DISOBEY": [
+                "Nay. (Geddit?)",
+                "I wish I could do as you ask, but I cannot.",
+                "Leave me alone."
+            ],
+            "DRINKING": [
+                "Ah, that's the good stuff."
+            ],
+            "EATING": [
+                "This is delicious!"
+            ],
+            "GENERIC_HAPPY": [
+                "*Happu*",
+                ":)",
+                "I think I'm happy, but it could be gas."
+            ],
+            "GENERIC_NEUTRAL": [
+                "How are you today?",
+                "Hello!",
+                "Bah...."
+            ],
+            "GENERIC_SAD": [
+                "*Sad*",
+                "I don't feel myself today :("
+            ],
+            "GREET_OWNER": [
+                "Fantastic to see you today!",
+                "Hello!"
+            ],
+            "HUNGRY": [
+                "I'm starving!"
+            ],
+            "LEVEL_UP": [
+                "I just leveled up!"
+            ],
+            "MUTED": [
+                "*silencio*"
+            ],
+            "PLAYFUL": [
+                "Let's do something fun today, like staring at a wall.",
+                "So bored.",
+                "Hey, let's go for a ride!"
+            ],
+            "SLEEPING": [
+                "Zzzz.... Marston!",
+                "Zzzz... Old Dan Tucker....",
+                "Zzzz... I have a heart that can never be tamed..."
+            ],
+            "THIRSTY": [
+                "I'm thirsty!"
+            ],
+            "TIRED": [
+                "I'm so tired!"
+            ],
+            "UNKNOWN_COMMAND": [
+                "I'm sorry, I don't understand!",
+                "Whatever, speak English if you want me to do something."
+            ]
+        },
+
+        "monkey": {
+            "DISOBEY": [
+                "Nay. (Geddit?)",
+                "I wish I could do as you ask, but I cannot.",
+                "Leave me alone."
+            ],
+            "DRINKING": [
+                "Ah, that's the good stuff."
+            ],
+            "EATING": [
+                "This is delicious!"
+            ],
+            "GENERIC_HAPPY": [
+                "*Happu*",
+                ":)",
+                "I think I'm happy, but it could be gas."
+            ],
+            "GENERIC_NEUTRAL": [
+                "How are you today?",
+                "Hello!",
+                "Bah...."
+            ],
+            "GENERIC_SAD": [
+                "*Sad*",
+                "I don't feel myself today :("
+            ],
+            "GREET_OWNER": [
+                "Fantastic to see you today!",
+                "Hello!"
+            ],
+            "HUNGRY": [
+                "I'm starving!"
+            ],
+            "LEVEL_UP": [
+                "I just leveled up!"
+            ],
+            "MUTED": [
+                "*silencio*"
+            ],
+            "PLAYFUL": [
+                "Let's do something fun today, like staring at a wall.",
+                "So bored.",
+                "Hey, let's go for a ride!"
+            ],
+            "SLEEPING": [
+                "Zzzz.... Marston!",
+                "Zzzz... Old Dan Tucker....",
+                "Zzzz... I have a heart that can never be tamed..."
+            ],
+            "THIRSTY": [
+                "I'm thirsty!"
+            ],
+            "TIRED": [
+                "I'm so tired!"
+            ],
+            "UNKNOWN_COMMAND": [
+                "I'm sorry, I don't understand!",
+                "Whatever, speak English if you want me to do something."
+            ]
+        },
+
+        "cow": {
+            "DISOBEY": [
+                "Well, I could do that. BUT, I just don't feel like it.",
+                "You're repeating yourself.",
+                "To do that would compromise my basic morals. Sorry, but no."
+            ],
+            "DRINKING": [
+                "Drinking water after an entire day eating grass is simply heavenly.",
+                "*Gulp* ..if it wasn't for water.. *Gulp* ..life wouldn't exist on this planet.."
+            ],
+            "EATING": [
+                "Veganism isn't just for Christmas. Veganism is for life.",
+                "*Crunch* I just ADORE meal times. *Crunch*",
+                "Mmmm. Healthy. *Crunch*"
+            ],
+            "GENERIC_HAPPY": [
+                "Today is a good day. Today is great.",
+                "With all the world's chaos, it takes effort to see the good. Remember that it's possible!",
+                "I'm glad I took that yoga class this morning: I'm feeling great right now."
+            ],
+            "GENERIC_NEUTRAL": [
+                "There is always some madness in love. But there is also always some reason in madness.",
+                "Cows need love too.",
+                "New York? London? Paris? Tokyo? Give me Kathmandu any day."
+            ],
+            "GENERIC_SAD": [
+                "I'm trying to see the light, but today I can only see the dark.",
+                "I'm feeling blue today... come back tomorrow."
+            ],
+            "GREET_OWNER": [
+                "Greetings. Did you bring that kale smoothie I asked for?",
+                "Hello again. Did you read that Zen Mind book I lent you?",
+                "Hello. You're looking... enlightened today, may I say."
+            ],
+            "HUNGRY": [
+                "I'm hungry, as opposed to starving.",
+                "I haven't eaten all day. Help.",
+                "Hey, I could really do with some food, comrade.",
+                "In my opinon, vegetarians should reconsider eating cheese or drinking milk."
+            ],
+            "LEVEL_UP": [
+                "*DING* I'm on the up.",
+                "*DING* Another level, done.",
+                "*DING* I just advanced another level. But what does that MEAN?",
+                "*DING* Another level. Are you proud?"
+            ],
+            "MUTED": [
+                "I could honestly not care less if I'm muted. I'll be right here listening to my jungle tape packs."
+            ],
+            "PLAYFUL": [
+                "You should really check out this Artificial Intelligence podcast I'm listening to.",
+                "Did you know the observable universe has more than 100 BILLION galaxies?"
+            ],
+            "PLAYING": [
+                "Marx actually made a lot of sense. Sometimes he made zero sense.",
+                "Do Androids Dream of Electric Sheep?"
+            ],
+            "SLEEPING": [
+                "*Dreams of electric sheep*",
+                "*zzZZzz..zz..zzZZzz*",
+                "*Rolls over and has a mouthful of grass mid-sleep*"
+            ],
+            "THIRSTY": [
+                "You can lead a cow to water, and it'll ALWAYS drink.",
+                "97% of the world's water is salty or otherwise undrinkable. By the way, I'm thirsty.",
+                "Would you do me a COLOSSAL favour and get me a drink?"
+            ],
+            "TIRED": [
+                "That existentialism debate has absolutely destroyed me. Good night.",
+                "Time for me to shut down for the day, dear friend.",
+                "Time to sleep - one of my favourite phrases."
+            ],
+            "UNKNOWN_COMMAND": [
+                "So. You're going to need to explain that a bit better...",
+                "Sorry, I don't understand. Repeat"
+            ]
+        }
+    }
+}

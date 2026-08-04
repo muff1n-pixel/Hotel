@@ -5,6 +5,7 @@ import { webSocketClient } from "../../../..";
 import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
 import { RoomActorChatData } from "@pixel63/events";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import { useTranslation } from "react-i18next";
 
 type RoomChatMessage = {
     id: number;
@@ -49,6 +50,8 @@ export default function RoomChat() {
     const messages = useRef<RoomChatMessage[]>([]);
     const [latestMessage, setLatestMessage] = useState<number>();
 
+    const [getVocalTranslation] = useTranslation("vocals");
+
     useEffect(() => {
         if(!room) {
             return;
@@ -59,20 +62,32 @@ export default function RoomChat() {
 
                 const actor = room.getActor(payload.actor);
 
-                if(!(actor.item instanceof RoomFigureItem)) {
-                    return;
-                }
-
                 const name = actor.data.name;
-                const figureConfiguration = (actor.data as any).figureConfiguration;
 
-                if(!actor.item.position || !figureConfiguration) {
+                if(!actor.item.position) {
                     return;
                 }
                 
                 const position = actor.item.position;
 
-                const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, figureConfiguration, payload.message, payload.options);
+                let message: string = payload.message;
+
+                if(payload.messageVocals.length) {
+                    if(payload.messageVocalIndex) {
+                        const texts = getVocalTranslation(payload.messageVocals, {
+                            returnObjects: true
+                        }) as string[];
+
+                        message = texts[payload.messageVocalIndex % texts.length];
+                    }
+                    else {
+                        message = getVocalTranslation(payload.messageVocals);
+                    }
+                }
+
+                console.log("Message: " + message);
+
+                const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, actor, message, payload.options);
 
                 const screenPosition = room.roomRenderer.getCoordinatePosition(position);
 
@@ -101,7 +116,7 @@ export default function RoomChat() {
         return () => {
             webSocketClient.removeProtobuffListener(RoomActorChatData, listener);
         };
-    }, [room]);
+    }, [room, getVocalTranslation]);
 
     useEffect(() => {
         if(!room || !rootRef.current) {

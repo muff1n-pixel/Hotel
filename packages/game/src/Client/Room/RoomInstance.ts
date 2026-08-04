@@ -35,6 +35,8 @@ export type HoveredFigure = {
     bot: RoomBot
 };
 
+export type RoomActor = RoomUser | RoomBot | RoomPet;
+
 export default class RoomInstance {
     public readonly key = Math.random();
 

@@ -6,7 +6,10 @@ import "Room/Actors/Chat/RoomActorChatOptionsData.proto";
 message RoomActorChatData {
     RoomActorIdentifierData actor = 1;
 
-    string message = 2;
     optional RoomActorChatOptionsData options = 3;
     string room_chat_style_id = 4;
+
+    string message = 2;
+    repeated string message_vocals = 5;
+    optional uint32 message_vocal_index = 6;
 }
