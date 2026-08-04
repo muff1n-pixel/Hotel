@@ -19,8 +19,8 @@ import { InvalidCommandParameterError } from "./Exceptions/InvalidCommandParamet
 import KickCommand from "./Handlers/KickCommand.js";
 import SoftKickCommand from "./Handlers/SoftKickCommand.js";
 
-export type CommandAliases = {
-    command: typeof Command;
+export type CommandAliases<T = typeof Command> = {
+    command: T;
     aliases: string[];
 };
 

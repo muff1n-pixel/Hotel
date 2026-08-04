@@ -39,9 +39,9 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
             roomUser.addAction("GestureSurprised");
         }
 
-        if(payload.message[0] === ':' || payload.message[0] === '/') {
-            const parts = payload.message.split(' ');
+        const parts = payload.message.split(' ');
 
+        if(payload.message[0] === ':' || payload.message[0] === '/') {
             if(roomUser.typing) {
                 roomUser.typing = false;
 
@@ -74,6 +74,14 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
 
         if(!userChatBlocked) {
             roomUser.sendRoomMessage(payload.message);
+
+            for(const roomPet of user.room.pets) {
+                const nameIndex = parts.indexOf(roomPet.model.name);
+
+                if(nameIndex !== -1 && parts[nameIndex + 1]) {
+                    await game.petCommandHandler.handleCommand(roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
+                }
+            }
         }
         else {
             user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({

@@ -5,16 +5,38 @@ import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import { RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
 
+export enum RoomPetState {
+    FREE = "free",
+    SIT = "sit"
+};
+
 export default class RoomPet implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
 
     public actions: string[] = [];
-    public position: RoomPositionData;
-    public direction: number;
+    
+    public get position(): RoomPositionData {
+        return this.model.position;
+    };
+
+    public set position(value: RoomPositionData) {
+        this.model.position = value;
+    };
+    
+    public get direction(): number {
+        return this.model.direction;
+    };
+
+    public set direction(value: number) {
+        this.model.direction = value;
+    };
 
     public path: RoomActorPath;
 
     public lastActivity: number = 0;
+
+    private state: RoomPetState = RoomPetState.FREE;
+    private posture: string = "std";
 
     constructor(public readonly room: Room, public readonly model: UserPetModel) {
         this.position = model.position;
@@ -52,6 +74,12 @@ export default class RoomPet implements RoomActor {
     public addAction(action: string, removeAfterMs?: number, sendProtobuff?: boolean): RoomActorActionData | null {
         if(this.actions.includes(action)) {
             return null;
+        }
+
+        if(action === "sit") {
+            if(this.direction % 2) {
+                this.path.setDirection((this.direction + 1) % 8);
+            }
         }
 
         this.actions.push(action);
@@ -180,9 +208,9 @@ export default class RoomPet implements RoomActor {
     public async handleActionsInterval() {
         this.handleAutomaticChat();
 
-        //if(this.model.relaxed) {
+        if(this.state === RoomPetState.FREE) {
             await this.handleRelaxed();
-        //}
+        }
 
         this.path.handleActionsInterval().catch(console.error);
     }
@@ -248,5 +276,53 @@ export default class RoomPet implements RoomActor {
 
             roomChatStyleId: "normal"
         }));
+    }
+
+    public sendInformationMessage(message: string) {
+        this.room.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
+            actor: {
+                pet: {
+                    petId: this.model.id
+                }
+            },
+
+            message,
+
+            roomChatStyleId: "generic"
+        }));
+    }
+
+    public setPosture(posture: string) {
+        this.posture = posture;
+
+        if(posture === "sit") {
+            if(this.direction % 2) {
+                this.path.setDirection((this.direction + 1) % 8);
+            }
+        }
+        
+        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
+            actor: {
+                pet: {
+                    petId: this.model.id
+                }
+            },
+            
+            posture: this.posture
+        }));
+    }
+
+    public setFree() {
+        this.state = RoomPetState.FREE;
+
+        this.setPosture("std");
+        this.sendVocal("GENERIC_HAPPY");
+    }
+
+    public setSit() {
+        this.state = RoomPetState.SIT;
+
+        this.setPosture("sit");
+        this.sendVocal("GENERIC_NEUTRAL");
     }
 }

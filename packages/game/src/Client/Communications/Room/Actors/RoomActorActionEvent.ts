@@ -1,6 +1,7 @@
 import { clientInstance } from "../../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import { RoomActorActionData } from "@pixel63/events";
 
 export default class RoomActorActionEvent implements ProtobuffListener<RoomActorActionData> {
@@ -33,6 +34,11 @@ export default class RoomActorActionEvent implements ProtobuffListener<RoomActor
                 
                 roomUser.data.actions = actor.item.figureRenderer.actions;
             }
+
+            clientInstance.roomInstance.value.roomRenderer.focusedItem.update();
+        }
+        else if(actor.item instanceof RoomPetItem && payload.posture) {
+            actor.item.pet.posture = payload.posture;
 
             clientInstance.roomInstance.value.roomRenderer.focusedItem.update();
         }

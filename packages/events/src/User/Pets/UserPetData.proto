@@ -12,4 +12,6 @@ message UserPetData {
 
     RoomPositionData position = 6;
     uint32 direction = 7;
+
+    uint32 scratches = 8;
 }

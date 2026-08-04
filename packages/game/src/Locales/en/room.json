@@ -15,7 +15,9 @@
             "use": "Use",
             "edit": "Edit",
 
-            "buy": "Buy furniture"
+            "buy": "Buy furniture",
+
+            "scratch": "Scratch ({{scratches}})"
         },
 
         "context_menu": {

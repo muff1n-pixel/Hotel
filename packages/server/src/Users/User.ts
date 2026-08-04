@@ -112,4 +112,13 @@ export default class User extends EventEmitter {
 
         return false;
     }
+
+    public async resetScratches() {
+        if(!this.model.scratchesResetAt || Date.now() - this.model.scratchesResetAt.getTime() > 24 * 60 * 60 * 1000) {
+            this.model.scratchesResetAt = new Date();
+            this.model.scratches = 3;
+
+            await this.model.save();
+        }
+    }
 }

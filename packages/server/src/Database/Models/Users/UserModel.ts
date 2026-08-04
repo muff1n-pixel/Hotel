@@ -18,6 +18,9 @@ export class UserModel extends Model {
     declare roomChatStyleId: string;
     declare online: boolean;
 
+    declare scratches: number;
+    declare scratchesResetAt: Date | null;
+
     declare habboClub: Date | null;
     declare habboClubDays: number;
     declare habboClubFirstMembership: Date | null;
@@ -143,6 +146,17 @@ export function initializeUserModel(sequelize: Sequelize) {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0
+            },
+
+            scratches: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 3
+            },
+            scratchesResetAt: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null
             },
         },
         {

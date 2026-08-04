@@ -15,4 +15,6 @@ message UserData {
     optional string home_room_id = 7;
 
     optional string habbo_club = 8;
+
+    uint32 scratches = 9;
 }

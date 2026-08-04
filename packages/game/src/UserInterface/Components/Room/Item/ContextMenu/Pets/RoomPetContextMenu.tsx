@@ -5,7 +5,7 @@ import { useRoomInstance } from "../../../../../Hooks/useRoomInstance";
 import { useUser } from "../../../../../Hooks/useUser";
 import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
-import { PickupRoomPetData } from "@pixel63/events";
+import { PickupRoomPetData, ScratchRoomPetData } from "@pixel63/events";
 import { webSocketClient } from "../../../../../..";
 
 export type RoomPetContextMenuProps = {
@@ -34,6 +34,14 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
 
             {(pet.data.userId === user.id) && (
                 <Fragment>
+                    {(user.scratches > 0) && (
+                        <UserContextMenuButton text={`Scratch (${user.scratches})`} onClick={() => {
+                            webSocketClient.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
+                                petId: pet.data.id
+                            }));
+                        }}/>
+                    )}
+
                     <UserContextMenuButton text={"Pick up"} onClick={() => {
                         webSocketClient.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                             id: pet.data.id

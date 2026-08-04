@@ -8,6 +8,7 @@ import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
+import PetCommandHandler from "./Rooms/Pets/Commands/PetCommandHandler.js";
 
 export default class Game {
     public readonly hotelInformation;
@@ -18,6 +19,7 @@ export default class Game {
     public readonly roomNavigatorManager;
 
     public readonly commandHandler;
+    public readonly petCommandHandler;
     public readonly eventHandler;
     public readonly webSocket;
 
@@ -32,6 +34,7 @@ export default class Game {
         this.roomManager = new RoomManager();
 
         this.commandHandler = new CommandHandler();
+        this.petCommandHandler = new PetCommandHandler();
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
 

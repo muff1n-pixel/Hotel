@@ -8,8 +8,11 @@ import { webSocketClient } from "../../../..";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBot from "@Client/Room/Bots/RoomBot";
 import RoomBotProfile from "./Bot/RoomBotProfile";
-import { RoomBotsData, RoomFurnitureData, RoomUserData, RoomUserLeftData } from "@pixel63/events";
+import { RoomBotsData, RoomFurnitureData, RoomPetsData, RoomUserData, RoomUserLeftData } from "@pixel63/events";
 import RoomItem from "@Client/Room/Items/RoomItem";
+import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
+import RoomPet from "@Client/Room/Pets/RoomPet";
+import RoomPetProfile from "./Pet/RoomPetProfile";
 
 export type RoomItemProfileItem = {
     type: "user";
@@ -20,6 +23,9 @@ export type RoomItemProfileItem = {
 } | {
     type: "bot";
     bot: RoomBot;
+} | {
+    type: "pet";
+    pet: RoomPet;
 };
 
 export type RoomItemProfileProps = {
@@ -67,6 +73,14 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
                 setFocusedItem({
                     type: "furniture",
                     furniture
+                });
+            }
+            else if(roomItem instanceof RoomPetItem) {
+                const pet = room.getPetByItem(roomItem);
+
+                setFocusedItem({
+                    type: "pet",
+                    pet
                 });
             }
             else {
@@ -119,6 +133,19 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
                 webSocketClient.removeProtobuffListener(RoomBotsData, listener);
             };
         }
+        else if(focusedItem.type === "pet") {
+            const listener = webSocketClient.addProtobuffListener(RoomPetsData, {
+                async handle(payload: RoomPetsData) {
+                    if(payload.petsRemoved?.some((removedPet) => removedPet.id === focusedItem.pet.data.id)) {
+                        setFocusedItem(undefined);
+                    }
+                },
+            })
+
+            return () => {
+                webSocketClient.removeProtobuffListener(RoomPetsData, listener);
+            };
+        }
     }, [focusedItem]);
 
     if(!focusedItem) {
@@ -144,6 +171,9 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
 
                     case "bot":
                         return (<RoomBotProfile bot={focusedItem.bot}/>);
+
+                    case "pet":
+                        return (<RoomPetProfile pet={focusedItem.pet}/>);
                 }
             })()}
         </div>

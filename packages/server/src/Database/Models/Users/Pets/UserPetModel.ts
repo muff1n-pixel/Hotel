@@ -10,6 +10,7 @@ export class UserPetModel extends Model {
     declare position: RoomPositionData;
     declare direction: number;
     declare name: string;
+    declare scratches: number;
 
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
@@ -50,6 +51,11 @@ export function initializeUserPetModel(sequelize: Sequelize) {
           color: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+          },
+          scratches: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
           }
         },
         {

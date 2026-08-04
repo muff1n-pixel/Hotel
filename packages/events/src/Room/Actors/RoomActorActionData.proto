@@ -6,4 +6,5 @@ message RoomActorActionData {
     RoomActorIdentifierData actor = 1;
     repeated string actions_added = 2;
     repeated string actions_removed = 3;
+    optional string posture = 4;
 }

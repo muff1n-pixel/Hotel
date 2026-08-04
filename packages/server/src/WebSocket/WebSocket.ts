@@ -276,6 +276,7 @@ export default class WebSocket {
         await user.achievements.addTotalAchievementScore("TrueHabbo", daysSinceRegistration);
 
         await user.habboClub.redeemCashback();
+        await user.resetScratches();
 
         user.sendProtobuff(UserReadyData, UserReadyData.create({}));
     }
