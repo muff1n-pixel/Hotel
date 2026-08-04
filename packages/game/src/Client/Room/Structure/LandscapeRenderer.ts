@@ -33,7 +33,9 @@ export default class LandscapeRenderer {
 
     private animationLayers: LandscapeAnimationLayer[] = [];
 
-    private canvas: OffscreenCanvas;
+    private width: number;
+    private height: number;
+
     private textureCanvas: OffscreenCanvas;
 
     constructor(public readonly structure: RoomStructure, public readonly size: number) {
@@ -53,10 +55,8 @@ export default class LandscapeRenderer {
         this.leftRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 2);
         this.rightRectangles = this.rectangles.filter((rectangle) => rectangle.direction === 4);
     
-        const width = (this.structure.rows * this.fullSize) + (this.structure.columns * this.fullSize) + (this.floorThickness * 2);
-        const height = (this.structure.rows * this.halfSize) + (this.structure.columns * this.halfSize) + (this.structure.wallDepth * this.fullSize) + (this.wallThickness) + this.floorThickness + (this.size * 2);
-
-        this.canvas = new OffscreenCanvas(width, height);
+        this.width = (this.structure.rows * this.fullSize) + (this.structure.columns * this.fullSize) + (this.floorThickness * 2);
+        this.height = (this.structure.rows * this.halfSize) + (this.structure.columns * this.halfSize) + (this.structure.wallDepth * this.fullSize) + (this.wallThickness) + this.floorThickness + (this.size * 2);
         
         const textureWidth = this.rectangles.length * this.fullSize;
         const textureHeight = (this.structure.wallDepth * this.fullSize) + (this.size * 2);
@@ -65,7 +65,8 @@ export default class LandscapeRenderer {
     }
 
     public async renderOffScreen() {
-        const context = this.canvas.getContext("2d");
+        const canvas = new OffscreenCanvas(this.width, this.height);
+        const context = canvas.getContext("2d");
 
         if(!context) {
             throw new ContextNotAvailableError();
@@ -129,7 +130,7 @@ export default class LandscapeRenderer {
 
         context.resetTransform();
 
-        return this.canvas;
+        return canvas;
     }
 
     private visualization?: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0];
