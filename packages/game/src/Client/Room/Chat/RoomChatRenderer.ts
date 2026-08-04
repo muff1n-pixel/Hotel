@@ -86,15 +86,12 @@ export default class RoomChatRenderer {
             );
         }
         else if(roomChatStyle.figure && actor.item instanceof RoomPetItem) {
-            console.log(actor.item);
             const figureRenderer = new Pet(actor.item.pet.type, actor.item.pet.palettes, undefined, true);
             
             await figureRenderer.loadAssets();
 
             const image = await figureRenderer.renderToCanvas();
             
-            console.log(image);
-
             const maxSize = 30;
 
             const scale = Math.min(maxSize / image.width, maxSize / image.height, 1);
