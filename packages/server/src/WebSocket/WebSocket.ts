@@ -128,8 +128,6 @@ export default class WebSocket {
                 this.pendingConnections.push(pendingConnection);
 
                 webSocket.addListener("error", console.error);
-
-                webSocket.addListener("message", (data) => this.handleMessageListener(pendingConnection, data));
                 
                 webSocket.addListener("close", () => {
                     (async () => {
@@ -142,6 +140,8 @@ export default class WebSocket {
                         }
                     })().catch(console.error);
                 });
+
+                webSocket.addListener("message", (data) => this.handleMessageListener(pendingConnection, data));
             })().catch(console.error);
         });
     }
@@ -179,7 +179,7 @@ export default class WebSocket {
     }
 
     private async handleUserReady(pendingConnection: PendingConnection) {
-        pendingConnection.websocket.removeAllListeners("message");
+        pendingConnection.websocket.removeAllListeners();
 
         const user = new User(pendingConnection.websocket, pendingConnection.user);
 
@@ -189,6 +189,12 @@ export default class WebSocket {
 
         pendingConnection.websocket.addListener("close", () => {
             (async () => {
+                if(user.room) {
+                    const roomUser = user.room.getRoomUser(user);
+
+                    roomUser.disconnect();
+                }
+
                 console.log("User " + user.model.name + " disconnected.");
 
                 const index = game.users.indexOf(user);

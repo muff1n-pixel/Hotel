@@ -43,12 +43,6 @@ export default class User extends EventEmitter {
     }
 
     public disconnect() {
-        if(this.room) {
-            const roomUser = this.room.getRoomUser(this);
-
-            roomUser.disconnect();
-        }
-
         this.webSocket.close();
     }
 

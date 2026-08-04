@@ -69,8 +69,6 @@ export default class RoomUser implements RoomActor {
 
         this.direction = room.model.structure.door?.direction ?? 2;
 
-        this.addEventListeners();
-
         this.room.sendProtobuff(RoomUserEnteredData, RoomUserEnteredData.create({
             user: this.getRoomUserData()
         }));
@@ -144,14 +142,6 @@ export default class RoomUser implements RoomActor {
         };
     }
 
-    private addEventListeners() {
-        this.user.addListener("close", this.disconnectListener);
-    }
-
-    private removeEventListeners() {
-        this.user.removeListener("close", this.disconnectListener);
-    }
-
     public async handleActionsInterval() {
         if(!this.idling && (performance.now() - this.lastActivity) > (game.hotelSettings.roomUserIdlingTimeout * 1000)) {
             this.idling = true;
@@ -168,10 +158,7 @@ export default class RoomUser implements RoomActor {
         await this.path.handleActionsInterval();
     }
 
-    private readonly disconnectListener = this.disconnect.bind(this);
     public disconnect() {
-        this.removeEventListeners();
-
         this.trading.stopTrading();
 
         for(const bot of this.room.bots) {
