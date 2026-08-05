@@ -1,11 +1,11 @@
 import { AchievementData, AchievementsCategoriesData, AchievementsData, BadgeData, GetAchievementsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { AchievementCategoryModel } from "../../../Database/Models/Achievements/AchievementCategoryModel";
-import { AchievementModel } from "../../../Database/Models/Achievements/AchievementModel";
-import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel";
+import { AchievementCategoryModel } from "../../../../Database/Models/Achievements/AchievementCategoryModel";
+import { AchievementModel } from "../../../../Database/Models/Achievements/AchievementModel";
+import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel";
 import { Op } from "sequelize";
-import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel";
+import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
 import { randomUUID } from "crypto";
 
 export default class GetAchievementsEvent implements ProtobuffListener<GetAchievementsData> {

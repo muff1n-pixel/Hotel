@@ -1,5 +1,5 @@
 import User from "../../../Users/User.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { game } from "../../../index.js";
 import { RoomFurnitureData, UpdateFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";

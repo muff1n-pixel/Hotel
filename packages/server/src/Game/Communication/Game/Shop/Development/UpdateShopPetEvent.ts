@@ -2,9 +2,9 @@ import User from "../../../../Users/User.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { GetShopPagePetsData, UpdateShopPetData } from "@pixel63/events";
-import { ShopPagePetModel } from "../../../../Database/Models/Shop/ShopPagePetModel.js";
+import { ShopPagePetModel } from "../../../../../Database/Models/Shop/ShopPagePetModel.js";
 import GetShopPagePetsEvent from "../GetShopPagePetsEvent.js";
-import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
+import { PetModel } from "../../../../../Database/Models/Pets/PetModel.js";
 
 export default class UpdateShopPetEvent implements ProtobuffListener<UpdateShopPetData> {
     minimumDurationBetweenEvents?: number = 1000;

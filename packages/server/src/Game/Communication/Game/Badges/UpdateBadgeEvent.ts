@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import { GetBadgeBrowserData, UpdateBadgeData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
+import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
 import GetBadgeBrowserEvent from "./GetBadgeBrowserEvent.js";
 
 export default class UpdateBadgeEvent implements ProtobuffListener<UpdateBadgeData> {

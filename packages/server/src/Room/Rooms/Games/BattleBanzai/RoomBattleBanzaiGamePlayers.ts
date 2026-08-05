@@ -1,0 +1,86 @@
+import { RoomGamePlayer, RoomGamePlayers } from "../RoomGame";
+import RoomBattleBanzaiGame from "./RoomBattleBanzaiGame";
+import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
+import { RoomBattleBanzaiGameTeam } from "./Interfaces/RoomBattleBanzaiGameTeam";
+import RoomUser from "../../Users/RoomUser";
+import { WidgetNotificationData } from "@pixel63/events";
+import BattleBanzaiGameNotifications from "../../../../Game/Users/Notifications/Games/BattleBanzaiGameNotifications";
+
+export default class RoomBattleBanzaiGamePlayers implements RoomGamePlayers<RoomBattleBanzaiGameTeam> {
+    private players: RoomBattleBanzaiGamePlayer[] = [];
+
+    constructor(private readonly game: RoomBattleBanzaiGame) {
+
+    }
+
+    public getTeamPlayers(team: RoomBattleBanzaiGameTeam): RoomGamePlayer<RoomBattleBanzaiGameTeam>[] {
+        return this.players.filter((player) => player.team === team);
+    }
+
+    public addPlayer(roomUser: RoomUser, team: RoomBattleBanzaiGameTeam): void {
+        this.removePlayer(roomUser);
+        
+        const player: RoomBattleBanzaiGamePlayer = {
+            roomUser,
+            team
+        };
+
+        this.players.push(player);
+
+        roomUser.pose.setEffect(this.game.getTeamAvatarEffect(player));
+
+        for(const furniture of this.game.getGateFurniture(team)) {
+            furniture.setAnimation(this.getTeamPlayers(team).length);
+        }
+        
+        player.roomUser.user.sendProtobuff(WidgetNotificationData, BattleBanzaiGameNotifications.buildPlayerJoinedTeam(team));
+    }
+
+    public hasPlayer(roomUser: RoomUser): boolean {
+        return this.players.some((player) => player.roomUser.user.model.id === roomUser.user.model.id);
+    }
+
+    public getPlayer(roomUser: RoomUser) {
+        return this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
+    }
+
+    public getAllPlayers() {
+        return this.players;
+    }
+
+    public removePlayer(roomUser: RoomUser): void {
+        const player = this.players.find((player) => player.roomUser.user.model.id === roomUser.user.model.id);
+
+        if(!player) {
+            return;
+        }
+
+        this.players.splice(this.players.indexOf(player), 1);
+
+        roomUser.pose.removeEffect();
+
+        for(const furniture of this.game.getGateFurniture(player.team)) {
+            furniture.setAnimation(this.getTeamPlayers(player.team).length);
+        }
+    }
+
+    public givePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams.addTeamScore(player.team, score);
+    }
+
+    public removePlayerScore(roomUser: RoomUser, score: number): void {
+        const player = this.getPlayer(roomUser);
+
+        if(!player) {
+            return;
+        }
+
+        this.game.teams.removeTeamScore(player.team, score);
+    }
+}

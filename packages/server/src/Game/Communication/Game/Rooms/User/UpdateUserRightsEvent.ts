@@ -1,10 +1,10 @@
 import User from "../../../../Users/User.js";
-import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
+import { RoomRightsModel } from "../../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
 import { randomUUID } from "node:crypto";
 import { GetRoomRightsData, RoomUserData, SetRoomUserRightsData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import GetRoomRightsEvent from "../Rights/GetRoomRightsEvent.js";
-import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
+import { UserModel } from "../../../../../Database/Models/Users/UserModel.js";
 
 export default class UpdateUserRightsEvent implements ProtobuffListener<SetRoomUserRightsData> {
     minimumDurationBetweenEvents?: number = 10;

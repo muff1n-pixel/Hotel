@@ -1,4 +1,4 @@
-import { HotelActivityRewardModel } from "../Database/Models/Hotel/HotelActivityRewardModel";
+import { HotelActivityRewardModel } from "../../Database/Models/Hotel/HotelActivityRewardModel";
 import Game from "../Game";
 
 export default class HotelActivityRewards {

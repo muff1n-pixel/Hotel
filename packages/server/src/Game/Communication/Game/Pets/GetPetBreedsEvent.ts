@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import { GetPetBreedsData, PetBreedData, PetBreedsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
+import { PetBreedModel } from "../../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class GetPetBreedsEvent implements ProtobuffListener<GetPetBreedsData> {
     async handle(user: User, payload: GetPetBreedsData) {

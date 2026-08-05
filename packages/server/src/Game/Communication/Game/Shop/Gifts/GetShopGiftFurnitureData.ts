@@ -1,5 +1,5 @@
 import { FurnitureData, GetShopGiftFurnitureData, ShopGiftFurnitureData } from "@pixel63/events";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 

@@ -1,9 +1,9 @@
 import { FurnitureCrackableData, FurnitureCrackableRewardData, FurnitureData, UpdateFurnitureCrackableData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
-import { FurnitureCrackableModel } from "../../../../Database/Models/Furniture/Crackable/FurnitureCrackableModel";
-import { FurnitureCrackableRewardModel } from "../../../../Database/Models/Furniture/Crackable/FurnitureCrackableRewardModel";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { FurnitureCrackableModel } from "../../../../../Database/Models/Furniture/Crackable/FurnitureCrackableModel";
+import { FurnitureCrackableRewardModel } from "../../../../../Database/Models/Furniture/Crackable/FurnitureCrackableRewardModel";
 import { randomUUID } from "node:crypto";
 
 export default class UpdateFurnitureCrackableEvent implements ProtobuffListener<UpdateFurnitureCrackableData> {

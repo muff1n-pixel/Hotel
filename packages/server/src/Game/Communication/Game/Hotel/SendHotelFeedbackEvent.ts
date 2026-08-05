@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { HotelFeedbackModel } from "../../../Database/Models/Hotel/HotelFeedbackModel.js";
+import { HotelFeedbackModel } from "../../../../Database/Models/Hotel/HotelFeedbackModel.js";
 import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { SendHotelFeedbackData } from "@pixel63/events";

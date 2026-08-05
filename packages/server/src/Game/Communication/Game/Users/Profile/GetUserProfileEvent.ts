@@ -1,15 +1,15 @@
 import { BadgeData, GetUserProfileData, GroupData, GroupMemberData, UserGroupMemberData, UserProfileData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { UserModel } from "../../../../Database/Models/Users/UserModel";
-import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel";
-import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
+import { UserModel } from "../../../../../Database/Models/Users/UserModel";
+import { UserBadgeModel } from "../../../../../Database/Models/Users/Badges/UserBadgeModel";
+import { BadgeModel } from "../../../../../Database/Models/Badges/BadgeModel";
 import { Op } from "sequelize";
 import { game } from "../../../..";
-import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
-import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
-import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
-import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel";
+import { UserFriendModel } from "../../../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserGroupModel } from "../../../../../Database/Models/Users/Groups/UserGroupModel";
+import { GroupModel } from "../../../../../Database/Models/Groups/RoomGroupModel";
+import { UserAchievementModel } from "../../../../../Database/Models/Users/Achievements/UserAchievementModel";
 
 export default class GetUserProfileEvent implements ProtobuffListener<GetUserProfileData> {
     minimumDurationBetweenEvents?: number = 500;

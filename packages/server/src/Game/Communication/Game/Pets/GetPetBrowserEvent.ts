@@ -1,8 +1,8 @@
 import User from "../../../Users/User.js";
 import { GetPetBrowserData, PetBrowserData, PetData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
-import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
+import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../../Database/Models/Pets/PetBreedModel.js";
 import { Op } from "sequelize";
 
 export default class GetPetBrowserEvent implements ProtobuffListener<GetPetBrowserData> {

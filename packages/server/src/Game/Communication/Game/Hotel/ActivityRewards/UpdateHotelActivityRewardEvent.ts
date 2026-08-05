@@ -2,7 +2,7 @@ import { UpdateHotelActivityRewardData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { game } from "../../../..";
-import { HotelActivityRewardModel } from "../../../../Database/Models/Hotel/HotelActivityRewardModel";
+import { HotelActivityRewardModel } from "../../../../../Database/Models/Hotel/HotelActivityRewardModel";
 import { randomUUID } from "crypto";
 import GetHotelActivityRewardsEvent from "./GetHotelActivityRewardsEvent";
 

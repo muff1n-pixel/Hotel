@@ -2,8 +2,8 @@ import { FurnitureTraxSongMetaData, RoomFurnitureData, BurnRoomFurnitureTraxSong
 import ProtobuffListener from "../../../../Interfaces/ProtobuffListener";
 import User from "../../../../../Users/User";
 import { randomUUID } from "crypto";
-import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
-import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { UserFurnitureModel } from "../../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { FurnitureModel } from "../../../../../../Database/Models/Furniture/FurnitureModel";
 
 export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener<BurnRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;

@@ -1,4 +1,4 @@
-import RoomUser from "../../Rooms/Users/RoomUser";
+import RoomUser from "../../../Room/Rooms/Users/RoomUser";
 import UserPermissions from "../../Users/Permissions/UserPermissions";
 import Command from "../Command";
 

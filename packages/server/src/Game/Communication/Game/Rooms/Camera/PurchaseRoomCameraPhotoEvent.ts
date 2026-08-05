@@ -6,8 +6,8 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { config } from "../../../../Config/Config";
 import { randomUUID } from "node:crypto";
 import path from "node:path";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
-import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 
 export default class PurchaseRoomCameraPhotoEvent implements ProtobuffListener<PurchaseRoomCameraPhotoData> {
     minimumDurationBetweenEvents?: number = 100;

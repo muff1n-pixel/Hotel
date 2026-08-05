@@ -1,8 +1,8 @@
 import User from "../../../Users/User.js";
-import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { GetShopFurnitureLinkData, ShopFurnitureLinkData } from "@pixel63/events";
-import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
 
 export default class GetShopFurnitureLinkEvent implements ProtobuffListener<GetShopFurnitureLinkData> {
     minimumDurationBetweenEvents?: number = 200;

@@ -1,6 +1,6 @@
-import { UserModel } from "../Database/Models/Users/UserModel";
-import Room from "../Rooms/Room";
-import RoomUser from "../Rooms/Users/RoomUser";
+import { UserModel } from "../../Database/Models/Users/UserModel";
+import Room from "../../Room/Rooms/Room";
+import RoomUser from "../../Room/Rooms/Users/RoomUser";
 import UserPermissions from "../Users/Permissions/UserPermissions";
 import { InvalidCommandParameterError } from "./Exceptions/InvalidCommandParameterError";
 import { MissingCommandParameterError } from "./Exceptions/MissingCommandParameterError";

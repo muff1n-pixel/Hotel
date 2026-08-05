@@ -1,5 +1,5 @@
 import { game } from "../index.js";
-import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { HotelData } from "@pixel63/events";
 
 export default class HotelInformation {

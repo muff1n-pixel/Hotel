@@ -3,7 +3,7 @@ import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { game } from "../../../..";
 import UserFriends from "../../../../Users/Friends/UserFriends";
-import { UserModel } from "../../../../Database/Models/Users/UserModel";
+import { UserModel } from "../../../../../Database/Models/Users/UserModel";
 import { Op } from "sequelize";
 
 export default class SearchUserFriendsEvent implements ProtobuffListener<SearchUserFriendsData> {

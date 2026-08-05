@@ -1,7 +1,7 @@
 import { GetHotelSettingsData, HotelSettingsData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { HotelSettingModel } from "../../../../Database/Models/Hotel/HotelSettingModel";
+import { HotelSettingModel } from "../../../../../Database/Models/Hotel/HotelSettingModel";
 
 export default class GetHotelSettingsEvent implements ProtobuffListener<GetHotelSettingsData> {
     async handle(user: User) {

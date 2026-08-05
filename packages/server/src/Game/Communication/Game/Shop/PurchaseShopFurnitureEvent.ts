@@ -1,14 +1,14 @@
 import User from "../../../Users/User.js";
-import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
+import RoomFurniture from "../../../../Room/Rooms/Furniture/RoomFurniture.js";
+import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { FurnitureData, HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
-import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel.js";
+import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import { game } from "../../../index.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {

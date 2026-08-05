@@ -1,8 +1,8 @@
 import type WebSocket from "ws";
-import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "./Inventory/UserInventory.js";
-import Room from "../Rooms/Room.js";
+import Room from "../../Room/Rooms/Room.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
 import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";

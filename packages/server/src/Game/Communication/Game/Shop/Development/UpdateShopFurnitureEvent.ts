@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
 import IncomingEvent from "../../../Interfaces/IncomingEvent.js";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
-import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
+import { ShopPageFurnitureModel } from "../../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import GetShopPageFurnitureEvent from "../GetShopPageFurnitureEvent.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";

@@ -1,8 +1,8 @@
 import { FurnitureData, GetUserInventorySongDisksData, GetUserInventorySoundSetsData, UserFurnitureData, UserInventorySongDisksData, UserInventorySoundSetsData } from "@pixel63/events";
 import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 
 export default class GetUserInventorySoundSetsEvent implements ProtobuffListener<GetUserInventorySoundSetsData> {
     minimumDurationBetweenEvents?: number = 100;

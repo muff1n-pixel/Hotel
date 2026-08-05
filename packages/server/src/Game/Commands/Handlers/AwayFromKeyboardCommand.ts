@@ -1,5 +1,5 @@
 import { RoomUserData } from "@pixel63/events";
-import RoomUser from "../../Rooms/Users/RoomUser";
+import RoomUser from "../../../Room/Rooms/Users/RoomUser";
 import Command from "../Command";
 
 export default class AwayFromKeyboardCommand extends Command {

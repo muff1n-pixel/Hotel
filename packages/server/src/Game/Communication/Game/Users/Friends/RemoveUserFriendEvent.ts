@@ -2,7 +2,7 @@ import { GetUserFriendsData, RemoveUserFriendData, UserFriendsData, UserFriendUp
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { game } from "../../../..";
-import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserFriendModel } from "../../../../../Database/Models/Users/Friends/UserFriendModel";
 import UserFriends from "../../../../Users/Friends/UserFriends";
 
 export default class RemoveUserFriendEvent implements ProtobuffListener<RemoveUserFriendData> {

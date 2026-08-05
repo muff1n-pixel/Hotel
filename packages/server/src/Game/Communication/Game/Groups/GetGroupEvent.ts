@@ -1,10 +1,10 @@
 import { GetGroupData, GroupData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel";
-import { UserModel } from "../../../Database/Models/Users/UserModel";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
+import { UserModel } from "../../../../Database/Models/Users/UserModel";
 
 export default class GetGroupEvent implements ProtobuffListener<GetGroupData> {
     minimumDurationBetweenEvents?: number = 500;

@@ -1,6 +1,6 @@
 import { RoomActorChatData } from "@pixel63/events";
 import { game } from "../../index.js";
-import RoomUser from "../../Rooms/Users/RoomUser.js";
+import RoomUser from "../../../Room/Rooms/Users/RoomUser.js";
 import UserPermissions from "../../Users/Permissions/UserPermissions.js";
 import Command from "../Command.js";
 

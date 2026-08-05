@@ -1,7 +1,7 @@
 import { UpdateUserFriendRelationshipData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserFriendModel } from "../../../../../Database/Models/Users/Friends/UserFriendModel";
 
 export default class UpdateUserFriendRelationshipEvent implements ProtobuffListener<UpdateUserFriendRelationshipData> {
     minimumDurationBetweenEvents?: number = 100;

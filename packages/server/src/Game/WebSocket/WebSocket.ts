@@ -1,11 +1,11 @@
 import WebSocketConnection, { WebSocketServer } from "ws";
-import { UserModel } from "../Database/Models/Users/UserModel.js";
+import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { game } from "../index.js";
 import User from "../Users/User.js";
 import { config } from "../Config/Config.js";
 import jsonWebToken from "jsonwebtoken";
-import { UserTokenModel } from "../Database/Models/Users/UserTokens/UserTokenModel.js";
-import { UserBadgeModel } from "../Database/Models/Users/Badges/UserBadgeModel.js";
+import { UserTokenModel } from "../../Database/Models/Users/UserTokens/UserTokenModel.js";
+import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
 import { UserReadyData } from "@pixel63/events";
 

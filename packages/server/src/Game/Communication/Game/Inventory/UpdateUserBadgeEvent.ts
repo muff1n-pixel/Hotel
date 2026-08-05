@@ -1,5 +1,5 @@
 import User from "../../../Users/User.js";
-import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeModel.js";
+import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UpdateUserBadgeData } from "@pixel63/events";
 

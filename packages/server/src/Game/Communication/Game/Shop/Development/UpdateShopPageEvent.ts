@@ -1,10 +1,10 @@
 import User from "../../../../Users/User.js";
-import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageModel } from "../../../../../Database/Models/Shop/ShopPageModel.js";
 import GetShopPagesEvent from "../GetShopPagesEvent.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { GetShopPagesData, UpdateShopPageData } from "@pixel63/events";
-import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel.js";
+import { ShopPageBundleModel } from "../../../../../Database/Models/Shop/ShopPageBundleModel.js";
 
 export default class UpdateShopPageEvent implements ProtobuffListener<UpdateShopPageData> {
     public readonly name = "UpdateShopPageEvent";

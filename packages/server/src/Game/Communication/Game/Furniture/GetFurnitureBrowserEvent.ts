@@ -2,7 +2,7 @@ import User from "../../../Users/User.js";
 import { FurnitureBrowserData, FurnitureData, GetFurnitureBrowserData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { Op } from "sequelize";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 
 export default class GetFurnitureBrowserEvent implements ProtobuffListener<GetFurnitureBrowserData> {
     async handle(user: User, payload: GetFurnitureBrowserData) {

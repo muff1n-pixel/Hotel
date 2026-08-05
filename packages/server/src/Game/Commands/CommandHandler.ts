@@ -1,4 +1,4 @@
-import RoomUser from "../Rooms/Users/RoomUser.js";
+import RoomUser from "../../Room/Rooms/Users/RoomUser.js";
 import SitCommand from "./Handlers/SitCommand.js";
 import WaveCommand from "./Handlers/WaveCommand.js";
 import EnableCommand from "./Handlers/EnableCommand.js";

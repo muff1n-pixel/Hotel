@@ -2,12 +2,12 @@ import User from "../../../Users/User.js";
 import { randomUUID } from "node:crypto";
 import { PurchaseShopMembershipData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { ShopPageMembershipModel } from "../../../Database/Models/Shop/ShopPageMembershipModel.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
+import { ShopPageMembershipModel } from "../../../../Database/Models/Shop/ShopPageMembershipModel.js";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel.js";
 import { game } from "../../../index.js";
-import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
+import { RoomCategoryModel } from "../../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import GetUserHabboClubEvent from "../Users/HabboClub/GetUserHabboClubEvent.js";
 
 export default class PurchaseShopMembershipEvent implements ProtobuffListener<PurchaseShopMembershipData> {

@@ -2,7 +2,7 @@ import { DeleteHotelActivityRewardData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { game } from "../../../..";
-import { HotelActivityRewardModel } from "../../../../Database/Models/Hotel/HotelActivityRewardModel";
+import { HotelActivityRewardModel } from "../../../../../Database/Models/Hotel/HotelActivityRewardModel";
 import GetHotelActivityRewardsEvent from "./GetHotelActivityRewardsEvent";
 
 export default class DeleteHotelActivityRewardEvent implements ProtobuffListener<DeleteHotelActivityRewardData> {

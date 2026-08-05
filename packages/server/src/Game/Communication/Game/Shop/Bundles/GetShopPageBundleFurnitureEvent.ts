@@ -1,11 +1,11 @@
 import User from "../../../../Users/User.js";
-import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
+import { ShopPageModel } from "../../../../../Database/Models/Shop/ShopPageModel.js";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
 import { FurnitureData, GetShopPageBundleFurnitureData, ShopFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
-import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel.js";
-import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
-import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import { ShopPageBundleModel } from "../../../../../Database/Models/Shop/ShopPageBundleModel.js";
+import { RoomModel } from "../../../../../Database/Models/Rooms/RoomModel.js";
+import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 
 export default class GetShopPageBundleFurnitureEvent implements ProtobuffListener<GetShopPageBundleFurnitureData> {
     minimumDurationBetweenEvents?: number = 1000;

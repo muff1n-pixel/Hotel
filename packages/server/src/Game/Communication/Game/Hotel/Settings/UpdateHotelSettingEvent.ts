@@ -1,7 +1,7 @@
 import { GetHotelSettingsData, HotelSettingsData, UpdateHotelSettingData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { HotelSettingModel } from "../../../../Database/Models/Hotel/HotelSettingModel";
+import { HotelSettingModel } from "../../../../../Database/Models/Hotel/HotelSettingModel";
 import { game } from "../../../..";
 
 export default class UpdateHotelSettingEvent implements ProtobuffListener<UpdateHotelSettingData> {

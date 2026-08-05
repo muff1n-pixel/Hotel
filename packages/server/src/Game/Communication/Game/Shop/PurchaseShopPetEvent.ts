@@ -1,12 +1,12 @@
 import User from "../../../Users/User.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { PurchaseShopPetData, RoomPositionData, ShopPurchaseData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { ShopPagePetModel } from "../../../Database/Models/Shop/ShopPagePetModel.js";
-import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
-import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
-import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
+import { ShopPagePetModel } from "../../../../Database/Models/Shop/ShopPagePetModel.js";
+import { UserPetModel } from "../../../../Database/Models/Users/Pets/UserPetModel.js";
+import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../../Database/Models/Pets/PetBreedModel.js";
 
 export default class PurchaseShopPetEvent implements ProtobuffListener<PurchaseShopPetData> {
     minimumDurationBetweenEvents?: number = 200;

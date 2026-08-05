@@ -1,0 +1,615 @@
+import User from "../../Game/Users/User.js";
+import { RoomModel } from "../../Database/Models/Rooms/RoomModel.js";
+import RoomUser from "./Users/RoomUser.js";
+import RoomFurniture from "./Furniture/RoomFurniture.js";
+import RoomFloorplanHelper from "./RoomFloorplanHelper.js";
+import RoomFloorplan from "./Floorplan/RoomFloorplan.js";
+import RoomBot from "./Bots/RoomBot.js";
+import RoomActor from "./Actor/RoomActor.js";
+import WiredTriggerLogic from "./Furniture/Logic/Wired/WiredTriggerLogic.js";
+import WiredTriggerStateChangedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerStateChangedLogic.js";
+import { MessageType, RoomClickConfigurationData, RoomFurnitureData, RoomInformationData, RoomPositionData, RoomPositionOffsetData, RoomStructureData, RoomStructureLandscapeData, UnknownMessage, UpdateRoomBellQueueData } from "@pixel63/events";
+import RoomPet from "./Pets/RoomPet.js";
+import { UserModel } from "../../Database/Models/Users/UserModel.js";
+import { game } from "../../Game/index.js";
+import RoomFurnitureStackHelperLogic from "./Furniture/Logic/RoomFurnitureStackHelperLogic.js";
+import { sequelize } from "../../Database/Database.js";
+import RoomGames from "./Games/RoomGames.js";
+import RoomFurnitureTraxLogic from "./Furniture/Logic/RoomFurnitureTraxLogic.js";
+import RoomGame from "./Games/RoomGame.js";
+import WiredTriggerGameEndsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameEndsLogic.js";
+import WiredTriggerGameStartsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameStartsLogic.js";
+import WiredTriggerScoreAchievedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic.js";
+import RoomWired from "./Wired/RoomWired.js";
+import RoomGroup from "./Groups/RoomGroup.js";
+import RoomEvent from "./Events/RoomEvent.js";
+
+export default class Room {
+    public readonly users: RoomUser[] = [];
+    public readonly bots: RoomBot[] = [];
+    public readonly pets: RoomPet[] = [];
+    public readonly furnitures: RoomFurniture[] = [];
+
+    public floorFurnitureCount: number = 0;
+    public wallFurnitureCount: number = 0;
+
+    public clickConfiguration: RoomClickConfigurationData | undefined = undefined;
+
+    public games: RoomGames = new RoomGames(this);
+    public wired: RoomWired = new RoomWired(this);
+    public group: RoomGroup = new RoomGroup(this);
+    public event: RoomEvent = new RoomEvent(this);
+
+    public readonly floorplan: RoomFloorplan;
+
+    // TODO: is there a better way to handle actions instead of an interval?
+    private actionsInterval?: NodeJS.Timeout;
+
+    constructor(public readonly model: RoomModel) {
+        this.floorplan = new RoomFloorplan(this);
+
+        this.furnitures = model.roomFurnitures.map((roomFurniture) => new RoomFurniture(this, roomFurniture));
+        this.bots = model.roomBots.map((userBot) => new RoomBot(this, userBot));
+        this.pets = model.roomPets.map((userPet) => new RoomPet(this, userPet));
+
+        this.floorplan.regenerateStaticGrid();
+
+        this.requestActionsFrame();
+    }
+
+    public addUserClient(user: User, position?: RoomPositionData) {
+        const roomUser = new RoomUser(this, user, position);
+        
+        this.users.push(roomUser);
+
+        return roomUser;
+    }
+    
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        const encoded = message.encode(payload).finish();
+
+        for(const roomUser of this.users) {
+            roomUser.user.sendEncodedProtobuff(message.$type, encoded);
+        }
+    }
+
+    public getRoomFurniture(roomFurnitureItemId: string) {
+        const furniture = this.furnitures.find((furniture) => furniture.model.id === roomFurnitureItemId);
+
+        if(!furniture) {
+            throw new Error("Furniture does not exist in room.");
+        }
+
+        return furniture;
+    }
+
+    public getBot(userBotId: string) {
+        const bot = this.bots.find((bot) => bot.model.id === userBotId);
+
+        if(!bot) {
+            throw new Error("Bot does not exist in room.");
+        }
+
+        return bot;
+    }
+
+    public getPetById(userPetId: string) {
+        const pet = this.pets.find((pet) => pet.model.id === userPetId);
+
+        if(!pet) {
+            throw new Error("Pet does not exist in room.");
+        }
+
+        return pet;
+    }
+
+    public getRoomUserAtPosition(position: RoomPositionOffsetData) {
+        return this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
+    }
+
+    public getClosestRoomUser(position: RoomPositionOffsetData): RoomUser | null {
+        let closestUser: RoomUser | null = null;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        for (const user of this.users) {
+            const rowDifference = user.position.row - position.row;
+            const columnDifference = user.position.column - position.column;
+            
+            const distanceSquared = rowDifference * rowDifference + columnDifference * columnDifference;
+
+            if (distanceSquared < closestDistance) {
+                closestDistance = distanceSquared;
+            
+                closestUser = user;
+            }
+        }
+
+        return closestUser;
+    }
+
+    public getActorAtPosition(position: RoomPositionOffsetData) {
+        const user = this.users.find((user) => user.position.row === position.row && user.position.column === position.column);
+        const bot = this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
+        const pet = this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
+
+        return user || bot || pet;
+    }
+
+    public getActorsAtPosition(position: RoomPositionOffsetData, dimensions?: RoomPositionData): RoomActor[] {
+        const actors: RoomActor[] = [];
+
+        for(const actor of this.users) {
+            if(actor.position.row < position.row) {
+                continue;
+            }
+
+            if(actor.position.column < position.column) {
+                continue;
+            }
+
+            if(dimensions) {
+                if(position.row + dimensions.row <= actor.position.row) {
+                    continue;
+                }
+
+                if(position.column + dimensions.column <= actor.position.column) {
+                    continue;
+                }
+            }
+
+            actors.push(actor);
+        }
+
+        for(const actor of this.bots) {
+            if(actor.position.row < position.row) {
+                continue;
+            }
+
+            if(actor.position.column < position.column) {
+                continue;
+            }
+
+            if(dimensions) {
+                if(position.row + dimensions.row <= actor.position.row) {
+                    continue;
+                }
+
+                if(position.column + dimensions.column <= actor.position.column) {
+                    continue;
+                }
+            }
+
+            actors.push(actor);
+        }
+
+        return actors;
+    }
+
+    public refreshActorsSitting(position: RoomPositionOffsetData, dimensions: RoomPositionData) {
+        const actors = this.getActorsAtPosition(position, dimensions);
+
+        for(const actor of actors) {
+            const sitableFurniture = this.getSitableFurnitureAtPosition(RoomPositionOffsetData.fromJSON(actor.position));
+
+            if(sitableFurniture) {
+                actor.pose.sit();
+
+                actor.path.setPosition({
+                    ...actor.position,
+                    depth: sitableFurniture.model.position.depth + sitableFurniture.model.furniture.dimensions.depth - 0.5
+                }, sitableFurniture.model.direction ?? undefined);
+            }
+            else {
+                const depth = this.getUpmostDepthAtPosition(RoomPositionOffsetData.fromJSON(actor.position));
+
+                if(depth !== null) {
+                    actor.pose.stand();
+                    
+                    actor.path.setPosition({
+                        ...actor.position,
+                        depth
+                    });
+                }
+            }
+        }
+    }
+
+    public getBotAtPosition(position: RoomPositionOffsetData) {
+        return this.bots.find((bot) => bot.position.row === position.row && bot.position.column === position.column);
+    }
+
+    public getPetAtPosition(position: RoomPositionOffsetData) {
+        return this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
+    }
+
+    public getRoomUser(user: User) {
+        return this.getRoomUserById(user.model.id);
+    }
+
+    public getRoomUserById(userId: string) {
+        const user = this.users.find((user) => user.user.model.id === userId);
+
+        if(!user) {
+            throw new Error("User does not exist in room.");
+        }
+
+        return user;
+    }
+
+    public requestActionsFrame() {
+        if(this.actionsInterval === undefined) {
+            this.actionsInterval = setInterval(() => {
+                this.handleActionsInterval().catch(console.error);
+            }, 500);
+
+            this.handleActionsInterval().catch(console.error);
+        }
+    }
+
+    public unload() {
+        if(this.actionsInterval === undefined) {
+            return;
+        }
+
+        clearInterval(this.actionsInterval);
+
+        delete this.actionsInterval;
+
+        for(const user of game.users.filter((user) => user.roomBellQueue?.model.id === this.model.id)) {
+            user.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
+                userId: user.model.id,
+                accept: false
+            }));
+
+            user.roomBellQueue = undefined;
+        }
+    }
+
+    private lastMinuteInterval = performance.now();
+
+    private async handleActionsInterval() {
+        for(const game of this.games.getAllGames()) {
+            await game.handleActionsInterval?.();
+        }
+
+        if(performance.now() - this.lastMinuteInterval > 60 * 1000) {
+            this.lastMinuteInterval = performance.now();
+
+            for(let furniture of this.furnitures.filter((furniture) => furniture.logic?.handleMinuteInterval !== undefined)) {
+                try {
+                    await furniture.logic?.handleMinuteInterval?.();
+                }
+                catch(error) {
+                    console.error("Failed to handle furniture minute interval", error);
+                }
+            }
+
+            game.getUserAchievements(this.model.owner.id).addAchievementScore("RoomHost", this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id).length).catch(console.error);
+
+            const usersExcludingOwner = this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id);
+
+            if(usersExcludingOwner.length) {
+                if(this.furnitures.some((furniture) => furniture.logic instanceof RoomFurnitureTraxLogic && furniture.model.animation === 1)) {
+                    game.getUserAchievements(this.model.owner.id).addAchievementScore("MusicPlayer", usersExcludingOwner.length).catch(console.error);
+                }
+            }
+        }
+
+        for(let furniture of this.furnitures) {
+            furniture.preoccupiedByActionHandler = false;
+        }
+
+        for(let user of this.users) {
+            user.preoccupiedByActionHandler = false;
+        }
+
+        const furnitureWithActions = this.furnitures.filter((furniture) => furniture.logic?.handleActionsInterval !== undefined);
+
+        for(let furniture of furnitureWithActions) {
+            try {
+                await furniture.logic?.handleActionsInterval?.();
+            }
+            catch(error) {
+                console.error("Failed to handle furniture actions interval", error);
+            }
+
+            if(furniture.model.changed()) {
+                furniture.model.save().catch(console.error);
+            }
+        }
+
+        // TODO: change so that the clients get the full path immediately, and only use this interval to cancel due to obstructions in the path?
+        for(const user of this.users) {
+            try {
+                await user.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle user actions interval", error);
+            }
+        }
+
+        for(const bot of this.bots) {
+            try {
+                await bot.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle bot actions interval", error);
+            }
+        }
+
+        for(const pet of this.pets) {
+            try {
+                await pet.handleActionsInterval();
+            }
+            catch(error) {
+                console.error("Failed to handle pet actions interval", error);
+            }
+        }
+
+        /*if(!this.users.some((user) => user.path?.length)) {
+            clearInterval(this.actionsInterval);
+
+            delete this.actionsInterval;
+        }*/
+    }
+
+    public getSitableFurnitureAtPosition(position: RoomPositionOffsetData) {
+        const furniture =
+            this.getAllFurnitureAtPosition(position)
+                .filter((furniture) => furniture.model.furniture.flags.sitable)
+                .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
+
+        if(!furniture.length) {
+            return undefined;
+        }
+
+        return furniture[0];
+    }
+
+    public getUpmostFurnitureAtPosition(position: RoomPositionOffsetData) {
+        const furniture =
+            this.getAllFurnitureAtPosition(position)
+                .toSorted((a, b) => b.model.position.depth - a.model.position.depth);
+
+        if(!furniture.length) {
+            return undefined;
+        }
+
+        const stackHelperFurniture = furniture.find((furniture) => furniture.logic instanceof RoomFurnitureStackHelperLogic);
+
+        if(stackHelperFurniture) {
+            return stackHelperFurniture;
+        }
+
+        return furniture[0];
+    }
+
+    public getAllFurnitureAtPosition(position: RoomPositionOffsetData) {
+        const furniture = this.furnitures
+            .filter((furniture) => furniture.isPositionInside(position));
+
+        return furniture;
+    }
+
+    public getUpmostDepthAtPosition(position: RoomPositionOffsetData, furniture?: RoomFurniture) {
+        if(!furniture) {
+            if(!this.model.structure.grid[position.row] || !this.model.structure.grid[position.row]![position.column]) {
+                return null;
+            }
+
+            if(this.model.structure.grid[position.row]![position.column] === 'X') {
+                return null;
+            }
+
+            return RoomFloorplanHelper.parseDepth(this.model.structure.grid[position.row]![position.column]!)
+        }
+
+        if(furniture.model.furniture.flags.sitable) {
+            return furniture.model.position.depth;
+        }
+
+        if(furniture.model.furniture.interactionType === "freeze_block" && furniture.model.animation !== 0) {
+            return furniture.model.position.depth;
+        }
+
+        if(furniture.model.furniture.interactionType === "multiheight" && furniture.model.furniture.customParams?.length && furniture.model.animation !== 0) {
+            const index = furniture.model.animation % furniture.model.furniture.customParams.length;
+
+            return furniture.model.furniture.dimensions.depth + parseFloat(furniture.model.furniture.customParams[index] ?? '0');
+        }
+
+        return furniture.model.position.depth + furniture.model.furniture.dimensions.depth;
+    }
+
+    public async setFloorId(id: string) {
+        const structure = RoomStructureData.create(this.model.structure);
+        structure.floor!.id = id.toString();
+
+        await this.model.update({ structure });
+
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
+    }
+
+    public async setLandscapeId(id: string) {
+        const structure = RoomStructureData.create(this.model.structure);
+
+        structure.landscape = RoomStructureLandscapeData.create({
+            ...structure.landscape,
+            id
+        });
+
+        await this.model.update({ structure });
+
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
+    }
+
+    public async setWallId(id: string) {
+        const structure = RoomStructureData.create(this.model.structure);
+        structure.wall!.id = id.toString();
+
+        await this.model.update({ structure });
+
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
+    }
+
+    public async setStructure(structure: RoomStructureData) {
+        await this.model.update({ structure });
+
+        this.floorplan.regenerateStaticGrid();
+
+        this.sendProtobuff(RoomStructureData, RoomStructureData.create(this.model.structure));
+    }
+
+    public getActiveFurniture(interactionType: string) {
+        const dimmerFurnitures = this.furnitures.filter((furniture) => furniture.model.furniture.interactionType === interactionType);
+        const activeDimmerFurniture = dimmerFurnitures.find((furniture) => furniture.model.animation === 1);
+
+        return activeDimmerFurniture;
+    }
+
+    public getInformationData(): RoomInformationData {
+        return {
+            $type: "RoomInformationData",
+
+            id: this.model.id,
+            
+            type: this.model.type,
+            lock: this.model.lock,
+
+            name: this.model.name,
+            description: this.model.description,
+            category: this.model.category.id,
+            thumbnail: (this.model.thumbnail)?(Buffer.from(this.model.thumbnail).toString('utf8')):(undefined),
+            trading: this.model.trading,
+
+            allowWalkingThroughUsers: this.model.allowWalkingThroughUsers,
+
+            allowPets: this.model.allowPets,
+            allowPetsToEatFood: this.model.allowPetsToEatFood,
+            muteAllPets: this.model.muteAllPets,
+            
+            owner: {
+                $type: "RoomInformationOwnerData",
+                id: this.model.owner.id,
+                name: this.model.owner.name
+            },
+
+            maxUsers: this.model.maxUsers
+        };
+    }
+    
+    public getFurnitureWithCategory<T>(category: (new (...args: any[]) => T)) {
+        return this.furnitures.filter((furniture) => furniture.logic instanceof category).map((furniture) => furniture.logic as T);
+    }
+
+    public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleBeforeUserWalksOnFurniture?.(roomUser, previousRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleBeforeUserWalksOnFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
+    }
+
+    public async handleUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleUserWalksOnFurniture(roomUser, previousRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleUserWalksOnFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
+    }
+
+    public async handleBeforeUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleBeforeUserWalksOffFurniture(roomUser, newRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleUserWalksOffFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
+    }
+
+    public async handleUserWalksOffFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, newRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleUserWalksOffFurniture(roomUser, newRoomFurniture);
+
+        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+
+        for(const logic of wiredTriggerLogic) {
+            logic.handleUserWalksOffFurniture?.(roomUser, roomFurniture).catch(console.error);
+        }
+    }
+
+    public async handleUserUseFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture) {
+        const wiredStateChangedLogic = this.getFurnitureWithCategory(WiredTriggerStateChangedLogic);
+
+        for(const logic of wiredStateChangedLogic) {
+            logic.handleUserUsesFurniture(roomUser, roomFurniture).catch(console.error);
+        }
+    }
+
+    public async handleGameStarts(game: RoomGame) {
+        const wiredTriggerGameStartsLogic = this.getFurnitureWithCategory(WiredTriggerGameStartsLogic);
+
+        for(const logic of wiredTriggerGameStartsLogic) {
+            logic.handleGameStarts(game).catch(console.error);
+        }
+    }
+
+    public async handleGameScore(team: string, score: number) {
+        const wiredTriggerScoreAchievedLogic = this.getFurnitureWithCategory(WiredTriggerScoreAchievedLogic);
+
+        for(const logic of wiredTriggerScoreAchievedLogic) {
+            logic.handleTeamScore(team, score).catch(console.error);
+        }
+    }
+
+    public async handleGameEnds(game: RoomGame) {
+        const wiredTriggerGameEndsLogic = this.getFurnitureWithCategory(WiredTriggerGameEndsLogic);
+
+        for(const logic of wiredTriggerGameEndsLogic) {
+            logic.handleGameEnds(game).catch(console.error);
+        }
+    }
+
+    public hasUserVisibility(user: UserModel) {
+        if(this.model.lock !== "invisible") {
+            return true;
+        }
+
+        if(this.model.owner.id === user.id) {
+            return true;
+        }
+
+        if(this.model.rights.some((rights) => rights.user.id === user.id)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async setBulkFurnitureAnimations(bulkFurniture: { furniture: RoomFurniture; animation: number }[]) {
+        const transaction = await sequelize.transaction();
+
+        for(const { furniture, animation } of bulkFurniture) {
+            await furniture.model.update({ animation }, {
+                transaction 
+            });
+        }
+
+        await transaction.commit();
+
+        this.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+            furnitureUpdated: bulkFurniture.map(({ furniture }) => {
+                return {
+                    furniture: {
+                        id: furniture.model.id,
+                        animation: furniture.model.animation
+                    }
+                };
+            })
+        }));
+    }
+}

@@ -1,12 +1,12 @@
 import User from "../../../Users/User.js";
-import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { ShopPageFeatureModel } from "../../../Database/Models/Shop/ShopPageFeatureModel.js";
+import { ShopPageFeatureModel } from "../../../../Database/Models/Shop/ShopPageFeatureModel.js";
 import { GetShopPagesData, ShopFeatureData, ShopPagesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { ShopPageBundleModel } from "../../../Database/Models/Shop/ShopPageBundleModel.js";
-import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
+import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel.js";
+import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
 import UserPermissions from "../../../Users/Permissions/UserPermissions.js";
 import { Op } from "sequelize";
 

@@ -2,8 +2,8 @@ import User from "../../../Users/User.js";
 import OutgoingEvent from "../../../Events/Interfaces/OutgoingEvent.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
 import { randomUUID } from "node:crypto";
-import { ShopPageBotModel } from "../../../Database/Models/Shop/ShopPageBotModel.js";
-import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel.js";
+import { ShopPageBotModel } from "../../../../Database/Models/Shop/ShopPageBotModel.js";
+import { UserBotModel } from "../../../../Database/Models/Users/Bots/UserBotModel.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { PurchaseShopBotData, ShopPurchaseData } from "@pixel63/events";
 

@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PlaceRoomPetData } from "@pixel63/events";
-import RoomPet from "../../../../Rooms/Pets/RoomPet.js";
+import RoomPet from "../../../../../Room/Rooms/Pets/RoomPet.js";
 
 export default class PlaceRoomPetEvent implements ProtobuffListener<PlaceRoomPetData> {
     minimumDurationBetweenEvents?: number = 500;

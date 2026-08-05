@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
-import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
-import { ShopPageFurnitureModel } from "../../../Database/Models/Shop/ShopPageFurnitureModel.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { GetShopPageFurnitureData, ShopPageFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { Op } from "sequelize";

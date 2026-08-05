@@ -1,8 +1,8 @@
 import { LeaveGroupData, GetUserGroupData, RoomGroupData, GetGroupData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
 import GetUserGroupEvent from "./GetUserGroupEvent";
 import GetGroupEvent from "./GetGroupEvent";
 

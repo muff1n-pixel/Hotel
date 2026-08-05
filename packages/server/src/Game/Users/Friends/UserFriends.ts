@@ -1,7 +1,7 @@
 import { UserFriendData, UserFriendsData, UserFriendUpdateData } from "@pixel63/events";
-import { UserFriendModel } from "../../Database/Models/Users/Friends/UserFriendModel";
-import { UserFriendRequestModel } from "../../Database/Models/Users/Friends/UserFriendRequestModel";
-import { UserModel } from "../../Database/Models/Users/UserModel";
+import { UserFriendModel } from "../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserFriendRequestModel } from "../../../Database/Models/Users/Friends/UserFriendRequestModel";
+import { UserModel } from "../../../Database/Models/Users/UserModel";
 import User from "../User";
 import { game } from "../..";
 

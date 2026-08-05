@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { DeleteShopMembershipData, GetShopPageMembershipsData } from "@pixel63/events";
-import { ShopPageMembershipModel } from "../../../../Database/Models/Shop/ShopPageMembershipModel.js";
+import { ShopPageMembershipModel } from "../../../../../Database/Models/Shop/ShopPageMembershipModel.js";
 import GetShopPageMembershipsEvent from "../GetShopPageMembershipsEvent.js";
 
 export default class DeleteShopMembershipEvent implements ProtobuffListener<DeleteShopMembershipData> {

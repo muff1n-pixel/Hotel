@@ -1,8 +1,8 @@
 import { WidgetNotificationData } from "@pixel63/events";
 import { randomUUID } from "crypto";
-import { RoomBattleBanzaiGameTeam } from "../../../Rooms/Games/BattleBanzai/Interfaces/RoomBattleBanzaiGameTeam";
-import { RoomFootballGamePlayer } from "../../../Rooms/Games/Football/Interfaces/RoomFootballGamePlayer";
-import { RoomFootballGameTeam } from "../../../Rooms/Games/Football/Interfaces/RoomFootballGameTeam";
+import { RoomBattleBanzaiGameTeam } from "../../../../Room/Rooms/Games/BattleBanzai/Interfaces/RoomBattleBanzaiGameTeam";
+import { RoomFootballGamePlayer } from "../../../../Room/Rooms/Games/Football/Interfaces/RoomFootballGamePlayer";
+import { RoomFootballGameTeam } from "../../../../Room/Rooms/Games/Football/Interfaces/RoomFootballGameTeam";
 
 export default class FootballGameNotifications {
     public static buildPlayerJoinedGame(player: RoomFootballGamePlayer) {

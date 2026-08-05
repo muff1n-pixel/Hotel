@@ -1,8 +1,8 @@
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { randomUUID } from "node:crypto";
-import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
+import { RoomCategoryModel } from "../../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { CreateRoomData, RoomCreatedData, RoomStructureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 

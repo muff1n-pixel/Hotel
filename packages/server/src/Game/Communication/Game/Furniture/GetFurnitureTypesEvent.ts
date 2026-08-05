@@ -1,6 +1,6 @@
 import User from "../../../Users/User.js";
 import IncomingEvent from "../../Interfaces/IncomingEvent.js";
-import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { FurnitureTypesData, GetFurnitureTypesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 

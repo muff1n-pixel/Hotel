@@ -1,5 +1,5 @@
 import User from "../../../../Users/User.js";
-import { ShopPageBotModel } from "../../../../Database/Models/Shop/ShopPageBotModel.js";
+import { ShopPageBotModel } from "../../../../../Database/Models/Shop/ShopPageBotModel.js";
 import { randomUUID } from "node:crypto";
 import GetShopPageBotsEvent from "../GetShopPageBotsEvent.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";

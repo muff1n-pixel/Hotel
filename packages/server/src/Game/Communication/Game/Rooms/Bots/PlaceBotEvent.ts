@@ -1,5 +1,5 @@
 import User from "../../../../Users/User.js";
-import RoomBot from "../../../../Rooms/Bots/RoomBot.js";
+import RoomBot from "../../../../../Room/Rooms/Bots/RoomBot.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PlaceRoomBotData } from "@pixel63/events";
 

@@ -1,6 +1,6 @@
 import User from "../../../../Users/User.js";
-import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
-import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import RoomFurniture from "../../../../../Room/Rooms/Furniture/RoomFurniture.js";
+import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { PlaceRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import { game } from "../../../../index.js";

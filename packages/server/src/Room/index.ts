@@ -1,4 +1,4 @@
-import { ServerTokenModel } from "../Game/Database/Models/Server/ServerTokenModel";
+import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel";
 import RoomServer from "./Server/RoomServer";
 
 ServerTokenModel.findOne().then((serverToken) => {

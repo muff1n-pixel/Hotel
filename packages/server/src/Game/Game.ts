@@ -1,15 +1,15 @@
 import CommandHandler from "./Commands/CommandHandler.js";
 import EventHandler from "./Events/EventHandler.js";
-import RoomNavigatorManager from "./Rooms/Navigator/RoomNavigatorManager.js";
-import RoomManager from "./Rooms/RoomManager.js";
+import RoomNavigatorManager from "../Room/Rooms/Navigator/RoomNavigatorManager.js";
+import RoomManager from "../Room/Rooms/RoomManager.js";
 import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
-import PetCommandHandler from "./Rooms/Pets/Commands/PetCommandHandler.js";
-import { ServerTokenModel } from "./Database/Models/Server/ServerTokenModel.js";
+import PetCommandHandler from "../Room/Rooms/Pets/Commands/PetCommandHandler.js";
+import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
 
 export default class Game {

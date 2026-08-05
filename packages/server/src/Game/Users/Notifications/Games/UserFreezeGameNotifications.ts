@@ -1,5 +1,5 @@
 import { WidgetNotificationData } from "@pixel63/events";
-import { RoomFreezeGamePlayer, RoomFreezeGamePowerups, RoomFreezeGameTeam } from "../../../Rooms/Games/Freeze/RoomFreezeGame";
+import { RoomFreezeGamePlayer, RoomFreezeGamePowerups, RoomFreezeGameTeam } from "../../../../Room/Rooms/Games/Freeze/RoomFreezeGame";
 import { randomUUID } from "crypto";
 
 export default class UserFreezeGameNotifications {

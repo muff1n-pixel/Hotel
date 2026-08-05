@@ -1,8 +1,8 @@
 import User from "../../../Users/User.js";
-import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
 import { GetShopPageMembershipsData, ShopMembershipsData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { ShopPageMembershipModel } from "../../../Database/Models/Shop/ShopPageMembershipModel.js";
+import { ShopPageMembershipModel } from "../../../../Database/Models/Shop/ShopPageMembershipModel.js";
 
 export default class GetShopPageMembershipsEvent implements ProtobuffListener<GetShopPageMembershipsData> {
     minimumDurationBetweenEvents?: number = 20;

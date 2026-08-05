@@ -1,12 +1,12 @@
 import User from "../../../Users/User.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { game } from "../../../index.js";
-import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
+import { RoomCategoryModel } from "../../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { Op } from "sequelize";
 import { GetNavigatorData, GroupData, NavigatorData, NavigatorRoomData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { UserModel } from "../../../Database/Models/Users/UserModel.js";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel.js";
 import { WhereOptions } from "sequelize";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {

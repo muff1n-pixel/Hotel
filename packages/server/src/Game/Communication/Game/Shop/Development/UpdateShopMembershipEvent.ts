@@ -2,7 +2,7 @@ import User from "../../../../Users/User.js";
 import { randomUUID } from "node:crypto";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { GetShopPageMembershipsData, UpdateShopMembershipData } from "@pixel63/events";
-import { ShopPageMembershipModel } from "../../../../Database/Models/Shop/ShopPageMembershipModel.js";
+import { ShopPageMembershipModel } from "../../../../../Database/Models/Shop/ShopPageMembershipModel.js";
 import GetShopPageMembershipsEvent from "../GetShopPageMembershipsEvent.js";
 
 export default class UpdateShopMembershipEvent implements ProtobuffListener<UpdateShopMembershipData> {

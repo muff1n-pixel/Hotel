@@ -1,5 +1,5 @@
-import { sequelize } from "../../../Database/Database.js";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
+import { sequelize } from "../../../../Database/Database.js";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";

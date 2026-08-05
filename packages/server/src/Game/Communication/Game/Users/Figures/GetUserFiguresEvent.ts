@@ -1,7 +1,7 @@
 import { GetUserFiguresData, UserFigureData, UserFiguresData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { UserFigureModel } from "../../../../Database/Models/Users/Figures/UserFigureModel";
+import { UserFigureModel } from "../../../../../Database/Models/Users/Figures/UserFigureModel";
 
 export default class GetUserFiguresEvent implements ProtobuffListener<GetUserFiguresData> {
     minimumDurationBetweenEvents?: number = 1000;

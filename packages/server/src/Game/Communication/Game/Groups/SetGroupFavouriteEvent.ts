@@ -1,7 +1,7 @@
 import { SetGroupFavouriteData, GetUserProfileData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
 import GetUserProfileEvent from "../Users/Profile/GetUserProfileEvent";
 
 export default class SetGroupFavouriteEvent implements ProtobuffListener<SetGroupFavouriteData> {

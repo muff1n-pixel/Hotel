@@ -1,5 +1,5 @@
 import User from "../../../../Users/User.js";
-import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
+import { RoomRightsModel } from "../../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
 import { randomUUID } from "node:crypto";
 import { RoomUserData, ClearRoomRightsData, GetRoomRightsData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";

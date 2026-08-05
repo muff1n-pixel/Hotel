@@ -1,6 +1,6 @@
 import { WidgetNotificationData } from "@pixel63/events";
 import { randomUUID } from "crypto";
-import { RoomBattleBanzaiGameTeam } from "../../../Rooms/Games/BattleBanzai/Interfaces/RoomBattleBanzaiGameTeam";
+import { RoomBattleBanzaiGameTeam } from "../../../../Room/Rooms/Games/BattleBanzai/Interfaces/RoomBattleBanzaiGameTeam";
 
 export default class BattleBanzaiGameNotifications {
     public static buildPlayerJoinedTeam(team: RoomBattleBanzaiGameTeam) {

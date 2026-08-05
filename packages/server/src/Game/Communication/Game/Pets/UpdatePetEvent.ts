@@ -2,8 +2,8 @@ import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
 import { GetPetBrowserData, RoomFurnitureData, UpdatePetData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
-import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
-import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
+import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../../Database/Models/Pets/PetBreedModel.js";
 import { randomUUID } from "node:crypto";
 import GetPetBrowserEvent from "./GetPetBrowserEvent.js";
 

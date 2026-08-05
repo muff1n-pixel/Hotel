@@ -1,7 +1,7 @@
 import User from "../../../../Users/User.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { DeleteRoomMapData } from "@pixel63/events";
-import { RoomMapModel } from "../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
+import { RoomMapModel } from "../../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
 import GetRoomMapsEvent from "../../Navigator/GetRoomMapsEvent.js";
 import { game } from "../../../../index.js";
 

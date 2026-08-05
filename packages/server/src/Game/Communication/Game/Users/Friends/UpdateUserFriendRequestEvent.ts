@@ -1,8 +1,8 @@
 import { UpdateUserFriendRequestData, UserFriendUpdateData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { UserModel } from "../../../../Database/Models/Users/UserModel";
-import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserModel } from "../../../../../Database/Models/Users/UserModel";
+import { UserFriendModel } from "../../../../../Database/Models/Users/Friends/UserFriendModel";
 import { randomUUID } from "node:crypto";
 import { game } from "../../../..";
 import UserFriends from "../../../../Users/Friends/UserFriends";

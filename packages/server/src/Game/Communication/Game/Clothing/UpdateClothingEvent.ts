@@ -1,7 +1,7 @@
 import { GetUserClothesData, UpdateClothingData, UserClothesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { ClothingModel } from "../../../Database/Models/Clothes/ClothesModel";
+import { ClothingModel } from "../../../../Database/Models/Clothes/ClothesModel";
 import { randomUUID } from "node:crypto";
 import GetUserClothesEvent from "../Users/Clothes/GetUserClothesEvent";
 

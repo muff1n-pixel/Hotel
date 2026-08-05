@@ -1,7 +1,7 @@
 import User from "../../../Users/User.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { GetShopPageLinkData, ShopPageLinkData } from "@pixel63/events";
-import { ShopPageModel } from "../../../Database/Models/Shop/ShopPageModel.js";
+import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel.js";
 
 export default class GetShopPageLinkEvent implements ProtobuffListener<GetShopPageLinkData> {
     minimumDurationBetweenEvents?: number = 200;

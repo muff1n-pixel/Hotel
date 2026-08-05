@@ -1,9 +1,9 @@
 import { FurnitureTraxSongMetaData, RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData } from "@pixel63/events";
 import ProtobuffListener from "../../../../Interfaces/ProtobuffListener";
 import User from "../../../../../Users/User";
-import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { UserFurnitureModel } from "../../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { game } from "../../../../..";
-import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { FurnitureModel } from "../../../../../../Database/Models/Furniture/FurnitureModel";
 
 export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListener<DeleteRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;

@@ -1,13 +1,13 @@
 import { BadgeData, PurchaseShopBundleData, ShopBundlePurchaseData, ShopPurchaseData, WidgetNotificationData } from "@pixel63/events";
 import User from "../../../../Users/User";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
-import { ShopPageModel } from "../../../../Database/Models/Shop/ShopPageModel";
-import { ShopPageBundleModel } from "../../../../Database/Models/Shop/ShopPageBundleModel";
-import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
-import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
+import { ShopPageModel } from "../../../../../Database/Models/Shop/ShopPageModel";
+import { ShopPageBundleModel } from "../../../../../Database/Models/Shop/ShopPageBundleModel";
+import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { RoomModel } from "../../../../../Database/Models/Rooms/RoomModel";
 import { randomUUID } from "node:crypto";
-import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel";
-import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
+import { UserBadgeModel } from "../../../../../Database/Models/Users/Badges/UserBadgeModel";
+import { BadgeModel } from "../../../../../Database/Models/Badges/BadgeModel";
 
 export default class PurchaseShopBundleEvent implements ProtobuffListener<PurchaseShopBundleData> {
     minimumDurationBetweenEvents?: number = 10_000;

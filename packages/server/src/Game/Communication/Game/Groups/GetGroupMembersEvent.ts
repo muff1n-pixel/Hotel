@@ -1,9 +1,9 @@
 import { GetGroupMembersData, GroupData, GroupMembersData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel";
-import { UserModel } from "../../../Database/Models/Users/UserModel";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
+import { UserModel } from "../../../../Database/Models/Users/UserModel";
 import { Op } from "sequelize";
 
 export default class GetGroupMembersEvent implements ProtobuffListener<GetGroupMembersData> {

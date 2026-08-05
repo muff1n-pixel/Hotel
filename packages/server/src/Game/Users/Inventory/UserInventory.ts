@@ -1,17 +1,17 @@
 import User from "../User.js";
-import { FurnitureModel } from "../../Database/Models/Furniture/FurnitureModel.js";
+import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
 import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
-import { UserFurnitureModel } from "../../Database/Models/Users/Furniture/UserFurnitureModel.js";
-import { UserModel } from "../../Database/Models/Users/UserModel.js";
-import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
-import { BadgeModel } from "../../Database/Models/Badges/BadgeModel.js";
-import { UserBotModel } from "../../Database/Models/Users/Bots/UserBotModel.js";
+import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeModel.js";
+import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
+import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel.js";
 import { UserNotificationData, UserInventoryBadgesData, UserInventoryBotsData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData, UserInventoryPetsData } from "@pixel63/events";
-import { UserPetModel } from "../../Database/Models/Users/Pets/UserPetModel.js";
-import { PetModel } from "../../Database/Models/Pets/PetModel.js";
-import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
+import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
+import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
+import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
 import { Op } from "sequelize";
-import { UserAchievementModel } from "../../Database/Models/Users/Achievements/UserAchievementModel.js";
+import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel.js";
 
 export default class UserInventory {
     constructor(private readonly user: User) {

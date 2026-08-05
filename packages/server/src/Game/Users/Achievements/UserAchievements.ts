@@ -1,12 +1,12 @@
 import { randomUUID } from "crypto";
-import { AchievementId, AchievementModel } from "../../Database/Models/Achievements/AchievementModel";
-import { UserAchievementModel } from "../../Database/Models/Users/Achievements/UserAchievementModel";
-import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel";
+import { AchievementId, AchievementModel } from "../../../Database/Models/Achievements/AchievementModel";
+import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel";
+import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeModel";
 import User from "../User";
-import { BadgeModel } from "../../Database/Models/Badges/BadgeModel";
+import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel";
 import { BadgeData, WidgetNotificationData } from "@pixel63/events";
 import RomanNumerals from "../../Helpers/RomanNumerals";
-import { UserModel } from "../../Database/Models/Users/UserModel";
+import { UserModel } from "../../../Database/Models/Users/UserModel";
 import { game } from "../..";
 
 export default class UserAchievements {

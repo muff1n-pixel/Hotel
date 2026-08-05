@@ -1,5 +1,5 @@
 import User from "../../../../Users/User.js";
-import RoomFurniture from "../../../../Rooms/Furniture/RoomFurniture.js";
+import RoomFurniture from "../../../../../Room/Rooms/Furniture/RoomFurniture.js";
 import { RoomFurnitureData, RoomPositionOffsetData, UpdateRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import { randomUUID } from "node:crypto";

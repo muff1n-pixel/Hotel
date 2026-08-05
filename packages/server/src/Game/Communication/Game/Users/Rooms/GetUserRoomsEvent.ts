@@ -1,5 +1,5 @@
 import { GetUserRoomsData, UserRoomsData } from "@pixel63/events";
-import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
+import { RoomModel } from "../../../../../Database/Models/Rooms/RoomModel.js";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener.js";
 import User from "../../../../Users/User.js";
 

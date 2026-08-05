@@ -1,8 +1,10 @@
-import { initializeModels, recreateShop, resetDatabase } from "./Database/Database";
+import { initializeModels, recreateShop, resetDatabase } from "../Database/Database";
 import Game from "./Game";
-import { createMissingFurniture } from "./Database/Development/FurnitureDevelopmentData";
-import { recreateShopPages } from "./Database/Development/ShopDevelopmentData";
+import { createMissingFurniture } from "../Database/Development/FurnitureDevelopmentData";
+import { recreateShopPages } from "../Database/Development/ShopDevelopmentData";
 import InitializerManager from "./Initializer/InitializerManager";
+import { seedHotelSettings } from "../Database/Models/Hotel/HotelSettingModel";
+import { seedAchievements } from "../Database/Models/Achievements/AchievementModel";
 
 let game: Game;
 
@@ -12,6 +14,9 @@ export async function startServer() {
     await game.createServerToken();
 
     await initializeModels();
+
+    await seedAchievements();
+    await seedHotelSettings();
 
     if (recreateShop) {
         await recreateShopPages();

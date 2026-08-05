@@ -1,9 +1,9 @@
 import { FurnitureCrackableData, FurnitureCrackableRewardData, FurnitureData, FurnitureTypesData, GetFurnitureCrackableData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
-import { FurnitureCrackableModel } from "../../../../Database/Models/Furniture/Crackable/FurnitureCrackableModel";
-import { FurnitureCrackableRewardModel } from "../../../../Database/Models/Furniture/Crackable/FurnitureCrackableRewardModel";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { FurnitureCrackableModel } from "../../../../../Database/Models/Furniture/Crackable/FurnitureCrackableModel";
+import { FurnitureCrackableRewardModel } from "../../../../../Database/Models/Furniture/Crackable/FurnitureCrackableRewardModel";
 
 export default class GetFurnitureCrackableEvent implements ProtobuffListener<GetFurnitureCrackableData> {
     minimumDurationBetweenEvents?: number = 200;

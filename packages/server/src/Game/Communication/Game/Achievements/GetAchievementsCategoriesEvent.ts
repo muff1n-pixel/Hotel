@@ -1,9 +1,9 @@
 import { AchievementsCategoriesData, GetAchievementsCategoriesData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { AchievementCategoryModel } from "../../../Database/Models/Achievements/AchievementCategoryModel";
-import { AchievementModel } from "../../../Database/Models/Achievements/AchievementModel";
-import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel";
+import { AchievementCategoryModel } from "../../../../Database/Models/Achievements/AchievementCategoryModel";
+import { AchievementModel } from "../../../../Database/Models/Achievements/AchievementModel";
+import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel";
 
 export default class GetAchievementsCategoriesEvent implements ProtobuffListener<GetAchievementsCategoriesData> {
     minimumDurationBetweenEvents?: number = 200;

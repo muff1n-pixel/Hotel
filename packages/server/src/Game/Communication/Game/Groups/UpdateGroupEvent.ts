@@ -1,12 +1,12 @@
 import { GetGroupData, RoomFurnitureData, UpdateGroupData, UserFurnitureColorTag } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener";
 import User from "../../../Users/User";
-import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel";
-import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
 import { game } from "../../..";
-import { RoomModel } from "../../../Database/Models/Rooms/RoomModel";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel";
 import GetGroupEvent from "./GetGroupEvent";
-import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel";
+import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 
 export default class UpdateGroupEvent implements ProtobuffListener<UpdateGroupData> {
     minimumDurationBetweenEvents?: number = 500;

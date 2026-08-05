@@ -2,7 +2,7 @@ import User from "../../../Users/User.js";
 import { BadgeBrowserData, BadgeData, GetBadgeBrowserData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { Op } from "sequelize";
-import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel.js";
+import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
 
 export default class GetBadgeBrowserEvent implements ProtobuffListener<GetBadgeBrowserData> {
     async handle(user: User, payload: GetBadgeBrowserData) {

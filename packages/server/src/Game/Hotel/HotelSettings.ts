@@ -1,4 +1,4 @@
-import { HotelSettingModel } from "../Database/Models/Hotel/HotelSettingModel";
+import { HotelSettingModel } from "../../Database/Models/Hotel/HotelSettingModel";
 
 export default class HotelSettings {
     public roomUserIdlingTimeout: number = 180;

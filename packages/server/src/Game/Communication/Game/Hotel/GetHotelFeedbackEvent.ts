@@ -1,6 +1,6 @@
-import { HotelFeedbackModel } from "../../../Database/Models/Hotel/HotelFeedbackModel.js";
+import { HotelFeedbackModel } from "../../../../Database/Models/Hotel/HotelFeedbackModel.js";
 import User from "../../../Users/User.js";
-import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { GetHotelFeedbackData } from "@pixel63/events";
 import { HotelFeedbackCollectionData } from "@pixel63/events/build/Client/Hotel/Feedback/HotelFeedbackData.js";

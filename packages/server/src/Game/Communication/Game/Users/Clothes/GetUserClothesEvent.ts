@@ -1,8 +1,8 @@
 import { GetUserClothesData, UserClothesData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
-import { UserClothingModel } from "../../../../Database/Models/Users/Clothes/UserClothingModel";
-import { ClothingModel } from "../../../../Database/Models/Clothes/ClothesModel";
+import { UserClothingModel } from "../../../../../Database/Models/Users/Clothes/UserClothingModel";
+import { ClothingModel } from "../../../../../Database/Models/Clothes/ClothesModel";
 
 export default class GetUserClothesEvent implements ProtobuffListener<GetUserClothesData> {
     minimumDurationBetweenEvents?: number = 100;
