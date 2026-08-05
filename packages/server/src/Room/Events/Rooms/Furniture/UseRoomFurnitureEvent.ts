@@ -1,0 +1,18 @@
+import User from "../../../../Game/Users/User.js";
+import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import { UseRoomFurnitureData } from "@pixel63/events";
+
+export default class UseRoomFurnitureEvent implements ProtobuffListener<UseRoomFurnitureData> {
+    minimumDurationBetweenEvents?: number = 100;
+    
+    async handle(user: User, payload: UseRoomFurnitureData) {
+        if(!user.room) {
+            return;
+        }
+
+        let roomUser = user.room.getRoomUser(user);
+        const roomFurniture = user.room.getRoomFurniture(payload.id);
+
+        await roomFurniture.logic?.use?.(roomUser, payload);
+    }
+}

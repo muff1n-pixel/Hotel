@@ -1,6 +1,5 @@
 import User from "../User.js";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import OutgoingEvent from "../../Events/Interfaces/OutgoingEvent.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
 import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeModel.js";
@@ -10,7 +9,6 @@ import { UserNotificationData, UserInventoryBadgesData, UserInventoryBotsData, U
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import { PetModel } from "../../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel.js";
-import { Op } from "sequelize";
 import { UserAchievementModel } from "../../../Database/Models/Users/Achievements/UserAchievementModel.js";
 
 export default class UserInventory {

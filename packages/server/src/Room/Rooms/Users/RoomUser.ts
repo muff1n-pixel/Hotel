@@ -7,11 +7,11 @@ import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
 import { FigureConfigurationData, LeaveRoomData, RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomBellQueueData, RoomBellQueueUserData, RoomLoadData, RoomPositionData, RoomPositionOffsetData, RoomUserData, RoomUserEnteredData, RoomUserLeftData } from "@pixel63/events";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel.js";
-import Directions from "../../../Game/Helpers/Directions.js";
+import Directions from "../../../Helpers/Directions.js";
 import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
 import RoomUserTrading from "./Trading/RoomUserTrading.js";
 import RoomUserGroup from "./Groups/RoomUserGroup.js";
-import { GroupRights, GroupType } from "../../../Database/Models/Groups/RoomGroupModel.js";
+import { GroupRights } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
 
 export default class RoomUser implements RoomActor {

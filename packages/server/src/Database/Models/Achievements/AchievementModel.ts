@@ -1,6 +1,6 @@
 import { DataTypes, Model, NonAttribute, Sequelize } from "sequelize";
 import { BadgeModel } from "../Badges/BadgeModel";
-import RomanNumerals from "../../../Game/Helpers/RomanNumerals";
+import RomanNumerals from "../../../Helpers/RomanNumerals";
 import { AchievementCategoryModel } from "./AchievementCategoryModel";
 import GameAchievementsSeeder, { GameAchievements } from "./Seeders/GameAchievementsSeeder";
 import RoomBuilderAchievementsSeeder, { RoomBuilderAchievements } from "./Seeders/RoomBuilderAchievementsSeeder";

@@ -3,7 +3,7 @@ import { WiredTriggerOptions } from "../WiredLogic";
 import WiredActionLogic from "../WiredActionLogic";
 import { RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 import RoomUser from "../../../../Users/RoomUser";
-import Directions from "../../../../../../Game/Helpers/Directions";
+import Directions from "../../../../../../Helpers/Directions";
 import WiredTriggerCollisionLogic from "../Trigger/WiredTriggerCollisionLogic";
 
 export default class WiredActionMoveToDirectionLogic extends WiredActionLogic {

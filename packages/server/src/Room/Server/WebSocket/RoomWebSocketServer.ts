@@ -3,6 +3,7 @@ import { config } from "../../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
 import RoomServer from "../RoomServer";
+import { MessageType, UnknownMessage } from "@pixel63/events";
 
 export default class RoomWebSocketServer {
     private readonly server: WebSocketServer;
@@ -62,6 +63,37 @@ export default class RoomWebSocketServer {
 
     private handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
         websocket.close();
+    }
+
+    public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
+        return this.sendProtobuff(this.gameServerWebSocket!, message, payload);
+    }
+
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(websocket: WebSocket, message: MessageType, payload: Message) {
+        try {
+            const encoded = message.encode(payload).finish();
+
+            this.sendEncodedProtobuff(websocket, message.$type, encoded);
+        }
+        catch(error) {
+            console.error("Failed to send Protobuff", error);
+        }
+    }
+
+    private sendEncodedProtobuff(websocket: WebSocket, eventType: string, encoded: Uint8Array) {
+        try {
+            const typeBytes = new TextEncoder().encode(eventType + "|");
+
+            const message = new Uint8Array(typeBytes.length + encoded.length);
+
+            message.set(typeBytes, 0);
+            message.set(encoded, typeBytes.length);
+
+            websocket.send(message);
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
     }
 
     private getAccessTokenPayload<T>(accessToken: string, secretKey: string) {

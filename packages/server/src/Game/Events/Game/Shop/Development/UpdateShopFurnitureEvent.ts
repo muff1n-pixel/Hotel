@@ -1,0 +1,70 @@
+import User from "../../../../Users/User.js";
+import IncomingEvent from "../../../../Communication/Interfaces/IncomingEvent.js";
+import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel.js";
+import { ShopPageFurnitureModel } from "../../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
+import GetShopPageFurnitureEvent from "../GetShopPageFurnitureEvent.js";
+import { randomUUID } from "node:crypto";
+import { UserProtobuffListener } from "../../../Interfaces/UserProtobuffListener.js";
+import { GetShopPageFurnitureData, UpdateShopFurnitureData } from "@pixel63/events";
+
+export default class UpdateShopFurnitureEvent implements UserProtobuffListener<UpdateShopFurnitureData> {
+    public readonly name = "UpdateShopFurnitureEvent";
+
+    async handle(user: User, payload: UpdateShopFurnitureData) {
+        const permissions = await user.getPermissions();
+
+        if(!permissions.hasPermission("shop:edit")) {
+            throw new Error("User is not privileged to edit the shope.");
+        }
+
+        if(payload.furnitureIds.length === 0) {
+            throw new Error("No furniture id was provided.");
+        }
+
+        if(payload.furnitureIds.length > 1 && payload.id) {
+            throw new Error("Multiple furniture was provided for existing furniture.");
+        }
+
+        for(const furnitureId of payload.furnitureIds) {
+            const furniture = await FurnitureModel.findByPk(furnitureId);
+
+            if(!furniture) {
+                throw new Error("Furniture does not exist.");
+            }
+            
+            if(payload.id !== undefined) {
+                await ShopPageFurnitureModel.update({
+                    furnitureId: furniture.id,
+
+                    credits: (payload.credits > 0)?(payload.credits):(null),
+                    duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                    diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+
+                    membership: payload.membership ?? undefined
+                }, {
+                    where: {
+                        id: payload.id
+                    }
+                });
+            }
+            else {
+                await ShopPageFurnitureModel.create({
+                    id: randomUUID(),
+                    
+                    shopPageId: payload.pageId,
+                    furnitureId: furniture.id,
+
+                    credits: (payload.credits > 0)?(payload.credits):(null),
+                    duckets: (payload.duckets > 0)?(payload.duckets):(null),
+                    diamonds: (payload.diamonds > 0)?(payload.diamonds):(null),
+
+                    membership: payload.membership ?? undefined,
+                });
+            }
+        }
+
+        await (new GetShopPageFurnitureEvent()).handle(user, GetShopPageFurnitureData.create({
+            pageId: payload.pageId
+        }));
+    }
+}

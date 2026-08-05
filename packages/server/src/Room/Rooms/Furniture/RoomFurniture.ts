@@ -7,7 +7,7 @@ import WiredTriggerStuffStateLogic from "./Logic/Wired/Trigger/WiredTriggerStuff
 import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositionOffsetData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import RoomFurnitureFreezeGateLogic from "./Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic.js";
-import Directions from "../../../Game/Helpers/Directions.js";
+import Directions from "../../../Helpers/Directions.js";
 import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic.js";
 
 export default class RoomFurniture<T = unknown> {

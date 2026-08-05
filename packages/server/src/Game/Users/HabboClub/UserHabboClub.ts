@@ -1,5 +1,5 @@
 import { BadgeData, UserHabboClubData } from "@pixel63/events";
-import GetUserHabboClubEvent from "../../Communication/Game/Users/HabboClub/GetUserHabboClubEvent";
+import GetUserHabboClubEvent from "../../Events/Game/Users/HabboClub/GetUserHabboClubEvent";
 import User from "../User";
 
 export default class UserHabboClub {

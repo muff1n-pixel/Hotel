@@ -5,7 +5,7 @@ import { UserBadgeModel } from "../../../Database/Models/Users/Badges/UserBadgeM
 import User from "../User";
 import { BadgeModel } from "../../../Database/Models/Badges/BadgeModel";
 import { BadgeData, WidgetNotificationData } from "@pixel63/events";
-import RomanNumerals from "../../Helpers/RomanNumerals";
+import RomanNumerals from "../../../Helpers/RomanNumerals";
 import { UserModel } from "../../../Database/Models/Users/UserModel";
 import { game } from "../..";
 

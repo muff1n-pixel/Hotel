@@ -1,5 +1,5 @@
 import CommandHandler from "./Commands/CommandHandler.js";
-import EventHandler from "./Events/EventHandler.js";
+import EventHandler from "./Events/UserEventHandler.js";
 import RoomNavigatorManager from "../Room/Rooms/Navigator/RoomNavigatorManager.js";
 import RoomManager from "../Room/Rooms/RoomManager.js";
 import User from "./Users/User.js";
@@ -51,7 +51,9 @@ export default class Game {
     }
 
     public async createServerToken() {
-        await ServerTokenModel.destroy();
+        await ServerTokenModel.destroy({
+            truncate: true
+        });
     
         await ServerTokenModel.create({
             id: randomUUID(),

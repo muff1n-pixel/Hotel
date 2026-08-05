@@ -2,7 +2,7 @@ import { RoomPositionOffsetData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
-import Directions from "../../../../../../Game/Helpers/Directions";
+import Directions from "../../../../../../Helpers/Directions";
 
 export default class RoomFurnitureSnowboardRampLogic implements RoomFurnitureLogic {
 

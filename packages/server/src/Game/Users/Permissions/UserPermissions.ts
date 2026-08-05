@@ -1,15 +1,15 @@
 import { PermissionAction } from "@shared/Interfaces/Permissions/PermissionMap";
-import User from "../User";
+import { UserModel } from "../../../Database/Models/Users/UserModel";
 
 export default class UserPermissions {
     private permissions: PermissionAction[] = [];
 
-    constructor(private readonly user: User) {
+    constructor(private readonly user: UserModel) {
 
     }
 
     public async loadPermissions() {
-        const roles = await this.user.model.getRoles({
+        const roles = await this.user.getRoles({
             include: [
                 {
                     association: "permissions"

@@ -11,9 +11,9 @@ let game: Game;
 export async function startServer() {
     game = new Game();
 
-    await game.createServerToken();
-
     await initializeModels();
+
+    await game.createServerToken();
 
     await seedAchievements();
     await seedHotelSettings();
