@@ -1,7 +1,5 @@
-import User from "../../../Game/Users/User.js";
 import Room from "../Room.js";
 import RoomFloorplanHelper from "../RoomFloorplanHelper.js";
-import { game } from "../../../Game/index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
@@ -13,6 +11,8 @@ import RoomUserTrading from "./Trading/RoomUserTrading.js";
 import RoomUserGroup from "./Groups/RoomUserGroup.js";
 import { GroupRights } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
+import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
+import { roomServer } from "../../index.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -44,7 +44,7 @@ export default class RoomUser implements RoomActor {
             this.idling = false;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: this.user.model.id,
+                id: this.user.id,
                 idling: false
             }));
         }
@@ -52,9 +52,7 @@ export default class RoomUser implements RoomActor {
 
     public pose: RoomFigurePose = new RoomFigurePose(this);
 
-    constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPositionData) {
-        this.user.room = room;
-
+    constructor(public readonly room: Room, public readonly user: RoomWebSocketUser, initialPosition?: RoomPositionData) {
         this.trading = new RoomUserTrading(this);
         this.group = new RoomUserGroup(this);
 
@@ -65,7 +63,7 @@ export default class RoomUser implements RoomActor {
             depth: RoomFloorplanHelper.parseDepth(room.model.structure.grid[room.model.structure.door?.row ?? 0]?.[room.model.structure.door?.column ?? 0] ?? '0')
         };
 
-        this.user.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         this.direction = room.model.structure.door?.direction ?? 2;
 
@@ -103,7 +101,7 @@ export default class RoomUser implements RoomActor {
 
         this.path = new RoomActorPath(this);
 
-        if(this.user.roomBellQueue) {
+        /*if(this.user.roomBellQueue) {
             const room = this.user.roomBellQueue;
             user.roomBellQueue = undefined;
             
@@ -117,9 +115,9 @@ export default class RoomUser implements RoomActor {
                     })
                 }));
             }
-        }
+        }*/
         
-        this.user.friends.updateFriends();
+        //this.user.friends.updateFriends();
     }
     
     public getRoomUserData(): RoomUserData {
@@ -143,7 +141,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleActionsInterval() {
-        if(!this.idling && (performance.now() - this.lastActivity) > (game.hotelSettings.roomUserIdlingTimeout * 1000)) {
+        if(!this.idling && (performance.now() - this.lastActivity) > (roomServer.hotelSettings.roomUserIdlingTimeout * 1000)) {
             this.idling = true;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({
@@ -175,7 +173,7 @@ export default class RoomUser implements RoomActor {
             userId: this.user.model.id
         }));
 
-        this.user.room?.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
+        this.room.floorplan.updatePosition(RoomPositionOffsetData.fromJSON(this.position));
 
         const furnitureWithUserLeftRoom = this.room.furnitures.filter((furniture) => furniture.logic?.handleUserLeftRoom !== undefined);
 
@@ -183,15 +181,13 @@ export default class RoomUser implements RoomActor {
             furniture.logic?.handleUserLeftRoom?.(this).catch(console.error);
         }
 
-        delete this.user.room;
-
         this.user.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}));
 
-        if(!this.room.users.length) {
+        /*if(!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
         }
 
-        this.user.friends.updateFriends();
+        this.user.friends.updateFriends();*/
     }
 
     public sendWalkEvent(previousPosition: RoomPositionData, jump: boolean): void {

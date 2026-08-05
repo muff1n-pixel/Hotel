@@ -121,6 +121,4 @@ export async function initializeModels() {
     initializeUserFigureModel(sequelize);
 
     initializeServerTokenModel(sequelize);
-
-    await sequelize.sync();
 }

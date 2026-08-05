@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message ServerSetUserAchievementScoreData {
+    string user_id = 1;
+    string achievement_id = 2;
+    uint32 total_score = 3;
+}

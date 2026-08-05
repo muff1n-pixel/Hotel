@@ -1,4 +1,3 @@
-import User from "../../../../Game/Users/User.js";
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { RoomFurnitureData, RoomPositionOffsetData, UpdateRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import { randomUUID } from "node:crypto";

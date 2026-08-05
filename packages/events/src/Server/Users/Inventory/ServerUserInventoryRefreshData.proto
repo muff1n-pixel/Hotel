@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message ServerUserInventoryRefreshData {
+    string user_id = 1;
+
+    optional bool furniture = 2;
+    optional bool pets = 3;
+    optional bool bots = 4;
+
+    optional bool trading = 5;
+}

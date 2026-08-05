@@ -1,5 +1,4 @@
 import { RoomPositionData, RoomStructureData, UpdateRoomStructureData } from "@pixel63/events";
-import User from "../../../Game/Users/User.js";
 import { RoomProtobuffListener } from "../Interfaces/RoomProtobuffListener.js";
 import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
 

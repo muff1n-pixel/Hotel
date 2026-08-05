@@ -1,4 +1,3 @@
-import User from "../../../../Game/Users/User.js";
 import { PickupRoomFurnitureData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
 import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";

@@ -125,11 +125,31 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
                     limit: 20
                 });
 
+                const popularRooms = game.roomServers.getRooms().toSorted((a, b) => b.userIds.length - a.userIds.length);
+                const popularRoomModels = (popularRooms.length)?(await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
+                    where: {
+                        id: {
+                            [Op.in]: popularRooms.map((room) => room.roomId)
+                        }
+                    },
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        },
+                        {
+                            model: GroupModel,
+                            as: "group"
+                        }
+                    ],
+                    limit: 20
+                })):([]);
+
                 user.sendProtobuff(NavigatorData, NavigatorData.create({
                     categories: [
                         {
                             title: "Most popular rooms",
-                            rooms: game.roomManager.instances.toSorted((a, b) => b.users.length - a.users.length).filter((room) => room.hasUserVisibility(user.model)).slice(0, 20).map((room) => this.getRoomNavigatorData.bind(this)(room.model))
+                            rooms: popularRoomModels.map(this.getRoomNavigatorData.bind(this))
                         },
                         {
                             title: "Recently created rooms",
@@ -223,7 +243,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
     }
 
     private getRoomNavigatorData(roomModel: RoomModel) {
-        const room = game.roomManager.getRoomInstance(roomModel.id);
+        const room = game.roomServers.getRoom(roomModel);
 
         return NavigatorRoomData.create({
             id: roomModel.id,
@@ -235,7 +255,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
             ownerId: roomModel.owner.id,
             ownerName: roomModel.owner.name,
 
-            users: room?.users.length ?? 0,
+            users: room?.userIds.length ?? 0,
             maxUsers: roomModel.maxUsers,
 
             thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined),

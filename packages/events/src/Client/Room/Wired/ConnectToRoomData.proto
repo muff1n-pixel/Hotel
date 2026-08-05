@@ -3,4 +3,5 @@ syntax = "proto3";
 message ConnectToRoomData {
     string host = 1;
     uint32 port = 2;
+    string room_id = 3;
 }

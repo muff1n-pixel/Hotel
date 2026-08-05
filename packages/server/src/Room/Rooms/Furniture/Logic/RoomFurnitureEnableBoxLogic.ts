@@ -3,7 +3,6 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import { FurnitureData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
-import { game } from "../../../../Game/index.js";
 import { UserEffectModel } from "../../../../Database/Models/Users/Effects/UserEffectModel.js";
 
 export default class RoomFurnitureEnableBoxLogic implements RoomFurnitureLogic {
@@ -34,13 +33,9 @@ export default class RoomFurnitureEnableBoxLogic implements RoomFurnitureLogic {
             });
 
             if(this.roomFurniture.model.userId) {
-                const user = game.getUserById(this.roomFurniture.model.userId);
-
-                if(user) {
-                    user.sendProtobuff(UserClothingUnlockedData, UserClothingUnlockedData.create({
-                        furniture: FurnitureData.fromJSON(this.roomFurniture.model.furniture),
-                    }));
-                }
+                roomUser.user.sendProtobuff(UserClothingUnlockedData, UserClothingUnlockedData.create({
+                    furniture: FurnitureData.fromJSON(this.roomFurniture.model.furniture),
+                }));
             }
         }
 

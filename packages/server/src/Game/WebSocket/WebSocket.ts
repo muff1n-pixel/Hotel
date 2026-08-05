@@ -23,6 +23,8 @@ export default class WebSocket {
     private readonly pendingConnections: PendingConnection[] = [];
 
     constructor() {
+        console.log("Starting on port " + config.port);
+        
         this.server = new WebSocketServer({
             host: config.hostname,
             port: config.port ?? 7632

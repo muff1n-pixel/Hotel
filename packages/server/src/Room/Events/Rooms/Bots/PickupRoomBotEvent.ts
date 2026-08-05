@@ -1,5 +1,3 @@
-import IncomingEvent from "../../../../Game/Communication/Interfaces/IncomingEvent.js";
-import User from "../../../../Game/Users/User.js";
 import { PickupRoomBotData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
 import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";

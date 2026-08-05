@@ -8,21 +8,21 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
     minimumDurationBetweenEvents?: number = 1000;
 
     async handle(user: User, payload: EnterRoomData) {
-        if(user.room) {
+        /*if(user.room) {
             const roomUser = user.room.getRoomUser(user);
 
             roomUser.disconnect();
-        }
-        
-        const roomInstance = await game.roomManager.getOrLoadRoomInstance(payload.id);
+        }*/
 
-        if(!roomInstance) {
+        const room = await game.roomServers.getOrCreateRoom(payload.id);
+        
+        if(!room) {
             console.error("Room does not exist.");
 
             return;
         }
 
-        if(!user.permissions.hasPermission("room:rights")) {
+        /*if(!user.permissions.hasPermission("room:rights")) {
             switch(roomInstance.model.lock) {
                 case "invisible": {
                     if(!roomInstance.hasUserVisibility(user.model)) {
@@ -82,8 +82,8 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
                     }
                 }
             }
-        }
+        }*/
 
-        roomInstance.addUserClient(user);
+        room.addUserToRoom(user, payload.id);
     }
 }

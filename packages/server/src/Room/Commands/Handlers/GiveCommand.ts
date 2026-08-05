@@ -1,8 +1,8 @@
-import { RoomActorChatData } from "@pixel63/events";
-import { game } from "../../index.js";
+import { RoomActorChatData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomUser from "../../../Room/Rooms/Users/RoomUser.js";
-import UserPermissions from "../../Users/Permissions/UserPermissions.js";
 import Command from "../Command.js";
+import UserPermissions from "../../../Game/Users/Permissions/UserPermissions.js";
+import { roomServer } from "../../index.js";
 
 export default class GiveCommand extends Command {
     validate(roomUser: RoomUser, permissions: UserPermissions) {
@@ -18,36 +18,21 @@ export default class GiveCommand extends Command {
         const value = this.parseNumber("value");
         const currency = this.parseEnum("currency", ["credits", "duckets", "diamonds"] as const);
 
-        const targetUser = game.getUserById(user.id);
+        switch(currency) {
+            case "duckets":
+            case "diamonds":
+            case "credits": {
+                user[currency] += value;
 
-        if(targetUser) {
-            switch(currency) {
-                case "duckets":
-                case "diamonds":
-                case "credits": {
-                    targetUser.model[currency] += value;
-
-                    break;
-                }
+                break;
             }
-
-            await targetUser.model.save();
-
-            targetUser.sendUserData();
         }
-        else {
-            switch(currency) {
-                case "duckets":
-                case "diamonds":
-                case "credits": {
-                    user[currency] += value;
 
-                    break;
-                }
-            }
+        await user.save();
 
-            await user.save();
-        }
+        roomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+            userId: user.id
+        }));
 
         roomUser.user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
             actor: {

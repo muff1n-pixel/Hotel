@@ -124,7 +124,6 @@ import GetShopPageBotsEvent from "./Game/Shop/GetShopPageBotsEvent.js";
 import UpdateShopBotEvent from "./Game/Shop/Development/UpdateShopBotEvent.js";
 import PurchaseShopBotEvent from "./Game/Shop/PurchaseShopBotEvent.js";
 import GetUserBotsEvent from "./Game/Inventory/GetUserBotsEvent.js";
-import RoomReadyEvent from "../../Room/Rooms/RoomReadyEvent.js";
 import GetShopPagePetsEvent from "./Game/Shop/GetShopPagePetsEvent.js";
 import UpdateShopPetEvent from "./Game/Shop/Development/UpdateShopPetEvent.js";
 import PurchaseShopPetEvent from "./Game/Shop/PurchaseShopPetEvent.js";

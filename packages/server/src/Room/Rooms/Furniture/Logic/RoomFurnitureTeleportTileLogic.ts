@@ -1,4 +1,3 @@
-import { game } from "../../../../Game/index.js";
 import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import RoomUser from "../../Users/RoomUser.js";
@@ -51,7 +50,7 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
             return;
         }
 
-        const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
+        /*const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
 
         if(!targetRoom) {
             console.warn("Target room does not exist.");
@@ -78,6 +77,6 @@ export default class RoomFurnitureTeleportTileLogic implements RoomFurnitureLogi
         roomUser.path.setPosition({
             ...targetFurniture.model.position,
             depth: targetFurniture.model.position.depth + 0.01
-        }, ((targetFurniture.model.direction ?? 0) + 4) % 8);
+        }, ((targetFurniture.model.direction ?? 0) + 4) % 8);*/
     }
 }

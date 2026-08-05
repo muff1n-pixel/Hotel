@@ -7,7 +7,7 @@ import jsonWebToken from "jsonwebtoken";
 export default class RoomServerClient {
     private readonly websocket: WebSocket;
 
-    public readonly eventHandler: EventHandler<null> = new EventHandler();
+    public readonly eventHandler: EventHandler<null> = new EventHandler((_: unknown, type: string) => console.log(`[RoomWebSocketServer:${this.port}] Received message ${type}`));
 
     constructor(private readonly game: Game, public readonly host: string, public readonly port: number) {
         const url = new URL(`ws://${host}:${port}`);

@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+import "Server/Rooms/ServerRoomData.proto";
+
 message ServerRoomLoadedData {
     string room_id = 1;
+    ServerRoomData data = 2;
 }

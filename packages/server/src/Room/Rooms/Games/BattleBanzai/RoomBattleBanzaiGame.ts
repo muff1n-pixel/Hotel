@@ -1,16 +1,15 @@
-import { WidgetNotificationData } from "@pixel63/events";
+import { ServerAddUserAchievementScoreData, WidgetNotificationData } from "@pixel63/events";
 import RoomFurnitureBattleBanzaiGateLogic from "../../Furniture/Logic/Games/BattleBanzai/Common/RoomFurnitureBattleBanzaiGateLogic";
 import RoomFurnitureBattleBanzaiCounterLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiCounterLogic";
 import RoomFurnitureBattleBanzaiTileLogic from "../../Furniture/Logic/Games/BattleBanzai/RoomFurnitureBattleBanzaiTileLogic";
 import Room from "../../Room";
-import RoomUser from "../../Users/RoomUser";
-import RoomGame, { RoomGamePlayer } from "../RoomGame";
+import RoomGame from "../RoomGame";
 import { RoomBattleBanzaiGamePlayer } from "./Interfaces/RoomBattleBanzaiGamePlayer";
 import { RoomBattleBanzaiGameTeam, RoomBattleBanzaiGameTeamData } from "./Interfaces/RoomBattleBanzaiGameTeam";
 import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
 import RoomBattleBanzaiGameTeams from "./RoomBattleBanzaiGameTeams";
 import BattleBanzaiGameNotifications from "../../../../Game/Users/Notifications/Games/BattleBanzaiGameNotifications";
-import { game } from "../../../../Game";
+import { roomServer } from "../../..";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
@@ -76,7 +75,11 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.started = false;
         this.paused = false;
 
-        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
+        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+            userId: this.room.model.owner.id,
+            achievementId: "GameArcadeOwner",
+            score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)
+        }));
 
         const winningTeam = this.teams.getTeamWithMostScore();
 
@@ -89,13 +92,13 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
             const playerTeam = this.teams.getTeam(player.team);
             
             if(playerTeam) {
-                player.roomUser.user.achievements.addAchievementScore("BattleBanzaiPlayer", playerTeam.score).catch(console.error);
+                player.roomUser.user.achievements.addAchievementScore("BattleBanzaiPlayer", playerTeam.score);
 
                 if(playerTeam.team === winningTeam?.team) {
                     player.roomUser.pose.wave();
                     
-                    player.roomUser.user.achievements.addAchievementScore("BattleBanzaiStar", playerTeam.score).catch(console.error);
-                    player.roomUser.user.achievements.addAchievementScore("Player", playerTeam.score).catch(console.error);
+                    player.roomUser.user.achievements.addAchievementScore("BattleBanzaiStar", playerTeam.score);
+                    player.roomUser.user.achievements.addAchievementScore("Player", playerTeam.score);
                 }
             }
 

@@ -2,7 +2,6 @@ import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
 import { UseRoomFurnitureData } from "@pixel63/events";
-import { game } from "../../../../Game/index.js";
 
 export default class RoomFurnitureTraxLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {

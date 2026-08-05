@@ -1,4 +1,4 @@
-import { CommandAliases } from "../../../../Game/Commands/CommandHandler";
+import { CommandAliases } from "../../../Commands/CommandHandler";
 import RoomUser from "../../Users/RoomUser";
 import RoomPet from "../RoomPet";
 import PetFreeCommand from "./Handlers/PetFreeCommand";
@@ -18,11 +18,10 @@ export default class PetCommandHandler {
             return false;
         }
 
-        const permissions = await roomUser.user.getPermissions();
 
         const command = new commandAlias.command(roomUser.room, roomPet, parameters);
 
-        if(!command.validate(roomUser, permissions)) {
+        if(!command.validate(roomUser, roomUser.user.permissions)) {
             return false;
         }
 

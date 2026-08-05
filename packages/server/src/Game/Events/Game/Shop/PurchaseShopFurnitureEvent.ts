@@ -1,7 +1,6 @@
 import User from "../../../Users/User.js";
 import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPageFurnitureModel.js";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
-import RoomFurniture from "../../../../Room/Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
 import { FurnitureData, HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData, WidgetNotificationData } from "@pixel63/events";
@@ -275,14 +274,14 @@ export default class PurchaseShopFurnitureEvent implements UserProtobuffListener
 
             await userFurniture.save();
 
-            const roomUser = user.room?.getRoomUser(user);
+            /*const roomUser = user.room?.getRoomUser(user);
 
             if(roomUser?.hasRights() && payload.position && payload.direction !== undefined && !payload.gift) {
                 await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
             }
-            else {
+            else {*/
                 await this.addUserFurniture(userReceiver, userFurniture);
-            }
+            //}
 
             if(user.model.id === userReceiver.id && userFurniture.furniture.interactionType === "sound_set") {
                 user.achievements.addAchievementScore("MusicCollector", 1).catch(console.error);

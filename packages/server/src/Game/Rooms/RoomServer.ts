@@ -1,6 +1,7 @@
-import { ServerAddUserToRoomData, ServerRoomData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserToRoomData, ServerRoomData } from "@pixel63/events";
 import RoomServerClient from "./RoomServerClient";
 import Game from "../Game";
+import User from "../Users/User";
 
 export default class RoomServer {
     public readonly client: RoomServerClient;
@@ -10,7 +11,7 @@ export default class RoomServer {
         this.client = new RoomServerClient(game, host, port);
     }
 
-    public addUserToRoom(userId: string, roomId: string) {
+    public addUserToRoom(user: User, roomId: string) {
         const room = this.rooms.find((room) => room.roomId === roomId);
 
         if(!room) {
@@ -18,8 +19,14 @@ export default class RoomServer {
         }
 
         this.client.sendProtobuff(ServerAddUserToRoomData, ServerAddUserToRoomData.create({
-            userId,
+            userId: user.model.id,
             roomId
+        }));
+
+        user.sendProtobuff(ConnectToRoomData, ConnectToRoomData.create({
+            host: this.client.host,
+            port: this.client.port,
+            roomId: roomId
         }));
     }
 }

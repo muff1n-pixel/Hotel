@@ -2,7 +2,6 @@ import type WebSocket from "ws";
 import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "./Inventory/UserInventory.js";
-import Room from "../../Room/Rooms/Room.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
 import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";
@@ -22,7 +21,7 @@ export default class User extends EventEmitter {
     public spamProtection: UserSpamProtection;
     
     public room?: UserRoomConnection;
-    public roomBellQueue?: Room | undefined;
+    //public roomBellQueue?: Room | undefined;
 
     public activityRewards: Map<string, number> = new Map();
     public readonly loggedInAt = performance.now();

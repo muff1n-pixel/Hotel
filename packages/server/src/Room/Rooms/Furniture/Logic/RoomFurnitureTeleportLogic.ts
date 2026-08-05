@@ -1,4 +1,3 @@
-import { game } from "../../../../Game/index.js";
 import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import RoomUser from "../../Users/RoomUser.js";
@@ -37,7 +36,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         if(roomUser.room.model.id !== targetFurniture.room.model.id) {
             roomUser.disconnect();
             
-            roomUser = targetFurniture.room.addUserClient(roomUser.user, targetFurniture.model.position);
+            //roomUser = targetFurniture.room.addUserClient(roomUser.user, targetFurniture.model.position);
         }
 
         targetFurniture.setAnimation(2);
@@ -70,7 +69,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         this.roomFurniture.setAnimation(0);
     }
 
-    private async getTargetFurniture() {
+    private async getTargetFurniture(): Promise<RoomFurniture | null> {
         if(!this.roomFurniture.model.data?.teleport?.furnitureId) {
             console.warn("Teleport does not have a second furniture.");
             
@@ -101,7 +100,9 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             return null;
         }
 
-        const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
+        return null;
+
+        /*const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
 
         if(!targetRoom) {
             console.warn("Target room does not exist.");
@@ -117,7 +118,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             return null;
         }
 
-        return targetFurniture;
+        return targetFurniture;*/
     }
 
     async use(roomUser: RoomUser): Promise<void> {

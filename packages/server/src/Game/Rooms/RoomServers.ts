@@ -10,13 +10,27 @@ export default class RoomServers {
     constructor(private game: Game) {
     }
 
+    public getRooms() {
+        return this.roomServers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
+    }
+
     public addServer(host: string, port: number) {
         this.roomServers.push(new RoomServer(this.game, host, port));
     }
 
-    private getRoomClient(room: RoomModel) {
+    public getRoom(room: RoomModel) {
         for(const roomServer of this.roomServers) {
-            if(roomServer.rooms.some((clientRoom) => clientRoom.roomId === room.id)) {
+            const roomData = roomServer.rooms.find((clientRoom) => clientRoom.roomId === room.id);
+
+            return roomData;
+        }
+
+        return null;
+    }
+
+    private getRoomClient(roomId: string) {
+        for(const roomServer of this.roomServers) {
+            if(roomServer.rooms.some((clientRoom) => clientRoom.roomId === roomId)) {
                 return roomServer;
             }
         }
@@ -24,23 +38,25 @@ export default class RoomServers {
         return null;
     }
 
-    private createRoom(room: RoomModel) {
+    private createRoom(roomId: string) {
         const roomServer = this.getServerForRoom();
 
         if(!roomServer) {
             throw new Error("Failed to get a server to create room.");
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise<RoomServer>((resolve, reject) => {
             const timeout = setTimeout(() => {
-                reject("Failed to load the room in a timely manner.");
+                reject("[RoomServers] Failed to load the room in a timely manner.");
             }, 5000);
 
             const listener = roomServer.client.eventHandler.addProtobuffListener(ServerRoomLoadedData, {
                 handle: async (_: null, payload: ServerRoomLoadedData) =>  {
-                    if(payload.roomId !== room.id) {
+                    if(payload.roomId !== roomId) {
                         return;
                     }
+
+                    roomServer.rooms.push(payload.data!);
 
                     clearTimeout(timeout);
 
@@ -51,21 +67,21 @@ export default class RoomServers {
             })
 
             roomServer.client.sendProtobuff(ServerLoadRoomData, ServerLoadRoomData.create({
-                roomId: room.id
+                roomId: roomId
             }));
 
             return roomServer;
         });
     }
 
-    public async getOrCreateRoom(room: RoomModel) {
-        const existingRoomClient = this.getRoomClient(room);
+    public async getOrCreateRoom(roomId: string) {
+        const existingRoomClient = this.getRoomClient(roomId);
 
         if(existingRoomClient) {
             return existingRoomClient;
         }
 
-        return await this.createRoom(room);
+        return await this.createRoom(roomId);
     }
 
     // TODO: measure load to automatically balance better for servers with the least usage

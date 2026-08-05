@@ -1,4 +1,3 @@
-import User from "../../../Game/Users/User.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import sharp from "sharp";
 import { RoomInformationData, UpdateRoomInformationData } from "@pixel63/events";

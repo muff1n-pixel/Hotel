@@ -6,12 +6,14 @@ import RoomServer from "../RoomServer";
 import { MessageType, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../../Communication/EventHandler";
+import RoomWebSocketUser from "../Users/RoomWebSocketUser";
 
 export default class RoomWebSocketServer {
     private readonly server: WebSocketServer;
     private gameServerWebSocket?: WebSocket;
 
-    public eventHandler = new EventHandler();
+    public serverEventHandler = new EventHandler((_: unknown, type: string) => console.log(`[RoomWebSocketServer:server] Received message ${type}`));
+    public userEventHandler = new EventHandler((user: RoomWebSocketUser, type: string) => console.log(`[RoomWebSocketServer:${user.id}] Received message ${type}`));
 
     constructor(private readonly roomServer: RoomServer) {
         this.server = new WebSocketServer({
@@ -20,7 +22,6 @@ export default class RoomWebSocketServer {
         });
 
         this.server.addListener("connection", this.handleConnection.bind(this));
-        this.server.addListener("message", this.handleMessage.bind(this));
     }
 
     private async handleConnection(websocket: WebSocket, request: IncomingMessage) {
@@ -76,14 +77,20 @@ export default class RoomWebSocketServer {
         this.gameServerWebSocket = websocket;
 
         console.log("[RoomWebSocketServer] Connected to game server!");
+
+        websocket.addListener("message", this.handleServerMessage.bind(this));
+    }
+    
+    private async handleServerMessage(data: RawData) {
+        this.serverEventHandler.decodeAndDispatchMessages(null, data);
     }
 
     private handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
         websocket.close();
     }
     
-    private async handleMessage(data: RawData) {
-        this.eventHandler.decodeAndDispatchMessages(null, data);
+    private async handleUserMessage(user: RoomWebSocketUser, data: RawData) {
+        this.userEventHandler.decodeAndDispatchMessages(user, data);
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
@@ -101,7 +108,7 @@ export default class RoomWebSocketServer {
         }
     }
 
-    private sendEncodedProtobuff(websocket: WebSocket, eventType: string, encoded: Uint8Array) {
+    public sendEncodedProtobuff(websocket: WebSocket, eventType: string, encoded: Uint8Array) {
         try {
             const typeBytes = new TextEncoder().encode(eventType + "|");
 

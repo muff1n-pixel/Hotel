@@ -1,7 +1,6 @@
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { PlaceRoomFurnitureData, ServerUserInventoryUpdatedData, WidgetNotificationData } from "@pixel63/events";
-import { game } from "../../../../Game/index.js";
 import { randomUUID } from "crypto";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
 import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
@@ -44,7 +43,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
         }
 
         if(userFurniture.furniture.placement === "floor") {
-            if(user.roomUser.room.floorFurnitureCount >= game.hotelSettings.roomMaxFloorFurniture) {
+            if(user.roomUser.room.floorFurnitureCount >= roomServer.hotelSettings.roomMaxFloorFurniture) {
                 user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `Maximum floor furniture count has been reached!`
@@ -54,7 +53,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
             }
         }
         else {
-            if(user.roomUser.room.wallFurnitureCount >= game.hotelSettings.roomMaxWallFurniture) {
+            if(user.roomUser.room.wallFurnitureCount >= roomServer.hotelSettings.roomMaxWallFurniture) {
                 user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `Maximum wall furniture count has been reached!`

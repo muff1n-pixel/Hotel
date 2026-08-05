@@ -1,13 +1,12 @@
-import { WidgetNotificationData } from "@pixel63/events";
+import { ServerAddUserAchievementScoreData, WidgetNotificationData } from "@pixel63/events";
 import Room from "../../Room";
 import RoomGame from "../RoomGame";
 import { RoomFootballGameTeam } from "./Interfaces/RoomFootballGameTeam";
 import RoomFootballGamePlayers from "./RoomFootballGamePlayers";
 import RoomFootballGameTeams from "./RoomFootballGameTeams";
-import BattleBanzaiGameNotifications from "../../../../Game/Users/Notifications/Games/BattleBanzaiGameNotifications";
-import { game } from "../../../../Game";
 import RoomFurnitureFootballCounterLogic from "../../Furniture/Logic/Games/Football/RoomFurnitureFootballCounterLogic";
 import FootballGameNotifications from "../../../../Game/Users/Notifications/Games/FootballGameNotifications";
+import { roomServer } from "../../..";
 
 export default class RoomFootballGame implements RoomGame<RoomFootballGameTeam> {
     public started: boolean = false;
@@ -63,8 +62,17 @@ export default class RoomFootballGame implements RoomGame<RoomFootballGameTeam> 
         this.started = false;
         this.paused = false;
 
-        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
-        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("FootballGoalHost", this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)).catch(console.error);
+        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+            userId: this.room.model.owner.id,
+            achievementId: "GameArcadeOwner",
+            score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)
+        }));
+        
+        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+            userId: this.room.model.owner.id,
+            achievementId: "FootballGoalHost",
+            score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)
+        }));
 
         const winningTeam = this.teams.getTeamWithMostScore();
 

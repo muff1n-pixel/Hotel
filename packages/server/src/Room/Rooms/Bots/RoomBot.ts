@@ -1,12 +1,12 @@
 import Room from "../Room.js";
 import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel.js";
-import { game } from "../../../Game/index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import RoomUser from "../Users/RoomUser.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
+import { roomServer } from "../../index.js";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -106,11 +106,10 @@ export default class RoomBot implements RoomActor {
             roomId: null
         });
 
-        const user = game.getUserById(this.model.user.id);
-
-        if(user) {
-            await user.getInventory().addBot(this.model);
-        }
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            userId: this.model.user.id,
+            botsAdded: [this.model.id]
+        }));
     }
 
     public async setPosition(position: RoomPositionData, save: boolean = true) {

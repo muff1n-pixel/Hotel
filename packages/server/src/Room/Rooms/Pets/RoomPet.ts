@@ -1,11 +1,11 @@
 import Room from "../Room.js";
-import { game } from "../../../Game/index.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
+import { roomServer } from "../../index.js";
 
 export enum RoomPetState {
     FREE = "free",
@@ -125,11 +125,10 @@ export default class RoomPet implements RoomActor {
             roomId: null
         });
 
-        const user = game.getUserById(this.model.user.id);
-
-        if(user) {
-            user.getInventory().addPet(this.model).catch(console.error);
-        }
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            userId: this.model.user.id,
+            petsAdded: [ this.model.id ]
+        }));
     }
 
     public async setPosition(position: RoomPositionData, save: boolean = true) {

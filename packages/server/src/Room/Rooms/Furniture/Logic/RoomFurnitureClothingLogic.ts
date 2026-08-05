@@ -3,8 +3,7 @@ import { UserClothingModel } from "../../../../Database/Models/Users/Clothes/Use
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { FurnitureData, RefreshUserClothesData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
-import { game } from "../../../../Game/index.js";
+import { FurnitureData, RoomFurnitureData, UserClothingUnlockedData, UseRoomFurnitureData } from "@pixel63/events";
 
 export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -29,15 +28,9 @@ export default class RoomFurnitureClothingLogic implements RoomFurnitureLogic {
                 ignoreDuplicates: true
             });
 
-            if(this.roomFurniture.model.userId) {
-                const user = game.getUserById(this.roomFurniture.model.userId);
-
-                if(user) {
-                    user.sendProtobuff(UserClothingUnlockedData, UserClothingUnlockedData.create({
-                        furniture: FurnitureData.fromJSON(this.roomFurniture.model.furniture),
-                    }));
-                }
-            }
+            roomUser.user.sendProtobuff(UserClothingUnlockedData, UserClothingUnlockedData.create({
+                furniture: FurnitureData.fromJSON(this.roomFurniture.model.furniture),
+            }));
         }
         
         await this.roomFurniture.model.destroy();

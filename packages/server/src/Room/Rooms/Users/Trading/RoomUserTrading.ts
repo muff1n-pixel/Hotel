@@ -1,10 +1,9 @@
-import { HotelAlertData, RoomUserTradingClosedData, RoomUserTradingData, UserInventoryFurnitureData } from "@pixel63/events";
+import { HotelAlertData, RoomUserTradingClosedData, RoomUserTradingData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, UserInventoryFurnitureData } from "@pixel63/events";
 import RoomUser from "../RoomUser";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
 import { Op } from "sequelize";
-import { sequelize } from "../../../../Database/Database";
-import { game } from "../../../../Game";
+import { roomServer } from "../../..";
 
 export default class RoomUserTrading {
     public tradingWithUser?: RoomUser;
@@ -162,7 +161,11 @@ export default class RoomUserTrading {
 
         this.userFurniture.push(...userFurniture);
 
-        await this.roomUser.user.getInventory().sendFurniture(true);
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+            userId: this.roomUser.user.id,
+            furniture: true,
+            trading: true
+        }));
 
         this.roomUser.user.sendProtobuff(RoomUserTradingData, this.getTradingData());
         this.tradingWithUser.user.sendProtobuff(RoomUserTradingData, this.tradingWithUser.trading.getTradingData());
@@ -182,7 +185,11 @@ export default class RoomUserTrading {
 
         this.userFurniture = this.userFurniture.filter((userFurniture) => userFurniture.id !== id);
 
-        await this.roomUser.user.getInventory().sendFurniture(true);
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+            userId: this.roomUser.user.id,
+            furniture: true,
+            trading: true
+        }));
 
         this.roomUser.user.sendProtobuff(RoomUserTradingData, this.getTradingData());
         this.tradingWithUser.user.sendProtobuff(RoomUserTradingData, this.tradingWithUser.trading.getTradingData());
@@ -201,7 +208,7 @@ export default class RoomUserTrading {
 
         if(this.tradingWithUser.trading.locked) {
             const date = new Date();
-            date.setSeconds(date.getSeconds() + game.hotelSettings.roomUserTradeCompletionSeconds);
+            date.setSeconds(date.getSeconds() + roomServer.hotelSettings.roomUserTradeCompletionSeconds);
 
             this.completesAt = this.tradingWithUser.trading.completesAt = date;
         }
@@ -269,9 +276,16 @@ export default class RoomUserTrading {
                 }
             }
         });
-
-        await this.roomUser.user.getInventory().sendFurniture();
-        await this.tradingWithUser.user.getInventory().sendFurniture();
+        
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+            userId: this.roomUser.user.id,
+            furniture: true
+        }));
+        
+        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+            userId: this.tradingWithUser.user.id,
+            furniture: true
+        }));
 
         this.stopTrading();
     }

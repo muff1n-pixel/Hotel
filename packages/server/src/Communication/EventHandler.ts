@@ -4,7 +4,7 @@ import { RawData } from "ws";
 import ProtobuffListener from "./Interfaces/ProtobuffListener";
 
 export default class EventHandler<User> extends EventEmitter {
-    constructor() {
+    constructor(private readonly log?: (user: User, type: string, payload: unknown) => void) {
         super();
 
         super.setMaxListeners(1);
@@ -30,7 +30,7 @@ export default class EventHandler<User> extends EventEmitter {
             const type = buffer.subarray(0, sep).toString("utf-8");
             const payload = buffer.subarray(sep + 1);
 
-            console.log("Received " + type);
+            this.log?.(user, type, payload);
 
             this.emit(type, user, payload/*, user.spamProtection.getDurationSinceLastEvent(type)*/);
         }

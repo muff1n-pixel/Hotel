@@ -1,4 +1,4 @@
-import { RoomPositionData, RoomPositionOffsetData, RoomUserData, WidgetNotificationData } from "@pixel63/events";
+import { RoomPositionOffsetData, RoomUserData, ServerAddUserAchievementScoreData, WidgetNotificationData } from "@pixel63/events";
 import RoomFurnitureFreezeGateLogic from "../../Furniture/Logic/Games/Freeze/Common/RoomFurnitureFreezeGateLogic";
 import RoomFurnitureFreezeTileLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeTileLogic";
 import Room from "../../Room";
@@ -7,10 +7,9 @@ import RoomFurnitureFreezeBlockLogic from "../../Furniture/Logic/Games/Freeze/Ro
 import RoomFurnitureFreezeExitLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeExitLogic";
 import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/RoomFurnitureFreezeCounterLogic";
 import { randomUUID } from "crypto";
-import UserFreezeGameNotifications from "../../../../Game/Users/Notifications/Games/UserFreezeGameNotifications";
 import RoomGame from "../RoomGame";
 import RoomFreezeGamePlayers from "./RoomFreezeGamePlayers";
-import { game } from "../../../../Game";
+import { roomServer } from "../../..";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -187,16 +186,20 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         this.started = false;
         this.paused = false;
 
-        game.getUserAchievements(this.room.model.owner.id).addAchievementScore("GameArcadeOwner", Object.values(this.teams).reduce((score, team) => team.score + score, 0)).catch(console.error);
+        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+            userId: this.room.model.owner.id,
+            achievementId: "GameArcadeOwner",
+            score: Object.values(this.teams).reduce((score, team) => team.score + score, 0)
+        }));
 
         const winnerTeam = this.getTeamWithMostScore();
 
         for(const player of this.players.getAllPlayers()) {
-            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score).catch(console.error);
+            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.teams[player.team].score);
 
             if(player.team === winnerTeam) {
-                player.roomUser.user.achievements.addAchievementScore("FreezeWinner", this.teams[player.team].score).catch(console.error);
-                player.roomUser.user.achievements.addAchievementScore("Player", this.teams[player.team].score).catch(console.error);
+                player.roomUser.user.achievements.addAchievementScore("FreezeWinner", this.teams[player.team].score);
+                player.roomUser.user.achievements.addAchievementScore("Player", this.teams[player.team].score);
             }
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.fromJSON({
@@ -206,7 +209,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 health: null
             }));
 
-            player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
+            //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildGameEnded(reason, winnerTeam, (winnerTeam)?(this.teams[winnerTeam].score):(undefined)));
         }
 
         for(const player of this.players.getFrozenPlayers()) {
@@ -248,7 +251,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
 
                             player.roomUser.path.teleportTo(RoomPositionOffsetData.fromJSON(exitFurniture.model.position));
                             
-                            player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerEliminated());
+                            //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerEliminated());
                         }
                     }
                 }
@@ -267,7 +270,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
     }
 
     public givePlayerPowerup(player: RoomFreezeGamePlayer, powerup: RoomFreezeGamePowerups) {
-        player.roomUser.user.achievements.addAchievementScore("FreezePowerUpper", 1).catch(console.error);
+        player.roomUser.user.achievements.addAchievementScore("FreezePowerUpper", 1);
         
         switch(powerup) {
             case RoomFreezeGamePowerups.ExtraLife: {
@@ -281,7 +284,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                         health: player.health
                     }));
 
-                    player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                    //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
                 }
 
                 break;
@@ -290,7 +293,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.BiggerBomb: {
                 player.radius++;
 
-                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -302,7 +305,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
                 player.roomUser.pose.removeEffect();
                 player.roomUser.pose.setEffect(this.getTeamAvatarEffect(player));
 
-                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -310,7 +313,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.CrossBlast: {
                 player.crossBlast = true;
 
-                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -318,7 +321,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.MorePower: {
                 player.maxSnowballs++;
 
-                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -326,7 +329,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
             case RoomFreezeGamePowerups.MegaSnowball: {
                 player.megaSnowball = true;
 
-                player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
+                //player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPickedUpPowerUp(powerup));
 
                 break;
             }
@@ -437,10 +440,10 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         this.teams[team].score += score;
         
         for(const furniture of this.getCounterFurniture(team)) {
-            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score).catch(console.error);
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score);
         }
 
-        this.room.handleGameScore(team, this.teams[team].score).catch(console.error);
+        this.room.handleGameScore(team, this.teams[team].score);
     }
     
     public removeTeamScore(team: RoomFreezeGameTeam, score: number): void {
@@ -448,9 +451,9 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         this.teams[team].score = Math.max(0, this.teams[team].score);
         
         for(const furniture of this.getCounterFurniture(team)) {
-            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score).catch(console.error);
+            (furniture.logic as RoomFurnitureFreezeCounterLogic).updateAnimationTags(this.teams[team].score);
         }
 
-        this.room.handleGameScore(team, this.teams[team].score).catch(console.error);
+        this.room.handleGameScore(team, this.teams[team].score);
     }
 }

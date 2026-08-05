@@ -4,7 +4,7 @@ import RoomWiredExecution from "./Interfaces/RoomWiredExecution";
 import RoomWiredLog from "./Interfaces/RoomWiredLog";
 import RoomWiredLogGroup from "./Interfaces/RoomWiredLogGroup";
 import { RoomWiredLogLevel } from "./Interfaces/RoomWiredLogLevel";
-import { game } from "../../../Game";
+import { roomServer } from "../..";
 
 export default class RoomWired {
     public logs: RoomWiredLog[] = [];
@@ -28,8 +28,8 @@ export default class RoomWired {
     }
 
     public startExecution<T>(promise: Promise<T>) {
-        if(this.executions.length >= game.hotelSettings.roomWiredMaxUsage) {
-            this.addLog("ERROR", "EXECUTION_CAP", `Execution cap of ${game.hotelSettings.roomWiredMaxUsage} has exceeded.`);
+        if(this.executions.length >= roomServer.hotelSettings.roomWiredMaxUsage) {
+            this.addLog("ERROR", "EXECUTION_CAP", `Execution cap of ${roomServer.hotelSettings.roomWiredMaxUsage} has exceeded.`);
 
             return null;
         }

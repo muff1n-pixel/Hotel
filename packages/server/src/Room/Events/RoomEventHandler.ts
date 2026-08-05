@@ -78,22 +78,21 @@ export default class RoomEventHandler extends EventHandler<RoomWebSocketUser> {
         this.addProtobuffListener(RoomClickData, new RoomClickEvent());
         this.addProtobuffListener(RoomDoubleClickData, new RoomDoubleClickEvent());
             
-        this
-            .addProtobuffListener(PlaceRoomFurnitureData, new PlaceFurnitureEvent())
-            .addProtobuffListener(PlaceRoomBotData, new PlaceBotEvent())
-            .addProtobuffListener(PlaceRoomContentFurnitureData, new PlaceRoomContentFurnitureEvent())
-            .addProtobuffListener(UseRoomFurnitureData, new UseRoomFurnitureEvent())
-            .addProtobuffListener(UpdateRoomFurnitureData, new UpdateRoomFurnitureEvent())
-            .addProtobuffListener(UpdateRoomBotData, new UpdateRoomBotEvent())
-            .addProtobuffListener(PickupRoomFurnitureData, new PickupRoomFurnitureEvent())
-            .addProtobuffListener(PickupAllRoomFurnitureData, new PickupAllRoomFurnitureEvent())
-            .addProtobuffListener(PickupRoomBotData, new PickupRoomBotEvent())
-            .addProtobuffListener(SendRoomUserWalkData, new StartWalkingEvent())
-            .addProtobuffListener(SendRoomChatMessageData, new SendUserMessageEvent())
-            .addProtobuffListener(GetRoomChatStylesData, new GetRoomChatStylesEvent())
-            .addProtobuffListener(UpdateRoomStructureData, new UpdateRoomStructureEvent())
-            .addProtobuffListener(UpdateRoomInformationData, new UpdateRoomInformationEvent())
-            .addProtobuffListener(SetRoomUserRightsData, new UpdateUserRightsEvent());
+        this.addProtobuffListener(PlaceRoomFurnitureData, new PlaceFurnitureEvent());
+        this.addProtobuffListener(PlaceRoomBotData, new PlaceBotEvent());
+        this.addProtobuffListener(PlaceRoomContentFurnitureData, new PlaceRoomContentFurnitureEvent());
+        this.addProtobuffListener(UseRoomFurnitureData, new UseRoomFurnitureEvent());
+        this.addProtobuffListener(UpdateRoomFurnitureData, new UpdateRoomFurnitureEvent());
+        this.addProtobuffListener(UpdateRoomBotData, new UpdateRoomBotEvent());
+        this.addProtobuffListener(PickupRoomFurnitureData, new PickupRoomFurnitureEvent());
+        this.addProtobuffListener(PickupAllRoomFurnitureData, new PickupAllRoomFurnitureEvent());
+        this.addProtobuffListener(PickupRoomBotData, new PickupRoomBotEvent());
+        this.addProtobuffListener(SendRoomUserWalkData, new StartWalkingEvent());
+        this.addProtobuffListener(SendRoomChatMessageData, new SendUserMessageEvent());
+        this.addProtobuffListener(GetRoomChatStylesData, new GetRoomChatStylesEvent());
+        this.addProtobuffListener(UpdateRoomStructureData, new UpdateRoomStructureEvent());
+        this.addProtobuffListener(UpdateRoomInformationData, new UpdateRoomInformationEvent());
+        this.addProtobuffListener(SetRoomUserRightsData, new UpdateUserRightsEvent());;
             
         this.addProtobuffListener(SetRoomChatTypingData, new SetTypingEvent());
             

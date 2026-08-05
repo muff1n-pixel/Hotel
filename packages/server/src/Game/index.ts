@@ -1,4 +1,4 @@
-import { initializeModels, recreateShop, resetDatabase } from "../Database/Database";
+import { initializeModels, recreateShop, resetDatabase, sequelize } from "../Database/Database";
 import Game from "./Game";
 import { createMissingFurniture } from "../Database/Development/FurnitureDevelopmentData";
 import { recreateShopPages } from "../Database/Development/ShopDevelopmentData";
@@ -12,6 +12,8 @@ export async function startServer() {
     game = new Game();
 
     await initializeModels();
+
+    await sequelize.sync();
 
     await game.createServerToken();
 
