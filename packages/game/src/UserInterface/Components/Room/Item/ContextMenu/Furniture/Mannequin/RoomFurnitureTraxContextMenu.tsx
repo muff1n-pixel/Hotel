@@ -5,6 +5,7 @@ import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserCont
 import UserContextMenuElement from "@UserInterface/Components/Room/Users/UserContextMenuElement";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { webSocketClient } from "@Game/index";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomFurnitureTraxContextMenuProps = {
     roomFurniture: RoomFurniture;
@@ -12,6 +13,7 @@ export type RoomFurnitureTraxContextMenuProps = {
 
 export default function RoomFurnitureTraxContextMenu({ roomFurniture }: RoomFurnitureTraxContextMenuProps) {
     const dialogs = useDialogs();
+    const room = useRoomInstance();
 
     return (
         <RoomItemContextMenuWrapper item={roomFurniture.item}>
@@ -20,7 +22,7 @@ export default function RoomFurnitureTraxContextMenu({ roomFurniture }: RoomFurn
             </UserContextMenuElement>
 
             <UserContextMenuButton text={(roomFurniture.data.animation === 0)?("Turn on"):("Turn off")} onClick={() => {
-                webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+                room?.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
                     id: roomFurniture.data.id,
                     animation: (roomFurniture.data.animation === 0)?(1):(0)
                 }));

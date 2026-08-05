@@ -31,7 +31,7 @@ export default function RoomSettingsRightsTab() {
                             cursor: "pointer"
                         }}
                         onClick={() => {
-                            webSocketClient.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
+                            room.websocket.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
                                 id: user.id,
                                 hasRights: false
                             }));
@@ -40,7 +40,7 @@ export default function RoomSettingsRightsTab() {
             }))}/>
 
             <DialogButton onClick={() => {
-                webSocketClient.sendProtobuff(ClearRoomRightsData, ClearRoomRightsData.create({}));
+                room.websocket.sendProtobuff(ClearRoomRightsData, ClearRoomRightsData.create({}));
             }}>
                 Remove all
             </DialogButton>

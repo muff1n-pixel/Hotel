@@ -9,18 +9,20 @@ import { useUser } from "@UserInterface/Hooks/useUser";
 import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 import { UseRoomFurnitureData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function RoomFurnitureGiftDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
     const user = useUser();
     const userProfile = useUserProfile(data.data.data?.gift?.senderUserId);
+    const room = useRoomInstance();
 
     const handleOpen = useCallback(() => {
-        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
             id: data.data.id
         }));
 
         onClose();
-    }, [data, onClose]);
+    }, [data, onClose, room]);
 
     if(hidden || !userProfile) {
         return null;

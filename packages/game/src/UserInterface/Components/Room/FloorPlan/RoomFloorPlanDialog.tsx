@@ -17,7 +17,7 @@ export default function RoomFloorPlanDialog({ hidden, onClose }: RoomFloorPlanDi
             return;
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
+        room.websocket.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
             offset,
             grid: structure.grid,
             door: {

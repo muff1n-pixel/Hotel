@@ -36,14 +36,14 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
                 <Fragment>
                     {(user.scratches > 0) && (
                         <UserContextMenuButton text={`Scratch (${user.scratches})`} onClick={() => {
-                            webSocketClient.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
+                            room?.websocket.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
                                 petId: pet.data.id
                             }));
                         }}/>
                     )}
 
                     <UserContextMenuButton text={"Pick up"} onClick={() => {
-                        webSocketClient.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
+                        room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                             id: pet.data.id
                         }));
                     }}/>

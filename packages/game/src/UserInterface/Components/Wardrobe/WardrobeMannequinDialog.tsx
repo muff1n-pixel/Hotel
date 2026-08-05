@@ -6,6 +6,7 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import WardrobeMannequinAvatar from "@UserInterface/Components/Wardrobe/WardrobeMannequinAvatar";
 import { useTranslation } from "react-i18next";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type WardrobeMannequinDialogProps = {
     hidden?: boolean;
@@ -16,6 +17,8 @@ export type WardrobeMannequinDialogProps = {
 };
 
 export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogProps) {
+    const room = useRoomInstance();
+
     const [getWardrobeTranslation] = useTranslation("wardrobe");
 
     const [figureConfiguration, setFigureConfiguration] = useState<FigureConfigurationData | undefined>(props.data.roomFurniture.data.data?.mannequin?.figureConfiguration ?? FigureConfigurationData.create({ gender: "male" }));
@@ -32,7 +35,7 @@ export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogPr
     }, [setFigureConfiguration]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
             id: props.data.roomFurniture.data.id,
 
             data: {
@@ -41,7 +44,7 @@ export default function WardrobeMannequinDialog(props: WardrobeMannequinDialogPr
                 }
             }
         }));
-    }, [figureConfiguration]);
+    }, [figureConfiguration, room]);
 
     if(!figureConfiguration) {
         return null;

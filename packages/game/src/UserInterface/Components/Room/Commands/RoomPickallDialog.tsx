@@ -5,6 +5,8 @@ import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogH
 import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 import { PickupAllRoomFurnitureData } from "@pixel63/events";
+import { useRoom } from "@UserInterface/Hooks/useRoom";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 const backgroundImage = new URL('../../../Images/dialog/background-red.png', import.meta.url).toString();
 
@@ -14,11 +16,13 @@ export type RoomPickallDialogProps = {
 }
 
 export default function RoomPickallDialog({ hidden, onClose }: RoomPickallDialogProps) {
+    const room = useRoomInstance();
+
     const onPickall = useCallback(() => {
-        webSocketClient.sendProtobuff(PickupAllRoomFurnitureData, PickupAllRoomFurnitureData.create({}));
+        room?.websocket.sendProtobuff(PickupAllRoomFurnitureData, PickupAllRoomFurnitureData.create({}));
 
         onClose?.();
-    }, [onClose]);
+    }, [onClose, room]);
 
     return (
         <Dialog title="Warning!" hidden={hidden} onClose={onClose} width={360} assumedHeight={190} height={"auto"}>

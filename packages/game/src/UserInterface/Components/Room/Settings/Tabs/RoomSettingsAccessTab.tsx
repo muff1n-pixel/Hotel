@@ -12,34 +12,34 @@ export default function RoomSettingsAccessTab() {
     const [password, setPassword] = useState("");
     
     const handleLockChanged = useCallback((value: string) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             lock: value
         }));
-    }, []);
+    }, [room]);
     
     const handlePasswordChanged = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             password
         }));
     }, [password]);
     
     const handleAllowPetsChange = useCallback((allowPets: boolean) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             allowPets
         }));
-    }, []);
+    }, [room]);
     
     const handleAllowPetsToEatFoodChange = useCallback((allowPetsToEatFood: boolean) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             allowPetsToEatFood
         }));
-    }, []);
+    }, [room]);
     
     const handleMuteAllPetsChange = useCallback((muteAllPets: boolean) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             muteAllPets
         }));
-    }, []);
+    }, [room]);
 
     if(!room) {
         return null;

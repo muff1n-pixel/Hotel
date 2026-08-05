@@ -11,8 +11,11 @@ import WiredFurniturePicker from "../../../../../../Common/Dialog/Layouts/Wired/
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheckbox";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionMoveToDirectionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [startDirection, setStartDirection] = useState(data.data.data?.wiredActionMoveToDirection?.startDirection ?? 0);
     const [blockedDirectionAction, setBlockedDirectionAction] = useState(data.data.data?.wiredActionMoveToDirection?.blockedDirectionAction ?? "wait");
     
@@ -22,7 +25,7 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -43,7 +46,7 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
         }));
 
         onClose();
-    }, [startDirection, blockedDirectionAction, blockCollidingWithUsers, furnitureIds, delayInSeconds, data, onClose]);
+    }, [startDirection, blockedDirectionAction, blockCollidingWithUsers, furnitureIds, delayInSeconds, room, data, onClose]);
 
     return (
         <WiredDialog onClose={onClose}>

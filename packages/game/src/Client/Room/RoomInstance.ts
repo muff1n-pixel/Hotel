@@ -15,6 +15,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
+import WebSocketClient from "@Game/WebSocket/WebSocketClient";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -60,7 +61,7 @@ export default class RoomInstance {
     public hasRights: boolean;
     public isOwner: boolean = false;
 
-    constructor(public readonly clientInstance: ClientInstance, event: RoomLoadData, ready?: () => void) {
+    constructor(public readonly clientInstance: ClientInstance, public readonly websocket: WebSocketClient, event: RoomLoadData, ready?: () => void) {
         this.id = event.id;
         
         if(event.information) {
@@ -88,7 +89,7 @@ export default class RoomInstance {
 
             this.registerEventListeners();
 
-            webSocketClient.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
+            this.websocket.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
 
             ready?.();
         });
@@ -126,6 +127,8 @@ export default class RoomInstance {
     }
 
     public terminate() {
+        this.websocket.close();
+        
         this.removeEventListeners();
 
         this.roomRenderer.terminate();
@@ -166,7 +169,7 @@ export default class RoomInstance {
                 if(event.otherEntity.item instanceof RoomFurnitureItem) {
                     const roomFurniture = this.getFurnitureByItem(event.otherEntity.item);
 
-                    webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
+                    this.websocket.sendProtobuff(RoomClickData, RoomClickData.create({
                         furnitureId: roomFurniture.data.id,
                         position: event.otherEntity.position
                     }));
@@ -176,7 +179,7 @@ export default class RoomInstance {
                 else if(event.otherEntity.item instanceof RoomFigureItem && event.otherEntity.item.type === "figure") {
                     const roomUser = this.getUserByItem(event.otherEntity.item);
 
-                    webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
+                    this.websocket.sendProtobuff(RoomClickData, RoomClickData.create({
                         userId: roomUser.data.id,
                         position: event.otherEntity.position
                     }));
@@ -185,7 +188,7 @@ export default class RoomInstance {
                 }
             }
             else if(event.floorEntity?.position) {
-                webSocketClient.sendProtobuff(RoomClickData, RoomClickData.create({
+                this.websocket.sendProtobuff(RoomClickData, RoomClickData.create({
                     position: RoomPositionData.fromJSON(event.floorEntity.position)
                 }));
 
@@ -199,7 +202,7 @@ export default class RoomInstance {
 
         if(!event.shiftKey && !event.ctrlKey && !event.altKey) {
             if(event.floorEntity?.position && (!(event.otherEntity?.item instanceof RoomFigureItem) || this.roomRenderer.cursor?.canClickBehindUser() || !this.roomRenderer.cursor?.canClickUser())) {
-                webSocketClient.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
+                this.websocket.sendProtobuff(SendRoomUserWalkData, SendRoomUserWalkData.create({
                     target: RoomPositionData.fromJSON(event.floorEntity.position)
                 }));
             }
@@ -214,7 +217,7 @@ export default class RoomInstance {
         console.log("DOUBLE CLICK", event);
 
         if(event.floorEntity?.position) {
-            webSocketClient.sendProtobuff(RoomDoubleClickData, RoomDoubleClickData.create({
+            this.websocket.sendProtobuff(RoomDoubleClickData, RoomDoubleClickData.create({
                 position: RoomPositionData.fromJSON(event.floorEntity.position)
             }));
         }
@@ -422,7 +425,7 @@ export default class RoomInstance {
         roomFurniturePlacer.startPlacing((position, direction) => {
             roomFurniturePlacer.destroy();
 
-            webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+            this.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
                 id: furniture.data.id,
 
                 position,

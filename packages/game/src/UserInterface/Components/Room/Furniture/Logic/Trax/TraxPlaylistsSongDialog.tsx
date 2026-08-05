@@ -9,6 +9,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type TraxPlaylistsSongDialogProps = {
     hidden?: boolean;
@@ -20,6 +21,7 @@ export type TraxPlaylistsSongDialogProps = {
 
 export default function TraxPlaylistsSongDialog({ hidden, data, onClose }: TraxPlaylistsSongDialogProps) {
     const dialogs = useDialogs();
+    const room = useRoomInstance();
 
     const [activeSong, setActiveSong] = useState<UserFurnitureData>();
 
@@ -44,13 +46,13 @@ export default function TraxPlaylistsSongDialog({ hidden, data, onClose }: TraxP
             return;
         }
 
-        webSocketClient.sendProtobuff(InsertRoomFurnitureTraxSongData, InsertRoomFurnitureTraxSongData.create({
+        room?.websocket.sendProtobuff(InsertRoomFurnitureTraxSongData, InsertRoomFurnitureTraxSongData.create({
             roomFurnitureId: data.roomFurniture.data.id,
             songFurnitureId: activeSong.id
         }));
 
         onClose?.();
-    }, [activeSong, data, dialogs, onClose]);
+    }, [activeSong, data, dialogs, onClose, room]);
 
     return (
         <TraxDialog title="Insert a song disk" hidden={hidden} onClose={onClose} width={260} height={220} initialPosition="center" style={{

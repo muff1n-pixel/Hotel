@@ -11,6 +11,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useCallback, useMemo, useState } from "react";
 import { webSocketClient } from "@Game/index";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type TraxPlaylistsDialogProps = {
     hidden?: boolean;
@@ -23,6 +24,7 @@ export type TraxPlaylistsDialogProps = {
 export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlaylistsDialogProps) {
     const user = useUser();
     const dialogs = useDialogs();
+    const room = useRoomInstance();
     
     const isFurnitureOwner = useMemo(() => {
         return user.id === data.roomFurniture.data.userId;
@@ -71,7 +73,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
         }
 
         if(playlist.some((playlist) => playlist.id === activeSong.id)) {
-            webSocketClient.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
+            room?.websocket.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
                 roomFurnitureId: data.roomFurniture.data.id,
 
                 playlist: (data.roomFurniture.data.data?.trax?.playlist ?? []).filter((playlist) => playlist !== activeSong.id)
@@ -80,12 +82,12 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
             return;
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
             roomFurnitureId: data.roomFurniture.data.id,
 
             playlist: (data.roomFurniture.data.data?.trax?.playlist ?? []).concat(activeSong.id)
         }));
-    }, [activeSong, playlist, data]);
+    }, [activeSong, playlist, data, room]);
 
     const handleMoveUp = useCallback((song: FurnitureTraxSongMetaData) => {
         if(!data.roomFurniture.data.data?.trax?.playlist) {
@@ -102,12 +104,12 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
         mutatedPlaylist.splice(currentIndex, 1);
         mutatedPlaylist.splice(currentIndex - 1, 0, song.id);
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
             roomFurnitureId: data.roomFurniture.data.id,
 
             playlist: mutatedPlaylist
         }));
-    }, [data.roomFurniture.data.data?.trax?.playlist]);
+    }, [data.roomFurniture.data.data?.trax?.playlist, room]);
     
     const handleMoveDown = useCallback((song: FurnitureTraxSongMetaData) => {
         if(!data.roomFurniture.data.data?.trax?.playlist) {
@@ -124,43 +126,43 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
         mutatedPlaylist.splice(currentIndex, 1);
         mutatedPlaylist.splice(currentIndex + 1, 0, song.id);
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxPlaylistData.create({
             roomFurnitureId: data.roomFurniture.data.id,
 
             playlist: mutatedPlaylist
         }));
-    }, [data.roomFurniture.data.data?.trax?.playlist]);
+    }, [data.roomFurniture.data.data?.trax?.playlist, room]);
 
     const handleToggle = useCallback(() => {
-        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
             id: data.roomFurniture.data.id,
             animation: (data.roomFurniture.data.animation === 0)?(1):(0)
         }));
-    }, [data.roomFurniture.data.id, data.roomFurniture.data.animation]);
+    }, [data.roomFurniture.data.id, data.roomFurniture.data.animation, room]);
 
     const handleDeleteSong = useCallback(() => {
         if(!activeSong) {
             return;
         }
 
-        webSocketClient.sendProtobuff(DeleteRoomFurnitureTraxSongData, DeleteRoomFurnitureTraxSongData.create({
+        room?.websocket.sendProtobuff(DeleteRoomFurnitureTraxSongData, DeleteRoomFurnitureTraxSongData.create({
             roomFurnitureId: data.roomFurniture.data.id,
 
             songId: activeSong.id
         }));
-    }, [activeSong]);
+    }, [activeSong, room]);
 
     const handleBurnSong = useCallback(() => {
         if(!activeSong) {
             return;
         }
 
-        webSocketClient.sendProtobuff(BurnRoomFurnitureTraxSongData, BurnRoomFurnitureTraxSongData.create({
+        room?.websocket.sendProtobuff(BurnRoomFurnitureTraxSongData, BurnRoomFurnitureTraxSongData.create({
             roomFurnitureId: data.roomFurniture.data.id,
 
             songId: activeSong.id
         }));
-    }, [activeSong]);
+    }, [activeSong, room]);
 
     const handleInsertSong = useCallback(() => {
         dialogs.openUniqueDialog("trax-playlists-song", {

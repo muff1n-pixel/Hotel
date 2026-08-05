@@ -39,7 +39,7 @@ export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab }:
                     
                     <UserContextMenuButton text={targetUser.data.actions.some((action) => action.startsWith("Dance"))?(getTranslation("item.context_menu.stop_dancing")):(getTranslation("item.context_menu.dance"))} hasDropdown={!targetUser.data.actions.some((action) => action.startsWith("Dance"))} onClick={() => {
                         if(targetUser.data.actions.some((action) => action.startsWith("Dance"))) {
-                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                            room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                 message: ":dance 0"
                             }));
 
@@ -88,7 +88,7 @@ export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab }:
 
                     {(room?.isTradingAllowed()) && (
                         <UserContextMenuButton text={getTranslation("item.context_menu.ask_to_trade")} style={{ fontSize: 11 }} onClick={() => {
-                            webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
+                            room.websocket.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
                                 targetUserId: targetUser.data.id
                             }));
 
@@ -100,7 +100,7 @@ export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab }:
 
                     {(room?.information?.owner?.id === user?.id) && (
                         <UserContextMenuButton text={(targetUser.data.hasRights)?(getTranslation("item.context_menu.revoke_rights")):(getTranslation("item.context_menu.give_rights"))} onClick={() => {
-                            webSocketClient.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
+                            room.websocket.sendProtobuff(SetRoomUserRightsData, SetRoomUserRightsData.create({
                                 id: targetUser.data.id,
                                 hasRights: !targetUser.data.hasRights
                             }));

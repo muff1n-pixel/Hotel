@@ -9,15 +9,18 @@ import { webSocketClient } from "../../../../../../..";
 import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionMoveRotateUserDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [movement, setMovement] = useState(data.data.data?.wiredActionMoveRotateUser?.movement ?? "none");
     const [rotation, setRotation] = useState(data.data.data?.wiredActionMoveRotateUser?.rotation ?? "none");
 
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -35,7 +38,7 @@ export default function WiredActionMoveRotateUserDialog({ data, onClose }: RoomF
         }));
 
         onClose();
-    }, [movement, rotation, delayInSeconds, data, onClose]);
+    }, [movement, rotation, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

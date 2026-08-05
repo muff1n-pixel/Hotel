@@ -41,7 +41,7 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
                     }}/>
 
                     <UserContextMenuButton text={(bot.data.relaxed)?("Stiffen"):("Relax")} onClick={() => {
-                        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+                        room?.websocket.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
                             id: bot.data.id,
 
                             relaxed: !bot.data.relaxed
@@ -53,7 +53,7 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
                     }}/>
 
                     <UserContextMenuButton text={"Pick up"} onClick={() => {
-                        webSocketClient.sendProtobuff(PickupRoomBotData, PickupRoomBotData.create({
+                        room?.websocket.sendProtobuff(PickupRoomBotData, PickupRoomBotData.create({
                             id: bot.data.id
                         }));
                     }}/>

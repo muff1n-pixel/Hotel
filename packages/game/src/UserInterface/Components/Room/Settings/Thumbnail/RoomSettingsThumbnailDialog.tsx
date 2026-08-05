@@ -30,7 +30,7 @@ export default function RoomSettingsThumbnailDialog({ hidden, onClose }: RoomSet
             throw new Error("Could not create a data url from the canvas.");
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             thumbnail: dataUrl
         }));
 

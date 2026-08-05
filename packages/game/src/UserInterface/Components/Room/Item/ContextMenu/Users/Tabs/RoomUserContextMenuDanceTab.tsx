@@ -4,14 +4,16 @@ import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserCont
 import UserContextMenuList from "@UserInterface/Components/Room/Users/UserContextMenuList";
 import { useTranslation } from "react-i18next";
 import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function RoomUserContextMenuDanceTab({ closeTab }: RoomUserContextMenuTabProps) {
+    const room = useRoomInstance();
     const [getTranslation] = useTranslation("room");
 
     return (
         <UserContextMenuList>
             <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_default")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":dance 1"
                 }));
 
@@ -19,7 +21,7 @@ export default function RoomUserContextMenuDanceTab({ closeTab }: RoomUserContex
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_pogo_mogo")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":dance 2"
                 }));
 
@@ -27,7 +29,7 @@ export default function RoomUserContextMenuDanceTab({ closeTab }: RoomUserContex
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_duck_funk")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":dance 3"
                 }));
 
@@ -35,7 +37,7 @@ export default function RoomUserContextMenuDanceTab({ closeTab }: RoomUserContex
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.dances.dance_the_rollie")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":dance 4"
                 }));
 

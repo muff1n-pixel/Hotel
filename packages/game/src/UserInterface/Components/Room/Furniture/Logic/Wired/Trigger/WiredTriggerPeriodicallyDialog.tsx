@@ -9,6 +9,7 @@ import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButt
 import { webSocketClient } from "../../../../../../..";
 import WiredSlider from "../../../../../../Common/Dialog/Layouts/Wired/Slider/WiredSlider";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type WiredTriggerPeriodicallyDialog = {
     furniture: RoomInstanceFurniture;
@@ -16,10 +17,12 @@ export type WiredTriggerPeriodicallyDialog = {
 };
 
 export default function WiredTriggerPeriodicallyDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [seconds, setSeconds] = useState(data.data.data?.wiredTriggerPeriodically?.seconds ?? 5);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
             data: {
                 wiredTriggerPeriodically: {
@@ -29,7 +32,7 @@ export default function WiredTriggerPeriodicallyDialog({ data, onClose }: RoomFu
         }));
 
         onClose();
-    }, [seconds, data, onClose]);
+    }, [seconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

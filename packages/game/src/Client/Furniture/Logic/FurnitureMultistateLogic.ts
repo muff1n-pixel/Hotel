@@ -23,7 +23,7 @@ export default class FurnitureMultistateLogic implements FurnitureLogic {
 
         const nextState = this.getNextState();
 
-        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+        this.room.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
             id: this.roomFurniture.data.id,
             animation: nextState,
             tag

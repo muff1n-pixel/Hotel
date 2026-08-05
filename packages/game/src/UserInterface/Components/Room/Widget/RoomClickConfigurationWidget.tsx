@@ -51,7 +51,7 @@ export default function RoomClickConfigurationWidget() {
                     <FlexLayout direction="row" justify="flex-end" align="center">
                         {(roomClickConfiguration?.enabled)?(
                             <WiredWidgetButton onClick={() => {
-                                webSocketClient.sendProtobuff(SetRoomClickConfigurationData, SetRoomClickConfigurationData.create({
+                                roomInstance?.websocket.sendProtobuff(SetRoomClickConfigurationData, SetRoomClickConfigurationData.create({
                                     enable: false
                                 }));
                             }}>
@@ -60,7 +60,7 @@ export default function RoomClickConfigurationWidget() {
                         ):(
                             <Fragment>
                                 <WiredWidgetButton onClick={() => {
-                                    webSocketClient.sendProtobuff(SetRoomClickConfigurationData, SetRoomClickConfigurationData.create({
+                                    roomInstance?.websocket.sendProtobuff(SetRoomClickConfigurationData, SetRoomClickConfigurationData.create({
                                         enable: true
                                     }));
                                 }}>
@@ -68,7 +68,7 @@ export default function RoomClickConfigurationWidget() {
                                 </WiredWidgetButton>
 
                                 <WiredWidgetButton onClick={() => {
-                                    webSocketClient.sendProtobuff(ResetRoomClickConfigurationData, ResetRoomClickConfigurationData.create({}));
+                                    roomInstance?.websocket.sendProtobuff(ResetRoomClickConfigurationData, ResetRoomClickConfigurationData.create({}));
                                 }}>
                                     Reset
                                 </WiredWidgetButton>

@@ -13,7 +13,7 @@ export default class WebSocketClient extends EventTarget {
         secure: boolean,
         hostname: string,
         port: number,
-        options: Record<"userId" | "accessToken", string>,
+        options: Record<string, string>,
     ) {
         super();
 

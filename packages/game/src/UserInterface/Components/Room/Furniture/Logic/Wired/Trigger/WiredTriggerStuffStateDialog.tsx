@@ -37,7 +37,7 @@ export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurn
             return roomFurniture.furniture.animation;
         });
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {

@@ -5,22 +5,25 @@ import RoomUser from "../../Rooms/Users/RoomUser";
 import RoomServer from "../RoomServer";
 import { MessageType, UnknownMessage } from "@pixel63/events";
 import RoomWebSocketUserAchievements from "./RoomWebSocketUserAchievements";
+import Room from "../../Rooms/Room";
 
 export default class RoomWebSocketUser {
-    public readonly id = "";
+    public readonly id: string;
 
-    public readonly roomUser: RoomUser = 0 as any;
     public roomChatStyleId: string = "";
-
-    public model: UserModel;
 
     public readonly permissions: UserPermissions;
 
     public readonly achievements = new RoomWebSocketUserAchievements(this);
 
-    constructor(private readonly server: RoomServer, private readonly websocket: WebSocket, user: UserModel) {
-        this.permissions = new UserPermissions(user);
-        this.model = user;
+    public readonly roomUser: RoomUser;
+
+    constructor(private readonly server: RoomServer, private readonly websocket: WebSocket, public readonly model: UserModel, public readonly room: Room) {
+        this.id = model.id;
+        this.roomChatStyleId = model.roomChatStyleId;
+
+        this.permissions = new UserPermissions(model);
+        this.roomUser = room.addUserClient(this);
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

@@ -16,22 +16,22 @@ export default function RoomSettingsCustomizeTab() {
     }
 
     const handleFloorThickness = useCallback((floorThickness: number) => {
-        webSocketClient.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
+        room.websocket.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
             floorThickness
         }));
-    }, []);
+    }, [room]);
 
     const handleWallThickness = useCallback((wallThickness: number) => {
-        webSocketClient.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
+        room.websocket.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
             wallThickness
         }));
-    }, []);
+    }, [room]);
 
     const handleWallHidden = useCallback((wallHidden: boolean) => {
-        webSocketClient.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
+        room.websocket.sendProtobuff(UpdateRoomStructureData, UpdateRoomStructureData.create({
             wallHidden
         }));
-    }, []);
+    }, [room]);
 
     return (
         <div style={{

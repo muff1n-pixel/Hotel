@@ -6,6 +6,7 @@ import Input from "@UserInterface/Common/Form/Components/Input";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "@Game/index";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type TraxSongNameDialogProps = {
     hidden?: boolean;
@@ -22,6 +23,7 @@ export type TraxSongNameDialogProps = {
 
 export default function TraxSongNameDialog({ hidden, data, onClose }: TraxSongNameDialogProps) {
     const dialogs = useDialogs();
+    const room = useRoomInstance();
 
     const [name, setName] = useState(data.song?.name ?? "Untitled Trax");
 
@@ -33,7 +35,7 @@ export default function TraxSongNameDialog({ hidden, data, onClose }: TraxSongNa
             roomFurniture: data.roomFurniture
         });
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureTraxSongData, UpdateRoomFurnitureTraxSongData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureTraxSongData, UpdateRoomFurnitureTraxSongData.create({
             roomFurnitureId: data.roomFurniture.data.id,
             
             name,
@@ -41,7 +43,7 @@ export default function TraxSongNameDialog({ hidden, data, onClose }: TraxSongNa
             songId: data.song.id,
             song: data.song.data
         }));
-    }, [ dialogs, data, name ]);
+    }, [ dialogs, data, name, room ]);
 
     return (
         <TraxDialog title="Save your song" hidden={hidden} onClose={onClose} width={260} height={120} initialPosition="center" style={{

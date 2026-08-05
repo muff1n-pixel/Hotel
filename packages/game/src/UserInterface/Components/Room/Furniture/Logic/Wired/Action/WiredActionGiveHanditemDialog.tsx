@@ -12,10 +12,12 @@ import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheck
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection/WiredSelection";
 import { useTranslation } from "react-i18next";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [getCarryItemTranslation] = useTranslation("carryitems");
-    
 
     const [giveHanditemUsingBot, setGiveHanditemUsingBot] = useState(data.data.data?.wiredActionGiveHanditem?.giveHanditemUsingBot ?? false);
     const [botName, setBotName] = useState(data.data.data?.wiredActionGiveHanditem?.botName ?? "");
@@ -25,7 +27,7 @@ export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFur
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -45,7 +47,7 @@ export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFur
         }));
 
         onClose();
-    }, [giveHanditemUsingBot, botName, handitem, delayInSeconds, data, onClose]);
+    }, [giveHanditemUsingBot, botName, handitem, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

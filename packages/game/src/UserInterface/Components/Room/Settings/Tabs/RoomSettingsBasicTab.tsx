@@ -19,7 +19,7 @@ export default function RoomSettingsBasicTab() {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
                 name
             }));
         }, 500);
@@ -27,11 +27,11 @@ export default function RoomSettingsBasicTab() {
         return () => {
             clearTimeout(timeout);
         }
-    }, [name]);
+    }, [name, room]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
                 description
             }));
         }, 500);
@@ -39,37 +39,37 @@ export default function RoomSettingsBasicTab() {
         return () => {
             clearTimeout(timeout);
         }
-    }, [description]);
+    }, [description, room]);
 
     const handleCategoryChange = useCallback((categoryId: string) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             category: categoryId
         }));
-    }, []);
+    }, [ room ]);
 
     const handleTypeChange = useCallback((type: string) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             type
         }));
-    }, []);
+    }, [ room ]);
 
     const handleMaxUsersChange = useCallback((maxUsers: number) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             maxUsers
         }));
-    }, []);
+    }, [ room ]);
 
     const handleTradingChange = useCallback((trading: string) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             trading
         }));
-    }, []);
+    }, [ room ]);
 
     const handleAllowWalkingThroughUsersChange = useCallback((allowWalkingThroughUsers: boolean) => {
-        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+        room?.websocket.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             allowWalkingThroughUsers
         }));
-    }, []);
+    }, [ room ]);
 
     if(!room) {
         return null;

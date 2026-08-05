@@ -4,14 +4,16 @@ import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserCont
 import UserContextMenuList from "@UserInterface/Components/Room/Users/UserContextMenuList";
 import { useTranslation } from "react-i18next";
 import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function RoomUserContextMenuActionTab({ targetUser, closeTab }: RoomUserContextMenuTabProps) {
+    const room = useRoomInstance();
     const [getTranslation] = useTranslation("room");
 
     return (
         <UserContextMenuList>
             <UserContextMenuButton text={(!targetUser.data.actions.includes("Sit"))?(getTranslation("item.context_menu.actions.sit")):(getTranslation("item.context_menu.actions.stand"))} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: (!targetUser.data.actions.includes("Sit"))?(":sit"):(":stand")
                 }));
 
@@ -19,7 +21,7 @@ export default function RoomUserContextMenuActionTab({ targetUser, closeTab }: R
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.actions.wave")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":wave"
                 }));
 
@@ -27,7 +29,7 @@ export default function RoomUserContextMenuActionTab({ targetUser, closeTab }: R
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.actions.laugh")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":laugh"
                 }));
 
@@ -35,7 +37,7 @@ export default function RoomUserContextMenuActionTab({ targetUser, closeTab }: R
             }}/>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.actions.sleep")} onClick={() => {
-                webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                     message: ":afk"
                 }));
 

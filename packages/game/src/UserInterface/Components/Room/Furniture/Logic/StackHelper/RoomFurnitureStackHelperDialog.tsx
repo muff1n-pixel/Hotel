@@ -27,7 +27,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
+            room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
                 id: data.data.id,
 
                 data: {
@@ -41,7 +41,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
         return () => {
             clearTimeout(timeout);
         };
-    }, [height]);
+    }, [height, room]);
 
     useEffect(() => {
         if(data.furniture.animation === 1) {

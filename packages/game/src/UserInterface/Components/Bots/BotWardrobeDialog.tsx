@@ -5,6 +5,7 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import { FigureConfigurationData, RoomBotsData, UpdateRoomBotData, UserBotData } from "@pixel63/events";
 import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type BotWardrobeDialogProps = {
     data: UserBotData;
@@ -14,11 +15,16 @@ export type BotWardrobeDialogProps = {
 
 export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
     const dialogs = useDialogs();
+    const room = useRoomInstance();
 
     const [figureConfiguration, setFigureConfiguration] = useState(FigureConfigurationData.create(props.data.figureConfiguration));
 
     useEffect(() => {
-        const listener = webSocketClient.addProtobuffListener(RoomBotsData, {
+        if(!room) {
+            return;
+        }
+
+        const listener = room.websocket.addProtobuffListener(RoomBotsData, {
             async handle(payload: RoomBotsData) {
                 if(payload.botsRemoved?.some((removedBot) => removedBot.id === props.data.id)) {
                     dialogs.closeDialog("bot-wardrobe");
@@ -27,9 +33,9 @@ export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
         });
 
         return () => {
-            webSocketClient.removeProtobuffListener(RoomBotsData, listener);
+            room.websocket.removeProtobuffListener(RoomBotsData, listener);
         };
-    }, [props.data.id, dialogs]);
+    }, [props.data.id, dialogs, room]);
 
 
     useEffect(() => {
@@ -37,14 +43,18 @@ export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
     }, [props.data.figureConfiguration]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+        if(!room) {
+            return;
+        }
+
+        room.websocket.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
             id: props.data.id,
 
             figureConfiguration
         }));
 
         dialogs.closeDialog("bot-wardrobe");
-    }, [ props.data, figureConfiguration ]);
+    }, [ props.data, figureConfiguration, room ]);
 
     if(!figureConfiguration) {
         return null;

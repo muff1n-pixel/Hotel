@@ -8,6 +8,7 @@ import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogB
 import Input from "../../../../../Common/Form/Components/Input";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomFurnitureBackgroundDialogData = {
     furniture: RoomInstanceFurniture;
@@ -15,6 +16,8 @@ export type RoomFurnitureBackgroundDialogData = {
 };
 
 export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [imageUrl, setImageUrl] = useState(data.data.data?.background?.imageUrl ?? "");
     const [linkUrl, setLinkUrl] = useState(data.data.data?.background?.linkUrl ?? "");
     
@@ -25,7 +28,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
     const [relativePosition, setRelativePosition] = useState(data.data.data?.background?.relativePosition ?? true);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.fromJSON({
             id: data.data.id,
 
             data: {
@@ -42,7 +45,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                 }
             }
         }));
-    }, [data, imageUrl, linkUrl, offsetX, offsetY, offsetZ, relativePosition]);
+    }, [data, imageUrl, linkUrl, offsetX, offsetY, offsetZ, relativePosition, room]);
 
     if(hidden) {
         return null;

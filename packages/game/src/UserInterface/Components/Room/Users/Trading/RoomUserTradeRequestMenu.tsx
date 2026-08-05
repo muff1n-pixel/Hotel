@@ -101,7 +101,7 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
 
                             textDecoration: "underline"
                         }} onClick={() => {
-                            webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
+                            room?.websocket.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
                                 targetUserId: user.data.id,
                                 accept: false
                             }));
@@ -119,7 +119,7 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
                             fontSize: 11,
                             fontFamily: "Ubuntu Bold"
                         }} onClick={() => {
-                            webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
+                            room?.websocket.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
                                 targetUserId: user.data.id,
                                 accept: true
                             }));

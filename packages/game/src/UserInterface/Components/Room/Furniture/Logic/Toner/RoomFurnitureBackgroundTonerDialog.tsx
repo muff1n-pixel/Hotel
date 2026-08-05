@@ -8,6 +8,7 @@ import DialogButton from "../../../../../Common/Dialog/Components/Button/DialogB
 import DialogColorPicker from "../../../../../Common/Dialog/Components/ColorPicker/DialogColorPicker";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import useRoomTonerPreview from "@UserInterface/Hooks/Room/useRoomTonerPreview";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomFurnitureBackgroundTonerDialogData = {
     furniture: RoomInstanceFurniture;
@@ -15,13 +16,15 @@ export type RoomFurnitureBackgroundTonerDialogData = {
 };
 
 export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [enabled, setEnabled] = useState(data.data.data?.toner?.enabled ?? false);
     const [color, setColor] = useState(data.data.data?.toner?.color ?? "#000000");
 
     useRoomTonerPreview(enabled, color);
 
     const handleApply = useCallback(() => {       
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
             data: {
                 toner: {
@@ -30,12 +33,12 @@ export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClo
                 }
             }
         }));
-    }, [enabled, color, data]);
+    }, [enabled, color, data, room]);
     
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
             data: {
                 toner: {
@@ -44,7 +47,7 @@ export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClo
                 }
             }
         }));
-    }, [enabled, color, data]);
+    }, [enabled, color, data, room]);
 
     if(hidden) {
         return null;

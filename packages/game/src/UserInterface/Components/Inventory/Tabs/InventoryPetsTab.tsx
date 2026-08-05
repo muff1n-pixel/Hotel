@@ -108,7 +108,7 @@ export default function InventoryPetsTab() {
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            webSocketClient.sendProtobuff(PlaceRoomPetData, PlaceRoomPetData.create({
+            room?.websocket.sendProtobuff(PlaceRoomPetData, PlaceRoomPetData.create({
                 id: activePet.id,
                 
                 position,
@@ -122,7 +122,7 @@ export default function InventoryPetsTab() {
             setRoomFurniturePlacer(undefined);
         });
 
-    }, [activePet, roomFurniturePlacer]);
+    }, [activePet, roomFurniturePlacer, room]);
 
     const onPlaceInRoomClick = useCallback(() => {
         if(!activePet?.pet) {

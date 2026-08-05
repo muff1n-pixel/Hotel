@@ -10,6 +10,8 @@ import WiredRadio from "../../../../../Common/Dialog/Layouts/Wired/WiredRadio";
 import WiredButton from "../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../..";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import { useRoom } from "@UserInterface/Hooks/useRoom";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type WiredUserSpecifierDialogData = {
     furniture: RoomInstanceFurniture;
@@ -17,11 +19,13 @@ export type WiredUserSpecifierDialogData = {
 };
 
 export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [match, setMatch] = useState(data.data.data?.wiredUserSpecifier?.match ?? "all");
     const [matchUser, setMatchUser] = useState(data.data.data?.wiredUserSpecifier?.matchUser ?? "");
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -33,7 +37,7 @@ export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitur
         }));
 
         onClose();
-    }, [match, matchUser, data, onClose]);
+    }, [match, matchUser, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

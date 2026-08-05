@@ -10,15 +10,18 @@ import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection/WiredSelection";
 import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pixel63/events/build/Client/Room/Configuration/RoomClickConfigurationData";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionClickConfigurationDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [userBehaviour, setUserBehaviour] = useState(data.data.data?.wiredActionClickConfiguration?.userBehaviour ?? RoomClickUserConfiguration.DEFAULT_USER_CLICK_BEHAVIOUR);
     const [furnitureBehaviour, setFurnitureBehaviour] = useState(data.data.data?.wiredActionClickConfiguration?.furnitureBehaviour ?? RoomClickFurnitureConfiguration.DEFAULT_FURNITURE_CLICK_BEHAVIOUR);
 
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -36,7 +39,7 @@ export default function WiredActionClickConfigurationDialog({ data, onClose }: R
         }));
 
         onClose();
-    }, [userBehaviour, furnitureBehaviour, delayInSeconds, data, onClose]);
+    }, [userBehaviour, furnitureBehaviour, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

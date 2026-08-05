@@ -10,15 +10,18 @@ import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import WiredFurniturePicker from "@UserInterface/Common/Dialog/Layouts/Wired/WiredFurniturePicker";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionBotMoveToFurniDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [botName, setBotName] = useState(data.data.data?.wiredActionBotMoveToFurni?.botName ?? "");
 
     const [furnitureIds, setFurnitureIds] = useState(data.data.data?.common?.furnitureSelection?.furnitureIds ?? []);
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -39,7 +42,7 @@ export default function WiredActionBotMoveToFurniDialog({ data, onClose }: RoomF
         }));
 
         onClose();
-    }, [furnitureIds, furnitureIds, botName, delayInSeconds, data, onClose]);
+    }, [furnitureIds, furnitureIds, botName, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

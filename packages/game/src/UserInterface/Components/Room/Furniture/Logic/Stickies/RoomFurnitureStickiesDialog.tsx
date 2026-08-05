@@ -66,7 +66,7 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
     useEffect(() => {
         const timeout = setTimeout(() => {
             if(text !== data.data.data?.sticky?.text) {
-                webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
                     id: data.data.id,
 
                     data: {
@@ -81,16 +81,16 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
         return () => {
             clearTimeout(timeout);
         };
-    }, [text]);
+    }, [text, room]);
 
     const handleColor = useCallback((color: number) => {
         setColorId(color + 1);
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
             color: color + 1
         }));
-    }, [data]);
+    }, [data, room]);
 
     return (
         <div ref={elementRef} onMouseDown={onDialogFocus} style={{

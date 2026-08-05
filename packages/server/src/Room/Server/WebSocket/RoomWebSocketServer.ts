@@ -7,6 +7,8 @@ import { MessageType, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../../Communication/EventHandler";
 import RoomWebSocketUser from "../Users/RoomWebSocketUser";
+import { UserTokenModel } from "../../../Database/Models/Users/UserTokens/UserTokenModel";
+import { UserModel } from "../../../Database/Models/Users/UserModel";
 
 export default class RoomWebSocketServer {
     private readonly server: WebSocketServer;
@@ -85,8 +87,58 @@ export default class RoomWebSocketServer {
         this.serverEventHandler.decodeAndDispatchMessages(null, data);
     }
 
-    private handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
-        websocket.close();
+    private async handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
+        const userToken = await UserTokenModel.findOne();
+
+        if(!userToken) {
+            console.error("User access token does not exist!");
+
+            websocket.close();
+
+            return;
+        }
+
+        const payload = this.getAccessTokenPayload(accessToken, userToken.secretKey);
+
+        if(!payload) {
+            console.error("Server access token is invalid.");
+
+            websocket.close();
+
+            return;
+        }
+
+        const model = await UserModel.findByPk(payload.userId);
+
+        if(!model) {
+            console.error("User does not exist.");
+
+            websocket.close();
+
+            return;
+        }
+
+        const roomId = url.searchParams.get("roomId");
+
+        if(!roomId) {
+            console.error("User provided no room id in request.");
+
+            websocket.close();
+
+            return;
+        }
+
+        console.log("[RoomWebSocketServer] Connected with user " + model.name);
+
+        const room = this.roomServer.roomManager.getRoomInstance(roomId);
+
+        if(!room) {
+            throw new Error("Room is not loaded!");
+        }
+
+        const user: RoomWebSocketUser = new RoomWebSocketUser(this.roomServer, websocket, model, room);
+
+        websocket.addListener("message", this.handleUserMessage.bind(this, user));
     }
     
     private async handleUserMessage(user: RoomWebSocketUser, data: RawData) {

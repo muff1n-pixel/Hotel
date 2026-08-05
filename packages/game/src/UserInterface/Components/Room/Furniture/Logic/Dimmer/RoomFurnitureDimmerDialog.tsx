@@ -9,8 +9,11 @@ import DialogHSLPicker from "@UserInterface/Common/Dialog/Components/ColorPicker
 import Colors from "@UserInterface/Utils/Colors";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import useRoomMoodlightPreview from "@UserInterface/Hooks/Room/useRoomMoodlightPreview";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [enabled, setEnabled] = useState(data.data.data?.moodlight?.enabled ?? false);
     const [backgroundOnly, setBackgroundOnly] = useState(data.data.data?.moodlight?.backgroundOnly ?? false);
     const [color, setColor] = useState(Colors.hexToHSL(data.data.data?.moodlight?.color ?? "#FF0000"));
@@ -22,7 +25,7 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
     const handleToggle = useCallback(() => {
         setEnabled(!enabled);
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -33,10 +36,10 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
                 }
             }
         }));
-    }, [enabled, color, backgroundOnly]);
+    }, [enabled, color, backgroundOnly, room]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -47,7 +50,7 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
                 }
             }
         }));
-    }, [enabled, color, backgroundOnly]);
+    }, [enabled, color, backgroundOnly, room]);
 
     if(hidden) {
         return null;

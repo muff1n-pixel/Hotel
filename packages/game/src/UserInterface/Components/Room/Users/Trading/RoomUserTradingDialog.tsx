@@ -80,14 +80,14 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
             return;
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
+        room?.websocket.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
             userId: trading.userId,
 
             cancel: true
         }));
 
         onClose?.();
-    }, [trading, onClose]);
+    }, [trading, onClose, room]);
 
     if(!trading || !tradingUser) {
         return null;
@@ -112,7 +112,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
                                         return;
                                     }
 
-                                    webSocketClient.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
+                                    room?.websocket.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
                                         userId: tradingUser.data.id,
 
                                         addUserFurnitureId: activeFurniture.id,
@@ -156,7 +156,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
                     <FlexLayout direction="row">
                         <FlexLayout direction="column" align="center" style={{ flex: 1 }}>
                             <TradingPanel userFurniture={trading.givingUserFurniture} locked={trading.givingLocked} onDelete={(userFurniture) => {
-                                webSocketClient.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
+                                room?.websocket.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
                                     userId: tradingUser.data.id,
 
                                     removeUserFurnitureId: userFurniture.id,
@@ -204,7 +204,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
 
                 <FlexLayout direction="row" justify="space-between">
                     <DialogButton disabled={trading.givingLocked} onClick={() => {
-                        webSocketClient.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
+                        room?.websocket.sendProtobuff(UpdateRoomUserTradingData, UpdateRoomUserTradingData.create({
                             userId: tradingUser.data.id,
 
                             lock: true

@@ -10,8 +10,11 @@ import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionBotTalkDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [botName, setBotName] = useState(data.data.data?.wiredActionBotTalk?.botName ?? "");
     const [message, setMessage] = useState(data.data.data?.wiredActionBotTalk?.message ?? "");
     const [shout, setShout] = useState(data.data.data?.wiredActionBotTalk?.shout ?? false);
@@ -19,7 +22,7 @@ export default function WiredActionBotTalkDialog({ data, onClose }: RoomFurnitur
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -38,7 +41,7 @@ export default function WiredActionBotTalkDialog({ data, onClose }: RoomFurnitur
         }));
 
         onClose();
-    }, [botName, message, shout, delayInSeconds, data, onClose]);
+    }, [botName, message, shout, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

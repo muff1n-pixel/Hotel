@@ -12,15 +12,18 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import WiredSlider from "@UserInterface/Common/Dialog/Layouts/Wired/Slider/WiredSlider";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [score, setScore] = useState(data.data.data?.wiredActionGiveScore?.score ?? 0);
     const [action, setAction] = useState(data.data.data?.wiredActionGiveScore?.action ?? "add");
 
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -38,7 +41,7 @@ export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnit
         }));
 
         onClose();
-    }, [score, action, delayInSeconds, data, onClose]);
+    }, [score, action, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

@@ -10,15 +10,18 @@ import WiredDelay from "../../../../../../Common/Dialog/Layouts/Wired/WiredDelay
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection/WiredSelection";
 import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheckbox";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionFreezeDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [effect, setEffect] = useState(data.data.data?.wiredActionFreeze?.effect ?? "frozen");
     const [unfreezeWhenTeleporting, setUnfreezeWhenTeleporting] = useState(data.data.data?.wiredActionFreeze?.unfreezeWhenTeleporting ?? true);
 
     const [delayInSeconds, setDelayInSeconds] = useState(data.data.data?.common?.delay?.delayInSeconds ?? 0);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -36,7 +39,7 @@ export default function WiredActionFreezeDialog({ data, onClose }: RoomFurniture
         }));
 
         onClose();
-    }, [effect, unfreezeWhenTeleporting, delayInSeconds, data, onClose]);
+    }, [effect, unfreezeWhenTeleporting, delayInSeconds, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

@@ -18,7 +18,7 @@ import RoomActorChatEvent from "@Client/Communications/Room/Actors/RoomActorChat
 import RoomBotsEvent from "@Client/Communications/Room/Bots/RoomBotsEvent";
 import RoomActorPositionEvent from "@Client/Communications/Room/Actors/RoomActorPositionEvent";
 import { LocalSettings } from "../UserInterface/Components/Settings/Interfaces/LocalSettings";
-import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData, UserFriendData, UserFriendsData, UserFriendUpdateData, UserFriendMessageData, WidgetNotificationData, RoomLockData, RoomBellQueueData, HotelAlertData, UserClothingUnlockedData, RoomClickConfigurationData, RoomClickConfigurationResetData, RoomUserTradingData, RoomUserTradingClosedData, RoomGroupData, RoomEventData, UserNotificationData, UserHabboClubData } from "@pixel63/events";
+import { HotelData, NavigatorData, RoomActorActionData, RoomActorChatData, RoomActorPositionData, RoomActorWalkToData, RoomBotsData, RoomCategoriesData, RoomCategoryData, RoomChatStylesData, RoomFurnitureData, RoomFurnitureMovedData, RoomInformationData, RoomUserEnteredData, RoomUserData, UserData, RoomUserLeftData, RoomStructureData, UserPermissionsData, NavigatorCategoryData, LeaveRoomData, RoomPetsData, UserFriendData, UserFriendsData, UserFriendUpdateData, UserFriendMessageData, WidgetNotificationData, RoomLockData, RoomBellQueueData, HotelAlertData, UserClothingUnlockedData, RoomClickConfigurationData, RoomClickConfigurationResetData, RoomUserTradingData, RoomUserTradingClosedData, RoomGroupData, RoomEventData, UserNotificationData, UserHabboClubData, ConnectToRoomData } from "@pixel63/events";
 import RoomActorWalkToEvent from "@Client/Communications/Room/Actors/RoomActorWalkToEvent";
 import RoomActorActionEvent from "@Client/Communications/Room/Actors/RoomActorActionEvent";
 import RoomCategoriesEvent from "@Client/Communications/Room/Categories/RoomCategoriesEvent";
@@ -47,6 +47,8 @@ import RoomEventEvent from "@Client/Communications/Room/RoomEventEvent";
 import UserNotifications from "./User/UserNotifications";
 import UserNotificationEvent from "./Communications/User/Notifications/UserNotificationEvent";
 import UserHabboClubEvent from "./Communications/User/HabboClub/UserHabboClubEvent";
+import WebSocketClient from "@Game/WebSocket/WebSocketClient";
+import ConnectToRoomEvent from "./Communications/Room/ConnectToRoomEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -85,50 +87,15 @@ export default class ClientInstance extends EventTarget {
         this.settings.subscribe((value) => localStorage.setItem("settings", JSON.stringify(value)));
 
         registerRoomEvents(this);
+
+        // Room events
+        webSocketClient.addProtobuffListener(ConnectToRoomData, new ConnectToRoomEvent());
         
         // User events
         webSocketClient.addProtobuffListener(UserData, new UserEvent());
         webSocketClient.addProtobuffListener(UserHabboClubData, new UserHabboClubEvent());
         webSocketClient.addProtobuffListener(UserPermissionsData, new UserPermissionsEvent());
 
-        // Room events
-        webSocketClient.addProtobuffListener(RoomCategoriesData, new RoomCategoriesEvent());
-        webSocketClient.addProtobuffListener(RoomChatStylesData, new RoomChatStylesEvent());
-        webSocketClient.addProtobuffListener(RoomGroupData, new RoomGroupEvent());
-        webSocketClient.addProtobuffListener(RoomEventData, new RoomEventEvent());
-        webSocketClient.addProtobuffListener(RoomInformationData, new RoomInformationEvent());
-        webSocketClient.addProtobuffListener(RoomStructureData, new RoomStructureEvent());
-        webSocketClient.addProtobuffListener(RoomClickConfigurationData, new RoomClickConfigurationEvent());
-        webSocketClient.addProtobuffListener(RoomClickConfigurationResetData, new RoomClickConfigurationResetEvent());
-
-        // Room actor events
-        webSocketClient.addProtobuffListener(RoomActorWalkToData, new RoomActorWalkToEvent());
-        webSocketClient.addProtobuffListener(RoomActorPositionData, new RoomActorPositionEvent());
-        webSocketClient.addProtobuffListener(RoomActorActionData, new RoomActorActionEvent());
-        webSocketClient.addProtobuffListener(RoomActorChatData, new RoomActorChatEvent());
-
-        // Room bot events
-        webSocketClient.addProtobuffListener(RoomBotsData, new RoomBotsEvent());
-
-        // Room pet events
-        webSocketClient.addProtobuffListener(RoomPetsData, new RoomPetsEvent());
-
-        // Room furniture events
-        webSocketClient.addProtobuffListener(RoomFurnitureMovedData, new RoomFurnitureMovedEvent());
-        webSocketClient.addProtobuffListener(RoomFurnitureData, new RoomFurnitureEvent());
-
-        // Room user events
-        webSocketClient.addProtobuffListener(RoomUserData, new RoomUserEvent());
-        webSocketClient.addProtobuffListener(RoomUserEnteredData, new RoomUserEnteredEvent());
-        webSocketClient.addProtobuffListener(RoomUserLeftData, new RoomUserLeftEvent());
-        webSocketClient.addProtobuffListener(LeaveRoomData, new LeaveRoomEvent());
-
-        // Room user trading events
-        webSocketClient.addProtobuffListener(RoomUserTradingData, new RoomUserTradingEvent());
-        webSocketClient.addProtobuffListener(RoomUserTradingClosedData, new RoomUserTradingClosedEvent());
-
-        // Room bell events
-        webSocketClient.addProtobuffListener(RoomLockData, new RoomLockEvent());
         webSocketClient.addProtobuffListener(RoomBellQueueData, new RoomBellQueueEvent());
 
         // Hotel events

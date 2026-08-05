@@ -140,6 +140,10 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
     }, [activeFurniture, userFurniture]);
 
     useEffect(() => {
+        if(!room) {
+            return;
+        }
+
         if(!roomFurniturePlacer) {
             setDialogHidden("inventory", false);
 
@@ -159,7 +163,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            webSocketClient.sendProtobuff(PlaceRoomFurnitureData, PlaceRoomFurnitureData.create({
+            room.websocket.sendProtobuff(PlaceRoomFurnitureData, PlaceRoomFurnitureData.create({
                 id: activeFurniture.id,
                 furnitureId: activeFurniture.furniture!.id,
                 stackable: activeFurniture.furniture!.flags!.inventoryStackable,
@@ -175,7 +179,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
             setRoomFurniturePlacer(undefined);
         });
 
-    }, [activeFurniture, roomFurniturePlacer]);
+    }, [activeFurniture, roomFurniturePlacer, room]);
 
     const onPlaceInRoomClick = useCallback((userFurniture: UserInventoryFurnitureData) => {
         if(!userFurniture?.furniture) {
@@ -183,7 +187,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
         }
 
         if(userFurniture.furniture?.type === "wallpaper" || userFurniture.furniture?.type === "floor" || userFurniture.furniture?.type === "landscape") {
-            webSocketClient.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
+            room?.websocket.sendProtobuff(PlaceRoomContentFurnitureData, PlaceRoomContentFurnitureData.create({
                 id: userFurniture.id,
                 furnitureId: userFurniture.furniture?.id,
                 stackable: userFurniture.furniture?.flags?.inventoryStackable ?? false
@@ -198,7 +202,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
 
         setRoomFurniturePlacer(RoomFurniturePlacer.fromFurnitureData(clientInstance.roomInstance.value, userFurniture.furniture, userFurniture.userFurniture));
         roomFurniturePlacerId.current = (userFurniture?.furniture.flags?.inventoryStackable)?(userFurniture?.furniture.id):(userFurniture?.id);
-    }, [roomFurniturePlacer]);
+    }, [roomFurniturePlacer, room]);
 
     const handleMouseDown = useCallback((userFurniture: UserInventoryFurnitureData) => {
         if(!allowPlacingInRoom) {

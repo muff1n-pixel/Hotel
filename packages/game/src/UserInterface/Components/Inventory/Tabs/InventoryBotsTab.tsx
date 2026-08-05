@@ -92,6 +92,10 @@ export default function InventoryBotsTab() {
     }, [activeBot, bots]);
 
     useEffect(() => {
+        if(!room) {
+            return;
+        }
+
         if(!roomFurniturePlacer) {
             setDialogHidden("inventory", false);
             
@@ -111,7 +115,7 @@ export default function InventoryBotsTab() {
         setDialogHidden("inventory", true);
 
         roomFurniturePlacer.startPlacing((position, direction) => {
-            webSocketClient.sendProtobuff(PlaceRoomBotData, PlaceRoomBotData.create({
+            room.websocket.sendProtobuff(PlaceRoomBotData, PlaceRoomBotData.create({
                 id: activeBot.id,
 
                 position,
@@ -125,7 +129,7 @@ export default function InventoryBotsTab() {
             setRoomFurniturePlacer(undefined);
         });
 
-    }, [activeBot, roomFurniturePlacer]);
+    }, [activeBot, roomFurniturePlacer, room]);
 
     const onPlaceInRoomClick = useCallback(() => {
         if(!activeBot?.figureConfiguration) {

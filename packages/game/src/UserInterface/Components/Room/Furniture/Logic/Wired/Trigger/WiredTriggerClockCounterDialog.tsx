@@ -32,7 +32,7 @@ export default function WiredTriggerClockCounterDialog({ data, onClose }: RoomFu
             return;
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {

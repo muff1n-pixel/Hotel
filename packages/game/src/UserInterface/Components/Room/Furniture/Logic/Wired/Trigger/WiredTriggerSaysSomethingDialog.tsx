@@ -11,6 +11,7 @@ import WiredCheckbox from "../../../../../../Common/Dialog/Layouts/Wired/WiredCh
 import WiredButton from "../../../../../../Common/Dialog/Layouts/Wired/WiredButton";
 import { webSocketClient } from "../../../../../../..";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type WiredTriggerSaysSomethingDialogData = {
     furniture: RoomInstanceFurniture;
@@ -18,13 +19,15 @@ export type WiredTriggerSaysSomethingDialogData = {
 };
 
 export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [type, setType] = useState(data.data.data?.wiredTriggerUserSaysSomething?.type ?? "match");
     const [message, setMessage] = useState(data.data.data?.wiredTriggerUserSaysSomething?.message ?? "");
     const [hideMessage, setHideMessage] = useState(data.data.data?.wiredTriggerUserSaysSomething?.hideMessage ?? true);
     const [onlyRoomOwner, setOnlyRoomOwner] = useState(data.data.data?.wiredTriggerUserSaysSomething?.onlyRoomOwner ?? false);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
             data: {
                 wiredTriggerUserSaysSomething: {
@@ -37,7 +40,7 @@ export default function WiredTriggerSaysSomethingDialog({ data, onClose }: RoomF
         }));
 
         onClose();
-    }, [type, message, hideMessage, onlyRoomOwner, data, onClose]);
+    }, [type, message, hideMessage, onlyRoomOwner, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

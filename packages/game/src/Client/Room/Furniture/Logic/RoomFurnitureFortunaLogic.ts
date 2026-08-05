@@ -17,7 +17,7 @@ export default class RoomFurnitureFortunaLogic implements FurnitureLogic {
             return;
         }
 
-        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
+        this.room.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.create({
             id: this.roomFurniture.data.id
         }));
     }

@@ -119,7 +119,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
 
                 {(furniture.data.userId && (room?.hasRights || furniture.data.userId === user?.id)) && (
                     <div className="room-furniture-profile-button" onClick={() => {
-                        webSocketClient.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
+                        room?.websocket.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
                             id: furniture.data.id
                         }));
                     }}>
@@ -133,7 +133,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
                             return;
                         }
 
-                        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
                             id: furniture.data.id,
 
                             direction: furniture.item.furnitureRenderer.getNextDirection()

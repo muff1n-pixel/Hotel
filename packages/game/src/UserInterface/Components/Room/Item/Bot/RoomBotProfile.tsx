@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { webSocketClient } from "../../../../..";
 import { UpdateRoomBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;
@@ -14,14 +15,15 @@ export type RoomBotProfileProps = {
 
 export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
     const user = useUser();
+    const room = useRoomInstance();
 
     const handleMottoChange = useCallback((motto: string) => {
-        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+        room?.websocket.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
             id: bot.data.id,
 
             motto
         }));
-    }, [bot]);
+    }, [bot, room]);
 
     return (
         <div style={{

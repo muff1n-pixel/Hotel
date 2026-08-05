@@ -9,6 +9,8 @@ import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
 import { RoomBotsData, UpdateRoomBotData, UserBotData } from "@pixel63/events";
+import { useRoom } from "@UserInterface/Hooks/useRoom";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type BotSpeechDialogProps = {
     data: UserBotData;
@@ -19,6 +21,7 @@ export type BotSpeechDialogProps = {
 export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDialogProps) {
     const dialogs = useDialogs();
     const botSpeech = useBotSpeech(data.id);
+    const room = useRoomInstance();
 
     const [automaticChat, setAutomaticChat] = useState(false);
     const [automaticChatDelay, setAutomaticChatDelay] = useState<number>(0);
@@ -30,7 +33,11 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
     const [activeMessageIndex, setActiveMessageIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        const listener = webSocketClient.addProtobuffListener(RoomBotsData, {
+        if(!room) {
+            return;
+        }
+
+        const listener = room.websocket.addProtobuffListener(RoomBotsData, {
             async handle(payload: RoomBotsData) {
                 if(payload.botsRemoved?.some((removedBot) => removedBot.id === data.id)) {
                     dialogs.closeDialog("bot-speech");
@@ -39,9 +46,9 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
         });
 
         return () => {
-            webSocketClient.removeProtobuffListener(RoomBotsData, listener);
+            room.websocket.removeProtobuffListener(RoomBotsData, listener);
         };
-    }, [data.id, dialogs]);
+    }, [data.id, dialogs, room]);
 
     useEffect(() => {
         if(botSpeech) {
@@ -63,7 +70,11 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
     }, [messages]);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
+        if(!room) {
+            return;
+        }
+
+        room.websocket.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
             id: data.id,
 
             speech: {
@@ -75,7 +86,7 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
         }));
 
         dialogs.closeDialog("bot-speech");
-    }, [data, dialogs, automaticChat, automaticChatDelay, randomizeMessages, messages]);
+    }, [data, dialogs, automaticChat, automaticChatDelay, randomizeMessages, messages, room]);
 
     if(!botSpeech) {
         return null;

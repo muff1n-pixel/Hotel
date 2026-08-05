@@ -155,7 +155,7 @@ export default class RoomCursor extends EventTarget {
                     const nextDirection = otherEntity.item.furnitureRenderer.getNextDirection();
 
                     if((nextDirection !== otherEntity.item.furnitureRenderer.direction) && roomFurnitureItem.item.position && !roomFurnitureItem.item.positionPathData) {
-                        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+                        this.roomRenderer.roomInstance.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
                             id: roomFurnitureItem.data.id,
                             direction: nextDirection
                         }));
@@ -165,7 +165,7 @@ export default class RoomCursor extends EventTarget {
                 }
                 else if(event.ctrlKey || event.metaKey) {
                     if(this.roomRenderer.roomInstance.hasRights || roomFurnitureItem.data.userId === this.roomRenderer.roomInstance.clientInstance.user.value?.id) {
-                        webSocketClient.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
+                        this.roomRenderer.roomInstance.websocket.sendProtobuff(PickupRoomFurnitureData, PickupRoomFurnitureData.create({
                             id: roomFurnitureItem.data.id
                         }));
                     }

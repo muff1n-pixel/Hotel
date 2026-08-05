@@ -5,8 +5,10 @@ import UserContextMenuList from "@UserInterface/Components/Room/Users/UserContex
 import { useTranslation } from "react-i18next";
 import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContextMenuTabProps) {
+    const room = useRoomInstance();
     const [getTranslation] = useTranslation("room");
 
     return (
@@ -15,7 +17,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
                     {Array(3).fill(null).map((_, index) => (
                         <UserContextMenuButton key={index} style={{ flex: 1 }} text={1 + (row * 3) + index} onClick={() => {
-                            webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                            room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                                 message: `:sign ${1 + (row * 3) + index}`
                             }));
 
@@ -27,7 +29,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
 
             <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
                 <UserContextMenuButton style={{ flex: 1 }} text={10} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: `:sign 10`
                     }));
 
@@ -35,7 +37,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
                 
                 <UserContextMenuButton style={{ flex: 1 }} text={0} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: `:sign 0`
                     }));
 
@@ -43,7 +45,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
 
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_11"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 11"
                     }));
 
@@ -53,7 +55,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
 
             <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_12"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 12"
                     }));
 
@@ -61,7 +63,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
 
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_13"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 13"
                     }));
 
@@ -69,7 +71,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
 
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_14"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 14"
                     }));
 
@@ -79,7 +81,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 
             <FlexLayout direction="row" gap={0} style={{ flexWrap: "wrap" }}>
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_15"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 15"
                     }));
 
@@ -87,7 +89,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
 
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_16"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 16"
                     }));
 
@@ -95,7 +97,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                 }}/>
                 
                 <UserContextMenuButton style={{ flex: 1 }} text={(<div className="sprite_room_user_signs_17"/>)} onClick={() => {
-                    webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+                    room?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
                         message: ":sign 17"
                     }));
 

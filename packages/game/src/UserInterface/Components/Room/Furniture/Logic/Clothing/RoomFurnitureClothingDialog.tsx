@@ -10,6 +10,7 @@ import DialogHeaderContent from "@UserInterface/Common/Dialog/Components/DialogH
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomFurnitureClothingDialogData = {
     furniture: RoomInstanceFurniture;
@@ -17,13 +18,15 @@ export type RoomFurnitureClothingDialogData = {
 };
 
 export default function RoomFurnitureClothingDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const handleBind = useCallback(() => {
         onClose?.();
 
-        webSocketClient.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.fromJSON({
+        room?.websocket.sendProtobuff(UseRoomFurnitureData, UseRoomFurnitureData.fromJSON({
             id: data.data.id,
         }));
-    }, [data, onClose]);
+    }, [data, onClose, room]);
 
     if(hidden) {
         return null;

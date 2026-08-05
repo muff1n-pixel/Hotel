@@ -22,7 +22,7 @@ export default function WiredConditionFurniHasUsersDialog({ data, onClose }: Roo
             return;
         }
 
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {

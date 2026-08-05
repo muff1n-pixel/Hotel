@@ -74,7 +74,7 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
             }}>
                 {(pet.data.userId && (room?.hasRights || pet.data.userId === user?.id)) && (
                     <div className="room-furniture-profile-button" onClick={() => {
-                        webSocketClient.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
+                        room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                             id: pet.data.id
                         }));
                     }}>
@@ -84,7 +84,7 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                 
                 {(user.scratches > 0) && (
                     <div className="room-furniture-profile-button" onClick={() => {
-                        webSocketClient.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
+                        room?.websocket.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
                             petId: pet.data.id
                         }));
                     }}>

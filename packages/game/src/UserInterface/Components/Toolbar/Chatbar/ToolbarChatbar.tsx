@@ -58,7 +58,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            webSocketClient.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
+            roomInstance?.websocket.sendProtobuff(SetRoomChatTypingData, SetRoomChatTypingData.create({
                 typing: (value.length)?(true):(false)
             }));
         }, 200);
@@ -66,7 +66,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
         return () => {
             clearTimeout(timeout);
         };
-    }, [typing]);
+    }, [typing, roomInstance]);
 
     const handleSubmit = useCallback(() => {
         if(!value.length) {
@@ -154,7 +154,7 @@ export default function ToolbarChatbar({ style }: ToolbarChatbarProps) {
             }
         }
 
-        webSocketClient.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
+        roomInstance?.websocket.sendProtobuff(SendRoomChatMessageData, SendRoomChatMessageData.create({
             message: value,
             focusedUserId
         }));

@@ -10,6 +10,7 @@ import { webSocketClient } from "../../../../../../..";
 import WiredSelection from "../../../../../../Common/Dialog/Layouts/Wired/Selection/WiredSelection";
 import WiredCheckbox from "../../../../../../Common/Dialog/Layouts/Wired/WiredCheckbox";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type WiredTriggerUserPerformsActionDialog = {
     furniture: RoomInstanceFurniture;
@@ -17,12 +18,14 @@ export type WiredTriggerUserPerformsActionDialog = {
 };
 
 export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const room = useRoomInstance();
+
     const [action, setAction] = useState(data.data.data?.wiredTriggerUserPerformsAction?.action ?? "Wave");
     const [filter, setFilter] = useState(data.data.data?.wiredTriggerUserPerformsAction?.filter ?? false);
     const [filterId, setFilterId] = useState(data.data.data?.wiredTriggerUserPerformsAction?.filterId ?? 1);
 
     const handleApply = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
+        room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,
 
             data: {
@@ -35,7 +38,7 @@ export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: 
         }));
 
         onClose();
-    }, [action, filter, filterId, data, onClose]);
+    }, [action, filter, filterId, data, onClose, room]);
 
     return (
         <WiredDialog onClose={onClose}>

@@ -9,6 +9,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { webSocketClient } from "@Game/index";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type EditRoomMapDialogProps = {
     data?: {
@@ -20,6 +21,8 @@ export type EditRoomMapDialogProps = {
 
 export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMapDialogProps) {
     const { openUniqueDialog, closeDialog } = useDialogs();
+
+    const room = useRoomInstance();
 
     const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -62,7 +65,7 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
     }));
 
     const handleUpdate = useCallback(() => {
-        webSocketClient.sendProtobuff(UpdateRoomMapData, UpdateRoomMapData.create({
+        room?.websocket.sendProtobuff(UpdateRoomMapData, UpdateRoomMapData.create({
             id: data?.map?.id,
 
             grid: structure.grid,
@@ -74,7 +77,7 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
         }));
 
         onClose?.();
-    }, [index, structure, membership, data, onClose]);
+    }, [index, structure, membership, data, onClose, room]);
 
     const handleDelete = useCallback(() => {
         if(!confirmDelete) {
@@ -87,12 +90,12 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
             return;
         }
 
-        webSocketClient.sendProtobuff(DeleteRoomMapData, DeleteRoomMapData.create({
+        room?.websocket.sendProtobuff(DeleteRoomMapData, DeleteRoomMapData.create({
             id: data.map.id,
         }));
 
         onClose?.();
-    }, [confirmDelete, data, onClose]);
+    }, [confirmDelete, data, onClose, room]);
 
     return (
         <Dialog title="Room Map Editor" editMode hidden={hidden} onClose={onClose} initialPosition="center" width={320} assumedHeight={500} height={"auto"}>
