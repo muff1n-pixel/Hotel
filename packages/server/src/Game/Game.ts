@@ -9,6 +9,8 @@ import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
 import PetCommandHandler from "./Rooms/Pets/Commands/PetCommandHandler.js";
+import { ServerTokenModel } from "./Database/Models/Server/ServerTokenModel.js";
+import { randomBytes, randomUUID } from "node:crypto";
 
 export default class Game {
     public readonly hotelInformation;
@@ -22,6 +24,8 @@ export default class Game {
     public readonly petCommandHandler;
     public readonly eventHandler;
     public readonly webSocket;
+
+    public readonly secretKey: string = randomBytes(32).toString("hex");
 
     public readonly users: User[];
 
@@ -44,6 +48,15 @@ export default class Game {
     public async loadModels() {
         await this.hotelSettings.loadModels();
         await this.roomNavigatorManager.loadModels();
+    }
+
+    public async createServerToken() {
+        await ServerTokenModel.destroy();
+    
+        await ServerTokenModel.create({
+            id: randomUUID(),
+            secretKey: this.secretKey
+        });
     }
 
     public getUserById(id: string) {

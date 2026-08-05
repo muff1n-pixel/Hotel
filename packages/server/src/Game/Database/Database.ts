@@ -50,6 +50,7 @@ import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/H
 import { initializeGroupModel } from "./Models/Groups/RoomGroupModel.js";
 import { initializeUserGroupModel } from "./Models/Users/Groups/UserGroupModel.js";
 import { initializeHotelActivityRewardModel } from "./Models/Hotel/HotelActivityRewardModel.js";
+import { initializeServerTokenModel } from "./Models/Server/ServerTokenModel.js";
 
 export const sequelize = new Sequelize({
     ...config.database,
@@ -118,6 +119,8 @@ export async function initializeModels() {
     initializeUserClothingModel(sequelize);
     initializeUserEffectModel(sequelize);
     initializeUserFigureModel(sequelize);
+
+    initializeServerTokenModel(sequelize);
 
     await sequelize.sync();
 
