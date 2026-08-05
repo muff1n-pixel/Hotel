@@ -1,6 +1,4 @@
 import EventHandler from "./Events/UserEventHandler.js";
-import RoomNavigatorManager from "../Room/Rooms/Navigator/RoomNavigatorManager.js";
-import RoomManager from "../Room/Rooms/RoomManager.js";
 import User from "./Users/User.js";
 import WebSocket from "./WebSocket/WebSocket.js";
 import HotelInformation from "./Hotel/HotelInformation.js";
@@ -9,14 +7,14 @@ import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
 import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
+import RoomServers from "./Rooms/RoomServers.js";
 
 export default class Game {
     public readonly hotelInformation;
     public readonly hotelSettings;
     public readonly hotelActivityRewards;
 
-    public readonly roomManager;
-    public readonly roomNavigatorManager;
+    public readonly roomServers;
 
     public readonly eventHandler;
     public readonly webSocket;
@@ -30,8 +28,7 @@ export default class Game {
         this.hotelSettings = new HotelSettings();
         this.hotelActivityRewards = new HotelActivityRewards(this);
 
-        this.roomNavigatorManager = new RoomNavigatorManager();
-        this.roomManager = new RoomManager();
+        this.roomServers = new RoomServers(this);
 
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
@@ -41,7 +38,6 @@ export default class Game {
 
     public async loadModels() {
         await this.hotelSettings.loadModels();
-        await this.roomNavigatorManager.loadModels();
     }
 
     public async createServerToken() {

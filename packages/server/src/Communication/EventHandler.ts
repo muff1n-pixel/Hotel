@@ -1,4 +1,4 @@
-import { MessageType } from "@pixel63/events";
+import { MessageType, UnknownMessage } from "@pixel63/events";
 import { EventEmitter } from "node:events";
 import { RawData } from "ws";
 import ProtobuffListener from "./Interfaces/ProtobuffListener";
@@ -40,7 +40,7 @@ export default class EventHandler<User> extends EventEmitter {
     }
 
     addProtobuffListener<T>(message: MessageType, protobuffListener: ProtobuffListener<User, T>) {
-        super.addListener(message.$type, (user: User, event, durationSinceLastEvent) => {
+        const listener = (user: User, event: Uint8Array<ArrayBufferLike>, durationSinceLastEvent: number) => {
             if(protobuffListener.minimumDurationBetweenEvents !== undefined) {
                 if(durationSinceLastEvent < protobuffListener.minimumDurationBetweenEvents) {
                     console.warn("Ignoring event from user, duration since last event " + durationSinceLastEvent + " is less than allowed " + protobuffListener.minimumDurationBetweenEvents);
@@ -52,12 +52,14 @@ export default class EventHandler<User> extends EventEmitter {
             protobuffListener.handle(user, message.decode(event) as T).catch(console.error);
 
             //user.spamProtection.registerEventTimestamp(message.$type);
-        });
+        };
 
-        return this;
+        super.addListener(message.$type, listener);
+
+        return listener;
     }
 
-    removeProtobuffListener(message: MessageType, listener: (event: Uint8Array<ArrayBufferLike>) => void) {
+    removeProtobuffListener(message: MessageType, listener: (...args: any[]) => void) {
         super.removeListener(message.$type, listener);
     }
 }

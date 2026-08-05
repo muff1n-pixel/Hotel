@@ -30,6 +30,8 @@ export async function startServer() {
 
     await game.hotelInformation.resetUsersOnline();
 
+    game.roomServers.addServer("localhost", 8081);
+
     game.webSocket.ready = true;
 
     console.log("Server started");

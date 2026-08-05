@@ -167,7 +167,7 @@ export default class WebSocket {
             const type = buffer.subarray(0, sep).toString("utf-8");
             const payload = buffer.subarray(sep + 1);
 
-            console.log("Received " + type);
+            //console.log("Received " + type);
 
             if(type === UserReadyData.$type) {
                 this.handleUserReady(pendingConnection);
@@ -190,9 +190,9 @@ export default class WebSocket {
         pendingConnection.websocket.addListener("close", () => {
             (async () => {
                 if(user.room) {
-                    const roomUser = user.room.getRoomUser(user);
+                    //const roomUser = user.room.getRoomUser(user);
 
-                    roomUser.disconnect();
+                    //roomUser.disconnect();
                 }
 
                 console.log("User " + user.model.name + " disconnected.");
@@ -234,7 +234,7 @@ export default class WebSocket {
 
         user.friends.updateFriends();
 
-        if(pendingConnection.url.searchParams.has("roomId")) {
+        /*if(pendingConnection.url.searchParams.has("roomId")) {
             const room = await game.roomManager.getOrLoadRoomInstance(pendingConnection.url.searchParams.get("roomId")!);
 
             room?.addUserClient(user);
@@ -243,7 +243,7 @@ export default class WebSocket {
             const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
 
             room?.addUserClient(user);
-        }
+        }*/
 
         const userBadgesCount = await UserBadgeModel.count({
             where: {

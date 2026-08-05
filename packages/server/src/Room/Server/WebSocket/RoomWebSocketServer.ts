@@ -1,13 +1,17 @@
-import WebSocket, { WebSocketServer } from "ws";
+import WebSocket, { RawData, WebSocketServer } from "ws";
 import { config } from "../../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
 import RoomServer from "../RoomServer";
 import { MessageType, UnknownMessage } from "@pixel63/events";
+import { ServerTokenModel } from "../../../Database/Models/Server/ServerTokenModel";
+import EventHandler from "../../../Communication/EventHandler";
 
 export default class RoomWebSocketServer {
     private readonly server: WebSocketServer;
     private gameServerWebSocket?: WebSocket;
+
+    public eventHandler = new EventHandler();
 
     constructor(private readonly roomServer: RoomServer) {
         this.server = new WebSocketServer({
@@ -16,9 +20,10 @@ export default class RoomWebSocketServer {
         });
 
         this.server.addListener("connection", this.handleConnection.bind(this));
+        this.server.addListener("message", this.handleMessage.bind(this));
     }
 
-    private handleConnection(websocket: WebSocket, request: IncomingMessage) {
+    private async handleConnection(websocket: WebSocket, request: IncomingMessage) {
         if(!request.url) {
             console.error("Connection does not contain a URL.");
 
@@ -40,15 +45,25 @@ export default class RoomWebSocketServer {
         }
 
         if(url.searchParams.get("type") === "server") {
-            this.handleServerConnection(websocket, request, accessToken, url);
+            await this.handleServerConnection(websocket, request, accessToken, url);
         }
         else {
             this.handleUserConnection(websocket, request, accessToken, url);
         }
     }
 
-    private handleServerConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
-        const payload = this.getAccessTokenPayload(accessToken, this.roomServer.accessToken);
+    private async handleServerConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
+        const serverToken = await ServerTokenModel.findOne();
+
+        if(!serverToken) {
+            console.error("Server access token does not exist!");
+
+            websocket.close();
+
+            return;
+        }
+
+        const payload = this.getAccessTokenPayload(accessToken, serverToken.secretKey);
 
         if(!payload) {
             console.error("Server access token is invalid.");
@@ -59,10 +74,16 @@ export default class RoomWebSocketServer {
         }
 
         this.gameServerWebSocket = websocket;
+
+        console.log("[RoomWebSocketServer] Connected to game server!");
     }
 
     private handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
         websocket.close();
+    }
+    
+    private async handleMessage(data: RawData) {
+        this.eventHandler.decodeAndDispatchMessages(null, data);
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

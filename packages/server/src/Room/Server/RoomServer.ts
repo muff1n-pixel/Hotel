@@ -8,7 +8,7 @@ export default class RoomServer {
     public readonly commandHandler: CommandHandler;
     public readonly petCommandHandler: PetCommandHandler;
 
-    constructor(public readonly accessToken: string) {
+    constructor() {
         this.websocket = new RoomWebSocketServer(this);  
         
         this.commandHandler = new CommandHandler();

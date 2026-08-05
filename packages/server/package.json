@@ -2,6 +2,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "tsx src/Game/index.ts",
+    "room": "tsx src/Room/index.ts",
     "build": "npx tsc",
     "dev": "tsx --watch src/Game/index.ts",
     "init": "tsx src/Game/index.ts --init",

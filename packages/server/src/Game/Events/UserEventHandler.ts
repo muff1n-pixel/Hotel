@@ -331,40 +331,32 @@ export default class UserEventHandler extends EventHandler<User> {
         // User room events
         this.addProtobuffListener(GetUserRoomsData, new GetUserRoomsEvent());
 
-        this.addProtobuffListener(RoomReadyData, new RoomReadyEvent());
+        this.addProtobuffListener(EnterRoomData, new EnterRoomEvent());
+        this.addProtobuffListener(EnterRandomRoomData, new EnterRandomRoomEvent());
+        this.addProtobuffListener(LeaveRoomData, new LeaveRoomEvent());
             
-        this
-            .addProtobuffListener(EnterRoomData, new EnterRoomEvent())
-            .addProtobuffListener(EnterRandomRoomData, new EnterRandomRoomEvent())
-            .addProtobuffListener(LeaveRoomData, new LeaveRoomEvent())
+        this.addProtobuffListener(GetUserData, new GetUserEvent());
+        this.addProtobuffListener(GetUserInventoryFurnitureData, new GetUserFurnitureEvent());
+        this.addProtobuffListener(GetUserInventoryBotsData, new GetUserBotsEvent());
+        this.addProtobuffListener(GetUserBadgesData, new GetUserBadgesEvent());
+        this.addProtobuffListener(GetUserInventoryBadgesData, new GetInventoryBadgesEvent());
+        this.addProtobuffListener(UpdateUserBadgeData, new UpdateUserBadgeEvent());
+        this.addProtobuffListener(SetUserRoomChatStyleData, new SetRoomChatStyleEvent());
+        this.addProtobuffListener(SetUserFigureConfigurationData, new SetFigureConfigurationEvent());
+        this.addProtobuffListener(SetUserHomeRoomData, new SetHomeRoomEvent());;
             
-        this
-            .addProtobuffListener(GetUserData, new GetUserEvent())
-            .addProtobuffListener(GetUserInventoryFurnitureData, new GetUserFurnitureEvent())
-            .addProtobuffListener(GetUserInventoryBotsData, new GetUserBotsEvent())
-            .addProtobuffListener(GetUserBadgesData, new GetUserBadgesEvent())
-            .addProtobuffListener(GetUserInventoryBadgesData, new GetInventoryBadgesEvent())
-            .addProtobuffListener(UpdateUserBadgeData, new UpdateUserBadgeEvent())
-            .addProtobuffListener(SetUserRoomChatStyleData, new SetRoomChatStyleEvent())
-            .addProtobuffListener(SetUserFigureConfigurationData, new SetFigureConfigurationEvent())
-            .addProtobuffListener(SetUserHomeRoomData, new SetHomeRoomEvent());
+        this.addProtobuffListener(GetRoomMapsData, new GetRoomMapsEvent());
+        this.addProtobuffListener(GetNavigatorData, new GetNavigatorRoomsEvent());
+        this.addProtobuffListener(GetRoomCategoriesData, new GetRoomCategoriesEvent());;
             
-        this
-            .addProtobuffListener(GetRoomMapsData, new GetRoomMapsEvent())
-            .addProtobuffListener(GetNavigatorData, new GetNavigatorRoomsEvent())
-            .addProtobuffListener(GetRoomCategoriesData, new GetRoomCategoriesEvent());
-            
-        this
-            .addProtobuffListener(GetHotelFeedbackData, new GetHotelFeedbackEvent());
+        this.addProtobuffListener(GetHotelFeedbackData, new GetHotelFeedbackEvent());;
 
-        this
-            .addProtobuffListener(UpdateShopPageData, new UpdateShopPageEvent())
-            .addProtobuffListener(UpdateShopFurnitureData, new UpdateShopFurnitureEvent())
-            .addProtobuffListener(UpdateShopMembershipData, new UpdateShopMembershipEvent())
-            .addProtobuffListener(UpdateShopBotData, new UpdateShopBotEvent());
+        this.addProtobuffListener(UpdateShopPageData, new UpdateShopPageEvent());
+        this.addProtobuffListener(UpdateShopFurnitureData, new UpdateShopFurnitureEvent());
+        this.addProtobuffListener(UpdateShopMembershipData, new UpdateShopMembershipEvent());
+        this.addProtobuffListener(UpdateShopBotData, new UpdateShopBotEvent());;
 
-        this
-            .addProtobuffListener(SetUserMottoData, new SetMottoEvent());
+        this.addProtobuffListener(SetUserMottoData, new SetMottoEvent());;
 
         this.addProtobuffListener(GetFurnitureTypesData, new GetFurnitureTypesEvent());
 
