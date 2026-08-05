@@ -1,9 +1,9 @@
 import { EnterRoomBellQueueData, RoomBellQueueData, RoomBellQueueUserData, UpdateRoomBellQueueData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../Game/Users/User";
-import { game } from "../../../../Game";
+import User from "../../../Users/User";
+import { UserProtobuffListener } from "../../Interfaces/UserProtobuffListener";
+import { game } from "../../..";
 
-export default class UpdateRoomBellQueueEvent implements ProtobuffListener<UpdateRoomBellQueueData> {
+export default class UpdateRoomBellQueueEvent implements UserProtobuffListener<UpdateRoomBellQueueData> {
     async handle(user: User, payload: UpdateRoomBellQueueData) {
         if(!user.room) {
             throw new Error("User is not in a room.");

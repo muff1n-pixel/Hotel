@@ -1,12 +1,14 @@
 syntax = "proto3";
 
 message ServerUserInventoryUpdatedData {
-    repeated string furniture_added = 1;
-    repeated string furniture_removed = 2;
+    string user_id = 1;
+
+    repeated string furniture_added = 2;
+    repeated string furniture_removed = 3;
     
-    repeated string pets_added = 3;
-    repeated string pets_removed = 4;
+    repeated string pets_added = 4;
+    repeated string pets_removed = 5;
     
-    repeated string bots_added = 5;
-    repeated string bots_removed = 6;
+    repeated string bots_added = 6;
+    repeated string bots_removed = 7;
 }

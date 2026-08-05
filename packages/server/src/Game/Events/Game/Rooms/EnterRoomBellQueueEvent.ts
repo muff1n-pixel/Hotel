@@ -1,9 +1,9 @@
 import { EnterRoomBellQueueData, RoomBellQueueData, RoomBellQueueUserData, UpdateRoomBellQueueData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../Game/Users/User";
-import { game } from "../../../../Game";
+import User from "../../../Users/User";
+import { UserProtobuffListener } from "../../Interfaces/UserProtobuffListener";
+import { game } from "../../..";
 
-export default class EnterRoomBellQueueEvent implements ProtobuffListener<EnterRoomBellQueueData> {
+export default class EnterRoomBellQueueEvent implements UserProtobuffListener<EnterRoomBellQueueData> {
     minimumDurationBetweenEvents?: number = 10_000;
 
     async handle(user: User, payload: EnterRoomBellQueueData) {

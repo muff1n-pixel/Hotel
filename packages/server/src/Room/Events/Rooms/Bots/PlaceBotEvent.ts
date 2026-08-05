@@ -35,6 +35,7 @@ export default class PlaceBotEvent implements RoomProtobuffListener<PlaceRoomBot
         }
 
         roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            userId: user.id,
             botsRemoved: [ userBot.id ]
         }));
 

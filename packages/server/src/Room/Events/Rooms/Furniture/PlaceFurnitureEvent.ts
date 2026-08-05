@@ -77,6 +77,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
         await RoomFurniture.place(user.roomUser.room, userFurniture, payload.position, payload.direction);
 
         roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            userId: user.id,
             furnitureRemoved: [userFurniture.id]
         }));
     }

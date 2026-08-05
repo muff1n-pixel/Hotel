@@ -1,24 +1,16 @@
-import { GetRoomWiredLogsData, GetRoomWiredMonitorData, RoomWiredLogsData, RoomWiredMonitorData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
-import User from "../../../../Game/Users/User.js";
+import { GetRoomWiredLogsData, RoomWiredLogsData } from "@pixel63/events";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
 
-export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomWiredLogsData> {
+export default class GetRoomWiredLogsEvent implements RoomProtobuffListener<GetRoomWiredLogsData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: User, payload: GetRoomWiredLogsData) {
-        if(!user.room) {
+    async handle(user: RoomWebSocketUser, payload: GetRoomWiredLogsData) {
+        if(!user.roomUser.hasRights()) {
             return;
         }
 
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
-            return;
-        }
-
-        const room = user.room;
-
-        let filteredLogs = room.wired.logs;
+        let filteredLogs = user.roomUser.room.wired.logs;
 
         if(payload.level) {
             filteredLogs = filteredLogs.filter((log) => log.level === payload.level);
@@ -35,7 +27,7 @@ export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomW
         const logsPerPage = 20;
 
         user.sendProtobuff(RoomWiredLogsData, RoomWiredLogsData.create({
-            roomId: user.room.model.id,
+            roomId: user.roomUser.room.model.id,
 
             logs: filteredLogs.slice(payload.page * logsPerPage, Math.min((payload.page * logsPerPage) + logsPerPage, filteredLogs.length)).map((log) => ({
                 category: log.category,

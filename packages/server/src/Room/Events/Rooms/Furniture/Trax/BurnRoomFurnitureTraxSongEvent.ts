@@ -1,31 +1,25 @@
-import { FurnitureTraxSongMetaData, RoomFurnitureData, BurnRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData, WidgetNotificationData, FurnitureData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../../Game/Users/User";
+import { RoomFurnitureData, BurnRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData, WidgetNotificationData, FurnitureData } from "@pixel63/events";
 import { randomUUID } from "crypto";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
 
-export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener<BurnRoomFurnitureTraxSongData> {
+export default class BurnRoomFurnitureTraxSongEvent implements RoomProtobuffListener<BurnRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: User, payload: BurnRoomFurnitureTraxSongData) {
-        if(!user.room) {
-            return;
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
+    async handle(user: RoomWebSocketUser, payload: BurnRoomFurnitureTraxSongData) {
+        if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
 
-        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
+        const furniture = user.roomUser.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
 
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
 
-        if(furniture?.model.userId !== user.model.id) {
+        if(furniture?.model.userId !== user.id) {
             throw new Error("User is not owner of Trax.");
         }
         
@@ -48,7 +42,9 @@ export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener
             throw new Error("Song is already burned.");
         }
 
-        if(user.model.credits < 10) {
+        const model = await user.getUser();
+
+        if(model.credits < 10) {
             throw new Error("User cannot afford burning.");
         }
 
@@ -62,15 +58,15 @@ export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener
             throw new Error("Song disk furniture does not exist.");
         }
 
-        user.model.credits -= 30;
+        model.credits -= 30;
 
-        await user.model.save();
+        await model.save();
         
         const userFurniture = await UserFurnitureModel.create({
             id: randomUUID(),
 
             name: existingSong.name,
-            description: `By ${user.model.name}`,
+            description: `By ${model.name}`,
 
             position: null,
             direction: null,
@@ -84,7 +80,7 @@ export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener
             }),
             
             roomId: null,
-            userId: user.model.id,
+            userId: model.id,
             traxId: furniture.model.id,
             furnitureId: songDiskFurniture.id
         });
@@ -95,10 +91,10 @@ export default class BurnRoomFurnitureTraxSongEvent implements ProtobuffListener
             data
         });
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+        user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.model.id,
+                    userId: user.id,
                     furniture: furniture.model
                 }
             ]

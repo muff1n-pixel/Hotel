@@ -1,31 +1,25 @@
 import { RequestRoomUserTradingData, RoomUserTradingRequestData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener.js";
-import User from "../../../../../Game/Users/User.js";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
 
-export default class RequestRoomUserTradingEvent implements ProtobuffListener<RequestRoomUserTradingData> {
+export default class RequestRoomUserTradingEvent implements RoomProtobuffListener<RequestRoomUserTradingData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: User, payload: RequestRoomUserTradingData) {
-        if(!user.room) {
-            throw new Error("User is not in a room.");
-        }
-
-        if(payload.targetUserId === user.model.id) {
+    async handle(user: RoomWebSocketUser, payload: RequestRoomUserTradingData) {
+        if(payload.targetUserId === user.id) {
             throw new Error("User cannot trade with themselves.");
         }
 
-        const roomUser = user.room.getRoomUser(user);
-
-        if(roomUser.trading.tradingWithUser) {
+        if(user.roomUser.trading.tradingWithUser) {
             throw new Error("User is already trading with a user.");
         }
 
-        const targetRoomUser = user.room.getRoomUserById(payload.targetUserId);
+        const targetRoomUser = user.roomUser.room.getRoomUserById(payload.targetUserId);
 
-        if(targetRoomUser.trading.requestedTradingWithUser?.user.model.id === user.model.id) {
+        if(targetRoomUser.trading.requestedTradingWithUser?.user.model.id === user.id) {
             if(payload.accept) {
-                roomUser.trading.startTrading(targetRoomUser);
-                targetRoomUser.trading.startTrading(roomUser);
+                user.roomUser.trading.startTrading(targetRoomUser);
+                targetRoomUser.trading.startTrading(user.roomUser);
             }
             else {
                 delete targetRoomUser.trading.requestedTradingWithUser;
@@ -34,13 +28,13 @@ export default class RequestRoomUserTradingEvent implements ProtobuffListener<Re
             return;
         }
         
-        switch(roomUser.room.model.trading) {
+        switch(user.roomUser.room.model.trading) {
             case "disabled": {
                 throw new Error("Trading is disabled in room.");
             }
 
             case "rights": {
-                if(!roomUser.hasRights()) {
+                if(!user.roomUser.hasRights()) {
                     throw new Error("Trading is restricted to users with rights.");
                 }
 
@@ -52,10 +46,10 @@ export default class RequestRoomUserTradingEvent implements ProtobuffListener<Re
             }
         }
 
-        roomUser.trading.requestedTradingWithUser = targetRoomUser;
+        user.roomUser.trading.requestedTradingWithUser = targetRoomUser;
 
         targetRoomUser.user.sendProtobuff(RoomUserTradingRequestData, RoomUserTradingRequestData.create({
-            userId: user.model.id
+            userId: user.id
         }));
     }
 }

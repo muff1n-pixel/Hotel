@@ -1,26 +1,17 @@
 import { GetRoomWiredMonitorData, RoomWiredMonitorData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
-import User from "../../../../Game/Users/User.js";
-import { game } from "../../../../Game/index.js";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
 
-export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRoomWiredMonitorData> {
+export default class GetRoomWiredMonitorEvent implements RoomProtobuffListener<GetRoomWiredMonitorData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: User) {
-        if(!user.room) {
+    async handle(user: RoomWebSocketUser) {
+        if(!user.roomUser.hasRights()) {
             return;
         }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
-            return;
-        }
-
-        const room = user.room;
 
         user.sendProtobuff(RoomWiredMonitorData, RoomWiredMonitorData.create({
-            roomId: user.room.model.id,
+            roomId: user.roomUser.room.model.id,
 
             statistics: {
                 heavy: false,
@@ -28,18 +19,18 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
                 variables: [
                     {
                         type: "wired_usage",
-                        value: room.wired.executions.length,
-                        maxValue: game.hotelSettings.roomWiredMaxUsage
+                        value: user.roomUser.room.wired.executions.length,
+                        maxValue: 0,//game.hotelSettings.roomWiredMaxUsage
                     },
                     {
                         type: "floor_furni",
-                        value: room.floorFurnitureCount,
-                        maxValue: game.hotelSettings.roomMaxFloorFurniture
+                        value: user.roomUser.room.floorFurnitureCount,
+                        maxValue: 0,//game.hotelSettings.roomMaxFloorFurniture
                     },
                     {
                         type: "wall_furni",
-                        value: room.wallFurnitureCount,
-                        maxValue: game.hotelSettings.roomMaxWallFurniture
+                        value: user.roomUser.room.wallFurnitureCount,
+                        maxValue: 0,//game.hotelSettings.roomMaxWallFurniture
                     },
                     {
                         type: "permanent_furni_vars",
@@ -59,7 +50,7 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
                 ]
             },
 
-            logs: roomUser.room.wired.getLogCategories().map((log) => ({
+            logs: user.roomUser.room.wired.getLogCategories().map((log) => ({
                 category: log.category,
                 level: log.level,
                 amount: log.amount,

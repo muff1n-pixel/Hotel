@@ -1,35 +1,29 @@
 import { UpdateRoomUserTradingData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener.js";
-import User from "../../../../../Game/Users/User.js";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
 
-export default class UpdateRoomUserTradingEvent implements ProtobuffListener<UpdateRoomUserTradingData> {
+export default class UpdateRoomUserTradingEvent implements RoomProtobuffListener<UpdateRoomUserTradingData> {
     minimumDurationBetweenEvents?: number = 100;
     
-    async handle(user: User, payload: UpdateRoomUserTradingData) {
-        if(!user.room) {
-            throw new Error("User is not in a room.");
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(payload.userId !== roomUser.trading.tradingWithUser?.user.model.id) {
+    async handle(user: RoomWebSocketUser, payload: UpdateRoomUserTradingData) {
+        if(payload.userId !== user.roomUser.trading.tradingWithUser?.user.model.id) {
             throw new Error("Requested trading user is not being traded with.");
         }
 
         if(payload.addUserFurnitureId) {
-            await roomUser.trading.addUserFurniture(payload.addUserFurnitureId, payload.addUserFurnitureQuantity);
+            await user.roomUser.trading.addUserFurniture(payload.addUserFurnitureId, payload.addUserFurnitureQuantity);
         }
         
         if(payload.removeUserFurnitureId) {
-            await roomUser.trading.removeUserFurniture(payload.removeUserFurnitureId);
+            await user.roomUser.trading.removeUserFurniture(payload.removeUserFurnitureId);
         }
         
-        if(payload.lock && !roomUser.trading.locked) {
-            roomUser.trading.setLocked();
+        if(payload.lock && !user.roomUser.trading.locked) {
+            user.roomUser.trading.setLocked();
         }
 
         if(payload.cancel) {
-            roomUser.trading.cancel();
+            user.roomUser.trading.cancel();
         }
     }
 }

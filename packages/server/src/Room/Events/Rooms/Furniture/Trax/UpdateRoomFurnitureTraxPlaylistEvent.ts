@@ -1,23 +1,16 @@
-import { FurnitureTraxSongMetaData, RoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UserFurnitureTraxData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../../Game/Users/User";
-import { randomUUID } from "crypto";
+import { RoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UserFurnitureTraxData } from "@pixel63/events";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
 
-export default class UpdateRoomFurnitureTraxPlaylistEvent implements ProtobuffListener<UpdateRoomFurnitureTraxPlaylistData> {
+export default class UpdateRoomFurnitureTraxPlaylistEvent implements RoomProtobuffListener<UpdateRoomFurnitureTraxPlaylistData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: User, payload: UpdateRoomFurnitureTraxPlaylistData) {
-        if(!user.room) {
-            return;
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
+    async handle(user: RoomWebSocketUser, payload: UpdateRoomFurnitureTraxPlaylistData) {
+        if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
 
-        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
+        const furniture = user.roomUser.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
 
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
@@ -45,10 +38,10 @@ export default class UpdateRoomFurnitureTraxPlaylistEvent implements ProtobuffLi
             animation: (data.trax.playlist.length)?(furniture.model.animation):(0)
         });
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+        user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.model.id,
+                    userId: user.id,
                     furniture: furniture.model
                 }
             ]

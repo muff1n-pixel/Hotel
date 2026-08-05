@@ -1,31 +1,25 @@
-import { FurnitureTraxSongMetaData, RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../../Game/Users/User";
+import { RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxData, UserFurnitureCustomData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
-import { game } from "../../../../../Game";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
+import { roomServer } from "../../../..";
 
-export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListener<DeleteRoomFurnitureTraxSongData> {
+export default class DeleteRoomFurnitureTraxSongEvent implements RoomProtobuffListener<DeleteRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: User, payload: DeleteRoomFurnitureTraxSongData) {
-        if(!user.room) {
-            return;
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
+    async handle(user: RoomWebSocketUser, payload: DeleteRoomFurnitureTraxSongData) {
+        if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
 
-        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
+        const furniture = user.roomUser.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
 
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
 
-        if(furniture?.model.userId !== user.model.id) {
+        if(furniture?.model.userId !== user.id) {
             throw new Error("User is not owner of Trax.");
         }
         
@@ -63,11 +57,10 @@ export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListen
                 });
 
                 if(userFurniture.userId) {
-                    const user = game.getUserById(userFurniture.userId);
-
-                    if(user) {
-                        await user.getInventory().addFurniture(userFurniture);
-                    }
+                    roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                        userId: userFurniture.userId,
+                        furnitureAdded: [userFurniture.id]
+                    }));
                 }
             }
         }
@@ -80,10 +73,10 @@ export default class DeleteRoomFurnitureTraxSongEvent implements ProtobuffListen
             animation: (data.trax.playlist.length)?(furniture.model.animation):(0)
         });
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+        user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.model.id,
+                    userId: user.id,
                     furniture: furniture.model
                 }
             ]

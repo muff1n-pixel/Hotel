@@ -10,6 +10,7 @@ export default class RoomWebSocketUser {
     public readonly id = "";
 
     public readonly roomUser: RoomUser = 0 as any;
+    public roomChatStyleId: string = "";
 
     public readonly permissions: UserPermissions;
 
@@ -19,5 +20,15 @@ export default class RoomWebSocketUser {
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
         this.server.websocket.sendProtobuff(this.websocket, message, payload);
+    }
+
+    public async getUser() {
+        const user = await UserModel.findByPk(this.id);
+
+        if(!user) {
+            throw new Error("Failed to find user?");
+        }
+
+        return user;
     }
 }

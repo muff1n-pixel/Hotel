@@ -1,29 +1,23 @@
 import { FurnitureTraxSongMetaData, RoomFurnitureData, UpdateRoomFurnitureTraxSongData, UserFurnitureTraxData } from "@pixel63/events";
-import ProtobuffListener from "../../../../../Game/Events/Interfaces/UserProtobuffListener";
-import User from "../../../../../Game/Users/User";
 import { randomUUID } from "crypto";
+import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
 
-export default class UpdateRoomFurnitureTraxSongEvent implements ProtobuffListener<UpdateRoomFurnitureTraxSongData> {
+export default class UpdateRoomFurnitureTraxSongEvent implements RoomProtobuffListener<UpdateRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: User, payload: UpdateRoomFurnitureTraxSongData) {
-        if(!user.room) {
-            return;
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(!roomUser.hasRights()) {
+    async handle(user: RoomWebSocketUser, payload: UpdateRoomFurnitureTraxSongData) {
+        if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
 
-        const furniture = user.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
+        const furniture = user.roomUser.room.furnitures.find((furniture) => furniture.model.id === payload.roomFurnitureId);
 
         if(!furniture) {
             throw new Error("Furniture does not exist in room.");
         }
 
-        if(furniture?.model.userId !== user.model.id) {
+        if(furniture?.model.userId !== user.id) {
             throw new Error("User is not owner of Trax.");
         }
         
@@ -66,10 +60,10 @@ export default class UpdateRoomFurnitureTraxSongEvent implements ProtobuffListen
             data
         });
 
-        user.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
+        user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.model.id,
+                    userId: user.id,
                     furniture: furniture.model
                 }
             ]

@@ -1,11 +1,11 @@
-import User from "../../../../Game/Users/User.js";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import User from "../../../../Users/User.js";
 import { DeleteRoomMapData } from "@pixel63/events";
-import { RoomMapModel } from "../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
-import GetRoomMapsEvent from "../../../../Game/Events/Game/Navigator/GetRoomMapsEvent.js";
-import { game } from "../../../../Game/index.js";
+import { RoomMapModel } from "../../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
+import GetRoomMapsEvent from "../../Navigator/GetRoomMapsEvent.js";
+import { game } from "../../../../index.js";
+import { UserProtobuffListener } from "../../../Interfaces/UserProtobuffListener.js";
 
-export default class DeleteRoomMapEvent implements ProtobuffListener<DeleteRoomMapData> {
+export default class DeleteRoomMapEvent implements UserProtobuffListener<DeleteRoomMapData> {
     async handle(user: User, payload: DeleteRoomMapData) {
         const permissions = await user.getPermissions();
 

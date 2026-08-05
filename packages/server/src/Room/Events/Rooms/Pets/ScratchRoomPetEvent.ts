@@ -1,38 +1,37 @@
-import User from "../../../../Game/Users/User.js";
-import { RoomPetsData, ScratchRoomPetData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import { RoomPetsData, ScratchRoomPetData, ServerUserUpdatedData } from "@pixel63/events";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
+import { roomServer } from "../../..";
 
-export default class ScratchRoomPetEvent implements ProtobuffListener<ScratchRoomPetData> {
+export default class ScratchRoomPetEvent implements RoomProtobuffListener<ScratchRoomPetData> {
     minimumDurationBetweenEvents?: number = 10;
 
-    async handle(user: User, payload: ScratchRoomPetData) {
-        if(!user.room) {
-            return;
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        const roomPet = user.room.pets.find((roomPet) => roomPet.model.id === payload.petId);
+    async handle(user: RoomWebSocketUser, payload: ScratchRoomPetData) {
+        const roomPet = user.roomUser.room.pets.find((roomPet) => roomPet.model.id === payload.petId);
 
         if(!roomPet) {
             throw new Error("Pet does not exist in room.");
         }
 
-        if(user.model.scratches === 0) {
+        const model = await user.getUser();
+
+        if(model.scratches === 0) {
             throw new Error("User does not have any scratches left.");
         }
 
-        user.model.scratches--;
+        model.scratches--;
 
-        await user.model.save();
+        await model.save();
 
-        user.sendUserData();
+        roomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+            userId: user.id
+        }));
 
         roomPet.model.scratches++;
 
         await roomPet.model.save();
 
-        roomUser.pose.wave();
+        user.roomUser.pose.wave();
 
         roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
             petsUpdated: [

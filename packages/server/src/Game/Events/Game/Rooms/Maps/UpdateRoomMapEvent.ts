@@ -1,12 +1,12 @@
-import User from "../../../../Game/Users/User.js";
+import User from "../../../../Users/User.js";
 import { randomUUID } from "node:crypto";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import { UserProtobuffListener } from "../../../Interfaces/UserProtobuffListener.js";
 import { UpdateRoomMapData } from "@pixel63/events";
-import { RoomMapModel } from "../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
-import GetRoomMapsEvent from "../../../../Game/Events/Game/Navigator/GetRoomMapsEvent.js";
-import { game } from "../../../../Game/index.js";
+import { RoomMapModel } from "../../../../../Database/Models/Rooms/Maps/RoomMapModel.js";
+import GetRoomMapsEvent from "../../Navigator/GetRoomMapsEvent.js";
+import { game } from "../../../../index.js";
 
-export default class UpdateRoomMapEvent implements ProtobuffListener<UpdateRoomMapData> {
+export default class UpdateRoomMapEvent implements UserProtobuffListener<UpdateRoomMapData> {
     async handle(user: User, payload: UpdateRoomMapData) {
         const permissions = await user.getPermissions();
 

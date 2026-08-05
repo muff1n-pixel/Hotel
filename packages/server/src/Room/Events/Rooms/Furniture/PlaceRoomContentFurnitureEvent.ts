@@ -52,6 +52,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
             await userFurniture.destroy();
 
             roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));
         }
@@ -65,6 +66,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
             await userFurniture.destroy();
 
             roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));
         }
@@ -78,6 +80,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
             await userFurniture.destroy();
 
             roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));
         }

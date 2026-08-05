@@ -1,14 +1,14 @@
-import User from "../../../../Game/Users/User.js";
-import { UserBadgeModel } from "../../../../Database/Models/Users/Badges/UserBadgeModel.js";
-import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel.js";
-import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
+import { UserBadgeModel } from "../../../../../Database/Models/Users/Badges/UserBadgeModel.js";
+import { BadgeModel } from "../../../../../Database/Models/Badges/BadgeModel.js";
+import { UserModel } from "../../../../../Database/Models/Users/UserModel.js";
 import { GetUserBadgesData, GroupData, UserBadgesData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
-import { UserAchievementModel } from "../../../../Database/Models/Users/Achievements/UserAchievementModel.js";
-import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel.js";
-import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserAchievementModel } from "../../../../../Database/Models/Users/Achievements/UserAchievementModel.js";
+import { UserGroupModel } from "../../../../../Database/Models/Users/Groups/UserGroupModel.js";
+import { GroupModel } from "../../../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserProtobuffListener } from "../../../Interfaces/UserProtobuffListener.js";
+import User from "../../../../Users/User.js";
 
-export default class GetUserBadgesEvent implements ProtobuffListener<GetUserBadgesData> {
+export default class GetUserBadgesEvent implements UserProtobuffListener<GetUserBadgesData> {
     minimumDurationBetweenEvents?: number = 100;
     
     async handle(user: User, payload: GetUserBadgesData) {

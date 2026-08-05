@@ -1,16 +1,12 @@
-import User from "../../../../Game/Users/User.js";
-import { game } from "../../../../Game/index.js";
 import { RoomActorChatData, RoomUserData, SendRoomChatMessageData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import { roomServer } from "../../../index.js";
 
-export default class SendUserMessageEvent implements ProtobuffListener<SendRoomChatMessageData> {
+export default class SendUserMessageEvent implements RoomProtobuffListener<SendRoomChatMessageData> {
     minimumDurationBetweenEvents?: number = 10;
 
-    async handle(user: User, payload: SendRoomChatMessageData) {
-        if(!user.room) {
-            return;
-        }
-
+    async handle(user: RoomWebSocketUser, payload: SendRoomChatMessageData) {
         if(!payload.message.length) {
             throw new Error("Message is empty.");
         }
@@ -19,67 +15,65 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
             throw new Error("Message exceeds 100 characters.");
         }
 
-        const roomUser = user.room.getRoomUser(user);
-
-        roomUser.lastActivity = performance.now();
+        user.roomUser.lastActivity = performance.now();
 
         if(payload.message.includes(":)")) {
-            roomUser.pose.smile();
+            user.roomUser.pose.smile();
         }
         else if(payload.message.includes(":D")) {
-            roomUser.pose.laugh();
+            user.roomUser.pose.laugh();
         }
         else if(payload.message.includes(":(")) {
-            roomUser.pose.sad();
+            user.roomUser.pose.sad();
         }
         else if(payload.message.includes(":@")) {
-            roomUser.pose.angry();
+            user.roomUser.pose.angry();
         }
         else if(payload.message.toLowerCase().includes(":o")) {
-            roomUser.pose.surprised();
+            user.roomUser.pose.surprised();
         }
 
         const parts = payload.message.split(' ');
 
         if(payload.message[0] === ':' || payload.message[0] === '/') {
-            if(roomUser.typing) {
-                roomUser.typing = false;
+            if(user.roomUser.typing) {
+                user.roomUser.typing = false;
 
-                user.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                    id: user.model.id,
-                    typing: roomUser.typing
+                user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                    id: user.id,
+                    typing: user.roomUser.typing
                 }));
             }
 
-            if(await game.commandHandler.handleCommand(roomUser, parts[0]!.substring(1), parts.slice(1).join(' '), payload.focusedUserId)) {
+            if(await roomServer.commandHandler.handleCommand(user.roomUser, parts[0]!.substring(1), parts.slice(1).join(' '), payload.focusedUserId)) {
                 return;
             }
         }
 
         let userChatBlocked = false;
 
-        const furnitureWithUserChatLogic = roomUser.room.furnitures.filter((furniture) => {
+        const furnitureWithUserChatLogic = user.roomUser.room.furnitures.filter((furniture) => {
             return furniture.logic?.handleUserChat !== undefined;
         });
 
         for(const furniture of furnitureWithUserChatLogic) {
-            const result = await furniture.logic?.handleUserChat?.(roomUser, payload.message);
+            const result = await furniture.logic?.handleUserChat?.(user.roomUser, payload.message);
 
             if(result?.blockUserChat) {
                 userChatBlocked = true;
             }
         }
 
-        roomUser.typing = false;
+        user.roomUser.typing = false;
 
         if(!userChatBlocked) {
-            roomUser.sendRoomMessage(payload.message);
+            user.roomUser.sendRoomMessage(payload.message);
 
-            for(const roomPet of user.room.pets) {
+            for(const roomPet of user.roomUser.room.pets) {
                 const nameIndex = parts.indexOf(roomPet.model.name);
 
                 if(nameIndex !== -1 && parts[nameIndex + 1]) {
-                    await game.petCommandHandler.handleCommand(roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
+                    await roomServer.petCommandHandler.handleCommand(user.roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
                 }
             }
         }
@@ -87,20 +81,20 @@ export default class SendUserMessageEvent implements ProtobuffListener<SendRoomC
             user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
                 actor: {
                     user: {
-                        userId: user.model.id
+                        userId: user.id
                     }
                 },
                 message: payload.message,
-                roomChatStyleId: user.model.roomChatStyleId,
+                roomChatStyleId: user.roomChatStyleId,
                 options: {
                     italic: true,
                     transparent: true
                 }
             }));
 
-            user.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: user.model.id,
-                typing: roomUser.typing
+            user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
+                id: user.id,
+                typing: user.roomUser.typing
             }));
         }
     }

@@ -1,24 +1,18 @@
-import User from "../../../../Game/Users/User.js";
 import { RoomUserData, SetRoomChatTypingData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
 
-export default class SetTypingEvent implements ProtobuffListener<SetRoomChatTypingData> {
-    async handle(user: User, payload: SetRoomChatTypingData) {
-        if(!user.room) {
-            throw new Error("User is not in a room.");
-        }
-
-        const roomUser = user.room.getRoomUser(user);
-
-        if(roomUser.typing === payload.typing) {
+export default class SetTypingEvent implements RoomProtobuffListener<SetRoomChatTypingData> {
+    async handle(user: RoomWebSocketUser, payload: SetRoomChatTypingData) {
+        if(user.roomUser.typing === payload.typing) {
             return;
         }
 
-        roomUser.typing = payload.typing === true;
+        user.roomUser.typing = payload.typing === true;
 
-        user.room.sendProtobuff(RoomUserData, RoomUserData.create({
-            id: user.model.id,
-            typing: roomUser.typing
+        user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            id: user.id,
+            typing: user.roomUser.typing
         }));
     }
 }

@@ -1,4 +1,3 @@
-import CommandHandler from "./Commands/CommandHandler.js";
 import EventHandler from "./Events/UserEventHandler.js";
 import RoomNavigatorManager from "../Room/Rooms/Navigator/RoomNavigatorManager.js";
 import RoomManager from "../Room/Rooms/RoomManager.js";
@@ -8,7 +7,6 @@ import HotelInformation from "./Hotel/HotelInformation.js";
 import UserAchievements from "./Users/Achievements/UserAchievements.js";
 import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
-import PetCommandHandler from "../Room/Rooms/Pets/Commands/PetCommandHandler.js";
 import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
 
@@ -20,8 +18,6 @@ export default class Game {
     public readonly roomManager;
     public readonly roomNavigatorManager;
 
-    public readonly commandHandler;
-    public readonly petCommandHandler;
     public readonly eventHandler;
     public readonly webSocket;
 
@@ -37,8 +33,6 @@ export default class Game {
         this.roomNavigatorManager = new RoomNavigatorManager();
         this.roomManager = new RoomManager();
 
-        this.commandHandler = new CommandHandler();
-        this.petCommandHandler = new PetCommandHandler();
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
 

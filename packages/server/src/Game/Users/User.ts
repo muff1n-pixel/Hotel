@@ -9,6 +9,7 @@ import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
 import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
 import UserHabboClub from "./HabboClub/UserHabboClub.js";
+import UserRoomConnection from "./Rooms/UserRoomConnection.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -20,7 +21,7 @@ export default class User extends EventEmitter {
 
     public spamProtection: UserSpamProtection;
     
-    public room?: Room;
+    public room?: UserRoomConnection;
     public roomBellQueue?: Room | undefined;
 
     public activityRewards: Map<string, number> = new Map();
@@ -30,7 +31,7 @@ export default class User extends EventEmitter {
         super();
 
         this.spamProtection = new UserSpamProtection(this);
-        this.permissions = new UserPermissions(this);
+        this.permissions = new UserPermissions(this.model);
         this.friends = new UserFriends(this);
         this.achievements = new UserAchievements(this.model.id);
         this.habboClub = new UserHabboClub(this);

@@ -1,34 +1,28 @@
-import User from "../../../../Game/Users/User.js";
-import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
-import { randomUUID } from "node:crypto";
 import { RoomUserData, ClearRoomRightsData, GetRoomRightsData } from "@pixel63/events";
-import ProtobuffListener from "../../../../Game/Events/Interfaces/UserProtobuffListener.js";
 import GetRoomRightsEvent from "./GetRoomRightsEvent.js";
+import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
+import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
 
-export default class ClearRoomRightsEvent implements ProtobuffListener<ClearRoomRightsData> {
+export default class ClearRoomRightsEvent implements RoomProtobuffListener<ClearRoomRightsData> {
     minimumDurationBetweenEvents?: number = 10;
     
-    async handle(user: User, payload: ClearRoomRightsData) {
-        if(!user.room) {
-            return;
-        }
-
-        if(user.room.model.owner.id !== user.model.id) {
+    async handle(user: RoomWebSocketUser, payload: ClearRoomRightsData) {
+        if(user.roomUser.room.model.owner.id !== user.id) {
             throw new Error("User is not room owner.");
         }
 
-        for(const rights of user.room.model.rights) {
+        for(const rights of user.roomUser.room.model.rights) {
             await rights.destroy();
 
-            user.room.model.rights.splice(user.room.model.rights.indexOf(rights), 1);
+            user.roomUser.room.model.rights.splice(user.roomUser.room.model.rights.indexOf(rights), 1);
 
-            const roomUser = user.room.users.find((user) => user.user.model.id === rights.user.id);
+            const roomUser = user.roomUser.room.users.find((user) => user.user.model.id === rights.user.id);
 
             if(!roomUser) {
                 continue;
             }
 
-            user.room.sendProtobuff(RoomUserData, RoomUserData.create({
+            user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
                 id: roomUser.user.model.id,
                 hasRights: roomUser.hasRights()
             }));
