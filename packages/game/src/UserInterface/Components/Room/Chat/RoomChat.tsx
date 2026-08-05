@@ -59,7 +59,7 @@ export default function RoomChat() {
             return;
         }
 
-        const listener = webSocketClient.addProtobuffListener(RoomActorChatData, {
+        const listener = room.websocket.addProtobuffListener(RoomActorChatData, {
             async handle(payload: RoomActorChatData) {
 
                 const actor = room.getActor(payload.actor);
@@ -110,7 +110,7 @@ export default function RoomChat() {
         })
 
         return () => {
-            webSocketClient.removeProtobuffListener(RoomActorChatData, listener);
+            room.websocket.removeProtobuffListener(RoomActorChatData, listener);
         };
     }, [room, getVocalTranslation]);
 
