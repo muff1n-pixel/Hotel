@@ -1,4 +1,4 @@
-import { BurnRoomFurnitureTraxSongData, ClearRoomRightsData, DeleteRoomFurnitureTraxSongData, GetRoomChatStylesData, GetRoomRightsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetUserBotSpeechData, InsertRoomFurnitureTraxSongData, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomReadyData, ScratchRoomPetData, SendRoomChatMessageData, SendRoomUserWalkData, ServerLoadRoomData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateRoomUserTradingData, UseRoomFurnitureData } from "@pixel63/events";
+import { BurnRoomFurnitureTraxSongData, ClearRoomRightsData, DeleteRoomFurnitureTraxSongData, GetRoomChatStylesData, GetRoomRightsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetUserBotSpeechData, InsertRoomFurnitureTraxSongData, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomReadyData, ScratchRoomPetData, SendRoomChatMessageData, SendRoomUserWalkData, ServerLoadRoomData, ServerRemoveUserFromRoomData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateRoomUserTradingData, UseRoomFurnitureData } from "@pixel63/events";
 import CommandHandler from "../Commands/CommandHandler";
 import PetCommandHandler from "../Rooms/Pets/Commands/PetCommandHandler";
 import ServerLoadRoomEvent from "../Events/Server/ServerLoadRoomEvent";
@@ -41,6 +41,7 @@ import UpdateRoomInformationEvent from "../Events/Rooms/UpdateRoomInformationEve
 import UpdateUserRightsEvent from "../Events/Rooms/User/UpdateUserRightsEvent";
 import SetTypingEvent from "../Events/Rooms/User/SetTypingEvent";
 import GetRoomBotSpeechEvent from "../Events/Rooms/Bots/GetRoomBotSpeechEvent";
+import ServerRemoveUserFromRoomEvent from "../Events/Server/ServerRemoveUserFromRoomEvent";
 
 export default class RoomServer {
     public websocket: RoomWebSocketServer;
@@ -68,6 +69,7 @@ export default class RoomServer {
 
     private registerServerEvents() {
         this.websocket.serverEventHandler.addProtobuffListener(ServerLoadRoomData, new ServerLoadRoomEvent());
+        this.websocket.serverEventHandler.addProtobuffListener(ServerRemoveUserFromRoomData, new ServerRemoveUserFromRoomEvent());
     }
 
     private registerUserEvents() {

@@ -20,7 +20,7 @@ export default class User extends EventEmitter {
 
     public spamProtection: UserSpamProtection;
     
-    public room?: UserRoomConnection;
+    public room: UserRoomConnection | undefined = undefined;
     //public roomBellQueue?: Room | undefined;
 
     public activityRewards: Map<string, number> = new Map();

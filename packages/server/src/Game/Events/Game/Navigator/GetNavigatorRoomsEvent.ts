@@ -243,7 +243,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
     }
 
     private getRoomNavigatorData(roomModel: RoomModel) {
-        const room = game.roomServers.getRoom(roomModel);
+        const room = game.roomServers.getRoom(roomModel.id);
 
         return NavigatorRoomData.create({
             id: roomModel.id,

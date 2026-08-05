@@ -8,11 +8,9 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
     minimumDurationBetweenEvents?: number = 1000;
 
     async handle(user: User, payload: EnterRoomData) {
-        /*if(user.room) {
-            const roomUser = user.room.getRoomUser(user);
-
-            roomUser.disconnect();
-        }*/
+        if(user.room) {
+            user.room.disconnect();
+        }
 
         const room = await game.roomServers.getOrCreateRoom(payload.id);
         

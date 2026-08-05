@@ -2,6 +2,8 @@ import { ConnectToRoomData, ServerAddUserToRoomData, ServerRoomData } from "@pix
 import RoomServerClient from "./RoomServerClient";
 import Game from "../Game";
 import User from "../Users/User";
+import UserRoomConnection from "../Users/Rooms/UserRoomConnection";
+import ServerRoomEvent from "../Events/Room/ServerRoomEvent";
 
 export default class RoomServer {
     public readonly client: RoomServerClient;
@@ -9,6 +11,8 @@ export default class RoomServer {
 
     constructor(private game: Game, host: string, port: number) {
         this.client = new RoomServerClient(game, host, port);
+    
+        this.client.eventHandler.addProtobuffListener(ServerRoomData, new ServerRoomEvent());
     }
 
     public addUserToRoom(user: User, roomId: string) {
@@ -28,5 +32,7 @@ export default class RoomServer {
             port: this.client.port,
             roomId: roomId
         }));
+
+        user.room = new UserRoomConnection(user, this.client, roomId);
     }
 }

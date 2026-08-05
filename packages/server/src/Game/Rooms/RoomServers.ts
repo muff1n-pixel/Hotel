@@ -10,6 +10,18 @@ export default class RoomServers {
     constructor(private game: Game) {
     }
 
+    public updateRoomData(payload: ServerRoomData) {
+        const client = this.getRoomClient(payload.roomId);
+        
+        if(client) {
+            const roomIndex = client.rooms.findIndex((room) => room.roomId === payload.roomId);
+
+            if(roomIndex !== -1) {
+                client.rooms[roomIndex] = payload;
+            }
+        }
+    }
+
     public getRooms() {
         return this.roomServers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
     }
@@ -18,9 +30,9 @@ export default class RoomServers {
         this.roomServers.push(new RoomServer(this.game, host, port));
     }
 
-    public getRoom(room: RoomModel) {
+    public getRoom(roomId: string) {
         for(const roomServer of this.roomServers) {
-            const roomData = roomServer.rooms.find((clientRoom) => clientRoom.roomId === room.id);
+            const roomData = roomServer.rooms.find((clientRoom) => clientRoom.roomId === roomId);
 
             return roomData;
         }
@@ -51,7 +63,7 @@ export default class RoomServers {
             }, 5000);
 
             const listener = roomServer.client.eventHandler.addProtobuffListener(ServerRoomLoadedData, {
-                handle: async (_: null, payload: ServerRoomLoadedData) =>  {
+                handle: async (_: RoomServerClient, payload: ServerRoomLoadedData) =>  {
                     if(payload.roomId !== roomId) {
                         return;
                     }

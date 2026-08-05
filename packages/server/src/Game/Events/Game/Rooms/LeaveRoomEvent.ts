@@ -8,8 +8,6 @@ export default class LeaveRoomEvent implements UserProtobuffListener<LeaveRoomDa
             throw new Error("User is not in a room.");
         }
 
-        const roomUser = user.room.getRoomUser(user);
-
-        roomUser.disconnect();
+        user.room.disconnect();
     }
 }

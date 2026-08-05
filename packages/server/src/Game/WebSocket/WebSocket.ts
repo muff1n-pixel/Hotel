@@ -192,9 +192,7 @@ export default class WebSocket {
         pendingConnection.websocket.addListener("close", () => {
             (async () => {
                 if(user.room) {
-                    //const roomUser = user.room.getRoomUser(user);
-
-                    //roomUser.disconnect();
+                    user.room.disconnect();
                 }
 
                 console.log("User " + user.model.name + " disconnected.");
