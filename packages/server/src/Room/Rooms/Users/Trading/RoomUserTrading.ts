@@ -164,7 +164,8 @@ export default class RoomUserTrading {
         roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
             userId: this.roomUser.user.id,
             furniture: true,
-            trading: true
+            trading: true,
+            furnitureIdsInTrade: this.userFurniture.map((userFurniture) => userFurniture.id)
         }));
 
         this.roomUser.user.sendProtobuff(RoomUserTradingData, this.getTradingData());

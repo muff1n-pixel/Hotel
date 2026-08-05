@@ -165,7 +165,7 @@ export default class UserInventory {
         }));
     }
 
-    public async sendFurniture(trading?: boolean) {
+    public async sendFurniture(trading?: boolean, furnitureIdsInTrade?: string[]) {
         let userFurnitures = await UserFurnitureModel.findAll({
             where: {
                 userId: this.user.model.id,
@@ -182,11 +182,9 @@ export default class UserInventory {
 
         const allUserFurniture: UserInventoryFurnitureData[] = [];
 
-        if(trading) {
-            const roomUser = this.user.room?.getRoomUser(this.user);
-
+        if(trading && furnitureIdsInTrade) {
             userFurnitures = userFurnitures.filter((userFurniture) => {
-                return !roomUser?.trading.userFurniture.some((tradingUserFurniture) => tradingUserFurniture.id === userFurniture.id)
+                return !furnitureIdsInTrade.some((tradingUserFurnitureId) => tradingUserFurnitureId === userFurniture.id)
             });
         }
 

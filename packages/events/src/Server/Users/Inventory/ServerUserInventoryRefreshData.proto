@@ -8,4 +8,5 @@ message ServerUserInventoryRefreshData {
     optional bool bots = 4;
 
     optional bool trading = 5;
+    repeated string furniture_ids_in_trade = 6;
 }
