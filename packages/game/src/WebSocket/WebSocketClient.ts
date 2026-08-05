@@ -48,15 +48,7 @@ export default class WebSocketClient extends EventTarget {
 
         this.addProtobuffListener(UserReadyData, {
             handle: async () => {
-                this.isReady = true;
-                
-                this.dispatchEvent(new Event("open"));
-
-                for (const outgoingMessage of this.pendingOutgoingMessages) {
-                    this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
-                }
-
-                this.pendingOutgoingMessages = [];
+                this.setReady();
             },
         });
 
@@ -65,6 +57,18 @@ export default class WebSocketClient extends EventTarget {
                 this.sendProtobuff(PingData, PingData.create({}));
             }
         }, 30 * 1000);
+    }
+
+    public setReady() {
+        this.isReady = true;
+        
+        this.dispatchEvent(new Event("open"));
+
+        for (const outgoingMessage of this.pendingOutgoingMessages) {
+            this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+        }
+
+        this.pendingOutgoingMessages = [];
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(

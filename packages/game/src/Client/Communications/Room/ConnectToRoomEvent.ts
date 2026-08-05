@@ -48,13 +48,6 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
 
         roomWebsocket.addProtobuffListener(RoomLoadData, {
             async handle(payload: RoomLoadData) {
-                if(clientInstance.roomInstance.value) {
-                    clientInstance.roomInstance.value.terminate();
-
-                    clientInstance.roomInstance.value = undefined;
-                    //throw new Error("TODO: room is already loaded!!");
-                }
-
                 clientInstance.roomInstance.value = new RoomInstance(clientInstance, roomWebsocket, payload, () => {
                     for(const furniture of payload.furniture) {
                         const furnitureData = payload.furnitureData.find((furnitureData) => furnitureData.id === furniture.furnitureId);
@@ -70,6 +63,8 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
                         clientInstance.roomInstance.value!.furnitures.push(new RoomFurniture(clientInstance.roomInstance.value!, furnitureData, furniture));
                     }
                 });
+
+                roomWebsocket.setReady();
             },
         });
 

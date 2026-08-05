@@ -142,6 +142,8 @@ export default class RoomWebSocketServer {
     }
     
     private async handleUserMessage(user: RoomWebSocketUser, data: RawData) {
+        console.log("Received message from " + user.model.name);
+        
         this.userEventHandler.decodeAndDispatchMessages(user, data);
     }
 

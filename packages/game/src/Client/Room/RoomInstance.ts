@@ -89,6 +89,8 @@ export default class RoomInstance {
 
             this.registerEventListeners();
 
+            console.log("sending room ready");
+
             this.websocket.sendProtobuff(RoomReadyData, RoomReadyData.create({}));
 
             ready?.();

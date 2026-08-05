@@ -46,56 +46,5 @@ export default class RoomEventHandler extends EventHandler<RoomWebSocketUser> {
     }
 
     registerIncomingEvents() {
-        // Room pet events
-        this.addProtobuffListener(PlaceRoomPetData, new PlaceRoomPetEvent());
-        this.addProtobuffListener(PickupRoomPetData, new PickupRoomPetEvent());
-        this.addProtobuffListener(ScratchRoomPetData, new ScratchRoomPetEvent());
-
-        // Room click configuration
-        this.addProtobuffListener(SetRoomClickConfigurationData, new SetRoomClickConfigurationEvent());
-        this.addProtobuffListener(ResetRoomClickConfigurationData, new ResetRoomClickConfigurationEvent());
-
-        // Room furniture events
-        this.addProtobuffListener(UpdateRoomFurnitureTraxSongData, new UpdateRoomFurnitureTraxSongEvent());
-        this.addProtobuffListener(UpdateRoomFurnitureTraxPlaylistData, new UpdateRoomFurnitureTraxPlaylistEvent());
-        this.addProtobuffListener(DeleteRoomFurnitureTraxSongData, new DeleteRoomFurnitureTraxSongEvent());
-        this.addProtobuffListener(BurnRoomFurnitureTraxSongData, new BurnRoomFurnitureTraxSongEvent());
-        this.addProtobuffListener(InsertRoomFurnitureTraxSongData, new InsertRoomFurnitureTraxSongEvent());
-
-        // Room user trading
-        this.addProtobuffListener(RequestRoomUserTradingData, new RequestRoomUserTradingEvent());
-        this.addProtobuffListener(UpdateRoomUserTradingData, new UpdateRoomUserTradingEvent());
-
-        // Room wired events
-        this.addProtobuffListener(GetRoomWiredMonitorData, new GetRoomWiredMonitorEvent());
-        this.addProtobuffListener(GetRoomWiredLogsData, new GetRoomWiredLogsEvent());
-
-        // Room rights events
-        this.addProtobuffListener(GetRoomRightsData, new GetRoomRightsEvent());
-        this.addProtobuffListener(ClearRoomRightsData, new ClearRoomRightsEvent());
-
-        this.addProtobuffListener(RoomReadyData, new RoomReadyEvent());
-        this.addProtobuffListener(RoomClickData, new RoomClickEvent());
-        this.addProtobuffListener(RoomDoubleClickData, new RoomDoubleClickEvent());
-            
-        this.addProtobuffListener(PlaceRoomFurnitureData, new PlaceFurnitureEvent());
-        this.addProtobuffListener(PlaceRoomBotData, new PlaceBotEvent());
-        this.addProtobuffListener(PlaceRoomContentFurnitureData, new PlaceRoomContentFurnitureEvent());
-        this.addProtobuffListener(UseRoomFurnitureData, new UseRoomFurnitureEvent());
-        this.addProtobuffListener(UpdateRoomFurnitureData, new UpdateRoomFurnitureEvent());
-        this.addProtobuffListener(UpdateRoomBotData, new UpdateRoomBotEvent());
-        this.addProtobuffListener(PickupRoomFurnitureData, new PickupRoomFurnitureEvent());
-        this.addProtobuffListener(PickupAllRoomFurnitureData, new PickupAllRoomFurnitureEvent());
-        this.addProtobuffListener(PickupRoomBotData, new PickupRoomBotEvent());
-        this.addProtobuffListener(SendRoomUserWalkData, new StartWalkingEvent());
-        this.addProtobuffListener(SendRoomChatMessageData, new SendUserMessageEvent());
-        this.addProtobuffListener(GetRoomChatStylesData, new GetRoomChatStylesEvent());
-        this.addProtobuffListener(UpdateRoomStructureData, new UpdateRoomStructureEvent());
-        this.addProtobuffListener(UpdateRoomInformationData, new UpdateRoomInformationEvent());
-        this.addProtobuffListener(SetRoomUserRightsData, new UpdateUserRightsEvent());;
-            
-        this.addProtobuffListener(SetRoomChatTypingData, new SetTypingEvent());
-            
-        this.addProtobuffListener(GetUserBotSpeechData, new GetRoomBotSpeechEvent());
     }
 }
