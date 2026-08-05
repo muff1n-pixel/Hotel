@@ -13,11 +13,12 @@ import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel";
 import { PetModel } from "../../../Database/Models/Pets/PetModel";
+import RoomServer from "../../Rooms/RoomServer";
 
 export default class ServerUserInventoryUpdatedEvent implements ServerProtobuffListener<ServerUserInventoryUpdatedData> {
     minimumDurationBetweenEvents?: number = 200;
 
-    async handle(client: RoomServerClient, payload: ServerUserInventoryUpdatedData) {
+    async handle(client: RoomServer, payload: ServerUserInventoryUpdatedData) {
         const user = game.getUserById(payload.userId);
 
         if(!user) {

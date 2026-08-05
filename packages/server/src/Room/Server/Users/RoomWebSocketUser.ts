@@ -3,7 +3,7 @@ import { UserModel } from "../../../Database/Models/Users/UserModel";
 import UserPermissions from "../../../Game/Users/Permissions/UserPermissions";
 import RoomUser from "../../Rooms/Users/RoomUser";
 import RoomServer from "../RoomServer";
-import { LeaveRoomData, MessageType, ServerRoomData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
+import { LeaveRoomData, MessageType, ServerRoomData, ServerRoomsData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
 import RoomWebSocketUserAchievements from "./RoomWebSocketUserAchievements";
 import Room from "../../Rooms/Room";
 import { roomServer } from "../..";
@@ -25,8 +25,10 @@ export default class RoomWebSocketUser {
 
         this.permissions = new UserPermissions(model);
         this.roomUser = room.addUserClient(this);
-        
-        roomServer.websocket.sendServerProtobuff(ServerRoomData, this.room.getServerData());
+
+        roomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+            data: roomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
@@ -57,8 +59,10 @@ export default class RoomWebSocketUser {
             roomId: this.room.model.id
         }));
 
-        roomServer.websocket.sendServerProtobuff(ServerRoomData, this.room.getServerData());
-
         this.server.roomManager.unloadRoom(this.room);
+
+        roomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+            data: roomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
     }
 }

@@ -4,11 +4,12 @@ import RoomServerClient from "../../Rooms/RoomServerClient";
 import { game } from "../..";
 import User from "../../Users/User";
 import UserInventory from "../../Users/Inventory/UserInventory";
+import RoomServer from "../../Rooms/RoomServer";
 
 export default class ServerUserInventoryRefreshEvent implements ServerProtobuffListener<ServerUserInventoryRefreshData> {
     minimumDurationBetweenEvents?: number = 200;
 
-    async handle(client: RoomServerClient, payload: ServerUserInventoryRefreshData) {
+    async handle(client: RoomServer, payload: ServerUserInventoryRefreshData) {
         const user = game.getUserById(payload.userId);
 
         if(!user) {

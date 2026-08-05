@@ -3,16 +3,16 @@ import RoomServerClient from "./RoomServerClient";
 import Game from "../Game";
 import User from "../Users/User";
 import UserRoomConnection from "../Users/Rooms/UserRoomConnection";
-import ServerRoomEvent from "../Events/Room/ServerRoomEvent";
+import ServerRoomEvent from "../Events/Room/ServerRoomsEvent";
 import ServerUserInventoryUpdatedEvent from "../Events/Room/ServerUserInventoryUpdatedEvent";
 import ServerUserInventoryRefreshEvent from "../Events/Room/ServerUserInventoryRefreshEvent";
 
 export default class RoomServer {
     public readonly client: RoomServerClient;
-    public readonly rooms: ServerRoomData[] = [];
+    public rooms: ServerRoomData[] = [];
 
     constructor(private game: Game, host: string, port: number) {
-        this.client = new RoomServerClient(game, host, port);
+        this.client = new RoomServerClient(this, game, host, port);
     
         this.client.eventHandler.addProtobuffListener(ServerRoomData, new ServerRoomEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
