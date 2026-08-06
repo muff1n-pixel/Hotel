@@ -35,6 +35,8 @@ export default function WidgetCurrency({ style, tooltip, color, value, children 
             display: "flex",
             flexDirection: "row",
             gap: 5,
+            width: "100%",
+            justifyContent: "flex-end",
             fontSize: 12,
             color,
             alignItems: "center",
