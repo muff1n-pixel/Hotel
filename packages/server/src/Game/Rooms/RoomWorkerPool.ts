@@ -65,7 +65,7 @@ export default class RoomWorkerPool {
                         return;
                     }
 
-                    roomServer.rooms.push(payload.data!);
+                    roomServer.rooms = payload.data;
 
                     clearTimeout(timeout);
 

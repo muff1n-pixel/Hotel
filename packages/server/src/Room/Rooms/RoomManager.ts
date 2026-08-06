@@ -123,6 +123,10 @@ export default class RoomManager {
 
         this.instances.push(instance);
 
+        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
+
         return instance;
     }
 

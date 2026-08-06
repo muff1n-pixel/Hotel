@@ -1,4 +1,4 @@
-import { ServerLoadRoomData, ServerRoomLoadedData } from "@pixel63/events";
+import { ServerLoadRoomData, ServerRoomLoadedData, ServerRoomsData } from "@pixel63/events";
 import { ServerProtobuffListener } from "../Interfaces/ServerProtobuffListener";
 import RoomServer from "../../RoomServer";
 
@@ -14,7 +14,7 @@ export default class ServerLoadRoomEvent implements ServerProtobuffListener<Serv
 
         RoomServer.websocket.sendServerProtobuff(ServerRoomLoadedData, ServerRoomLoadedData.create({
             roomId: room.model.id,
-            data: room.getServerData()
+            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
         }));
     }
 }
