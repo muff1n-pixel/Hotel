@@ -50,8 +50,6 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
 
             elementRef.current.style.transform = "translateY(-100%)";
             elementRef.current.style.opacity = "0";
-        }, {
-            once: true
         });
 
         elementRef.current.addEventListener("transitionend", (event) => {
@@ -60,8 +58,6 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             }
 
             onFinish();
-        }, {
-            once: true
         });
 
         window.requestAnimationFrame(() => {
