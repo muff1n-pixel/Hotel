@@ -5,6 +5,8 @@ There is one global game server which manages connections with users and global 
 
 Users tell the server they want to join a room, the server allocates a dedicated room server from a pool of dedicated room servers, prepares the room in that room server, then tells the user to connect to that server for room communications.
 
+All events between users and servers, game server and room servers, are done using Protobuff messages.
+
 ## Database
 By default, Pixel63 uses MySQL, however, this can be changed to SQLite or even Postgres, however, these have not been tested and there is no database schema provided for them.
 
@@ -13,7 +15,7 @@ This repository is designed as a mono-repo with 2 key packages:
 - **Server**: contains two types of servers, the game server and the room server. Both must be running for the server to operate, however, the game server can spawn room server as child processes.
 - **Game**: contains two types of packages, the client for the primarily the room renderer and its client logic, and the user interface for the React implementation of Pixel63.
 
-# Starting Pixel63 (developer targeted)
+# Developers
 These instructions are targeted at developers, other instructions for setting up Pixel63 for usage will be provided upon release.
 
 You need to have a MySQL server running, run `npm i` and then `npm run start` in the root direction. This will set up all the other prerequisities needed as well as seed your database.
