@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -6,6 +6,7 @@ import UserRoomConnection from "../Users/Rooms/UserRoomConnection";
 import ServerRoomsEvent from "../Events/Room/ServerRoomsEvent";
 import ServerUserInventoryUpdatedEvent from "../Events/Room/ServerUserInventoryUpdatedEvent";
 import ServerUserInventoryRefreshEvent from "../Events/Room/ServerUserInventoryRefreshEvent";
+import ServerUserUpdatedEvent from "../Events/Room/ServerUserUpdatedEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
@@ -21,6 +22,7 @@ export default class RoomWorker {
         });
         
         this.client.eventHandler.addProtobuffListener(ServerRoomsData, new ServerRoomsEvent());
+        this.client.eventHandler.addProtobuffListener(ServerUserUpdatedData, new ServerUserUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryRefreshData, new ServerUserInventoryRefreshEvent());
     }

@@ -78,7 +78,7 @@ export default class PurchaseShopBundleEvent implements UserProtobuffListener<Pu
 
         user.habboClub.addCashback(bundle.credits ?? 0);
 
-        await user.model.save();
+        await user.save();
 
         const room = await RoomModel.create({
             id: randomUUID(),
@@ -141,7 +141,5 @@ export default class PurchaseShopBundleEvent implements UserProtobuffListener<Pu
             success: true,
             roomId: room.id
         }));
-
-        user.sendUserData();
     }
 }

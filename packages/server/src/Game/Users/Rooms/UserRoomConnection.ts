@@ -3,7 +3,7 @@ import RoomWorkerWebSocket from "../../Rooms/RoomWorkerWebSocket";
 import User from "../User";
 
 export default class UserRoomConnection {
-    constructor(private readonly user: User, private readonly client: RoomWorkerWebSocket, private readonly roomId: string) {
+    constructor(private readonly user: User, public readonly client: RoomWorkerWebSocket, private readonly roomId: string) {
 
     }
 

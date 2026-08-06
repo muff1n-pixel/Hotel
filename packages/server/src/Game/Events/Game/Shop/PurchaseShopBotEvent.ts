@@ -37,7 +37,7 @@ export default class PurchaseShopBotEvent implements UserProtobuffListener<Purch
 
         user.habboClub.addCashback(shopBot.credits ?? 0);
 
-        await user.model.save();
+        await user.save();
 
         const userBot = await UserBotModel.create({
             id: randomUUID(),
@@ -60,8 +60,6 @@ export default class PurchaseShopBotEvent implements UserProtobuffListener<Purch
 
         await user.getInventory().addBot(userBot);
 
-        user.sendUserData();
-        
         user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
             success: true,
             itemId: payload.id,

@@ -12,15 +12,6 @@ export default class SetFigureConfigurationEvent implements UserProtobuffListene
         
         user.model.figureConfiguration = payload.figureConfiguration;
 
-        await user.model.save();
-
-        if(user.room) {
-            user.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: user.model.id,
-                figureConfiguration: user.model.figureConfiguration
-            }));
-        }
-
-        user.sendUserData();
+        await user.save();
     }
 }

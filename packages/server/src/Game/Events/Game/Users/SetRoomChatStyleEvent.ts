@@ -8,6 +8,6 @@ export default class SetRoomChatStyleEvent implements UserProtobuffListener<SetU
     async handle(user: User, payload: SetUserRoomChatStyleData) {
         user.model.roomChatStyleId = payload.id;
 
-        await user.model.save();
+        await user.save();
     }
 }

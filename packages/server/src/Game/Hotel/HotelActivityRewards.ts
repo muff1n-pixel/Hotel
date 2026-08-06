@@ -44,9 +44,7 @@ export default class HotelActivityRewards {
             }
 
             if(userRewardGiven) {
-                user.sendUserData();
-
-                await user.model.save();
+                await user.save();
             }
         }
     }

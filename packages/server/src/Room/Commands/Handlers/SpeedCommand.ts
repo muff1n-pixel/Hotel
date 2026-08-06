@@ -1,5 +1,5 @@
+import UserPermissions from "../../../Game/Users/Permissions/UserPermissions";
 import RoomUser from "../../../Room/Rooms/Users/RoomUser";
-import UserPermissions from "../../Users/Permissions/UserPermissions";
 import Command from "../Command";
 
 export default class SpeedCommand extends Command {

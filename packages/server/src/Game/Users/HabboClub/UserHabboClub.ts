@@ -112,6 +112,6 @@ export default class UserHabboClub {
 
         this.user.sendUserData();
 
-        await this.user.model.save();
+        await this.user.save();
     }
 }

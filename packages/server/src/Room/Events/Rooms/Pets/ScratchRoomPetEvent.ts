@@ -13,15 +13,13 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
             throw new Error("Pet does not exist in room.");
         }
 
-        const model = await user.getUser();
-
-        if(model.scratches === 0) {
+        if(user.model.scratches === 0) {
             throw new Error("User does not have any scratches left.");
         }
 
-        model.scratches--;
+        user.model.scratches--;
 
-        await model.save();
+        await user.save();
 
         RoomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
             userId: user.id

@@ -109,20 +109,19 @@ export default class UserAchievements {
 
         const gameUser = game.getUserById(this.userId);
 
-        const user = await UserModel.findByPk(this.userId);
+        const user = gameUser?.model ?? await UserModel.findByPk(this.userId);
 
         if(user) {
             user.credits += userAchievement.achievement.credits[nextLevel] ?? 0;
             user.duckets += userAchievement.achievement.duckets[nextLevel] ?? 0;
             user.diamonds += userAchievement.achievement.diamonds[nextLevel] ?? 0;
+        }
 
-            if(user.changed()) {
-                await user.save();
-            }
-            
-            if(gameUser) {
-                gameUser.sendUserData();
-            }
+        if(gameUser) {
+            gameUser.save();
+        }
+        else if(user) {
+            await user.save();
         }
 
         const badge = await BadgeModel.findByPk(`${userAchievement.achievement.badgePrefix}${userAchievement.level}`);

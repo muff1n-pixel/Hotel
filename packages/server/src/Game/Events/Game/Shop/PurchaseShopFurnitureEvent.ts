@@ -179,7 +179,7 @@ export default class PurchaseShopFurnitureEvent implements UserProtobuffListener
 
         user.sendUserData();
 
-        await user.model.save();
+        await user.save();
 
         for(let index = 0; index < quantity; index++) {
             const userFurniture = await UserFurnitureModel.create({

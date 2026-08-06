@@ -45,7 +45,7 @@ export default class PurchaseRoomCameraPhotoEvent implements UserProtobuffListen
 
                 user.model.credits -= 3;
 
-                await user.model.save();
+                await user.save();
 
                 break;
             }
@@ -67,7 +67,7 @@ export default class PurchaseRoomCameraPhotoEvent implements UserProtobuffListen
 
                 user.model.credits -= 5;
 
-                await user.model.save();
+                await user.save();
 
                 break;
             }

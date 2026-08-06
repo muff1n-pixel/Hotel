@@ -57,7 +57,7 @@ export default class PurchaseShopPetEvent implements UserProtobuffListener<Purch
 
         user.habboClub.addCashback(shopPet.credits ?? 0);
 
-        await user.model.save();
+        await user.save();
 
         const userPet = await UserPetModel.create({
             id: randomUUID(),
@@ -76,8 +76,6 @@ export default class PurchaseShopPetEvent implements UserProtobuffListener<Purch
         userPet.pet = shopPet.pet;
 
         await user.getInventory().addPet(userPet);
-
-        user.sendUserData();
                 
         user.sendProtobuff(ShopPurchaseData, ShopPurchaseData.create({
             success: true,

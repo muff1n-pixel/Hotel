@@ -42,9 +42,7 @@ export default class BurnRoomFurnitureTraxSongEvent implements RoomProtobuffList
             throw new Error("Song is already burned.");
         }
 
-        const model = await user.getUser();
-
-        if(model.credits < 10) {
+        if(user.model.credits < 10) {
             throw new Error("User cannot afford burning.");
         }
 
@@ -58,15 +56,15 @@ export default class BurnRoomFurnitureTraxSongEvent implements RoomProtobuffList
             throw new Error("Song disk furniture does not exist.");
         }
 
-        model.credits -= 30;
+        user.model.credits -= 30;
 
-        await model.save();
+        await user.save();
         
         const userFurniture = await UserFurnitureModel.create({
             id: randomUUID(),
 
             name: existingSong.name,
-            description: `By ${model.name}`,
+            description: `By ${user.model.name}`,
 
             position: null,
             direction: null,
@@ -80,7 +78,7 @@ export default class BurnRoomFurnitureTraxSongEvent implements RoomProtobuffList
             }),
             
             roomId: null,
-            userId: model.id,
+            userId: user.model.id,
             traxId: furniture.model.id,
             furnitureId: songDiskFurniture.id
         });

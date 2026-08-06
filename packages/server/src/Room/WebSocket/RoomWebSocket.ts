@@ -160,11 +160,24 @@ export default class RoomWebSocket {
 
         const user: User = new User(websocket, model, room);
 
+        RoomServer.users.push(user);
+
         websocket.addListener("message", this.handleUserMessage.bind(this, user));
+        websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
     }
 
     private async handleUserMessage(user: User, data: RawData) {
         this.userEventHandler.decodeAndDispatchMessages(user, data);
+    }
+
+    private async handleUserDisconnected(user: User, data: RawData) {
+        logger.info(`User ${user.model.name} disconnected.`);
+
+        const index = RoomServer.users.indexOf(user);
+
+        if(index !== -1) {
+            RoomServer.users.splice(index, 1);
+        }
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

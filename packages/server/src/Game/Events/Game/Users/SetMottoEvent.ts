@@ -9,16 +9,7 @@ export default class SetMottoEvent implements UserProtobuffListener<SetUserMotto
         user.model.motto = payload.motto;
 
         if(user.model.changed()) {
-            await user.model.save();
-        }
-
-        user.sendUserData();
-
-        if(user.room) {
-            user.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: user.model.id,
-                motto: user.model.motto
-            }));
+            await user.save();
         }
     }
 }

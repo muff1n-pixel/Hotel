@@ -3,7 +3,7 @@ import { UserModel } from "../../Database/Models/Users/UserModel.js";
 import { EventEmitter } from "node:events";
 import UserInventory from "./Inventory/UserInventory.js";
 import UserPermissions from "./Permissions/UserPermissions.js";
-import { MessageType, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
+import { MessageType, ServerUserUpdatedData, UnknownMessage, UserData, UserPermissionsData, WidgetNotificationData } from "@pixel63/events";
 import UserFriends from "./Friends/UserFriends.js";
 import UserAchievements from "./Achievements/UserAchievements.js";
 import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
@@ -40,6 +40,18 @@ export default class User extends EventEmitter {
                 permissions: this.permissions.getPermissionData()
             }));
         }).catch(console.error);
+    }
+
+    public async save() {
+        await this.model.save();
+
+        if(this.room) {
+            this.room.client.sendProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+                userId: this.model.id
+            }));
+        }
+
+        this.sendUserData();
     }
 
     public disconnect() {
@@ -112,7 +124,7 @@ export default class User extends EventEmitter {
             this.model.scratchesResetAt = new Date();
             this.model.scratches = 3;
 
-            await this.model.save();
+            await this.save();
         }
     }
 }

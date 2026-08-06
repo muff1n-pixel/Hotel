@@ -3,7 +3,7 @@ import { UserModel } from "../../Database/Models/Users/UserModel";
 import UserPermissions from "../../Game/Users/Permissions/UserPermissions";
 import RoomUser from "../Rooms/Users/RoomUser";
 import RoomServer from "../RoomServer";
-import { LeaveRoomData, MessageType, ServerRoomData, ServerRoomsData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
+import { LeaveRoomData, MessageType, ServerRoomData, ServerRoomsData, ServerUserRemovedFromRoomData, ServerUserUpdatedData, UnknownMessage } from "@pixel63/events";
 import UserAchievementsBridge from "./Achievements/UserAchievementsBridge";
 import Room from "../Rooms/Room";
 
@@ -27,6 +27,14 @@ export default class User {
 
         RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
             data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
+    }
+
+    public async save() {
+        await this.model.save();
+        
+        RoomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+            userId: this.model.id
         }));
     }
 

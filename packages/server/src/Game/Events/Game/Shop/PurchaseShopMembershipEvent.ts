@@ -145,8 +145,6 @@ export default class PurchaseShopMembershipEvent implements UserProtobuffListene
 
         user.habboClub.addCashback(shopMembership.credits ?? 0);
 
-        await user.model.save();
-
-        user.sendUserData();
+        await user.save();
     }
 }
