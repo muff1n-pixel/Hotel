@@ -237,6 +237,8 @@ export default class RoomWebSocket {
         if(index !== -1) {
             RoomServer.users.splice(index, 1);
         }
+
+        user.roomUser.disconnect();
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
