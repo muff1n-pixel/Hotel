@@ -38,7 +38,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
             return;
         }
 
-        const listener = webSocketClient.addProtobuffListener(RoomActorChatData, {
+        const listener = room.websocket.addProtobuffListener(RoomActorChatData, {
             async handle(payload: RoomActorChatData) {
                 if(!payload.actor?.user) {
                     return;
@@ -62,7 +62,7 @@ export default function ToolbarRoomChat({ minimized, onMinimized }: ToolbarRoomC
         })
 
         return () => {
-            webSocketClient.removeProtobuffListener(RoomActorChatData, listener);
+            room.websocket.removeProtobuffListener(RoomActorChatData, listener);
         };
     }, [room, history]);
     
