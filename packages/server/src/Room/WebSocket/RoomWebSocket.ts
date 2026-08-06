@@ -196,7 +196,13 @@ export default class RoomWebSocket {
         const room = RoomServer.roomManager.getRoomInstance(roomId);
 
         if (!room) {
-            throw new Error("Room is not loaded!");
+            logger.warn("Refusing connection from websocket, requested room is not loaded.", {
+                userId: payload.userId
+            });
+
+            websocket.close();
+
+            return;
         }
 
         const permissions = new UserPermissions(model);
