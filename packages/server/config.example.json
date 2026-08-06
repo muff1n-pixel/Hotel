@@ -28,11 +28,22 @@
         "host": "localhost",
         "port": 3306
     },
-    
+
     "rooms": {
-        "allocatedRoomPorts": [ 8081 ],
+        "allocatedRoomServers": [
+            {
+                "public": {
+                    "host": "localhost",
+                    "port": 8082
+                },
+                "local": {
+                    "host": "localhost",
+                    "port": 8082
+                }
+            }
+        ],
         
         "automaticallySpawnRoomServers": true,
-        "automaticRoomServerPortAllocations": [ 8081 ]
+        "automaticRoomServerPortAllocations": [ 8082 ]
     }
 }

@@ -13,9 +13,9 @@ export default class RoomWorkerPool {
         return this.workers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
     }
 
-    public async addServer(host: string, port: number) {
+    public async addServer(localHost: string, localPort: number, publicHost: string, publicPort: number) {
         return new Promise<RoomWorker>((resolve) => {
-            const roomWorker = new RoomWorker(this.game, host, port, () => {
+            const roomWorker = new RoomWorker(this.game, localHost, localPort, publicHost, publicPort, () => {
                 this.workers.push(roomWorker);
 
                 resolve(roomWorker);
@@ -123,13 +123,13 @@ export default class RoomWorkerPool {
         return clientWithLeastRooms;
     }
 
-    private getAllocatedServer() {
-        for(const port of config.rooms.allocatedRoomPorts) {
-            if(this.workers.some((worker) => worker.port === port)) {
+    private async getAllocatedServer() {
+        for(const server of config.rooms.allocatedRoomServers) {
+            if(this.workers.some((worker) => worker.host === server.public.host && worker.port === server.public.port)) {
                 continue;
             }
 
-            return this.addServer("localhost", port);
+            return await this.addServer(server.local.host, server.local.port, server.public.host, server.public.port);
         }
 
         return null;

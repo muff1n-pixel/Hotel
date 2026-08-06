@@ -56,6 +56,10 @@ export async function startServer() {
             
             child.stdout?.pipe(process.stdout);
             child.stderr?.pipe(process.stderr);
+            
+            process.on("exit", () => {
+                child.kill();
+            });
         }
     }
 

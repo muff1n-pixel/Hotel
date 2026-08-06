@@ -27,7 +27,17 @@ export type Config = {
     database: Options;
 
     rooms: {
-        allocatedRoomPorts: number[];
+        allocatedRoomServers: {
+            local: {
+                host: string;
+                port: number;
+            };
+
+            public: {
+                host: string;
+                port: number;
+            };
+        }[];
         
         automaticallySpawnRoomServers: boolean;
         automaticRoomServerPortAllocations: number[];
