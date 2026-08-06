@@ -1,19 +1,15 @@
 import { ServerSetUserAchievementScoreData } from "@pixel63/events";
 import { ServerProtobuffListener } from "../Interfaces/ServerProtobuffListener";
-import { game } from "../..";
 import RoomWorker from "../../Rooms/RoomWorker";
 import { AchievementId } from "../../../Database/Models/Achievements/AchievementModel";
+import UserAchievements from "../../Users/Achievements/UserAchievements";
 
 export default class ServerSetUserAchievementScoreEvent implements ServerProtobuffListener<ServerSetUserAchievementScoreData> {
     minimumDurationBetweenEvents?: number = 200;
 
     async handle(client: RoomWorker, payload: ServerSetUserAchievementScoreData) {
-        const user = game.getUserById(payload.userId);
-
-        if(!user) {
-            throw new Error("User is not connected.");
-        }
+        const userAchievements = new UserAchievements(payload.userId);
         
-        user.achievements.addTotalAchievementScore(payload.achievementId as AchievementId, payload.totalScore);
+        userAchievements.addTotalAchievementScore(payload.achievementId as AchievementId, payload.totalScore);
     }
 }
