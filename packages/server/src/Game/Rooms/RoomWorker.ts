@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -7,6 +7,8 @@ import ServerRoomsEvent from "../Events/Room/ServerRoomsEvent";
 import ServerUserInventoryUpdatedEvent from "../Events/Room/ServerUserInventoryUpdatedEvent";
 import ServerUserInventoryRefreshEvent from "../Events/Room/ServerUserInventoryRefreshEvent";
 import ServerUserUpdatedEvent from "../Events/Room/ServerUserUpdatedEvent";
+import ServerAddUserAchievementScoreEvent from "../Events/Room/ServerAddUserAchievementScoreEvent";
+import ServerSetUserAchievementScoreEvent from "../Events/Room/ServerSetUserAchievementScoreEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
@@ -25,6 +27,9 @@ export default class RoomWorker {
         this.client.eventHandler.addProtobuffListener(ServerUserUpdatedData, new ServerUserUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryRefreshData, new ServerUserInventoryRefreshEvent());
+
+        this.client.eventHandler.addProtobuffListener(ServerAddUserAchievementScoreData, new ServerAddUserAchievementScoreEvent());
+        this.client.eventHandler.addProtobuffListener(ServerSetUserAchievementScoreData, new ServerSetUserAchievementScoreEvent());
     }
 
     public addUserToRoom(user: User, roomId: string) {
