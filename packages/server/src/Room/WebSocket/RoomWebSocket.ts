@@ -1,23 +1,23 @@
 import WebSocket, { RawData, WebSocketServer } from "ws";
-import { config } from "../../../Game/Config/Config";
+import { config } from "../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
-import RoomServer from "../RoomServer";
 import { MessageType, UnknownMessage } from "@pixel63/events";
-import { ServerTokenModel } from "../../../Database/Models/Server/ServerTokenModel";
-import EventHandler from "../../../Communication/EventHandler";
-import RoomWebSocketUser from "../Users/RoomWebSocketUser";
-import { UserTokenModel } from "../../../Database/Models/Users/UserTokens/UserTokenModel";
-import { UserModel } from "../../../Database/Models/Users/UserModel";
+import { ServerTokenModel } from "../../Database/Models/Server/ServerTokenModel";
+import EventHandler from "../../Communication/EventHandler";
+import User from "../Users/User";
+import { UserTokenModel } from "../../Database/Models/Users/UserTokens/UserTokenModel";
+import { UserModel } from "../../Database/Models/Users/UserModel";
+import RoomServer from "../RoomServer";
 
-export default class RoomWebSocketServer {
+export default class RoomWebSocket {
     private readonly server: WebSocketServer;
     private gameServerWebSocket?: WebSocket;
 
     public serverEventHandler = new EventHandler((_: unknown, type: string) => console.log(`[RoomWebSocketServer:server] Received message ${type}`));
-    public userEventHandler = new EventHandler((user: RoomWebSocketUser, type: string) => console.log(`[RoomWebSocketServer:${user.id}] Received message ${type}`));
+    public userEventHandler = new EventHandler((user: User, type: string) => console.log(`[RoomWebSocketServer:${user.id}] Received message ${type}`));
 
-    constructor(private readonly roomServer: RoomServer) {
+    constructor() {
         this.server = new WebSocketServer({
             host: config.hostname,
             port: 8081 // TODO: support port in arguments
@@ -130,18 +130,18 @@ export default class RoomWebSocketServer {
 
         console.log("[RoomWebSocketServer] Connected with user " + model.name);
 
-        const room = this.roomServer.roomManager.getRoomInstance(roomId);
+        const room = RoomServer.roomManager.getRoomInstance(roomId);
 
         if(!room) {
             throw new Error("Room is not loaded!");
         }
 
-        const user: RoomWebSocketUser = new RoomWebSocketUser(this.roomServer, websocket, model, room);
+        const user: User = new User(websocket, model, room);
 
         websocket.addListener("message", this.handleUserMessage.bind(this, user));
     }
     
-    private async handleUserMessage(user: RoomWebSocketUser, data: RawData) {
+    private async handleUserMessage(user: User, data: RawData) {
         console.log("Received message from " + user.model.name);
         
         this.userEventHandler.decodeAndDispatchMessages(user, data);

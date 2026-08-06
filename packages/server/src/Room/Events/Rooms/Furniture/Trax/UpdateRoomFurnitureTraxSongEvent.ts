@@ -1,12 +1,12 @@
 import { FurnitureTraxSongMetaData, RoomFurnitureData, UpdateRoomFurnitureTraxSongData, UserFurnitureTraxData } from "@pixel63/events";
 import { randomUUID } from "crypto";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
+import User from "../../../../Users/User";
 
 export default class UpdateRoomFurnitureTraxSongEvent implements RoomProtobuffListener<UpdateRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomFurnitureTraxSongData) {
+    async handle(user: User, payload: UpdateRoomFurnitureTraxSongData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }

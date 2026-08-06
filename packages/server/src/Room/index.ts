@@ -1,12 +1,8 @@
 import { initializeModels } from "../Database/Database";
-import RoomServer from "./Server/RoomServer";
-
-export let roomServer: RoomServer;
+import RoomServer from "./RoomServer";
 
 initializeModels().then(async () => {
-    roomServer = new RoomServer();
-
-    await roomServer.hotelSettings.loadModels();
+    await RoomServer.start();
 
     console.log("Room server started");
 });

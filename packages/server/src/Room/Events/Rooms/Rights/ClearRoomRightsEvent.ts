@@ -1,12 +1,12 @@
 import { RoomUserData, ClearRoomRightsData, GetRoomRightsData } from "@pixel63/events";
 import GetRoomRightsEvent from "./GetRoomRightsEvent.js";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class ClearRoomRightsEvent implements RoomProtobuffListener<ClearRoomRightsData> {
     minimumDurationBetweenEvents?: number = 10;
     
-    async handle(user: RoomWebSocketUser, payload: ClearRoomRightsData) {
+    async handle(user: User, payload: ClearRoomRightsData) {
         if(user.roomUser.room.model.owner.id !== user.id) {
             throw new Error("User is not room owner.");
         }

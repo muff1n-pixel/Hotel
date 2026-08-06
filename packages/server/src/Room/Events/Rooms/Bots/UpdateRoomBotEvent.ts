@@ -1,11 +1,11 @@
 import { RoomBotsData, UpdateRoomBotData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class UpdateRoomBotEvent implements RoomProtobuffListener<UpdateRoomBotData> {
     minimumDurationBetweenEvents?: number = 100;
     
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomBotData) {
+    async handle(user: User, payload: UpdateRoomBotData) {
         const bot = user.roomUser.room.getBot(payload.id);
 
         if(bot.model.user.id !== user.id) {

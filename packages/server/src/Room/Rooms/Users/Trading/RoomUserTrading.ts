@@ -3,7 +3,7 @@ import RoomUser from "../RoomUser";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel";
 import { Op } from "sequelize";
-import { roomServer } from "../../..";
+import RoomServer from "../../../RoomServer";
 
 export default class RoomUserTrading {
     public tradingWithUser?: RoomUser;
@@ -161,7 +161,7 @@ export default class RoomUserTrading {
 
         this.userFurniture.push(...userFurniture);
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
             userId: this.roomUser.user.id,
             furniture: true,
             trading: true,
@@ -186,7 +186,7 @@ export default class RoomUserTrading {
 
         this.userFurniture = this.userFurniture.filter((userFurniture) => userFurniture.id !== id);
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
             userId: this.roomUser.user.id,
             furniture: true,
             trading: true
@@ -209,7 +209,7 @@ export default class RoomUserTrading {
 
         if(this.tradingWithUser.trading.locked) {
             const date = new Date();
-            date.setSeconds(date.getSeconds() + roomServer.hotelSettings.roomUserTradeCompletionSeconds);
+            date.setSeconds(date.getSeconds() + RoomServer.hotelSettings.roomUserTradeCompletionSeconds);
 
             this.completesAt = this.tradingWithUser.trading.completesAt = date;
         }
@@ -278,12 +278,12 @@ export default class RoomUserTrading {
             }
         });
         
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
             userId: this.roomUser.user.id,
             furniture: true
         }));
         
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
             userId: this.tradingWithUser.user.id,
             furniture: true
         }));

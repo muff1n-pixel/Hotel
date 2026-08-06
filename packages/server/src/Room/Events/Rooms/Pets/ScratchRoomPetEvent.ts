@@ -1,12 +1,12 @@
 import { RoomPetsData, ScratchRoomPetData, ServerUserUpdatedData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
-import { roomServer } from "../../..";
+import User from "../../../Users/User";
+import RoomServer from "../../../RoomServer";
 
 export default class ScratchRoomPetEvent implements RoomProtobuffListener<ScratchRoomPetData> {
     minimumDurationBetweenEvents?: number = 10;
 
-    async handle(user: RoomWebSocketUser, payload: ScratchRoomPetData) {
+    async handle(user: User, payload: ScratchRoomPetData) {
         const roomPet = user.roomUser.room.pets.find((roomPet) => roomPet.model.id === payload.petId);
 
         if(!roomPet) {
@@ -23,7 +23,7 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
 
         await model.save();
 
-        roomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
             userId: user.id
         }));
 

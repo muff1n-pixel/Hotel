@@ -7,7 +7,7 @@ import HotelSettings from "./Hotel/HotelSettings.js";
 import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
 import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
-import RoomServers from "./Rooms/RoomServers.js";
+import RoomWorkerPool from "./Rooms/RoomWorkerPool.js";
 
 export default class Game {
     public readonly hotelInformation;
@@ -28,7 +28,7 @@ export default class Game {
         this.hotelSettings = new HotelSettings();
         this.hotelActivityRewards = new HotelActivityRewards(this);
 
-        this.roomServers = new RoomServers(this);
+        this.roomServers = new RoomWorkerPool(this);
 
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();

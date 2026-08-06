@@ -3,14 +3,14 @@ import { MessageType, UnknownMessage } from "@pixel63/events";
 import EventHandler from "../../Communication/EventHandler";
 import Game from "../Game";
 import jsonWebToken from "jsonwebtoken";
-import RoomServer from "./RoomServer";
+import RoomWorker from "./RoomWorker";
 
-export default class RoomServerClient {
+export default class RoomWorkerWebSocket {
     private readonly websocket: WebSocket;
 
-    public readonly eventHandler: EventHandler<RoomServer> = new EventHandler((_: RoomServer, type: string) => console.log(`[RoomWebSocketServer:${this.port}] Received message ${type}`));
+    public readonly eventHandler: EventHandler<RoomWorker> = new EventHandler((_: RoomWorker, type: string) => console.log(`[RoomWebSocketServer:${this.port}] Received message ${type}`));
 
-    constructor(private readonly server: RoomServer, private readonly game: Game, public readonly host: string, public readonly port: number) {
+    constructor(private readonly server: RoomWorker, private readonly game: Game, public readonly host: string, public readonly port: number) {
         const url = new URL(`ws://${host}:${port}`);
 
         const accessToken = jsonWebToken.sign(

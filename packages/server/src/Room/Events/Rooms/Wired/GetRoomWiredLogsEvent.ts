@@ -1,11 +1,11 @@
 import { GetRoomWiredLogsData, RoomWiredLogsData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
+import User from "../../../Users/User";
 
 export default class GetRoomWiredLogsEvent implements RoomProtobuffListener<GetRoomWiredLogsData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: RoomWebSocketUser, payload: GetRoomWiredLogsData) {
+    async handle(user: User, payload: GetRoomWiredLogsData) {
         if(!user.roomUser.hasRights()) {
             return;
         }

@@ -1,15 +1,15 @@
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { PlaceRoomContentFurnitureData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
-import { roomServer } from "../../../index.js";
+import RoomServer from "../../../RoomServer.js";
 
 export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffListener<PlaceRoomContentFurnitureData> {
     minimumDurationBetweenEvents?: number = 100;
     
-    async handle(user: RoomWebSocketUser, payload: PlaceRoomContentFurnitureData) {
+    async handle(user: User, payload: PlaceRoomContentFurnitureData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
@@ -51,7 +51,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
 
             await userFurniture.destroy();
 
-            roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
                 userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));
@@ -65,7 +65,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
 
             await userFurniture.destroy();
 
-            roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
                 userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));
@@ -79,7 +79,7 @@ export default class PlaceRoomContentFurnitureEvent implements RoomProtobuffList
 
             await userFurniture.destroy();
 
-            roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
                 userId: user.id,
                 furnitureRemoved: [userFurniture.id]
             }));

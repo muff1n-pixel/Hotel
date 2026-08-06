@@ -9,7 +9,7 @@ import { RoomBattleBanzaiGameTeam, RoomBattleBanzaiGameTeamData } from "./Interf
 import RoomBattleBanzaiGamePlayers from "./RoomBattleBanzaiGamePlayers";
 import RoomBattleBanzaiGameTeams from "./RoomBattleBanzaiGameTeams";
 import BattleBanzaiGameNotifications from "../../../../Game/Users/Notifications/Games/BattleBanzaiGameNotifications";
-import { roomServer } from "../../..";
+import RoomServer from "../../../RoomServer";
 
 export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGameTeam> {
     public started: boolean = false;
@@ -75,7 +75,7 @@ export default class RoomBattleBanzaiGame implements RoomGame<RoomBattleBanzaiGa
         this.started = false;
         this.paused = false;
 
-        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
             userId: this.room.model.owner.id,
             achievementId: "GameArcadeOwner",
             score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)

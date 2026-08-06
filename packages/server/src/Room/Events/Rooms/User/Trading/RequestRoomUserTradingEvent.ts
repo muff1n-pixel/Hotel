@@ -1,11 +1,11 @@
 import { RequestRoomUserTradingData, RoomUserTradingRequestData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
+import User from "../../../../Users/User";
 
 export default class RequestRoomUserTradingEvent implements RoomProtobuffListener<RequestRoomUserTradingData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: RoomWebSocketUser, payload: RequestRoomUserTradingData) {
+    async handle(user: User, payload: RequestRoomUserTradingData) {
         if(payload.targetUserId === user.id) {
             throw new Error("User cannot trade with themselves.");
         }

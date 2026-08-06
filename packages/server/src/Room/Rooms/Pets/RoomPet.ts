@@ -5,7 +5,7 @@ import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomAc
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
-import { roomServer } from "../../index.js";
+import RoomServer from "../../RoomServer.js";
 
 export enum RoomPetState {
     FREE = "free",
@@ -125,7 +125,7 @@ export default class RoomPet implements RoomActor {
             roomId: null
         });
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: this.model.user.id,
             petsAdded: [ this.model.id ]
         }));

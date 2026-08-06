@@ -6,7 +6,7 @@ import RoomFootballGamePlayers from "./RoomFootballGamePlayers";
 import RoomFootballGameTeams from "./RoomFootballGameTeams";
 import RoomFurnitureFootballCounterLogic from "../../Furniture/Logic/Games/Football/RoomFurnitureFootballCounterLogic";
 import FootballGameNotifications from "../../../../Game/Users/Notifications/Games/FootballGameNotifications";
-import { roomServer } from "../../..";
+import RoomServer from "../../../RoomServer";
 
 export default class RoomFootballGame implements RoomGame<RoomFootballGameTeam> {
     public started: boolean = false;
@@ -62,13 +62,13 @@ export default class RoomFootballGame implements RoomGame<RoomFootballGameTeam> 
         this.started = false;
         this.paused = false;
 
-        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
             userId: this.room.model.owner.id,
             achievementId: "GameArcadeOwner",
             score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)
         }));
         
-        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
             userId: this.room.model.owner.id,
             achievementId: "FootballGoalHost",
             score: this.teams.getAllTeams().reduce((score, team) => team.score + score, 0)

@@ -2,12 +2,12 @@ import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { RoomFurnitureData, RoomPositionOffsetData, UpdateRoomFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import { randomUUID } from "node:crypto";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class UpdateRoomFurnitureEvent implements RoomProtobuffListener<UpdateRoomFurnitureData> {
     minimumDurationBetweenEvents?: number = 100;
     
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomFurnitureData) {
+    async handle(user: User, payload: UpdateRoomFurnitureData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
@@ -129,7 +129,7 @@ export default class UpdateRoomFurnitureEvent implements RoomProtobuffListener<U
         }));
     }
 
-    private async handleSingleActiveFurniture(user: RoomWebSocketUser, furniture: RoomFurniture) {
+    private async handleSingleActiveFurniture(user: User, furniture: RoomFurniture) {
         const activeFurniture = user.roomUser.room.getActiveFurniture(furniture.model.furniture.interactionType);
 
         if(activeFurniture && activeFurniture.model.id !== furniture.model.id) {

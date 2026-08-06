@@ -3,13 +3,13 @@ import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/
 import { PlaceRoomFurnitureData, ServerUserInventoryUpdatedData, WidgetNotificationData } from "@pixel63/events";
 import { randomUUID } from "crypto";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
-import { roomServer } from "../../../index.js";
+import RoomServer from "../../../RoomServer.js";
 
 export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceRoomFurnitureData> {
-    async handle(user: RoomWebSocketUser, payload: PlaceRoomFurnitureData) {
+    async handle(user: User, payload: PlaceRoomFurnitureData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
@@ -43,7 +43,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
         }
 
         if(userFurniture.furniture.placement === "floor") {
-            if(user.roomUser.room.floorFurnitureCount >= roomServer.hotelSettings.roomMaxFloorFurniture) {
+            if(user.roomUser.room.floorFurnitureCount >= RoomServer.hotelSettings.roomMaxFloorFurniture) {
                 user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `Maximum floor furniture count has been reached!`
@@ -53,7 +53,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
             }
         }
         else {
-            if(user.roomUser.room.wallFurnitureCount >= roomServer.hotelSettings.roomMaxWallFurniture) {
+            if(user.roomUser.room.wallFurnitureCount >= RoomServer.hotelSettings.roomMaxWallFurniture) {
                 user.sendProtobuff(WidgetNotificationData, WidgetNotificationData.create({
                     id: randomUUID(),
                     text: `Maximum wall furniture count has been reached!`
@@ -75,7 +75,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
 
         await RoomFurniture.place(user.roomUser.room, userFurniture, payload.position, payload.direction);
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: user.id,
             furnitureRemoved: [userFurniture.id]
         }));

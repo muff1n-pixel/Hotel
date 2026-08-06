@@ -1,7 +1,7 @@
 import { ServerRoomData, ServerUserInventoryUpdatedData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener";
 import { ServerProtobuffListener } from "../Interfaces/ServerProtobuffListener";
-import RoomServerClient from "../../Rooms/RoomServerClient";
+import RoomWorkerWebSocket from "../../Rooms/RoomWorkerWebSocket";
 import { game } from "../..";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { Op } from "sequelize";
@@ -13,12 +13,12 @@ import { UserBotModel } from "../../../Database/Models/Users/Bots/UserBotModel";
 import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureModel";
 import { PetBreedModel } from "../../../Database/Models/Pets/PetBreedModel";
 import { PetModel } from "../../../Database/Models/Pets/PetModel";
-import RoomServer from "../../Rooms/RoomServer";
+import RoomWorker from "../../Rooms/RoomWorker";
 
 export default class ServerUserInventoryUpdatedEvent implements ServerProtobuffListener<ServerUserInventoryUpdatedData> {
     minimumDurationBetweenEvents?: number = 200;
 
-    async handle(client: RoomServer, payload: ServerUserInventoryUpdatedData) {
+    async handle(client: RoomWorker, payload: ServerUserInventoryUpdatedData) {
         const user = game.getUserById(payload.userId);
 
         if(!user) {

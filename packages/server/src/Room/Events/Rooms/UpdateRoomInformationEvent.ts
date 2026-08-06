@@ -3,12 +3,12 @@ import sharp from "sharp";
 import { RoomInformationData, UpdateRoomInformationData } from "@pixel63/events";
 import bcrypt from "bcrypt";
 import { RoomProtobuffListener } from "../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
+import User from "../../Users/User.js";
 
 export default class UpdateRoomInformationEvent implements RoomProtobuffListener<UpdateRoomInformationData> {
     minimumDurationBetweenEvents?: number = 100;
 
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomInformationData) {
+    async handle(user: User, payload: UpdateRoomInformationData) {
         if(user.roomUser.room.model.owner.id !== user.id) {
             throw new Error("User is not owner of room.");
         }

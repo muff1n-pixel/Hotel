@@ -1,78 +1,73 @@
 import { BurnRoomFurnitureTraxSongData, ClearRoomRightsData, DeleteRoomFurnitureTraxSongData, GetRoomChatStylesData, GetRoomRightsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetUserBotSpeechData, InsertRoomFurnitureTraxSongData, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomReadyData, ScratchRoomPetData, SendRoomChatMessageData, SendRoomUserWalkData, ServerLoadRoomData, ServerRemoveUserFromRoomData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateRoomUserTradingData, UseRoomFurnitureData } from "@pixel63/events";
-import CommandHandler from "../Commands/CommandHandler";
-import PetCommandHandler from "../Rooms/Pets/Commands/PetCommandHandler";
-import ServerLoadRoomEvent from "../Events/Server/ServerLoadRoomEvent";
-import RoomManager from "../Rooms/RoomManager";
-import HotelSettings from "../../Game/Hotel/HotelSettings";
-import RoomWebSocketServer from "./WebSocket/RoomWebSocketServer";
-import PlaceRoomPetEvent from "../Events/Rooms/Pets/PlaceRoomPetEvent";
-import PickupRoomPetEvent from "../Events/Rooms/Pets/PickupRoomPetEvent";
-import ScratchRoomPetEvent from "../Events/Rooms/Pets/ScratchRoomPetEvent";
-import SetRoomClickConfigurationEvent from "../Events/Rooms/Configuration/SetRoomClickConfigurationEvent";
-import ResetRoomClickConfigurationEvent from "../Events/Rooms/Configuration/ResetRoomClickConfigurationEvent";
-import UpdateRoomFurnitureTraxSongEvent from "../Events/Rooms/Furniture/Trax/UpdateRoomFurnitureTraxSongEvent";
-import UpdateRoomFurnitureTraxPlaylistEvent from "../Events/Rooms/Furniture/Trax/UpdateRoomFurnitureTraxPlaylistEvent";
-import DeleteRoomFurnitureTraxSongEvent from "../Events/Rooms/Furniture/Trax/DeleteRoomFurnitureTraxSongEvent";
-import BurnRoomFurnitureTraxSongEvent from "../Events/Rooms/Furniture/Trax/BurnRoomFurnitureTraxSongEvent";
-import InsertRoomFurnitureTraxSongEvent from "../Events/Rooms/Furniture/Trax/InsertRoomFurnitureTraxSongEvent";
-import RequestRoomUserTradingEvent from "../Events/Rooms/User/Trading/RequestRoomUserTradingEvent";
-import UpdateRoomUserTradingEvent from "../Events/Rooms/User/Trading/UpdateRoomUserTradingEvent";
-import GetRoomWiredMonitorEvent from "../Events/Rooms/Wired/GetRoomWiredMonitorEvent";
-import GetRoomWiredLogsEvent from "../Events/Rooms/Wired/GetRoomWiredLogsEvent";
-import GetRoomRightsEvent from "../Events/Rooms/Rights/GetRoomRightsEvent";
-import ClearRoomRightsEvent from "../Events/Rooms/Rights/ClearRoomRightsEvent";
-import RoomReadyEvent from "../Rooms/RoomReadyEvent";
-import RoomClickEvent from "../Events/Rooms/RoomClickEvent";
-import RoomDoubleClickEvent from "../Events/Rooms/RoomDoubleClickEvent";
-import PlaceFurnitureEvent from "../Events/Rooms/Furniture/PlaceFurnitureEvent";
-import PlaceBotEvent from "../Events/Rooms/Bots/PlaceBotEvent";
-import PlaceRoomContentFurnitureEvent from "../Events/Rooms/Furniture/PlaceRoomContentFurnitureEvent";
-import UseRoomFurnitureEvent from "../Events/Rooms/Furniture/UseRoomFurnitureEvent";
-import UpdateRoomFurnitureEvent from "../Events/Rooms/Furniture/UpdateRoomFurnitureEvent";
-import UpdateRoomBotEvent from "../Events/Rooms/Bots/UpdateRoomBotEvent";
-import PickupRoomFurnitureEvent from "../Events/Rooms/Furniture/PickupRoomFurnitureEvent";
-import PickupAllRoomFurnitureEvent from "../Events/Rooms/Furniture/PickupAllRoomFurnitureEvent";
-import PickupRoomBotEvent from "../Events/Rooms/Bots/PickupRoomBotEvent";
-import StartWalkingEvent from "../Events/Rooms/User/StartWalkingEvent";
-import SendUserMessageEvent from "../Events/Rooms/User/SendUserMessageEvent";
-import GetRoomChatStylesEvent from "../Events/Rooms/Chat/Styles/GetRoomChatStylesEvent";
-import UpdateRoomStructureEvent from "../Events/Rooms/UpdateRoomStructureEvent";
-import UpdateRoomInformationEvent from "../Events/Rooms/UpdateRoomInformationEvent";
-import UpdateUserRightsEvent from "../Events/Rooms/User/UpdateUserRightsEvent";
-import SetTypingEvent from "../Events/Rooms/User/SetTypingEvent";
-import GetRoomBotSpeechEvent from "../Events/Rooms/Bots/GetRoomBotSpeechEvent";
-import ServerRemoveUserFromRoomEvent from "../Events/Server/ServerRemoveUserFromRoomEvent";
+import CommandHandler from "./Commands/CommandHandler";
+import PetCommandHandler from "./Rooms/Pets/Commands/PetCommandHandler";
+import ServerLoadRoomEvent from "./Events/Server/ServerLoadRoomEvent";
+import RoomManager from "./Rooms/RoomManager";
+import HotelSettings from "../Game/Hotel/HotelSettings";
+import RoomWebSocket from "./WebSocket/RoomWebSocket";
+import PlaceRoomPetEvent from "./Events/Rooms/Pets/PlaceRoomPetEvent";
+import PickupRoomPetEvent from "./Events/Rooms/Pets/PickupRoomPetEvent";
+import ScratchRoomPetEvent from "./Events/Rooms/Pets/ScratchRoomPetEvent";
+import SetRoomClickConfigurationEvent from "./Events/Rooms/Configuration/SetRoomClickConfigurationEvent";
+import ResetRoomClickConfigurationEvent from "./Events/Rooms/Configuration/ResetRoomClickConfigurationEvent";
+import UpdateRoomFurnitureTraxSongEvent from "./Events/Rooms/Furniture/Trax/UpdateRoomFurnitureTraxSongEvent";
+import UpdateRoomFurnitureTraxPlaylistEvent from "./Events/Rooms/Furniture/Trax/UpdateRoomFurnitureTraxPlaylistEvent";
+import DeleteRoomFurnitureTraxSongEvent from "./Events/Rooms/Furniture/Trax/DeleteRoomFurnitureTraxSongEvent";
+import BurnRoomFurnitureTraxSongEvent from "./Events/Rooms/Furniture/Trax/BurnRoomFurnitureTraxSongEvent";
+import InsertRoomFurnitureTraxSongEvent from "./Events/Rooms/Furniture/Trax/InsertRoomFurnitureTraxSongEvent";
+import RequestRoomUserTradingEvent from "./Events/Rooms/User/Trading/RequestRoomUserTradingEvent";
+import UpdateRoomUserTradingEvent from "./Events/Rooms/User/Trading/UpdateRoomUserTradingEvent";
+import GetRoomWiredMonitorEvent from "./Events/Rooms/Wired/GetRoomWiredMonitorEvent";
+import GetRoomWiredLogsEvent from "./Events/Rooms/Wired/GetRoomWiredLogsEvent";
+import GetRoomRightsEvent from "./Events/Rooms/Rights/GetRoomRightsEvent";
+import ClearRoomRightsEvent from "./Events/Rooms/Rights/ClearRoomRightsEvent";
+import RoomReadyEvent from "./Rooms/RoomReadyEvent";
+import RoomClickEvent from "./Events/Rooms/RoomClickEvent";
+import RoomDoubleClickEvent from "./Events/Rooms/RoomDoubleClickEvent";
+import PlaceFurnitureEvent from "./Events/Rooms/Furniture/PlaceFurnitureEvent";
+import PlaceBotEvent from "./Events/Rooms/Bots/PlaceBotEvent";
+import PlaceRoomContentFurnitureEvent from "./Events/Rooms/Furniture/PlaceRoomContentFurnitureEvent";
+import UseRoomFurnitureEvent from "./Events/Rooms/Furniture/UseRoomFurnitureEvent";
+import UpdateRoomFurnitureEvent from "./Events/Rooms/Furniture/UpdateRoomFurnitureEvent";
+import UpdateRoomBotEvent from "./Events/Rooms/Bots/UpdateRoomBotEvent";
+import PickupRoomFurnitureEvent from "./Events/Rooms/Furniture/PickupRoomFurnitureEvent";
+import PickupAllRoomFurnitureEvent from "./Events/Rooms/Furniture/PickupAllRoomFurnitureEvent";
+import PickupRoomBotEvent from "./Events/Rooms/Bots/PickupRoomBotEvent";
+import StartWalkingEvent from "./Events/Rooms/User/StartWalkingEvent";
+import SendUserMessageEvent from "./Events/Rooms/User/SendUserMessageEvent";
+import GetRoomChatStylesEvent from "./Events/Rooms/Chat/Styles/GetRoomChatStylesEvent";
+import UpdateRoomStructureEvent from "./Events/Rooms/UpdateRoomStructureEvent";
+import UpdateRoomInformationEvent from "./Events/Rooms/UpdateRoomInformationEvent";
+import UpdateUserRightsEvent from "./Events/Rooms/User/UpdateUserRightsEvent";
+import SetTypingEvent from "./Events/Rooms/User/SetTypingEvent";
+import GetRoomBotSpeechEvent from "./Events/Rooms/Bots/GetRoomBotSpeechEvent";
+import ServerRemoveUserFromRoomEvent from "./Events/Server/ServerRemoveUserFromRoomEvent";
 
 export default class RoomServer {
-    public websocket: RoomWebSocketServer;
+    public static websocket: RoomWebSocket;
 
-    public readonly commandHandler: CommandHandler;
-    public readonly petCommandHandler: PetCommandHandler;
+    public static readonly commandHandler: CommandHandler = new CommandHandler();
+    public static readonly petCommandHandler: PetCommandHandler = new PetCommandHandler();
 
-    public readonly roomManager: RoomManager;
+    public static readonly roomManager: RoomManager = new RoomManager();
 
-    public readonly hotelSettings: HotelSettings;
+    public static readonly hotelSettings: HotelSettings = new HotelSettings();
 
-    constructor() {
-        this.websocket = new RoomWebSocketServer(this);
+    public static async start() {
+        this.websocket = new RoomWebSocket();
         
-        this.commandHandler = new CommandHandler();
-        this.petCommandHandler = new PetCommandHandler();
-
-        this.hotelSettings = new HotelSettings();
-
-        this.roomManager = new RoomManager();
+        await this.hotelSettings.loadModels();
 
         this.registerServerEvents();
         this.registerUserEvents();
     }
 
-    private registerServerEvents() {
+    private static registerServerEvents() {
         this.websocket.serverEventHandler.addProtobuffListener(ServerLoadRoomData, new ServerLoadRoomEvent());
         this.websocket.serverEventHandler.addProtobuffListener(ServerRemoveUserFromRoomData, new ServerRemoveUserFromRoomEvent());
     }
 
-    private registerUserEvents() {
+    private static registerUserEvents() {
         // Room pet events
         this.websocket.userEventHandler.addProtobuffListener(PlaceRoomPetData, new PlaceRoomPetEvent());
         this.websocket.userEventHandler.addProtobuffListener(PickupRoomPetData, new PickupRoomPetEvent());

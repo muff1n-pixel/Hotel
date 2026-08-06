@@ -1,5 +1,5 @@
 import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener";
-import RoomServer from "../../Rooms/RoomServer";
-import RoomServerClient from "../../Rooms/RoomServerClient";
+import RoomWorker from "../../Rooms/RoomWorker";
+import RoomWorkerWebSocket from "../../Rooms/RoomWorkerWebSocket";
 
-export type ServerProtobuffListener<T> = ProtobuffListener<RoomServer, T>;
+export type ServerProtobuffListener<T> = ProtobuffListener<RoomWorker, T>;

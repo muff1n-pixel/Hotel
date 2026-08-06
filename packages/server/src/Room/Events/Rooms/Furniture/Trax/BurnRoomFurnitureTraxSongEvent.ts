@@ -3,12 +3,12 @@ import { randomUUID } from "crypto";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
+import User from "../../../../Users/User";
 
 export default class BurnRoomFurnitureTraxSongEvent implements RoomProtobuffListener<BurnRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: RoomWebSocketUser, payload: BurnRoomFurnitureTraxSongData) {
+    async handle(user: User, payload: BurnRoomFurnitureTraxSongData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }

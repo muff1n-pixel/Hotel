@@ -1,11 +1,11 @@
 import { RoomDoubleClickData, RoomPositionOffsetData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
+import User from "../../Users/User.js";
 
 export default class RoomDoubleClickEvent implements RoomProtobuffListener<RoomDoubleClickData> {
     minimumDurationBetweenEvents?: number = 100;
 
-    async handle(user: RoomWebSocketUser, payload: RoomDoubleClickData) {
+    async handle(user: User, payload: RoomDoubleClickData) {
         if(payload.position) {
             const furnitureAtPosition = user.roomUser.room.getAllFurnitureAtPosition(RoomPositionOffsetData.fromJSON(payload.position));
 

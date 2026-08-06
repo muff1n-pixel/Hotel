@@ -1,11 +1,11 @@
 import { GetRoomRightsData, RoomRightsData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class GetRoomRightsEvent implements RoomProtobuffListener<GetRoomRightsData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: RoomWebSocketUser, payload: GetRoomRightsData) {
+    async handle(user: User, payload: GetRoomRightsData) {
         if(!user.roomUser.hasRights()) {
             return;
         }

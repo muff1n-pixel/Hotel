@@ -21,8 +21,8 @@ import WiredTriggerScoreAchievedLogic from "./Furniture/Logic/Wired/Trigger/Wire
 import RoomWired from "./Wired/RoomWired.js";
 import RoomGroup from "./Groups/RoomGroup.js";
 import RoomEvent from "./Events/RoomEvent.js";
-import { roomServer } from "../index.js";
-import RoomWebSocketUser from "../Server/Users/RoomWebSocketUser.js";
+import User from "../Users/User.js";
+import RoomServer from "../RoomServer.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -57,7 +57,7 @@ export default class Room {
         this.requestActionsFrame();
     }
 
-    public addUserClient(user: RoomWebSocketUser, position?: RoomPositionData) {
+    public addUserClient(user: User, position?: RoomPositionData) {
         const roomUser = new RoomUser(this, user, position);
         
         this.users.push(roomUser);
@@ -222,7 +222,7 @@ export default class Room {
         return this.pets.find((pet) => pet.position.row === position.row && pet.position.column === position.column);
     }
 
-    public getRoomUser(user: RoomWebSocketUser) {
+    public getRoomUser(user: User) {
         return this.getRoomUserById(user.model.id);
     }
 
@@ -284,7 +284,7 @@ export default class Room {
                 }
             }
 
-            roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
                 userId: this.model.owner.id,
                 achievementId: "RoomHost",
                 score: this.users.filter((roomUser) => roomUser.user.model.id !== this.model.owner.id).length
@@ -294,7 +294,7 @@ export default class Room {
 
             if(usersExcludingOwner.length) {
                 if(this.furnitures.some((furniture) => furniture.logic instanceof RoomFurnitureTraxLogic && furniture.model.animation === 1)) {
-                    roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+                    RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
                         userId: this.model.owner.id,
                         achievementId: "MusicPlayer",
                         score: usersExcludingOwner.length

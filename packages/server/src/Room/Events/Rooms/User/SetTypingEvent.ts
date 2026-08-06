@@ -1,9 +1,9 @@
 import { RoomUserData, SetRoomChatTypingData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
+import User from "../../../Users/User";
 
 export default class SetTypingEvent implements RoomProtobuffListener<SetRoomChatTypingData> {
-    async handle(user: RoomWebSocketUser, payload: SetRoomChatTypingData) {
+    async handle(user: User, payload: SetRoomChatTypingData) {
         if(user.roomUser.typing === payload.typing) {
             return;
         }

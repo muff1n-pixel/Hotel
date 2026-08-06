@@ -6,7 +6,7 @@ import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomAc
 import RoomUser from "../Users/RoomUser.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
-import { roomServer } from "../../index.js";
+import RoomServer from "../../RoomServer.js";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -106,7 +106,7 @@ export default class RoomBot implements RoomActor {
             roomId: null
         });
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: this.model.user.id,
             botsAdded: [this.model.id]
         }));

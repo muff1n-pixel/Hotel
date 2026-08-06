@@ -3,13 +3,13 @@ import { randomUUID } from "crypto";
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
-import { roomServer } from "../../../..";
+import User from "../../../../Users/User";
+import RoomServer from "../../../../RoomServer";
 
 export default class InsertRoomFurnitureTraxSongEvent implements RoomProtobuffListener<InsertRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: RoomWebSocketUser, payload: InsertRoomFurnitureTraxSongData) {
+    async handle(user: User, payload: InsertRoomFurnitureTraxSongData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
@@ -80,7 +80,7 @@ export default class InsertRoomFurnitureTraxSongEvent implements RoomProtobuffLi
             ]
         }));
 
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: user.id,
             furnitureRemoved: [songFurniture.id]
         }));

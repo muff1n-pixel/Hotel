@@ -11,8 +11,8 @@ import RoomUserTrading from "./Trading/RoomUserTrading.js";
 import RoomUserGroup from "./Groups/RoomUserGroup.js";
 import { GroupRights } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
-import { roomServer } from "../../index.js";
+import User from "../../Users/User.js";
+import RoomServer from "../../RoomServer.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -52,7 +52,7 @@ export default class RoomUser implements RoomActor {
 
     public pose: RoomFigurePose = new RoomFigurePose(this);
 
-    constructor(public readonly room: Room, public readonly user: RoomWebSocketUser, initialPosition?: RoomPositionData) {
+    constructor(public readonly room: Room, public readonly user: User, initialPosition?: RoomPositionData) {
         this.trading = new RoomUserTrading(this);
         this.group = new RoomUserGroup(this);
 
@@ -141,7 +141,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleActionsInterval() {
-        if(!this.idling && (performance.now() - this.lastActivity) > (roomServer.hotelSettings.roomUserIdlingTimeout * 1000)) {
+        if(!this.idling && (performance.now() - this.lastActivity) > (RoomServer.hotelSettings.roomUserIdlingTimeout * 1000)) {
             this.idling = true;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({

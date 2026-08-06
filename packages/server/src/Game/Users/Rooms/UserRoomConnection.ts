@@ -1,9 +1,9 @@
 import { ServerRemoveUserFromRoomData } from "@pixel63/events";
-import RoomServerClient from "../../Rooms/RoomServerClient";
+import RoomWorkerWebSocket from "../../Rooms/RoomWorkerWebSocket";
 import User from "../User";
 
 export default class UserRoomConnection {
-    constructor(private readonly user: User, private readonly client: RoomServerClient, private readonly roomId: string) {
+    constructor(private readonly user: User, private readonly client: RoomWorkerWebSocket, private readonly roomId: string) {
 
     }
 

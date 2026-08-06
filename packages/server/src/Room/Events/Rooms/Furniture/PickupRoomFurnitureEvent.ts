@@ -1,9 +1,9 @@
 import { PickupRoomFurnitureData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
+import User from "../../../Users/User";
 
 export default class PickupRoomFurnitureEvent implements RoomProtobuffListener<PickupRoomFurnitureData> {
-    async handle(user: RoomWebSocketUser, payload: PickupRoomFurnitureData) {
+    async handle(user: User, payload: PickupRoomFurnitureData) {
         const roomFurniture = user.roomUser.room.getRoomFurniture(payload.id);
 
         if(!roomFurniture.model.user) {

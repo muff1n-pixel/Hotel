@@ -1,15 +1,15 @@
 import { ServerRoomData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, UserInventoryFurnitureCollectionData, UserInventoryFurnitureData } from "@pixel63/events";
 import { ServerProtobuffListener } from "../Interfaces/ServerProtobuffListener";
-import RoomServerClient from "../../Rooms/RoomServerClient";
+import RoomWorkerWebSocket from "../../Rooms/RoomWorkerWebSocket";
 import { game } from "../..";
 import User from "../../Users/User";
 import UserInventory from "../../Users/Inventory/UserInventory";
-import RoomServer from "../../Rooms/RoomServer";
+import RoomWorker from "../../Rooms/RoomWorker";
 
 export default class ServerUserInventoryRefreshEvent implements ServerProtobuffListener<ServerUserInventoryRefreshData> {
     minimumDurationBetweenEvents?: number = 200;
 
-    async handle(client: RoomServer, payload: ServerUserInventoryRefreshData) {
+    async handle(client: RoomWorker, payload: ServerUserInventoryRefreshData) {
         const user = game.getUserById(payload.userId);
 
         if(!user) {

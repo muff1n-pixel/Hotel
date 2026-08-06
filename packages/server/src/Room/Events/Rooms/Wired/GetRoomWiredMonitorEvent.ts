@@ -1,12 +1,12 @@
 import { GetRoomWiredMonitorData, RoomWiredMonitorData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
-import { roomServer } from "../../..";
+import User from "../../../Users/User";
+import RoomServer from "../../../RoomServer";
 
 export default class GetRoomWiredMonitorEvent implements RoomProtobuffListener<GetRoomWiredMonitorData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: RoomWebSocketUser) {
+    async handle(user: User) {
         if(!user.roomUser.hasRights()) {
             return;
         }
@@ -21,17 +21,17 @@ export default class GetRoomWiredMonitorEvent implements RoomProtobuffListener<G
                     {
                         type: "wired_usage",
                         value: user.roomUser.room.wired.executions.length,
-                        maxValue: roomServer.hotelSettings.roomWiredMaxUsage
+                        maxValue: RoomServer.hotelSettings.roomWiredMaxUsage
                     },
                     {
                         type: "floor_furni",
                         value: user.roomUser.room.floorFurnitureCount,
-                        maxValue: roomServer.hotelSettings.roomMaxFloorFurniture
+                        maxValue: RoomServer.hotelSettings.roomMaxFloorFurniture
                     },
                     {
                         type: "wall_furni",
                         value: user.roomUser.room.wallFurnitureCount,
-                        maxValue: roomServer.hotelSettings.roomMaxWallFurniture
+                        maxValue: RoomServer.hotelSettings.roomMaxWallFurniture
                     },
                     {
                         type: "permanent_furni_vars",

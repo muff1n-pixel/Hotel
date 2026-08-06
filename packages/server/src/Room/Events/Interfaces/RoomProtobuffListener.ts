@@ -1,4 +1,4 @@
 import ProtobuffListener from "../../../Communication/Interfaces/ProtobuffListener";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser";
+import User from "../../Users/User";
 
-export type RoomProtobuffListener<T> = ProtobuffListener<RoomWebSocketUser, T>;
+export type RoomProtobuffListener<T> = ProtobuffListener<User, T>;

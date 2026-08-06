@@ -2,7 +2,7 @@ import { RoomActorChatData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomUser from "../../../Room/Rooms/Users/RoomUser.js";
 import Command from "../Command.js";
 import UserPermissions from "../../../Game/Users/Permissions/UserPermissions.js";
-import { roomServer } from "../../index.js";
+import RoomServer from "../../RoomServer.js";
 
 export default class GiveCommand extends Command {
     validate(roomUser: RoomUser, permissions: UserPermissions) {
@@ -30,7 +30,7 @@ export default class GiveCommand extends Command {
 
         await user.save();
 
-        roomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
             userId: user.id
         }));
 

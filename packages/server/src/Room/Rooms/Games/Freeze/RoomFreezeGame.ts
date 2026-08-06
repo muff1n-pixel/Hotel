@@ -9,7 +9,7 @@ import RoomFurnitureFreezeCounterLogic from "../../Furniture/Logic/Games/Freeze/
 import { randomUUID } from "crypto";
 import RoomGame from "../RoomGame";
 import RoomFreezeGamePlayers from "./RoomFreezeGamePlayers";
-import { roomServer } from "../../..";
+import RoomServer from "../../../RoomServer";
 
 export type RoomFreezeGameTeam = "red" | "green" | "blue" | "yellow";
 
@@ -186,7 +186,7 @@ export default class RoomFreezeGame implements RoomGame<RoomFreezeGameTeam> {
         this.started = false;
         this.paused = false;
 
-        roomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
             userId: this.room.model.owner.id,
             achievementId: "GameArcadeOwner",
             score: Object.values(this.teams).reduce((score, team) => team.score + score, 0)

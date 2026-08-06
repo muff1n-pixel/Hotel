@@ -1,11 +1,11 @@
 import { UpdateRoomUserTradingData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
+import User from "../../../../Users/User";
 
 export default class UpdateRoomUserTradingEvent implements RoomProtobuffListener<UpdateRoomUserTradingData> {
     minimumDurationBetweenEvents?: number = 100;
     
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomUserTradingData) {
+    async handle(user: User, payload: UpdateRoomUserTradingData) {
         if(payload.userId !== user.roomUser.trading.tradingWithUser?.user.model.id) {
             throw new Error("Requested trading user is not being traded with.");
         }

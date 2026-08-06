@@ -3,12 +3,12 @@ import WiredTriggerUserClickFurniLogic from "../../Rooms/Furniture/Logic/Wired/T
 import WiredTriggerUserClickTileLogic from "../../Rooms/Furniture/Logic/Wired/Trigger/WiredTriggerUserClickTileLogic.js";
 import { RoomClickData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
+import User from "../../Users/User.js";
 
 export default class RoomClickEvent implements RoomProtobuffListener<RoomClickData> {
     minimumDurationBetweenEvents?: number = 100;
 
-    async handle(user: RoomWebSocketUser, payload: RoomClickData) {
+    async handle(user: User, payload: RoomClickData) {
         if(payload.userId) {
             const targetUser = user.roomUser.room.getRoomUserById(payload.userId);
 

@@ -1,11 +1,11 @@
 import { RoomPositionData, RoomStructureData, UpdateRoomStructureData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../Server/Users/RoomWebSocketUser.js";
+import User from "../../Users/User.js";
 
 export default class UpdateRoomStructureEvent implements RoomProtobuffListener<UpdateRoomStructureData> {
     minimumDurationBetweenEvents?: number = 1000;
 
-    async handle(user: RoomWebSocketUser, payload: UpdateRoomStructureData) {
+    async handle(user: User, payload: UpdateRoomStructureData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have room rights.");
         }

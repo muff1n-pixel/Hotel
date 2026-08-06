@@ -1,25 +1,25 @@
 import { ServerLoadRoomData, ServerRoomData, ServerRoomLoadedData } from "@pixel63/events";
-import RoomServerClient from "./RoomServerClient";
+import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import { RoomModel } from "../../Database/Models/Rooms/RoomModel";
-import RoomServer from "./RoomServer";
+import RoomWorker from "./RoomWorker";
 import Game from "../Game";
 
-export default class RoomServers {
-    private readonly roomServers: RoomServer[] = [];
+export default class RoomWorkerPool {
+    private readonly workers: RoomWorker[] = [];
 
     constructor(private game: Game) {
     }
 
     public getRooms() {
-        return this.roomServers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
+        return this.workers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
     }
 
     public addServer(host: string, port: number) {
-        this.roomServers.push(new RoomServer(this.game, host, port));
+        this.workers.push(new RoomWorker(this.game, host, port));
     }
 
     public getRoom(roomId: string) {
-        for(const roomServer of this.roomServers) {
+        for(const roomServer of this.workers) {
             const roomData = roomServer.rooms.find((clientRoom) => clientRoom.roomId === roomId);
 
             return roomData;
@@ -29,7 +29,7 @@ export default class RoomServers {
     }
 
     private getRoomClient(roomId: string) {
-        for(const roomServer of this.roomServers) {
+        for(const roomServer of this.workers) {
             if(roomServer.rooms.some((clientRoom) => clientRoom.roomId === roomId)) {
                 return roomServer;
             }
@@ -45,13 +45,13 @@ export default class RoomServers {
             throw new Error("Failed to get a server to create room.");
         }
 
-        return new Promise<RoomServer>((resolve, reject) => {
+        return new Promise<RoomWorker>((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject("[RoomServers] Failed to load the room in a timely manner.");
             }, 5000);
 
             const listener = roomServer.client.eventHandler.addProtobuffListener(ServerRoomLoadedData, {
-                handle: async (_: RoomServer, payload: ServerRoomLoadedData) =>  {
+                handle: async (_: RoomWorker, payload: ServerRoomLoadedData) =>  {
                     if(payload.roomId !== roomId) {
                         return;
                     }
@@ -87,7 +87,7 @@ export default class RoomServers {
     // TODO: measure load to automatically balance better for servers with the least usage
     // Idea: use messages sent/received per minute as a reducer
     private getServerForRoom() {
-        const clientWithLeastRooms = this.roomServers.reduce((previousClient: RoomServer | null, currentClient: RoomServer) => {
+        const clientWithLeastRooms = this.workers.reduce((previousClient: RoomWorker | null, currentClient: RoomWorker) => {
             if(!currentClient) {
                 return previousClient;
             }

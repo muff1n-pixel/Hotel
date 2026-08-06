@@ -1,9 +1,9 @@
 import { RoomPositionOffsetData, SendRoomUserWalkData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser";
+import User from "../../../Users/User";
 
 export default class StartWalkingEvent implements RoomProtobuffListener<SendRoomUserWalkData> {
-    async handle(user: RoomWebSocketUser, payload: SendRoomUserWalkData) {
+    async handle(user: User, payload: SendRoomUserWalkData) {
         if(!payload.target) {
             throw new Error();
         }

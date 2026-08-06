@@ -4,12 +4,12 @@ import { GetRoomRightsData, RoomUserData, SetRoomUserRightsData } from "@pixel63
 import GetRoomRightsEvent from "../Rights/GetRoomRightsEvent.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class UpdateUserRightsEvent implements RoomProtobuffListener<SetRoomUserRightsData> {
     minimumDurationBetweenEvents?: number = 10;
     
-    async handle(user: RoomWebSocketUser, payload: SetRoomUserRightsData) {
+    async handle(user: User, payload: SetRoomUserRightsData) {
         if(user.roomUser.room.model.owner.id !== user.id) {
             throw new Error("User is not room owner.");
         }

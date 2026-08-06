@@ -1,9 +1,9 @@
 import { RoomEventData, RoomGroupData, RoomReadyData, RoomUserEnteredData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../Events/Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../Server/Users/RoomWebSocketUser.js";
+import User from "../Users/User.js";
 
 export default class RoomReadyEvent implements RoomProtobuffListener<RoomReadyData> {
-    async handle(user: RoomWebSocketUser) {
+    async handle(user: User) {
         if(user.roomUser.ready) {
             return;
         }

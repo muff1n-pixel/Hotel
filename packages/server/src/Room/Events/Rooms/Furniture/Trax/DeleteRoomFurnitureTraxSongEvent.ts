@@ -2,13 +2,13 @@ import { RoomFurnitureData, DeleteRoomFurnitureTraxSongData, UserFurnitureTraxDa
 import { UserFurnitureModel } from "../../../../../Database/Models/Users/Furniture/UserFurnitureModel";
 import { FurnitureModel } from "../../../../../Database/Models/Furniture/FurnitureModel";
 import { RoomProtobuffListener } from "../../../Interfaces/RoomProtobuffListener";
-import RoomWebSocketUser from "../../../../Server/Users/RoomWebSocketUser";
-import { roomServer } from "../../../..";
+import User from "../../../../Users/User";
+import RoomServer from "../../../../RoomServer";
 
 export default class DeleteRoomFurnitureTraxSongEvent implements RoomProtobuffListener<DeleteRoomFurnitureTraxSongData> {
     minimumDurationBetweenEvents?: number = 500;
     
-    async handle(user: RoomWebSocketUser, payload: DeleteRoomFurnitureTraxSongData) {
+    async handle(user: User, payload: DeleteRoomFurnitureTraxSongData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }
@@ -57,7 +57,7 @@ export default class DeleteRoomFurnitureTraxSongEvent implements RoomProtobuffLi
                 });
 
                 if(userFurniture.userId) {
-                    roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                    RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
                         userId: userFurniture.userId,
                         furnitureAdded: [userFurniture.id]
                     }));

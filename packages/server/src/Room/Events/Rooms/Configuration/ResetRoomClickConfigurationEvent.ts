@@ -1,11 +1,11 @@
 import { ResetRoomClickConfigurationData, RoomClickConfigurationResetData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class ResetRoomClickConfigurationEvent implements RoomProtobuffListener<ResetRoomClickConfigurationData> {
     minimumDurationBetweenEvents?: number = 100;
 
-    async handle(user: RoomWebSocketUser, payload: ResetRoomClickConfigurationData) {
+    async handle(user: User, payload: ResetRoomClickConfigurationData) {
         if(!user.roomUser.hasRights()) {
             throw new Error("User does not have rights.");
         }

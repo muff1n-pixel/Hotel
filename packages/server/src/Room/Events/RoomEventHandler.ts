@@ -36,9 +36,9 @@ import GetRoomRightsEvent from "./Rooms/Rights/GetRoomRightsEvent.js";
 import ClearRoomRightsEvent from "./Rooms/Rights/ClearRoomRightsEvent.js";
 import ScratchRoomPetEvent from "./Rooms/Pets/ScratchRoomPetEvent.js";
 import EventHandler from "../../Communication/EventHandler.js";
-import RoomWebSocketUser from "../Server/Users/RoomWebSocketUser.js";
+import User from "../Users/User.js";
 
-export default class RoomEventHandler extends EventHandler<RoomWebSocketUser> {
+export default class RoomEventHandler extends EventHandler<User> {
     constructor() {
         super();
 

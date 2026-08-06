@@ -7,7 +7,7 @@ import { RoomFurnitureData, RoomFurnitureMovedData, RoomPositionData, RoomPositi
 import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import Directions from "../../../Helpers/Directions.js";
 import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic.js";
-import { roomServer } from "../../index.js";
+import RoomServer from "../../RoomServer.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -53,35 +53,35 @@ export default class RoomFurniture<T = unknown> {
 
         if(roomFurniture.model.userId) {
             if(roomFurniture.model.furniture.interactionType === "icetag_field") {
-                roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+                RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                     userId: roomFurniture.model.userId,
                     achievementId: "IceRinkBuilder",
                     totalScore: room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.interactionType === "icetag_field").length
                 }));
             }
             else if(roomFurniture.model.furniture.type === "snowb_slope") {
-                roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+                RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                     userId: roomFurniture.model.userId,
                     achievementId: "SnowBoardBuilder",
                     totalScore: room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.type === "snowb_slope").length
                 }));
             }
             else if(roomFurniture.model.furniture.type === "val11_floor") {
-                roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+                RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                     userId: roomFurniture.model.userId,
                     achievementId: "RollerRinkBuilder",
                     totalScore: room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.type === "val11_floor").length
                 }));
             }
             else if(roomFurniture.model.furniture.interactionType === "bunnyrun_field") {
-                roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+                RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                     userId: roomFurniture.model.userId,
                     achievementId: "BunnyRunBuilder",
                     totalScore: room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId && roomFurniture.model.furniture.interactionType === "bunnyrun_field").length
                 }));
             }
 
-            roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                 userId: roomFurniture.model.userId,
                 achievementId: "RoomBuilder",
                 totalScore: room.furnitures.length
@@ -89,7 +89,7 @@ export default class RoomFurniture<T = unknown> {
 
             const uniqueFurniture = [...new Set(room.furnitures.filter((roomFurniture) => roomFurniture.model.userId === userFurniture.userId).map((roomFurniture) => roomFurniture.model.furniture.id))];
 
-            roomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
                 userId: roomFurniture.model.userId,
                 achievementId: "FurniCollector",
                 totalScore: uniqueFurniture.length
@@ -125,7 +125,7 @@ export default class RoomFurniture<T = unknown> {
         });
 
         if(this.model.user) {
-            roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+            RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
                 userId: this.model.user.id,
                 furnitureAdded: [this.model.id]
             }));

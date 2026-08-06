@@ -1,17 +1,17 @@
 import { PlaceRoomPetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import RoomPet from "../../../Rooms/Pets/RoomPet.js";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 import { UserPetModel } from "../../../../Database/Models/Users/Pets/UserPetModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import { PetModel } from "../../../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../../../Database/Models/Pets/PetBreedModel.js";
-import { roomServer } from "../../../index.js";
+import RoomServer from "../../../RoomServer.js";
 
 export default class PlaceRoomPetEvent implements RoomProtobuffListener<PlaceRoomPetData> {
     minimumDurationBetweenEvents?: number = 500;
 
-    async handle(user: RoomWebSocketUser, payload: PlaceRoomPetData) {
+    async handle(user: User, payload: PlaceRoomPetData) {
         if(!user.roomUser.hasRights() || !user.roomUser.room.model.allowPets) {
             throw new Error("User is not allowed to place pets.");
         }
@@ -49,7 +49,7 @@ export default class PlaceRoomPetEvent implements RoomProtobuffListener<PlaceRoo
             throw new Error();
         }
         
-        roomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+        RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: user.id,
             botsRemoved: [ userPet.id ]
         }));

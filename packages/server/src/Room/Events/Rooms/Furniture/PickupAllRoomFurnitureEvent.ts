@@ -1,9 +1,9 @@
 import { PickupRoomFurnitureData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
+import User from "../../../Users/User.js";
 
 export default class PickupAllRoomFurnitureEvent implements RoomProtobuffListener<PickupRoomFurnitureData> {
-    async handle(user: RoomWebSocketUser, payload: PickupRoomFurnitureData) {
+    async handle(user: User, payload: PickupRoomFurnitureData) {
         if(user.id !== user.roomUser.room.model.owner.id) {
             throw new Error("User does not own the room.");
         }

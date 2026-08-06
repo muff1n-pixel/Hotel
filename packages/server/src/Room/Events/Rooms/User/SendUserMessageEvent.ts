@@ -1,12 +1,12 @@
 import { RoomActorChatData, RoomUserData, SendRoomChatMessageData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener.js";
-import RoomWebSocketUser from "../../../Server/Users/RoomWebSocketUser.js";
-import { roomServer } from "../../../index.js";
+import User from "../../../Users/User.js";
+import RoomServer from "../../../RoomServer.js";
 
 export default class SendUserMessageEvent implements RoomProtobuffListener<SendRoomChatMessageData> {
     minimumDurationBetweenEvents?: number = 10;
 
-    async handle(user: RoomWebSocketUser, payload: SendRoomChatMessageData) {
+    async handle(user: User, payload: SendRoomChatMessageData) {
         if(!payload.message.length) {
             throw new Error("Message is empty.");
         }
@@ -45,7 +45,7 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
                 }));
             }
 
-            if(await roomServer.commandHandler.handleCommand(user.roomUser, parts[0]!.substring(1), parts.slice(1).join(' '), payload.focusedUserId)) {
+            if(await RoomServer.commandHandler.handleCommand(user.roomUser, parts[0]!.substring(1), parts.slice(1).join(' '), payload.focusedUserId)) {
                 return;
             }
         }
@@ -73,7 +73,7 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
                 const nameIndex = parts.indexOf(roomPet.model.name);
 
                 if(nameIndex !== -1 && parts[nameIndex + 1]) {
-                    await roomServer.petCommandHandler.handleCommand(user.roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
+                    await RoomServer.petCommandHandler.handleCommand(user.roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
                 }
             }
         }
