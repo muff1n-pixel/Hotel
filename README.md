@@ -1,3 +1,8 @@
+# Infrastructure
+Pixel63 is built from scratch, with no correlation to existing emulator infrastructure or communication structure. Everything is built from scratch up in a manner that cannot be compared to emulators.
+
+There is one global game server which manages connections with users and global game logic, this includes for example the shop, navigator, friends. Rooms are hosted by dedicated room servers which can hold any amount of rooms. Users tell the server they want to join a room, the server allocates a dedicated room server from a pool of dedicated room servers, prepares the room in that room server, then tells the user to connect to that server for room communications.
+
 # Contributing
 ## Setting up your environment
 
