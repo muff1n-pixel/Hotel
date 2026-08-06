@@ -46,16 +46,5 @@ export default class User {
         this.sendProtobuff(LeaveRoomData, LeaveRoomData.create({}));
 
         this.websocket.close();
-
-        RoomServer.websocket.sendServerProtobuff(ServerUserRemovedFromRoomData, ServerUserRemovedFromRoomData.create({
-            userId: this.model.id,
-            roomId: this.room.model.id
-        }));
-
-        RoomServer.roomManager.unloadRoom(this.room);
-
-        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
-        }));
     }
 }

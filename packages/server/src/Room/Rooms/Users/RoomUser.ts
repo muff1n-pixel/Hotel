@@ -179,8 +179,6 @@ export default class RoomUser implements RoomActor {
             furniture.logic?.handleUserLeftRoom?.(this).catch(console.error);
         }
 
-        this.user.disconnect();
-
         /*if(!this.room.users.length) {
             game.roomManager.unloadRoom(this.room);
         }

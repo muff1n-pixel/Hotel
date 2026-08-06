@@ -2,7 +2,7 @@ import WebSocket, { RawData, WebSocketServer } from "ws";
 import { config } from "../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
-import { MessageType, ServerReadyData, ServerRoomsData, UnknownMessage } from "@pixel63/events";
+import { MessageType, ServerReadyData, ServerRoomsData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../Communication/EventHandler";
 import User from "../Users/User";
@@ -233,7 +233,7 @@ export default class RoomWebSocket {
 
     private async handleUserDisconnected(user: User, data: RawData) {
         logger.info(`User ${user.model.name} disconnected.`);
-
+        
         const index = RoomServer.users.indexOf(user);
 
         if(index !== -1) {
@@ -241,6 +241,17 @@ export default class RoomWebSocket {
         }
 
         user.roomUser.disconnect();
+
+        RoomServer.websocket.sendServerProtobuff(ServerUserRemovedFromRoomData, ServerUserRemovedFromRoomData.create({
+            userId: user.model.id,
+            roomId: user.room.model.id
+        }));
+
+        RoomServer.roomManager.unloadRoom(user.room);
+
+        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

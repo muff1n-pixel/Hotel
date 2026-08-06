@@ -47,6 +47,10 @@ export default class RoomWorker {
             throw new Error("Room does not exist in client.");
         }
 
+        if(user.room) {
+            user.room.disconnect();
+        }
+
         this.client.sendProtobuff(ServerAddUserToRoomData, ServerAddUserToRoomData.create({
             userId: user.model.id,
             roomId,
@@ -59,10 +63,6 @@ export default class RoomWorker {
             secure: this.secure,
             roomId: roomId
         }));
-
-        if(user.room) {
-            user.room.disconnect();
-        }
         
         user.room = new UserRoomConnection(user, this.client, roomId);
 
