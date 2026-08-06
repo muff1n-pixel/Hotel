@@ -26,6 +26,7 @@ import UserNotificationEvent from "./Communications/User/Notifications/UserNotif
 import UserHabboClubEvent from "./Communications/User/HabboClub/UserHabboClubEvent";
 import ConnectToRoomEvent from "./Communications/Room/ConnectToRoomEvent";
 import RoomLockEvent from "./Communications/Room/Lock/RoomLockEvent";
+import RoomCategoriesEvent from "./Communications/Room/Categories/RoomCategoriesEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -67,6 +68,7 @@ export default class ClientInstance extends EventTarget {
 
         // Room events
         webSocketClient.addProtobuffListener(ConnectToRoomData, new ConnectToRoomEvent());
+        webSocketClient.addProtobuffListener(RoomCategoriesData, new RoomCategoriesEvent());
         
         // User events
         webSocketClient.addProtobuffListener(UserData, new UserEvent());

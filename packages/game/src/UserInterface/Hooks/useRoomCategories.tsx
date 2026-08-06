@@ -8,7 +8,6 @@ export function useRoomCategories() {
   useEffect(() => {
     if(!clientInstance.roomCategories.value?.length) {
       webSocketClient.sendProtobuff(GetRoomCategoriesData, GetRoomCategoriesData.create({}));
-      
     }
 
     return clientInstance.roomCategories.subscribe(setValue);

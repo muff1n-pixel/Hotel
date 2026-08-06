@@ -70,7 +70,6 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
         });
 
         // Room events
-        roomWebsocket.addProtobuffListener(RoomCategoriesData, new RoomCategoriesEvent());
         roomWebsocket.addProtobuffListener(RoomChatStylesData, new RoomChatStylesEvent());
         roomWebsocket.addProtobuffListener(RoomGroupData, new RoomGroupEvent());
         roomWebsocket.addProtobuffListener(RoomEventData, new RoomEventEvent());
