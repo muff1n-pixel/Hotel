@@ -8,10 +8,10 @@ import RoomWorker from "./RoomWorker";
 export default class RoomWorkerWebSocket {
     private readonly websocket: WebSocket;
 
-    public readonly eventHandler: EventHandler<RoomWorker> = new EventHandler((_: RoomWorker, type: string) => console.log(`[RoomWebSocketServer:${this.port}] Received message ${type}`));
+    public readonly eventHandler: EventHandler<RoomWorker> = new EventHandler((_: RoomWorker, type: string) => console.log(`[RoomWebSocketServer:${this.server.port}] Received message ${type}`));
 
-    constructor(private readonly server: RoomWorker, private readonly game: Game, public readonly host: string, public readonly port: number, public readonly onOpen?: () => void) {
-        const url = new URL(`ws://${host}:${port}`);
+    constructor(private readonly server: RoomWorker, private readonly game: Game, secure: boolean, host: string, port: number, public readonly onOpen?: () => void) {
+        const url = new URL(`${(secure)?("wss"):("ws")}://${host}:${port}`);
 
         const accessToken = jsonWebToken.sign(
             {},
@@ -32,7 +32,7 @@ export default class RoomWorkerWebSocket {
     }
 
     private handleConnected() {
-        console.log(`[RoomServerClient:${this.port}] Connected to the room server!`);
+        console.log(`[RoomServerClient:${this.server.port}] Connected to the room server!`);
     }
     
     private async handleMessage(data: RawData) {
@@ -40,7 +40,7 @@ export default class RoomWorkerWebSocket {
     }
 
     private handleDisconnected() {
-        console.log(`[RoomServerClient:${this.port}] Lost connection with the room server.`);
+        console.log(`[RoomServerClient:${this.server.port}] Lost connection with the room server.`);
     }
     
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

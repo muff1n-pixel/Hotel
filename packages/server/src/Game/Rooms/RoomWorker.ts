@@ -17,8 +17,8 @@ export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
     public rooms: ServerRoomData[] = [];
 
-    constructor(private game: Game, localHost: string, localPort: number, public readonly host: string, public readonly port: number, onOpen?: () => void) {
-        this.client = new RoomWorkerWebSocket(this, game, localHost, localPort, onOpen);
+    constructor(private game: Game, localSecure: boolean, localHost: string, localPort: number, public readonly secure: boolean, public readonly host: string, public readonly port: number, onOpen?: () => void) {
+        this.client = new RoomWorkerWebSocket(this, game, localSecure, localHost, localPort, onOpen);
     
         this.client.eventHandler.addProtobuffListener(ServerReadyData, {
             async handle(user, payload) {
@@ -54,8 +54,9 @@ export default class RoomWorker {
         }));
 
         user.sendProtobuff(ConnectToRoomData, ConnectToRoomData.create({
-            host: this.client.host,
-            port: this.client.port,
+            host: this.host,
+            port: this.port,
+            secure: this.secure,
             roomId: roomId
         }));
 

@@ -31,11 +31,13 @@ export type Config = {
             local: {
                 host: string;
                 port: number;
+                secure: boolean;
             };
 
             public: {
                 host: string;
                 port: number;
+                secure: boolean;
             };
         }[];
         
