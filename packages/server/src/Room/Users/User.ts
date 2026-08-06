@@ -8,14 +8,11 @@ import UserAchievementsBridge from "./Achievements/UserAchievementsBridge";
 import Room from "../Rooms/Room";
 
 export default class User {
-    public readonly permissions: UserPermissions;
-
     public readonly achievements = new UserAchievementsBridge(this);
 
     public readonly roomUser: RoomUser;
 
-    constructor(private readonly websocket: WebSocket, public readonly model: UserModel, public readonly room: Room) {
-        this.permissions = new UserPermissions(model);
+    constructor(private readonly websocket: WebSocket, public readonly model: UserModel, public readonly room: Room, public readonly permissions: UserPermissions) {
         this.roomUser = room.addUserClient(this);
 
         RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({

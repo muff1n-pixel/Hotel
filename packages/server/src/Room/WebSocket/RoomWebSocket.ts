@@ -12,6 +12,7 @@ import RoomServer from "../RoomServer";
 import { logger } from "../RoomLogger";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import UserPermissions from "../../Game/Users/Permissions/UserPermissions";
 
 export default class RoomWebSocket {
     private readonly server: WebSocketServer;
@@ -158,12 +159,16 @@ export default class RoomWebSocket {
             throw new Error("Room is not loaded!");
         }
 
-        const user: User = new User(websocket, model, room);
+        const permissions = new UserPermissions(model);
 
-        RoomServer.users.push(user);
+        permissions.loadPermissions().then(() => {
+            const user: User = new User(websocket, model, room, permissions);
 
-        websocket.addListener("message", this.handleUserMessage.bind(this, user));
-        websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
+            RoomServer.users.push(user);
+
+            websocket.addListener("message", this.handleUserMessage.bind(this, user));
+            websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
+        });
     }
 
     private async handleUserMessage(user: User, data: RawData) {
