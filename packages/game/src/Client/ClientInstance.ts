@@ -25,6 +25,7 @@ import UserNotifications from "./User/UserNotifications";
 import UserNotificationEvent from "./Communications/User/Notifications/UserNotificationEvent";
 import UserHabboClubEvent from "./Communications/User/HabboClub/UserHabboClubEvent";
 import ConnectToRoomEvent from "./Communications/Room/ConnectToRoomEvent";
+import RoomLockEvent from "./Communications/Room/Lock/RoomLockEvent";
 
 export default class ClientInstance extends EventTarget {
     public roomInstance = new ObservableProperty<RoomInstance>();
@@ -72,8 +73,6 @@ export default class ClientInstance extends EventTarget {
         webSocketClient.addProtobuffListener(UserHabboClubData, new UserHabboClubEvent());
         webSocketClient.addProtobuffListener(UserPermissionsData, new UserPermissionsEvent());
 
-        webSocketClient.addProtobuffListener(RoomBellQueueData, new RoomBellQueueEvent());
-
         // Hotel events
         webSocketClient.addProtobuffListener(HotelData, new HotelEvent());
         webSocketClient.addProtobuffListener(HotelAlertData, new HotelAlertEvent());
@@ -96,6 +95,9 @@ export default class ClientInstance extends EventTarget {
 
         // Widgets
         webSocketClient.addProtobuffListener(WidgetNotificationData, new WidgetNotificationEvent());
+
+        // Room bell events
+        webSocketClient.addProtobuffListener(RoomLockData, new RoomLockEvent());
     }
 
     addEventListener<T>(type: string, callback: (event: T) => void | null, options?: AddEventListenerOptions | boolean): void {

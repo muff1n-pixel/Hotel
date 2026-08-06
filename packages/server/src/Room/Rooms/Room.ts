@@ -30,6 +30,8 @@ export default class Room {
     public readonly pets: RoomPet[] = [];
     public readonly furnitures: RoomFurniture[] = [];
 
+    public readonly queue: UserModel[] = [];
+
     public floorFurnitureCount: number = 0;
     public wallFurnitureCount: number = 0;
 

@@ -144,7 +144,7 @@ import GetBadgeBrowserEvent from "./Game/Badges/GetBadgeBrowserEvent.js";
 import UpdateBadgeEvent from "./Game/Badges/UpdateBadgeEvent.js";
 import EnterRoomBellQueueEvent from "./Game/Rooms/EnterRoomBellQueueEvent.js";
 import LeaveRoomBellQueueEvent from "./Game/Rooms/LeaveRoomBellQueueEvent.js";
-import UpdateRoomBellQueueEvent from "./Game/Rooms/UpdateRoomBellQueueEvent.js";
+import UpdateRoomBellQueueEvent from "../../Room/Events/Rooms/User/UpdateRoomBellQueueEvent.js";
 import GetUserProfileEvent from "./Game/Users/Profile/GetUserProfileEvent.js";
 import DeleteShopFurnitureEvent from "./Game/Shop/Development/DeleteShopFurnitureEvent.js";
 import GetFurnitureCrackableEvent from "./Game/Furniture/Crackable/GetFurnitureCrackableEvent.js";
@@ -244,7 +244,6 @@ export default class UserEventHandler extends EventHandler<User> {
         // Room bell events
         this.addProtobuffListener(EnterRoomBellQueueData, new EnterRoomBellQueueEvent());
         this.addProtobuffListener(ExitRoomBellQueueData, new LeaveRoomBellQueueEvent());
-        this.addProtobuffListener(UpdateRoomBellQueueData, new UpdateRoomBellQueueEvent());
 
         // Shop events
         this.addProtobuffListener(GetShopPagesData, new GetShopPagesEvent());

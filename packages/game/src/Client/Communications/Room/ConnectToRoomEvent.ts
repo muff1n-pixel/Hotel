@@ -31,6 +31,7 @@ import RoomEventEvent from "@Client/Communications/Room/RoomEventEvent";
 import RoomInstance from "@Client/Room/RoomInstance";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
+import RoomBellQueueEvent from "./Lock/RoomBellQueueEvent";
 
 export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRoomData> {
     async handle(payload: ConnectToRoomData) {
@@ -103,8 +104,7 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
         // Room user trading events
         roomWebsocket.addProtobuffListener(RoomUserTradingData, new RoomUserTradingEvent());
         roomWebsocket.addProtobuffListener(RoomUserTradingClosedData, new RoomUserTradingClosedEvent());
-
-        // Room bell events
-        roomWebsocket.addProtobuffListener(RoomLockData, new RoomLockEvent());
+        
+        roomWebsocket.addProtobuffListener(RoomBellQueueData, new RoomBellQueueEvent());
     }
 }

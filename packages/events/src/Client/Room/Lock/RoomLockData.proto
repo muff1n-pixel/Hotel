@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "Client/Room/Information/RoomInformationData.proto";
-
 message RoomLockData {
-    RoomInformationData room = 1;
+    string room_id = 1;
+    string room_name = 2;
+    string room_lock = 3;
 }

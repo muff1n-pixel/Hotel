@@ -5,6 +5,7 @@ import { RoomBellQueueUserData, UpdateRoomBellQueueData } from "@pixel63/events"
 import { Fragment, useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
+import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export type RoomDoorbellQueueDialogProps = {
     data?: RoomBellQueueUserData[];
@@ -13,27 +14,29 @@ export type RoomDoorbellQueueDialogProps = {
 }
 
 export default function RoomDoorbellQueueDialog({ data, hidden, onClose }: RoomDoorbellQueueDialogProps) {
+    const room = useRoomInstance();
+
     if(!data) {
         return null;
     }
 
     const handleAcceptAll = useCallback(() => {
         for(const user of data) {
-            webSocketClient.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
+            room?.websocket.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
                 userId: user.id,
                 accept: true
             }));
         }
-    }, [data]);
+    }, [data, room]);
 
     const handleDenyAll = useCallback(() => {
         for(const user of data) {
-            webSocketClient.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
+            room?.websocket.sendProtobuff(UpdateRoomBellQueueData, UpdateRoomBellQueueData.create({
                 userId: user.id,
                 accept: false
             }));
         }
-    }, [data]);
+    }, [data, room]);
 
     return (
         <Dialog title="Room Doorbell Queue" hidden={hidden} onClose={onClose} width={265} height={180}>

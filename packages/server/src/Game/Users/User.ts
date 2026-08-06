@@ -9,6 +9,7 @@ import UserAchievements from "./Achievements/UserAchievements.js";
 import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
 import UserHabboClub from "./HabboClub/UserHabboClub.js";
 import UserRoomConnection from "./Rooms/UserRoomConnection.js";
+import UserRoomQueue from "./Rooms/UserRoomQueue.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -21,7 +22,7 @@ export default class User extends EventEmitter {
     public spamProtection: UserSpamProtection;
     
     public room: UserRoomConnection | undefined = undefined;
-    //public roomBellQueue?: Room | undefined;
+    public roomBellQueue?: UserRoomQueue | undefined;
 
     public activityRewards: Map<string, number> = new Map();
     public readonly loggedInAt = performance.now();

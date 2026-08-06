@@ -4,14 +4,14 @@ import { RoomLockData } from "@pixel63/events";
 
 export default class RoomLockEvent implements ProtobuffListener<RoomLockData> {
     async handle(payload: RoomLockData) {
-        switch(payload.room?.lock) {
+        switch(payload.roomLock) {
             case "bell": {
-                clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => dialog.id !== payload.room?.id && dialog.type !== "room-doorbell");
+                clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => dialog.id !== payload.roomId && dialog.type !== "room-doorbell");
 
                 clientInstance.dialogs.value!.push({
-                    id: payload.room.id,
+                    id: payload.roomId,
                     type: "room-doorbell",
-                    data: payload.room,
+                    data: payload
                 });
 
                 clientInstance.dialogs.update();
@@ -20,12 +20,12 @@ export default class RoomLockEvent implements ProtobuffListener<RoomLockData> {
             }
 
             case "password": {
-                clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => dialog.id !== payload.room?.id && dialog.type !== "room-password");
+                clientInstance.dialogs.value = clientInstance.dialogs.value?.filter((dialog) => dialog.id !== payload.roomId && dialog.type !== "room-password");
 
                 clientInstance.dialogs.value!.push({
-                    id: payload.room.id,
+                    id: payload.roomId,
                     type: "room-password",
-                    data: payload.room,
+                    data: payload,
                 });
 
                 clientInstance.dialogs.update();

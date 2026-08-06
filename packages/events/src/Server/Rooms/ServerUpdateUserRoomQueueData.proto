@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message ServerUpdateUserRoomQueueData {
+    string user_id = 1;
+    string room_id = 2;
+
+    bool accept = 3;
+}

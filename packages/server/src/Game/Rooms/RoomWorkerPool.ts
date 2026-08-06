@@ -33,7 +33,7 @@ export default class RoomWorkerPool {
         return null;
     }
 
-    private getRoomClient(roomId: string) {
+    public getRoomClient(roomId: string) {
         for(const roomServer of this.workers) {
             if(roomServer.rooms.some((clientRoom) => clientRoom.roomId === roomId)) {
                 return roomServer;

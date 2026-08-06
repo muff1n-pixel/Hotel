@@ -1,13 +1,13 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { EnterRoomData, RoomInformationData } from "@pixel63/events";
+import { EnterRoomData, RoomInformationData, RoomLockData } from "@pixel63/events";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import Input from "@UserInterface/Common/Form/Components/Input";
 
 export type RoomPasswordDialogProps = {
-    data?: RoomInformationData;
+    data?: RoomLockData;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -21,7 +21,7 @@ export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswo
         }
 
         webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
-            id: data.id,
+            id: data.roomId,
             password
         }));
 
@@ -41,7 +41,7 @@ export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswo
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <div><b>{data.name}</b></div>
+                    <div><b>{data.roomName}</b></div>
 
                     <div><p>This room is protected by a password.</p></div>
 

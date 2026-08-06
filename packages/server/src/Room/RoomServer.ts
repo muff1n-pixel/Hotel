@@ -1,4 +1,4 @@
-import { BurnRoomFurnitureTraxSongData, ClearRoomRightsData, DeleteRoomFurnitureTraxSongData, GetRoomChatStylesData, GetRoomRightsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetUserBotSpeechData, InsertRoomFurnitureTraxSongData, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomReadyData, ScratchRoomPetData, SendRoomChatMessageData, SendRoomUserWalkData, ServerAddUserToRoomData, ServerLoadRoomData, ServerRemoveUserFromRoomData, ServerUserPlaceFurnitureInRoomData, ServerUserUpdatedData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateRoomUserTradingData, UseRoomFurnitureData } from "@pixel63/events";
+import { BurnRoomFurnitureTraxSongData, ClearRoomRightsData, DeleteRoomFurnitureTraxSongData, GetRoomChatStylesData, GetRoomRightsData, GetRoomWiredLogsData, GetRoomWiredMonitorData, GetUserBotSpeechData, InsertRoomFurnitureTraxSongData, PickupAllRoomFurnitureData, PickupRoomBotData, PickupRoomFurnitureData, PickupRoomPetData, PlaceRoomBotData, PlaceRoomContentFurnitureData, PlaceRoomFurnitureData, PlaceRoomPetData, RequestRoomUserTradingData, ResetRoomClickConfigurationData, RoomClickData, RoomDoubleClickData, RoomReadyData, ScratchRoomPetData, SendRoomChatMessageData, SendRoomUserWalkData, ServerAddUserToRoomData, ServerAddUserToRoomQueueData, ServerLoadRoomData, ServerRemoveUserFromRoomData, ServerRemoveUserToRoomQueueData, ServerUserPlaceFurnitureInRoomData, ServerUserUpdatedData, SetRoomChatTypingData, SetRoomClickConfigurationData, SetRoomUserRightsData, UpdateRoomBellQueueData, UpdateRoomBotData, UpdateRoomFurnitureData, UpdateRoomFurnitureTraxPlaylistData, UpdateRoomFurnitureTraxSongData, UpdateRoomInformationData, UpdateRoomStructureData, UpdateRoomUserTradingData, UseRoomFurnitureData } from "@pixel63/events";
 import CommandHandler from "./Commands/CommandHandler";
 import PetCommandHandler from "./Rooms/Pets/Commands/PetCommandHandler";
 import ServerLoadRoomEvent from "./Events/Server/ServerLoadRoomEvent";
@@ -47,6 +47,9 @@ import User from "./Users/User";
 import ServerUserUpdatedEvent from "./Events/Server/ServerUserUpdatedEvent";
 import ServerUserPlaceFurnitureInRoomEvent from "./Events/Server/ServerUserPlaceFurnitureInRoomEvent";
 import ServerAddUserToRoomEvent from "./Events/Server/ServerAddUserToRoomEvent";
+import ServerAddUserToRoomQueueEvent from "./Events/Server/ServerAddUserToRoomQueueEvent";
+import ServerRemoveUserToRoomQueueEvent from "./Events/Server/ServerRemoveUserToRoomQueueEvent";
+import UpdateRoomBellQueueEvent from "./Events/Rooms/User/UpdateRoomBellQueueEvent";
 
 export default class RoomServer {
     public static readonly websocket: RoomWebSocket = new RoomWebSocket();
@@ -76,6 +79,9 @@ export default class RoomServer {
         this.websocket.serverEventHandler.addProtobuffListener(ServerUserPlaceFurnitureInRoomData, new ServerUserPlaceFurnitureInRoomEvent());
         this.websocket.serverEventHandler.addProtobuffListener(ServerAddUserToRoomData, new ServerAddUserToRoomEvent());
         this.websocket.serverEventHandler.addProtobuffListener(ServerRemoveUserFromRoomData, new ServerRemoveUserFromRoomEvent());
+
+        this.websocket.serverEventHandler.addProtobuffListener(ServerAddUserToRoomQueueData, new ServerAddUserToRoomQueueEvent());
+        this.websocket.serverEventHandler.addProtobuffListener(ServerRemoveUserToRoomQueueData, new ServerRemoveUserToRoomQueueEvent());
     }
 
     private static registerUserEvents() {
@@ -130,5 +136,7 @@ export default class RoomServer {
         this.websocket.userEventHandler.addProtobuffListener(SetRoomChatTypingData, new SetTypingEvent());
             
         this.websocket.userEventHandler.addProtobuffListener(GetUserBotSpeechData, new GetRoomBotSpeechEvent());
+        
+        this.websocket.userEventHandler.addProtobuffListener(UpdateRoomBellQueueData, new UpdateRoomBellQueueEvent());
     }
 }

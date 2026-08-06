@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -9,6 +9,8 @@ import ServerUserInventoryRefreshEvent from "../Events/Room/ServerUserInventoryR
 import ServerUserUpdatedEvent from "../Events/Room/ServerUserUpdatedEvent";
 import ServerAddUserAchievementScoreEvent from "../Events/Room/ServerAddUserAchievementScoreEvent";
 import ServerSetUserAchievementScoreEvent from "../Events/Room/ServerSetUserAchievementScoreEvent";
+import ServerUpdateUserRoomQueueEvent from "../Events/Room/ServerUpdateUserRoomQueueEvent";
+import ServerRemoveUserFromRoomQueueEvent from "../Events/Room/ServerRemoveUserFromRoomQueueEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
@@ -30,6 +32,9 @@ export default class RoomWorker {
 
         this.client.eventHandler.addProtobuffListener(ServerAddUserAchievementScoreData, new ServerAddUserAchievementScoreEvent());
         this.client.eventHandler.addProtobuffListener(ServerSetUserAchievementScoreData, new ServerSetUserAchievementScoreEvent());
+
+        this.client.eventHandler.addProtobuffListener(ServerUpdateUserRoomQueueData, new ServerUpdateUserRoomQueueEvent());
+        this.client.eventHandler.addProtobuffListener(ServerRemoveUserToRoomQueueData, new ServerRemoveUserFromRoomQueueEvent());
     }
 
     public addUserToRoom(user: User, roomId: string) {

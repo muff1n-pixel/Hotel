@@ -1,12 +1,12 @@
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { EnterRoomBellQueueData, ExitRoomBellQueueData, RoomInformationData, UpdateRoomBellQueueData } from "@pixel63/events";
+import { EnterRoomBellQueueData, ExitRoomBellQueueData, RoomInformationData, RoomLockData, UpdateRoomBellQueueData } from "@pixel63/events";
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 
 export type RoomDoorbellDialogProps = {
-    data?: RoomInformationData;
+    data?: RoomLockData;
     hidden?: boolean;
     onClose?: () => void;
 }
@@ -55,7 +55,7 @@ export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbe
         setRinging(true);
 
         webSocketClient.sendProtobuff(EnterRoomBellQueueData, EnterRoomBellQueueData.create({
-            roomId: data.id
+            roomId: data.roomId
         }));
     }, [data, setRinging]);
 
@@ -68,7 +68,7 @@ export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbe
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <div><b>{data.name}</b></div>
+                    <div><b>{data.roomName}</b></div>
 
                     <div>
                         {(denied)?(

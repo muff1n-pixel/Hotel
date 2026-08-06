@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message ServerRemoveUserToRoomQueueData {
+    string user_id = 1;
+    string room_id = 2;
+}

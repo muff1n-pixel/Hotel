@@ -1,5 +1,4 @@
 import User from "../../../Users/User.js";
-import IncomingEvent from "../../../Communication/Interfaces/IncomingEvent.js";
 import { game } from "../../../index.js";
 import { GetRoomCategoriesData, RoomCategoriesData } from "@pixel63/events";
 import { UserProtobuffListener } from "../../Interfaces/UserProtobuffListener.js";

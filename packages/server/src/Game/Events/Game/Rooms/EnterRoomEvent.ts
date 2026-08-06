@@ -27,6 +27,10 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
                         }
                     ]
                 },
+                {
+                    model: UserModel,
+                    as: "owner"
+                }
             ]
         });
 
@@ -45,9 +49,11 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
                         break;
                     }
 
-                    /*user.sendProtobuff(RoomLockData, RoomLockData.create({
-                        room: roomInstance.getInformationData()
-                    }));*/
+                    user.sendProtobuff(RoomLockData, RoomLockData.create({
+                        roomId: roomModel.id,
+                        roomName: roomModel.name,
+                        roomLock: roomModel.lock
+                    }));
 
                     return;
                 }
@@ -62,9 +68,11 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
                     }
 
                     if(!payload.password) {
-                        /*user.sendProtobuff(RoomLockData, RoomLockData.create({
-                            room: roomInstance.getInformationData()
-                        }));*/
+                        user.sendProtobuff(RoomLockData, RoomLockData.create({
+                            roomId: roomModel.id,
+                            roomName: roomModel.name,
+                            roomLock: roomModel.lock
+                        }));
 
                         return;
                     }

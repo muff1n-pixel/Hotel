@@ -8,6 +8,7 @@ import HotelActivityRewards from "./Hotel/HotelActivityRewards.js";
 import { ServerTokenModel } from "../Database/Models/Server/ServerTokenModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
 import RoomWorkerPool from "./Rooms/RoomWorkerPool.js";
+import RoomNavigatorManager from "./Rooms/Navigator/RoomNavigatorManager.js";
 
 export default class Game {
     public readonly hotelInformation;
@@ -15,6 +16,7 @@ export default class Game {
     public readonly hotelActivityRewards;
 
     public readonly roomWorkerPool;
+    public readonly roomNavigatorManager;
 
     public readonly eventHandler;
     public readonly webSocket;
@@ -29,6 +31,7 @@ export default class Game {
         this.hotelActivityRewards = new HotelActivityRewards(this);
 
         this.roomWorkerPool = new RoomWorkerPool(this);
+        this.roomNavigatorManager = new RoomNavigatorManager();
 
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
@@ -37,6 +40,7 @@ export default class Game {
     }
 
     public async loadModels() {
+        await this.roomNavigatorManager.loadModels();
         await this.hotelSettings.loadModels();
     }
 
