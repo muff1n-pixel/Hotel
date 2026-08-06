@@ -2,7 +2,7 @@ import WebSocket, { RawData, WebSocketServer } from "ws";
 import { config } from "../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
-import { MessageType, ServerReadyData, UnknownMessage } from "@pixel63/events";
+import { MessageType, ServerReadyData, ServerRoomsData, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../Communication/EventHandler";
 import User from "../Users/User";
@@ -183,7 +183,9 @@ export default class RoomWebSocket {
 
         if(pendingUser.roomId !== roomId) {
             logger.warn("Refusing connection from websocket, user is not requesting the correct room id.", {
-                userId: payload.userId
+                userId: payload.userId,
+                requestedRoomId: roomId,
+                pendingRoomId: pendingUser.roomId
             });
 
             websocket.close();
@@ -222,6 +224,10 @@ export default class RoomWebSocket {
 
             websocket.addListener("message", this.handleUserMessage.bind(this, user));
             websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
+
+            RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+                data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+            }));
         });
     }
 

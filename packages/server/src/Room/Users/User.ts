@@ -14,10 +14,6 @@ export default class User {
 
     constructor(private readonly websocket: WebSocket, public readonly model: UserModel, public readonly room: Room, public readonly permissions: UserPermissions) {
         this.roomUser = room.addUserClient(this);
-
-        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
-        }));
     }
 
     public async save() {

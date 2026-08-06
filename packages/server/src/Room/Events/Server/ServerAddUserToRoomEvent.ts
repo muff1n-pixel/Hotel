@@ -6,6 +6,8 @@ export default class ServerAddUserToRoomEvent implements ServerProtobuffListener
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(_: null, payload: ServerAddUserToRoomData) {
+        RoomServer.pendingUsers = RoomServer.pendingUsers.filter((pendingUser) => pendingUser.userId !== payload.userId);
+        
         RoomServer.pendingUsers.push(payload);
     }
 }
