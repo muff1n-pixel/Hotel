@@ -15,6 +15,11 @@ This repository is designed as a mono-repo with 2 key packages:
 - **Server**: contains two types of servers, the game server and the room server. Both must be running for the server to operate, however, the game server can spawn room server as child processes.
 - **Game**: contains two types of packages, the client for the primarily the room renderer and its client logic, and the user interface for the React implementation of Pixel63.
 
+# Asset conversion
+Pixel63 uses lossless spritesheets for all kinds of objects (avatars, pets, furniture) coupled with a JSON manifest. These are generated using the `utils/swf` CLI package.
+
+You must download the SWF assets on your own and then provide the path for the assets to the CLI. Running `npm run start` will provide you with a list of actions to perform using the SWF CLI.
+
 # Developers
 These instructions are targeted at developers, other instructions for setting up Pixel63 for usage will be provided upon release.
 
