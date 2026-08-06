@@ -42,7 +42,7 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
             //throw new Error("TODO: room is already loaded!!");
         }
 
-        const roomWebsocket = new WebSocketClient(false, payload.host, payload.port, {
+        const roomWebsocket = new WebSocketClient(payload.secure, payload.host, payload.port, {
             accessToken: Cookies.get("accessToken") ?? "",
             roomId: payload.roomId
         });
