@@ -30,6 +30,8 @@
     },
     
     "rooms": {
+        "allocatedRoomPorts": [ 8081 ],
+        
         "automaticallySpawnRoomServers": true,
         "automaticRoomServerPortAllocations": [ 8081 ]
     }

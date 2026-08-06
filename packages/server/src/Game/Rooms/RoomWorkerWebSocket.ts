@@ -1,5 +1,5 @@
 import WebSocket, { RawData } from "ws";
-import { MessageType, UnknownMessage } from "@pixel63/events";
+import { MessageType, ServerReadyData, UnknownMessage } from "@pixel63/events";
 import EventHandler from "../../Communication/EventHandler";
 import Game from "../Game";
 import jsonWebToken from "jsonwebtoken";
@@ -10,7 +10,7 @@ export default class RoomWorkerWebSocket {
 
     public readonly eventHandler: EventHandler<RoomWorker> = new EventHandler((_: RoomWorker, type: string) => console.log(`[RoomWebSocketServer:${this.port}] Received message ${type}`));
 
-    constructor(private readonly server: RoomWorker, private readonly game: Game, public readonly host: string, public readonly port: number) {
+    constructor(private readonly server: RoomWorker, private readonly game: Game, public readonly host: string, public readonly port: number, public readonly onOpen?: () => void) {
         const url = new URL(`ws://${host}:${port}`);
 
         const accessToken = jsonWebToken.sign(

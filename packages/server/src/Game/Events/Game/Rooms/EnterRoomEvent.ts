@@ -12,7 +12,7 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
             user.room.disconnect();
         }
 
-        const room = await game.roomServers.getOrCreateRoom(payload.id);
+        const room = await game.roomWorkerPool.getOrCreateRoom(payload.id);
         
         if(!room) {
             console.error("Room does not exist.");

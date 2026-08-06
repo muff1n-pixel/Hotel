@@ -25,6 +25,13 @@ export type Config = {
     };
 
     database: Options;
+
+    rooms: {
+        allocatedRoomPorts: number[];
+        
+        automaticallySpawnRoomServers: boolean;
+        automaticRoomServerPortAllocations: number[];
+    };
 };
 
 export const config: Config = JSON.parse(readFileSync("./config.json", { encoding: "utf-8" })) as Config;

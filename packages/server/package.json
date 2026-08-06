@@ -19,6 +19,7 @@
     "@types/node": "^25.0.6",
     "@types/request": "^2.48.13",
     "@types/ws": "^8.18.1",
+    "@types/yargs": "^17.0.35",
     "cli-progress": "^3.12.0",
     "eslint": "^9.39.2",
     "sequelize-cli": "^6.6.5",
@@ -42,7 +43,8 @@
     "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",
     "winston": "^3.19.0",
-    "ws": "^8.19.0"
+    "ws": "^8.19.0",
+    "yargs": "^18.1.0"
   },
   "optionalDependencies": {
     "bufferutil": "*"

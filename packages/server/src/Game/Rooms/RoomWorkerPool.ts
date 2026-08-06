@@ -1,8 +1,7 @@
 import { ServerLoadRoomData, ServerRoomData, ServerRoomLoadedData } from "@pixel63/events";
-import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
-import { RoomModel } from "../../Database/Models/Rooms/RoomModel";
 import RoomWorker from "./RoomWorker";
 import Game from "../Game";
+import { config } from "../Config/Config";
 
 export default class RoomWorkerPool {
     private readonly workers: RoomWorker[] = [];
@@ -14,8 +13,14 @@ export default class RoomWorkerPool {
         return this.workers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
     }
 
-    public addServer(host: string, port: number) {
-        this.workers.push(new RoomWorker(this.game, host, port));
+    public async addServer(host: string, port: number) {
+        return new Promise<RoomWorker>((resolve) => {
+            const roomWorker = new RoomWorker(this.game, host, port, () => {
+                this.workers.push(roomWorker);
+
+                resolve(roomWorker);
+            });
+        });
     }
 
     public getRoom(roomId: string) {
@@ -38,11 +43,15 @@ export default class RoomWorkerPool {
         return null;
     }
 
-    private createRoom(roomId: string) {
-        const roomServer = this.getServerForRoom();
+    private async createRoom(roomId: string) {
+        let roomServer = this.getServerForRoom();
 
         if(!roomServer) {
-            throw new Error("Failed to get a server to create room.");
+            roomServer = await this.getAllocatedServer();
+
+            if(!roomServer) {
+                throw new Error("Failed to get an allocated room worker.");
+            }
         }
 
         return new Promise<RoomWorker>((resolve, reject) => {
@@ -112,5 +121,17 @@ export default class RoomWorkerPool {
         console.log(`[RoomServers] Next server for room allocation is ${clientWithLeastRooms.client.port}`)
 
         return clientWithLeastRooms;
+    }
+
+    private getAllocatedServer() {
+        for(const port of config.rooms.allocatedRoomPorts) {
+            if(this.workers.some((worker) => worker.port === port)) {
+                continue;
+            }
+
+            return this.addServer("localhost", port);
+        }
+
+        return null;
     }
 }

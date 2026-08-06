@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserToRoomData, ServerRoomData, ServerRoomsData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserToRoomData, ServerReadyData, ServerRoomData, ServerRoomsData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -11,9 +11,15 @@ export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
     public rooms: ServerRoomData[] = [];
 
-    constructor(private game: Game, host: string, port: number) {
-        this.client = new RoomWorkerWebSocket(this, game, host, port);
+    constructor(private game: Game, host: string, public readonly port: number, onOpen?: () => void) {
+        this.client = new RoomWorkerWebSocket(this, game, host, port, onOpen);
     
+        this.client.eventHandler.addProtobuffListener(ServerReadyData, {
+            async handle(user, payload) {
+                onOpen?.();
+            },
+        });
+        
         this.client.eventHandler.addProtobuffListener(ServerRoomsData, new ServerRoomsEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryRefreshData, new ServerUserInventoryRefreshEvent());

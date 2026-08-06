@@ -125,7 +125,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
                     limit: 20
                 });
 
-                const popularRooms = game.roomServers.getRooms().toSorted((a, b) => b.userIds.length - a.userIds.length);
+                const popularRooms = game.roomWorkerPool.getRooms().toSorted((a, b) => b.userIds.length - a.userIds.length);
                 const popularRoomModels = (popularRooms.length)?(await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
                     where: {
                         id: {
@@ -243,7 +243,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
     }
 
     private getRoomNavigatorData(roomModel: RoomModel) {
-        const room = game.roomServers.getRoom(roomModel.id);
+        const room = game.roomWorkerPool.getRoom(roomModel.id);
 
         return NavigatorRoomData.create({
             id: roomModel.id,

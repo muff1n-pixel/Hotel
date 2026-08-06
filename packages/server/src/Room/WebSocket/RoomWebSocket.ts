@@ -2,7 +2,7 @@ import WebSocket, { RawData, WebSocketServer } from "ws";
 import { config } from "../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
-import { MessageType, UnknownMessage } from "@pixel63/events";
+import { MessageType, ServerReadyData, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../Communication/EventHandler";
 import User from "../Users/User";
@@ -10,6 +10,8 @@ import { UserTokenModel } from "../../Database/Models/Users/UserTokens/UserToken
 import { UserModel } from "../../Database/Models/Users/UserModel";
 import RoomServer from "../RoomServer";
 import { logger } from "../RoomLogger";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 export default class RoomWebSocket {
     private readonly server: WebSocketServer;
@@ -18,19 +20,30 @@ export default class RoomWebSocket {
     public serverEventHandler = new EventHandler((_: unknown, type: string) => logger.verbose(`Received server message ${type}`));
     public userEventHandler = new EventHandler((user: User, type: string) => logger.verbose(`Received user message from ${user.model.name}: ${type}`));
 
-    constructor() {        
+    constructor() {
+        const args = yargs(hideBin(process.argv))
+            .option("port", {
+                type: "number",
+                default: 8081
+            })
+            .option("hostname", {
+                type: "string",
+                default: "localhost"
+            })
+            .parseSync();
+
         this.server = new WebSocketServer({
-            host: config.hostname,
-            port: 8081 // TODO: support port in arguments
+            host: args.hostname,
+            port: args.port
         });
 
         this.server.addListener("connection", this.handleConnection.bind(this));
 
-        logger.verbose(`Listening to websocket connections on port ${8081}.`);
+        logger.verbose(`Listening to websocket connections on port ${args.port}.`);
     }
 
     private async handleConnection(websocket: WebSocket, incomingMessage: IncomingMessage) {
-        if(!incomingMessage.url) {
+        if (!incomingMessage.url) {
             logger.warn("Refusing connection from websocket, incoming message does not contain a URL.");
 
             websocket.close();
@@ -42,7 +55,7 @@ export default class RoomWebSocket {
 
         const accessToken = url.searchParams.get("accessToken");
 
-        if(!accessToken) {
+        if (!accessToken) {
             logger.warn("Refusing connection from websocket, incoming message does not contain an access token.");
 
             websocket.close();
@@ -50,7 +63,7 @@ export default class RoomWebSocket {
             return;
         }
 
-        if(url.searchParams.get("type") === "server") {
+        if (url.searchParams.get("type") === "server") {
             await this.handleServerConnection(websocket, incomingMessage, accessToken, url);
         }
         else {
@@ -61,7 +74,7 @@ export default class RoomWebSocket {
     private async handleServerConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
         const serverToken = await ServerTokenModel.findOne();
 
-        if(!serverToken) {
+        if (!serverToken) {
             logger.error("Refusing connection from websocket, server token does not exist in database!");
 
             websocket.close();
@@ -71,7 +84,7 @@ export default class RoomWebSocket {
 
         const payload = this.getAccessTokenPayload(accessToken, serverToken.secretKey);
 
-        if(!payload) {
+        if (!payload) {
             logger.warn("Refusing connection from websocket, server access token is invalid.");
 
             websocket.close();
@@ -84,8 +97,10 @@ export default class RoomWebSocket {
         logger.info("Room server is connected with the game server.");
 
         websocket.addListener("message", this.handleServerMessage.bind(this));
+
+        this.sendProtobuff(websocket, ServerReadyData, ServerReadyData.create({}));
     }
-    
+
     private async handleServerMessage(data: RawData) {
         this.serverEventHandler.decodeAndDispatchMessages(null, data);
     }
@@ -93,7 +108,7 @@ export default class RoomWebSocket {
     private async handleUserConnection(websocket: WebSocket, request: IncomingMessage, accessToken: string, url: URL) {
         const userToken = await UserTokenModel.findOne();
 
-        if(!userToken) {
+        if (!userToken) {
             logger.error("Refusing connection from websocket, user token does not exist in database!");
 
             websocket.close();
@@ -103,7 +118,7 @@ export default class RoomWebSocket {
 
         const payload = this.getAccessTokenPayload(accessToken, userToken.secretKey);
 
-        if(!payload) {
+        if (!payload) {
             logger.warn("Refusing connection from websocket, user access token is invalid.");
 
             websocket.close();
@@ -113,7 +128,7 @@ export default class RoomWebSocket {
 
         const model = await UserModel.findByPk(payload.userId);
 
-        if(!model) {
+        if (!model) {
             logger.warn("Refusing connection from websocket, user does not exist in database.", {
                 userId: payload.userId
             });
@@ -125,7 +140,7 @@ export default class RoomWebSocket {
 
         const roomId = url.searchParams.get("roomId");
 
-        if(!roomId) {
+        if (!roomId) {
             logger.warn("Refusing connection from websocket, incoming message does not contain a room id.", {
                 userId: payload.userId
             });
@@ -139,7 +154,7 @@ export default class RoomWebSocket {
 
         const room = RoomServer.roomManager.getRoomInstance(roomId);
 
-        if(!room) {
+        if (!room) {
             throw new Error("Room is not loaded!");
         }
 
@@ -147,8 +162,8 @@ export default class RoomWebSocket {
 
         websocket.addListener("message", this.handleUserMessage.bind(this, user));
     }
-    
-    private async handleUserMessage(user: User, data: RawData) {        
+
+    private async handleUserMessage(user: User, data: RawData) {
         this.userEventHandler.decodeAndDispatchMessages(user, data);
     }
 
@@ -162,7 +177,7 @@ export default class RoomWebSocket {
 
             this.sendEncodedProtobuff(websocket, message.$type, encoded);
         }
-        catch(error) {
+        catch (error) {
             logger.error("Failed to encode Protobuff message.", {
                 message,
                 payload,
@@ -182,7 +197,7 @@ export default class RoomWebSocket {
 
             websocket.send(message);
         }
-        catch(error) {
+        catch (error) {
             logger.error("Failed to send encoded Protobuff message.", {
                 eventType,
                 encoded,
@@ -195,13 +210,13 @@ export default class RoomWebSocket {
         try {
             const payload = jsonWebToken.verify(accessToken, secretKey);
 
-            if(typeof payload === "string") {
+            if (typeof payload === "string") {
                 throw new Error("Payload is a string.");
             }
 
             return payload;
         }
-        catch(error) {
+        catch (error) {
             logger.error("Failed to verify JWT", error);
 
             return null;

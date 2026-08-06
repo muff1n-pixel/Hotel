@@ -5,6 +5,9 @@ import { recreateShopPages } from "../Database/Development/ShopDevelopmentData";
 import InitializerManager from "./Initializer/InitializerManager";
 import { seedHotelSettings } from "../Database/Models/Hotel/HotelSettingModel";
 import { seedAchievements } from "../Database/Models/Achievements/AchievementModel";
+import { config } from "./Config/Config";
+import { exec, spawn } from "child_process";
+import { logger } from "../Room/RoomLogger";
 
 let game: Game;
 
@@ -32,7 +35,16 @@ export async function startServer() {
 
     await game.hotelInformation.resetUsersOnline();
 
-    game.roomServers.addServer("localhost", 8081);
+    if(config.rooms.automaticallySpawnRoomServers) {
+        for(const port of config.rooms.automaticRoomServerPortAllocations) {
+            logger.info(`Spawning room server process at port ${port}.`);
+
+            const child = exec(`npm run room -- --port=${port}`);
+            
+            child.stdout?.pipe(process.stdout);
+            child.stderr?.pipe(process.stderr);
+        }
+    }
 
     game.webSocket.ready = true;
 

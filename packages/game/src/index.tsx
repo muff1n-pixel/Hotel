@@ -82,9 +82,5 @@ async function start(text?: string) {
         const loaderInstance = new LoaderInstance(loaderElement);
 
         loaderInstance.render("Disconnected");
-
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
     });
 }

@@ -14,7 +14,7 @@ export default class Game {
     public readonly hotelSettings;
     public readonly hotelActivityRewards;
 
-    public readonly roomServers;
+    public readonly roomWorkerPool;
 
     public readonly eventHandler;
     public readonly webSocket;
@@ -28,7 +28,7 @@ export default class Game {
         this.hotelSettings = new HotelSettings();
         this.hotelActivityRewards = new HotelActivityRewards(this);
 
-        this.roomServers = new RoomWorkerPool(this);
+        this.roomWorkerPool = new RoomWorkerPool(this);
 
         this.eventHandler = new EventHandler();
         this.webSocket = new WebSocket();
