@@ -4,7 +4,7 @@ import User from "../../../Users/User.js";
 
 export default class PickupAllRoomFurnitureEvent implements RoomProtobuffListener<PickupRoomFurnitureData> {
     async handle(user: User, payload: PickupRoomFurnitureData) {
-        if(user.id !== user.roomUser.room.model.owner.id) {
+        if(user.model.id !== user.roomUser.room.model.owner.id) {
             throw new Error("User does not own the room.");
         }
 

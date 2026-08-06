@@ -11,7 +11,7 @@ export default class SetTypingEvent implements RoomProtobuffListener<SetRoomChat
         user.roomUser.typing = payload.typing === true;
 
         user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
-            id: user.id,
+            id: user.model.id,
             typing: user.roomUser.typing
         }));
     }

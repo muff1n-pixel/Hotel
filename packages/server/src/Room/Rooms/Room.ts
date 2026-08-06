@@ -624,7 +624,7 @@ export default class Room {
     public getServerData(): ServerRoomData {
         return ServerRoomData.create({
             roomId: this.model.id,
-            userIds: this.users.map((roomUser) => roomUser.user.id)
+            userIds: this.users.map((roomUser) => roomUser.user.model.id)
         })
     }
 }

@@ -19,7 +19,7 @@ export default class PlaceRoomPetEvent implements RoomProtobuffListener<PlaceRoo
         const userPet = await UserPetModel.findOne({
             where: {
                 id: payload.id,
-                userId: user.id,
+                userId: user.model.id,
                 roomId: null
             },
             include: [
@@ -50,7 +50,7 @@ export default class PlaceRoomPetEvent implements RoomProtobuffListener<PlaceRoo
         }
         
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
-            userId: user.id,
+            userId: user.model.id,
             botsRemoved: [ userPet.id ]
         }));
 

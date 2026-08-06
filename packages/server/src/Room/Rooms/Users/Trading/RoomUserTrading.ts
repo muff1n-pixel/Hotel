@@ -162,7 +162,7 @@ export default class RoomUserTrading {
         this.userFurniture.push(...userFurniture);
 
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
-            userId: this.roomUser.user.id,
+            userId: this.roomUser.user.model.id,
             furniture: true,
             trading: true,
             furnitureIdsInTrade: this.userFurniture.map((userFurniture) => userFurniture.id)
@@ -187,7 +187,7 @@ export default class RoomUserTrading {
         this.userFurniture = this.userFurniture.filter((userFurniture) => userFurniture.id !== id);
 
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
-            userId: this.roomUser.user.id,
+            userId: this.roomUser.user.model.id,
             furniture: true,
             trading: true
         }));
@@ -279,12 +279,12 @@ export default class RoomUserTrading {
         });
         
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
-            userId: this.roomUser.user.id,
+            userId: this.roomUser.user.model.id,
             furniture: true
         }));
         
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryRefreshData, ServerUserInventoryRefreshData.create({
-            userId: this.tradingWithUser.user.id,
+            userId: this.tradingWithUser.user.model.id,
             furniture: true
         }));
 

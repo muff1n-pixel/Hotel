@@ -41,7 +41,7 @@ export default class UpdateRoomFurnitureTraxPlaylistEvent implements RoomProtobu
         user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.id,
+                    userId: user.model.id,
                     furniture: furniture.model
                 }
             ]

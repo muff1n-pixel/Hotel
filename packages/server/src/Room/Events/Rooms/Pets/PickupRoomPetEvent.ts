@@ -9,7 +9,7 @@ export default class PickupRoomPetEvent implements RoomProtobuffListener<PickupR
 
         const userPet = user.roomUser.room.getPetById(payload.id);
 
-        if(userPet.model.user.id !== user.id) {
+        if(userPet.model.user.id !== user.model.id) {
             throw new Error("User is not owner of the pet.");
         }
 

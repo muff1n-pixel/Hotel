@@ -8,7 +8,7 @@ export default class GetRoomBotSpeechEvent implements RoomProtobuffListener<GetU
     async handle(user: User, payload: GetUserBotSpeechData) {
         const bot = user.roomUser.room.getBot(payload.id);
 
-        if(bot.model.user.id !== user.id) {
+        if(bot.model.user.id !== user.model.id) {
             throw new Error("User does not own the bot.");
         }
 

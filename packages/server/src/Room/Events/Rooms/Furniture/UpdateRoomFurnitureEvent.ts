@@ -122,7 +122,7 @@ export default class UpdateRoomFurnitureEvent implements RoomProtobuffListener<U
         user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.id,
+                    userId: user.model.id,
                     furniture: furniture.model
                 }
             ]

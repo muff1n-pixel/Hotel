@@ -17,7 +17,7 @@ export default class UpdateRoomFurnitureTraxSongEvent implements RoomProtobuffLi
             throw new Error("Furniture does not exist in room.");
         }
 
-        if(furniture?.model.userId !== user.id) {
+        if(furniture?.model.userId !== user.model.id) {
             throw new Error("User is not owner of Trax.");
         }
         
@@ -63,7 +63,7 @@ export default class UpdateRoomFurnitureTraxSongEvent implements RoomProtobuffLi
         user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.id,
+                    userId: user.model.id,
                     furniture: furniture.model
                 }
             ]

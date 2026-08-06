@@ -10,7 +10,7 @@ export default class UserAchievementsBridge {
 
     public addTotalAchievementScore(achievementId: AchievementId, score: number) {
         RoomServer.websocket.sendServerProtobuff(ServerSetUserAchievementScoreData, ServerSetUserAchievementScoreData.create({
-            userId: this.user.id,
+            userId: this.user.model.id,
             achievementId,
             totalScore: score
         }));
@@ -18,7 +18,7 @@ export default class UserAchievementsBridge {
 
     public addAchievementScore(achievementId: AchievementId, score: number) {
         RoomServer.websocket.sendServerProtobuff(ServerAddUserAchievementScoreData, ServerAddUserAchievementScoreData.create({
-            userId: this.user.id,
+            userId: this.user.model.id,
             achievementId,
             score
         }));

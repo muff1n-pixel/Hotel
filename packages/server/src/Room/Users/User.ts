@@ -8,10 +8,6 @@ import UserAchievementsBridge from "./Achievements/UserAchievementsBridge";
 import Room from "../Rooms/Room";
 
 export default class User {
-    public readonly id: string;
-
-    public roomChatStyleId: string = "";
-
     public readonly permissions: UserPermissions;
 
     public readonly achievements = new UserAchievementsBridge(this);
@@ -19,9 +15,6 @@ export default class User {
     public readonly roomUser: RoomUser;
 
     constructor(private readonly websocket: WebSocket, public readonly model: UserModel, public readonly room: Room) {
-        this.id = model.id;
-        this.roomChatStyleId = model.roomChatStyleId;
-
         this.permissions = new UserPermissions(model);
         this.roomUser = room.addUserClient(this);
 
@@ -47,7 +40,7 @@ export default class User {
     }
 
     public async getUser() {
-        const user = await UserModel.findByPk(this.id);
+        const user = await UserModel.findByPk(this.model.id);
 
         if(!user) {
             throw new Error("Failed to find user?");

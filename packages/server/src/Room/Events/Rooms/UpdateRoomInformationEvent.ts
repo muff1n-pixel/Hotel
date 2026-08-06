@@ -9,7 +9,7 @@ export default class UpdateRoomInformationEvent implements RoomProtobuffListener
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: UpdateRoomInformationData) {
-        if(user.roomUser.room.model.owner.id !== user.id) {
+        if(user.roomUser.room.model.owner.id !== user.model.id) {
             throw new Error("User is not owner of room.");
         }
 

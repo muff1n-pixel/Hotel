@@ -8,7 +8,7 @@ export default class UpdateRoomBotEvent implements RoomProtobuffListener<UpdateR
     async handle(user: User, payload: UpdateRoomBotData) {
         const bot = user.roomUser.room.getBot(payload.id);
 
-        if(bot.model.user.id !== user.id) {
+        if(bot.model.user.id !== user.model.id) {
             throw new Error("User does not own the bot.");
         }
 

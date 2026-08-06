@@ -44,7 +44,7 @@ export default class RoomUser implements RoomActor {
             this.idling = false;
 
             this.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: this.user.id,
+                id: this.user.model.id,
                 idling: false
             }));
         }

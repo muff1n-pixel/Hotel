@@ -21,7 +21,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
                 }):({
                     id: payload.id,
                 })),
-                userId: user.id,
+                userId: user.model.id,
                 roomId: null,
                 traxId: null,
                 giftId: null
@@ -76,7 +76,7 @@ export default class PlaceFurnitureEvent implements RoomProtobuffListener<PlaceR
         await RoomFurniture.place(user.roomUser.room, userFurniture, payload.position, payload.direction);
 
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
-            userId: user.id,
+            userId: user.model.id,
             furnitureRemoved: [userFurniture.id]
         }));
     }

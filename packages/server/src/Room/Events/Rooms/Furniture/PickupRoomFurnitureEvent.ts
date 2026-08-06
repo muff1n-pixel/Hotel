@@ -10,7 +10,7 @@ export default class PickupRoomFurnitureEvent implements RoomProtobuffListener<P
             return;
         }
 
-        if(roomFurniture.model.userId !== user.id && !user.roomUser.hasRights()) {
+        if(roomFurniture.model.userId !== user.model.id && !user.roomUser.hasRights()) {
             throw new Error("User is not owner of the furniture and does not have rights.");
         }
 

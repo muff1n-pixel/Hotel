@@ -7,7 +7,7 @@ export default class ClearRoomRightsEvent implements RoomProtobuffListener<Clear
     minimumDurationBetweenEvents?: number = 10;
     
     async handle(user: User, payload: ClearRoomRightsData) {
-        if(user.roomUser.room.model.owner.id !== user.id) {
+        if(user.roomUser.room.model.owner.id !== user.model.id) {
             throw new Error("User is not room owner.");
         }
 

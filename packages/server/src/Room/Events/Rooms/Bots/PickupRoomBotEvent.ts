@@ -6,7 +6,7 @@ export default class PickupRoomBotEvent implements RoomProtobuffListener<PickupR
     async handle(user: User, payload: PickupRoomBotData) {
         const userBot = user.roomUser.room.getBot(payload.id);
 
-        if(userBot.model.user.id !== user.id) {
+        if(userBot.model.user.id !== user.model.id) {
             throw new Error("User is not owner of the bot.");
         }
 

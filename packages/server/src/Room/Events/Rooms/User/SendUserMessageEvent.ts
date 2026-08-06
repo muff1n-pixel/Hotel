@@ -40,7 +40,7 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
                 user.roomUser.typing = false;
 
                 user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                    id: user.id,
+                    id: user.model.id,
                     typing: user.roomUser.typing
                 }));
             }
@@ -81,11 +81,11 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
             user.sendProtobuff(RoomActorChatData, RoomActorChatData.create({
                 actor: {
                     user: {
-                        userId: user.id
+                        userId: user.model.id
                     }
                 },
                 message: payload.message,
-                roomChatStyleId: user.roomChatStyleId,
+                roomChatStyleId: user.model.roomChatStyleId,
                 options: {
                     italic: true,
                     transparent: true
@@ -93,7 +93,7 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
             }));
 
             user.roomUser.room.sendProtobuff(RoomUserData, RoomUserData.create({
-                id: user.id,
+                id: user.model.id,
                 typing: user.roomUser.typing
             }));
         }

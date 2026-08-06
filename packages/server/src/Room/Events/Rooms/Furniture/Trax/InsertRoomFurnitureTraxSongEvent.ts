@@ -33,7 +33,7 @@ export default class InsertRoomFurnitureTraxSongEvent implements RoomProtobuffLi
             throw new Error("Song furniture does not exist.");
         }
 
-        if(songFurniture.userId !== user.id) {
+        if(songFurniture.userId !== user.model.id) {
             throw new Error("User does not own the sound disk.");
         }
 
@@ -74,14 +74,14 @@ export default class InsertRoomFurnitureTraxSongEvent implements RoomProtobuffLi
         user.roomUser.room.sendProtobuff(RoomFurnitureData, RoomFurnitureData.fromJSON({
             furnitureUpdated: [
                 {
-                    userId: user.id,
+                    userId: user.model.id,
                     furniture: furniture.model
                 }
             ]
         }));
 
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
-            userId: user.id,
+            userId: user.model.id,
             furnitureRemoved: [songFurniture.id]
         }));
     }

@@ -22,7 +22,7 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
         await user.save();
 
         RoomServer.websocket.sendServerProtobuff(ServerUserUpdatedData, ServerUserUpdatedData.create({
-            userId: user.id
+            userId: user.model.id
         }));
 
         roomPet.model.scratches++;

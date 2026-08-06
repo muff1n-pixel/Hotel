@@ -8,14 +8,14 @@ import RoomServer from "../../../RoomServer.js";
 
 export default class PlaceBotEvent implements RoomProtobuffListener<PlaceRoomBotData> {
     async handle(user: User, payload: PlaceRoomBotData) {
-        if(user.id !== user.roomUser.room.model.owner.id) {
+        if(user.model.id !== user.roomUser.room.model.owner.id) {
             throw new Error("User does not own the room.");
         }
 
         const userBot = await UserBotModel.findOne({
             where: {
                 id: payload.id,
-                userId: user.id,
+                userId: user.model.id,
                 roomId: null
             },
             include: [
@@ -35,7 +35,7 @@ export default class PlaceBotEvent implements RoomProtobuffListener<PlaceRoomBot
         }
 
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
-            userId: user.id,
+            userId: user.model.id,
             botsRemoved: [ userBot.id ]
         }));
 

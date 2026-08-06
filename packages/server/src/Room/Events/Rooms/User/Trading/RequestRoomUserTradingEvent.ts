@@ -6,7 +6,7 @@ export default class RequestRoomUserTradingEvent implements RoomProtobuffListene
     minimumDurationBetweenEvents?: number = 500;
     
     async handle(user: User, payload: RequestRoomUserTradingData) {
-        if(payload.targetUserId === user.id) {
+        if(payload.targetUserId === user.model.id) {
             throw new Error("User cannot trade with themselves.");
         }
 
@@ -16,7 +16,7 @@ export default class RequestRoomUserTradingEvent implements RoomProtobuffListene
 
         const targetRoomUser = user.roomUser.room.getRoomUserById(payload.targetUserId);
 
-        if(targetRoomUser.trading.requestedTradingWithUser?.user.model.id === user.id) {
+        if(targetRoomUser.trading.requestedTradingWithUser?.user.model.id === user.model.id) {
             if(payload.accept) {
                 user.roomUser.trading.startTrading(targetRoomUser);
                 targetRoomUser.trading.startTrading(user.roomUser);
@@ -49,7 +49,7 @@ export default class RequestRoomUserTradingEvent implements RoomProtobuffListene
         user.roomUser.trading.requestedTradingWithUser = targetRoomUser;
 
         targetRoomUser.user.sendProtobuff(RoomUserTradingRequestData, RoomUserTradingRequestData.create({
-            userId: user.id
+            userId: user.model.id
         }));
     }
 }
