@@ -58,7 +58,13 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             once: true
         });
 
-        elementRef.current.style.opacity = "1";
+        window.requestAnimationFrame(() => {
+            if(!elementRef.current) {
+                return;
+            }
+            
+            elementRef.current.style.opacity = "1";
+        });
     }, [elementRef]);
 
     return (
