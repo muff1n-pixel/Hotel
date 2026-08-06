@@ -234,16 +234,18 @@ export default class WebSocket {
 
         user.friends.updateFriends();
 
-        /*if(pendingConnection.url.searchParams.has("roomId")) {
-            const room = await game.roomManager.getOrLoadRoomInstance(pendingConnection.url.searchParams.get("roomId")!);
+        if(pendingConnection.url.searchParams.has("roomId")) {
+            const roomId = pendingConnection.url.searchParams.get("roomId")!;
 
-            room?.addUserClient(user);
+            const room = await game.roomWorkerPool.getOrCreateRoom(roomId);
+
+            room.addUserToRoom(user, roomId);
         }
         else if(user.model.homeRoomId) {
-            const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
+            const room = await game.roomWorkerPool.getOrCreateRoom(user.model.homeRoomId);
 
-            room?.addUserClient(user);
-        }*/
+            room.addUserToRoom(user, user.model.homeRoomId);
+        }
 
         const userBadgesCount = await UserBadgeModel.count({
             where: {

@@ -287,14 +287,6 @@ export default class PurchaseShopFurnitureEvent implements UserProtobuffListener
                 await this.addUserFurniture(userReceiver, userFurniture);
             }
 
-            /*const roomUser = user.room?.getRoomUser(user);
-
-            if(roomUser?.hasRights() && payload.position && payload.direction !== undefined && !payload.gift) {
-                await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
-            }
-            else {*/
-            //}
-
             if(user.model.id === userReceiver.id && userFurniture.furniture.interactionType === "sound_set") {
                 user.achievements.addAchievementScore("MusicCollector", 1).catch(console.error);
             }

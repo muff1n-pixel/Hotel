@@ -48,11 +48,9 @@ export default class CommandHandler {
             return false;
         }
 
-        const permissions = await roomUser.user.getPermissions();
-
         const command = new commandAlias.command(roomUser.room, parameters, focusedUserId);
 
-        if(!command.validate(roomUser, permissions)) {
+        if(!command.validate(roomUser, roomUser.user.permissions)) {
             return false;
         }
 

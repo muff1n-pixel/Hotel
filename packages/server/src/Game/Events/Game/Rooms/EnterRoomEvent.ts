@@ -1,3 +1,6 @@
+import { RoomRightsModel } from "../../../../Database/Models/Rooms/Rights/RoomRightsModel.js";
+import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
+import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
 import User from "../../../Users/User.js";
 import { game } from "../../../index.js";
 import { UserProtobuffListener } from "../../Interfaces/UserProtobuffListener.js";
@@ -12,65 +15,65 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
             user.room.disconnect();
         }
 
-        const room = await game.roomWorkerPool.getOrCreateRoom(payload.id);
-        
-        if(!room) {
-            console.error("Room does not exist.");
+        const roomModel = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findByPk(payload.id, {
+            include: [
+                {
+                    model: RoomRightsModel,
+                    as: "rights",
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "user"
+                        }
+                    ]
+                },
+            ]
+        });
 
-            return;
+        if(!roomModel) {
+            throw new Error("Room model doesn't exist or user can not see it.");
         }
 
-        /*if(!user.permissions.hasPermission("room:rights")) {
-            switch(roomInstance.model.lock) {
-                case "invisible": {
-                    if(!roomInstance.hasUserVisibility(user.model)) {
-                        console.error("User tried to enter a room that is invisible and does not have permission to enter.");
-
-                        return;
-                    }
-
-                    break;
-                }
-
+        if(!user.permissions.hasPermission("room:rights")) {
+            switch(roomModel.lock) {
                 case "bell": {
-                    if(roomInstance.model.owner.id === user.model.id) {
+                    if(roomModel.owner.id === user.model.id) {
                         break;
                     }
 
-                    if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                    if(roomModel.rights.some((rights) => rights.user.id === user.model.id)) {
                         break;
                     }
 
-                    user.sendProtobuff(RoomLockData, RoomLockData.create({
+                    /*user.sendProtobuff(RoomLockData, RoomLockData.create({
                         room: roomInstance.getInformationData()
-                    }));
+                    }));*/
 
                     return;
                 }
 
                 case "password": {
-                    if(roomInstance.model.owner.id === user.model.id) {
+                    if(roomModel.owner.id === user.model.id) {
                         break;
                     }
 
-                    if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                    if(roomModel.rights.some((rights) => rights.user.id === user.model.id)) {
                         break;
                     }
 
-                    // TODO: verify password
                     if(!payload.password) {
-                        user.sendProtobuff(RoomLockData, RoomLockData.create({
+                        /*user.sendProtobuff(RoomLockData, RoomLockData.create({
                             room: roomInstance.getInformationData()
-                        }));
+                        }));*/
 
                         return;
                     }
 
-                    if(!roomInstance.model.password) {
+                    if(!roomModel.password) {
                         return;
                     }
 
-                    if (!(await bcrypt.compare(payload.password, roomInstance.model.password))) {
+                    if (!(await bcrypt.compare(payload.password, roomModel.password))) {
                         user.sendProtobuff(HotelAlertData, HotelAlertData.create({
                             message: "That password is not correct!",
                             dialogType: "room-password-error"
@@ -80,7 +83,15 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
                     }
                 }
             }
-        }*/
+        }
+
+        const room = await game.roomWorkerPool.getOrCreateRoom(payload.id);
+        
+        if(!room) {
+            console.error("Room does not exist.");
+
+            return;
+        }
 
         room.addUserToRoom(user, payload.id);
     }
