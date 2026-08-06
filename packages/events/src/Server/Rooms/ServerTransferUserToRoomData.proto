@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message ServerTransferUserToRoomData {
+    string user_id = 1;
+    string room_id = 2;
+    string user_furniture_id = 3;
+}

@@ -194,6 +194,14 @@ export default class RoomWebSocket {
 
             RoomServer.users.push(user);
 
+            if(pendingUser.userFurnitureId) {
+                const userFurniture = room.furnitures.find((userFurniture) => userFurniture.model.id === pendingUser.userFurnitureId);
+
+                if(userFurniture) {
+                    userFurniture.logic?.handleUserEntersRoomWithFurniture?.(user.roomUser);
+                }
+            }
+
             websocket.addListener("message", this.handleUserMessage.bind(this, user));
             websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
         });

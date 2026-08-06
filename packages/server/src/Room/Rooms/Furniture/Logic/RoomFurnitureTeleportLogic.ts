@@ -1,9 +1,10 @@
 import { RoomModel } from "../../../../Database/Models/Rooms/RoomModel.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
+import RoomServer from "../../../RoomServer.js";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
-import { RoomPositionOffsetData } from "@pixel63/events";
+import { RoomPositionOffsetData, ServerTransferUserToRoomData } from "@pixel63/events";
 
 export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -33,18 +34,26 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
 
         this.roomFurniture.setAnimation(2);
 
-        if(roomUser.room.model.id !== targetFurniture.room.model.id) {
+        if(roomUser.room.model.id !== targetFurniture.roomId) {
             roomUser.disconnect();
+
+            RoomServer.websocket.sendServerProtobuff(ServerTransferUserToRoomData, ServerTransferUserToRoomData.create({
+                userId: roomUser.user.model.id,
+                roomId: targetFurniture.roomId!,
+                userFurnitureId: targetFurniture.id
+            }));
             
             //roomUser = targetFurniture.room.addUserClient(roomUser.user, targetFurniture.model.position);
-        }
 
-        targetFurniture.setAnimation(2);
-        
-        roomUser.path.setPosition({
-            ...targetFurniture.model.position,
-            depth: targetFurniture.model.position.depth + 0.01
-        });
+            return;
+        }
+        else {
+            const targetRoomFurniture = this.roomFurniture.room.furnitures.find((roomFurniture) => roomFurniture.model.id === targetFurniture.id);
+
+            if(targetRoomFurniture) {
+                targetRoomFurniture.logic?.handleUserEntersRoomWithFurniture?.(roomUser);
+            } 
+        }
 
         await new Promise<void>((resolve) => {
             setTimeout(() => {
@@ -53,12 +62,27 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         });
 
         this.roomFurniture.setAnimation(0);
+    }
 
-        targetFurniture.setAnimation(1);
+    public async handleUserEntersRoomWithFurniture(roomUser: RoomUser) {
+        roomUser.path.setPosition({
+            ...this.roomFurniture.model.position,
+            depth: this.roomFurniture.model.position.depth + 0.01
+        });
 
-        const targetOffsetPosition = targetFurniture.getOffsetPosition(1);
+        this.roomFurniture.setAnimation(2);
 
-        roomUser.path.walkTo(targetOffsetPosition, undefined, () => this.handleUserExitsTeleport(roomUser, targetFurniture), () => this.handleUserCancelledEnteringTeleport(roomUser));
+        await new Promise<void>((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 500);
+        });
+
+        this.roomFurniture.setAnimation(1);
+
+        const targetOffsetPosition = this.roomFurniture.getOffsetPosition(1);
+
+        roomUser.path.walkTo(targetOffsetPosition, undefined, () => this.handleUserExitsTeleport(roomUser, this.roomFurniture), () => this.handleUserCancelledEnteringTeleport(roomUser));
     }
 
     private handleUserExitsTeleport(roomUser: RoomUser, targetFurniture: RoomFurniture) {
@@ -69,7 +93,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
         this.roomFurniture.setAnimation(0);
     }
 
-    private async getTargetFurniture(): Promise<RoomFurniture | null> {
+    private async getTargetFurniture(): Promise<UserFurnitureModel | null> {
         if(!this.roomFurniture.model.data?.teleport?.furnitureId) {
             console.warn("Teleport does not have a second furniture.");
             
@@ -100,25 +124,7 @@ export default class RoomFurnitureTeleportLogic implements RoomFurnitureLogic {
             return null;
         }
 
-        return null;
-
-        /*const targetRoom = await game.roomManager.getOrLoadRoomInstance(targetUserFurniture.room.id);
-
-        if(!targetRoom) {
-            console.warn("Target room does not exist.");
-            
-            return null;
-        }
-
-        const targetFurniture = targetRoom.furnitures.find((furniture) => furniture.model.id === this.roomFurniture.model.data?.teleport?.furnitureId);
-
-        if(!targetFurniture) {
-            console.warn("Target room furniture is not loaded.");
-            
-            return null;
-        }
-
-        return targetFurniture;*/
+        return targetUserFurniture;
     }
 
     async use(roomUser: RoomUser): Promise<void> {

@@ -3,4 +3,5 @@ syntax = "proto3";
 message ServerAddUserToRoomData {
     string room_id = 1;
     string user_id = 2;
+    optional string user_furniture_id = 3;
 }

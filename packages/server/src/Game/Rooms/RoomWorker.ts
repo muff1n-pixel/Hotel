@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerTransferUserToRoomData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -11,6 +11,7 @@ import ServerAddUserAchievementScoreEvent from "../Events/Room/ServerAddUserAchi
 import ServerSetUserAchievementScoreEvent from "../Events/Room/ServerSetUserAchievementScoreEvent";
 import ServerUpdateUserRoomQueueEvent from "../Events/Room/ServerUpdateUserRoomQueueEvent";
 import ServerRemoveUserFromRoomQueueEvent from "../Events/Room/ServerRemoveUserFromRoomQueueEvent";
+import ServerTransferUserToRoomEvent from "../Events/Room/ServerTransferUserToRoomEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
@@ -35,9 +36,11 @@ export default class RoomWorker {
 
         this.client.eventHandler.addProtobuffListener(ServerUpdateUserRoomQueueData, new ServerUpdateUserRoomQueueEvent());
         this.client.eventHandler.addProtobuffListener(ServerRemoveUserToRoomQueueData, new ServerRemoveUserFromRoomQueueEvent());
+        
+        this.client.eventHandler.addProtobuffListener(ServerTransferUserToRoomData, new ServerTransferUserToRoomEvent());
     }
 
-    public addUserToRoom(user: User, roomId: string) {
+    public addUserToRoom(user: User, roomId: string, userFurnitureId?: string) {
         const room = this.rooms.find((room) => room.roomId === roomId);
 
         if(!room) {
@@ -46,7 +49,8 @@ export default class RoomWorker {
 
         this.client.sendProtobuff(ServerAddUserToRoomData, ServerAddUserToRoomData.create({
             userId: user.model.id,
-            roomId
+            roomId,
+            userFurnitureId
         }));
 
         user.sendProtobuff(ConnectToRoomData, ConnectToRoomData.create({
