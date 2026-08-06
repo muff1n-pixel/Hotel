@@ -39,8 +39,6 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             return;
         }
 
-        elementRef.current.style.transition = "all 0.5s ease";
-
         elementRef.current.addEventListener("transitionend", () => {
             setTimeout(() => {
                 if(!elementRef.current) {
@@ -75,6 +73,9 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             position: "absolute",
             right: 70,
             opacity: 0,
+            transitionProperty: "opacity, transform",
+            transitionDuration: "500ms",
+            transitionDelay: "0s",
             ...style
         }} data-tooltip={tooltip}>
             <b>{(data.value > 0)?('+'):('-')}</b>
