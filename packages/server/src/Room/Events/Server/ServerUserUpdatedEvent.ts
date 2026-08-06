@@ -1,6 +1,6 @@
 import { ServerProtobuffListener } from "../Interfaces/ServerProtobuffListener";
 import RoomServer from "../../RoomServer";
-import { ServerUserUpdatedData } from "@pixel63/events";
+import { RoomUserData, ServerUserUpdatedData } from "@pixel63/events";
 
 export default class ServerUserUpdatedEvent implements ServerProtobuffListener<ServerUserUpdatedData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -8,6 +8,12 @@ export default class ServerUserUpdatedEvent implements ServerProtobuffListener<S
     async handle(_: null, payload: ServerUserUpdatedData) {
         const user = RoomServer.users.find((user) => user.model.id === payload.userId);
 
-        await user?.model.reload();
+        if(!user) {
+            return;
+        }
+
+        await user.model.reload();
+
+        user.room.sendProtobuff(RoomUserData, RoomUserData.create(user.roomUser.getRoomUserData()));
     }
 }
