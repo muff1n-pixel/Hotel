@@ -163,7 +163,7 @@ export default class RoomWebSocket {
             return;
         }
 
-        const pendingUser = RoomServer.pendingUsers.find((pendingUser) => pendingUser.userId === model.id);
+        const pendingUser = RoomServer.pendingUsers.get(model.id);
 
         if(!pendingUser) {
             logger.warn("Refusing connection from websocket, user does not have a pending connection.", {
@@ -175,11 +175,7 @@ export default class RoomWebSocket {
             return;
         }
 
-        const pendingUserIndex = RoomServer.pendingUsers.indexOf(pendingUser);
-
-        if(pendingUserIndex !== -1) {
-            RoomServer.pendingUsers.splice(pendingUserIndex, 1);
-        }
+        RoomServer.pendingUsers.delete(model.id);
 
         if(pendingUser.roomId !== roomId) {
             logger.warn("Refusing connection from websocket, user is not requesting the correct room id.", {

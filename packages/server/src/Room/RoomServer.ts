@@ -62,7 +62,7 @@ export default class RoomServer {
     public static readonly hotelSettings: HotelSettings = new HotelSettings();
 
     public static readonly users: User[] = [];
-    public static pendingUsers: ServerAddUserToRoomData[] = [];
+    public static pendingUsers: Map<string, ServerAddUserToRoomData> = new Map();
 
     public static async start() {
         await this.hotelSettings.loadModels();
