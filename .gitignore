@@ -31,3 +31,5 @@ config.json
 *.zip
 
 storybook-static
+
+*.log

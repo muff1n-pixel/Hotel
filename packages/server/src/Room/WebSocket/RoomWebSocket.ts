@@ -9,38 +9,41 @@ import User from "../Users/User";
 import { UserTokenModel } from "../../Database/Models/Users/UserTokens/UserTokenModel";
 import { UserModel } from "../../Database/Models/Users/UserModel";
 import RoomServer from "../RoomServer";
+import { logger } from "../RoomLogger";
 
 export default class RoomWebSocket {
     private readonly server: WebSocketServer;
     private gameServerWebSocket?: WebSocket;
 
-    public serverEventHandler = new EventHandler((_: unknown, type: string) => console.log(`[RoomWebSocketServer:server] Received message ${type}`));
-    public userEventHandler = new EventHandler((user: User, type: string) => console.log(`[RoomWebSocketServer:${user.id}] Received message ${type}`));
+    public serverEventHandler = new EventHandler((_: unknown, type: string) => logger.verbose(`Received server message ${type}`));
+    public userEventHandler = new EventHandler((user: User, type: string) => logger.verbose(`Received user message from ${user.model.name}: ${type}`));
 
-    constructor() {
+    constructor() {        
         this.server = new WebSocketServer({
             host: config.hostname,
             port: 8081 // TODO: support port in arguments
         });
 
         this.server.addListener("connection", this.handleConnection.bind(this));
+
+        logger.verbose(`Listening to websocket connections on port ${8081}.`);
     }
 
-    private async handleConnection(websocket: WebSocket, request: IncomingMessage) {
-        if(!request.url) {
-            console.error("Connection does not contain a URL.");
+    private async handleConnection(websocket: WebSocket, incomingMessage: IncomingMessage) {
+        if(!incomingMessage.url) {
+            logger.warn("Refusing connection from websocket, incoming message does not contain a URL.");
 
             websocket.close();
 
             return;
         }
 
-        const url = new URL(request.url, "http://localhost");
+        const url = new URL(incomingMessage.url, "http://localhost");
 
         const accessToken = url.searchParams.get("accessToken");
 
         if(!accessToken) {
-            console.warn("No access token provided.");
+            logger.warn("Refusing connection from websocket, incoming message does not contain an access token.");
 
             websocket.close();
 
@@ -48,10 +51,10 @@ export default class RoomWebSocket {
         }
 
         if(url.searchParams.get("type") === "server") {
-            await this.handleServerConnection(websocket, request, accessToken, url);
+            await this.handleServerConnection(websocket, incomingMessage, accessToken, url);
         }
         else {
-            this.handleUserConnection(websocket, request, accessToken, url);
+            this.handleUserConnection(websocket, incomingMessage, accessToken, url);
         }
     }
 
@@ -59,7 +62,7 @@ export default class RoomWebSocket {
         const serverToken = await ServerTokenModel.findOne();
 
         if(!serverToken) {
-            console.error("Server access token does not exist!");
+            logger.error("Refusing connection from websocket, server token does not exist in database!");
 
             websocket.close();
 
@@ -69,7 +72,7 @@ export default class RoomWebSocket {
         const payload = this.getAccessTokenPayload(accessToken, serverToken.secretKey);
 
         if(!payload) {
-            console.error("Server access token is invalid.");
+            logger.warn("Refusing connection from websocket, server access token is invalid.");
 
             websocket.close();
 
@@ -78,7 +81,7 @@ export default class RoomWebSocket {
 
         this.gameServerWebSocket = websocket;
 
-        console.log("[RoomWebSocketServer] Connected to game server!");
+        logger.info("Room server is connected with the game server.");
 
         websocket.addListener("message", this.handleServerMessage.bind(this));
     }
@@ -91,7 +94,7 @@ export default class RoomWebSocket {
         const userToken = await UserTokenModel.findOne();
 
         if(!userToken) {
-            console.error("User access token does not exist!");
+            logger.error("Refusing connection from websocket, user token does not exist in database!");
 
             websocket.close();
 
@@ -101,7 +104,7 @@ export default class RoomWebSocket {
         const payload = this.getAccessTokenPayload(accessToken, userToken.secretKey);
 
         if(!payload) {
-            console.error("Server access token is invalid.");
+            logger.warn("Refusing connection from websocket, user access token is invalid.");
 
             websocket.close();
 
@@ -111,7 +114,9 @@ export default class RoomWebSocket {
         const model = await UserModel.findByPk(payload.userId);
 
         if(!model) {
-            console.error("User does not exist.");
+            logger.warn("Refusing connection from websocket, user does not exist in database.", {
+                userId: payload.userId
+            });
 
             websocket.close();
 
@@ -121,14 +126,16 @@ export default class RoomWebSocket {
         const roomId = url.searchParams.get("roomId");
 
         if(!roomId) {
-            console.error("User provided no room id in request.");
+            logger.warn("Refusing connection from websocket, incoming message does not contain a room id.", {
+                userId: payload.userId
+            });
 
             websocket.close();
 
             return;
         }
 
-        console.log("[RoomWebSocketServer] Connected with user " + model.name);
+        logger.info(`Connected with user ${model.name} for room id ${roomId}.`);
 
         const room = RoomServer.roomManager.getRoomInstance(roomId);
 
@@ -141,9 +148,7 @@ export default class RoomWebSocket {
         websocket.addListener("message", this.handleUserMessage.bind(this, user));
     }
     
-    private async handleUserMessage(user: User, data: RawData) {
-        console.log("Received message from " + user.model.name);
-        
+    private async handleUserMessage(user: User, data: RawData) {        
         this.userEventHandler.decodeAndDispatchMessages(user, data);
     }
 
@@ -158,7 +163,11 @@ export default class RoomWebSocket {
             this.sendEncodedProtobuff(websocket, message.$type, encoded);
         }
         catch(error) {
-            console.error("Failed to send Protobuff", error);
+            logger.error("Failed to encode Protobuff message.", {
+                message,
+                payload,
+                error
+            });
         }
     }
 
@@ -174,7 +183,11 @@ export default class RoomWebSocket {
             websocket.send(message);
         }
         catch(error) {
-            console.error("Failed to send encoded Protobuff", error);
+            logger.error("Failed to send encoded Protobuff message.", {
+                eventType,
+                encoded,
+                error
+            });
         }
     }
 
@@ -183,15 +196,13 @@ export default class RoomWebSocket {
             const payload = jsonWebToken.verify(accessToken, secretKey);
 
             if(typeof payload === "string") {
-                console.error("Access token payload is a string.");
-
-                return null;
+                throw new Error("Payload is a string.");
             }
 
             return payload;
         }
         catch(error) {
-            console.error(error);
+            logger.error("Failed to verify JWT", error);
 
             return null;
         }

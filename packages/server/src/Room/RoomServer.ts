@@ -42,9 +42,10 @@ import UpdateUserRightsEvent from "./Events/Rooms/User/UpdateUserRightsEvent";
 import SetTypingEvent from "./Events/Rooms/User/SetTypingEvent";
 import GetRoomBotSpeechEvent from "./Events/Rooms/Bots/GetRoomBotSpeechEvent";
 import ServerRemoveUserFromRoomEvent from "./Events/Server/ServerRemoveUserFromRoomEvent";
+import { logger } from "./RoomLogger";
 
 export default class RoomServer {
-    public static websocket: RoomWebSocket;
+    public static readonly websocket: RoomWebSocket = new RoomWebSocket();
 
     public static readonly commandHandler: CommandHandler = new CommandHandler();
     public static readonly petCommandHandler: PetCommandHandler = new PetCommandHandler();
@@ -54,12 +55,12 @@ export default class RoomServer {
     public static readonly hotelSettings: HotelSettings = new HotelSettings();
 
     public static async start() {
-        this.websocket = new RoomWebSocket();
-        
         await this.hotelSettings.loadModels();
 
         this.registerServerEvents();
         this.registerUserEvents();
+
+        logger.info("Room server has started.");
     }
 
     private static registerServerEvents() {

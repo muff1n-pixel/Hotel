@@ -1,4 +1,5 @@
 import { HotelSettingModel } from "../../Database/Models/Hotel/HotelSettingModel";
+import { logger } from "../../Room/RoomLogger";
 
 export default class HotelSettings {
     public roomUserIdlingTimeout: number = 180;
@@ -11,7 +12,7 @@ export default class HotelSettings {
 
     }
 
-    public async loadModels() {
+    public async loadModels() {        
         const settings = await HotelSettingModel.findAll();
 
         this.roomUserIdlingTimeout = this.findSetting(settings, "room.user.idling_timeout") ?? this.roomUserIdlingTimeout;
@@ -21,6 +22,8 @@ export default class HotelSettings {
         this.roomMaxWallFurniture = this.findSetting(settings, "room.max_wall_furniture") ?? this.roomMaxWallFurniture;
         
         this.roomWiredMaxUsage = this.findSetting(settings, "room.wired.max_usage") ?? this.roomWiredMaxUsage;
+
+        logger.verbose("Refreshed hotel settings from the database.");
 
         return settings;
     }

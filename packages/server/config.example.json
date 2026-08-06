@@ -27,5 +27,10 @@
         "password": "PASSWORD",
         "host": "localhost",
         "port": 3306
+    },
+    
+    "rooms": {
+        "automaticallySpawnRoomServers": true,
+        "automaticRoomServerPortAllocations": [ 8081 ]
     }
 }
