@@ -151,6 +151,34 @@ export default class RoomWebSocket {
             return;
         }
 
+        const pendingUser = RoomServer.pendingUsers.find((pendingUser) => pendingUser.userId === model.id);
+
+        if(!pendingUser) {
+            logger.warn("Refusing connection from websocket, user does not have a pending connection.", {
+                userId: payload.userId
+            });
+
+            websocket.close();
+
+            return;
+        }
+
+        const pendingUserIndex = RoomServer.pendingUsers.indexOf(pendingUser);
+
+        if(pendingUserIndex !== -1) {
+            RoomServer.pendingUsers.splice(pendingUserIndex, 1);
+        }
+
+        if(pendingUser.roomId !== roomId) {
+            logger.warn("Refusing connection from websocket, user is not requesting the correct room id.", {
+                userId: payload.userId
+            });
+
+            websocket.close();
+
+            return;
+        }
+
         logger.info(`Connected with user ${model.name} for room id ${roomId}.`);
 
         const room = RoomServer.roomManager.getRoomInstance(roomId);
