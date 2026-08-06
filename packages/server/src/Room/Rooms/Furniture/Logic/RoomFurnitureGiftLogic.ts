@@ -1,4 +1,4 @@
-import { RoomFurnitureData, UserFurnitureCustomData, UserFurnitureData, UseRoomFurnitureData } from "@pixel63/events";
+import { RoomFurnitureData, ServerUserInventoryUpdatedData, UserFurnitureCustomData, UserFurnitureData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
@@ -7,6 +7,7 @@ import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/
 import { randomUUID } from "node:crypto";
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserModel } from "../../../../Database/Models/Users/UserModel.js";
+import RoomServer from "../../../RoomServer.js";
 
 export default class RoomFurnitureGiftLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -69,7 +70,10 @@ export default class RoomFurnitureGiftLogic implements RoomFurnitureLogic {
                 await RoomFurniture.place(this.roomFurniture.room, userFurniture, this.roomFurniture.model.position, null);
             }
             else {
-                roomUser.user.getInventory().addFurniture(userFurniture);
+                RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
+                    userId: roomUser.user.model.id,
+                    furnitureAdded: [userFurniture.id]
+                }));
             }
         }
 

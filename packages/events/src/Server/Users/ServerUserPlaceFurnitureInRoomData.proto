@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Client/Room/RoomPositionData.proto";
+
+message ServerUserPlaceFurnitureInRoomData {
+    string user_id = 1;
+    string user_furniture_id = 2;
+
+    RoomPositionData position = 3;
+    uint32 direction = 4;
+}

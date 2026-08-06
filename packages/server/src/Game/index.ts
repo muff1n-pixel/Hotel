@@ -7,20 +7,30 @@ import { seedHotelSettings } from "../Database/Models/Hotel/HotelSettingModel";
 import { seedAchievements } from "../Database/Models/Achievements/AchievementModel";
 import { config } from "./Config/Config";
 import { exec, spawn } from "child_process";
-import { logger } from "../Room/RoomLogger";
+import { logger } from "./GameLogger";
 
 let game: Game;
 
 export async function startServer() {
     game = new Game();
 
+    logger.verbose("Initializing models...");
+
     await initializeModels();
+
+    logger.verbose("Synchronizing database...");
 
     await sequelize.sync();
 
+    logger.verbose("Creating server token...");
+
     await game.createServerToken();
 
+    logger.verbose("Seeding achievements...");
+
     await seedAchievements();
+
+    logger.verbose("Seeding hotel settings...");
     await seedHotelSettings();
 
     if (recreateShop) {
@@ -31,9 +41,12 @@ export async function startServer() {
         await createMissingFurniture();
     }
 
+    logger.verbose("Loading models...");
     await game.loadModels();
 
     await game.hotelInformation.resetUsersOnline();
+
+    logger.verbose("Loading room servers...");
 
     if(config.rooms.automaticallySpawnRoomServers) {
         for(const port of config.rooms.automaticRoomServerPortAllocations) {

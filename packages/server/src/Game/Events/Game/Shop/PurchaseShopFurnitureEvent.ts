@@ -3,7 +3,7 @@ import { ShopPageFurnitureModel } from "../../../../Database/Models/Shop/ShopPag
 import { FurnitureModel } from "../../../../Database/Models/Furniture/FurnitureModel.js";
 import { UserFurnitureModel } from "../../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { FurnitureData, HotelAlertData, PurchaseShopFurnitureData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData, WidgetNotificationData } from "@pixel63/events";
+import { FurnitureData, HotelAlertData, PurchaseShopFurnitureData, ServerUserPlaceFurnitureInRoomData, ShopPurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData, WidgetNotificationData } from "@pixel63/events";
 import { UserProtobuffListener } from "../../Interfaces/UserProtobuffListener.js";
 import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel.js";
 import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel.js";
@@ -274,13 +274,25 @@ export default class PurchaseShopFurnitureEvent implements UserProtobuffListener
 
             await userFurniture.save();
 
+            if(user.room && payload.position && payload.direction !== undefined && !payload.gift) {
+                user.room.client.sendProtobuff(ServerUserPlaceFurnitureInRoomData, ServerUserPlaceFurnitureInRoomData.create({
+                    userId: user.model.id,
+                    userFurnitureId: userFurniture.id,
+
+                    position: payload.position,
+                    direction: payload.direction
+                }));
+            }
+            else {
+                await this.addUserFurniture(userReceiver, userFurniture);
+            }
+
             /*const roomUser = user.room?.getRoomUser(user);
 
             if(roomUser?.hasRights() && payload.position && payload.direction !== undefined && !payload.gift) {
                 await RoomFurniture.place(roomUser.room, userFurniture, payload.position, payload.direction);
             }
             else {*/
-                await this.addUserFurniture(userReceiver, userFurniture);
             //}
 
             if(user.model.id === userReceiver.id && userFurniture.furniture.interactionType === "sound_set") {
