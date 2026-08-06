@@ -97,7 +97,7 @@ export default class UserFriends {
 
             online: Boolean(gameUser),
             lastOnline: user.lastLogin?.toISOString(),
-            roomId: gameUser?.room?.model.id
+            roomId: gameUser?.room?.roomId
         });
     }
 }

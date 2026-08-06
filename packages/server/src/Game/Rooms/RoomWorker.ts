@@ -51,5 +51,7 @@ export default class RoomWorker {
         }));
 
         user.room = new UserRoomConnection(user, this.client, roomId);
+
+        user.friends.updateFriends();
     }
 }

@@ -116,8 +116,6 @@ export default class RoomUser implements RoomActor {
                 }));
             }
         }*/
-        
-        //this.user.friends.updateFriends();
     }
     
     public getRoomUserData(): RoomUserData {

@@ -59,7 +59,7 @@ export function initializeAchievementModel(sequelize: Sequelize) {
             credits: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("credits"));
+                    return JSON.parse(this.getDataValue("credits") ?? '[]');
                 },
                 set: function (value) {
                     this.setDataValue("credits", JSON.stringify(value));
@@ -70,7 +70,7 @@ export function initializeAchievementModel(sequelize: Sequelize) {
             duckets: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("duckets"));
+                    return JSON.parse(this.getDataValue("duckets") ?? '[]');
                 },
                 set: function (value) {
                     this.setDataValue("duckets", JSON.stringify(value));
@@ -81,7 +81,7 @@ export function initializeAchievementModel(sequelize: Sequelize) {
             diamonds: {
                 type: DataTypes.TEXT,
                 get: function () {
-                    return JSON.parse(this.getDataValue("diamonds"));
+                    return JSON.parse(this.getDataValue("diamonds") ?? '[]');
                 },
                 set: function (value) {
                     this.setDataValue("diamonds", JSON.stringify(value));
