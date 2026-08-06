@@ -1,64 +1,42 @@
 # Infrastructure
 Pixel63 is built from scratch, with no correlation to existing emulator infrastructure or communication structure. Everything is built from scratch up in a manner that cannot be compared to emulators.
 
-There is one global game server which manages connections with users and global game logic, this includes for example the shop, navigator, friends. Rooms are hosted by dedicated room servers which can hold any amount of rooms. Users tell the server they want to join a room, the server allocates a dedicated room server from a pool of dedicated room servers, prepares the room in that room server, then tells the user to connect to that server for room communications.
+There is one global game server which manages connections with users and global game logic, this includes for example the shop, navigator, friends. Rooms are hosted by dedicated room servers which can hold any amount of rooms.
 
-# Contributing
-## Setting up your environment
+Users tell the server they want to join a room, the server allocates a dedicated room server from a pool of dedicated room servers, prepares the room in that room server, then tells the user to connect to that server for room communications.
 
-### Configurations
-Copy and rename the config.example.json files to config.json in the web and server package.
+## Database
+By default, Pixel63 uses MySQL, however, this can be changed to SQLite or even Postgres, however, these have not been tested and there is no database schema provided for them.
 
-To set up your environment without the web server, change `useAccessTokens` to false in the configuration for the server.
+## Project structure
+This repository is designed as a mono-repo with 2 key packages:
+- **Server**: contains two types of servers, the game server and the room server. Both must be running for the server to operate, however, the game server can spawn room server as child processes.
+- **Game**: contains two types of packages, the client for the primarily the room renderer and its client logic, and the user interface for the React implementation of Pixel63.
 
-#### For MySQL:
-1. Start your MySQL server and create an empty database.
-2. Set up your credentials in each config.json file for the web and server package.
+# Starting Pixel63 (developer targeted)
+These instructions are targeted at developers, other instructions for setting up Pixel63 for usage will be provided upon release.
 
-#### For SQLite or other local storage dialects:
-1. Change the database configuration to the following:
-```json
-"database": {
-    "dialect": "sqlite",
-    "storage": "path/to/database.sqlite"
-}
-```
+You need to have a MySQL server running, run `npm i` and then `npm run start` in the root direction. This will set up all the other prerequisities needed as well as seed your database.
 
-Initializing server
-```sh
-cd packages/server
-npm run init
-```
+Once set up, you can start each package individually.
 
-Close the server and then run `npm run migrate`.
+## Web server (packages/web/)
+Running `npm run start` will start the provided web server
 
-### Starting
-#### Shared
-```sh
-cd packages/shared
-npm run build
-```
+## Game server (packages/server/)
+Running `npm run start` will start the game server and spawn a room server (unless configured otherwise).
 
-#### Server
-The shared package must be built before the server can be built.
-```sh
-cd packages/server
-npm run start
-```
+To perform migrations, first build the server package using `npm run build` and then run `npm run migrate`.
 
-#### Web
-The static files must be built before you can start the web server.
+## Room server (packages/server/)
+Running `npm run room -- --port=8080` will spawn a room server on the specified port. For the game server to utilize this room server, the hostname and port for this room server must be specified in the game server's configuration.
 
-```sh
-cd packages/web
-npm run build
-npm run start
-```
+## Game package (packages/game/)
+Running `npm run build` will build the frontend assets to the build folder. Running `npm run start` will start watching the frontend and build automatically.
 
-#### Game
-The shared package must be built before the game can be built.
+## Events package (packages/events/)
+Communication messages between users and servers is done with Protobuff via WebSockets. This package contains all Protobuff messages.
 
-```sh
-cd packages/game
-npm run watch
-```
+To be able to generate the Protobuff messages, you must have `protoc` installed. This can be set up in the setup script.
+
+Running `npm run generate` will build the messages. You must restart the game- and room server, as well as restart the watch process for the game package.
