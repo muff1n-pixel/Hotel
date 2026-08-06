@@ -39,21 +39,27 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             return;
         }
 
-        elementRef.current.addEventListener("transitionend", () => {
-            setTimeout(() => {
-                if(!elementRef.current) {
-                    return;
-                }
+        elementRef.current.addEventListener("transitionend", (event) => {
+            if(event.propertyName !== "opacity") {
+                return;
+            }
 
-                elementRef.current.style.transform = "translateY(-100%)";
-                elementRef.current.style.opacity = "0";
+            if(!elementRef.current) {
+                return;
+            }
 
-                elementRef.current.addEventListener("transitionend", () => {
-                    onFinish();
-                }, {
-                    once: true
-                });
-            }, 500);
+            elementRef.current.style.transform = "translateY(-100%)";
+            elementRef.current.style.opacity = "0";
+        }, {
+            once: true
+        });
+
+        elementRef.current.addEventListener("transitionend", (event) => {
+            if(event.propertyName !== "transform") {
+                return;
+            }
+
+            onFinish();
         }, {
             once: true
         });
@@ -62,7 +68,7 @@ export default function WidgetCurrencyChange({ data, style, tooltip, color, chil
             if(!elementRef.current) {
                 return;
             }
-            
+
             elementRef.current.style.opacity = "1";
         });
     }, [elementRef]);
