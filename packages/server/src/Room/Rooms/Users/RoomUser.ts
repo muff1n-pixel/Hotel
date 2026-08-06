@@ -326,7 +326,7 @@ export default class RoomUser implements RoomActor {
         }
 
         if(newPosition.row === this.room.model.structure.door?.row && newPosition.column === this.room.model.structure.door?.column) {
-            this.disconnect();
+            this.user.disconnect();
         }
     }
 

@@ -1,4 +1,4 @@
-import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerTransferUserToRoomData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerTransferUserToRoomData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserRemovedFromRoomData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
@@ -12,6 +12,7 @@ import ServerSetUserAchievementScoreEvent from "../Events/Room/ServerSetUserAchi
 import ServerUpdateUserRoomQueueEvent from "../Events/Room/ServerUpdateUserRoomQueueEvent";
 import ServerRemoveUserFromRoomQueueEvent from "../Events/Room/ServerRemoveUserFromRoomQueueEvent";
 import ServerTransferUserToRoomEvent from "../Events/Room/ServerTransferUserToRoomEvent";
+import ServerUserRemovedFromRoomEvent from "../Events/Room/ServerUserRemovedFromRoomEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
@@ -28,6 +29,7 @@ export default class RoomWorker {
         
         this.client.eventHandler.addProtobuffListener(ServerRoomsData, new ServerRoomsEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserUpdatedData, new ServerUserUpdatedEvent());
+        this.client.eventHandler.addProtobuffListener(ServerUserRemovedFromRoomData, new ServerUserRemovedFromRoomEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryRefreshData, new ServerUserInventoryRefreshEvent());
 
