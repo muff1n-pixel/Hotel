@@ -139,6 +139,18 @@ export default class RoomWebSocket {
             return;
         }
 
+        const existingUser = RoomServer.users.find((user) => user.model.id === model.id);
+
+        if(existingUser) {
+            logger.warn("User is already connected to server, disconnecting existing user and rejecting incoming connection.");
+
+            existingUser.disconnect();
+
+            websocket.close();
+
+            return;
+        }
+
         const roomId = url.searchParams.get("roomId");
 
         if (!roomId) {

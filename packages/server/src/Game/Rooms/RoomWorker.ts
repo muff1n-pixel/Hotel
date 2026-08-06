@@ -60,6 +60,10 @@ export default class RoomWorker {
             roomId: roomId
         }));
 
+        if(user.room) {
+            user.room.disconnect();
+        }
+        
         user.room = new UserRoomConnection(user, this.client, roomId);
 
         user.friends.updateFriends();
