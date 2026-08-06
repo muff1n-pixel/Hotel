@@ -11,6 +11,8 @@ import { PetModel } from "../../Database/Models/Pets/PetModel.js";
 import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
 import { FurnitureCrackableModel } from "../../Database/Models/Furniture/Crackable/FurnitureCrackableModel.js";
 import { GroupModel } from "../../Database/Models/Groups/RoomGroupModel.js";
+import RoomServer from "../RoomServer.js";
+import { ServerRoomLoadedData, ServerRoomsData } from "@pixel63/events";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -134,5 +136,9 @@ export default class RoomManager {
         room.unload();
 
         this.instances.splice(this.instances.indexOf(room), 1);
+
+        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
+            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+        }));
     }
 }
