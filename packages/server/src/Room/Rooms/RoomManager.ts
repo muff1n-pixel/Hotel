@@ -13,6 +13,7 @@ import { FurnitureCrackableModel } from "../../Database/Models/Furniture/Crackab
 import { GroupModel } from "../../Database/Models/Groups/RoomGroupModel.js";
 import RoomServer from "../RoomServer.js";
 import { ServerRoomLoadedData, ServerRoomsData } from "@pixel63/events";
+import { logger } from "../RoomLogger.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
 export default class RoomManager {
@@ -135,11 +136,21 @@ export default class RoomManager {
             return;
         }
 
-        console.log("Unloading room " + room.model.id);
+        const index = this.instances.indexOf(room);
+
+        if(index === -1) {
+            logger.warn("Tried to unload already unloaded room.", {
+                roomId: room.model.id
+            });
+
+            return;
+        }
+
+        this.instances.splice(index, 1);
+
+        logger.verbose("Unloading room " + room.model.id);
 
         room.unload();
-
-        this.instances.splice(this.instances.indexOf(room), 1);
 
         RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
             data: RoomServer.roomManager.instances.map((room) => room.getServerData())
