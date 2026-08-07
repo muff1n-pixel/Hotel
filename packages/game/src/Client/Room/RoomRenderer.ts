@@ -478,7 +478,13 @@ export default class RoomRenderer extends EventTarget {
             frame: new Rectangle(Math.round(clientRectangle.left), Math.round(clientRectangle.top), width, height),
         });
 
-        context.drawImage(extracted as HTMLCanvasElement, 0, 0);
+        const image = extracted as HTMLCanvasElement;
+
+        context.drawImage(
+            image,
+            0, 0, image.width, image.height,
+            0, 0, width, height
+        );
 
         return canvas;
     }
