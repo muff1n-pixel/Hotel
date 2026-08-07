@@ -18,14 +18,18 @@ export default class RoomLandscapeDebugSprite extends RoomSprite {
             -99,
             undefined,
             undefined,
-            item.roomRenderer.landscape?.image,
+            undefined,
             false
         );
+
+        if(this.item.roomRenderer.landscape?.texture) {
+            this.setExistingTexture(this.item.roomRenderer.landscape.texture);
+        }
     }
 
     public updateLandscape() {
-        if(this.item.roomRenderer.landscape.image) {
-            this.setTexture(this.item.roomRenderer.landscape.image);
+        if(this.item.roomRenderer.landscape?.texture) {
+            this.setExistingTexture(this.item.roomRenderer.landscape.texture);
         }
     }
 

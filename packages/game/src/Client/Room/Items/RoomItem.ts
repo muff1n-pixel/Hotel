@@ -5,7 +5,7 @@ import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { Container } from "pixi.js";
+import { Container, Texture } from "pixi.js";
 
 export default class RoomItem implements RoomItemInterface {
     public id: number = Math.random();
@@ -234,5 +234,9 @@ export default class RoomItem implements RoomItemInterface {
 
     public isSpritesInView() {
         return this._sprites.some((sprite) => sprite.isSpriteInView());
+    }
+
+    public updateLandscapeMask(texture: Texture) {
+        
     }
 }

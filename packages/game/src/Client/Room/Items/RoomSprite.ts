@@ -53,7 +53,9 @@ export default class RoomSprite implements RoomItemSpriteInterface {
             zIndex,
         });
 
-        this._sprite.texture.source.scaleMode = "nearest";
+        if(this._sprite.texture) {
+            this._sprite.texture.source.scaleMode = "nearest";
+        }
 
         this.item.roomRenderer.container.addChild(this._sprite);
     }
@@ -73,6 +75,12 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     public setTexture(texture: TextureSourceLike) {
         this._sprite.texture = Texture.from(texture);
         this._sprite.texture.source.scaleMode = "nearest";
+
+        this.update();
+    }
+
+    public setExistingTexture(texture: Texture) {
+        this._sprite.texture = texture;
 
         this.update();
     }

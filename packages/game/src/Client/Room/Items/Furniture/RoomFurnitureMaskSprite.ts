@@ -24,10 +24,14 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
             furnitureSprite.zIndex,
             undefined,
             undefined,
-            item.roomRenderer.landscape.image,
+            undefined,
             false,
             true
         );
+
+        if(this.item.roomRenderer.landscape?.texture) {
+            this.setExistingTexture(this.item.roomRenderer.landscape.texture);
+        }
 
         this.mask = new RoomSprite(
             item,
@@ -42,8 +46,8 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
     }
 
     public updateLandscape() {
-        if(this.item.roomRenderer.landscape.image) {
-            this.setTexture(this.item.roomRenderer.landscape.image);
+        if(this.item.roomRenderer.landscape?.texture) {
+            this.setExistingTexture(this.item.roomRenderer.landscape.texture);
         }
     }
 

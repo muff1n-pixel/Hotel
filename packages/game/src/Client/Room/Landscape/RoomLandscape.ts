@@ -4,15 +4,17 @@ import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugS
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
+import { Texture } from "pixi.js";
 
 export default class RoomLandscape {
     private renderer: LandscapeRenderer;
 
-    public image?: ImageBitmap;
     private frame: number = 0;
 
     private item?: RoomItem;
     private sprite?: RoomLandscapeDebugSprite;
+
+    public texture?: Texture;
 
     private settingsListener?: () => void;
 
@@ -30,12 +32,6 @@ export default class RoomLandscape {
     }
 
     public destroy() {
-        if(this.image) {
-            this.image.close();
-
-            DataStats.landscapeImageBitmapsClosed++;
-        }
-
         this.settingsListener?.();
     }
 
@@ -58,15 +54,18 @@ export default class RoomLandscape {
 
         this.frame = (this.frame + 1) % 24;
 
-        const imageBitmap = await this.renderer.renderOffScreen();
+        const image = await this.renderer.renderOffScreen();
 
-        if(this.image) {
-            this.image.close();
-            
-            DataStats.landscapeImageBitmapsClosed++;
+        if(this.texture) {
+            this.texture.destroy(true);
         }
 
-        this.image = imageBitmap;
+        this.texture = Texture.from(image, true);
+        this.texture.source.scaleMode = "nearest";
+
+        for(const item of this.roomRenderer.getFilteredItems((item) => item instanceof RoomFurnitureItem && item.hasLandscapeMask)) {
+            item.updateLandscapeMask(this.texture);
+        }
 
         this.rendering = false;
 

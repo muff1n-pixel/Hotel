@@ -71,6 +71,8 @@ export default class LandscapeRenderer {
             throw new ContextNotAvailableError();
         }
 
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         context.imageSmoothingEnabled = false;
 
         const texture = await this.renderTexture();
@@ -129,11 +131,7 @@ export default class LandscapeRenderer {
 
         context.resetTransform();
 
-        const imageBitmap = this.canvas.transferToImageBitmap();
-
-        DataStats.landscapeImageBitmapsOpened++;
-
-        return imageBitmap;
+        return this.canvas;
     }
 
     private visualization?: RoomData["visualization"]["landscapeData"]["landscapes"][0]["visualizations"][0];

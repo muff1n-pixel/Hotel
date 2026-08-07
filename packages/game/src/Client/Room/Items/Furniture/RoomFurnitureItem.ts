@@ -9,6 +9,7 @@ import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMann
 import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
 import RoomSprite from "@Client/Room/Items/RoomSprite";
 import RoomFurnitureMaskSprite from "@Client/Room/Items/Furniture/RoomFurnitureMaskSprite";
+import { Texture } from "pixi.js";
 
 export default class RoomFurnitureItem extends RoomItem {
     public readonly id = Math.random();
@@ -89,9 +90,10 @@ export default class RoomFurnitureItem extends RoomItem {
                 this.renderFurniture();
             }
         }
-        else {
-            this.mask?.updateLandscape();
-        }
+    }
+
+    public updateLandscapeMask(texture: Texture): void {
+        this.mask?.setExistingTexture(texture);
     }
 
     private renderFurniture() {
