@@ -45,12 +45,6 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
         this.setMask(this.mask);
     }
 
-    public updateLandscape() {
-        if(this.item.roomRenderer.landscape?.texture) {
-            this.setExistingTexture(this.item.roomRenderer.landscape.texture);
-        }
-    }
-
     mouseover(position: MousePosition) {
         if(this.item.disabled) {
             return null;
@@ -97,12 +91,12 @@ export default class RoomFurnitureMaskSprite extends RoomSprite {
     update(): void {
         super.update();
 
-        this.mask.update();
+        this.mask?.update();
     }
 
     destroy(): void {
         super.destroy();
 
-        this.mask.destroy();
+        this.mask?.destroy();
     }
 }

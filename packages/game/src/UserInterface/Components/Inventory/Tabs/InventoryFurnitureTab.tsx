@@ -377,7 +377,6 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                                                 furniture: activeFurniture.furniture,
                                                 externalImage: activeFurniture.userFurniture?.data?.externalImage?.externalImage,
                                                 figureConfiguration: activeFurniture.userFurniture?.data?.mannequin?.figureConfiguration,
-                                                panToItem: true,
                                                 colorTags: activeFurniture.userFurniture?.colorTags
                                             }
                                         ]):([])

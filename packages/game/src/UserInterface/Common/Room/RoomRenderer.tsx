@@ -161,21 +161,6 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
                         );
 
                         item.setPosition(position);
-
-                        if(furnitureItem.panToItem) {
-                            if(item.furnitureRenderer.placement === "floor") {
-                                roomRenderer.panToItem(item, {
-                                    left: 0,
-                                    top: 0
-                                });
-                            }
-                            else {
-                                roomRenderer.panToItem(item, {
-                                    left: (Math.max(1, item.position?.row ?? 0) * 16),
-                                    top: 0
-                                });
-                            }
-                        }
                     });
                 }
             }
@@ -215,13 +200,6 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
             
             item.figureRenderer.configuration = figureItem.figureConfiguration;
             item.figureRenderer.setActions(figureItem.actions ?? []);
-
-            if(figureItem.panToItem) {
-                roomRenderer.panToItem(item, {
-                    left: 0,
-                    top: 0
-                });
-            }
         }
     }, [roomRenderer, figure]);
 

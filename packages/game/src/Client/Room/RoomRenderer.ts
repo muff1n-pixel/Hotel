@@ -223,7 +223,9 @@ export default class RoomRenderer extends EventTarget {
             item.process(this.frameCounter.tick);
         }
 
-        this.landscape.render();
+        if(this.frameCounter.tick % 2 === 0) {
+            this.landscape.render();
+        }
 
         this.dispatchEvent(new RoomFrameEvent());
     }
@@ -406,29 +408,6 @@ export default class RoomRenderer extends EventTarget {
         };
     }
 
-    public panToItem(item: RoomItem, offset: MousePosition) {
-        if(item instanceof RoomFurnitureItem) {
-            if(!item.position) {
-                return;
-            }
-
-            const dimensions = item.furnitureRenderer.getDimensions();
-
-            this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + (Math.max(dimensions.row - 1, 0) * 16) + (Math.max(dimensions.column - 1, 0) * -16) + offset.left);
-            this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) - (Math.max(dimensions.row - 1, 0) * -8) + (Math.max(dimensions.column - 1, 0) * -8) + offset.top);
-        }
-        else  {
-            if(!item.position) {
-                return;
-            }
-
-            const position = this.getCoordinatePosition(item.position);
-            
-            this.camera.cameraPosition.left = position.left + 64 + offset.left;
-            this.camera.cameraPosition.top = -position.top + offset.top;
-        }
-    }
-
     public panToOffset(offset: MousePosition) {
         this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + offset.left);
         this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) + offset.top);
@@ -537,13 +516,17 @@ export default class RoomRenderer extends EventTarget {
         const scaleY = (canvasHeight - padding) / furnitureHeight;
         this.previewScale = Math.min(scaleX, scaleY, 1);
 
-        if(this.previewScale < 1 && furnitureItem.position) {
+        if(furnitureItem.position) {
             const screenPos = this.getCoordinatePosition(furnitureItem.position);
             const spriteCenterX = (minX + maxX) / 2;
             const spriteCenterY = (minY + maxY) / 2;
 
             this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + -(screenPos.left + spriteCenterX));
-            this.camera.cameraPosition.top = Math.round(-(screenPos.top + spriteCenterY));
+            this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) + -(screenPos.top + spriteCenterY));
+        }
+        else {
+            this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2));
+            this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2));
         }
     }
 

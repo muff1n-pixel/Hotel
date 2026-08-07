@@ -20,15 +20,17 @@ export default class RoomCamera {
     }
 
     public init() {
-        this.renderer.application.canvas.addEventListener("touchstart", this.touchstart.bind(this));
-        this.renderer.application.canvas.addEventListener("touchmove", this.touchmove.bind(this));
-        this.renderer.application.canvas.addEventListener("touchend", this.touchend.bind(this));
+        if(this.renderer.roomInstance) {
+            this.renderer.application.canvas.addEventListener("touchstart", this.touchstart.bind(this));
+            this.renderer.application.canvas.addEventListener("touchmove", this.touchmove.bind(this));
+            this.renderer.application.canvas.addEventListener("touchend", this.touchend.bind(this));
 
-        this.renderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
-        this.renderer.application.canvas.addEventListener("mousemove", this.mousemove.bind(this));
-        this.renderer.application.canvas.addEventListener("mouseup", this.mouseup.bind(this));
-        this.renderer.application.canvas.addEventListener("mouseleave", this.mouseleave.bind(this));
-        this.renderer.application.canvas.addEventListener("wheel", this.wheel.bind(this));
+            this.renderer.application.canvas.addEventListener("mousedown", this.mousedown.bind(this));
+            this.renderer.application.canvas.addEventListener("mousemove", this.mousemove.bind(this));
+            this.renderer.application.canvas.addEventListener("mouseup", this.mouseup.bind(this));
+            this.renderer.application.canvas.addEventListener("mouseleave", this.mouseleave.bind(this));
+            this.renderer.application.canvas.addEventListener("wheel", this.wheel.bind(this));
+        }
     }
 
     private wheel(event: WheelEvent) {

@@ -54,19 +54,6 @@ export default class RoomFurnitureRenderer {
         this.roomRenderer.init().then(() => {
             this.roomRenderer.addEventListener("render", () => {
                 if(this.roomRenderer && this.roomItem && (this.roomItem instanceof RoomFurnitureItem)) {
-                    if(this.roomItem.furnitureRenderer.placement === "floor") {
-                        this.roomRenderer.panToItem(this.roomItem, {
-                            left: 0,
-                            top: (options.withoutWalls)?(-16):(0)
-                        });
-                    }
-                    else {
-                        this.roomRenderer.panToItem(this.roomItem, {
-                            left: (Math.max(1, this.roomItem.position?.row ?? 0) * 16),
-                            top: (this.roomItem.position?.depth ?? 0) * 32
-                        });
-                    }
-
                     this.roomRenderer.updatePreviewScale();
                 }
             });
@@ -94,7 +81,7 @@ export default class RoomFurnitureRenderer {
         
         this.roomRenderer.addItem(this.roomItem);
 
-        this.roomRenderer.panToItem(this.roomItem, { left: 0, top: 64 });
+        this.roomRenderer.updatePreviewScale();
     }
 
     async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: number = 0) {

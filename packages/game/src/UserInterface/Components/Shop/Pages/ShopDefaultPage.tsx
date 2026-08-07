@@ -182,7 +182,6 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                             {
                                 id: activeFurniture.id,
                                 furniture: activeFurniture.furniture,
-                                panToItem: true,
                                 colorTags: (group) && [
                                     UserFurnitureColorTag.create({
                                         tag: "COLOR1",

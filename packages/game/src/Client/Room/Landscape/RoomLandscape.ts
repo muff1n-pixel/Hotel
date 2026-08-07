@@ -56,15 +56,19 @@ export default class RoomLandscape {
 
         const image = await this.renderer.renderOffScreen();
 
-        if(this.texture) {
-            this.texture.destroy(true);
-        }
-
-        this.texture = Texture.from(image, true);
-        this.texture.source.scaleMode = "nearest";
+        const texture = Texture.from(image, true);
+        texture.source.scaleMode = "nearest";
 
         for(const item of this.roomRenderer.getFilteredItems((item) => item instanceof RoomFurnitureItem && item.hasLandscapeMask)) {
-            item.updateLandscapeMask(this.texture);
+            item.updateLandscapeMask(texture);
+        }
+
+        const previousTexture = this.texture;
+
+        this.texture = texture;
+
+        if(previousTexture) {
+            previousTexture.destroy(true);
         }
 
         this.rendering = false;

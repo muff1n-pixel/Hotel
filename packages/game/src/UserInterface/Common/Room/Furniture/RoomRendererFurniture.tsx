@@ -6,7 +6,6 @@ export type RoomRendererFurnitureProps = {
     externalImage?: string;
     figureConfiguration?: FigureConfigurationData;
     position?: RoomPositionData;
-    panToItem?: boolean;
     colorTags?: UserFurnitureColorTag[];
 };
 

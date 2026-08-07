@@ -5,6 +5,5 @@ export type RoomRendererFigureProps = {
     figureConfiguration: FigureConfigurationData;
     actions?: string[];
     position?: RoomPositionData;
-    panToItem?: boolean;
 };
 
