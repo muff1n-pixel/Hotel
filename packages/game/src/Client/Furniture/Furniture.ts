@@ -224,13 +224,7 @@ export default class Furniture {
         }
 
         if(!this.data) {
-            this.data = FurnitureAssets.getFurnitureData(this.type);
-
-            if(!this.data) {
-                throw new Error("Furniture data does not exist.");
-            }
-            
-            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+            throw new Error("Data is not loaded.");
         }
 
         if(this.direction === undefined) {
@@ -325,6 +319,24 @@ export default class Furniture {
         return this.visualization.directions[currentIndex - 1].id;
     }
 
+    public getNextAnimation() {
+        if(!this.visualization) {
+            return this.animation;
+        }
+
+        const currentIndex = this.visualization.animations.findIndex((animation) => animation.id === this.animation);
+
+        if(currentIndex === -1) {
+            return this.animation;
+        }
+
+        if(!this.visualization.animations[currentIndex + 1]) {
+            return this.visualization.animations[0].id;
+        }
+
+        return this.visualization.animations[currentIndex + 1].id;
+    }
+
     public getColors() {
         if(!this.visualization) {
             return [];
@@ -360,8 +372,14 @@ export default class Furniture {
     }
 
     public async loadAssets() {
-        if(!FurnitureAssets.getFurnitureData(this.type)) {
-            await FurnitureAssets.fetchFurnitureData(this.type);
+        if(!this.data) {
+            this.data = FurnitureAssets.getFurnitureData(this.type) ?? await FurnitureAssets.fetchFurnitureData(this.type);
+
+            if(!this.data) {
+                throw new Error("Furniture data does not exist.");
+            }
+            
+            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
         }
 
         if(!FurnitureAssets.getFurnitureSpritesheet(this.type)) {

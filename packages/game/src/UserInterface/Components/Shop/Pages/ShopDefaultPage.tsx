@@ -21,6 +21,7 @@ import ShopGroupSelector from "@UserInterface/Components/Shop/Pages/Groups/ShopG
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@UserInterface/Hooks/useSettings";
 import useShopPurchaseFurniture, { ShopPurchaseFurnitureData } from "../Purchasing/Hooks/useShopPurchaseFurniture";
+import Furniture from "@Client/Furniture/Furniture";
 
 export default function ShopDefaultPage({ search, editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -34,10 +35,29 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
     const activeFurnitureRef = useRef<HTMLCanvasElement>(null);
 
-    const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
+    const [activeFurniture, _setActiveFurniture] = useState<ShopFurnitureData>();
+    const [activeFurnitureRenderer, setActiveFurnitureRenderer] = useState<Furniture>();
+    const [activeAnimationId, setActiveAnimationId] = useState(0);
 
     const [quantity, setQuantity] = useState(1);
     const [group, setGroup] = useState<GroupData>();
+
+    const setActiveFurniture = useCallback((shopFurniture: ShopFurnitureData) => {
+        setActiveAnimationId(0);
+        setActiveFurnitureRenderer(undefined);
+
+        if(!shopFurniture.furniture) {
+            return;
+        }
+
+        const furniture = new Furniture(shopFurniture.furniture.type, 64);
+
+        furniture.loadAssets().then(() => {
+            _setActiveFurniture(shopFurniture);
+
+            setActiveFurnitureRenderer(furniture);
+        });
+    }, [setActiveAnimationId, setActiveFurnitureRenderer, _setActiveFurniture]);
 
     const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
@@ -97,8 +117,12 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
     }, [page, shopFurniture]);
 
     const onRoomClick = useCallback((furniture: ShopFurnitureData) => {
+        if(!activeFurnitureRenderer) {
+            return;
+        }
 
-    }, []);
+        setActiveAnimationId(activeFurnitureRenderer.getNextAnimation());
+    }, [activeFurnitureRenderer, setActiveAnimationId]);
 
     const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
@@ -181,10 +205,12 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                         }
                     })}
                     furniture={
-                        (activeFurniture?.furniture)?([
+                        (activeFurniture?.furniture && activeFurnitureRenderer)?([
                             {
-                                id: activeFurniture.id,
+                                id: activeFurniture.furniture.id,
                                 furniture: activeFurniture.furniture,
+                                furnitureRenderer: activeFurnitureRenderer,
+                                animationId: activeAnimationId,
                                 colorTags: (group) && [
                                     UserFurnitureColorTag.create({
                                         tag: "COLOR1",

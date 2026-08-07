@@ -124,7 +124,7 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
                 else {
                     item = new RoomFurnitureItem(
                         roomRenderer, 
-                        new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),
+                        furnitureItem.furnitureRenderer ?? new Furniture(furnitureItem.furniture.type, 64, undefined, undefined, furnitureItem.furniture.color),
                         furnitureItem.position
                     );
 
@@ -140,6 +140,7 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
             item.furnitureRenderer.figureConfiguration = furnitureItem.figureConfiguration;
             item.furnitureRenderer.externalImage = furnitureItem.externalImage;
             item.furnitureRenderer.colorTags = furnitureItem.colorTags;
+            item.furnitureRenderer.animation = furnitureItem.animationId ?? 0;
 
             //console.log("color tags set to", furnitureItem.colorTags);
 
