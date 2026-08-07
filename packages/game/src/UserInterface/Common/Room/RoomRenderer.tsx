@@ -14,9 +14,10 @@ export type RoomRendererProps = {
     structure: RoomStructureData;
     furniture?: RoomRendererFurnitureProps[];
     figure?: RoomRendererFigureProps[];
+    onClick?: () => void;
 }
 
-export default function RoomRenderer({ hidden, structure, furniture, figure }: RoomRendererProps) {
+export default function RoomRenderer({ onClick, hidden, structure, furniture, figure }: RoomRendererProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     const roomRendererRequested = useRef<boolean>(false);
     const roomFurnitureItems = useRef<Map<string, RoomItem>>(new Map());
@@ -141,6 +142,7 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
             item.furnitureRenderer.externalImage = furnitureItem.externalImage;
             item.furnitureRenderer.colorTags = furnitureItem.colorTags;
             item.furnitureRenderer.animation = furnitureItem.animationId ?? 0;
+            item.furnitureRenderer.direction = furnitureItem.direction;
 
             //console.log("color tags set to", furnitureItem.colorTags);
 
@@ -205,7 +207,7 @@ export default function RoomRenderer({ hidden, structure, furniture, figure }: R
     }, [roomRenderer, figure]);
 
     return (
-        <div ref={elementRef} style={{
+        <div ref={elementRef} onClick={onClick} style={{
             height: "100%",
             width: "100%",
 

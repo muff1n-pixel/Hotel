@@ -7,6 +7,7 @@ export type RoomRendererFurnitureProps = {
     furniture: FurnitureData;
     furnitureRenderer?: Furniture;
     animationId?: number;
+    direction?: number;
     externalImage?: string;
     figureConfiguration?: FigureConfigurationData;
     position?: RoomPositionData;

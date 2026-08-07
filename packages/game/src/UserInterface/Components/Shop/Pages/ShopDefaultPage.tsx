@@ -38,19 +38,21 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
     const [activeFurniture, _setActiveFurniture] = useState<ShopFurnitureData>();
     const [activeFurnitureRenderer, setActiveFurnitureRenderer] = useState<Furniture>();
     const [activeAnimationId, setActiveAnimationId] = useState(0);
+    const [activeDirection, setActiveDirection] = useState<number | undefined>();
 
     const [quantity, setQuantity] = useState(1);
     const [group, setGroup] = useState<GroupData>();
 
-    const setActiveFurniture = useCallback((shopFurniture: ShopFurnitureData) => {
+    const setActiveFurniture = useCallback((shopFurniture?: ShopFurnitureData) => {
         setActiveAnimationId(0);
+        setActiveDirection(undefined);
         setActiveFurnitureRenderer(undefined);
 
-        if(!shopFurniture.furniture) {
+        if(!shopFurniture?.furniture) {
             return;
         }
 
-        const furniture = new Furniture(shopFurniture.furniture.type, 64);
+        const furniture = new Furniture(shopFurniture.furniture.type, 64, undefined, undefined, shopFurniture.furniture.color);
 
         furniture.loadAssets().then(() => {
             _setActiveFurniture(shopFurniture);
@@ -124,6 +126,22 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
         setActiveAnimationId(activeFurnitureRenderer.getNextAnimation());
     }, [activeFurnitureRenderer, setActiveAnimationId]);
 
+    const handlePreviousDirection = useCallback(() => {
+        if(!activeFurnitureRenderer) {
+            return;
+        }
+
+        setActiveDirection(activeFurnitureRenderer.getPreviousDirection());
+    }, [activeFurnitureRenderer, setActiveAnimationId]);
+
+    const handleNextDirection = useCallback(() => {
+        if(!activeFurnitureRenderer) {
+            return;
+        }
+
+        setActiveDirection(activeFurnitureRenderer.getNextDirection());
+    }, [activeFurnitureRenderer, setActiveAnimationId]);
+
     const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
@@ -178,7 +196,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
             overflow: "hidden"
         }}>
-            <div onClick={() => activeFurniture && onRoomClick(activeFurniture)} style={{
+            <div style={{
                 height: 240,
                 width: "100%",
 
@@ -189,6 +207,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
                 <RoomRenderer
                     hidden={!activeFurniture}
+                    onClick={() => activeFurniture && onRoomClick(activeFurniture)}
                     structure={RoomStructureData.create({
                         grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
                         floor: {
@@ -210,6 +229,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                                 id: activeFurniture.furniture.id,
                                 furniture: activeFurniture.furniture,
                                 furnitureRenderer: activeFurnitureRenderer,
+                                direction: activeDirection,
                                 animationId: activeAnimationId,
                                 colorTags: (group) && [
                                     UserFurnitureColorTag.create({
@@ -227,21 +247,44 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                     />
 
                 {(activeFurniture) && (
-                    <div style={{
+                    <FlexLayout direction="row" style={{
                         position: "absolute",
                         left: 0,
                         top: 0,
+
+                        width: "100%",
+                        boxSizing: "border-box",
 
                         padding: 10,
 
                         color: "white"
                     }}>
-                        <b>{activeFurniture.furniture?.name}</b>
+                        <FlexLayout flex={1} direction="column" gap={5}>
+                            <b>{activeFurniture.furniture?.name}</b>
 
-                        {(activeFurniture.furniture?.description) && (
-                            <p style={{ fontSize: 12 }}>{activeFurniture.furniture.description}</p>
-                        )}
-                    </div>
+                            {(activeFurniture.furniture?.description) && (
+                                <p style={{ fontSize: 12 }}>{activeFurniture.furniture.description}</p>
+                            )}
+                        </FlexLayout>
+
+                        <FlexLayout gap={5} direction="row">
+                            <DialogButton contentStyle={{
+                                paddingLeft: "6px",
+                                paddingRight: "6px"
+                            }} onClick={handlePreviousDirection}>
+                                <div className="sprite_forms_arrow-big" style={{
+                                    transform: "rotateZ(180deg)"
+                                }}/>
+                            </DialogButton>
+
+                            <DialogButton contentStyle={{
+                                paddingLeft: "6px",
+                                paddingRight: "6px"
+                            }} onClick={handleNextDirection}>
+                                <div className="sprite_forms_arrow-big"/>
+                            </DialogButton>
+                        </FlexLayout>
+                    </FlexLayout>
                 )}
 
                 {(activeFurniture) && (
