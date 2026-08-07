@@ -96,6 +96,10 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
         }
     }, [page, shopFurniture]);
 
+    const onRoomClick = useCallback((furniture: ShopFurnitureData) => {
+
+    }, []);
+
     const onMouseDown = useCallback((furniture: ShopFurnitureData) => {
         if(!clientInstance.roomInstance.value) {
             return;
@@ -150,8 +154,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
 
             overflow: "hidden"
         }}>
-            <div onMouseDown={() => activeFurniture && onMouseDown(activeFurniture)} style={{
-
+            <div onClick={() => activeFurniture && onRoomClick(activeFurniture)} style={{
                 height: 240,
                 width: "100%",
 
