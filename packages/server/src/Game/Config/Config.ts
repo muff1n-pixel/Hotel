@@ -42,7 +42,10 @@ export type Config = {
         }[];
         
         automaticallySpawnRoomServers: boolean;
-        automaticRoomServerPortAllocations: number[];
+        automaticRoomServerPortAllocations: {
+            host: string;
+            port: number;
+        }[];
     };
 };
 

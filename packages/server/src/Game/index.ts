@@ -49,10 +49,10 @@ export async function startServer() {
     logger.verbose("Loading room servers...");
 
     if(config.rooms.automaticallySpawnRoomServers) {
-        for(const port of config.rooms.automaticRoomServerPortAllocations) {
+        for(const { host, port } of config.rooms.automaticRoomServerPortAllocations) {
             logger.info(`Spawning room server process at port ${port}.`);
 
-            const child = exec(`npm run room -- --port=${port}`);
+            const child = exec(`npm run room -- --hostname=${host} --port=${port}`);
             
             child.stdout?.pipe(process.stdout);
             child.stderr?.pipe(process.stderr);
