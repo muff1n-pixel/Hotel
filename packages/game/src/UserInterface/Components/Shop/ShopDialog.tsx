@@ -130,7 +130,7 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
 
     return (
         <Dialog title={getTranslation("title")} hidden={hidden} editMode={editMode} onEditClick={hasEditShopPermission && onEditClick} onClose={onClose} width={580} height={670}>
-            <DialogTabs index={activeIndex} onChange={setActiveIndex} header={header} withLargeTabs tabs={[
+            <DialogTabs index={activeIndex} onChange={(index) => { setActiveIndex(index); setSearch(""); }} header={header} withLargeTabs tabs={[
                 {
                     icon: getTranslation("tabs.frontpage"),
                     element: (
