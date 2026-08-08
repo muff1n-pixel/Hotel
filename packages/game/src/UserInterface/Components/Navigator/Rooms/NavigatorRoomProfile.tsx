@@ -65,12 +65,14 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
                 flexDirection: "row",
                 gap: 10
             }}>
-                <RoomThumbnail roomId={room.id} thumbnail={room.thumbnail} disallowEdit/>
-
                 <div>
+                    <RoomThumbnail roomId={room.id} thumbnail={room.thumbnail} disallowEdit/>
+                </div>
+
+                <div style={{ flex: 1 }}>
                     <b>{room.name}</b>
 
-                    <p>{room.description}</p>
+                    <p style={{ textWrap: "wrap" }}>{room.description}</p>
                 </div>
             </div>
 
@@ -101,10 +103,6 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
                     gap: 5
                 }}>
                     <b><u><GroupLink group={room.group}/></u></b>
-                    
-                    <div/>
-
-                    <div><b>Max users:</b> {room.maxUsers}</div>
                 </div>
             </div>
         </DialogPanel>
