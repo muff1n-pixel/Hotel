@@ -5,6 +5,7 @@ import RoomThumbnail from "../../Room/Thumbnail/RoomThumbnail";
 import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import NavigatorRoomListThumbnail from "./NavigatorRoomListThumbnail";
 
 export type NavigatorRoomListProps = {
     title: string;
@@ -27,55 +28,13 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                     gap: 5
                 }}>
                     {rooms.map((room) => (
-                        <div key={room.id} style={{
-                            background: "#EAE8DE",
-                            
-                            borderBottom: "2px solid #CCCCCC",
-                            borderRadius: 6,
-
-                            padding: 5,
-
-                            display: "flex",
-                            flexDirection: "column",
-
-                            gap: 5,
-
-                            cursor: "pointer"
-                        }} onClick={() => onClick(room)}>
-                            <RoomThumbnail roomId={room.id} thumbnail={room.thumbnail} disallowEdit>
-                                <FlexLayout flex={1}>
-                                    {(room.group) && (
-                                        <div style={{
-                                            padding: 2
-                                        }}>
-                                            <div className="sprite_groups_icon"/>
-                                        </div>
-                                    )}
-
-                                    <div style={{
-                                        flex: 1,
-
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "flex-end",
-
-                                        padding: 4
-                                    }}>
-                                        <div>
-                                            <NavigatorRoomUsersCount users={room.users} maxUsers={room.maxUsers}/>
-                                        </div>
-                                    </div>
-                                </FlexLayout>
-                            </RoomThumbnail>
-
-                            <div style={{ fontSize: 12, maxWidth: 112 }}>{room.name}</div>
-                        </div>
+                        <NavigatorRoomListThumbnail key={room.id} room={room} onClick={() => onClick(room)}/>
                     ))}
                 </div>
             ):(
                 <DialogList>
                     {rooms.map((room) => (
-                        <NavigatorRoomListItem room={room} onClick={() => onClick(room)}/>
+                        <NavigatorRoomListItem key={room.id} room={room} onClick={() => onClick(room)}/>
                     ))}
                 </DialogList>
             )}
