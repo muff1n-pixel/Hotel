@@ -119,7 +119,12 @@ export default class Pet {
 
         if(data.palettes) {
             for(const palette of data.palettes) {
-                await PetAssets.fetchPaletteData(this.type, palette.source);
+                try {
+                    await PetAssets.fetchPaletteData(this.type, palette.source);
+                }
+                catch(error) {
+                    console.error(error);
+                }
             }
         }
 
