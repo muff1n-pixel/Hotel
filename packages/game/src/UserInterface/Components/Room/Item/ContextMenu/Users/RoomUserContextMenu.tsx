@@ -33,7 +33,11 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                 {targetUser.data.name}
             </UserContextMenuElement>
 
-            <RoomUserContextMenuTabs tab={tab} targetUser={targetUser} setTab={setTab} closeTab={() => setTab(null)}/>
+            <RoomUserContextMenuTabs tab={tab} targetUser={targetUser} setTab={setTab} closeTab={() => setTab(null)} close={() => {
+                if(room) {
+                    room.roomRenderer.focusedItem.value = undefined;
+                }
+            }}/>
         </RoomItemContextMenuWrapper>
     );
 }

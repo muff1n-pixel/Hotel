@@ -8,26 +8,26 @@ export type RoomUserContextMenuTabsProps = RoomUserContextMenuTabProps & {
     tab: string | null;
 };
 
-export default function RoomUserContextMenuTabs({ tab, targetUser, setTab, closeTab }: RoomUserContextMenuTabsProps) {
+export default function RoomUserContextMenuTabs({ tab, targetUser, setTab, closeTab, close }: RoomUserContextMenuTabsProps) {
     switch(tab) {
         case "dance": {
-            return (<RoomUserContextMenuDanceTab targetUser={targetUser} setTab={setTab} closeTab={closeTab}/>)
+            return (<RoomUserContextMenuDanceTab targetUser={targetUser} setTab={setTab} closeTab={closeTab} close={close}/>)
         }
         
         case "relationship": {
-            return (<RoomUserContextMenuRelationshipTab targetUser={targetUser} setTab={setTab} closeTab={closeTab}/>)
+            return (<RoomUserContextMenuRelationshipTab targetUser={targetUser} setTab={setTab} closeTab={closeTab} close={close}/>)
         }
         
         case "signs": {
-            return (<RoomUserContextMenuSignsTab targetUser={targetUser} setTab={setTab} closeTab={closeTab}/>)
+            return (<RoomUserContextMenuSignsTab targetUser={targetUser} setTab={setTab} closeTab={closeTab} close={close}/>)
         }
         
         case "actions": {
-            return (<RoomUserContextMenuActionTab targetUser={targetUser} setTab={setTab} closeTab={closeTab}/>)
+            return (<RoomUserContextMenuActionTab targetUser={targetUser} setTab={setTab} closeTab={closeTab} close={close}/>)
         }
         
         default: {
-            return (<RoomUserContextMenuTab targetUser={targetUser} setTab={setTab} closeTab={closeTab}/>)
+            return (<RoomUserContextMenuTab targetUser={targetUser} setTab={setTab} closeTab={closeTab} close={close}/>)
         }
     }
 }

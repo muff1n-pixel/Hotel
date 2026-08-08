@@ -7,7 +7,7 @@ import { RoomUserContextMenuTabProps } from "./RoomUserContextMenuTab";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
-export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContextMenuTabProps) {
+export default function RoomUserContextMenuSignsTab({ close, closeTab }: RoomUserContextMenuTabProps) {
     const room = useRoomInstance();
     const [getTranslation] = useTranslation("room");
 
@@ -21,6 +21,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                                 message: `:sign ${1 + (row * 3) + index}`
                             }));
 
+                            close();
                             closeTab();
                         }}/>
                     ))}
@@ -33,6 +34,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: `:sign 10`
                     }));
 
+                    close();
                     closeTab();
                 }}/>
                 
@@ -41,6 +43,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: `:sign 0`
                     }));
 
+                    close();
                     closeTab();
                 }}/>
 
@@ -49,6 +52,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 11"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
             </FlexLayout>
@@ -59,6 +63,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 12"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
 
@@ -67,6 +72,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 13"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
 
@@ -75,6 +81,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 14"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
             </FlexLayout>
@@ -85,6 +92,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 15"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
 
@@ -93,6 +101,7 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 16"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
                 
@@ -101,11 +110,13 @@ export default function RoomUserContextMenuSignsTab({ closeTab }: RoomUserContex
                         message: ":sign 17"
                     }));
 
+                    close();
                     closeTab();
                 }}/>
             </FlexLayout>
             
             <UserContextMenuButton text={getTranslation("item.context_menu.back")} hasBack onClick={() => {
+                close();
                 closeTab();
             }}/>
         </UserContextMenuList>

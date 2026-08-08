@@ -15,9 +15,10 @@ export type RoomUserContextMenuTabProps = {
 
     setTab: (tab: string | null) => void;
     closeTab: () => void;
+    close: () => void;
 };
 
-export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab }: RoomUserContextMenuTabProps) {
+export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab, close }: RoomUserContextMenuTabProps) {
     const [getTranslation] = useTranslation("room");
     
     const user = useUser();
@@ -43,6 +44,7 @@ export default function RoomUserContextMenuTab({ targetUser, setTab, closeTab }:
                                 message: ":dance 0"
                             }));
 
+                            close();
                             closeTab();
                         }
                         else {
