@@ -8,6 +8,7 @@ import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { useTranslation } from "react-i18next";
 
 import "./RoomChat.css";
+import RoomRenderer from "@Client/Room/RoomRenderer";
 
 type RoomChatMessage = {
     id: number;
@@ -70,8 +71,6 @@ export default function RoomChat() {
                     return;
                 }
                 
-                const position = actor.item.position;
-
                 let message: string = payload.message;
 
                 if(payload.messageVocals.length) {
@@ -89,9 +88,9 @@ export default function RoomChat() {
 
                 const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, actor, message, payload.options);
 
-                const screenPosition = room.roomRenderer.getCoordinatePosition(position);
+                const screenPosition = RoomRenderer.getCoordinatePosition(actor.item.position, room.roomRenderer.container.scale.x);
 
-                const left = screenPosition.left - (image.width / 2) + 64;
+                const left = screenPosition.left - (image.width / 2) + (64 * room.roomRenderer.container.scale.x);
 
                 const newMessage: RoomChatMessage = {
                     id: Math.random(),
