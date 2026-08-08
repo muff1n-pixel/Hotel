@@ -1,15 +1,17 @@
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import NavigatorRoomProfile from "@UserInterface/Components/Navigator/Rooms/NavigatorRoomProfile";
 import { NavigatorRoomData } from "@pixel63/events";
 import NavigatorRoomLock from "@UserInterface/Components/Navigator/Rooms/NavigatorRoomLock";
 
 export type NavigatorRoomListItemProps = {
+    parentRef: RefObject<HTMLDivElement | null>;
+    
     room: NavigatorRoomData;
     onClick: () => void;
 }
 
-export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomListItemProps) {
+export default function NavigatorRoomListItem({ parentRef, room, onClick }: NavigatorRoomListItemProps) {
     const elementRef = useRef<HTMLDivElement>(null);
 
     const [hovered, setHovered] = useState(false);
@@ -23,8 +25,6 @@ export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomLi
             alignItems: "center",
             
             gap: 8,
-
-            position: "relative"
         }} onClick={onClick}>
             <NavigatorRoomUsersCount users={room.users} maxUsers={room.maxUsers}/>
 
@@ -45,6 +45,7 @@ export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomLi
             {(hovered) && (
                 <NavigatorRoomProfile
                     elementRef={elementRef}
+                    parentRef={parentRef}
                     room={room}/>
             )}
         </div>

@@ -3,7 +3,7 @@ import DialogTabs from "../../Common/Dialog/Components/Tabs/DialogTabs";
 import NavigatorRoomList from "./Rooms/NavigatorRoomList";
 import { webSocketClient } from "../../..";
 import { useDialogs } from "../../Hooks/useDialogs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigator } from "../../Hooks/useNavigator";
 import { EnterRandomRoomData, EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
@@ -20,6 +20,8 @@ export type NavigatorDialogProps = {
 }
 
 export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDialogProps) {
+    const elementRef = useRef<HTMLDivElement>(null);
+
     const { addUniqueDialog, closeDialog } = useDialogs();
 
     const [tab, setTab] = useState("all");
@@ -51,9 +53,9 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                         }}>
                             <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
-                            <DialogScrollArea>
+                            <DialogScrollArea ref={elementRef}>
                                 {navigator?.map((navigator) => (
-                                    <NavigatorRoomList thumbnail={true} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    <NavigatorRoomList parentRef={elementRef} thumbnail={true} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
                                         webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
                                             id: room.id
                                         }));
@@ -78,9 +80,9 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                         }}>
                             <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
-                            <DialogScrollArea>
+                            <DialogScrollArea ref={elementRef}>
                                 {navigator?.map((navigator) => (
-                                    <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    <NavigatorRoomList parentRef={elementRef} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
                                         webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
                                             id: room.id
                                         }));
@@ -105,9 +107,9 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                         }}>
                             <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
 
-                            <DialogScrollArea>
+                            <DialogScrollArea ref={elementRef}>
                                 {navigator?.map((navigator) => (
-                                    <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    <NavigatorRoomList parentRef={elementRef} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
                                         webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
                                             id: room.id
                                         }));
@@ -132,9 +134,9 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                         }}>
                             <NavigatorSearch filter={filter} onFilterChange={setFilter} search={search} onSearchChange={setSearch}/>
                             
-                            <DialogScrollArea>
+                            <DialogScrollArea ref={elementRef}>
                                 {navigator?.map((navigator) => (
-                                    <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                    <NavigatorRoomList parentRef={elementRef} key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
                                         webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
                                             id: room.id
                                         }));

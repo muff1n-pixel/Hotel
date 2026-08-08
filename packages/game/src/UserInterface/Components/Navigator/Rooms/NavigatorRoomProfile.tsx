@@ -7,15 +7,20 @@ import GroupLink from "@UserInterface/Common/Groups/GroupLink";
 
 export type NavigatorRoomProfileProps = {
     elementRef: RefObject<HTMLDivElement | null>;
+    parentRef: RefObject<HTMLDivElement | null>;
 
     room: NavigatorRoomData;
 };
 
-export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoomProfileProps) {
+export default function NavigatorRoomProfile({ elementRef, parentRef, room }: NavigatorRoomProfileProps) {
     const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if(!elementRef.current) {
+            return;
+        }
+
+        if(!parentRef.current) {
             return;
         }
 
@@ -24,9 +29,10 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
         }
 
         panelRef.current.style.display = "block";
-        panelRef.current.style.top = `${elementRef.current.offsetTop - (elementRef.current.parentElement?.parentElement?.parentElement?.parentElement?.scrollTop ?? 0)}px`;
-        panelRef.current.style.left = `${elementRef.current.clientWidth}px`;
-    }, [panelRef, elementRef]);
+        panelRef.current.style.transform = `translateY(${Math.round(elementRef.current.clientHeight / 2) - 100 - 8}px)`;
+        panelRef.current.style.top = `${elementRef.current.offsetTop - (parentRef.current.scrollTop ?? 0)}px`;
+        panelRef.current.style.marginLeft = `${6 + elementRef.current.clientWidth}px`;
+    }, [panelRef, elementRef, parentRef]);
 
     return (
         <DialogPanel ref={panelRef} arrow color="beige" style={{
@@ -36,12 +42,7 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
 
             position: "fixed",
 
-            left: 0,
-            top: 0,
-
             transform: "translateY(-100px)",
-
-            marginLeft: 23,
 
             zIndex: 1
         }} contentStyle={{
@@ -88,7 +89,7 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
                     flexDirection: "column",
                     gap: 5
                 }}>
-                    <b><u><UserLink id={room.ownerId} name={room.ownerName}/></u></b>
+                    <b><u>{room.ownerName}</u></b>
                     
                     <div/>
 
@@ -102,7 +103,7 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
                     flexDirection: "column",
                     gap: 5
                 }}>
-                    <b><u><GroupLink group={room.group}/></u></b>
+                    <b><u>{(room.group && room.group.name)}</u></b>
                 </div>
             </div>
         </DialogPanel>

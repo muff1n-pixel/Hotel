@@ -2,15 +2,17 @@ import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import { NavigatorRoomData } from "@pixel63/events";
 import RoomThumbnail from "@UserInterface/Components/Room/Thumbnail/RoomThumbnail";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import NavigatorRoomProfile from "./NavigatorRoomProfile";
 
 export type NavigatorRoomListThumbnailProps = {
+    parentRef: RefObject<HTMLDivElement | null>;
+    
     room: NavigatorRoomData;
     onClick: () => void;
 }
 
-export default function NavigatorRoomListThumbnail({ room, onClick }: NavigatorRoomListThumbnailProps) {
+export default function NavigatorRoomListThumbnail({ parentRef, room, onClick }: NavigatorRoomListThumbnailProps) {
     const elementRef = useRef<HTMLDivElement>(null);
     
     const [hovered, setHovered] = useState(false);
@@ -29,9 +31,7 @@ export default function NavigatorRoomListThumbnail({ room, onClick }: NavigatorR
 
             gap: 5,
 
-            position: "relative",
-
-            cursor: "pointer"
+            position: "relative"
         }} onClick={onClick}>
             <RoomThumbnail roomId={room.id} thumbnail={room.thumbnail} disallowEdit>
                 <FlexLayout flex={1}>
@@ -65,12 +65,13 @@ export default function NavigatorRoomListThumbnail({ room, onClick }: NavigatorR
             }}>
                 <div style={{ flex: 1, fontSize: 12, maxWidth: 112 }}>{room.name}</div>
 
-                {/*<div className="sprite_navigator_information" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}/>*/}
+                <div className="sprite_navigator_information" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}/>
             </FlexLayout>
 
             {(hovered) && (
                 <NavigatorRoomProfile
                     elementRef={elementRef}
+                    parentRef={parentRef}
                     room={room}/>
             )}
         </div>

@@ -1,7 +1,9 @@
-import { CSSProperties, ReactNode, useRef } from "react";
+import { CSSProperties, ReactNode, RefObject, useRef } from "react";
 import DialogScrollbar from "./DialogScrollbar";
 
 export type DialogScrollAreaProps = {
+    ref?: RefObject<HTMLDivElement | null>;
+
     children?: ReactNode;
     style?: CSSProperties;
     contentStyle?: CSSProperties;
@@ -9,8 +11,8 @@ export type DialogScrollAreaProps = {
     reversed?: boolean;
 };
 
-export default function DialogScrollArea({ style, contentStyle, children, hideInactive, reversed }: DialogScrollAreaProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
+export default function DialogScrollArea({ ref, style, contentStyle, children, hideInactive, reversed }: DialogScrollAreaProps) {
+    const containerRef = ref ?? useRef<HTMLDivElement>(null);
 
     return (
         <div style={{

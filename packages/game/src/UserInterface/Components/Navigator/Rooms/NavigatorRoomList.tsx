@@ -6,8 +6,11 @@ import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import NavigatorRoomListThumbnail from "./NavigatorRoomListThumbnail";
+import { RefObject } from "react";
 
 export type NavigatorRoomListProps = {
+    parentRef: RefObject<HTMLDivElement | null>;
+    
     title: string;
    
     thumbnail?: boolean;
@@ -17,7 +20,7 @@ export type NavigatorRoomListProps = {
     onClick: (room: NavigatorRoomListProps["rooms"][0]) => void;
 };
 
-export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: NavigatorRoomListProps) {
+export default function NavigatorRoomList({ parentRef, thumbnail, title, rooms, onClick }: NavigatorRoomListProps) {
     return (
         <DialogListContainer title={title}>
             {(thumbnail)?(
@@ -28,13 +31,13 @@ export default function NavigatorRoomList({ thumbnail, title, rooms, onClick }: 
                     gap: 5
                 }}>
                     {rooms.map((room) => (
-                        <NavigatorRoomListThumbnail key={room.id} room={room} onClick={() => onClick(room)}/>
+                        <NavigatorRoomListThumbnail key={room.id} parentRef={parentRef} room={room} onClick={() => onClick(room)}/>
                     ))}
                 </div>
             ):(
                 <DialogList>
                     {rooms.map((room) => (
-                        <NavigatorRoomListItem key={room.id} room={room} onClick={() => onClick(room)}/>
+                        <NavigatorRoomListItem key={room.id} parentRef={parentRef} room={room} onClick={() => onClick(room)}/>
                     ))}
                 </DialogList>
             )}
