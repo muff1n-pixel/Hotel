@@ -7,7 +7,8 @@ import jsonWebToken from "jsonwebtoken";
 import { UserTokenModel } from "../../Database/Models/Users/UserTokens/UserTokenModel.js";
 import { UserBadgeModel } from "../../Database/Models/Users/Badges/UserBadgeModel.js";
 import { randomBytes, randomUUID } from "node:crypto";
-import { UserReadyData } from "@pixel63/events";
+import { MessageType, UnknownMessage, UserReadyData } from "@pixel63/events";
+import { logger } from "../GameLogger.js";
 
 export type PendingConnection = {
     user: UserModel;
@@ -121,6 +122,8 @@ export default class WebSocket {
                     }
                 }
 
+                logger.verbose("Waiting for user " + model.name + " to send ready message.");
+
                 const pendingConnection: PendingConnection = {
                     user: model,
                     websocket: webSocket,
@@ -128,6 +131,8 @@ export default class WebSocket {
                 };
 
                 this.pendingConnections.push(pendingConnection);
+
+                webSocket.addListener("message", (data) => this.handleMessageListener(pendingConnection, data));
 
                 webSocket.addListener("error", console.error);
                 
@@ -143,7 +148,7 @@ export default class WebSocket {
                     })().catch(console.error);
                 });
 
-                webSocket.addListener("message", (data) => this.handleMessageListener(pendingConnection, data));
+                this.sendProtobuff(webSocket, UserReadyData, UserReadyData.create({}));
             })().catch(console.error);
         });
     }
@@ -168,8 +173,6 @@ export default class WebSocket {
             const sep = buffer.indexOf("|".charCodeAt(0));
             const type = buffer.subarray(0, sep).toString("utf-8");
             const payload = buffer.subarray(sep + 1);
-
-            //console.log("Received " + type);
 
             if(type === UserReadyData.$type) {
                 this.handleUserReady(pendingConnection);
@@ -287,5 +290,32 @@ export default class WebSocket {
         await user.resetScratches();
 
         user.sendProtobuff(UserReadyData, UserReadyData.create({}));
+    }
+    
+    public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(websocket: WebSocketConnection, message: MessageType, payload: Message) {
+        try {
+            const encoded = message.encode(payload).finish();
+
+            this.sendEncodedProtobuff(websocket, message.$type, encoded);
+        }
+        catch(error) {
+            console.error("Failed to send Protobuff", error);
+        }
+    }
+
+    sendEncodedProtobuff(websocket: WebSocketConnection, eventType: string, encoded: Uint8Array) {
+        try {
+            const typeBytes = new TextEncoder().encode(eventType + "|");
+
+            const message = new Uint8Array(typeBytes.length + encoded.length);
+
+            message.set(typeBytes, 0);
+            message.set(encoded, typeBytes.length);
+
+            websocket.send(message);
+        }
+        catch(error) {
+            console.error("Failed to send encoded Protobuff", error);
+        }
     }
 }

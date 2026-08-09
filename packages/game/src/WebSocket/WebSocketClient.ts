@@ -4,7 +4,7 @@ import { MessageType, PingData, UnknownMessage, UserReadyData } from "@pixel63/e
 import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class WebSocketClient extends EventTarget {
-    private readonly socket: WebSocket;
+    public readonly socket: WebSocket;
 
     private pendingOutgoingMessages: Array<{ message: MessageType; payload: UnknownMessage }> = [];
     private isReady: boolean = false;
@@ -23,18 +23,16 @@ export default class WebSocketClient extends EventTarget {
 
         this.socket.binaryType = "arraybuffer";
 
-        this.socket.addEventListener("open", () => {
-            console.log("Sending user ready");
-            this.sendProtobuff(UserReadyData, UserReadyData.create({}));
-        });
-
         this.socket.addEventListener("message", (event) => {
             try {
+                console.log(event);
                 const data = new Uint8Array(event.data);
                 
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
+
+                console.log("payload: "+ type);
 
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
             } catch (error) {
@@ -43,6 +41,8 @@ export default class WebSocketClient extends EventTarget {
         });
 
         this.socket.addEventListener("close", () => {
+            console.log("closed");
+
             this.dispatchEvent(new Event("close"));
         });
 
@@ -50,6 +50,8 @@ export default class WebSocketClient extends EventTarget {
             handle: async () => {
                 this.setReady();
             },
+        }, {
+            once: true
         });
 
         setInterval(() => {
@@ -60,7 +62,13 @@ export default class WebSocketClient extends EventTarget {
     }
 
     public setReady() {
+        if(this.isReady) {
+            return;
+        }
+
         this.isReady = true;
+
+        this.sendProtobuff(UserReadyData, UserReadyData.create({}));
         
         this.dispatchEvent(new Event("open"));
 

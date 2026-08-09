@@ -10,6 +10,7 @@ import UserSpamProtection from "./SpamPrevention/UserSpamPrevention.js";
 import UserHabboClub from "./HabboClub/UserHabboClub.js";
 import UserRoomConnection from "./Rooms/UserRoomConnection.js";
 import UserRoomQueue from "./Rooms/UserRoomQueue.js";
+import { game } from "../index.js";
 
 export default class User extends EventEmitter {
     private inventory?: UserInventory;
@@ -60,30 +61,11 @@ export default class User extends EventEmitter {
     }
 
     public sendProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {
-        try {
-            const encoded = message.encode(payload).finish();
-
-            this.sendEncodedProtobuff(message.$type, encoded);
-        }
-        catch(error) {
-            console.error("Failed to send Protobuff", error);
-        }
+        game.webSocket.sendProtobuff(this.webSocket, message, payload);
     }
 
     sendEncodedProtobuff(eventType: string, encoded: Uint8Array) {
-        try {
-            const typeBytes = new TextEncoder().encode(eventType + "|");
-
-            const message = new Uint8Array(typeBytes.length + encoded.length);
-
-            message.set(typeBytes, 0);
-            message.set(encoded, typeBytes.length);
-
-            this.webSocket.send(message);
-        }
-        catch(error) {
-            console.error("Failed to send encoded Protobuff", error);
-        }
+        game.webSocket.sendEncodedProtobuff(this.webSocket, eventType, encoded);
     }
 
     addListener<T>(eventName: string | symbol, listener: (client: User, event: T) => void): this {

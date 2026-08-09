@@ -22,15 +22,7 @@ export let userInterface: UserInterfaceInstance;
 
 start();
 
-async function start(text?: string) {
-    const response = await fetch("/game/config.json", {
-        headers: {
-            "Accept": "application/json"
-        }
-    });
-
-    const config = await response.json();
-
+async function start() {
     if (!clientElement) {
         throw new Error("Client root element is not created.");
     }
@@ -42,13 +34,27 @@ async function start(text?: string) {
     if (!loaderElement) {
         throw new Error("Loader root element is not created.");
     }
+
+    loaderInstance = new LoaderInstance(loaderElement);
+
+    loaderInstance.render("Loading config...");
+
+    const response = await fetch("/game/config.json", {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    const config = await response.json();
+    
+    loaderInstance.render("Loading assets...");
     
     await FigureAssets.loadAssets();
     await FurnitureAssets.preloadAssets();
 
-    loaderInstance = new LoaderInstance(loaderElement);
+    await i18n.init();
 
-    loaderInstance.render(text);
+    loaderInstance.render("Connecting...");
 
     webSocketClient = new WebSocketClient(
         config.server.secure,
@@ -64,12 +70,10 @@ async function start(text?: string) {
         }
     );
 
-    await i18n.init();
-
-    clientInstance = new ClientInstance(clientElement);
-    userInterface = new UserInterfaceInstance(interfaceElement);
-
     webSocketClient.addEventListener("open", async () => {
+        clientInstance = new ClientInstance(clientElement);
+        userInterface = new UserInterfaceInstance(interfaceElement);
+        
         userInterface.render();
 
         loaderInstance.hide();
