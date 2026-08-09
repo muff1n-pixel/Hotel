@@ -24,6 +24,10 @@ export default class RoomFurnitureItem extends RoomItem {
         if(position) {
             this.setPosition(position);
         }
+
+        this.setSprites([
+            new RoomFurniturePlaceholderSprite(this)
+        ]);
     }
     
     process(frame: number): void {
@@ -68,12 +72,6 @@ export default class RoomFurnitureItem extends RoomItem {
             }
         }*/
 
-        if(!this.sprites.length) {
-            this.setSprites([
-                new RoomFurniturePlaceholderSprite(this)
-            ]);
-        }
-
         this.furnitureRenderer.frame++;
         
         if(!this.rendering && (this.furnitureRenderer.shouldRender() || forceRender)) {
@@ -103,15 +101,13 @@ export default class RoomFurnitureItem extends RoomItem {
             this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
         }        
         
-        if(result.sprites.length) {
-            const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
+        const sprites: RoomSprite[] = result.sprites.map((sprite) => new RoomFurnitureSprite(this, sprite));
 
-            if(result.mask) {
-                sprites.push(new RoomFurnitureMaskSprite(this, result.mask));
-            }
-
-            this.setSprites(sprites);
+        if(result.mask) {
+            sprites.push(new RoomFurnitureMaskSprite(this, result.mask));
         }
+
+        this.setSprites(sprites);
 
         this.rendering = false;
     }

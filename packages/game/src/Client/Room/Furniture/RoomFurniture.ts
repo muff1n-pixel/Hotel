@@ -73,7 +73,6 @@ export default class RoomFurniture {
 
             case "gate":
             case "multiheight":
-            case "default":
             case "conf_invis_control":
             case "crackable":
                 return new FurnitureMultistateLogic(this.instance, this);
