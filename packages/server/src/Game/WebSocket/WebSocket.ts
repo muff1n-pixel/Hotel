@@ -239,12 +239,12 @@ export default class WebSocket {
 
             const room = await game.roomWorkerPool.getOrCreateRoom(roomId);
 
-            room.addUserToRoom(user, roomId);
+            room.worker.addUserToRoom(user, roomId);
         }
         else if(user.model.homeRoomId) {
             const room = await game.roomWorkerPool.getOrCreateRoom(user.model.homeRoomId);
 
-            room.addUserToRoom(user, user.model.homeRoomId);
+            room.worker.addUserToRoom(user, user.model.homeRoomId);
         }
 
         const userBadgesCount = await UserBadgeModel.count({

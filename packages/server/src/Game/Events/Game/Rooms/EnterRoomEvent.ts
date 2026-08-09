@@ -101,6 +101,6 @@ export default class EnterRoomEvent implements UserProtobuffListener<EnterRoomDa
             return;
         }
 
-        room.addUserToRoom(user, payload.id);
+        room.worker.addUserToRoom(user, payload.id);
     }
 }

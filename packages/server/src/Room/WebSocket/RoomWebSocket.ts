@@ -2,7 +2,7 @@ import WebSocket, { RawData, WebSocketServer } from "ws";
 import { config } from "../../Game/Config/Config";
 import { IncomingMessage } from "http";
 import jsonWebToken from "jsonwebtoken";
-import { MessageType, ServerReadyData, ServerRoomsData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
+import { MessageType, ServerReadyData, ServerRoomData, ServerRoomsData, ServerUserRemovedFromRoomData, UnknownMessage } from "@pixel63/events";
 import { ServerTokenModel } from "../../Database/Models/Server/ServerTokenModel";
 import EventHandler from "../../Communication/EventHandler";
 import User from "../Users/User";
@@ -191,10 +191,10 @@ export default class RoomWebSocket {
 
         logger.info(`Connected with user ${model.name} for room id ${roomId}.`);
 
-        const room = RoomServer.roomManager.getRoomInstance(roomId);
+        const room = await RoomServer.roomManager.getOrLoadRoomInstance(roomId);
 
         if (!room) {
-            logger.warn("Refusing connection from websocket, requested room is not loaded.", {
+            logger.warn("Refusing connection from websocket, requested room could not be loaded.", {
                 userId: payload.userId
             });
 
@@ -221,9 +221,7 @@ export default class RoomWebSocket {
             websocket.addListener("message", this.handleUserMessage.bind(this, user));
             websocket.addListener("close", this.handleUserDisconnected.bind(this, user));
 
-            RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-                data: RoomServer.roomManager.instances.map((room) => room.getServerData())
-            }));
+            RoomServer.websocket.sendServerProtobuff(ServerRoomData, room.getServerData());
         });
     }
 
@@ -247,11 +245,9 @@ export default class RoomWebSocket {
             roomId: user.room.model.id
         }));
 
-        RoomServer.roomManager.unloadRoom(user.room);
-
-        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
-        }));
+        if(!RoomServer.roomManager.unloadRoom(user.room)) {
+            RoomServer.websocket.sendServerProtobuff(ServerRoomData, user.room.getServerData());
+        }
     }
 
     public sendServerProtobuff<Message extends UnknownMessage = UnknownMessage>(message: MessageType, payload: Message) {

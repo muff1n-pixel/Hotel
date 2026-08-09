@@ -12,7 +12,7 @@ import { PetBreedModel } from "../../Database/Models/Pets/PetBreedModel.js";
 import { FurnitureCrackableModel } from "../../Database/Models/Furniture/Crackable/FurnitureCrackableModel.js";
 import { GroupModel } from "../../Database/Models/Groups/RoomGroupModel.js";
 import RoomServer from "../RoomServer.js";
-import { ServerRoomLoadedData, ServerRoomsData } from "@pixel63/events";
+import { ServerRoomData, ServerRoomLoadedData, ServerRoomsData, ServerRoomUnloadedData } from "@pixel63/events";
 import { logger } from "../RoomLogger.js";
 
 // TODO: do we really need the Room model in the functions or is it sufficient with a roomId?
@@ -124,16 +124,14 @@ export default class RoomManager {
 
         this.instances.push(instance);
 
-        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
-        }));
+        RoomServer.websocket.sendServerProtobuff(ServerRoomData, instance.getServerData());
 
         return instance;
     }
 
     public unloadRoom(room: Room) {
         if(room.users.length) {
-            return;
+            return false;
         }
 
         const index = this.instances.indexOf(room);
@@ -143,7 +141,7 @@ export default class RoomManager {
                 roomId: room.model.id
             });
 
-            return;
+            return false;
         }
 
         this.instances.splice(index, 1);
@@ -152,8 +150,10 @@ export default class RoomManager {
 
         room.unload();
 
-        RoomServer.websocket.sendServerProtobuff(ServerRoomsData, ServerRoomsData.create({
-            data: RoomServer.roomManager.instances.map((room) => room.getServerData())
+        RoomServer.websocket.sendServerProtobuff(ServerRoomUnloadedData, ServerRoomUnloadedData.create({
+            roomId: room.model.id
         }));
+
+        return true;
     }
 }

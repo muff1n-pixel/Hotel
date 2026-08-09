@@ -4,10 +4,10 @@ import User from "../User";
 
 export default class UserRoomQueue {
     constructor(private readonly user: User, public readonly roomId: string) {
-        const roomWorker = game.roomWorkerPool.getRoomClient(this.roomId);
+        const roomWorker = game.roomWorkerPool.getRoom(this.roomId);
 
         if(roomWorker) {
-            roomWorker.client.sendProtobuff(ServerAddUserToRoomQueueData, ServerAddUserToRoomQueueData.create({
+            roomWorker.worker.client.sendProtobuff(ServerAddUserToRoomQueueData, ServerAddUserToRoomQueueData.create({
                 userId: this.user.model.id,
                 roomId: this.roomId
             }));
@@ -17,10 +17,10 @@ export default class UserRoomQueue {
     public cancel() {
         this.user.roomBellQueue = undefined;
 
-        const roomWorker = game.roomWorkerPool.getRoomClient(this.roomId);
+        const roomWorker = game.roomWorkerPool.getRoom(this.roomId);
 
         if(roomWorker) {
-            roomWorker.client.sendProtobuff(ServerRemoveUserToRoomQueueData, ServerRemoveUserToRoomQueueData.create({
+            roomWorker.worker.client.sendProtobuff(ServerRemoveUserToRoomQueueData, ServerRemoveUserToRoomQueueData.create({
                 userId: this.user.model.id,
                 roomId: this.roomId
             }));

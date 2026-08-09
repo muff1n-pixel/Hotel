@@ -25,9 +25,9 @@ export default class ServerUpdateUserRoomQueueEvent implements ServerProtobuffLi
         user.roomBellQueue = undefined;
 
         if(payload.accept) {
-            const room = game.roomWorkerPool.getRoomClient(payload.roomId);
+            const room = game.roomWorkerPool.getRoom(payload.roomId);
 
-            room?.addUserToRoom(user, payload.roomId);
+            room?.worker.addUserToRoom(user, payload.roomId);
         }
     }
 }

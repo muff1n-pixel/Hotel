@@ -21,6 +21,6 @@ export default class ServerTransferUserToRoomEvent implements ServerProtobuffLis
             throw new Error("Room does not exist.");
         }
 
-        room.addUserToRoom(user, payload.roomId, payload.userFurnitureId);
+        room.worker.addUserToRoom(user, payload.roomId, payload.userFurnitureId);
     }
 }

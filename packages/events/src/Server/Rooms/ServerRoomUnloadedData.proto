@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message ServerRoomUnloadedData {
+    string room_id = 1;
+}

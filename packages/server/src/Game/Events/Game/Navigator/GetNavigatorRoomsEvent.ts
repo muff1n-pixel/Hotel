@@ -125,11 +125,11 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
                     limit: 20
                 });
 
-                const popularRooms = game.roomWorkerPool.getRooms().toSorted((a, b) => b.userIds.length - a.userIds.length);
+                const popularRooms = game.roomWorkerPool.getRooms().toSorted((a, b) => b.data.userIds.length - a.data.userIds.length);
                 const popularRoomModels = (popularRooms.length)?(await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
                     where: {
                         id: {
-                            [Op.in]: popularRooms.map((room) => room.roomId)
+                            [Op.in]: popularRooms.map((room) => room.data.roomId)
                         }
                     },
                     include: [
@@ -255,7 +255,7 @@ export default class GetNavigatorRoomsEvent implements UserProtobuffListener<Get
             ownerId: roomModel.owner.id,
             ownerName: roomModel.owner.name,
 
-            users: room?.userIds.length ?? 0,
+            users: room?.data.userIds.length ?? 0,
             maxUsers: roomModel.maxUsers,
 
             thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined),

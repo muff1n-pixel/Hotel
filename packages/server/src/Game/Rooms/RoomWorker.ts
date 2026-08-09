@@ -1,9 +1,8 @@
-import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerSetUserAchievementScoreData, ServerTransferUserToRoomData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserRemovedFromRoomData, ServerUserUpdatedData } from "@pixel63/events";
+import { ConnectToRoomData, ServerAddUserAchievementScoreData, ServerAddUserToRoomData, ServerReadyData, ServerRemoveUserToRoomQueueData, ServerRoomData, ServerRoomsData, ServerRoomUnloadedData, ServerSetUserAchievementScoreData, ServerTransferUserToRoomData, ServerUpdateUserRoomQueueData, ServerUserInventoryRefreshData, ServerUserInventoryUpdatedData, ServerUserRemovedFromRoomData, ServerUserUpdatedData } from "@pixel63/events";
 import RoomWorkerWebSocket from "./RoomWorkerWebSocket";
 import Game from "../Game";
 import User from "../Users/User";
 import UserRoomConnection from "../Users/Rooms/UserRoomConnection";
-import ServerRoomsEvent from "../Events/Room/ServerRoomsEvent";
 import ServerUserInventoryUpdatedEvent from "../Events/Room/ServerUserInventoryUpdatedEvent";
 import ServerUserInventoryRefreshEvent from "../Events/Room/ServerUserInventoryRefreshEvent";
 import ServerUserUpdatedEvent from "../Events/Room/ServerUserUpdatedEvent";
@@ -13,10 +12,11 @@ import ServerUpdateUserRoomQueueEvent from "../Events/Room/ServerUpdateUserRoomQ
 import ServerRemoveUserFromRoomQueueEvent from "../Events/Room/ServerRemoveUserFromRoomQueueEvent";
 import ServerTransferUserToRoomEvent from "../Events/Room/ServerTransferUserToRoomEvent";
 import ServerUserRemovedFromRoomEvent from "../Events/Room/ServerUserRemovedFromRoomEvent";
+import ServerRoomEvent from "../Events/Room/ServerRoomEvent";
+import ServerRoomUnloadedEvent from "../Events/Room/ServerRoomUnloadedEvent";
 
 export default class RoomWorker {
     public readonly client: RoomWorkerWebSocket;
-    public rooms: ServerRoomData[] = [];
 
     constructor(private game: Game, localSecure: boolean, localHost: string, localPort: number, public readonly secure: boolean, public readonly host: string, public readonly port: number, onOpen?: () => void) {
         this.client = new RoomWorkerWebSocket(this, game, localSecure, localHost, localPort, onOpen);
@@ -27,7 +27,8 @@ export default class RoomWorker {
             },
         });
         
-        this.client.eventHandler.addProtobuffListener(ServerRoomsData, new ServerRoomsEvent());
+        this.client.eventHandler.addProtobuffListener(ServerRoomData, new ServerRoomEvent());
+        this.client.eventHandler.addProtobuffListener(ServerRoomUnloadedData, new ServerRoomUnloadedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserUpdatedData, new ServerUserUpdatedEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserRemovedFromRoomData, new ServerUserRemovedFromRoomEvent());
         this.client.eventHandler.addProtobuffListener(ServerUserInventoryUpdatedData, new ServerUserInventoryUpdatedEvent());
@@ -43,12 +44,6 @@ export default class RoomWorker {
     }
 
     public addUserToRoom(user: User, roomId: string, userFurnitureId?: string) {
-        const room = this.rooms.find((room) => room.roomId === roomId);
-
-        if(!room) {
-            throw new Error("Room does not exist in client.");
-        }
-
         if(user.room) {
             user.room.disconnect();
         }

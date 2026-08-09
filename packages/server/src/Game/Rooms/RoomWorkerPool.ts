@@ -2,15 +2,40 @@ import { ServerLoadRoomData, ServerRoomData, ServerRoomLoadedData } from "@pixel
 import RoomWorker from "./RoomWorker";
 import Game from "../Game";
 import { config } from "../Config/Config";
+import { logger } from "../GameLogger";
+
+export type Room = {
+    worker: RoomWorker,
+    data: ServerRoomData;
+};
 
 export default class RoomWorkerPool {
     private readonly workers: RoomWorker[] = [];
+    public readonly rooms: Map<string, Room> = new Map();
 
     constructor(private game: Game) {
     }
 
     public getRooms() {
-        return this.workers.reduce<ServerRoomData[]>((previousValue, currentValue) => previousValue.concat(currentValue.rooms), []);
+        return Array.from(this.rooms.values());
+    }
+
+    public setRoomData(roomId: string, data: ServerRoomData) {
+        const room = this.getRoom(roomId);
+
+        if(!room) {
+            logger.warn("Room does not exist.", {
+                roomId
+            });
+
+            return;
+        }
+
+        room.data = data;
+    }
+
+    public removeRoomData(roomId: string) {
+        this.rooms.delete(roomId);
     }
 
     public async addServer(localSecure: boolean, localHost: string, localPort: number, publicSecure: boolean, publicHost: string, publicPort: number) {
@@ -24,23 +49,7 @@ export default class RoomWorkerPool {
     }
 
     public getRoom(roomId: string) {
-        for(const roomServer of this.workers) {
-            const roomData = roomServer.rooms.find((clientRoom) => clientRoom.roomId === roomId);
-
-            return roomData;
-        }
-
-        return null;
-    }
-
-    public getRoomClient(roomId: string) {
-        for(const roomServer of this.workers) {
-            if(roomServer.rooms.some((clientRoom) => clientRoom.roomId === roomId)) {
-                return roomServer;
-            }
-        }
-
-        return null;
+        return this.rooms.get(roomId);
     }
 
     private async createRoom(roomId: string) {
@@ -54,7 +63,17 @@ export default class RoomWorkerPool {
             }
         }
 
-        return new Promise<RoomWorker>((resolve, reject) => {
+        const data = {
+            worker: roomServer,
+            data: ServerRoomData.create({
+                roomId,
+                userIds: []
+            })
+        };
+
+        this.rooms.set(roomId, data);
+
+        return new Promise<Room>((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject("[RoomServers] Failed to load the room in a timely manner.");
             }, 5000);
@@ -65,11 +84,9 @@ export default class RoomWorkerPool {
                         return;
                     }
 
-                    roomServer.rooms = payload.data;
-
                     clearTimeout(timeout);
 
-                    resolve(roomServer);
+                    resolve(data);
 
                     roomServer.client.eventHandler.removeProtobuffListener(ServerRoomLoadedData, listener);
                 }
@@ -84,7 +101,7 @@ export default class RoomWorkerPool {
     }
 
     public async getOrCreateRoom(roomId: string) {
-        const existingRoomClient = this.getRoomClient(roomId);
+        const existingRoomClient = this.getRoom(roomId);
 
         if(existingRoomClient) {
             return existingRoomClient;
@@ -105,9 +122,9 @@ export default class RoomWorkerPool {
                 return currentClient;
             }
 
-            if(currentClient.rooms.length < previousClient.rooms.length) {
-                return currentClient;
-            }
+            //if(currentClient.rooms.length < previousClient.rooms.length) {
+            //    return currentClient;
+            //}
 
             return previousClient;
         }, null);
