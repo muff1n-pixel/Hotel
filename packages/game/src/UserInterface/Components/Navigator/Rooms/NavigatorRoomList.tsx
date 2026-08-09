@@ -6,7 +6,7 @@ import NavigatorRoomListItem from "./NavigatorRoomListItem";
 import NavigatorRoomUsersCount from "./NavigatorRoomUsersCount";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import NavigatorRoomListThumbnail from "./NavigatorRoomListThumbnail";
-import { RefObject } from "react";
+import { RefObject, useState } from "react";
 
 export type NavigatorRoomListProps = {
     parentRef: RefObject<HTMLDivElement | null>;
@@ -21,9 +21,11 @@ export type NavigatorRoomListProps = {
 };
 
 export default function NavigatorRoomList({ parentRef, thumbnail, title, rooms, onClick }: NavigatorRoomListProps) {
+    const [cards, setCards] = useState(thumbnail ?? false);
+
     return (
-        <DialogListContainer title={title}>
-            {(thumbnail)?(
+        <DialogListContainer title={title} cards={cards} onCardsToggle={setCards}>
+            {(cards)?(
                 <div style={{
                     display: "flex",
                     flexDirection: "row",
