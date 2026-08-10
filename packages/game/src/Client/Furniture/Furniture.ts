@@ -252,6 +252,10 @@ export default class Furniture {
     }
 
     getDimensions(raw: boolean = false) {
+        return this.getDimensionsForDirection(this.direction, raw);
+    };
+
+    public getDimensionsForDirection(direction?: number, raw?: boolean) {
         let result = RoomPositionData.create({ row: 0, column: 0, depth: 0 });
 
         if(!this.data) {
@@ -264,7 +268,7 @@ export default class Furniture {
             depth: this.data.logic.model.dimensions.z
         });
 
-        if(!raw && (this.direction === 0 || this.direction === 4)) {
+        if(!raw && (direction === 0 || direction === 4)) {
             result = RoomPositionData.create({
                 row: this.data.logic.model.dimensions.y,
                 column: this.data.logic.model.dimensions.x,
@@ -273,7 +277,7 @@ export default class Furniture {
         }
 
         return result;
-    };
+    }
 
     public getNextDirection() {
         if(!this.visualization) {

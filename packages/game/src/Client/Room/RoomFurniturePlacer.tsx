@@ -215,7 +215,7 @@ export default class RoomFurniturePlacer {
         const position = this.getPlacementPosition(entity, placement);
 
         if(entity?.position && position) {
-            const dimensions = (
+            let dimensions = (
                 (isFurniture)?(
                     this.roomFurnitureItem.furnitureRenderer.getDimensions()
                 ):(
@@ -227,7 +227,23 @@ export default class RoomFurniturePlacer {
                 )
             );
 
-            const isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(position), dimensions)));
+            let isPositionInsideStructure = (!isFloorPlacement || (entity && this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(position), dimensions)));
+
+            if(isFurniture && isFloorPlacement && !isPositionInsideStructure) {
+                const nextDirection = this.roomFurnitureItem.furnitureRenderer.getNextDirection();
+
+                if(nextDirection !== this.roomFurnitureItem.furnitureRenderer.direction) {
+                    const rotatedDimensions = this.roomFurnitureItem.furnitureRenderer.getDimensionsForDirection(nextDirection);
+
+                    if(this.roomInstance.roomRenderer.isPositionInsideStructure(RoomPositionData.fromJSON(position), rotatedDimensions)) {
+                        dimensions = rotatedDimensions;
+                        isPositionInsideStructure = true;
+
+                        this.roomFurnitureItem.furnitureRenderer.direction = nextDirection;
+                    }
+                }
+            }
+
             const isPositionInsideFigure = (isFloorPlacement && (entity && this.roomInstance.roomRenderer.isPositionInsideFigure(RoomPositionData.fromJSON(position), dimensions, this.roomFurnitureItem)));
 
             const furnitureAtPosition = (isFloorPlacement)?(this.roomInstance.getFurnitureAtUpmostPosition(
