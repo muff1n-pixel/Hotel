@@ -118,6 +118,7 @@ export default class RoomFurnitureLogicFactory {
             case "gate":
                 return new RoomFurnitureGateLogic(roomFurniture);
             
+            case "default":
             case "multiheight":
                 return new RoomFurnitureLightingLogic(roomFurniture);
                 

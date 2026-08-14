@@ -72,6 +72,7 @@ export default class RoomFurniture {
                 return new RoomFurnitureTraxLogic(this.instance, this);
 
             case "gate":
+            case "default":
             case "multiheight":
             case "conf_invis_control":
             case "crackable":
