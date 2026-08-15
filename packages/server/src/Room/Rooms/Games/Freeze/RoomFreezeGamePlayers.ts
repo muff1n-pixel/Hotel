@@ -1,4 +1,4 @@
-import { RoomPositionData, RoomUserData } from "@pixel63/events";
+import { RoomPositionData, RoomUserData, WidgetNotificationData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser";
 import { RoomGamePlayers } from "../RoomGame";
 import RoomFreezeGame, { RoomFreezeGamePlayer, RoomFreezeGameTeam } from "./RoomFreezeGame";
@@ -44,7 +44,7 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
 
         roomUser.pose.setEffect(this.game.getTeamAvatarEffect(player));
 
-        roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
+        roomUser.user.sendProtobuff(WidgetNotificationData, UserFreezeGameNotifications.buildPlayerJoinedTeam(team));
     }
     
     public getPlayer(roomUser: RoomUser) {
@@ -69,7 +69,7 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
             
             roomUser.pose.removeEffect();
 
-            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.game.teams[player.team].score).catch(console.error);
+            player.roomUser.user.achievements.addAchievementScore("FreezePlayer", this.game.teams[player.team].score);
 
             const uniqueTeamsLeft = [...new Set(this.players.map((player) => player.team))];
 
@@ -109,12 +109,12 @@ export default class RoomFreezeGamePlayers implements RoomGamePlayers<RoomFreeze
             }));
         }
 
-        player.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
+        player.roomUser.user.sendProtobuff(WidgetNotificationData, UserFreezeGameNotifications.buildPlayerHit(player, triggerPlayer));
 
         if(player.roomUser.user.model.id !== triggerPlayer.roomUser.user.model.id) {
-            triggerPlayer.roomUser.user.sendWidgetNotification(UserFreezeGameNotifications.buildTriggerPlayerHit(player));
+            triggerPlayer.roomUser.user.sendProtobuff(WidgetNotificationData, UserFreezeGameNotifications.buildTriggerPlayerHit(player));
 
-            triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1).catch(console.error);
+            triggerPlayer.roomUser.user.achievements.addAchievementScore("FreezeFighter", 1);
         }
 
         if(player.team !== triggerPlayer.team) {
