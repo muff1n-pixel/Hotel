@@ -2,65 +2,104 @@
     "pet": {
         "common": {
             "DISOBEY": [
-                "Nay. (Geddit?)",
-                "I wish I could do as you ask, but I cannot.",
-                "Leave me alone."
+                "*looks up*",
+                "*growls*",
+                "*whispers softly to himself*"
             ],
             "DRINKING": [
-                "Ah, that's the good stuff."
+                "*drinks like crazy*"
             ],
             "EATING": [
-                "This is delicious!"
+                "*oh that tastes good!*",
+                "*nom nom nom ... hmmmm!*"
             ],
             "GENERIC_HAPPY": [
-                "*Happu*",
-                ":)",
-                "I think I'm happy, but it could be gas."
+                "*i enjoy it*",
+                "Whooohoo! *ahem* i meanl. nice.",
+                "*what a beautiful day it is today, and everything looks beautiful!*"
             ],
             "GENERIC_NEUTRAL": [
-                "How are you today?",
-                "Hello!",
-                "Bah...."
+                "*what are we going to do today....*",
+                "Life is fun with a toy in your mouth or paws...",
+                "*takes a look around*"
             ],
             "GENERIC_SAD": [
-                "*Sad*",
-                "I don't feel myself today :("
+                "I'm a little sad.",
+                "I have a terrible day today :(",
+                "Everything is against me today, what a rotten day!",
+                "Oooh I just want to cry...."
             ],
             "GREET_OWNER": [
-                "Fantastic to see you today!",
-                "Hello!"
+                "Hey, what's up!",
+                "Welcome back, were you on vacation?",
+                "Hello, Bonjour, Hola, Salaam, Guten tag, Hello, Здравстуйте!"
             ],
             "HUNGRY": [
-                "I'm starving!"
+                "*can I put some sugar on that?*",
+                "*my stomach is rumbling.....*",
+                "*I am very hungry, please feed me!*"
             ],
             "LEVEL_UP": [
-                "I just leveled up!"
+                "*DING* I'm on the up.",
+                "*DING* Another level, done.",
+                "I just leveled up!",
+                "*DING* I just advanced another level. But what does that MEAN?"
             ],
             "MUTED": [
-                "*silencio*"
+                "*Mmmmm...Mmmmmm.M....M...m....... .   .    .*",
+                "*But .......... ... .. .   .*",
+                "*... ... ... ... ...*"
             ],
             "PLAYFUL": [
-                "Let's do something fun today, like staring at a wall.",
-                "So bored.",
-                "Hey, let's go for a ride!"
+                "Fancy a game? Eh.... water polo? Or something?",
+                "*play! oh please?*",
+                "*feel like a game*",
+                "*i want to do something that is fun*"
             ],
             "SLEEPING": [
-                "Zzzz.... Marston!",
-                "Zzzz... Old Dan Tucker....",
-                "Zzzz... I have a heart that can never be tamed..."
+                "*Zz.Zz.Zz....Zz.Zz.Zz....*",
+                "*dreams about food*",
+                "*dreams about the owner*",
+                "*dreams about something beautiful*",
+                "*dreams of long vacations with the owner*",
+                "*Zz.ZZZ...if only I were an Elephant, I'd have a trunk*"
             ],
             "THIRSTY": [
-                "I'm thirsty!"
+                "*Thirst!*",
+                "Wahaaaater! thirsty",
+                "*looks for a drink*"
             ],
             "TIRED": [
-                "I'm so tired!"
+                "*yawns and looks dreamy*",
+                "*yawns and looks sleepy*"
             ],
             "UNKNOWN_COMMAND": [
-                "I'm sorry, I don't understand!",
-                "Whatever, speak English if you want me to do something."
+                "No way hosay!",
+                "I don't get you, what do you want me to do?"
             ]
         },
-
+        "cat": {
+            "DRINKING": [
+                "Sllrrppppp..."
+            ],
+            "GENERIC_NEUTRAL": [
+                "*looks for birds*"
+            ]
+        },
+        "croco": {
+            "SLEEPING": [
+                "*dreams of beautiful islands*"
+            ]
+        },
+        "dragon": {
+            "GENERIC_HAPPY": [
+                "Whoohooo! This is awesome!",
+                "Wow, this is much more fun than I thought!"
+            ],
+            "GENERIC_NEUTRAL": [
+                "Water! The most beautiful on earth! Except for my owner"
+            ]
+        },
         "monkey": {
             "DISOBEY": [
                 "Nay. (Geddit?)",
@@ -121,7 +160,6 @@
                 "Whatever, speak English if you want me to do something."
             ]
         },
-
         "cow": {
             "DISOBEY": [
                 "Well, I could do that. BUT, I just don't feel like it.",
