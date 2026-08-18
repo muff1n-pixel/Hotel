@@ -1,4 +1,4 @@
-import { RoomPetsData, ScratchRoomPetData, ServerUserUpdatedData } from "@pixel63/events";
+import { RoomPetExperiencePointsData, RoomPetsData, ScratchRoomPetData, ServerUserUpdatedData } from "@pixel63/events";
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
 import User from "../../../Users/User";
 import RoomServer from "../../../RoomServer";
@@ -46,10 +46,9 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
 
         await roomPet.model.save();
 
-        roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
-            petsUpdated: [
-                roomPet.model
-            ]
+        roomPet.room.sendProtobuff(RoomPetExperiencePointsData, RoomPetExperiencePointsData.create({
+            petId: roomPet.model.id,
+            experiencePoints: 10
         }));
     }
 }

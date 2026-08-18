@@ -1,7 +1,7 @@
 import { clientInstance, webSocketClient } from "../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
 import WebSocketClient from "@Game/WebSocket/WebSocketClient";
-import { ConnectToRoomData, RoomLoadData } from "@pixel63/events";
+import { ConnectToRoomData, RoomLoadData, RoomPetExperiencePointsData, ScratchRoomPetData } from "@pixel63/events";
 import Cookies from "js-cookie";
 
 import RoomFurnitureEvent from "@Client/Communications/Room/Furniture/RoomFurnitureEvent";
@@ -32,6 +32,7 @@ import RoomInstance from "@Client/Room/RoomInstance";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 import RoomFurniture from "@Client/Room/Furniture/RoomFurniture";
 import RoomBellQueueEvent from "./Lock/RoomBellQueueEvent";
+import RoomPetExperiencePointsEvent from "./Pets/RoomPetExperiencePointsEvent";
 
 export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRoomData> {
     async handle(payload: ConnectToRoomData) {
@@ -89,6 +90,7 @@ export default class ConnectToRoomEvent implements ProtobuffListener<ConnectToRo
 
         // Room pet events
         roomWebsocket.addProtobuffListener(RoomPetsData, new RoomPetsEvent());
+        roomWebsocket.addProtobuffListener(RoomPetExperiencePointsData, new RoomPetExperiencePointsEvent());
 
         // Room furniture events
         roomWebsocket.addProtobuffListener(RoomFurnitureMovedData, new RoomFurnitureMovedEvent());

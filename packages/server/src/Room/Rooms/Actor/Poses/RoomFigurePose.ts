@@ -45,7 +45,7 @@ export default class RoomFigurePose implements RoomActorPose {
     }
 
     public pet(): void {
-        this.addAction("CarryItem", 3000);
+        this.addAction("CarryItem", 1000);
     }
     
     public surprised() {

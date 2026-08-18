@@ -22,7 +22,7 @@ export default class RoomItem implements RoomItemInterface {
         this.updateSprites();
     }
 
-    private _sprites: RoomSprite[] = [];
+    public _sprites: RoomSprite[] = [];
 
     public get sprites() {
         return this._sprites;
