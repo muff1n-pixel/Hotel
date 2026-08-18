@@ -1,22 +1,22 @@
-import { CSSProperties, PropsWithChildren, useEffect, useRef, useState } from "react";
+import { CSSProperties, PropsWithChildren, TransitionEvent, useCallback, useEffect, useRef, useState } from "react";
 import { WidgetCurrencyChangeData } from "./Widget";
 
 function getCurrencyAsString(value?: number) {
-    if(!value) {
+    if (!value) {
         return "0";
     }
 
     const numberFormat = new Intl.NumberFormat('en-US');
-    
-    if(value >= 100_000_000) {
+
+    if (value >= 100_000_000) {
         return `${numberFormat.format(Math.round(value / 1_000_000))} M`;
     }
-    
-    if(value >= 10_000_000) {
+
+    if (value >= 10_000_000) {
         return `${numberFormat.format(Math.round(value / 1_000_000 * 10) / 10)} M`;
     }
 
-    if(value >= 1_000_000) {
+    if (value >= 1_000_000) {
         return `${numberFormat.format(Math.round(value / 1_000_000 * 100) / 100)} M`;
     }
 
@@ -32,61 +32,48 @@ export type WidgetCurrencyChangeProps = PropsWithChildren & {
 }
 
 export default function WidgetCurrencyChange({ data, style, tooltip, color, children, onFinish }: WidgetCurrencyChangeProps) {
-    const elementRef = useRef<HTMLDivElement>(null);
+    const [phase, setPhase] = useState<"enter" | "exit">("enter");
 
     useEffect(() => {
-        if(!elementRef.current) {
-            return;
-        }
+        const timer = window.setTimeout(() => {
+            setPhase("exit");
+        }, 500);
 
-        elementRef.current.addEventListener("transitionend", (event) => {
-            if(event.propertyName !== "opacity") {
-                return;
-            }
+        return () => {
+            window.clearTimeout(timer);
+        };
+    }, []);
 
-            if(!elementRef.current) {
-                return;
-            }
-
-            elementRef.current.style.transform = "translateY(-100%)";
-            elementRef.current.style.opacity = "0";
-        });
-
-        elementRef.current.addEventListener("transitionend", (event) => {
-            if(event.propertyName !== "transform") {
-                return;
-            }
-
+    const handleTransitionEnd = useCallback((event: TransitionEvent) => {
+        if (event.propertyName === "transform" && phase === "exit") {
             onFinish();
-        });
-
-        window.requestAnimationFrame(() => {
-            if(!elementRef.current) {
-                return;
-            }
-
-            elementRef.current.style.opacity = "1";
-        });
-    }, [elementRef]);
+        }
+    }, [phase, onFinish]);
 
     return (
-        <div ref={elementRef} style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 5,
-            fontSize: 12,
-            color,
-            alignItems: "center",
-            justifyContent: "flex-end",
-            position: "absolute",
-            right: 70,
-            opacity: 0,
-            transitionProperty: "opacity, transform",
-            transitionDuration: "500ms",
-            transitionDelay: "0s",
-            ...style
-        }} data-tooltip={tooltip}>
-            <b>{(data.value > 0)?('+'):('-')}</b>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 5,
+                fontSize: 12,
+                color,
+                alignItems: "center",
+                justifyContent: "flex-end",
+                position: "absolute",
+                right: 80,
+
+                opacity: (phase === "enter")?(1):(0),
+                transform: (phase === "enter")?("translateY(0)"):("translateY(-100%)"),
+
+                transition: "opacity 500ms, transform 500ms",
+
+                ...style,
+            }}
+            onTransitionEnd={handleTransitionEnd}
+            data-tooltip={tooltip}
+        >
+            <b>{data.value > 0 ? "+" : "-"}</b>
             
             <b>{getCurrencyAsString(Math.abs(data.value))}</b>
 
