@@ -6,6 +6,7 @@ import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.j
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
 import RoomServer from "../../RoomServer.js";
+import Directions from "../../../Helpers/Directions.js";
 
 export enum RoomPetState {
     FREE = "free",
@@ -233,7 +234,11 @@ export default class RoomPet implements RoomActor {
 
             message,
 
-            roomChatStyleId: "generic"
+            roomChatStyleId: "generic",
+
+            options: {
+                hideUsername: true
+            }
         }));
     }
 
@@ -277,5 +282,9 @@ export default class RoomPet implements RoomActor {
                 petId: this.model.id
             }
         })
+    }
+    
+    public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
+        return Directions.getPositionFromOffset(offset, this.model.position, direction);
     }
 }

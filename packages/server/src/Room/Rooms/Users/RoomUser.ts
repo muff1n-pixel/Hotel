@@ -228,50 +228,6 @@ export default class RoomUser implements RoomActor {
         }));
     }
 
-    public getOffsetPosition(direction: number, offset: number) {
-        const position = {...this.position};
-
-        switch(Directions.normalizeDirection(direction)) {
-            case 0:
-                position.row -= offset;
-                break;
-
-            case 1:
-                position.row -= offset;
-                position.column += offset;
-                break;
-
-            case 2:
-                position.column += offset;
-                break;
-
-            case 3:
-                position.row += offset;
-                position.column += offset;
-                break;
-            
-            case 4:
-                position.row += offset;
-                break;
-
-            case 5:
-                position.row += offset;
-                position.column -= offset;
-                break;
-            
-            case 6:
-                position.column -= offset;
-                break;
-
-            case 7:
-                position.row -= offset;
-                position.column -= offset;
-                break;
-        }
-
-        return position;
-    }
-
     public hasRights() {
         if(this.user.permissions.hasPermission("room:rights")) {
             return true;
@@ -433,5 +389,9 @@ export default class RoomUser implements RoomActor {
                 userId: this.user.model.id
             }
         })
+    }
+        
+    public getOffsetPosition(offset: number, direction: number | null = this.direction): RoomPositionOffsetData {
+        return Directions.getPositionFromOffset(offset, this.position, direction);
     }
 }

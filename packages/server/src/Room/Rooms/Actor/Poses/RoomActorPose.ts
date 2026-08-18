@@ -8,6 +8,7 @@ export default interface RoomActorPose {
     sad(): void;
     angry(): void;
     surprised(): void;
+    pet(): void;
 
     setEffect?(effect: string): void;
     removeEffect?(): void;

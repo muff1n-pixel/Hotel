@@ -2,6 +2,7 @@ import { RoomPetsData, ScratchRoomPetData, ServerUserUpdatedData } from "@pixel6
 import { RoomProtobuffListener } from "../../Interfaces/RoomProtobuffListener";
 import User from "../../../Users/User";
 import RoomServer from "../../../RoomServer";
+import RoomPet from "../../../Rooms/Pets/RoomPet";
 
 export default class ScratchRoomPetEvent implements RoomProtobuffListener<ScratchRoomPetData> {
     minimumDurationBetweenEvents?: number = 10;
@@ -25,11 +26,13 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
             userId: user.model.id
         }));
 
-        roomPet.model.scratches++;
+        const targetOffsetPosition = roomPet.getOffsetPosition(1);
 
-        await roomPet.model.save();
+        user.roomUser.path.walkTo(targetOffsetPosition, undefined, this.handlePetScratch.bind(this, user, roomPet), this.handlePetScratch.bind(this, user, roomPet));
+    }
 
-        user.roomUser.pose.wave();
+    private async handlePetScratch(user: User, roomPet: RoomPet) {
+        user.roomUser.pose.pet();
 
         roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
             petsUpdated: [
@@ -38,5 +41,15 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
         }));
 
         roomPet.sendInformationMessage(`${roomPet.model.name} was scratched!`);
+
+        roomPet.model.scratches++;
+
+        await roomPet.model.save();
+
+        roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
+            petsUpdated: [
+                roomPet.model
+            ]
+        }));
     }
 }

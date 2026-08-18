@@ -26,5 +26,7 @@ export default interface RoomActor {
     handleWalksOnFurniture?(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void>;
 
     getActorIdentifier(): RoomActorIdentifierData;
+    
+    getOffsetPosition(offset: number, direction: number | null): RoomPositionOffsetData;
 }
 

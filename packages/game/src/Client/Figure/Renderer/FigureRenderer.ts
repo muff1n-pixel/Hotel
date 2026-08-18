@@ -213,16 +213,20 @@ export default class FigureRenderer {
         const carryItemAction = actionsForBodyParts.find((action) => action.actionId === "CarryItem");
 
         if(carryItemAction) {
-            spritesFromConfiguration.push({
-                id: this.figureActions.getActionParamId(mutatedActions, carryItemAction.actionId)?.toString() ?? "0",
-                assetId: "hh_human_item",
-                colorable: false,
-                colorIndex: 0,
-                colorPaletteId: 0,
-                type: "ri",
-                index: 0,
-                colors: []
-            });
+            const carryItemActionId = this.figureActions.getActionParamId(mutatedActions, carryItemAction.actionId);
+
+            if(carryItemActionId) {
+                spritesFromConfiguration.push({
+                    id: carryItemActionId.toString(),
+                    assetId: "hh_human_item",
+                    colorable: false,
+                    colorIndex: 0,
+                    colorPaletteId: 0,
+                    type: "ri",
+                    index: 0,
+                    colors: []
+                });
+            }
         }
 
         const signId = this.figureActions.getActionId(mutatedActions, "Sign");

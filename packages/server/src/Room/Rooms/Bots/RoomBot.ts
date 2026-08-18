@@ -7,6 +7,7 @@ import RoomUser from "../Users/RoomUser.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomFigurePose from "../Actor/Poses/RoomFigurePose.js";
 import RoomServer from "../../RoomServer.js";
+import Directions from "../../../Helpers/Directions.js";
 
 export default class RoomBot implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -265,5 +266,9 @@ export default class RoomBot implements RoomActor {
                 botId: this.model.id
             }
         })
+    }
+        
+    public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
+        return Directions.getPositionFromOffset(offset, this.model.position, direction);
     }
 }

@@ -63,4 +63,52 @@ export default class Directions {
 
         return 0;
     }
+
+    public static getPositionFromOffset(offset: number, position: RoomPositionData, direction: number | null): RoomPositionOffsetData {
+        const destination = RoomPositionOffsetData.fromJSON(position);
+
+        if(direction === null) {
+            return destination;
+        }
+
+        switch(Directions.normalizeDirection(direction)) {
+            case 0:
+                destination.row -= offset;
+                break;
+
+            case 1:
+                destination.row -= offset;
+                destination.column += offset;
+                break;
+
+            case 2:
+                destination.column += offset;
+                break;
+
+            case 3:
+                destination.row += offset;
+                destination.column += offset;
+                break;
+            
+            case 4:
+                destination.row += offset;
+                break;
+
+            case 5:
+                destination.row += offset;
+                destination.column -= offset;
+                break;
+            
+            case 6:
+                destination.column -= offset;
+                break;
+
+            case 7:
+                destination.row -= offset;
+                destination.column -= offset;
+                break;
+        }
+
+        return destination;
+    }
 }

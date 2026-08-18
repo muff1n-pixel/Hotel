@@ -208,51 +208,7 @@ export default class RoomFurniture<T = unknown> {
     }
 
     public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
-        const position = {...this.model.position};
-
-        if(direction === null) {
-            return RoomPositionOffsetData.fromJSON(position);
-        }
-
-        switch(Directions.normalizeDirection(direction)) {
-            case 0:
-                position.row -= offset;
-                break;
-
-            case 1:
-                position.row -= offset;
-                position.column += offset;
-                break;
-
-            case 2:
-                position.column += offset;
-                break;
-
-            case 3:
-                position.row += offset;
-                position.column += offset;
-                break;
-            
-            case 4:
-                position.row += offset;
-                break;
-
-            case 5:
-                position.row += offset;
-                position.column -= offset;
-                break;
-            
-            case 6:
-                position.column -= offset;
-                break;
-
-            case 7:
-                position.row -= offset;
-                position.column -= offset;
-                break;
-        }
-
-        return RoomPositionOffsetData.fromJSON(position);
+        return Directions.getPositionFromOffset(offset, this.model.position, direction);
     }
 
     public setAnimation(animation: number) {

@@ -43,6 +43,10 @@ export default class RoomFigurePose implements RoomActorPose {
     public angry() {
         this.addAction("GestureAngry");
     }
+
+    public pet(): void {
+        this.addAction("CarryItem", 3000);
+    }
     
     public surprised() {
         this.addAction("GestureSurprised");
@@ -102,7 +106,7 @@ export default class RoomFigurePose implements RoomActorPose {
             removeAfterMs = 5000;
         }
 
-        if(action.startsWith("CarryItem")) {
+        if(action.startsWith("CarryItem") && removeAfterMs === undefined) {
             removeAfterMs = 2 * 60 * 1000;
         }
 

@@ -37,6 +37,10 @@ export default class RoomPetPose implements RoomActorPose {
         
     }
 
+    public pet(): void {
+        
+    }
+
     public isSitting(): boolean {
         return this.posture === "sit";
     }
