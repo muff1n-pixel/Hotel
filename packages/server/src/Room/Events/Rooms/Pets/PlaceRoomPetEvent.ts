@@ -51,7 +51,7 @@ export default class PlaceRoomPetEvent implements RoomProtobuffListener<PlaceRoo
         
         RoomServer.websocket.sendServerProtobuff(ServerUserInventoryUpdatedData, ServerUserInventoryUpdatedData.create({
             userId: user.model.id,
-            botsRemoved: [ userPet.id ]
+            petsRemoved: [ userPet.id ]
         }));
 
         await RoomPet.place(user.roomUser.room, userPet, payload.position, payload.direction);
