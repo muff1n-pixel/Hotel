@@ -32,22 +32,28 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
                 {pet.data.name}
             </UserContextMenuElement>
 
-            {(pet.data.userId === user.id) && (
-                <Fragment>
-                    {(user.scratches > 0) && (
-                        <UserContextMenuButton text={`Scratch (${user.scratches})`} onClick={() => {
-                            room?.websocket.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
-                                petId: pet.data.id
-                            }));
-                        }}/>
-                    )}
+            {(user.scratches > 0) && (
+                <UserContextMenuButton text={`Scratch (${user.scratches})`} onClick={() => {
+                    room?.websocket.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
+                        petId: pet.data.id
+                    }));
+                }}/>
+            )}
 
-                    <UserContextMenuButton text={"Pick up"} onClick={() => {
+            {(pet.data.userId === user.id)?(
+                <UserContextMenuButton text={"Pick up"} onClick={() => {
+                    room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
+                        id: pet.data.id
+                    }));
+                }}/>
+            ):(
+                (room?.hasRights) && (
+                    <UserContextMenuButton text={"Kick"} onClick={() => {
                         room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                             id: pet.data.id
                         }));
                     }}/>
-                </Fragment>
+                )
             )}
         </RoomItemContextMenuWrapper>
     );
