@@ -18,6 +18,16 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
             throw new Error("User does not have any scratches left.");
         }
 
+        const targetOffsetPosition = roomPet.getOffsetPosition(1);
+
+        user.roomUser.path.walkTo(targetOffsetPosition, undefined, this.handlePetScratch.bind(this, user, roomPet), this.handlePetScratch.bind(this, user, roomPet));
+    }
+
+    private async handlePetScratch(user: User, roomPet: RoomPet) {
+        if(user.model.scratches === 0) {
+            throw new Error("User does not have any scratches left.");
+        }
+
         user.model.scratches--;
 
         await user.save();
@@ -26,12 +36,6 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
             userId: user.model.id
         }));
 
-        const targetOffsetPosition = roomPet.getOffsetPosition(1);
-
-        user.roomUser.path.walkTo(targetOffsetPosition, undefined, this.handlePetScratch.bind(this, user, roomPet), this.handlePetScratch.bind(this, user, roomPet));
-    }
-
-    private async handlePetScratch(user: User, roomPet: RoomPet) {
         user.roomUser.pose.pet();
 
         roomPet.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
