@@ -7,7 +7,7 @@ export default class RoomPetExperiencePointsSprite extends RoomSprite {
     private frame: number = 0;
 
     constructor(public readonly item: RoomPetItem, public experiencePoints: number) {
-        super(item, undefined, 100);
+        super(item, undefined, 100, 0);
 
         AssetFetcher.fetchImage(`/assets/figure/sprites/experience_points.png`).then((image) => {
             this.offset = {
