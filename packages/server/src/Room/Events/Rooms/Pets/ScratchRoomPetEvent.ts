@@ -50,9 +50,6 @@ export default class ScratchRoomPetEvent implements RoomProtobuffListener<Scratc
 
         await roomPet.model.save();
 
-        roomPet.room.sendProtobuff(RoomPetExperiencePointsData, RoomPetExperiencePointsData.create({
-            petId: roomPet.model.id,
-            experiencePoints: 10
-        }));
+        await roomPet.addExperiencePoints(10);
     }
 }

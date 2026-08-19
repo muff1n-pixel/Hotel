@@ -1,7 +1,7 @@
 import Room from "../Room.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetExperiencePointsData, RoomPetsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
@@ -286,5 +286,32 @@ export default class RoomPet implements RoomActor {
     
     public getOffsetPosition(offset: number, direction: number | null = this.model.direction): RoomPositionOffsetData {
         return Directions.getPositionFromOffset(offset, this.model.position, direction);
+    }
+
+    public async addExperiencePoints(points: number) {
+        this.model.experiencePoints += points;
+
+        if(this.model.level < 20) {
+            const nextLevel = this.model.level + 1;
+
+            if(this.model.experiencePoints >= nextLevel * 100) {
+                this.model.level = nextLevel;
+
+                this.sendVocal("LEVEL_UP");
+            }
+        }
+
+        await this.model.save();
+
+        this.room.sendProtobuff(RoomPetExperiencePointsData, RoomPetExperiencePointsData.create({
+            petId: this.model.id,
+            experiencePoints: points
+        }));
+
+        this.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
+            petsUpdated: [
+                this.model
+            ]
+        }));
     }
 }

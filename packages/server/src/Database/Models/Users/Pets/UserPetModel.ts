@@ -12,6 +12,11 @@ export class UserPetModel extends Model {
     declare name: string;
     declare scratches: number;
 
+    declare level: number;
+    declare experiencePoints: number;
+    declare happiness: number;
+    declare energy: number;
+
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
     declare pet: NonAttribute<PetModel>;
@@ -27,6 +32,26 @@ export function initializeUserPetModel(sequelize: Sequelize) {
           name: {
             type: DataTypes.STRING,
             allowNull: false,
+          },
+          level: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+          },
+          happiness: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 100
+          },
+          energy: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 100
+          },
+          experiencePoints: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
           },
           position: {
               type: DataTypes.TEXT,

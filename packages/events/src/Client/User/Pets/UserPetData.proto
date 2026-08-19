@@ -14,4 +14,9 @@ message UserPetData {
     uint32 direction = 7;
 
     uint32 scratches = 8;
+
+    uint32 level = 9;
+    uint32 experience_points = 10;
+    uint32 happiness = 11;
+    uint32 energy = 12;
 }
