@@ -20,75 +20,77 @@ export class UserPetModel extends Model {
     declare room: NonAttribute<RoomModel | null>;
     declare user: NonAttribute<UserModel>;
     declare pet: NonAttribute<PetModel>;
+
+    declare createdAt: NonAttribute<Date>;
 }
 
 export function initializeUserPetModel(sequelize: Sequelize) {
     UserPetModel.init(
         {
-          id: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-          },
-          name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-          },
-          level: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1
-          },
-          happiness: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 100
-          },
-          energy: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 100
-          },
-          experience: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-          },
-          position: {
-              type: DataTypes.TEXT,
-              get: function () {
-                  return JSON.parse(this.getDataValue("position"));
-              },
-              set: function (value) {
-                  this.setDataValue("position", JSON.stringify(value));
-              },
-              allowNull: true,
-              defaultValue: null
-          },
-          direction: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            defaultValue: null
-          },
-          animation: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-          },
-          color: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-          },
-          scratches: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-          }
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true,
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            level: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 1
+            },
+            happiness: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 100
+            },
+            energy: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 100
+            },
+            experience: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
+            position: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    return JSON.parse(this.getDataValue("position"));
+                },
+                set: function (value) {
+                    this.setDataValue("position", JSON.stringify(value));
+                },
+                allowNull: true,
+                defaultValue: null
+            },
+            direction: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue: null
+            },
+            animation: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            color: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0,
+            },
+            scratches: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            }
         },
         {
-          tableName: 'user_pets',
-          sequelize
+            tableName: 'user_pets',
+            sequelize
         },
-      );
-    
+    );
+
     UserPetModel.belongsTo(PetModel, {
         as: "pet",
         foreignKey: "petId"
@@ -104,7 +106,7 @@ export function initializeUserPetModel(sequelize: Sequelize) {
         foreignKey: "roomId",
         constraints: false
     });
-    
+
     RoomModel.hasMany(UserPetModel, {
         as: "roomPets",
         foreignKey: "roomId",
