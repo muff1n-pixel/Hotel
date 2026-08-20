@@ -2,5 +2,5 @@ syntax = "proto3";
 
 message RoomPetExperiencePointsData {
     string pet_id = 1;
-    uint32 experience_points = 2;
+    uint32 experience = 2;
 }

@@ -11,6 +11,6 @@ export default class RoomPetExperiencePointsEvent implements ProtobuffListener<R
 
         const pet = clientInstance.roomInstance.value.getPetById(payload.petId);
 
-        pet.item.setExperiencePointsSprite(payload.experiencePoints);
+        pet.item.setExperiencePointsSprite(payload.experience);
     }
 }

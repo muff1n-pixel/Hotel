@@ -13,7 +13,7 @@ export class UserPetModel extends Model {
     declare scratches: number;
 
     declare level: number;
-    declare experiencePoints: number;
+    declare experience: number;
     declare happiness: number;
     declare energy: number;
 
@@ -48,7 +48,7 @@ export function initializeUserPetModel(sequelize: Sequelize) {
             allowNull: false,
             defaultValue: 100
           },
-          experiencePoints: {
+          experience: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0

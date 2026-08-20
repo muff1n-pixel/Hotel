@@ -1,7 +1,7 @@
 import Room from "../Room.js";
 import RoomActor from "../Actor/RoomActor.js";
 import RoomActorPath from "../Actor/Path/RoomActorPath.js";
-import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetExperiencePointsData, RoomPetsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData } from "@pixel63/events";
+import { RoomActorActionData, RoomActorChatData, RoomActorIdentifierData, RoomActorPositionData, RoomActorWalkToData, RoomPetExperiencePointsData, RoomPetsData, RoomPositionData, RoomPositionOffsetData, ServerUserInventoryUpdatedData, UserPetData } from "@pixel63/events";
 import { UserPetModel } from "../../../Database/Models/Users/Pets/UserPetModel.js";
 import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
@@ -145,7 +145,7 @@ export default class RoomPet implements RoomActor {
 
             this.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
                 petsUpdated: [
-                    this.model
+                    this.getPetData()
                 ]
             }));
         }
@@ -289,13 +289,11 @@ export default class RoomPet implements RoomActor {
     }
 
     public async addExperiencePoints(points: number) {
-        this.model.experiencePoints += points;
+        this.model.experience += points;
 
         if(this.model.level < 20) {
-            const nextLevel = this.model.level + 1;
-
-            if(this.model.experiencePoints >= nextLevel * 100) {
-                this.model.level = nextLevel;
+            if(this.model.experience >= this.getMaxExperience()) {
+                this.model.level++;
 
                 this.sendVocal("LEVEL_UP");
             }
@@ -305,13 +303,36 @@ export default class RoomPet implements RoomActor {
 
         this.room.sendProtobuff(RoomPetExperiencePointsData, RoomPetExperiencePointsData.create({
             petId: this.model.id,
-            experiencePoints: points
+            experience: points
         }));
 
         this.room.sendProtobuff(RoomPetsData, RoomPetsData.fromJSON({
             petsUpdated: [
-                this.model
+                this.getPetData()
             ]
         }));
+    }
+
+    public getPetData(): UserPetData {
+        return UserPetData.fromJSON({
+            ...this.model.toJSON(),
+            maxEnergy: this.getMaxEnergy(),
+            maxExperience: this.getMaxExperience(),
+            maxHappiness: this.getMaxHappiness()
+        });
+    }
+
+    public getMaxEnergy() {
+        return 80 + (this.model.level * 20);
+    }
+
+    public getMaxExperience() {
+        const nextLevel = this.model.level + 1;
+
+        return nextLevel * 100;
+    }
+
+    public getMaxHappiness() {
+        return 100;
     }
 }

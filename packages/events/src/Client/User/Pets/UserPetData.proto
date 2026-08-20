@@ -16,7 +16,13 @@ message UserPetData {
     uint32 scratches = 8;
 
     uint32 level = 9;
-    uint32 experience_points = 10;
-    uint32 happiness = 11;
-    uint32 energy = 12;
+
+    uint32 experience = 10;
+    uint32 max_experience = 11;
+
+    uint32 happiness = 12;
+    uint32 max_happiness = 13;
+
+    uint32 energy = 14;
+    uint32 max_energy = 15;
 }
