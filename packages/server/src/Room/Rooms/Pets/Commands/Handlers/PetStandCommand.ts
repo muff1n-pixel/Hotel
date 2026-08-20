@@ -2,9 +2,9 @@ import RoomUser from "../../../Users/RoomUser";
 import { RoomPetState } from "../../RoomPet";
 import PetCommand from "../PetCommand";
 
-export default class PetSitCommand extends PetCommand {
+export default class PetStandCommand extends PetCommand {
     async handle(roomUser: RoomUser): Promise<void> {
-        if(this.roomPet.actions.state === RoomPetState.SIT) {
+        if(this.roomPet.actions.state === RoomPetState.STAND) {
             this.roomPet.sendVocal("UNKNOWN_COMMAND");
 
             return;
@@ -20,6 +20,6 @@ export default class PetSitCommand extends PetCommand {
 
         await this.roomPet.path.finishPath();
 
-        this.roomPet.actions.sit();
+        this.roomPet.actions.stand();
     }
 }

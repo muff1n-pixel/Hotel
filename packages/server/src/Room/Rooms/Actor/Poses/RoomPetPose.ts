@@ -3,7 +3,7 @@ import RoomActorPose from "./RoomActorPose";
 import RoomActor from "../RoomActor";
 
 export default class RoomPetPose implements RoomActorPose {
-    private posture: string = "std";
+    public posture: string = "std";
     
     constructor(private readonly actor: RoomActor) {
 
@@ -11,6 +11,10 @@ export default class RoomPetPose implements RoomActorPose {
 
     public sit(): void {
         this.setPosture("sit");
+    }
+
+    public lay(): void {
+        this.setPosture("lay");
     }
 
     public wave(): void {
