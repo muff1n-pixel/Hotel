@@ -7,10 +7,13 @@ import RoomActorPose from "../Actor/Poses/RoomActorPose.js";
 import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
 import RoomServer from "../../RoomServer.js";
 import Directions from "../../../Helpers/Directions.js";
+import RoomPetActions from "./RoomPetActions.js";
 
 export enum RoomPetState {
     FREE = "free",
-    SIT = "sit"
+    SIT = "sit",
+    LAY = "lay",
+    STAND = "stand"
 };
 
 export default class RoomPet implements RoomActor {
@@ -36,10 +39,8 @@ export default class RoomPet implements RoomActor {
 
     public lastActivity: number = 0;
 
-    private state: RoomPetState = RoomPetState.FREE;
-    private posture: string = "std";
-
     public pose: RoomActorPose = new RoomPetPose(this);
+    public actions: RoomPetActions = new RoomPetActions(this);
 
     constructor(public readonly room: Room, public readonly model: UserPetModel) {
         this.position = model.position;
@@ -154,9 +155,7 @@ export default class RoomPet implements RoomActor {
     public async handleActionsInterval() {
         this.handleAutomaticChat();
 
-        if(this.state === RoomPetState.FREE) {
-            await this.handleRelaxed();
-        }
+        this.actions.handleActionsInterval();
 
         this.path.handleActionsInterval().catch(console.error);
     }
@@ -241,40 +240,6 @@ export default class RoomPet implements RoomActor {
             }
         }));
     }
-
-    public setPosture(posture: string) {
-        this.posture = posture;
-
-        if(posture === "sit") {
-            if(this.direction % 2) {
-                this.path.setDirection((this.direction + 1) % 8);
-            }
-        }
-        
-        this.room.sendProtobuff(RoomActorActionData, RoomActorActionData.create({
-            actor: {
-                pet: {
-                    petId: this.model.id
-                }
-            },
-            
-            posture: this.posture
-        }));
-    }
-
-    public setFree() {
-        this.state = RoomPetState.FREE;
-
-        this.setPosture("std");
-        this.sendVocal("GENERIC_HAPPY");
-    }
-
-    public setSit() {
-        this.state = RoomPetState.SIT;
-
-        this.setPosture("sit");
-        this.sendVocal("GENERIC_NEUTRAL");
-    }
     
     public getActorIdentifier(): RoomActorIdentifierData {
         return RoomActorIdentifierData.create({
@@ -288,8 +253,12 @@ export default class RoomPet implements RoomActor {
         return Directions.getPositionFromOffset(offset, this.model.position, direction);
     }
 
-    public async addExperiencePoints(points: number) {
+    public async addExperiencePoints(points: number, energyDrained?: number) {
         this.model.experience += points;
+
+        if(energyDrained !== undefined) {
+            this.model.energy -= energyDrained;
+        }
 
         if(this.model.level < 20) {
             if(this.model.experience >= this.getMaxExperience()) {
