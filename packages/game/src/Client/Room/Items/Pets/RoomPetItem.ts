@@ -80,14 +80,14 @@ export default class RoomPetItem extends RoomItem {
         super.setSprites(allSprites);
     }
 
-    public setExperiencePointsSprite(experiencePoints: number) {
+    public setExperiencePointsSprite(experience: number) {
         if(this.experiencePointsSprite) {
             this.experiencePointsSprite.destroy();
             
             this._sprites = this.sprites.filter((sprite) => !(sprite instanceof RoomPetExperiencePointsSprite));
         }
 
-        this.experiencePointsSprite = new RoomPetExperiencePointsSprite(this, experiencePoints);
+        this.experiencePointsSprite = new RoomPetExperiencePointsSprite(this, experience);
 
         this.sprites.push(this.experiencePointsSprite);
     }

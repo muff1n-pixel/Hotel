@@ -6,7 +6,7 @@ import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableErro
 export default class RoomPetExperiencePointsSprite extends RoomSprite {
     private frame: number = 0;
 
-    constructor(public readonly item: RoomPetItem, public experiencePoints: number) {
+    constructor(public readonly item: RoomPetItem, public experience: number) {
         super(item, undefined, 100, 0);
 
         AssetFetcher.fetchImage(`/assets/figure/sprites/experience_points.png`).then((image) => {
@@ -30,7 +30,7 @@ export default class RoomPetExperiencePointsSprite extends RoomSprite {
             context.font = "12px Ubuntu";
             context.fillStyle = "#FFFFFF";
 
-            context.fillText(`+${experiencePoints}`, Math.floor(image.width / 2), Math.floor(image.height / 2));
+            context.fillText(`+${experience}`, Math.floor(image.width / 2), Math.floor(image.height / 2));
 
             this.setTexture(canvas);
         });

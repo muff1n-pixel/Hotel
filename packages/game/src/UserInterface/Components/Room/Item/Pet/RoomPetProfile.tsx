@@ -5,6 +5,9 @@ import { PickupRoomPetData, ScratchRoomPetData } from "@pixel63/events";
 import { useTranslation } from "react-i18next";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import PetImage from "@UserInterface/Components/Pets/PetImage";
+import PetExperienceProgressBar from "@UserInterface/Common/Pets/Components/PetExperienceProgressBar";
+import PetHappinessProgressBar from "@UserInterface/Common/Pets/Components/PetHappinessProgressBar";
+import PetEnergyProgressBar from "@UserInterface/Common/Pets/Components/PetEnergyProgressBar";
 
 export type RoomPetProfileProps = {
     pet: RoomPet;
@@ -62,6 +65,18 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                     alignItems: "center"
                 }}>
                     <PetImage data={pet.data.pet}/>
+                </div>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10
+                }}>
+                    <PetHappinessProgressBar value={pet.data.happiness} maxValue={pet.data.maxHappiness}/>
+                    <PetExperienceProgressBar value={pet.data.experience} maxValue={pet.data.maxExperience}/>
+                    <PetEnergyProgressBar value={pet.data.energy} maxValue={pet.data.maxEnergy}/>
                 </div>
 
                 <div>Scratches: {pet.data.scratches.toLocaleString("en-US")}</div>
