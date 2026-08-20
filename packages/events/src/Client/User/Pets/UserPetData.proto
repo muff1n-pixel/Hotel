@@ -6,6 +6,7 @@ import "Client/Pets/PetData.proto";
 message UserPetData {
     string id = 1;
     string user_id = 2;
+    string user_name = 3;
     
     string name = 4;
     PetData pet = 5;
@@ -25,4 +26,6 @@ message UserPetData {
 
     uint32 energy = 14;
     uint32 max_energy = 15;
+
+    uint32 days = 16;
 }

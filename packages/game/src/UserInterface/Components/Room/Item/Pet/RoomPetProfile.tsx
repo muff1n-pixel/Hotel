@@ -8,6 +8,7 @@ import PetImage from "@UserInterface/Components/Pets/PetImage";
 import PetExperienceProgressBar from "@UserInterface/Common/Pets/Components/PetExperienceProgressBar";
 import PetHappinessProgressBar from "@UserInterface/Common/Pets/Components/PetHappinessProgressBar";
 import PetEnergyProgressBar from "@UserInterface/Common/Pets/Components/PetEnergyProgressBar";
+import UserLink from "@UserInterface/Common/Users/UserLink";
 
 export type RoomPetProfileProps = {
     pet: RoomPet;
@@ -70,6 +71,17 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                 <div style={{
                     display: "flex",
                     flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: 10
+                }}>
+                    <div>Level: {pet.data.level}/20</div>
+                    <div>Age: {pet.data.days.toLocaleString('en-US')} days</div>
+                </div>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
                     gap: 5,
                     paddingLeft: 10,
                     paddingRight: 10
@@ -79,7 +91,35 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                     <PetEnergyProgressBar value={pet.data.energy} maxValue={pet.data.maxEnergy}/>
                 </div>
 
-                <div>Scratches: {pet.data.scratches.toLocaleString("en-US")}</div>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: 10
+                }}>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 2,
+                        height: 10
+                    }}>
+                        Been scratched: {pet.data.scratches.toLocaleString("en-US")} <div className="sprite_room_pet_scratches"/>    
+                    </div>
+
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 2,
+                        height: 10
+                    }}>
+                        Owner: {pet.data.userName}
+                    </div>
+                </div>
+
             </div>
 
             <div style={{

@@ -316,6 +316,11 @@ export default class RoomPet implements RoomActor {
     public getPetData(): UserPetData {
         return UserPetData.fromJSON({
             ...this.model.toJSON(),
+
+            userName: this.model.user.name,
+
+            days: Math.round((new Date().getTime() - this.model.createdAt.getTime()) / (1000 * 60 * 60 * 24)),
+
             maxEnergy: this.getMaxEnergy(),
             maxExperience: this.getMaxExperience(),
             maxHappiness: this.getMaxHappiness()
