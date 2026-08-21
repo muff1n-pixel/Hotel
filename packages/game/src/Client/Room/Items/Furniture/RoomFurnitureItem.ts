@@ -64,13 +64,11 @@ export default class RoomFurnitureItem extends RoomItem {
     }
 
     render(forceRender?: boolean) {
-        /*if(this.furnitureRenderer.type !== "tile_cursor") {
-            if(this.furnitureRenderer.size !== this.roomRenderer.size) {
-                this.furnitureRenderer.size = this.roomRenderer.size;
+        if(this.furnitureRenderer.size !== this.roomRenderer.size) {
+            this.furnitureRenderer.size = this.roomRenderer.size;
 
-                this.sprites = [];
-            }
-        }*/
+            forceRender = true;
+        }
 
         this.furnitureRenderer.frame++;
         

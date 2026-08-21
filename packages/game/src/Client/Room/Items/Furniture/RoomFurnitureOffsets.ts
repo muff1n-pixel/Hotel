@@ -23,13 +23,8 @@ export default class RoomFurnitureOffsets {
             offset.top -= 16;
         }
 
-        if(furniture.type !== "tile_cursor") {
-            offset.left *= scale;
-            offset.top *= scale;
-        }
-
-        offset.left += sprite.x;
-        offset.top += sprite.y;
+        offset.left += (sprite.x * scale);
+        offset.top += (sprite.y * scale);
 
         return offset;
     }

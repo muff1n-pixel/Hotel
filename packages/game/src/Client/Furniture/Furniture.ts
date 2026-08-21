@@ -40,6 +40,8 @@ export type FurnitureRendererSprite = {
     layerCode: string;
 
     tag?: string;
+
+    size: number;
 }
 
 export default class Furniture {
@@ -175,9 +177,9 @@ export default class Furniture {
                 throw new Error("Furniture data is not loaded.");
             }
 
-            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == 64);
             
-            const particleSystemData = this.data.logic.particleSystems?.find((particleSystem) => particleSystem.size == this.size);
+            const particleSystemData = this.data.logic.particleSystems?.find((particleSystem) => particleSystem.size == 64);
 
             if(particleSystemData) {
                 this.particleSystem = new FurnitureParticleSystem(this, particleSystemData);
@@ -242,7 +244,7 @@ export default class Furniture {
     }
 
     public getVisualizationData(data: FurnitureData) {
-        const visualization = data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+        const visualization = data.visualization.visualizations.find((visualization) => visualization.size == 64);
 
         if(!visualization) {
             throw new Error("Furniture does not have visualization data.");
@@ -383,7 +385,7 @@ export default class Furniture {
                 throw new Error("Furniture data does not exist.");
             }
             
-            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == this.size);
+            this.visualization = this.data.visualization.visualizations.find((visualization) => visualization.size == 64);
         }
 
         if(!FurnitureAssets.getFurnitureSpritesheet(this.type)) {
