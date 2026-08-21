@@ -1,6 +1,7 @@
 import TexturePacker from "free-tex-packer-core";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { downscaleIfNeeded } from "./Downscaling.ts";
 
 export default class SpritesheetGenerator {
     private readonly imagePaths: string[];
@@ -10,6 +11,8 @@ export default class SpritesheetGenerator {
     }
 
     public async execute() {
+        await this.generateDownscaledSprites();
+
         const { imageBuffer, spritesBuffer } = await this.generateSpritesheet();
 
         const sprites = JSON.parse(new TextDecoder().decode(spritesBuffer));
@@ -24,6 +27,16 @@ export default class SpritesheetGenerator {
                 width: data.frame.w
             }))
         };
+    }
+
+    private async generateDownscaledSprites() {
+        if(process.env.AUTOMATICALLY_DOWNSCALE_SPRITES) {
+            this.imagePaths.push(...(await Promise.all(
+                this.imagePaths.map(async (imagePath) => {
+                    return await downscaleIfNeeded(imagePath);
+                })))
+            );
+        }
     }
 
     private async generateSpritesheet() {
