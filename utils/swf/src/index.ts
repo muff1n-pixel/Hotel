@@ -4,6 +4,7 @@ import ConvertFurnitureAction from "./actions/ConvertFurnitureAction.ts";
 import EnvironmentSettings from "./core/EnvironmentSettings.ts";
 import ExtractAction from "./actions/ExtractAction.ts";
 import ConvertHabboRoomContentAction from "./actions/ConvertHabboRoomContentAction.ts";
+import ConvertPetAction from "./actions/ConvertPetAction.ts";
 
 if (!EnvironmentSettings.read()) {
     const action = new ChangeEnvironmentSettingsAction();
@@ -19,6 +20,11 @@ export async function runApplication() {
                 name: "Convert furniture",
                 value: "furniture",
                 description: "Extract and convert a furniture to the Pixel63 format.",
+            },
+            {
+                name: "Convert pet",
+                value: "pet",
+                description: "Extract and convert a pet to the Pixel63 format.",
             },
             {
                 name: "Convert HabboRoomContent",
@@ -49,6 +55,14 @@ export async function runApplication() {
 
         case "furniture": {
             const action = new ConvertFurnitureAction();
+
+            await action.run();
+
+            break;
+        }
+
+        case "pet": {
+            const action = new ConvertPetAction();
 
             await action.run();
 
