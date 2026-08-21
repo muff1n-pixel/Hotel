@@ -1,4 +1,4 @@
-import { input, select } from "@inquirer/prompts";
+import { checkbox, confirm, input, select } from "@inquirer/prompts";
 import EnvironmentSettings from "../core/EnvironmentSettings.ts";
 import { runApplication } from "../index.ts";
 
@@ -26,6 +26,11 @@ export default class ChangeEnvironmentSettingsAction {
                     name: "Change assets output path",
                     value: "ASSETS_OUTPUT_PATH",
                     description: "Set the path to where the assets folder is located.",
+                },
+                {
+                    name: "Change automatically downscaling sprites",
+                    value: "AUTOMATICALLY_DOWNSCALE_SPRITES",
+                    description: "Toggle between whether to automatically downscale missing x32 sprites.",
                 }
             ],
         });
@@ -41,6 +46,20 @@ export default class ChangeEnvironmentSettingsAction {
                 });
 
                 process.env[option] = path;
+
+                EnvironmentSettings.write();
+
+                await runApplication();
+
+                break;
+            }
+
+            case "AUTOMATICALLY_DOWNSCALE_SPRITES": {
+                const choice = await confirm({
+                    message: "Automatically downscale sprites:",
+                });
+
+                process.env[option] = choice;
 
                 EnvironmentSettings.write();
 
