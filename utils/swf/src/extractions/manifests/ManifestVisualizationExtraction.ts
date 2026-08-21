@@ -2,7 +2,6 @@ import { XMLParser } from "fast-xml-parser";
 import { readFileSync } from "node:fs";
 import { getValueAsArray } from "../../helpers.ts";
 import type { FurnitureVisualization } from "../../../../../packages/game/src/Client/Interfaces/Furniture/FurnitureVisualization.ts"
-import type FurnitureDataExtraction from "../FurnitureDataExtraction.ts";
 
 export default class ManifestVisualizationExtraction {
     private readonly filePath: string;
@@ -11,7 +10,7 @@ export default class ManifestVisualizationExtraction {
         this.filePath = filePath;
     }
 
-    public async execute(furnitureData: any) {
+    public async execute(furnitureData?: any) {
         const parser = new XMLParser({
             ignoreAttributes: false
         });

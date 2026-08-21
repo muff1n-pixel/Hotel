@@ -13,6 +13,11 @@ export default class ChangeEnvironmentSettingsAction {
                     description: "Set the path to where the furniture SWF assets folder is located.",
                 },
                 {
+                    name: "Change pet assets input path",
+                    value: "PET_INPUT_PATH",
+                    description: "Set the path to where the pet SWF assets folder is located.",
+                },
+                {
                     name: "Change assets input path",
                     value: "ASSETS_INPUT_PATH",
                     description: "Set the path to where the general SWF assets folder is located.",
@@ -27,6 +32,7 @@ export default class ChangeEnvironmentSettingsAction {
 
         switch(option) {
             case "FURNITURE_INPUT_PATH":
+            case "PET_INPUT_PATH":
             case "ASSETS_OUTPUT_PATH":
             case "ASSETS_INPUT_PATH": {
                 const path = await input({
