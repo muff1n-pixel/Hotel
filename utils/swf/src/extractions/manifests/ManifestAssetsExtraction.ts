@@ -15,44 +15,46 @@ export default class ManifestAssetsExtraction {
 
         let assets: any[] = document.assets.asset;
 
-        /*const assetNames = assets.map((asset: any) => asset["@_name"]);
+        const assetNames = assets.map((asset: any) => asset["@_name"]);
         const has32Assets = assetNames.some((name: string) =>
             name.includes("_32_") || name.endsWith("_32")
         );
 
-        if (!has32Assets && flags.some((flag) => flag === "--downscale")) {
-            console.log("Adding downscaled 32 sprites.");
+        if(process.env.AUTOMATICALLY_DOWNSCALE_SPRITES) {
+            if (!has32Assets) {
+                console.log("Adding downscaled 32 sprites.");
 
-            const duplicated: any[] = [];
+                const duplicated: any[] = [];
 
-            for (const asset of assets) {
-                const clone = { ...asset };
+                for (const asset of assets) {
+                    const clone = { ...asset };
 
-                let newName = asset["@_name"].replace(/_64_/g, "_32_");
+                    let newName = asset["@_name"].replace(/_64_/g, "_32_");
 
-                if (newName === asset["@_name"]) {
-                    newName = asset["@_name"] + "_32";
+                    if (newName === asset["@_name"]) {
+                        newName = asset["@_name"] + "_32";
+                    }
+
+                    clone["@_name"] = newName;
+
+                    if (clone["@_x"] !== undefined) {
+                        clone["@_x"] = Math.round(parseFloat(clone["@_x"]) / 2).toString();
+                    }
+
+                    if (clone["@_y"] !== undefined) {
+                        clone["@_y"] = Math.round(parseFloat(clone["@_y"]) / 2).toString();
+                    }
+
+                    if (clone["@_source"]) {
+                        clone["@_source"] = clone["@_source"].replace(/_64_/g, "_32_");
+                    }
+
+                    duplicated.push(clone);
                 }
 
-                clone["@_name"] = newName;
-
-                if (clone["@_x"] !== undefined) {
-                    clone["@_x"] = Math.round(parseFloat(clone["@_x"]) / 2).toString();
-                }
-
-                if (clone["@_y"] !== undefined) {
-                    clone["@_y"] = Math.round(parseFloat(clone["@_y"]) / 2).toString();
-                }
-
-                if (clone["@_source"]) {
-                    clone["@_source"] = clone["@_source"].replace(/_64_/g, "_32_");
-                }
-
-                duplicated.push(clone);
+                assets = [...assets, ...duplicated];
             }
-
-            assets = [...assets, ...duplicated];
-        }*/
+        }
 
         return assets.map((asset: any) => ({
             name: asset["@_name"],

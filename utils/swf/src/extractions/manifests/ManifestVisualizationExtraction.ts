@@ -19,30 +19,32 @@ export default class ManifestVisualizationExtraction {
 
         let visualizationBlocks = getValueAsArray(document["visualizationData"]["graphics"]["visualization"]);
 
-        /*const isVisualizationUseful = (visualization: any): boolean => {
-            const directions = getValueAsArray(visualization["directions"]?.["direction"]);
+        if(process.env.AUTOMATICALLY_DOWNSCALE_SPRITES) {
+            const isVisualizationUseful = (visualization: any): boolean => {
+                const directions = getValueAsArray(visualization["directions"]?.["direction"]);
 
-            return directions.some((direction: any) =>
-                getValueAsArray(direction["layer"]).length > 0
-            );
-        };
+                return directions.some((direction: any) =>
+                    getValueAsArray(direction["layer"]).length > 0
+                );
+            };
 
-        const size32Index = visualizationBlocks.findIndex((v: any) => parseInt(v["@_size"]) === 32);
-        const size64Block = visualizationBlocks.find((v: any) => parseInt(v["@_size"]) === 64);
+            const size32Index = visualizationBlocks.findIndex((v: any) => parseInt(v["@_size"]) === 32);
+            const size64Block = visualizationBlocks.find((v: any) => parseInt(v["@_size"]) === 64);
 
-        const hasUseful32 = size32Index !== -1 && isVisualizationUseful(visualizationBlocks[size32Index]);
-        const has64 = !!size64Block;
+            const hasUseful32 = size32Index !== -1 && isVisualizationUseful(visualizationBlocks[size32Index]);
+            const has64 = !!size64Block;
 
-        if (!hasUseful32 && has64 && flags.some((flag) => flag === "--downscale")) {
-            const vis32 = structuredClone(size64Block);
-            vis32["@_size"] = "32";
+            if (!hasUseful32 && has64) {
+                const vis32 = structuredClone(size64Block);
+                vis32["@_size"] = "32";
 
-            if (size32Index !== -1) {
-                visualizationBlocks[size32Index] = vis32;
-            } else {
-                visualizationBlocks = [vis32, ...visualizationBlocks];
+                if (size32Index !== -1) {
+                    visualizationBlocks[size32Index] = vis32;
+                } else {
+                    visualizationBlocks = [vis32, ...visualizationBlocks];
+                }
             }
-        }*/
+        }
 
         return {
             type: document["visualizationData"]["@_type"],

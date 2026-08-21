@@ -24,8 +24,9 @@ export default class EnvironmentSettings {
         process.env.FURNITURE_INPUT_PATH ??= path.join("assets", "furniture");
         process.env.PET_INPUT_PATH ??= path.join("assets", "pets");
         process.env.FIGURE_INPUT_PATH ??= path.join("assets", "figure");
-
         process.env.ASSETS_INPUT_PATH ??= path.join("assets");
+
+        process.env.AUTOMATICALLY_DOWNSCALE_SPRITES ??= true;
 
         this.write();
     }
@@ -33,10 +34,13 @@ export default class EnvironmentSettings {
     public static write() {
         const content = stringify({
             ASSETS_OUTPUT_PATH: process.env.ASSETS_OUTPUT_PATH,
+            
             FURNITURE_INPUT_PATH: process.env.FURNITURE_INPUT_PATH,
             PET_INPUT_PATH: process.env.PET_INPUT_PATH,
             ASSETS_INPUT_PATH: process.env.ASSETS_INPUT_PATH,
             FIGURE_INPUT_PATH: process.env.FIGURE_INPUT_PATH,
+
+            AUTOMATICALLY_DOWNSCALE_SPRITES: process.env.AUTOMATICALLY_DOWNSCALE_SPRITES,
         });
 
         writeFileSync(".env", content, {
