@@ -169,10 +169,10 @@ export default class RoomRenderer extends EventTarget {
         }
 
         this.camera.cameraPosition.left = Math.round(this.application.screen.width / 2);
-        this.camera.cameraPosition.left -= (this.structure.data.grid.length ) * 3;
+        this.camera.cameraPosition.left -= (this.structure.data.grid[0].length * 8) - (this.structure.data.grid.length * 8);
         
         this.camera.cameraPosition.top = Math.round(this.application.screen.height / 2);
-        this.camera.cameraPosition.top -= (this.structure.data.grid.length + this.structure.data.grid[0]?.length) * 6;
+        this.camera.cameraPosition.top -= (this.structure.data.grid.length + this.structure.data.grid[0]?.length) * 8;
 
         this.lighting.init();
 
