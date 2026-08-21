@@ -266,10 +266,10 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             return existingRender;
         }
 
-        this.visualization = data.visualization.visualizations.find((visualization) => visualization.size == options.size);
+        this.visualization = data.visualization.visualizations.find((visualization) => visualization.size == 64);
 
         if(!this.visualization) {
-            throw new Error("Visualization for " + this.type + " does not exist for size: " + options.size + ".");
+            throw new Error("Visualization for " + this.type + " does not exist.");
         }
        
         const animationFrames = this.getLayerFrames(options);
@@ -329,13 +329,24 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 this.animated = true;
             }
 
+            let size: number = options.size;
+
             let assetName = `${this.type}_${options.size}_${layerCode}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
 
             if(options.size === 1) {
+                size = 1;
+
                 assetName = `${this.type}_icon_${layerCode}`;
             }
 
-            const assetData = data.assets.find((asset) => asset.name === assetName);
+            let assetData = data.assets.find((asset) => asset.name === assetName);
+
+            if(!assetData && options.size === 32) {
+                size = 64;
+
+                assetName = `${this.type}_64_${layerCode}_${options.direction}_${animationFrame?.spriteFrame ?? 0}`;
+                assetData = data.assets.find((asset) => asset.name === assetName);
+            }
 
             if(!assetData) {
                 //console.warn("Failed to find asset data for " + assetName);
@@ -412,7 +423,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 alpha: layerData?.alpha ?? ((layerCode === "sd")?(0.15 * 255):(undefined)),
                 ignoreMouse: layerData?.ignoreMouse,
 
-                layerCode
+                layerCode,
+
+                size
             };
 
             sprites.push(assetSprite);
@@ -426,9 +439,17 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             return null;
         }
 
-        const assetName = `${this.type}_${options.size}_${options.direction}_mask`;
+        let size = options.size;
 
-        const assetData = data.assets.find((asset) => asset.name === assetName);
+        let assetName = `${this.type}_${size}_${options.direction}_mask`;
+        let assetData = data.assets.find((asset) => asset.name === assetName);
+        
+        if(!assetData && size === 32) {
+            size = 64;
+
+            assetName = `${this.type}_${size}_${options.direction}_mask`;
+            assetData = data.assets.find((asset) => asset.name === assetName);
+        }
 
         if(!assetData) {
             return null;
@@ -464,7 +485,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             alpha: undefined,
             ignoreMouse: false,
 
-            layerCode: "mask"
+            layerCode: "mask",
+
+            size: options.size
         };
     }
 

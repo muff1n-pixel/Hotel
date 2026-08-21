@@ -19,12 +19,16 @@ export default class RoomFurnitureSprite extends RoomSprite {
 
         super(
             item,
-            RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, 1),
+            RoomFurnitureOffsets.getDefaultOffsetPosition(item.furnitureRenderer, furnitureSprite, (furnitureSprite.size === 32)?(2):(1)),
             furnitureSprite.zIndex,
             (furnitureSprite.alpha !== undefined)?(furnitureSprite.alpha / 255):(undefined),
             furnitureSprite.ink,
             furnitureSprite.image
         );
+
+        if(furnitureSprite.size === 32) {
+            this._sprite.scale = 2;
+        }
 
         this.priority = this.furnitureSprite.zIndex;
         this.tag = furnitureSprite.tag;

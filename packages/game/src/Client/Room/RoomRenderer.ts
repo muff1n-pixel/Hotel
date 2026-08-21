@@ -84,6 +84,13 @@ export default class RoomRenderer extends EventTarget {
 
         this.scaleSubscription = this.scale.subscribe((value) => {
             this.container.scale = value;
+
+            if(value <= 0.75) {
+                this.size = 32;
+            }
+            else {
+                this.size = 64;
+            }
         });
     }
 
