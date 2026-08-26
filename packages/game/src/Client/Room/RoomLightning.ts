@@ -86,8 +86,7 @@ export default class RoomLighting {
         const shouldRerender = 
             (moodlight?.enabled !== this.moodlight?.enabled && this.moodlight?.backgroundOnly)
             || (moodlight?.backgroundOnly !== this.moodlight?.backgroundOnly)
-            || (moodlight?.color !== this.moodlight?.color)
-            || (moodlight?.alpha !== this.moodlight?.alpha);
+            || (moodlight?.color !== this.moodlight?.color);
 
         this.moodlight = moodlight;
 
