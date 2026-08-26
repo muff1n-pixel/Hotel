@@ -22,7 +22,7 @@ message UserFurnitureData {
 
     repeated UserFurnitureColorTag color_tags = 13;
 
-    optional uint32 color = 7;
+    optional string color = 7;
 
     UserFurnitureCustomData data = 8;
 
