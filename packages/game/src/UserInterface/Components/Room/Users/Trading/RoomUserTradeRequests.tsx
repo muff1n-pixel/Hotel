@@ -1,9 +1,9 @@
-import { RoomUser } from "@Client/Room/RoomInstance";
 import { useEffect, useState } from "react";
 import { useRoom } from "@UserInterface/Hooks/useRoom";
 import { webSocketClient } from "@Game/index";
 import { RoomUserLeftData, RoomUserTradingRequestData } from "@pixel63/events";
 import RoomUserTradeRequestMenu from "@UserInterface/Components/Room/Users/Trading/RoomUserTradeRequestMenu";
+import RoomUser from "@Client/Room/Users/RoomUser";
 
 export default function RoomUserTradeRequests() {
     const { room } = useRoom();

@@ -1,15 +1,13 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import RoomCamera from "./RoomCamera";
-import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
+import RoomCamera from "../RoomCamera";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
-import RoomCursor from "./Cursor/RoomCursor";
-import RoomSprite from "./Items/RoomSprite";
-import RoomFrameEvent from "@Client/Events/RoomFrameEvent";
-import RoomItem from "./Items/RoomItem";
+import RoomCursor from "../Cursor/RoomCursor";
+import RoomSprite from "../Items/RoomSprite";
+import RoomItem from "../Items/RoomItem";
 import ClientInstance from "@Client/ClientInstance";
-import RoomInstance from "./RoomInstance";
-import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import RoomFurniturePlacer from "./RoomFurniturePlacer";
+import RoomInstance from "../RoomInstance";
+import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
+import RoomFurniturePlacer from "../RoomFurniturePlacer";
 import RoomLighting from "@Client/Room/RoomLightning";
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
@@ -21,31 +19,30 @@ import { RoomPositionData, RoomStructureData, ShopFeatureRoomConfigurationData }
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
-import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCounter";
 import { Application, Container, Rectangle } from "pixi.js";
-import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
 import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
-import RoomPriority from "./Items/RoomPriority";
+import RoomPriority from "../Items/RoomPriority";
+import RoomRendererCounter from "./RoomRendererCounter";
+import RoomEntityManager from "./Entities/RoomEntityManager";
 
 export default class RoomRenderer extends EventTarget {
-    public readonly application: Application;
-    public readonly container: Container;
+    public readonly application = new Application();
+    public readonly container = new Container();
+
+    public readonly counter = new RoomRendererCounter(this);
+    public readonly entityManager = new RoomEntityManager(this);
 
     public readonly camera: RoomCamera;
     public cursor?: RoomCursor;
-
-    public readonly frameCounter = new RoomRendererFrameCounter(this);
 
     public lighting: RoomLighting;
     public structure: RoomStructure;
     public landscape: RoomLandscape;
 
     public furniturePlacer?: RoomFurniturePlacer;
-
-    private readonly items: RoomItem[] = [];
 
     public scale = new ObservableRequiredProperty<number>(1);
     private scaleSubscription: () => void;
@@ -64,17 +61,12 @@ export default class RoomRenderer extends EventTarget {
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
 
-    private processingTick = false;
-
     constructor(public readonly parent: HTMLElement, public readonly clientInstance: ClientInstance | undefined, public readonly roomInstance: RoomInstance | undefined, structure?: RoomStructureData) {
         super();
 
         if(!structure) {
             throw new Error();
         }
-
-        this.application = new Application();
-        this.container = new Container();
 
         this.structure = new RoomStructure(structure);
         this.landscape = new RoomLandscape(this);
@@ -132,6 +124,8 @@ export default class RoomRenderer extends EventTarget {
             autoDensity: resolution !== 1,
         });
 
+        this.counter.initialize();
+
         this.camera.init();
 
         if(resolution !== 1) {
@@ -153,24 +147,6 @@ export default class RoomRenderer extends EventTarget {
             }
         }
 
-        this.application.ticker.add(() => {
-            if(this.terminated) {
-                return;
-            }
-
-            if(!this.processingTick) {
-                const shouldProcessTick = this.frameCounter.shouldProcessTick();
-
-                if(shouldProcessTick) {
-                    this.processTick();
-                }
-            }
-            
-            if(this.frameCounter.shouldProcessFrame()) {
-                this.processFrame();
-            }
-        });
-
         if(this.roomInstance) {
             this.cursor = new RoomCursor(this);
         }
@@ -190,121 +166,6 @@ export default class RoomRenderer extends EventTarget {
         this.parent.appendChild(this.application.canvas);
 
         await this.setStructure(this.structure.data);
-    }
-
-    public addItem(item: RoomItem) {
-        if(this.items.includes(item)) {
-            return;
-        }
-        
-        this.items.push(item);
-    }
-
-    public getFilteredItems(filter: (item: RoomItem) => boolean) {
-        return this.items.filter(filter);
-    }
-
-    public removeItem(item: RoomItem) {
-        const index = this.items.indexOf(item);
-        
-        if(index === -1) {
-            return;
-        }
-        
-        this.items.splice(index, 1);
-
-        item.destroy();
-    }
-
-    private processTick() {
-        for(let index = 0; index < this.items.length; index++) {
-            const item = this.items[index];
-
-            if(!item.initialProcessed) {
-                item.initialProcessed = true;
-            }
-            else if(!item.isSpritesInView()) {
-                continue;
-            }
-
-            item.process(this.frameCounter.tick);
-        }
-
-        if(this.frameCounter.tick % 2 === 0) {
-            this.landscape.render();
-        }
-
-        this.dispatchEvent(new RoomFrameEvent());
-    }
-
-    private processFrame() {
-        this.container.x = this.camera.cameraPosition.left;
-        this.container.y = this.camera.cameraPosition.top;
-
-        for(let index = 0; index < this.items.length; index++) {
-            this.items[index].processPositionPath();
-        }
-
-        this.dispatchEvent(new RoomRenderEvent());
-    }
-
-    public getMouseOffsetPosition() {
-        if(!this.camera.mousePosition) {
-            return null;
-        }
-
-        const result = {
-            left: Math.round((this.camera.mousePosition.left - this.camera.cameraPosition.left)/ this.scale.value),
-            top: Math.round((this.camera.mousePosition.top - this.camera.cameraPosition.top)/ this.scale.value)
-        };
-
-        return result;
-    }
-
-    public getItemAtPosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
-        if(this.camera.mousePosition) {
-            const offsetMousePosition = this.getMouseOffsetPosition();
-
-            if(!offsetMousePosition) {
-                return null;
-            }
-
-            let filteredItems = this.items;
-
-            if(filter) {
-                filteredItems = filteredItems.filter(filter);
-            }
-
-            const scale = 1; // this.getSizeScale();
-
-            const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.getSpritePriority(b) - this.getSpritePriority(a));
-
-            for(let index = 0; index < sprites.length; index++) {
-                const sprite = sprites[index];
-
-                const relativeMousePosition: MousePosition = {
-                    left: offsetMousePosition.left,
-                    top: offsetMousePosition.top
-                };
-
-                if(sprite.item.position) {
-                    relativeMousePosition.left = offsetMousePosition.left - ((Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale);
-                    relativeMousePosition.top = offsetMousePosition.top - ((Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale);
-                }
-
-                const tile = sprite.mouseover(relativeMousePosition);
-
-                if(tile) {
-                    return {
-                        item: sprite.item,
-                        sprite: sprite,
-                        position: tile
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     public getCoordinatePosition(coordinate?: RoomPositionData): MousePosition {
@@ -330,7 +191,7 @@ export default class RoomRenderer extends EventTarget {
         return result;
     }
 
-    private getSpritePriority(sprite: RoomSprite) {
+    public getSpritePriority(sprite: RoomSprite) {
         return sprite.item.calculatedPriority + sprite.priority;
     }
 
@@ -435,7 +296,7 @@ export default class RoomRenderer extends EventTarget {
     public isPositionInsideFigure(position: RoomPositionData, dimensions: RoomPositionData, ignoreItem?: RoomItem) {
         for(let row = position.row; row < position.row + dimensions.row; row++) {
             for(let column = position.column; column < position.column + dimensions.column; column++) {
-                if(this.items.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
+                if(this.entityManager.entities.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
                     return true;
                 }
             }   
@@ -476,7 +337,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public updatePreviewScale() {
-        const furnitureItem = this.items.find(
+        const furnitureItem = this.entityManager.entities.find(
             (item): item is RoomFurnitureItem => item instanceof RoomFurnitureItem
         );
 
@@ -554,7 +415,7 @@ export default class RoomRenderer extends EventTarget {
 
         const scale = 1; /*this.getSizeScale()*/;
 
-        const filteredItems = this.items.filter((item) => {
+        const filteredItems = this.entityManager.entities.filter((item) => {
             return item.sprites.some((sprite) => {
                 const relativeMousePosition: MousePosition = {
                     left: offsetMousePosition.left,
@@ -599,7 +460,7 @@ export default class RoomRenderer extends EventTarget {
         this.landscape.recreate();
 
         if(this.floorItem) {
-            this.removeItem(this.floorItem);
+            this.entityManager.removeEntity(this.floorItem);
 
             this.floorItem = undefined;
         }
@@ -611,11 +472,11 @@ export default class RoomRenderer extends EventTarget {
                 resolve
             );
 
-            this.items.push(this.floorItem);
+            this.entityManager.entities.push(this.floorItem);
         });
 
         if(this.wallItem) {
-            this.removeItem(this.wallItem);
+            this.entityManager.removeEntity(this.wallItem);
 
             this.wallItem = undefined;
         }
@@ -628,7 +489,7 @@ export default class RoomRenderer extends EventTarget {
                     resolve
                 );
 
-                this.items.push(this.wallItem);
+                this.entityManager.entities.push(this.wallItem);
             }
             else {
                 resolve();
@@ -643,6 +504,6 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public hasLandscapeMask() {
-        return this.items.some((item) => item.hasLandscapeMask);
+        return this.entityManager.entities.some((item) => item.hasLandscapeMask);
     }
 }

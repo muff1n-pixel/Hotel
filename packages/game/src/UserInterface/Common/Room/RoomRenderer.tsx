@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ClientRoomRenderer from "@Client/Room/RoomRenderer";
+import ClientRoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import { RoomPositionData, RoomStructureData, RoomStructureFloorData, RoomStructureLandscapeData, RoomStructureWallData } from "@pixel63/events";
 import { RoomRendererFurnitureProps } from "@UserInterface/Common/Room/Furniture/RoomRendererFurniture";
 import RoomItem from "@Client/Room/Items/RoomItem";
@@ -62,7 +62,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
 
         for(const [id, item] of roomFurnitureItems.current.entries()) {
             if(!furniture?.some((furniture) => furniture.id === id)) {
-                roomRenderer.removeItem(item);
+                roomRenderer.entityManager.removeEntity(item);
 
                 roomFurnitureItems.current.delete(id);
             }
@@ -118,7 +118,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                         })
                     );
 
-                    roomRenderer.addItem(item);
+                    roomRenderer.entityManager.addEntity(item);
 
                     roomFurnitureItems.current.set(furnitureItem.id, item);
                 }
@@ -129,7 +129,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                         furnitureItem.position
                     );
 
-                    roomRenderer.addItem(item);
+                    roomRenderer.entityManager.addEntity(item);
 
                     roomFurnitureItems.current.set(furnitureItem.id, item);
                 }
@@ -177,7 +177,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
 
         for(const [id, item] of roomFigureItems.current.entries()) {
             if(!figure?.some((figure) => figure.id === id)) {
-                roomRenderer.removeItem(item);
+                roomRenderer.entityManager.removeEntity(item);
 
                 roomFigureItems.current.delete(id);
             }
@@ -193,7 +193,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                     figureItem.position
                 );
 
-                roomRenderer.addItem(item);
+                roomRenderer.entityManager.addEntity(item);
 
                 roomFigureItems.current.set(figureItem.id, item);
             }

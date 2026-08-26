@@ -1,4 +1,4 @@
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import { clientInstance } from "@Game/index";
 
 export default class RoomRendererFrameCounter {
     public tick: number = 0;
@@ -14,7 +14,8 @@ export default class RoomRendererFrameCounter {
     public readonly cappedFramesPerSecond: number = 60;
     public readonly cappedMillisecondsPerFrame: number = 1000 / this.cappedFramesPerSecond;
 
-    constructor(private readonly roomRenderer: RoomRenderer) {
+    constructor() {
+
     }
 
     public shouldProcessTick(): boolean {
@@ -31,7 +32,7 @@ export default class RoomRendererFrameCounter {
     }
 
     public shouldProcessFrame(): boolean {
-        if(!this.roomRenderer.clientInstance?.settings.value?.limitRoomFrames) {
+        if(!clientInstance?.settings.value?.limitRoomFrames) {
             this.lastFrameTimestamp = performance.now();
             
             return true;

@@ -2,7 +2,7 @@ import RoomItem from "../RoomItem";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureSprite from "./RoomFigureSprite";
 import RoomFigureEffectSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureEffectSprite";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import RoomFigureTypingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureTypingSprite";
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureIdlingSprite";
 import { RoomPositionData } from "@pixel63/events";

@@ -1,5 +1,5 @@
 import RoomItem from "../RoomItem";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import { RoomPositionData } from "@pixel63/events";
 import Pet from "@Client/Pets/Pet";
 import RoomPetSprite from "@Client/Room/Items/Pets/RoomPetSprite";

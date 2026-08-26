@@ -14,9 +14,10 @@ import { useUserFriendRelationships } from "@UserInterface/Hooks/useUserFriendRe
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
+import RoomUser from "@Client/Room/Users/RoomUser";
 
 export type RoomUserProfileProps = {
-    user: RoomUserData;
+    user: RoomUser;
 }
 
 export default function RoomUserProfile({ user: targetUser }: RoomUserProfileProps) {
@@ -48,11 +49,11 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
         return carryItemId;
     }, [user, room]);
 
-    const { badges, group, achievementScore } = useUserBadges(targetUser.id);
-    const relationships = useUserFriendRelationships(targetUser.id);
+    const { badges, group, achievementScore } = useUserBadges(targetUser.data.id);
+    const relationships = useUserFriendRelationships(targetUser.data.id);
 
     const handleMottoChange = useCallback((motto: string) => {
-        if(targetUser.id !== user?.id) {
+        if(targetUser.data.id !== user?.id) {
             return;
         }
 
@@ -76,7 +77,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             flexDirection: "column",
             gap: 10
         }}>
-            <b><UserLink id={targetUser.id} name={targetUser.name!} reversed/></b>
+            <b><UserLink id={targetUser.data.id} name={targetUser.data.name!} reversed/></b>
 
             <div style={{
                 width: "100%",
@@ -104,10 +105,10 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
 
                     cursor: "pointer"
                 }} onClick={() => {
-                    dialogs.addUniqueDialog("user-profile", targetUser.id, targetUser.id);
+                    dialogs.addUniqueDialog("user-profile", targetUser.data.id, targetUser.data.id);
                 }}>
-                    {(targetUser.figureConfiguration) && (
-                        <FigureImage figureConfiguration={targetUser.figureConfiguration} direction={2}/>
+                    {(targetUser.data.figureConfiguration) && (
+                        <FigureImage figureConfiguration={targetUser.data.figureConfiguration} direction={2}/>
                     )}
                 </div>
 
@@ -160,7 +161,7 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                 background: "#333333"
             }}/>
 
-            <RoomUserProfileMotto canEdit={user.id == targetUser.id} value={targetUser.motto ?? ""} onChange={handleMottoChange}/>
+            <RoomUserProfileMotto canEdit={user.id == targetUser.data.id} value={targetUser.data.motto ?? ""} onChange={handleMottoChange}/>
 
             {(relationships && relationships.loveRelationships.length > 0) && (
                 <FlexLayout align="center" gap={5} direction="row">

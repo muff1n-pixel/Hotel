@@ -1,11 +1,11 @@
 import useRoomItemScreenPosition from "../Hooks/useRoomItemScreenPosition";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
-import { RoomUser } from "@Client/Room/RoomInstance";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "@Game/index";
 import { UpdateUserFriendRequestData } from "@pixel63/events";
 import { useState } from "react";
+import RoomUser from "@Client/Room/Users/RoomUser";
 
 export type RoomUserFriendRequestMenuProps = {
     user: RoomUser;

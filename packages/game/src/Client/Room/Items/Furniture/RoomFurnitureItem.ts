@@ -1,7 +1,7 @@
 import Furniture from "@Client/Furniture/Furniture";
 import RoomFurnitureSprite from "./RoomFurnitureSprite";
 import RoomItem from "../RoomItem";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import RoomFurniturePlaceholderSprite from "@Client/Room/Items/Furniture/RoomFurniturePlaceholderSprite";
 import { RoomPositionData, UserFurnitureCustomData } from "@pixel63/events";
 import { clientInstance } from "@Game/index";

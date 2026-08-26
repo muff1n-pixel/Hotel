@@ -1,7 +1,7 @@
 import DataStats from "@Client/DataStats";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomLandscapeDebugSprite from "@Client/Room/Landscape/RoomLandscapeDebugSprite";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import LandscapeRenderer from "@Client/Room/Structure/LandscapeRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import { Texture } from "pixi.js";
@@ -59,7 +59,7 @@ export default class RoomLandscape {
         const texture = Texture.from(image, true);
         texture.source.scaleMode = "nearest";
 
-        for(const item of this.roomRenderer.getFilteredItems((item) => item instanceof RoomFurnitureItem && item.hasLandscapeMask)) {
+        for(const item of this.roomRenderer.entityManager.entities.filter((item) => item instanceof RoomFurnitureItem && item.hasLandscapeMask)) {
             item.updateLandscapeMask(texture);
         }
 
@@ -86,7 +86,7 @@ export default class RoomLandscape {
         this.sprite = new RoomLandscapeDebugSprite(this.item);
         this.item.setSprites([ this.sprite ]);
 
-        this.roomRenderer.addItem(this.item);
+        this.roomRenderer.entityManager.addEntity(this.item);
     }
 
     public deleteSprite() {
@@ -94,7 +94,7 @@ export default class RoomLandscape {
             return;
         }
 
-        this.roomRenderer.removeItem(this.item);
+        this.roomRenderer.entityManager.removeEntity(this.item);
 
         this.item = undefined;
     }

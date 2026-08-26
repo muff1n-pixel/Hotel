@@ -1,8 +1,8 @@
-import { RoomUser } from "@Client/Room/RoomInstance";
 import { useEffect, useState } from "react";
 import RoomUserFriendRequestMenu from "@UserInterface/Components/Room/Users/Friends/RoomUserFriendRequestMenu";
 import useFriends from "@UserInterface/Hooks/useFriends";
 import { useRoom } from "@UserInterface/Hooks/useRoom";
+import RoomUser from "@Client/Room/Users/RoomUser";
 
 export default function RoomUserFriendRequests() {
     const { room, roomState } = useRoom();

@@ -8,7 +8,7 @@ import RoomPetItem from "../Items/Pets/RoomPetItem";
 import Pet from "@Client/Pets/Pet";
 
 export default class RoomChatRenderer {
-    public static async render(style: string, user: string, actor: RoomActor, message: string, options?: RoomActorChatOptionsData) {
+    public static async render(style: string, user: string | undefined, actor: RoomActor, message: string, options?: RoomActorChatOptionsData) {
         const roomChatStyles = await AssetFetcher.fetchJson<any[]>("/assets/room/RoomChatStyles.json");
 
         const chatStyleImage = await AssetFetcher.fetchImage(`/assets/room/chat/${style}_chat_bubble_base_png.png`);
@@ -40,7 +40,6 @@ export default class RoomChatRenderer {
             throw new Error("Invalid room chat style.");
         }
 
-
         context.drawImage(chatStyleImage,
             0, 0, roomChatStyle.slice.left, chatStyleImage.height,
             0, 0, roomChatStyle.slice.left, chatStyleImage.height
@@ -62,7 +61,7 @@ export default class RoomChatRenderer {
             context.globalAlpha = 0.75;
         }
 
-        if(!options?.hideUsername) {
+        if(!options?.hideUsername && user !== undefined) {
             context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
             context.fillText(`${user}: `, roomChatStyle.text.left + 2, roomChatStyle.text.top + 2);
         }

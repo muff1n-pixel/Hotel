@@ -13,10 +13,11 @@ import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomPet from "@Client/Room/Pets/RoomPet";
 import RoomPetProfile from "./Pet/RoomPetProfile";
+import RoomUser from "@Client/Room/Users/RoomUser";
 
 export type RoomItemProfileItem = {
     type: "user";
-    user: Required<RoomUserData>;
+    user: RoomUser;
 } | {
     type: "furniture";
     furniture: RoomFurniture;
@@ -55,7 +56,7 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
 
                     setFocusedItem({
                         type: "user",
-                        user: user.data
+                        user: user
                     });
                 }
                 else if(roomItem.type === "bot") {
@@ -110,7 +111,7 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
         else if(focusedItem.type === "user") {
             const listener = webSocketClient.addProtobuffListener(RoomUserLeftData, {
                 async handle(payload: RoomUserLeftData) {
-                    if(payload.userId === focusedItem.user.id) {
+                    if(payload.userId === focusedItem.user.data.id) {
                         setFocusedItem(undefined);
                     }
                 },

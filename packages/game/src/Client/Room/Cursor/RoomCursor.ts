@@ -1,5 +1,5 @@
 import Furniture from "@Client/Furniture/Furniture";
-import RoomRenderer from "../RoomRenderer";
+import RoomRenderer from "../Renderer/RoomRenderer";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomClickEvent from "@Client/Events/RoomClickEvent";
 import { webSocketClient } from "../../..";
@@ -28,7 +28,7 @@ export default class RoomCursor extends EventTarget {
 
         this.furnitureItem.disabled = true;
 
-        this.roomRenderer.addItem(this.furnitureItem);
+        this.roomRenderer.entityManager.addEntity(this.furnitureItem);
 
         document.addEventListener("keydown", this.keydownListener);
         document.addEventListener("keyup", this.keyupListener);
@@ -60,7 +60,7 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
+        const otherEntity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
             if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {
@@ -78,8 +78,8 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
-        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
+        const floorEntity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === "floor");
+        const otherEntity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type !== "floor" && item.type !== "wall");
         
         if(this.roomRenderer.roomInstance && otherEntity) {
             if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {
@@ -97,7 +97,7 @@ export default class RoomCursor extends EventTarget {
     }
 
     private render() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
+        const entity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === "floor");
         
         if(!entity || this.cursorDisabled) {
             this.furnitureItem.disabled = true;
@@ -117,7 +117,7 @@ export default class RoomCursor extends EventTarget {
     }
 
     private frame() {
-        const entity = this.roomRenderer.getItemAtPosition((item) => ["furniture", "figure", "bot", "pet"].includes(item.type));
+        const entity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => ["furniture", "figure", "bot", "pet"].includes(item.type));
 
         if(entity && entity.item.id !== this.roomRenderer.hoveredItem.value?.id) {
             this.roomRenderer.hoveredItem.value = entity.item;
@@ -144,8 +144,8 @@ export default class RoomCursor extends EventTarget {
             return;
         }
 
-        const floorEntity = this.roomRenderer.getItemAtPosition((item) => item.type === "floor");
-        const otherEntity = this.roomRenderer.getItemAtPosition((item) => item.type !== "floor" && item.type !== "wall");
+        const floorEntity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === "floor");
+        const otherEntity = this.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type !== "floor" && item.type !== "wall");
 
         if(this.roomRenderer.roomInstance && otherEntity?.item.position) {
             if(otherEntity.item instanceof RoomFurnitureItem && this.canClickFurniture()) {

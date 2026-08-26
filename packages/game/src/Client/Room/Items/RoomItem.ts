@@ -3,7 +3,7 @@
 import { RoomPositionData } from "@pixel63/events";
 import RoomItemInterface from "../Interfaces/RoomItemInterface";
 import RoomSprite from "./RoomSprite";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import { Container, Texture } from "pixi.js";
 

@@ -1,7 +1,7 @@
 import AssetFetcher from "@Client/Assets/AssetFetcher";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import { GroupBadgeData } from "@pixel63/events";
-import { GroupBadgeBaseData, GroupBadgeSymbolData } from "@pixel63/events/build/Groups/GroupBadgeData";
+import { GroupBadgeBaseData, GroupBadgeSymbolData } from "@pixel63/events/build/Client/Groups/GroupBadgeData";
 
 type GroupBadgeSprite = {
     image: ImageBitmap;

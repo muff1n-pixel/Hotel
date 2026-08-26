@@ -21,7 +21,7 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement();
 
     const [text, setText] = useState<string>(data.data.data?.sticky?.text ?? "");
-    const [colorId, setColorId] = useState<number>(data.item.furnitureRenderer.color ?? 0);
+    const [colorId, setColorId] = useState<string>(data.item.furnitureRenderer.color ?? '0');
     const [colors, setColors] = useState<string[]>([]);
 
     useEffect(() => {
@@ -84,7 +84,9 @@ export default function RoomFurnitureStickiesDialog({ data, onClose }: RoomFurni
     }, [text, room]);
 
     const handleColor = useCallback((color: number) => {
-        setColorId(color + 1);
+        const colorId = Number(color);
+
+        setColorId(((isNaN(colorId)?(0):(colorId)) + 1).toString());
 
         room?.websocket.sendProtobuff(UpdateRoomFurnitureData, UpdateRoomFurnitureData.create({
             id: data.data.id,

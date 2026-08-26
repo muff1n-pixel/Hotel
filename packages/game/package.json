@@ -31,7 +31,8 @@
     "spritesheet:loader": "npx ts-node src/loader/utils/generateSpritesheet.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "lint": "npx eslint ./src"
+    "lint": "npx eslint ./src",
+    "compile": "npx tsc --noEmit"
   },
   "dependencies": {
     "@pixel63/events": "file:../events",

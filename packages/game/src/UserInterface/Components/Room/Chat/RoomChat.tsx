@@ -8,7 +8,7 @@ import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 import { useTranslation } from "react-i18next";
 
 import "./RoomChat.css";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 
 type RoomChatMessage = {
     id: number;

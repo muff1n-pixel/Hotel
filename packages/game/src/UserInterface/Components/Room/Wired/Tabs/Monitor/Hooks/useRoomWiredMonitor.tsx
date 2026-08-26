@@ -9,22 +9,26 @@ export default function useRoomWiredMonitor() {
     const [monitor, setMonitor] = useState<RoomWiredMonitorData>();
 
     useEffect(() => {
-        const listener = room?.websocket.addProtobuffListener(RoomWiredMonitorData, {
+        if(!room) {
+            return;
+        }
+
+        const listener = room.websocket.addProtobuffListener(RoomWiredMonitorData, {
             async handle(payload: RoomWiredMonitorData) {
                 setMonitor(payload);
             },
         });
 
         const timer = setInterval(() => {
-            room?.websocket.sendProtobuff(GetRoomWiredMonitorData, GetRoomWiredMonitorData.create({}));
+            room.websocket.sendProtobuff(GetRoomWiredMonitorData, GetRoomWiredMonitorData.create({}));
         }, 15 * 1000);
 
-        room?.websocket.sendProtobuff(GetRoomWiredMonitorData, GetRoomWiredMonitorData.create({}));
+        room.websocket.sendProtobuff(GetRoomWiredMonitorData, GetRoomWiredMonitorData.create({}));
 
         return () => {
             clearInterval(timer);
             
-            room?.websocket.removeProtobuffListener(RoomWiredMonitorData, listener);
+            room.websocket.removeProtobuffListener(RoomWiredMonitorData, listener);
         };
     }, [ room ]);
 

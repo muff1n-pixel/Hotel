@@ -95,7 +95,7 @@ export default class RoomFurniturePlacer {
             this.roomInstance.roomRenderer.cursor.cursorDisabled = true;
         }
 
-        this.roomInstance.roomRenderer.addItem(this.roomFurnitureItem);
+        this.roomInstance.roomRenderer.entityManager.addEntity(this.roomFurnitureItem);
 
         this.roomInstance.roomRenderer.addEventListener("render", this.renderListener);
         this.roomInstance.roomRenderer.application.canvas.addEventListener("click", this.clickListener);
@@ -211,7 +211,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const entity = this.roomInstance.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === placement);
         const position = this.getPlacementPosition(entity, placement);
 
         if(entity?.position && position) {
@@ -301,7 +301,7 @@ export default class RoomFurniturePlacer {
             const sprite: RoomFurnitureSprite | undefined = this.roomFurnitureItem.sprites.find<RoomFurnitureSprite>((sprite) => sprite instanceof RoomFurnitureSprite);
 
             if(sprite) {
-                const filteredWallFurniture = this.roomInstance.roomRenderer.getFilteredItems((item) => item.id !== this.roomFurnitureItem.id && item instanceof RoomFurnitureItem && item.furnitureRenderer.placement === "wall" && item.furnitureRenderer.direction === entity.position?.direction);
+                const filteredWallFurniture = this.roomInstance.roomRenderer.entityManager.entities.filter((item) => item.id !== this.roomFurnitureItem.id && item instanceof RoomFurnitureItem && item.furnitureRenderer.placement === "wall" && item.furnitureRenderer.direction === entity.position?.direction);
 
                 function getSquaredDistance(item: RoomItem) {
                     const dr = item.position!.row - entity!.position!.row;
@@ -405,7 +405,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.getItemAtPosition((item) => item.type === placement);
+        const entity = this.roomInstance.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === placement);
         const placementPosition = this.getPlacementPosition(entity, placement);
 
         const dimensions = (
@@ -493,7 +493,7 @@ export default class RoomFurniturePlacer {
         document.removeEventListener("wheel", this.scrollListener);
 
         if(this.temporaryFurniture) {
-            this.roomInstance.roomRenderer.removeItem(this.roomFurnitureItem);
+            this.roomInstance.roomRenderer.entityManager.removeEntity(this.roomFurnitureItem);
         }
         else {
             this.roomFurnitureItem.alpha = 1;

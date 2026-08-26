@@ -1,5 +1,5 @@
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
-import RoomRenderer from "./RoomRenderer";
+import RoomRenderer from "./Renderer/RoomRenderer";
 import RoomWallItem from "./Items/Map/RoomWallItem";
 import FloorRenderer from "./Structure/FloorRenderer";
 import WallRenderer from "./Structure/WallRenderer";
@@ -59,16 +59,16 @@ export default class RoomFurnitureRenderer {
             });
 
             if(!options.withoutWalls) {
-                this.roomRenderer.addItem(this.wallItem);
+                this.roomRenderer.entityManager.addEntity(this.wallItem);
             }
 
-            this.roomRenderer.addItem(this.floorItem);
+            this.roomRenderer.entityManager.addEntity(this.floorItem);
         });
     }
 
     async setFigure(figureConfiguration: FigureConfigurationData, actions?: string[], position?: RoomPositionData) {
         if(this.roomItem) {
-            this.roomRenderer.removeItem(this.roomItem);
+            this.roomRenderer.entityManager.removeEntity(this.roomItem);
         }
 
         const figureRenderer = new Figure(figureConfiguration, 4, actions);
@@ -79,14 +79,14 @@ export default class RoomFurnitureRenderer {
             depth: position?.depth ?? 0
         }));
         
-        this.roomRenderer.addItem(this.roomItem);
+        this.roomRenderer.entityManager.addEntity(this.roomItem);
 
         this.roomRenderer.updatePreviewScale();
     }
 
-    async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: number = 0) {
+    async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: string = '0') {
         if(this.roomItem) {
-            this.roomRenderer.removeItem(this.roomItem);
+            this.roomRenderer.entityManager.removeEntity(this.roomItem);
         }
 
         if(type === "wallpaper") {
@@ -126,7 +126,7 @@ export default class RoomFurnitureRenderer {
 
         this.roomItem.priority = 10000000;
 
-        this.roomRenderer.addItem(this.roomItem);
+        this.roomRenderer.entityManager.addEntity(this.roomItem);
     }
 
     progressFurnitureAnimation() {

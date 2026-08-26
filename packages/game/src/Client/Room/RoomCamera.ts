@@ -1,5 +1,5 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import RoomRenderer from "./RoomRenderer";
+import RoomRenderer from "./Renderer/RoomRenderer";
 
 export default class RoomCamera {
     private moving: boolean = false;
@@ -17,6 +17,19 @@ export default class RoomCamera {
 
     constructor(private readonly renderer: RoomRenderer) {
         
+    }
+    
+    public getMouseOffsetPosition() {
+        if(!this.mousePosition) {
+            return null;
+        }
+
+        const result = {
+            left: Math.round((this.mousePosition.left - this.cameraPosition.left)/ this.renderer.scale.value),
+            top: Math.round((this.mousePosition.top - this.cameraPosition.top)/ this.renderer.scale.value)
+        };
+
+        return result;
     }
 
     public init() {

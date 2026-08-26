@@ -1,6 +1,6 @@
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
 import { Sprite, Texture } from "pixi.js";
 
@@ -95,7 +95,7 @@ export default class RoomLighting {
 
     public updateMoodlightData(shouldRerender: boolean = true) {
         if(shouldRerender) {
-            const backgroundItems = this.roomRenderer.getFilteredItems((item) => item.type === "wall" || item.type === "floor");
+            const backgroundItems = this.roomRenderer.entityManager.entities.filter((item) => item.type === "wall" || item.type === "floor");
 
             for(const item of backgroundItems) {
                 if(item instanceof RoomWallItem || item instanceof RoomFloorItem) {

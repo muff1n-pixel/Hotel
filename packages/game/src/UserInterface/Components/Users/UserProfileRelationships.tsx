@@ -1,4 +1,4 @@
-import { UserProfileData_UserProfileFriendRelationshipsData } from "@pixel63/events/build/User/Profile/UserProfileData";
+import { UserProfileData_UserProfileFriendRelationshipsData } from "@pixel63/events/build/Client/User/Profile/UserProfileData";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";

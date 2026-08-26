@@ -1,5 +1,5 @@
 import ClientInstance from "@Client/ClientInstance";
-import RoomRenderer from "./RoomRenderer";
+import RoomRenderer from "./Renderer/RoomRenderer";
 import Figure from "@Client/Figure/Figure";
 import RoomFigureItem from "./Items/Figure/RoomFigureItem";
 import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
@@ -227,7 +227,7 @@ export default class RoomInstance {
     public removeUser(userId: string) {
         const user = this.getUserById(userId);
 
-        this.roomRenderer.removeItem(user.item);
+        this.roomRenderer.entityManager.removeEntity(user.item);
         this.users.splice(this.users.indexOf(user), 1);
         
         if(this.roomRenderer.focusedItem.value?.id === user.item.id) {
@@ -316,7 +316,7 @@ export default class RoomInstance {
     public removePet(petId: string) {
         const pet = this.getPetById(petId);
 
-        this.roomRenderer.removeItem(pet.item);
+        this.roomRenderer.entityManager.removeEntity(pet.item);
         this.pets.splice(this.pets.indexOf(pet), 1);
 
         if(this.roomRenderer.focusedItem.value?.id === pet.item.id) {
@@ -360,7 +360,7 @@ export default class RoomInstance {
             this.clientInstance.flyingFurnitureIcons.update();
         }
 
-        this.roomRenderer.removeItem(furniture.item);
+        this.roomRenderer.entityManager.removeEntity(furniture.item);
         this.furnitures.splice(this.furnitures.indexOf(furniture), 1);
 
         if(this.clientInstance.dialogs.value) {
@@ -385,7 +385,7 @@ export default class RoomInstance {
     public removeBot(botId: string) {
         const bot = this.getBotById(botId);
 
-        this.roomRenderer.removeItem(bot.item);
+        this.roomRenderer.entityManager.removeEntity(bot.item);
         this.bots.splice(this.bots.indexOf(bot), 1);
 
         if(this.roomRenderer.focusedItem.value?.id === bot.item.id) {

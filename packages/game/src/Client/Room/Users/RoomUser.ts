@@ -11,7 +11,7 @@ export default class RoomUser {
         this.figure = new Figure(this.data.figureConfiguration, this.data.direction ?? 0);
         this.item = new RoomFigureItem(this.instance.roomRenderer, this.figure, this.data.position);
 
-        this.instance.roomRenderer.addItem(this.item);
+        this.instance.roomRenderer.entityManager.addEntity(this.item);
 
         this.updateData(data);
     }

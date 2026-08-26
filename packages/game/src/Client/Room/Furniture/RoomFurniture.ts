@@ -34,7 +34,7 @@ export default class RoomFurniture {
         this.furniture = new Furniture(this.furnitureData.type, 64, this.data.direction, this.data.animation, this.furnitureData.color);
         this.item = new RoomFurnitureItem(this.instance.roomRenderer, this.furniture, data.position, this.data.data as any);
 
-        this.instance.roomRenderer.addItem(this.item);
+        this.instance.roomRenderer.entityManager.addEntity(this.item);
 
         this.updateData(data);
     }

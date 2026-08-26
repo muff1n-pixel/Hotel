@@ -1,4 +1,4 @@
-import { RoomUser } from "@Client/Room/RoomInstance";
+import RoomUser from "@Client/Room/Users/RoomUser";
 import { webSocketClient } from "@Game/index";
 import { RequestRoomUserTradingData, SendRoomChatMessageData, SendUserFriendRequestData, SetRoomUserRightsData, UpdateUserFriendRequestData } from "@pixel63/events";
 import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserContextMenuButton";

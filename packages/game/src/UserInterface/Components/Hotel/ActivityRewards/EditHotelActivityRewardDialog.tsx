@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { DeleteHotelActivityRewardData, UpdateHotelActivityRewardData } from "@pixel63/events";
-import { HotelActivityRewardData } from "@pixel63/events/build/Hotel/ActivityRewards/HotelActivityRewardsData";
+import { HotelActivityRewardData } from "@pixel63/events/build/Client/Hotel/ActivityRewards/HotelActivityRewardsData";
 
 export type EditHotelActivityRewardDialogProps = {
     data: {

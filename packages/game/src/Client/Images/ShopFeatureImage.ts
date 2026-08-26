@@ -2,7 +2,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import Furniture from "@Client/Furniture/Furniture";
 import { getGlobalCompositeModeFromBlendMode } from "@Client/Renderers/GlobalCompositeModes";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import { FurnitureData, ShopFeatureConfigurationData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 

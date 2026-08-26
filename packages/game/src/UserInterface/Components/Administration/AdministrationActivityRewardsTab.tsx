@@ -1,4 +1,4 @@
-import { HotelActivityRewardData } from "@pixel63/events/build/Hotel/ActivityRewards/HotelActivityRewardsData";
+import { HotelActivityRewardData } from "@pixel63/events/build/Client/Hotel/ActivityRewards/HotelActivityRewardsData";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";

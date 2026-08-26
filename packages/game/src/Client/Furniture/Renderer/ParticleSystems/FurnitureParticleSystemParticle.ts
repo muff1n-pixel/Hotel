@@ -112,7 +112,9 @@ export default class FurnitureParticleSystemParticle {
             alpha: 255,
             ignoreMouse: true,
 
-            layerCode: ""
+            layerCode: "",
+
+            size: 64
         };
 
         this.sprite = assetSprite;

@@ -2,7 +2,7 @@ import RoomItem from "../RoomItem";
 import WallRenderer from "@Client/Room/Structure/WallRenderer";
 import RoomWallSprite from "../Floor/RoomWallSprite";
 import RoomDoorMaskSprite from "../Floor/RoomDoorMaskSprite";
-import RoomRenderer from "@Client/Room/RoomRenderer";
+import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomSprite from "../RoomSprite";
 
