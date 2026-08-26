@@ -39,7 +39,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
         const renderer = new ClientRoomRenderer(elementRef.current, undefined, undefined, structure);
 
         renderer.addEventListener("render", () => {
-            renderer.updatePreviewScale();
+            renderer.camera.updatePreviewScale();
         });
 
         renderer.init().then(() => {
@@ -92,7 +92,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                         })
                     });
 
-                    roomRenderer.panToOffset({
+                    roomRenderer.camera.panToOffset({
                         left: 0,
                         top: 32
                     });

@@ -1,5 +1,10 @@
 import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomRenderer from "./Renderer/RoomRenderer";
+import RoomFurnitureSprite from "./Items/Furniture/RoomFurnitureSprite";
+import RoomFurnitureItem from "./Items/Furniture/RoomFurnitureItem";
+import RoomFurnitureOffsets from "./Items/Furniture/RoomFurnitureOffsets";
+import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
+import { Rectangle } from "pixi.js";
 
 export default class RoomCamera {
     private moving: boolean = false;
@@ -30,6 +35,106 @@ export default class RoomCamera {
         };
 
         return result;
+    }
+
+    public panToOffset(offset: MousePosition) {
+        this.cameraPosition.left = Math.round((this.renderer.application.screen.width / 2) + offset.left);
+        this.cameraPosition.top = Math.round((this.renderer.application.screen.height / 2) + offset.top);
+    }
+
+    public updatePreviewScale() {
+        const furnitureItem = this.renderer.entityManager.entities.find(
+            (item): item is RoomFurnitureItem => item instanceof RoomFurnitureItem
+        );
+
+        if(!furnitureItem) {
+            this.renderer.scale.value = 1;
+            
+            return;
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let hasSprites = false;
+
+        for(const roomSprite of furnitureItem.sprites) {
+            if(!(roomSprite instanceof RoomFurnitureSprite)) {
+                continue;
+            }
+
+            const s = roomSprite._sprite;
+
+            const offset = RoomFurnitureOffsets.getDefaultOffsetPosition(furnitureItem.furnitureRenderer, roomSprite.furnitureSprite, 1);
+
+            minX = Math.min(minX, offset.left);
+            minY = Math.min(minY, offset.top);
+            maxX = Math.max(maxX, offset.left + s.width);
+            maxY = Math.max(maxY, offset.top + s.height);
+            hasSprites = true;
+        }
+
+        if(!hasSprites) {
+            return;
+        }
+
+        const furnitureWidth = maxX - minX;
+        const furnitureHeight = maxY - minY;
+
+        const canvasWidth = this.renderer.application.screen.width;
+        const canvasHeight = this.renderer.application.screen.height;
+
+        if(canvasWidth <= 0 || canvasHeight <= 0 || furnitureWidth <= 0 || furnitureHeight <= 0) {
+            return;
+        }
+
+        const padding = 20;
+        const scaleX = (canvasWidth - padding) / furnitureWidth;
+        const scaleY = (canvasHeight - padding) / furnitureHeight;
+        
+        this.renderer.scale.value = Math.min(scaleX, scaleY, 1);
+
+        if(furnitureItem.position) {
+            const screenPos = this.renderer.coordinateMapper.getCoordinatePosition(furnitureItem.position);
+            const spriteCenterX = (minX + maxX) / 2;
+            const spriteCenterY = (minY + maxY) / 2;
+
+            this.cameraPosition.left = Math.round((this.renderer.application.screen.width / 2) + -(screenPos.left + spriteCenterX));
+            this.cameraPosition.top = Math.round((this.renderer.application.screen.height / 2) + -(screenPos.top + spriteCenterY));
+        }
+        else {
+            this.cameraPosition.left = Math.round((this.renderer.application.screen.width / 2));
+            this.cameraPosition.top = Math.round((this.renderer.application.screen.height / 2));
+        }
+    }
+
+    public async captureCroppedImage(element: HTMLElement, width: number, height: number) {
+        const canvas = new OffscreenCanvas(width, height);
+
+        const context = canvas.getContext("2d");
+
+        if(!context) {
+            throw new ContextNotAvailableError();
+        }
+
+        const clientRectangle = element.getBoundingClientRect();
+
+        if(!clientRectangle) {
+            throw new Error("Bounding client rectangle is not available.");
+        }
+
+        const extracted = this.renderer.application.renderer.extract.canvas({
+            target: this.renderer.application.stage,
+            frame: new Rectangle(Math.round(clientRectangle.left), Math.round(clientRectangle.top), width, height),
+        });
+
+        const image = extracted as HTMLCanvasElement;
+
+        context.drawImage(
+            image,
+            0, 0, image.width, image.height,
+            0, 0, width, height
+        );
+
+        return canvas;
     }
 
     public init() {

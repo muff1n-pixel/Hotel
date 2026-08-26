@@ -54,7 +54,7 @@ export default class RoomFurnitureRenderer {
         this.roomRenderer.init().then(() => {
             this.roomRenderer.addEventListener("render", () => {
                 if(this.roomRenderer && this.roomItem && (this.roomItem instanceof RoomFurnitureItem)) {
-                    this.roomRenderer.updatePreviewScale();
+                    this.roomRenderer.camera.updatePreviewScale();
                 }
             });
 
@@ -81,7 +81,7 @@ export default class RoomFurnitureRenderer {
         
         this.roomRenderer.entityManager.addEntity(this.roomItem);
 
-        this.roomRenderer.updatePreviewScale();
+        this.roomRenderer.camera.updatePreviewScale();
     }
 
     async setFurniture(type: string, size: number, direction: number | undefined = undefined, animation: number = 0, color: string = '0') {
