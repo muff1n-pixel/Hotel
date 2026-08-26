@@ -2,29 +2,20 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import RoomCamera from "../RoomCamera";
 import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import RoomCursor from "../Cursor/RoomCursor";
-import RoomSprite from "../Items/RoomSprite";
 import RoomItem from "../Items/RoomItem";
 import ClientInstance from "@Client/ClientInstance";
 import RoomInstance from "../RoomInstance";
 import RoomFurnitureItem from "../Items/Furniture/RoomFurnitureItem";
 import RoomFurniturePlacer from "../RoomFurniturePlacer";
 import RoomLighting from "@Client/Room/RoomLightning";
-import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
-import FloorRenderer from "@Client/Room/Structure/FloorRenderer";
-import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
-import WallRenderer from "@Client/Room/Structure/WallRenderer";
-import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
-import RoomFigureSprite from "@Client/Room/Items/Figure/RoomFigureSprite";
-import { RoomPositionData, RoomStructureData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
+import { RoomStructureData } from "@pixel63/events";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
-import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import RoomFurnitureSprite from "@Client/Room/Items/Furniture/RoomFurnitureSprite";
 import { Application, Container, Rectangle } from "pixi.js";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import RoomStructure from "@Client/Room/Structure/RoomStructure";
 import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
-import RoomPriority from "../Items/RoomPriority";
 import RoomRendererCounter from "./RoomRendererCounter";
 import RoomEntityManager from "./Entities/RoomEntityManager";
 import RoomHitTester from "./RoomHitTester";
@@ -54,15 +45,7 @@ export default class RoomRenderer extends EventTarget {
     private scaleSubscription: () => void;
     private subscriptions: ((() => void) | undefined)[] = [];
 
-    private _previewScale: number = 1;
-    public set previewScale(scale: number) {
-        this._previewScale = scale;
-
-        this.container.scale = scale;
-    }
-
     public size: number = 64;
-    private currentSize: number = 64;
     
     public focusedItem = new ObservableProperty<RoomItem | null>(null);
     public hoveredItem = new ObservableProperty<RoomItem | null>(null);
@@ -179,30 +162,6 @@ export default class RoomRenderer extends EventTarget {
         this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) + offset.top);
     }
 
-    public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
-        for(let row = position.row; row < position.row + dimensions.row; row++) {
-            for(let column = position.column; column < position.column + dimensions.column; column++) {
-                if(this.structure.data.grid[row]?.[column] === undefined || this.structure.data.grid[row]?.[column] === 'X') {
-                    return false;
-                }
-            }   
-        }
-
-        return true;
-    }
-
-    public isPositionInsideFigure(position: RoomPositionData, dimensions: RoomPositionData, ignoreItem?: RoomItem) {
-        for(let row = position.row; row < position.row + dimensions.row; row++) {
-            for(let column = position.column; column < position.column + dimensions.column; column++) {
-                if(this.entityManager.entities.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
-                    return true;
-                }
-            }   
-        }
-
-        return false;
-    }
-
     public async captureCroppedImage(element: HTMLElement, width: number, height: number) {
         const canvas = new OffscreenCanvas(width, height);
 
@@ -240,7 +199,8 @@ export default class RoomRenderer extends EventTarget {
         );
 
         if(!furnitureItem) {
-            this.previewScale = 1;
+            this.scale.value = 1;
+            
             return;
         }
 
@@ -280,7 +240,8 @@ export default class RoomRenderer extends EventTarget {
         const padding = 20;
         const scaleX = (canvasWidth - padding) / furnitureWidth;
         const scaleY = (canvasHeight - padding) / furnitureHeight;
-        this.previewScale = Math.min(scaleX, scaleY, 1);
+        
+        this.scale.value = Math.min(scaleX, scaleY, 1);
 
         if(furnitureItem.position) {
             const screenPos = this.coordinateMapper.getCoordinatePosition(furnitureItem.position);

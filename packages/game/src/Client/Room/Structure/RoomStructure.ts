@@ -1,4 +1,4 @@
-import { RoomStructureData } from "@pixel63/events";
+import { RoomPositionData, RoomStructureData } from "@pixel63/events";
 import RoomRenderer from "../Renderer/RoomRenderer";
 import RoomFloorItem from "../Items/Map/RoomFloorItem";
 import FloorRenderer from "./FloorRenderer";
@@ -20,6 +20,18 @@ export default class RoomStructure {
         this.data = data;
 
         this.setCalculatedData();
+    }
+        
+    public isPositionInsideStructure(position: RoomPositionData, dimensions: RoomPositionData) {
+        for(let row = position.row; row < position.row + dimensions.row; row++) {
+            for(let column = position.column; column < position.column + dimensions.column; column++) {
+                if(this.data.grid[row]?.[column] === undefined || this.data.grid[row]?.[column] === 'X') {
+                    return false;
+                }
+            }   
+        }
+
+        return true;
     }
 
     private setCalculatedData() {

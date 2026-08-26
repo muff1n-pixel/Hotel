@@ -3,8 +3,9 @@ import RoomRenderer from "../RoomRenderer";
 import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
-import { ShopFeatureRoomConfigurationData } from "@pixel63/events";
+import { RoomPositionData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
+import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 
 export default class RoomEntityManager {
     public floorItem?: RoomFloorItem;
@@ -38,6 +39,18 @@ export default class RoomEntityManager {
 
     public hasLandscapeMask() {
         return this.entities.some((item) => item.hasLandscapeMask);
+    }
+    
+    public isPositionInsideFigure(position: RoomPositionData, dimensions: RoomPositionData, ignoreItem?: RoomItem) {
+        for(let row = position.row; row < position.row + dimensions.row; row++) {
+            for(let column = position.column; column < position.column + dimensions.column; column++) {
+                if(this.entities.some((item) => (item instanceof RoomFigureItem) && (item.type === "figure" || item.type === "bot") && (!ignoreItem || !(ignoreItem instanceof RoomFigureItem) || item.id !== ignoreItem.id) && item.position?.row === row && item.position.column === column)) {
+                    return true;
+                }
+            }   
+        }
+
+        return false;
     }
 
     public captureItems(element: HTMLElement, width: number, height: number) {
