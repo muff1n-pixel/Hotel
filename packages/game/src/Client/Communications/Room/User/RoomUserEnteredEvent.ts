@@ -1,6 +1,7 @@
 import { clientInstance } from "../../../..";
 import ProtobuffListener from "@Client/Communications/ProtobuffListener";
-import { RoomUserData, RoomUserEnteredData } from "@pixel63/events";
+import RoomUser from "@Client/Room/Users/RoomUser";
+import { RoomUserEnteredData } from "@pixel63/events";
 
 export default class RoomUserEnteredEvent implements ProtobuffListener<RoomUserEnteredData> {
     async handle(payload: RoomUserEnteredData) {
@@ -12,7 +13,7 @@ export default class RoomUserEnteredEvent implements ProtobuffListener<RoomUserE
             throw new Error();
         }
 
-        clientInstance.roomInstance.value.users.push(clientInstance.roomInstance.value.addUser(payload.user as Required<RoomUserData>));
+        clientInstance.roomInstance.value.users.push(new RoomUser(clientInstance.roomInstance.value, payload.user));
         clientInstance.roomInstance.update();
     }
 }

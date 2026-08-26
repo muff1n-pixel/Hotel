@@ -10,45 +10,7 @@ export default class RoomUserEvent implements ProtobuffListener<RoomUserData> {
         
         const roomUser = clientInstance.roomInstance.value.getUserById(payload.id);
 
-        if(payload.hasRights !== undefined) {
-            roomUser.data.hasRights = payload.hasRights;
-
-            if(clientInstance.user.value?.id === payload.id) {
-                clientInstance.roomInstance.value.hasRights = payload.hasRights;
-            }
-        }
-
-        if(payload.figureConfiguration !== undefined) {
-            roomUser.data.figureConfiguration = payload.figureConfiguration;
-            roomUser.item.figureRenderer.configuration = payload.figureConfiguration;
-        }
-
-        if(payload.typing !== undefined) {
-            roomUser.item.typing = payload.typing;
-        }
-
-        if(payload.idling !== undefined) {
-            if(payload.idling) {
-                roomUser.item.figureRenderer.addAction("Sleep");
-            }
-            else {
-                roomUser.item.figureRenderer.removeAction("Sleep");
-            }
-
-            roomUser.item.idling = payload.idling;
-        }
-
-        if(payload.motto !== undefined) {
-            roomUser.data.motto = payload.motto;
-        }
-
-        if(payload.actions.length) {
-            roomUser.item.figureRenderer.setActions(payload.actions);
-        }
-
-        if(payload.updateHealth) {
-            roomUser.item.health = (payload.health !== undefined)?(payload.health):(null);
-        }
+        roomUser.updateData(payload);
 
         clientInstance.roomInstance.update();
     }

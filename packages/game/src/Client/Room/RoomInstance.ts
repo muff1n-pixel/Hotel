@@ -16,6 +16,7 @@ import RoomDoubleClickEvent from "@Client/Events/RoomDoubleClickEvent";
 import RoomFurnitureStackHelperLogic from "@Client/Room/Furniture/Logic/RoomFurnitureStackHelperLogic";
 import ObservableProperty from "@Client/Utilities/ObservableProperty";
 import WebSocketClient from "@Game/WebSocket/WebSocketClient";
+import RoomUser from "./Users/RoomUser";
 
 type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigureItem | RoomFurnitureItem> = {
     data: DataType;
@@ -23,8 +24,6 @@ type RoomItem<DataType = RoomUserData | UserFurnitureData, ItemType = RoomFigure
 };
 
 export type RoomInstanceFurniture = RoomItem<UserFurnitureData, RoomFurnitureItem>;
-
-export type RoomUser = RoomItem<Required<RoomUserData>, RoomFigureItem>;
 
 export type HoveredFigure = {
     type: "user";
@@ -76,7 +75,7 @@ export default class RoomInstance {
 
         this.roomRenderer.init().then(async () => {
             for(const user of event.users) {
-                this.users.push(this.addUser(user as Required<RoomUserData>));
+                this.users.push(new RoomUser(this, user));
             }
 
             for(const bot of event.bots) {
@@ -223,25 +222,6 @@ export default class RoomInstance {
                 position: RoomPositionData.fromJSON(event.floorEntity.position)
             }));
         }
-    }
-
-    public addUser(userData: Required<RoomUserData>): RoomUser {
-        const figureRenderer = new Figure(userData.figureConfiguration, userData.direction, userData.actions);
-        const item = new RoomFigureItem(this.roomRenderer, figureRenderer, userData.position);
-
-        item.idling = userData.idling;
-        item.typing = userData.typing;
-        
-        if(item.idling) {
-            item.figureRenderer.addAction("Sleep");
-        }
-
-        this.roomRenderer.addItem(item);
-
-        return {
-            data: userData,
-            item
-        };
     }
 
     public removeUser(userId: string) {
