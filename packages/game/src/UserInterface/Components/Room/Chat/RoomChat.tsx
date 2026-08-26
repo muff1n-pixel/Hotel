@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import "./RoomChat.css";
 import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
+import RoomCoordinateMapper from "@Client/Room/Renderer/RoomCoordinateMapper";
 
 type RoomChatMessage = {
     id: number;
@@ -88,7 +89,7 @@ export default function RoomChat() {
 
                 const image = await RoomChatRenderer.render(payload.roomChatStyleId, name, actor, message, payload.options);
 
-                const screenPosition = RoomRenderer.getCoordinatePosition(actor.item.position, room.roomRenderer.container.scale.x);
+                const screenPosition = RoomCoordinateMapper.getCoordinatePosition(actor.item.position, room.roomRenderer.container.scale.x);
 
                 const left = screenPosition.left - (image.width / 2) + (64 * room.roomRenderer.container.scale.x);
 

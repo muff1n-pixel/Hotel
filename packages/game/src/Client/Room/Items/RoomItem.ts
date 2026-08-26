@@ -108,7 +108,7 @@ export default class RoomItem implements RoomItemInterface {
         this._priority = index;
         
         this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
-        this.screenPosition =  this.roomRenderer.getCoordinatePosition(position);
+        this.screenPosition =  this.roomRenderer.coordinateMapper.getCoordinatePosition(position);
 
         this.updateSprites();
     }

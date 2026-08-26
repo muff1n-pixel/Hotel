@@ -2,6 +2,7 @@ import AssetFetcher from "@Client/Assets/AssetFetcher";
 import Furniture from "@Client/Furniture/Furniture";
 import { getGlobalCompositeModeFromBlendMode } from "@Client/Renderers/GlobalCompositeModes";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
+import RoomCoordinateMapper from "@Client/Room/Renderer/RoomCoordinateMapper";
 import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import { FurnitureData, ShopFeatureConfigurationData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
@@ -195,7 +196,7 @@ export default class ShopFeatureImage {
         }));
 
         for(const sprite of furnitureSprites.flatMap((sprites) => sprites).sort((a, b) => a.zIndex - b.zIndex)) {
-            const translatePosition = RoomRenderer.getCoordinatePosition(sprite.position, 1);
+            const translatePosition = RoomCoordinateMapper.getCoordinatePosition(sprite.position, 1);
 
             context.save();
 

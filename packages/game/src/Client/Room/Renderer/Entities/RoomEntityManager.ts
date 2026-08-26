@@ -1,11 +1,8 @@
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomRenderer from "../RoomRenderer";
-import RoomEntitiesHitTester from "./RoomEntitiesHitTester";
 
 export default class RoomEntityManager {
     public readonly entities: RoomItem[] = [];
-
-    public readonly hitTester: RoomEntitiesHitTester = new RoomEntitiesHitTester(this);
 
     constructor(public readonly renderer: RoomRenderer) {
 

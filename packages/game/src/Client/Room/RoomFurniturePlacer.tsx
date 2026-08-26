@@ -211,7 +211,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === placement);
+        const entity = this.roomInstance.roomRenderer.hitTester.getEntityAtMousePosition((item) => item.type === placement);
         const position = this.getPlacementPosition(entity, placement);
 
         if(entity?.position && position) {
@@ -405,7 +405,7 @@ export default class RoomFurniturePlacer {
 
         const placement = (isFloorPlacement)?("floor"):("wall");
 
-        const entity = this.roomInstance.roomRenderer.entityManager.hitTester.getEntityAtMousePosition((item) => item.type === placement);
+        const entity = this.roomInstance.roomRenderer.hitTester.getEntityAtMousePosition((item) => item.type === placement);
         const placementPosition = this.getPlacementPosition(entity, placement);
 
         const dimensions = (

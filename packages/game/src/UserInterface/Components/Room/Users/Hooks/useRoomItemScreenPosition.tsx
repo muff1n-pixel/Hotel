@@ -5,7 +5,7 @@ import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 export default function useRoomItemScreenPosition(item: RoomItem) {
     const room = useRoomInstance();
 
-    const [position, setPosition] = useState(room?.roomRenderer.getItemScreenPosition(item));
+    const [position, setPosition] = useState(room?.roomRenderer.coordinateMapper.getItemScreenPosition(item));
 
     useEffect(() => {
         if(!room) {
@@ -13,7 +13,7 @@ export default function useRoomItemScreenPosition(item: RoomItem) {
         }
 
         const listener = () => {
-            const position = room.roomRenderer.getItemScreenPosition(item);
+            const position = room.roomRenderer.coordinateMapper.getItemScreenPosition(item);
 
             setPosition(position);
         };

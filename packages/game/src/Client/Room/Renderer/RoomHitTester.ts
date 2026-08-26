@@ -1,25 +1,26 @@
 import RoomItem from "@Client/Room/Items/RoomItem";
-import RoomEntityManager from "./RoomEntityManager";
+import RoomEntityManager from "./Entities/RoomEntityManager";
 import { RoomPointerPosition } from "@Client/Interfaces/RoomPointerPosition";
 import { MousePosition } from "@Client/Interfaces/MousePosition";
+import RoomRenderer from "./RoomRenderer";
 
-export default class RoomEntitiesHitTester {
-    constructor(private readonly entityManager: RoomEntityManager) {
+export default class RoomHitTester {
+    constructor(private readonly renderer: RoomRenderer) {
 
     }
 
     public getEntityAtMousePosition(filter?: (item: RoomItem) => boolean): RoomPointerPosition | null {
-        if(!this.entityManager.renderer.camera.mousePosition) {
+        if(!this.renderer.camera.mousePosition) {
             return null;
         }
 
-        const offsetMousePosition = this.entityManager.renderer.camera.getMouseOffsetPosition();
+        const offsetMousePosition = this.renderer.camera.getMouseOffsetPosition();
 
         if(!offsetMousePosition) {
             return null;
         }
 
-        let filteredItems = this.entityManager.entities;
+        let filteredItems = this.renderer.entityManager.entities;
 
         if(filter) {
             filteredItems = filteredItems.filter(filter);
@@ -27,7 +28,7 @@ export default class RoomEntitiesHitTester {
 
         const scale = 1; // this.getSizeScale();
 
-        const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.entityManager.renderer.getSpritePriority(b) - this.entityManager.renderer.getSpritePriority(a));
+        const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.renderer.getSpritePriority(b) - this.renderer.getSpritePriority(a));
 
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];

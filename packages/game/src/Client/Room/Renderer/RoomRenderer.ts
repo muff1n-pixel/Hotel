@@ -27,6 +27,8 @@ import RoomLandscape from "@Client/Room/Landscape/RoomLandscape";
 import RoomPriority from "../Items/RoomPriority";
 import RoomRendererCounter from "./RoomRendererCounter";
 import RoomEntityManager from "./Entities/RoomEntityManager";
+import RoomHitTester from "./RoomHitTester";
+import RoomCoordinateMapper from "./RoomCoordinateMapper";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application = new Application();
@@ -34,6 +36,8 @@ export default class RoomRenderer extends EventTarget {
 
     public readonly counter = new RoomRendererCounter(this);
     public readonly entityManager = new RoomEntityManager(this);
+    public readonly hitTester = new RoomHitTester(this);
+    public readonly coordinateMapper = new RoomCoordinateMapper(this);
 
     public readonly camera: RoomCamera;
     public cursor?: RoomCursor;
@@ -168,29 +172,6 @@ export default class RoomRenderer extends EventTarget {
         await this.setStructure(this.structure.data);
     }
 
-    public getCoordinatePosition(coordinate?: RoomPositionData): MousePosition {
-        if(!coordinate) {
-            return {
-                left: 0,
-                top: 0
-            };
-        }
-
-        return RoomRenderer.getCoordinatePosition(coordinate, 1 /*this.getSizeScale()*/);
-    }
-
-    public static getCoordinatePosition(coordinate: RoomPositionData, scale: number) {
-        const result = {
-            left: Math.round(-(coordinate.row * 32) + (coordinate.column * 32) - 64),
-            top: Math.round((coordinate.column * 16) + (coordinate.row * 16) - ((Math.round(coordinate.depth * 1000) / 1000) * 32))
-        };
-
-        result.left *= scale;
-        result.top *= scale;
-
-        return result;
-    }
-
     public getSpritePriority(sprite: RoomSprite) {
         return sprite.item.calculatedPriority + sprite.priority;
     }
@@ -233,47 +214,6 @@ export default class RoomRenderer extends EventTarget {
         const column = (floored)?(Math.round(position.column)):(position.column);
 
         return (row * 1000) + (column * 1000) + (position.depth * 10);
-    }
-
-    public getItemScreenPosition(item: RoomItem): MousePosition {
-        if(!item.position) {
-            return {
-                left: (this.camera.cameraPosition.left * this.scale.value),
-                top: (this.camera.cameraPosition.top * this.scale.value)
-            };
-        }
-
-        const translatePosition = RoomRenderer.getCoordinatePosition(item.position, this.scale.value);
-
-        if(item instanceof RoomFigureItem) {
-            const figureSprite = item.sprites.find<RoomFigureSprite>((sprite) => sprite instanceof RoomFigureSprite);
-
-            if(figureSprite) {
-                translatePosition.top += figureSprite.offset.top + 128;
-
-                if(figureSprite.item.figureRenderer.hasAction("Sit")) {
-                    translatePosition.top += 16;
-                }
-            }
-        }
-        else if(item instanceof RoomPetItem) {
-            translatePosition.top -= 16;
-        }
-        else if(item instanceof RoomFurnitureItem) {
-            const furnitureSprites = item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite);
-
-            if(furnitureSprites.length) {
-                const minOffset = Math.max(...furnitureSprites.map(({ furnitureSprite: sprite }) => sprite.y), 0);
-
-                translatePosition.top += minOffset;
-                translatePosition.top -= 24;
-            }
-        }
-
-        return {
-            left: (this.camera.cameraPosition.left + (translatePosition.left)),
-            top: (this.camera.cameraPosition.top + (translatePosition.top))
-        };
     }
 
     public panToOffset(offset: MousePosition) {
@@ -385,7 +325,7 @@ export default class RoomRenderer extends EventTarget {
         this.previewScale = Math.min(scaleX, scaleY, 1);
 
         if(furnitureItem.position) {
-            const screenPos = this.getCoordinatePosition(furnitureItem.position);
+            const screenPos = this.coordinateMapper.getCoordinatePosition(furnitureItem.position);
             const spriteCenterX = (minX + maxX) / 2;
             const spriteCenterY = (minY + maxY) / 2;
 

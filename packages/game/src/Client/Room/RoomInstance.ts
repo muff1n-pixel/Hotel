@@ -354,7 +354,7 @@ export default class RoomInstance {
                 id: roomFurnitureId,
                 furniture: furniture.furnitureData,
                 targetElementId: "toolbar-inventory",
-                position: this.roomRenderer.getItemScreenPosition(furniture.item)
+                position: this.roomRenderer.coordinateMapper.getItemScreenPosition(furniture.item)
             });
             
             this.clientInstance.flyingFurnitureIcons.update();
