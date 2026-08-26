@@ -72,7 +72,7 @@ export default class RoomRenderer extends EventTarget {
             throw new Error();
         }
 
-        this.structure = new RoomStructure(structure);
+        this.structure = new RoomStructure(this, structure);
         this.landscape = new RoomLandscape(this);
 
         this.camera = new RoomCamera(this);
@@ -169,7 +169,7 @@ export default class RoomRenderer extends EventTarget {
 
         this.parent.appendChild(this.application.canvas);
 
-        await this.setStructure(this.structure.data);
+        await this.structure.setStructure(this.structure.data);
     }
 
     public getSpritePriority(sprite: RoomSprite) {
@@ -181,7 +181,7 @@ export default class RoomRenderer extends EventTarget {
 
         if(item.position) {
             if(Math.round(item.position.row) === this.structure.data.door?.row && Math.round(item.position.column) === this.structure.data.door.column) {
-                if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
+                if(this.entityManager.wallItem && this.entityManager.wallItem.wallRenderer.hasDoorWall) {
                     priority = RoomPriority.getDoorPositionPriority(item.position);
                 
                     return priority;
@@ -389,58 +389,6 @@ export default class RoomRenderer extends EventTarget {
                 };
             })
         });
-    }
-
-    private floorItem?: RoomFloorItem;
-    public wallItem?: RoomWallItem;
-    
-    public setStructure(structure: RoomStructureData) {
-        this.structure = new RoomStructure(structure);
-
-        this.landscape.recreate();
-
-        if(this.floorItem) {
-            this.entityManager.removeEntity(this.floorItem);
-
-            this.floorItem = undefined;
-        }
-
-        const floorPromise = new Promise<void>((resolve) => {
-            this.floorItem = new RoomFloorItem(
-                this,
-                new FloorRenderer(this.structure, structure.floor?.id ?? "default", 64),
-                resolve
-            );
-
-            this.entityManager.entities.push(this.floorItem);
-        });
-
-        if(this.wallItem) {
-            this.entityManager.removeEntity(this.wallItem);
-
-            this.wallItem = undefined;
-        }
-
-        const wallPromise = new Promise<void>((resolve) => {
-            if(!structure.wall?.hidden) {
-                this.wallItem = new RoomWallItem(
-                    this,
-                    new WallRenderer(this.structure, structure.wall?.id ?? "default", 64),
-                    resolve
-                );
-
-                this.entityManager.entities.push(this.wallItem);
-            }
-            else {
-                resolve();
-            }
-        });
-
-        return Promise.allSettled([
-            wallPromise,
-            floorPromise,
-            this.landscape.render()
-        ]);
     }
 
     public hasLandscapeMask() {

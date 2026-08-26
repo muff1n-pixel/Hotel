@@ -25,7 +25,7 @@ export default function RoomMapImage({ staticImage, size = 6, width, height, sty
             return;
         }
 
-        const roomStructure = new RoomStructure(structure);
+        const roomStructure = new RoomStructure(null, structure);
 
         rendered.current = true;
         

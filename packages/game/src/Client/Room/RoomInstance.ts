@@ -113,12 +113,6 @@ export default class RoomInstance {
         }
     }
 
-    public async setStructure(structure: RoomStructureData) {
-        await this.roomRenderer.setStructure(structure);
-
-        this.clientInstance.roomInstance.update();
-    }
-
     public setMoodlight(moodlight?: UserFurnitureMoodlightData) {
         this.roomRenderer.lighting.setMoodlightData(moodlight);
     }

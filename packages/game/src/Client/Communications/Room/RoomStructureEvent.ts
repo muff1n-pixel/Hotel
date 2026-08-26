@@ -8,6 +8,6 @@ export default class RoomStructureEvent implements ProtobuffListener<RoomStructu
             throw new Error("Room instance is not created.");
         }
 
-        clientInstance.roomInstance.value.setStructure(payload);
+        clientInstance.roomInstance.value.roomRenderer.structure.setStructure(payload);
     }
 }

@@ -1,7 +1,12 @@
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomRenderer from "../RoomRenderer";
+import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
+import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 
 export default class RoomEntityManager {
+    public floorItem?: RoomFloorItem;
+    public wallItem?: RoomWallItem;
+
     public readonly entities: RoomItem[] = [];
 
     constructor(public readonly renderer: RoomRenderer) {

@@ -290,7 +290,7 @@ export default class RoomFurniturePlacer {
         }
 
         if(placement === "floor") {
-            if(this.roomInstance.roomRenderer.wallItem?.wallRenderer.hasDoorWall && entity.position.row === this.roomInstance.roomRenderer.structure.data.door?.row && entity.position.column === this.roomInstance.roomRenderer.structure.data.door?.column) {
+            if(this.roomInstance.roomRenderer.entityManager.wallItem?.wallRenderer.hasDoorWall && entity.position.row === this.roomInstance.roomRenderer.structure.data.door?.row && entity.position.column === this.roomInstance.roomRenderer.structure.data.door?.column) {
                 return null;
             }
             

@@ -73,7 +73,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
 
             if(!item) {
                 if(furnitureItem.furniture.type === "floor") {
-                    roomRenderer.setStructure({
+                    roomRenderer.structure.setStructure({
                         ...roomRenderer.structure.data,
                         floor: RoomStructureFloorData.create({
                             ...roomRenderer.structure.data.floor,
@@ -84,7 +84,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                     continue;
                 }
                 else if(furnitureItem.furniture.type === "wallpaper") {
-                    roomRenderer.setStructure({
+                    roomRenderer.structure.setStructure({
                         ...roomRenderer.structure.data,
                         wall: RoomStructureWallData.create({
                             ...roomRenderer.structure.data.wall,
@@ -100,7 +100,7 @@ export default function RoomRenderer({ onClick, hidden, structure, furniture, fi
                     continue;
                 }
                 else if(furnitureItem.furniture.type === "landscape") {
-                    roomRenderer.setStructure({
+                    roomRenderer.structure.setStructure({
                         ...roomRenderer.structure.data,
                         landscape: RoomStructureLandscapeData.create({
                             ...roomRenderer.structure.data.landscape,

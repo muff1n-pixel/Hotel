@@ -57,7 +57,7 @@ export default class RoomFurnitureSprite extends RoomSprite {
             this.priority = 100000;
         }
         else if(this.item.furnitureRenderer.type === "tile_cursor") {
-            if(this.item.roomRenderer.wallItem?.wallRenderer.hasDoorWall && Math.round(this.item.position!.row) === this.item.roomRenderer.structure.data.door?.row && Math.round(this.item.position!.column) === this.item.roomRenderer.structure.data.door.column) {
+            if(this.item.roomRenderer.entityManager.wallItem?.wallRenderer.hasDoorWall && Math.round(this.item.position!.row) === this.item.roomRenderer.structure.data.door?.row && Math.round(this.item.position!.column) === this.item.roomRenderer.structure.data.door.column) {
                 this.priority = -1;
             }
             else {
