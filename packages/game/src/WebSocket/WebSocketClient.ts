@@ -25,14 +25,11 @@ export default class WebSocketClient extends EventTarget {
 
         this.socket.addEventListener("message", (event) => {
             try {
-                console.log(event);
                 const data = new Uint8Array(event.data);
                 
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
-
-                console.log("payload: "+ type);
 
                 this.dispatchEvent(new WebSocketEvent(type, payload, undefined));
             } catch (error) {
