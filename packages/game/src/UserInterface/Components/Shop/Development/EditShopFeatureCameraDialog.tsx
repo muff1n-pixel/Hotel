@@ -41,7 +41,7 @@ export default function EditShopFeatureCameraDialog({ hidden, data, onClose }: E
         const minimumLeft = Math.floor(clientRectangle.left);
         const minimumTop = Math.floor(clientRectangle.top);
 
-        const result = room.roomRenderer.captureItems(canvasRef.current, canvasRef.current.width, canvasRef.current.height);
+        const result = room.roomRenderer.entityManager.captureItems(canvasRef.current, canvasRef.current.width, canvasRef.current.height);
 
         result.renderedOffsetLeft -= minimumLeft;
         result.renderedOffsetTop -= minimumTop;

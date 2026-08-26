@@ -3,6 +3,7 @@ import Furniture from "@Client/Furniture/Furniture";
 import { getGlobalCompositeModeFromBlendMode } from "@Client/Renderers/GlobalCompositeModes";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
 import RoomCoordinateMapper from "@Client/Room/Renderer/RoomCoordinateMapper";
+import RoomPriorityMapper from "@Client/Room/Renderer/RoomPriorityMapper";
 import RoomRenderer from "@Client/Room/Renderer/RoomRenderer";
 import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 import { FurnitureData, ShopFeatureConfigurationData, ShopFeatureRoomConfigurationData } from "@pixel63/events";
@@ -179,7 +180,7 @@ export default class ShopFeatureImage {
     }
 
     public static async renderRoom(context: CanvasRenderingContext2D, data: ShopFeatureRoomConfigurationData) {
-        const furnitureItems = data.roomFurniture.toSorted((a, b) => (a.priority + RoomRenderer.getPositionPriority(a.position!)) - (b.priority + RoomRenderer.getPositionPriority(b.position!)));
+        const furnitureItems = data.roomFurniture.toSorted((a, b) => (a.priority + RoomPriorityMapper.getPositionPriority(a.position!)) - (b.priority + RoomPriorityMapper.getPositionPriority(b.position!)));
         const furnitureSprites = await Promise.all(furnitureItems.flatMap(async (furnitureItem) => {
             const furniture = new Furniture(furnitureItem.type, 64, furnitureItem.direction, furnitureItem.animation, furnitureItem.color);
 
@@ -190,7 +191,7 @@ export default class ShopFeatureImage {
                     ...sprite,
                     furniture,
                     position: furnitureItem.position!,
-                    zIndex: furnitureItem.priority + RoomRenderer.getPositionPriority(furnitureItem.position!) + sprite.zIndex
+                    zIndex: furnitureItem.priority + RoomPriorityMapper.getPositionPriority(furnitureItem.position!) + sprite.zIndex
                 }
             });
         }));

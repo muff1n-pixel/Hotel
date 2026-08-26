@@ -46,7 +46,7 @@ export default class RoomLandscape {
             return;
         }
 
-        if(!this.roomRenderer.hasLandscapeMask()) {
+        if(!this.roomRenderer.entityManager.hasLandscapeMask()) {
             return;
         }
 

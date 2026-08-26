@@ -57,7 +57,7 @@ export default class RoomItem implements RoomItemInterface {
     constructor(public roomRenderer: RoomRenderer, public type: string, sprites: RoomSprite[] = []) {
         this._sprites = sprites;
 
-        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+        this.calculatedPriority = this.roomRenderer.priorityMapper.getItemCalculatedPriority(this);
     }
 
     public setSprites(sprites: RoomSprite[]) {
@@ -107,7 +107,7 @@ export default class RoomItem implements RoomItemInterface {
         this._position = position;
         this._priority = index;
         
-        this.calculatedPriority = this.roomRenderer.getItemCalculatedPriority(this);
+        this.calculatedPriority = this.roomRenderer.priorityMapper.getItemCalculatedPriority(this);
         this.screenPosition =  this.roomRenderer.coordinateMapper.getCoordinatePosition(position);
 
         this.updateSprites();

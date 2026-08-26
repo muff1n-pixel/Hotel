@@ -28,7 +28,7 @@ export default class RoomHitTester {
 
         const scale = 1; // this.getSizeScale();
 
-        const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.renderer.getSpritePriority(b) - this.renderer.getSpritePriority(a));
+        const sprites = filteredItems.flatMap((item) => item.sprites).sort((a, b) => this.renderer.priorityMapper.getSpritePriority(b) - this.renderer.priorityMapper.getSpritePriority(a));
 
         for(let index = 0; index < sprites.length; index++) {
             const sprite = sprites[index];

@@ -39,7 +39,7 @@ export default function RoomItemsCameraRenderer({ canvasRef, width, height }: Ro
             const minimumLeft = Math.floor(clientRectangle.left);
             const minimumTop = Math.floor(clientRectangle.top);
 
-            const result = room.roomRenderer.captureItems(canvasRef.current!, width, height);
+            const result = room.roomRenderer.entityManager.captureItems(canvasRef.current!, width, height);
 
             result.renderedOffsetLeft -= minimumLeft;
             result.renderedOffsetTop -= minimumTop;

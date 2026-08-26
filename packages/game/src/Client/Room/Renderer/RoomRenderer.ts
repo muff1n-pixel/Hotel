@@ -29,6 +29,7 @@ import RoomRendererCounter from "./RoomRendererCounter";
 import RoomEntityManager from "./Entities/RoomEntityManager";
 import RoomHitTester from "./RoomHitTester";
 import RoomCoordinateMapper from "./RoomCoordinateMapper";
+import RoomPriorityMapper from "./RoomPriorityMapper";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application = new Application();
@@ -38,6 +39,7 @@ export default class RoomRenderer extends EventTarget {
     public readonly entityManager = new RoomEntityManager(this);
     public readonly hitTester = new RoomHitTester(this);
     public readonly coordinateMapper = new RoomCoordinateMapper(this);
+    public readonly priorityMapper = new RoomPriorityMapper(this);
 
     public readonly camera: RoomCamera;
     public cursor?: RoomCursor;
@@ -172,50 +174,6 @@ export default class RoomRenderer extends EventTarget {
         await this.structure.setStructure(this.structure.data);
     }
 
-    public getSpritePriority(sprite: RoomSprite) {
-        return sprite.item.calculatedPriority + sprite.priority;
-    }
-
-    public getItemCalculatedPriority(item: RoomItem) {
-        let priority = item.priority;
-
-        if(item.position) {
-            if(Math.round(item.position.row) === this.structure.data.door?.row && Math.round(item.position.column) === this.structure.data.door.column) {
-                if(this.entityManager.wallItem && this.entityManager.wallItem.wallRenderer.hasDoorWall) {
-                    priority = RoomPriority.getDoorPositionPriority(item.position);
-                
-                    return priority;
-                }
-            }
-
-            if(item instanceof RoomFurnitureItem) {
-                if(item.furnitureRenderer.placement === "wall") {
-                    priority = RoomPriority.WALL_FURNITURE_SPRITE_PRIORITY + RoomRenderer.getPositionPriority(item.position, !item.positionPathData);
-                    priority += (item.position.depth * 100);
-                }
-                else {
-                    priority += RoomRenderer.getPositionPriority(item.position, !item.positionPathData);
-                }
-            }
-            else {
-                priority += RoomRenderer.getPositionPriority(item.position);
-
-                if(item.type === "figure" && item.positionPathData) {
-                    priority += 10;
-                }
-            }
-        }
-
-        return priority;
-    }
-
-    public static getPositionPriority(position: RoomPositionData, floored: boolean = true) {
-        const row = (floored)?(Math.round(position.row)):(position.row);
-        const column = (floored)?(Math.round(position.column)):(position.column);
-
-        return (row * 1000) + (column * 1000) + (position.depth * 10);
-    }
-
     public panToOffset(offset: MousePosition) {
         this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2) + offset.left);
         this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2) + offset.top);
@@ -336,62 +294,5 @@ export default class RoomRenderer extends EventTarget {
             this.camera.cameraPosition.left = Math.round((this.application.screen.width / 2));
             this.camera.cameraPosition.top = Math.round((this.application.screen.height / 2));
         }
-    }
-
-    public captureItems(element: HTMLElement, width: number, height: number) {
-        const clientRectangle = element.getBoundingClientRect();
-
-        if(!clientRectangle) {
-            throw new Error("Bounding client rectangle is not available.");
-        }
-
-        const minimumLeft = Math.floor(clientRectangle.left);
-        const minimumTop = Math.floor(clientRectangle.top);
-
-        const offsetMousePosition = {
-            left: minimumLeft - this.camera.cameraPosition.left,
-            top: minimumTop - this.camera.cameraPosition.top
-        };
-
-        const scale = 1; /*this.getSizeScale()*/;
-
-        const filteredItems = this.entityManager.entities.filter((item) => {
-            return item.sprites.some((sprite) => {
-                const relativeMousePosition: MousePosition = {
-                    left: offsetMousePosition.left,
-                    top: offsetMousePosition.top
-                };
-
-                if(sprite.item.position) {
-                    relativeMousePosition.left = offsetMousePosition.left - (Math.floor(-(sprite.item.position.row * 32) + (sprite.item.position.column * 32) - 64)) * scale;
-                    relativeMousePosition.top = offsetMousePosition.top - (Math.floor((sprite.item.position.column * 16) + (sprite.item.position.row * 16) - ((Math.round(sprite.item.position.depth * 1000) / 1000) * 32))) * scale;
-                }
-
-                return sprite.isPositionInsideBounds?.(relativeMousePosition, {
-                    left: relativeMousePosition.left + width,
-                    top: relativeMousePosition.top + height
-                });
-            })
-        });
-
-        return ShopFeatureRoomConfigurationData.create({
-            renderedOffsetLeft: this.camera.cameraPosition.left,
-            renderedOffsetTop: this.camera.cameraPosition.top,
-
-            roomFurniture: filteredItems.filter((item) => item instanceof RoomFurnitureItem).map((item) => {
-                return {
-                    animation: item.furnitureRenderer.animation,
-                    color: item.furnitureRenderer.color,
-                    direction: item.furnitureRenderer.direction,
-                    type: item.furnitureRenderer.type,
-                    position: item.position,
-                    priority: item.priority
-                };
-            })
-        });
-    }
-
-    public hasLandscapeMask() {
-        return this.entityManager.entities.some((item) => item.hasLandscapeMask);
     }
 }
