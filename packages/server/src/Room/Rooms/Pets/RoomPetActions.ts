@@ -18,14 +18,31 @@ export default class RoomPetActions {
     }
 
     public async handleActionsInterval() {
-        if(this.state === RoomPetState.FREE) {
-            await this.roomPet.handleRelaxed();
-        }
-        else if(this.state === RoomPetState.STAND) {
-            if(performance.now() - this.stateUpdatedAt > 5000) {
-                this.state = RoomPetState.FREE;
+        switch(this.state) {
+            case RoomPetState.FREE: {
+                await this.roomPet.handleRelaxed();
 
-                this.roomPet.pose.stand();
+                break;
+            }
+            
+            case RoomPetState.STAND: {
+                if(performance.now() - this.stateUpdatedAt > 5000) {
+                    this.state = RoomPetState.FREE;
+
+                    this.roomPet.pose.stand();
+                }
+
+                break;
+            }
+            
+            case RoomPetState.BEG: {
+                if(performance.now() - this.stateUpdatedAt > 1000) {
+                    this.state = RoomPetState.FREE;
+
+                    this.roomPet.pose.stand();
+                }
+
+                break;
             }
         }
     }
@@ -49,6 +66,13 @@ export default class RoomPetActions {
 
         this.roomPet.pose.lay();
         this.roomPet.sendVocal("GENERIC_NEUTRAL");
+    }
+
+    public beg() {
+        this.state = RoomPetState.BEG;
+
+        this.roomPet.pose.beg();
+        this.roomPet.sendVocal("HUNGRY");
     }
 
     public stand() {

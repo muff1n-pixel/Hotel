@@ -2,6 +2,7 @@ export default interface RoomActorPose {
     stand(): void;
     sit(): void;
     lay(): void;
+    beg(): void;
     eat(): void;
 
     wave(): void;

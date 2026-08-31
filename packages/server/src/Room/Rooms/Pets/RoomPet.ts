@@ -13,7 +13,8 @@ export enum RoomPetState {
     FREE = "free",
     SIT = "sit",
     LAY = "lay",
-    STAND = "stand"
+    STAND = "stand",
+    BEG = "beg"
 };
 
 export default class RoomPet implements RoomActor {
