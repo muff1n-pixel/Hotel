@@ -17,8 +17,6 @@ export default class RoomUser {
     }
 
     public updateData(data: RoomUserData) {        
-        this.data = data;
-
         if(data.direction !== undefined) {
             this.item.figureRenderer.direction = this.data.direction = data.direction;
         }

@@ -22,7 +22,7 @@ export default class RoomChatRenderer {
         }
 
         context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu Bold"`;
-        const userText = (options?.hideUsername)?({ width: 0 }):(context.measureText(`${user}: `));
+        const userText = (options?.hideUsername || user === undefined)?({ width: 0 }):(context.measureText(`${user}: `));
 
         context.font = `${(options?.italic)?("italic"):("")} 12px "Ubuntu"`;
         const messageText = context.measureText(message);
