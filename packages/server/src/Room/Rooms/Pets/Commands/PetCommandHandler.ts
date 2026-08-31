@@ -3,6 +3,7 @@ import RoomUser from "../../Users/RoomUser";
 import RoomPet from "../RoomPet";
 import PetDownCommand from "./Handlers/PetDownCommand";
 import PetDrinkCommand from "./Handlers/PetDrinkCommand";
+import PetEatCommand from "./Handlers/PetEatCommand";
 import PetFreeCommand from "./Handlers/PetFreeCommand";
 import PetHereCommand from "./Handlers/PetHereCommand";
 import PetSitCommand from "./Handlers/PetSitCommand";
@@ -17,6 +18,7 @@ export default class PetCommandHandler {
         { command: PetStandCommand, aliases: [ "stand", "up" ] },
         { command: PetHereCommand, aliases: [ "here", "come here" ] },
         { command: PetDrinkCommand, aliases: [ "drink" ] },
+        { command: PetEatCommand, aliases: [ "eat" ] },
     ];
 
     public async handleCommand(roomUser: RoomUser, roomPet: RoomPet, alias: string, parameters: string): Promise<boolean> {
