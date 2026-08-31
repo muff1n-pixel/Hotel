@@ -102,6 +102,7 @@ import RoomFurnitureFootballCounterLogic from "./Logic/Games/Football/RoomFurnit
 import RoomFurnitureFootballTimerLogic from "./Logic/Games/Football/RoomFurnitureFootballTimerLogic";
 import RoomFurnitureFootballGoalLogic from "./Logic/Games/Football/RoomFurnitureFootballGoalLogic";
 import RoomFurnitureGiftLogic from "./Logic/RoomFurnitureGiftLogic";
+import RoomFurnitureWaterBowlLogic from "./Logic/RoomFurnitureWaterBowlLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -158,6 +159,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "water":
                 return new RoomFurnitureWaterLogic(roomFurniture);
+
+            case "pet_drink":
+                return new RoomFurnitureWaterBowlLogic(roomFurniture);
 
             // Skateboarding
             case "skate_rail":

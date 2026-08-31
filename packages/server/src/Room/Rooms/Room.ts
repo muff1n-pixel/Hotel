@@ -23,6 +23,7 @@ import RoomGroup from "./Groups/RoomGroup.js";
 import RoomEvent from "./Events/RoomEvent.js";
 import User from "../Users/User.js";
 import RoomServer from "../RoomServer.js";
+import Directions from "../../Helpers/Directions.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -110,23 +111,7 @@ export default class Room {
     }
 
     public getClosestRoomUser(position: RoomPositionOffsetData): RoomUser | null {
-        let closestUser: RoomUser | null = null;
-        let closestDistance = Number.POSITIVE_INFINITY;
-
-        for (const user of this.users) {
-            const rowDifference = user.position.row - position.row;
-            const columnDifference = user.position.column - position.column;
-            
-            const distanceSquared = rowDifference * rowDifference + columnDifference * columnDifference;
-
-            if (distanceSquared < closestDistance) {
-                closestDistance = distanceSquared;
-            
-                closestUser = user;
-            }
-        }
-
-        return closestUser;
+        return Directions.getClosestPosition(position, this.users, (user) => user.position);
     }
 
     public getActorAtPosition(position: RoomPositionOffsetData) {

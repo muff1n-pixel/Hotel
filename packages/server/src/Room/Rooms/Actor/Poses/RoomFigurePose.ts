@@ -20,6 +20,10 @@ export default class RoomFigurePose implements RoomActorPose {
         this.addAction("Lay");
     }
 
+    public eat(): void {
+        
+    }
+
     public isSitting(): boolean {
         return this.hasAction("Sit");
     }

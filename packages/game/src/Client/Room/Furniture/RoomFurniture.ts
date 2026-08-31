@@ -73,6 +73,7 @@ export default class RoomFurniture {
 
             case "gate":
             case "default":
+            case "pet_drink":
             case "multiheight":
             case "conf_invis_control":
             case "crackable":

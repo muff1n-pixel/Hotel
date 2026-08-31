@@ -111,4 +111,27 @@ export default class Directions {
 
         return destination;
     }
+
+    
+    public static getClosestPosition<T>(position: RoomPositionOffsetData, items: T[], positionMapper: (value: T) => RoomPositionData): T | null {
+        let closestItem: T | null = null;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        for (const item of items) {
+            const itemPosition = positionMapper(item);
+            
+            const rowDifference = itemPosition.row - position.row;
+            const columnDifference = itemPosition.column - position.column;
+            
+            const distanceSquared = rowDifference * rowDifference + columnDifference * columnDifference;
+
+            if (distanceSquared < closestDistance) {
+                closestDistance = distanceSquared;
+            
+                closestItem = item;
+            }
+        }
+
+        return closestItem;
+    }
 }
