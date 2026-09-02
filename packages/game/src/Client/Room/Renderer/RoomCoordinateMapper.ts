@@ -58,7 +58,7 @@ export default class RoomCoordinateMapper {
             }
         }
         else if(item instanceof RoomPetItem) {
-            translatePosition.top -= 16;
+            translatePosition.top += 32;
         }
         else if(item instanceof RoomFurnitureItem) {
             const furnitureSprites = item.sprites.filter((sprite) => sprite instanceof RoomFurnitureSprite);
