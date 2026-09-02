@@ -42,7 +42,7 @@ export default class RoomPetDrinkAction implements RoomPetAction {
 
         waterBowlFurniture.setAnimation(waterBowlFurniture.model.animation - 1);
 
-        await this.roomPet.addExperiencePoints(5);
+        await this.roomPet.addExperiencePoints(5, -5);
 
         this.roomPet.pose.eat();
         
