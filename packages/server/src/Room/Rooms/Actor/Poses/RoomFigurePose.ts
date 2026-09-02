@@ -28,6 +28,10 @@ export default class RoomFigurePose implements RoomActorPose {
         
     }
 
+    public dead(): void {
+        
+    }
+
     public isSitting(): boolean {
         return this.hasAction("Sit");
     }
