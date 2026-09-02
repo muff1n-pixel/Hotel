@@ -73,7 +73,7 @@ export default class SendUserMessageEvent implements RoomProtobuffListener<SendR
                 const nameIndex = parts.indexOf(roomPet.model.name);
 
                 if(nameIndex !== -1 && parts[nameIndex + 1]) {
-                    await RoomServer.petCommandHandler.handleCommand(user.roomUser, roomPet, parts[nameIndex + 1]!, parts.slice(nameIndex + 1).join(' '));
+                    await RoomServer.petCommandHandler.handleCommand(user.roomUser, roomPet, parts.slice(nameIndex + 1).join(' '));
                 }
             }
         }

@@ -1,6 +1,7 @@
 import { RoomPositionData, UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../../Users/RoomUser.js";
 import RoomFurniture from "../../RoomFurniture.js";
+import RoomActor from "../../../Actor/RoomActor.js";
 
 export type RoomFurnitureHandleUserChatResult = { blockUserChat?: boolean; } | null;
 
@@ -19,7 +20,7 @@ export default interface RoomFurnitureLogic {
     handleUserChat?(roomUser: RoomUser, message: string): Promise<RoomFurnitureHandleUserChatResult>;
     handleUserWalksTo?(roomUser: RoomUser): Promise<void>;
 
-    handleBeforeUserWalksOn?(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void>;
+    handleBeforeActorWalksOn?(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]): Promise<void>;
     handleUserWalksOn?(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void>;
     
     handleBeforeUserWalksOff?(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void>;

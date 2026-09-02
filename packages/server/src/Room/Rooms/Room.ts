@@ -497,13 +497,15 @@ export default class Room {
         return this.furnitures.filter((furniture) => furniture.logic instanceof category).map((furniture) => furniture.logic as T);
     }
 
-    public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
-        await roomFurniture.handleBeforeUserWalksOnFurniture?.(roomUser, previousRoomFurniture);
+    public async handleBeforeActorWalksOnFurniture(roomActor: RoomActor, roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]) {
+        await roomFurniture.handleBeforeActorWalksOnFurniture?.(roomActor, previousRoomFurniture);
 
-        const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
+        if(roomActor instanceof RoomUser) {
+            const wiredTriggerLogic = this.getFurnitureWithCategory(WiredTriggerLogic);
 
-        for(const logic of wiredTriggerLogic) {
-            logic.handleBeforeUserWalksOnFurniture?.(roomUser, roomFurniture).catch(console.error);
+            for(const logic of wiredTriggerLogic) {
+                logic.handleBeforeUserWalksOnFurniture?.(roomActor, roomFurniture).catch(console.error);
+            }
         }
     }
 

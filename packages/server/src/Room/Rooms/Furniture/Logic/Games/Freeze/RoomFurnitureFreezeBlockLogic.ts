@@ -2,6 +2,7 @@ import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
 import RoomFreezeGame from "../../../../Games/Freeze/RoomFreezeGame";
+import RoomActor from "../../../../Actor/RoomActor";
 
 export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic {
     constructor(private readonly roomFurniture: RoomFurniture) {
@@ -25,7 +26,11 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
         }, 500);
     }
 
-    public async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+    public async handleBeforeActorWalksOn(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!(roomActor instanceof RoomUser)) {
+            return;
+        }
+
         if(!this.roomFurniture.room.games.isGamePlaying(RoomFreezeGame)) {
             return;
         }
@@ -36,7 +41,7 @@ export default class RoomFurnitureFreezeBlockLogic implements RoomFurnitureLogic
             return;
         }
 
-        const player = game.players.getPlayer(roomUser);
+        const player = game.players.getPlayer(roomActor);
 
         if(!player) {
             return;

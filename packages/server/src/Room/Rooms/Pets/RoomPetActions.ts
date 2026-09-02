@@ -25,11 +25,11 @@ export default class RoomPetActions {
                 break;
             }
             
-            case RoomPetState.STAND: {
+            case RoomPetState.STAND:
+            case RoomPetState.LAY:
+            case RoomPetState.SIT: {
                 if(performance.now() - this.stateUpdatedAt > 5000) {
-                    this.state = RoomPetState.FREE;
-
-                    this.roomPet.pose.stand();
+                    this.free();
                 }
 
                 break;
@@ -37,9 +37,7 @@ export default class RoomPetActions {
             
             case RoomPetState.BEG: {
                 if(performance.now() - this.stateUpdatedAt > 1000) {
-                    this.state = RoomPetState.FREE;
-
-                    this.roomPet.pose.stand();
+                    this.free();
                 }
 
                 break;
@@ -55,6 +53,8 @@ export default class RoomPetActions {
     }
 
     public sit() {
+        this.roomPet.path.finishPath();
+
         this.state = RoomPetState.SIT;
 
         this.roomPet.pose.sit();
@@ -62,6 +62,8 @@ export default class RoomPetActions {
     }
 
     public lay() {
+        this.roomPet.path.finishPath();
+
         this.state = RoomPetState.LAY;
 
         this.roomPet.pose.lay();
@@ -69,6 +71,8 @@ export default class RoomPetActions {
     }
 
     public beg() {
+        this.roomPet.path.finishPath();
+
         this.state = RoomPetState.BEG;
 
         this.roomPet.pose.beg();
@@ -76,6 +80,8 @@ export default class RoomPetActions {
     }
 
     public stand() {
+        this.roomPet.path.finishPath();
+
         this.state = RoomPetState.STAND;
 
         this.roomPet.pose.stand();

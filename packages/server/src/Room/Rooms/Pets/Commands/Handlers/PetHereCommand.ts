@@ -25,6 +25,7 @@ export default class PetHereCommand extends PetCommand {
         this.roomPet.actions.free();
 
         await this.roomPet.path.finishPath();
+        
         this.roomPet.path.walkTo(position, false, this.handleFinishWalk.bind(this, roomUser));
     }
 

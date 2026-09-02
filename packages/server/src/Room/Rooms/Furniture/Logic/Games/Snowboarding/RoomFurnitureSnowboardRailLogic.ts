@@ -3,6 +3,7 @@ import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomUser from "../../../../Users/RoomUser";
 import Directions from "../../../../../../Helpers/Directions";
+import RoomActor from "../../../../Actor/RoomActor";
 
 export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLogic {
 
@@ -10,12 +11,16 @@ export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLog
 
     }
 
-    async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        if(!this.isRoomUserSkating(roomUser)) {
+    async handleBeforeActorWalksOn(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!(roomActor instanceof RoomUser)) {
             return;
         }
 
-        let direction = roomUser.direction - (this.roomFurniture.model.direction ?? 0) + 2;
+        if(!this.isRoomUserSkating(roomActor)) {
+            return;
+        }
+
+        let direction = roomActor.direction - (this.roomFurniture.model.direction ?? 0) + 2;
 
         const previousSkateRail = previousRoomFurniture.find((furniture) => furniture.logic instanceof RoomFurnitureSnowboardRailLogic);
 
@@ -23,7 +28,7 @@ export default class RoomFurnitureSnowboardRailLogic implements RoomFurnitureLog
             direction += 2;
         }
 
-        roomUser.direction = Directions.normalizeDirection(direction);
+        roomActor.direction = Directions.normalizeDirection(direction);
     }
 
     async handleUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {

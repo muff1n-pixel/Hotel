@@ -7,6 +7,7 @@ import PetDrinkCommand from "./Handlers/PetDrinkCommand";
 import PetEatCommand from "./Handlers/PetEatCommand";
 import PetFreeCommand from "./Handlers/PetFreeCommand";
 import PetHereCommand from "./Handlers/PetHereCommand";
+import PetPlayFootballCommand from "./Handlers/PetPlayFootballCommand";
 import PetSitCommand from "./Handlers/PetSitCommand";
 import PetStandCommand from "./Handlers/PetStandCommand";
 import PetCommand from "./PetCommand";
@@ -21,16 +22,17 @@ export default class PetCommandHandler {
         { command: PetDrinkCommand, aliases: [ "drink" ] },
         { command: PetEatCommand, aliases: [ "eat" ] },
         { command: PetBegCommand, aliases: [ "beg" ] },
+        { command: PetPlayFootballCommand, aliases: [ "play football", "play soccer", "play ball" ] },
     ];
 
-    public async handleCommand(roomUser: RoomUser, roomPet: RoomPet, alias: string, parameters: string): Promise<boolean> {
-        const commandAlias = this.commands.find((commandAlias) => commandAlias.aliases.includes(alias.toLowerCase()));
+    public async handleCommand(roomUser: RoomUser, roomPet: RoomPet, alias: string): Promise<boolean> {
+        const commandAlias = this.commands.find((commandAlias) => commandAlias.aliases.some((commandAlias) => commandAlias.startsWith(alias.toLowerCase())));
 
         if(!commandAlias) {
             return false;
         }
 
-        const command = new commandAlias.command(roomUser.room, roomPet, parameters);
+        const command = new commandAlias.command(roomUser.room, roomPet);
 
         if(!command.validate(roomUser, roomUser.user.permissions)) {
             return false;

@@ -8,6 +8,7 @@ import RoomFurnitureLogicFactory from "./RoomFurnitureLogicFactory.js";
 import Directions from "../../../Helpers/Directions.js";
 import RoomFurnitureStackHelperLogic from "./Logic/RoomFurnitureStackHelperLogic.js";
 import RoomServer from "../../RoomServer.js";
+import RoomActor from "../Actor/RoomActor.js";
 
 export default class RoomFurniture<T = unknown> {
     public preoccupiedByActionHandler: boolean = false;
@@ -394,8 +395,8 @@ export default class RoomFurniture<T = unknown> {
     }
 
     /** Call this from the Room instance only. */
-    public async handleBeforeUserWalksOnFurniture(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]) {
-        await this.logic?.handleBeforeUserWalksOn?.(roomUser, previousRoomFurniture);
+    public async handleBeforeActorWalksOnFurniture(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]) {
+        await this.logic?.handleBeforeActorWalksOn?.(roomActor, previousRoomFurniture);
     }
 
     /** Call this from the Room instance only. */

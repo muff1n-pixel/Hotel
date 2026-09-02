@@ -4,6 +4,7 @@ import RoomUser from "../../../../Users/RoomUser";
 import RoomFurniture from "../../../RoomFurniture";
 import RoomFurnitureLogic from "../../Interfaces/RoomFurnitureLogic";
 import RoomBattleBanzaiGame from "../../../../Games/BattleBanzai/RoomBattleBanzaiGame";
+import RoomActor from "../../../../Actor/RoomActor";
 
 export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurnitureLogic {
     public locked = false;
@@ -16,7 +17,11 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
         
     }
 
-    async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+    async handleBeforeActorWalksOn(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        if(!(roomActor instanceof RoomUser)) {
+            return;
+        }
+
         if (!this.roomFurniture.room.games.isGamePlaying(RoomBattleBanzaiGame)) {
             return;
         }
@@ -27,7 +32,7 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
             return;
         }
 
-        const player = game.players.getPlayer(roomUser);
+        const player = game.players.getPlayer(roomActor);
 
         if (!player) {
             return;
@@ -72,10 +77,10 @@ export default class RoomFurnitureBattleBanzaiTileLogic implements RoomFurniture
 
                     game.teams.addTeamScore(player.team, autoFillFurnitureAnimations.length);
 
-                    roomUser.user.achievements.addAchievementScore("LordOfTheTiles", autoFillAreas.length + 1).catch(console.error);
+                    roomActor.user.achievements.addAchievementScore("LordOfTheTiles", autoFillAreas.length + 1);
                 }
                 else {
-                    roomUser.user.achievements.addAchievementScore("LordOfTheTiles", 1).catch(console.error);
+                    roomActor.user.achievements.addAchievementScore("LordOfTheTiles", 1);
                 }
             }
 

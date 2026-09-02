@@ -2,6 +2,7 @@ import { UseRoomFurnitureData } from "@pixel63/events";
 import RoomUser from "../../Users/RoomUser.js";
 import RoomFurniture from "../RoomFurniture.js";
 import RoomFurnitureLogic from "./Interfaces/RoomFurnitureLogic.js";
+import RoomActor from "../../Actor/RoomActor.js";
 
 export default class RoomFurnitureWaterLogic implements RoomFurnitureLogic {
     private roomUsersSplashing: RoomUser[] = [];
@@ -10,10 +11,14 @@ export default class RoomFurnitureWaterLogic implements RoomFurnitureLogic {
 
     }
 
-    async handleBeforeUserWalksOn(roomUser: RoomUser): Promise<void> {
-        roomUser.pose.setEffect("AvatarEffect.28");
+    async handleBeforeActorWalksOn(roomActor: RoomActor): Promise<void> {
+        if(!(roomActor instanceof RoomUser)) {
+            return;
+        }
 
-        this.roomUsersSplashing.push(roomUser);
+        roomActor.pose.setEffect("AvatarEffect.28");
+
+        this.roomUsersSplashing.push(roomActor);
     }
 
     async handleBeforeUserWalksOff(roomUser: RoomUser, newRoomFurniture: RoomFurniture[]): Promise<void> {

@@ -5,12 +5,13 @@ import RoomFurnitureLogic from "../Interfaces/RoomFurnitureLogic.js";
 import RoomFootballGame from "../../../Games/Football/RoomFootballGame.js";
 import RoomFurnitureFootballGoalLogic from "./Football/RoomFurnitureFootballGoalLogic.js";
 import FootballGameNotifications from "../../../../../Game/Users/Notifications/Games/FootballGameNotifications.js";
+import RoomActor from "../../../Actor/RoomActor.js";
 
 export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
     private travelingDirection: number | null = null;
     private travelingVelocity: number | null = null;
     private travelingPassing: boolean | null = null;
-    private triggeringUser: RoomUser | null = null;
+    private triggeringActor: RoomActor | null = null;
 
     private travelingInterval: NodeJS.Timeout | null = null;
 
@@ -18,11 +19,11 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
 
     }
 
-    async handleBeforeUserWalksOn(roomUser: RoomUser, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        this.travelingDirection = roomUser.direction;
-        this.travelingPassing = Boolean(roomUser.path.path && roomUser.path.path.length > 0);
+    async handleBeforeActorWalksOn(roomActor: RoomActor, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        this.travelingDirection = roomActor.direction;
+        this.travelingPassing = Boolean(roomActor.path.path && roomActor.path.path.length > 0);
         this.travelingVelocity = (this.travelingPassing)?(2):(6);
-        this.triggeringUser = roomUser;
+        this.triggeringActor = roomActor;
 
         this.moveFurniture().catch(console.error);
     }
@@ -119,7 +120,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             if(this.travelingVelocity === 0) {
                 this.travelingVelocity = null;
                 this.travelingDirection = null;
-                this.triggeringUser = null;
+                this.triggeringActor = null;
                 
                 this.roomFurniture.setAnimation(0);
                 
@@ -131,7 +132,7 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
                 }, duration);
             }
 
-            this.handleFootballMoved(this.triggeringUser, position).catch(console.error);
+            this.handleFootballMoved(this.triggeringActor, position).catch(console.error);
 
             if(this.roomFurniture.model.animation !== 1) {
                 this.roomFurniture.setAnimation(1);
@@ -139,18 +140,18 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
         }
     }
 
-    public async handleFootballMoved(user: RoomUser | null, position: RoomPositionData) {
-        if(!this.roomFurniture.room.games.isGamePlaying(RoomFootballGame)) {
+    public async handleFootballMoved(roomActor: RoomActor | null, position: RoomPositionData) {
+        if(!roomActor || !(roomActor instanceof RoomUser)) {
             return;
         }
 
-        if(!user) {
+        if(!this.roomFurniture.room.games.isGamePlaying(RoomFootballGame)) {
             return;
         }
 
         const game = this.roomFurniture.room.games.getGame(RoomFootballGame);
 
-        const player = game?.players.getPlayer(user);
+        const player = game?.players.getPlayer(roomActor);
 
         if(!player) {
             return;

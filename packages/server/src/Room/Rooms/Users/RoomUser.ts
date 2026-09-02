@@ -308,7 +308,7 @@ export default class RoomUser implements RoomActor {
     }
 
     public async handleBeforeWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
-        return this.room.handleBeforeUserWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
+        return this.room.handleBeforeActorWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 
     public async handleWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {

@@ -18,8 +18,6 @@ export default class PetStandCommand extends PetCommand {
 
         await this.roomPet.addExperiencePoints(5, 5);
 
-        await this.roomPet.path.finishPath();
-
         this.roomPet.actions.stand();
     }
 }

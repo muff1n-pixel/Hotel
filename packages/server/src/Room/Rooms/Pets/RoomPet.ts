@@ -8,13 +8,15 @@ import RoomPetPose from "../Actor/Poses/RoomPetPose.js";
 import RoomServer from "../../RoomServer.js";
 import Directions from "../../../Helpers/Directions.js";
 import RoomPetActions from "./RoomPetActions.js";
+import RoomFurniture from "../Furniture/RoomFurniture.js";
 
 export enum RoomPetState {
     FREE = "free",
     SIT = "sit",
     LAY = "lay",
     STAND = "stand",
-    BEG = "beg"
+    BEG = "beg",
+    PLAY_FOOTBALL = "play_football"
 };
 
 export default class RoomPet implements RoomActor {
@@ -309,5 +311,18 @@ export default class RoomPet implements RoomActor {
 
     public getMaxHappiness() {
         return 100;
+    }
+
+    public async handleBeforeWalkEvent(previousPosition: RoomPositionOffsetData, newPosition: RoomPositionOffsetData) {
+        const previousFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(previousPosition));
+        const newFurniture = this.room.furnitures.filter((furniture) => furniture.isPositionInside(newPosition));
+
+        for(const furniture of newFurniture) {
+            await this.handleBeforeWalksOnFurniture?.(furniture, previousFurniture);
+        }
+    }
+
+    public async handleBeforeWalksOnFurniture(roomFurniture: RoomFurniture, previousRoomFurniture: RoomFurniture[]): Promise<void> {
+        return this.room.handleBeforeActorWalksOnFurniture(this, roomFurniture, previousRoomFurniture);
     }
 }
