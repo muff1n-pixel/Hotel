@@ -9,6 +9,8 @@ import RoomServer from "../../RoomServer.js";
 import Directions from "../../../Helpers/Directions.js";
 import RoomPetActions from "./RoomPetActions.js";
 import RoomFurniture from "../Furniture/RoomFurniture.js";
+import RoomPetAction from "./Actions/Interfaces/RoomPetAction.js";
+import RoomPetFreeAction from "./Actions/RoomPetFreeAction.js";
 
 export enum RoomPetState {
     FREE = "free",
@@ -43,13 +45,15 @@ export default class RoomPet implements RoomActor {
     public lastActivity: number = 0;
 
     public pose: RoomActorPose = new RoomPetPose(this);
-    public actions: RoomPetActions = new RoomPetActions(this);
+
+    public action: RoomPetAction;
 
     constructor(public readonly room: Room, public readonly model: UserPetModel) {
         this.position = model.position;
         this.direction = model.direction;
 
         this.path = new RoomActorPath(this);
+        this.action = new RoomPetFreeAction(this);
     }
 
     public static async place(room: Room, userPet: UserPetModel, position: RoomPositionData, direction: number) {
@@ -158,7 +162,13 @@ export default class RoomPet implements RoomActor {
     public async handleActionsInterval() {
         this.handleAutomaticChat();
 
-        this.actions.handleActionsInterval();
+        if(this.action.expiresAt !== undefined) {
+            if(performance.now() >= this.action.expiresAt) {
+                this.action = new RoomPetFreeAction(this);
+            }
+        }
+
+        await this.action.handleActionsInterval?.();
 
         this.path.handleActionsInterval().catch(console.error);
     }

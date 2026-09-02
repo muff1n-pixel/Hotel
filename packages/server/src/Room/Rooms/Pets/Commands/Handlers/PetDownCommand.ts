@@ -1,15 +1,9 @@
 import RoomUser from "../../../Users/RoomUser";
-import { RoomPetState } from "../../RoomPet";
+import RoomPetDownAction from "../../Actions/RoomPetDownAction";
 import PetCommand from "../PetCommand";
 
 export default class PetDownCommand extends PetCommand {
     async handle(roomUser: RoomUser): Promise<void> {
-        if(this.roomPet.actions.state === RoomPetState.LAY) {
-            this.roomPet.sendVocal("UNKNOWN_COMMAND");
-
-            return;
-        }
-
         if(this.roomPet.model.energy < 5) {
             this.roomPet.sendVocal("DISOBEY");
 
@@ -18,6 +12,6 @@ export default class PetDownCommand extends PetCommand {
 
         await this.roomPet.addExperiencePoints(5, 5);
 
-        this.roomPet.actions.lay();
+        this.roomPet.action = new RoomPetDownAction(this.roomPet);
     }
 }
