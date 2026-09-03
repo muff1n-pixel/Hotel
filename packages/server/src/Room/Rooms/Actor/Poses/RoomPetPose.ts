@@ -29,6 +29,10 @@ export default class RoomPetPose implements RoomActorPose {
         this.setPosture("ded");
     }
 
+    public play(): void {
+        this.setPosture("pla");
+    }
+
     public wave(): void {
         
     }

@@ -1,8 +1,8 @@
 import RoomUser from "../../../Users/RoomUser";
 import PetCommand from "../PetCommand";
-import RoomPetPlayFootballAction from "../../Actions/RoomPetPlayFootballAction";
+import RoomPetPlayAction from "../../Actions/RoomPetPlayAction";
 
-export default class PetPlayFootballCommand extends PetCommand {
+export default class PetPlayCommand extends PetCommand {
     async handle(roomUser: RoomUser): Promise<void> {
         if(this.roomPet.model.energy < 10) {
             this.roomPet.sendVocal("DISOBEY");
@@ -10,6 +10,6 @@ export default class PetPlayFootballCommand extends PetCommand {
             return;
         }
 
-        this.roomPet.action = new RoomPetPlayFootballAction(this.roomPet);
+        this.roomPet.action = new RoomPetPlayAction(this.roomPet);
     }
 }
