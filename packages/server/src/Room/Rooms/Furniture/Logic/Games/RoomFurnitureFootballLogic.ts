@@ -196,6 +196,13 @@ export default class RoomFurnitureFootballLogic implements RoomFurnitureLogic {
             return false;
         }
 
+        if(this.roomFurniture.room.model.structure.door) {
+            if(this.roomFurniture.room.model.structure.door.row === position.row && this.roomFurniture.room.model.structure.door.column === position.column) {
+                return false;
+            }
+
+        }
+
         return true;
     }
 }
