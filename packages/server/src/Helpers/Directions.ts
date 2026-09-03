@@ -1,6 +1,11 @@
 import { RoomPositionData, RoomPositionOffsetData } from "@pixel63/events";
 
 export default class Directions {
+    public static AHEAD: number = 0;
+    public static RIGHT: number = 2;
+    public static BEHIND: number = 4;
+    public static LEFT: number = 6;
+
     public static normalizeDirection(direction: number) {
         while(direction < 0) {
             direction += 8;
