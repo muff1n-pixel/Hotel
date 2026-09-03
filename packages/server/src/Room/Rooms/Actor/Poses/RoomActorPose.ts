@@ -6,6 +6,7 @@ export default interface RoomActorPose {
     eat(): void;
     dead(): void;
     play(): void;
+    jump(): void;
 
     wave(): void;
     smile(): void;
