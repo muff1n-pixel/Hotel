@@ -105,6 +105,7 @@ import RoomFurnitureGiftLogic from "./Logic/RoomFurnitureGiftLogic";
 import RoomFurnitureWaterBowlLogic from "./Logic/RoomFurnitureWaterBowlLogic";
 import RoomFurniturePetFoodLogic from "./Logic/RoomFurniturePetFoodLogic";
 import RoomFurniturePetToyLogic from "./Logic/RoomFurniturePetToyLogic";
+import RoomFurniturePetNestLogic from "./Logic/RoomFurniturePetNestLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -170,6 +171,9 @@ export default class RoomFurnitureLogicFactory {
 
             case "pet_toy":
                 return new RoomFurniturePetToyLogic(roomFurniture);
+
+            case "pet_nest":
+                return new RoomFurniturePetNestLogic(roomFurniture);
 
             // Skateboarding
             case "skate_rail":

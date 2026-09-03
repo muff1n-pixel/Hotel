@@ -74,6 +74,10 @@ export default class RoomPetPose implements RoomActorPose {
     }
     
     public setPosture(posture: string) {
+        if(this.posture === posture) {
+            return;
+        }
+        
         this.posture = posture;
 
         if(posture === "sit") {
