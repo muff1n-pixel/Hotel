@@ -7,6 +7,7 @@ import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import { PickupRoomPetData, ScratchRoomPetData } from "@pixel63/events";
 import { webSocketClient } from "../../../../../..";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type RoomPetContextMenuProps = {
     item: RoomPetItem;
@@ -15,6 +16,7 @@ export type RoomPetContextMenuProps = {
 export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
     const room = useRoomInstance();
     const user = useUser();
+    const dialogs = useDialogs();
 
     const [pet, setPet] = useState(room?.pets.find((pet) => pet.item.id === item.id));
 
@@ -39,6 +41,12 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
                     }));
                 }}/>
             )}
+
+            <UserContextMenuButton text={"Train"} onClick={() => {
+                dialogs.openUniqueDialog("room-pet-train", {
+                    pet
+                });
+            }}/>
 
             {(pet.data.userId === user.id)?(
                 <UserContextMenuButton text={"Pick up"} onClick={() => {

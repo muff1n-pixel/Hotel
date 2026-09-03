@@ -72,6 +72,7 @@ import WardrobeFootballDialog from "@UserInterface/Components/Wardrobe/WardrobeF
 import ShopGiftFurnitureDialog from "@UserInterface/Components/Shop/Pages/Gifts/ShopGiftFurnitureDialog";
 import EditHotelActivityRewardDialog from "@UserInterface/Components/Hotel/ActivityRewards/EditHotelActivityRewardDialog";
 import HabboClubCenterDialog from "@UserInterface/Components/HabboClub/HabboClubCenterDialog";
+import RoomPetTrainDialog from "@UserInterface/Components/Room/Pets/RoomPetTrainDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -210,6 +211,9 @@ export default function DialogInstances() {
 
                     case "room-group-creation":
                         return (<RoomGroupCreationDialog {...props} key={dialog.id}/>);
+
+                    case "room-pet-train":
+                        return (<RoomPetTrainDialog {...props} key={dialog.id}/>);
 
                     case "group":
                         return (<GroupDialog {...props} key={dialog.id}/>);

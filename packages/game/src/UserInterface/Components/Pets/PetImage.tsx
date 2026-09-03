@@ -7,9 +7,10 @@ export type PetImageProps = {
     data?: PetData;
     headOnly?: boolean;
     style?: CSSProperties;
+    scale?: number;
 }
 
-export default function PetImage({ data, headOnly, style }: PetImageProps) {
+export default function PetImage({ data, headOnly, style, scale }: PetImageProps) {
     const [image, setImage] = useState<OffscreenCanvas>();
 
     useEffect(() => {
@@ -29,6 +30,6 @@ export default function PetImage({ data, headOnly, style }: PetImageProps) {
     }
 
     return (
-        <OffscreenCanvasRender offscreenCanvas={image} style={style}/>
+        <OffscreenCanvasRender offscreenCanvas={image} style={style} scale={scale}/>
     );
 }
