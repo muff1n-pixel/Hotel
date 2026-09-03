@@ -65,14 +65,14 @@ export default class RoomFloorplan {
                     return 1;
                 }
             }
+        }
 
-            if(this.room.getBotAtPosition(position)) {
-                return 1;
-            }
+        if(this.room.getBotAtPosition(position)) {
+            return 1;
+        }
 
-            if(this.room.getPetAtPosition(position)) {
-                return 1;
-            }
+        if(this.room.getPetAtPosition(position)) {
+            return 1;
         }
 
         return 0;
