@@ -20,6 +20,8 @@ import PetPlayFootballCommand from "./Handlers/PetPlayFootballCommand";
 import PetSitCommand from "./Handlers/PetSitCommand";
 import PetStandCommand from "./Handlers/PetStandCommand";
 import PetStayCommand from "./Handlers/PetStayCommand";
+import PetTurnLeftCommand from "./Handlers/PetTurnLeftCommand";
+import PetTurnRightCommand from "./Handlers/PetTurnRightCommand";
 import PetCommand from "./PetCommand";
 
 export default class PetCommandHandler {
@@ -44,6 +46,8 @@ export default class PetCommandHandler {
         { command: PetMoveForwardCommand, aliases: [ "move forward" ] },
         { command: PetMoveLeftCommand, aliases: [ "move left" ] },
         { command: PetMoveRightCommand, aliases: [ "move right" ] },
+        { command: PetTurnLeftCommand, aliases: [ "turn left" ] },
+        { command: PetTurnRightCommand, aliases: [ "turn right" ] },
     ];
 
     public async handleCommand(roomUser: RoomUser, roomPet: RoomPet, alias: string): Promise<boolean> {
