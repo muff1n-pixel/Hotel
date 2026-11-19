@@ -7,8 +7,10 @@ import WiredWidgetButton from "@UserInterface/Common/Widgets/Wired/WiredWidgetBu
 import useRoomClickConfiguration from "@UserInterface/Components/Room/Widget/Hooks/useRoomClickConfiguration";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { Fragment } from "react/jsx-runtime";
+import { useTranslation } from "react-i18next";
 
 export default function RoomClickConfigurationWidget() {
+    const [getTranslation] = useTranslation("room");
     const roomInstance = useRoomInstance();
     const roomClickConfiguration = useRoomClickConfiguration();
 
@@ -22,28 +24,28 @@ export default function RoomClickConfigurationWidget() {
                 padding: 8,
             }}>
                 <div>
-                    Clicking behaviour has changed for this room.
+                    {getTranslation("widget.click.changed")}
                 </div>
 
                 <div>
                     {(roomClickConfiguration?.userBehaviour === RoomClickUserConfiguration.CLICKABLE_USER_BEHAVIOUR) && (
-                        <i>User clicks will walk behind the user</i>
+                        <i>{getTranslation("widget.click.behind")}</i>
                     )}
 
                     {(roomClickConfiguration?.userBehaviour === RoomClickUserConfiguration.UNCLICKABLE_USER_BEHAVIOUR) && (
-                        <i>User clicks will passthrough</i>
+                        <i>{getTranslation("widget.click.user_passthrough")}</i>
                     )}
 
                     {(roomClickConfiguration?.userBehaviour && roomClickConfiguration?.furnitureBehaviour)?(
-                        <i> and </i>
+                        <i>{getTranslation("widget.click.and")}</i>
                     ):(
                         (roomClickConfiguration?.userBehaviour) && (
-                            <i>. </i>
+                            <i>{getTranslation("widget.click.period")}</i>
                         )
                     )}
 
                     {(roomClickConfiguration?.furnitureBehaviour === RoomClickFurnitureConfiguration.UNCLICKABLE_FURNITURE_CLICK_BEHAVIOUR) && (
-                        <i>Furniture clicks will passthrough.</i>
+                        <i>{getTranslation("widget.click.furniture_passthrough")}</i>
                     )}
                 </div>
 

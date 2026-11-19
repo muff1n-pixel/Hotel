@@ -17,11 +17,24 @@
 
             "buy": "Buy furniture",
 
-            "scratch": "Scratch ({{scratches}})"
+            "scratch": "Scratch ({{scratches}})",
+            "carrying": "Carrying: {{item}}",
+            "bot": "Bot"
         },
 
         "context_menu": {
             "wardrobe": "Wardrobe",
+            "male_clothes": "Male clothes",
+            "female_clothes": "Female clothes",
+
+            "turn_on": "Turn on",
+            "turn_off": "Turn off",
+            "playlists": "Playlists",
+            "train": "Train",
+            "kick": "Kick",
+            "stiffen": "Stiffen",
+            "relax": "Relax",
+            "setup_speech": "Setup speech",
 
             "dance": "Dance",
             "stop_dancing": "Stop dancing",
@@ -56,5 +69,310 @@
 
             "back": "Back"
         }
+    },
+    "camera": {
+        "title": "Room Camera",
+        "editor": {
+            "title": "Room Camera Editor",
+            "save": "Save to computer",
+            "zoom": "Zoom",
+            "zoom_out": "out",
+            "zoom_in": "in",
+            "cancel": "Cancel"
+        },
+        "preview": {
+            "title": "Room Camera Preview",
+            "large_poster": "Buy large photo poster furni",
+            "small_poster": "Buy photo poster furni",
+            "description": "Your best shots from the hotel.",
+            "price": "Price:",
+            "buy": "Buy",
+            "publish": "Publish",
+            "publish_description": "Post the photo on your profile page and the Photos page.",
+            "cancel": "Cancel"
+        }
+    },
+    "commands": {
+        "pickall": {
+            "warning": "Warning!",
+            "destructive": "This is a destructive command!",
+            "confirm": "Are you sure you want to pick up all furniture from the room?",
+            "pick_up": "Pick up all furniture",
+            "cancel": "Cancel"
+        }
+    },
+    "doorbell": {
+        "title": "Room Doorbell",
+        "denied": "Sorry, you were not allowed into the room. Try another door!",
+        "ringing": "The doorbell is ringing, waiting for someone to open the door...",
+        "locked": "This room is locked. You need to ring the doorbell to enter.",
+        "cancel_entering": "Cancel entering the room",
+        "cancel": "Cancel",
+        "ring": "Ring doorbell",
+        "queue_title": "Room Doorbell Queue",
+        "queue_description": "Some users are ringing the doorbell!",
+        "deny_all": "Deny all",
+        "accept_all": "Accept all",
+        "password_description": "This room is protected by a password.",
+        "enter": "Enter room",
+        "oops": "Ooops!",
+        "close": "Close"
+    },
+    "chat": {
+        "commands": {
+            "title": "Chat commands",
+            "command": "Command",
+            "description": "Description",
+            "commands": "Shows you this dialog!",
+            "furni": "Opens a dialog with a list of all furniture in the room.",
+            "dance": "Starts dancing or stop dancing if no dance provided.",
+            "enable": "Equips the enable id, if no provided, opens a dialog with all enables.",
+            "carry": "Equips the carry item, if no provided, opens a dialog with all items.",
+            "sign": "Equips the sign (1-17).",
+            "floor": "Opens the floorplan editor.",
+            "sit": "Sits your Habbo down!",
+            "stand": "Stands your Habbo up!",
+            "wave": "Waves to everyone in the room!",
+            "speed": "Sets the room's roller speed, 0 is never moving and 2 is moving instantly.",
+            "teleport": "Enables teleportation for yourself.",
+            "pickall": "(Dangerous) Picks up all furniture from the room."
+        }
+    },
+    "furniture": {
+        "dialog": {
+            "title": "Room Furniture",
+            "search": "Search",
+            "all": "All furniture",
+            "floor": "Floor furniture",
+            "wall": "Wall furniture",
+            "furniture": "Furniture",
+            "position": "Position"
+        },
+        "background": {
+            "title": "Room Furniture Background",
+            "image_url": "Image url",
+            "offset_x": "Offset X",
+            "offset_y": "Offset Y",
+            "offset_z": "Offset Z",
+            "relative": "Put image relative to furniture sprite",
+            "link_url": "Link url",
+            "link_hint": "This is only available for background furniture that has clickable sprites.",
+            "apply": "Apply"
+        },
+        "dimmer": {
+            "title": "Room Furniture Background",
+            "background_only": "Background only",
+            "turn_off": "Turn off",
+            "turn_on": "Turn on",
+            "apply": "Apply"
+        },
+        "clothing": {
+            "warning": "This is a permanent action. Once you add it to wardrobe, the furniture will disappear forever.",
+            "cancel": "Cancel",
+            "add": "Add to wardrobe"
+        },
+        "mannequin": {
+            "warning": "This is a permanent action. Once you equip it, your existing looks will be changed.",
+            "cancel": "Cancel",
+            "equip": "Equip clothing"
+        },
+        "gift": {
+            "title": "Gift from {{name}}",
+            "open": "Open gift"
+        },
+        "stack": {"title": "Stacking Helper", "height": "Height:"},
+        "toner": {"title": "Room Furniture Background", "turn_off": "Turn off", "turn_on": "Turn on", "apply": "Apply"}
+    },
+    "information": {
+        "title": "Room information",
+        "owner": "Owner:",
+        "homeroom": "This room is the homeroom for {{name}}",
+        "settings": "Room settings",
+        "floorplan": "Edit room floorplan"
+    },
+    "pet_profile": {
+        "level": "Level: {{level}}/20",
+        "age_one": "Age: {{days}} day",
+        "age_other": "Age: {{days}} days",
+        "scratches": "Been scratched: {{scratches}}"
+    },
+    "pet_training": {
+        "level": "Level {{level}}",
+        "commands": {
+            "sit": "Sit",
+            "nest": "Nest",
+            "eat": "Eat",
+            "drink": "Drink",
+            "free": "Free",
+            "stay": "Stay",
+            "stand": "Stand",
+            "jump": "Jump",
+            "beg": "Beg",
+            "lay": "Lay",
+            "play": "Play",
+            "play_dead": "Play dead",
+            "play_football": "Play football",
+            "move_left": "Move left",
+            "move_right": "Move right",
+            "move_forward": "Move forward",
+            "turn_left": "Turn left",
+            "turn_right": "Turn right",
+            "come_here": "Come here",
+            "follow": "Follow",
+            "follow_left": "Follow left",
+            "follow_right": "Follow right"
+        }
+    },
+    "link": {
+        "title": "Room link",
+        "share": "Share your room!",
+        "description": "Copy this link to a forum or your friends chat! Anyone who follows the link will enter this room directly."
+    },
+    "floorplan": {
+        "title": "Room Floorplan",
+        "door_direction": "Door direction",
+        "floor_and_walls": "Floor and walls",
+        "thinnest_floor": "Thinnest floor",
+        "thin_floor": "Thin floor",
+        "normal_floor": "Normal floor",
+        "thick_floor": "Thick floor",
+        "thickest_floor": "Thickest floor",
+        "thinnest_walls": "Thinnest walls",
+        "thin_walls": "Thin walls",
+        "normal_walls": "Normal walls",
+        "thick_walls": "Thick walls",
+        "thickest_walls": "Thickest walls",
+        "hide_walls": "Hide room walls",
+        "wall_height": "Wall height",
+        "apply": "Apply"
+    },
+    "map": {
+        "title": "Room Map Editor",
+        "open_floorplan": "Open floorplan editor",
+        "index": "Index",
+        "index_description": "This is used to sort the map in the room creation dialog.",
+        "membership_required": "Membership required",
+        "membership_none": "None",
+        "membership_hc": "Habbo Club",
+        "delete": "Delete map",
+        "confirm_delete": "Confirm deletion",
+        "update": "Update map",
+        "create": "Create map"
+    },
+    "settings": {
+        "title": "Room Settings",
+        "tabs": {"basic": "Basic", "access": "Access", "rights": "Rights", "customize": "Customize"},
+        "access": {
+            "title": "Room Access",
+            "description": "Select access rights for the room. Open means everyone can enter; Locked restricts access to Habbos with a password; Private means Habbos have to ring your doorbell and wait to be let in.",
+            "label": "Access to this room:",
+            "open": "Open - anyone can enter",
+            "bell": "Visitors have to ring the doorbell",
+            "invisible": "Invisible in navigator to users without rights",
+            "password": "Password is required to enter this room",
+            "password_title": "Room Password",
+            "password_hint": "If you already have a password set, it will not be shown here.",
+            "pet_settings": "Pet settings",
+            "allow_pets": "Allow pets",
+            "allow_pets_eat": "Allow other pets to eat food",
+            "mute_pets": "Mute all pets"
+        },
+        "basic": {
+            "name": "Room name",
+            "name_placeholder": "My room name",
+            "description": "Room description",
+            "description_placeholder": "My room description",
+            "category": "Room category",
+            "type": "Room type",
+            "type_private": "Private",
+            "type_public": "Public",
+            "type_bundle": "Bundle",
+            "max_users": "Maximum amount of visitors",
+            "trade": "Trade settings",
+            "trade_everyone": "Everyone is allowed to trade",
+            "trade_rights": "Users with rights are allowed to trade",
+            "trade_disabled": "No one is allowed to trade",
+            "allow_walking": "Allow walking through users"
+        },
+        "rights": {"title": "Users with rights"},
+        "customize": {
+            "title": "Room customization",
+            "description": "Customize your walls and floors! You can choose whether or not the walls of your room are visible, and how thick the walls and floors are.",
+            "floor_walls": "Floor and walls",
+            "edit_floorplan": "Edit room floorplan"
+        }
+    },
+    "thumbnail": {"title": "Camera", "capture": "Capture"},
+    "trax": {
+        "use": "Use",
+        "eject": "Eject",
+        "machine": "Traxmachine",
+        "songs": "Traxmachine Songs",
+        "no_songs": "No songs available",
+        "edit_song": "Edit song",
+        "create_song": "Create a new song",
+        "playlist": "Playlist",
+        "no_songs_added": "No songs added",
+        "start_playlist": "Start Playlist",
+        "stop_playlist": "Stop Playlist",
+        "song_info": "Song Info",
+        "eject_cd": "Eject CD",
+        "burn_song": "Burn Song",
+        "owner_required": "You must be the owner of this Trax.",
+        "burn_warning": "Burning your song will make it impossible to edit in the future.",
+        "burned_modify": "You can not modify a burnt song.",
+        "trax_required": "You need a Trax to create songs.",
+        "insert_title": "Insert a song disk",
+        "your_song_disks": "Your song disks:",
+        "untitled_song": "Untitled Song",
+        "no_song_disks": "You have no song disks in your inventory",
+        "insert": "Insert",
+        "save_title": "Save your song",
+        "name": "Trax name:",
+        "save": "Save",
+        "untitled_trax": "Untitled Trax",
+        "editor": "Trax Editor",
+        "now_playing": "Now playing:"
+    },
+    "groups": {
+        "homeroom": "Group homeroom",
+        "join": "Join group",
+        "request": "Request to join",
+        "creation": {
+            "title": "Room Group Creation",
+            "step": "Step",
+            "identity": {"title": "Group identity", "description": "Describe your group here", "name": "Name of your group:", "name_placeholder": "{{name}}'s group", "description_label": "Description of your group:", "description_placeholder": "Where all the cool kids hang!", "homeroom": "Choose a homeroom for your Group:", "homeroom_hint": "Choose your Groups homeroom carefully, the homeroom cannot be changed later.", "create_room": "No suitable room found? Click here to create a new one!"},
+            "badge": {"title": "Group badge", "description": "Wear it with pride! :)"},
+            "colors": {"title": "Group colors", "description": "You can personalize your group furniture with these colors"},
+            "buy": "Buy group",
+            "ready": {"title": "Ready to go", "description": "All set! You can now purchase your group"},
+            "back": "Go back",
+            "next": "Next step",
+            "final": {"badge": "Group badge", "colors": "Group colors", "description": "Your Group is now set up and ready to go. When you have purchased your Group, you can start inviting users and giving rights to members.", "habbo_group": "Habbo Group"}
+        }
+    },
+    "widget": {
+        "click": {
+            "changed": "Clicking behaviour has changed for this room.",
+            "behind": "User clicks will walk behind the user",
+            "user_passthrough": "User clicks will passthrough",
+            "and": " and ",
+            "period": ". ",
+            "furniture_passthrough": "Furniture clicks will passthrough."
+        },
+        "event": {"promote": "Promote room"}
+    },
+    "friends": {"request_from": "Friend request from"},
+    "trading": {
+        "you": "You",
+        "offering": "is offering",
+        "request_from": "Trade request from",
+        "lock": "Lock trade",
+        "cancel": "Cancel",
+        "title": "Trading with {{name}}",
+        "furniture": "Furniture",
+        "offer": "Offer",
+        "add_items": "Add the items you would like to trade in the box below.",
+        "seconds_until_completion": "{{seconds}} seconds until completion"
     }
 }

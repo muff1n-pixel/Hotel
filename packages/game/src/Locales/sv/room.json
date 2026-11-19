@@ -15,11 +15,24 @@
             "use": "Använd",
             "edit": "Redigera",
             
-            "buy": "Köp möbel"
+            "buy": "Köp möbel",
+            "carrying": "Bär: {{item}}",
+            "bot": "Bot"
         },
 
         "context_menu": {
             "wardrobe": "Garderob",
+            "male_clothes": "Herrkläder",
+            "female_clothes": "Damkläder",
+
+            "turn_on": "Slå på",
+            "turn_off": "Stäng av",
+            "playlists": "Spellistor",
+            "train": "Träna",
+            "kick": "Sparka ut",
+            "stiffen": "Stelna",
+            "relax": "Slappna av",
+            "setup_speech": "Ställ in tal",
 
             "dance": "Dansa",
             "stop_dancing": "Sluta dansa",
@@ -47,5 +60,310 @@
 
             "back": "Tillbaka"
         }
+    },
+    "camera": {
+        "title": "Rumskamera",
+        "editor": {
+            "title": "Redigerare för rumskamera",
+            "save": "Spara till dator",
+            "zoom": "Zoom",
+            "zoom_out": "ut",
+            "zoom_in": "in",
+            "cancel": "Avbryt"
+        },
+        "preview": {
+            "title": "Förhandsgranskning av rumskamera",
+            "large_poster": "Köp stor fotoposter",
+            "small_poster": "Köp fotoposter",
+            "description": "Dina bästa bilder från hotellet.",
+            "price": "Pris:",
+            "buy": "Köp",
+            "publish": "Publicera",
+            "publish_description": "Lägg upp fotot på din profilsida och Fotosidan.",
+            "cancel": "Avbryt"
+        }
+    },
+    "commands": {
+        "pickall": {
+            "warning": "Varning!",
+            "destructive": "Detta är ett destruktivt kommando!",
+            "confirm": "Är du säker på att du vill plocka upp alla möbler i rummet?",
+            "pick_up": "Plocka upp alla möbler",
+            "cancel": "Avbryt"
+        }
+    },
+    "doorbell": {
+        "title": "Rumsdörrklocka",
+        "denied": "Tyvärr tilläts du inte komma in i rummet. Prova en annan dörr!",
+        "ringing": "Dörrklockan ringer och väntar på att någon ska öppna dörren...",
+        "locked": "Detta rum är låst. Du måste ringa på dörrklockan för att komma in.",
+        "cancel_entering": "Avbryt inträde i rummet",
+        "cancel": "Avbryt",
+        "ring": "Ring på dörrklockan",
+        "queue_title": "Kö för rumsdörrklocka",
+        "queue_description": "Vissa användare ringar på dörrklockan!",
+        "deny_all": "Avvisa alla",
+        "accept_all": "Acceptera alla",
+        "password_description": "Detta rum skyddas av ett lösenord.",
+        "enter": "Gå in i rummet",
+        "oops": "Hoppsan!",
+        "close": "Stäng"
+    },
+    "chat": {
+        "commands": {
+            "title": "Chattkommandon",
+            "command": "Kommando",
+            "description": "Beskrivning",
+            "commands": "Visar den här dialogen!",
+            "furni": "Öppnar en dialog med alla möbler i rummet.",
+            "dance": "Börjar dansa eller slutar dansa om ingen dans anges.",
+            "enable": "Använder enable-id; om inget anges visas alla enables.",
+            "carry": "Använder bärföremålet; om inget anges visas alla föremål.",
+            "sign": "Visar skylten (1-17).",
+            "floor": "Öppnar golvplansredigeraren.",
+            "sit": "Sätter din Habbo i sittläge!",
+            "stand": "Låter din Habbo stå upp!",
+            "wave": "Vinkar till alla i rummet!",
+            "speed": "Ställer in rullarnas hastighet; 0 flyttar aldrig och 2 flyttar direkt.",
+            "teleport": "Aktiverar teleportering för dig själv.",
+            "pickall": "(Farligt) Plockar upp alla möbler i rummet."
+        }
+    },
+    "furniture": {
+        "dialog": {
+            "title": "Rumsmöbler",
+            "search": "Sök",
+            "all": "Alla möbler",
+            "floor": "Golvmöbler",
+            "wall": "Väggmöbler",
+            "furniture": "Möbel",
+            "position": "Position"
+        },
+        "background": {
+            "title": "Rumsmöbelbakgrund",
+            "image_url": "Bildadress",
+            "offset_x": "Förskjutning X",
+            "offset_y": "Förskjutning Y",
+            "offset_z": "Förskjutning Z",
+            "relative": "Placera bilden relativt till möbelsprite",
+            "link_url": "Länkadress",
+            "link_hint": "Detta är endast tillgängligt för bakgrundsmöbler som har klickbara sprites.",
+            "apply": "Verkställ"
+        },
+        "dimmer": {
+            "title": "Rumsmöbelbelysning",
+            "background_only": "Endast bakgrund",
+            "turn_off": "Stäng av",
+            "turn_on": "Slå på",
+            "apply": "Verkställ"
+        },
+        "clothing": {
+            "warning": "Detta är en permanent åtgärd. När du lägger till den i garderoben försvinner möbeln permanent.",
+            "cancel": "Avbryt",
+            "add": "Lägg till i garderoben"
+        },
+        "mannequin": {
+            "warning": "Detta är en permanent åtgärd. När du använder den ändras dina befintliga utseenden.",
+            "cancel": "Avbryt",
+            "equip": "Använd klädsel"
+        },
+        "gift": {
+            "title": "Present från {{name}}",
+            "open": "Öppna present"
+        },
+        "stack": {"title": "Staplingshjälp", "height": "Höjd:"},
+        "toner": {"title": "Bakgrund för rumsmöbel", "turn_off": "Stäng av", "turn_on": "Slå på", "apply": "Verkställ"}
+    },
+    "information": {
+        "title": "Rumsinformation",
+        "owner": "Ägare:",
+        "homeroom": "Det här rummet är hemrum för {{name}}",
+        "settings": "Rumsinställningar",
+        "floorplan": "Redigera rumsplan"
+    },
+    "pet_profile": {
+        "level": "Nivå: {{level}}/20",
+        "age_one": "Ålder: {{days}} dag",
+        "age_other": "Ålder: {{days}} dagar",
+        "scratches": "Har blivit kliad: {{scratches}}"
+    },
+    "pet_training": {
+        "level": "Nivå {{level}}",
+        "commands": {
+            "sit": "Sitt",
+            "nest": "Bo",
+            "eat": "Ät",
+            "drink": "Drick",
+            "free": "Fri",
+            "stay": "Stanna",
+            "stand": "Stå",
+            "jump": "Hoppa",
+            "beg": "Tigga",
+            "lay": "Ligg",
+            "play": "Lek",
+            "play_dead": "Spela död",
+            "play_football": "Spela fotboll",
+            "move_left": "Gå vänster",
+            "move_right": "Gå höger",
+            "move_forward": "Gå framåt",
+            "turn_left": "Sväng vänster",
+            "turn_right": "Sväng höger",
+            "come_here": "Kom hit",
+            "follow": "Följ",
+            "follow_left": "Följ vänster",
+            "follow_right": "Följ höger"
+        }
+    },
+    "link": {
+        "title": "Länk till rum",
+        "share": "Dela ditt rum!",
+        "description": "Kopiera den här länken till ett forum eller din vänschatt! Alla som följer länken kommer direkt till detta rum."
+    },
+    "floorplan": {
+        "title": "Rumsplan",
+        "door_direction": "Dörrens riktning",
+        "floor_and_walls": "Golv och väggar",
+        "thinnest_floor": "Tunnaste golvet",
+        "thin_floor": "Tunt golv",
+        "normal_floor": "Normalt golv",
+        "thick_floor": "Tjockt golv",
+        "thickest_floor": "Tjockaste golvet",
+        "thinnest_walls": "Tunnaste väggarna",
+        "thin_walls": "Tunna väggar",
+        "normal_walls": "Normala väggar",
+        "thick_walls": "Tjocka väggar",
+        "thickest_walls": "Tjockaste väggarna",
+        "hide_walls": "Dölj rumsväggar",
+        "wall_height": "Vägg höjd",
+        "apply": "Verkställ"
+    },
+    "map": {
+        "title": "Redigerare för rumskarta",
+        "open_floorplan": "Öppna rumsplansredigeraren",
+        "index": "Index",
+        "index_description": "Används för att sortera kartan i rumsdialogen.",
+        "membership_required": "Medlemskap krävs",
+        "membership_none": "Inget",
+        "membership_hc": "Habbo Club",
+        "delete": "Ta bort karta",
+        "confirm_delete": "Bekräfta borttagning",
+        "update": "Uppdatera karta",
+        "create": "Skapa karta"
+    },
+    "settings": {
+        "title": "Rumsinställningar",
+        "tabs": {"basic": "Grundläggande", "access": "Åtkomst", "rights": "Rättigheter", "customize": "Anpassa"},
+        "access": {
+            "title": "Rumsåtkomst",
+            "description": "Välj åtkomst till rummet. Öppet innebär att alla kan komma in; Låst begränsar åtkomsten till Habbos med lösenord; Privat innebär att Habbos måste ringa på och vänta på att släppas in.",
+            "label": "Åtkomst till detta rum:",
+            "open": "Öppet - alla kan komma in",
+            "bell": "Besökare måste ringa på dörrklockan",
+            "invisible": "Osynligt i navigatorn för användare utan rättigheter",
+            "password": "Lösenord krävs för att komma in i rummet",
+            "password_title": "Rumlösenord",
+            "password_hint": "Om du redan har ett lösenord visas det inte här.",
+            "pet_settings": "Husdjurinställningar",
+            "allow_pets": "Tillåt husdjur",
+            "allow_pets_eat": "Tillåt andra husdjur att äta mat",
+            "mute_pets": "Stäng av ljud för alla husdjur"
+        },
+        "basic": {
+            "name": "Rumsnamn",
+            "name_placeholder": "Mitt rumsnamn",
+            "description": "Rumsbeskrivning",
+            "description_placeholder": "Min rumsbeskrivning",
+            "category": "Rumskategori",
+            "type": "Rumstyp",
+            "type_private": "Privat",
+            "type_public": "Publikt",
+            "type_bundle": "Paket",
+            "max_users": "Högsta antal besökare",
+            "trade": "Bytesinställningar",
+            "trade_everyone": "Alla får byta",
+            "trade_rights": "Användare med rättigheter får byta",
+            "trade_disabled": "Ingen får byta",
+            "allow_walking": "Tillåt att gå igenom användare"
+        },
+        "rights": {"title": "Användare med rättigheter"},
+        "customize": {
+            "title": "Anpassa rum",
+            "description": "Anpassa dina väggar och golv! Du kan välja om rumsväggarna ska synas och hur tjocka väggar och golv ska vara.",
+            "floor_walls": "Golv och väggar",
+            "edit_floorplan": "Redigera rumsplan"
+        }
+    },
+    "thumbnail": {"title": "Kamera", "capture": "Ta bild"},
+    "trax": {
+        "use": "Använd",
+        "eject": "Mata ut",
+        "machine": "Traxmaskin",
+        "songs": "Traxmaskinlåtar",
+        "no_songs": "Inga låtar tillgängliga",
+        "edit_song": "Redigera låt",
+        "create_song": "Skapa en ny låt",
+        "playlist": "Spellista",
+        "no_songs_added": "Inga låtar tillagda",
+        "start_playlist": "Starta spellista",
+        "stop_playlist": "Stoppa spellista",
+        "song_info": "Låtinfo",
+        "eject_cd": "Mata ut CD",
+        "burn_song": "Bränn låt",
+        "owner_required": "Du måste vara ägare till denna Trax.",
+        "burn_warning": "Om du bränner låten kan den inte längre redigeras.",
+        "burned_modify": "Du kan inte ändra en bränd låt.",
+        "trax_required": "Du behöver en Trax för att skapa låtar.",
+        "insert_title": "Sätt i en låtdisk",
+        "your_song_disks": "Dina låtdiskar:",
+        "untitled_song": "Namnlös låt",
+        "no_song_disks": "Du har inga låtdiskar i ditt förråd",
+        "insert": "Sätt in",
+        "save_title": "Spara din låt",
+        "name": "Traxnamn:",
+        "save": "Spara",
+        "untitled_trax": "Namnlös Trax",
+        "editor": "Trax-redigerare",
+        "now_playing": "Spelas nu:"
+    },
+    "groups": {
+        "homeroom": "Gruppens hemrum",
+        "join": "Gå med i gruppen",
+        "request": "Begär att få gå med",
+        "creation": {
+            "title": "Skapa rumsgrupp",
+            "step": "Steg",
+            "identity": {"title": "Gruppidentitet", "description": "Beskriv din grupp här", "name": "Namnet på din grupp:", "name_placeholder": "{{name}}s grupp", "description_label": "Beskrivning av din grupp:", "description_placeholder": "Dit alla coola ungar går!", "homeroom": "Välj hemrum för din grupp:", "homeroom_hint": "Välj gruppens hemrum noggrant, det kan inte ändras senare.", "create_room": "Hittar du inget passande rum? Klicka här för att skapa ett nytt!"},
+            "badge": {"title": "Gruppmärke", "description": "Bär det med stolthet! :)"},
+            "colors": {"title": "Gruppfärger", "description": "Du kan anpassa dina gruppmöbler med dessa färger"},
+            "buy": "Köp grupp",
+            "ready": {"title": "Redo att gå", "description": "Klart! Du kan nu köpa din grupp"},
+            "back": "Gå tillbaka",
+            "next": "Nästa steg",
+            "final": {"badge": "Gruppmärke", "colors": "Gruppfärger", "description": "Din grupp är nu redo att användas. När du har köpt gruppen kan du bjuda in användare och ge rättigheter.", "habbo_group": "Habbo-grupp"}
+        }
+    },
+    "widget": {
+        "click": {
+            "changed": "Klickbeteendet har ändrats för detta rum.",
+            "behind": "Användarklick går bakom användaren",
+            "user_passthrough": "Användarklick passerar igenom",
+            "and": " och ",
+            "period": ". ",
+            "furniture_passthrough": "Möbelklick passerar igenom."
+        },
+        "event": {"promote": "Marknadsför rum"}
+    },
+    "friends": {"request_from": "Vänförfrågan från"},
+    "trading": {
+        "you": "Du",
+        "offering": "erbjuder",
+        "request_from": "Bytesförfrågan från",
+        "lock": "Lås byte",
+        "cancel": "Avbryt",
+        "title": "Byter med {{name}}",
+        "furniture": "Möbler",
+        "offer": "Erbjud",
+        "add_items": "Lägg till föremålen du vill byta i rutan nedan.",
+        "seconds_until_completion": "{{seconds}} sekunder tills bytet slutförs"
     }
 }

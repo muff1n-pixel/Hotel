@@ -1,0 +1,20 @@
+{
+    "experience": "Erfarenhet",
+    "happiness": "Lycka",
+    "energy": "Energi",
+    "editor": {
+        "title": "Husdjursredigerare",
+        "type": "Husdjurstyp",
+        "name": "Husdjurets namn",
+        "breed_name": "Husdjursras",
+        "show_list": "Visa lista",
+        "new_breed": "Ny ras",
+        "breed_index": "Husdjursrasens index",
+        "palette": "Husdjurs palett",
+        "tags": "Taggar",
+        "palette_id": "Palett-ID",
+        "palette_color": "Palettfärg",
+        "update": "Uppdatera",
+        "create": "Skapa"
+    }
+}

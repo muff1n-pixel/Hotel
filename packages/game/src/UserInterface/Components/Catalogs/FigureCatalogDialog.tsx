@@ -17,6 +17,7 @@ export type FigureCatalogDialogProps = {
 export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDialogProps) {
     const user = useUser();
     const [getCarryItemTranslation] = useTranslation("carryitems");
+    const [getTranslation] = useTranslation("catalogs");
 
     const [action, setAction] = useState<string | null>(null);
 
@@ -25,10 +26,10 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
     }
 
     return (
-        <Dialog title="Figure Catalog" hidden={hidden} onClose={onClose} width={410} height={560} initialPosition="center">
+        <Dialog title={getTranslation("figure.title")} hidden={hidden} onClose={onClose} width={410} height={560} initialPosition="center">
             <DialogTabs withoutHeader tabs={[
                 {
-                    icon: "Enables",
+                    icon: getTranslation("figure.enables"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -69,7 +70,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     })}/>
                             </div>
 
-                            <DialogTable activeId={action?.split('.')[1]} columns={["ID", "Library"]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
+                            <DialogTable activeId={action?.split('.')[1]} columns={[getTranslation("figure.id"), getTranslation("figure.library")]} items={FigureAssets.effectmap.filter((effect) => effect.id).map((effect) => {
                                 return {
                                     id: effect.id.toString(),
                                     values: [effect.id.toString(), effect.library],
@@ -80,7 +81,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                     )
                 },
                 {
-                    icon: "Carry items",
+                    icon: getTranslation("figure.carry_items"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -121,7 +122,7 @@ export default function FigureCatalogDialog({ hidden, onClose }: FigureCatalogDi
                                     })}/>
                             </div>
 
-                            <DialogTable activeId={action?.split('.')[1]} columns={["Item ID", "Name"]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
+                            <DialogTable activeId={action?.split('.')[1]} columns={[getTranslation("figure.item_id"), getTranslation("figure.name")]} items={FigureAssets.avataractions.find((action) => action.id === "CarryItem")?.params.map((param) => {
                                 return {
                                     id: param.value.toString(),
                                     values: [param.value.toString(), getCarryItemTranslation(`handitem_${param.value}`)],

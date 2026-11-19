@@ -12,6 +12,7 @@ import { useUser } from "@UserInterface/Hooks/useUser";
 import { useCallback, useMemo, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type TraxPlaylistsDialogProps = {
     hidden?: boolean;
@@ -22,6 +23,7 @@ export type TraxPlaylistsDialogProps = {
 }
 
 export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlaylistsDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const dialogs = useDialogs();
     const room = useRoomInstance();
@@ -171,14 +173,14 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
     }, [dialogs, data]);
 
     return (
-        <TraxDialog title="Traxmachine" hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{
+        <TraxDialog title={getTranslation("trax.machine")} hidden={hidden} onClose={onClose} width={540} height={330} initialPosition="center" style={{
             display: "flex",
             flexDirection: "column",
             gap: 10
         }}>
             <FlexLayout flex={1} direction="row" style={{ flex: 1 }}>
                 <FlexLayout flex={4}>
-                    <div style={{ textAlign: "center" }}><b>Traxmachine Songs</b></div>
+                    <div style={{ textAlign: "center" }}><b>{getTranslation("trax.songs")}</b></div>
 
                     <TraxDialogListPanel style={{
                         flex: "1 1 0",
@@ -204,7 +206,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                     </TraxDialogListPanelItem>
                                 ))
                             ):(
-                                <div style={{ color: "#97D5CE", textAlign: "center" }}><i>No songs available</i></div>
+                                <div style={{ color: "#97D5CE", textAlign: "center" }}><i>{getTranslation("trax.no_songs")}</i></div>
                             )}
                         </DialogScrollArea>
                     </TraxDialogListPanel>
@@ -216,21 +218,21 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                             containerStyle={{ flex: 1}}
                             tooltip={
                                 (!isFurnitureOwner)?(
-                                    "You must be the owner of this Trax."
+                                    getTranslation("trax.owner_required")
                                 ):(
                                     (activeSong?.userFurnitureId)?(
-                                        "You can not modify a burnt song."
+                                        getTranslation("trax.burned_modify")
                                     ):(
                                         (data.roomFurniture.furnitureData.interactionType !== "trax")?(
-                                            "You need a Trax to create songs."
+                                            getTranslation("trax.trax_required")
                                         ):(
                                             undefined
                                         )
                                     ))}>
-                            Edit song
+                            {getTranslation("trax.edit_song")}
                         </TraxButton>
                         
-                        <TraxButton disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined || data.roomFurniture.furnitureData.interactionType !== "trax"} onClick={handleDeleteSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
+                        <TraxButton disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined || data.roomFurniture.furnitureData.interactionType !== "trax"} onClick={handleDeleteSong}                         tooltip={(!isFurnitureOwner)?(getTranslation("trax.owner_required")):(undefined)}>
                             <div className="sprite_dialog_trax_trash"/>
                         </TraxButton>
                     </FlexLayout>
@@ -240,15 +242,15 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                         onClick={handleCreateSong}
                         tooltip={
                             (!isFurnitureOwner)?(
-                                "You must be the owner of this Trax."
+                                getTranslation("trax.owner_required")
                             ):(
                                 (data.roomFurniture.furnitureData.interactionType !== "trax")?(
-                                    "You need a Trax to create songs."
+                                    getTranslation("trax.trax_required")
                                 ):(
                                     undefined
                                 )
                             )}>
-                        Create a new song
+                        {getTranslation("trax.create_song")}
                     </TraxButton>
                 </FlexLayout>
 
@@ -272,7 +274,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                 </div>
 
                 <FlexLayout flex={4}>
-                    <div style={{ textAlign: "center" }}><b>Playlist</b></div>
+                    <div style={{ textAlign: "center" }}><b>{getTranslation("trax.playlist")}</b></div>
 
                     <FlexLayout direction="row" style={{
                         flex: "3 1 0",
@@ -315,7 +317,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                         </FlexLayout>
                                     ))
                                 ):(
-                                    <div style={{ color: "#97D5CE", textAlign: "center" }}><i>No songs added</i></div>
+                                    <div style={{ color: "#97D5CE", textAlign: "center" }}><i>{getTranslation("trax.no_songs_added")}</i></div>
                                 )}
                             </DialogScrollArea>
                         </TraxDialogListPanel>
@@ -324,14 +326,14 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                     <div style={{ padding: "0 10px" }}>
                         <TraxButton onClick={handleToggle} disabled={data.roomFurniture.data.animation === 0 && !playlist.length}>
                             {(data.roomFurniture.data.animation === 0)?(
-                                "Start Playlist"
+                                getTranslation("trax.start_playlist")
                             ):(
-                                "Stop Playlist"
+                                getTranslation("trax.stop_playlist")
                             )}
                         </TraxButton>
                     </div>
 
-                    <div style={{ textAlign: "center", color: "#97D5CE", opacity: (activeSong)?(1):(0) }}><b>Song Info</b></div>
+                    <div style={{ textAlign: "center", color: "#97D5CE", opacity: (activeSong)?(1):(0) }}><b>{getTranslation("trax.song_info")}</b></div>
 
                     {(activeSong)?(
                         <TraxDialogPanel containerStyle={{ flex: 2 }} style={{ display: "flex", padding: 10 }}>
@@ -343,9 +345,9 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                                 <div style={{ flex: 1 }}/>
 
                                 {(activeSong.userFurnitureId)?(
-                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)} onClick={handleDeleteSong}>Eject CD</TraxButton>
+                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?(getTranslation("trax.owner_required")):(undefined)} onClick={handleDeleteSong}>{getTranslation("trax.eject_cd")}</TraxButton>
                                 ):(
-                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):("Burning your song will make it impossible to edit in the future.")} onClick={handleBurnSong}>Burn Song</TraxButton>
+                                    <TraxButton disabled={!isFurnitureOwner} style={{ paddingLeft: 20, paddingRight: 20}} tooltip={(!isFurnitureOwner)?(getTranslation("trax.owner_required")):(getTranslation("trax.burn_warning"))} onClick={handleBurnSong}>{getTranslation("trax.burn_song")}</TraxButton>
                                 )}
                             </FlexLayout>
                         </TraxDialogPanel>
@@ -357,7 +359,7 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                         <FlexLayout direction="row" gap={4}>
                             <div className="sprite_dialog_trax_cd"/>
 
-                            Insert a Song Disk
+                            {getTranslation("trax.insert_title")}
                         </FlexLayout>
                     </TraxButton>
                 </FlexLayout>

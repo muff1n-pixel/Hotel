@@ -6,6 +6,7 @@ import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
+import { useTranslation } from "react-i18next";
 
 export type BadgeBrowserDialogProps = {
     hidden?: boolean;
@@ -17,6 +18,7 @@ export type BadgeBrowserDialogProps = {
 }
 
 export default function BadgeBrowserDialog({ data, hidden, onClose }: BadgeBrowserDialogProps) {
+    const [getTranslation] = useTranslation("browsers");
     const dialogs = useDialogs();
     const hasEditPermissions = usePermissionAction("badges:edit");
     
@@ -66,7 +68,7 @@ export default function BadgeBrowserDialog({ data, hidden, onClose }: BadgeBrows
 
             table={{
                 flex: [1, 1, 1, 1, 1],
-                columns: ["Badge", "ID", "Image", "Name", "Description"],
+                columns: ["badge", "id", "image", "name", "description"].map((key) => getTranslation(`badge.columns.${key}`)),
                 items: items.map((item) => {
                     return {
                         id: item.id,
@@ -114,9 +116,9 @@ export default function BadgeBrowserDialog({ data, hidden, onClose }: BadgeBrows
 
             hidden={hidden}
             onClose={onClose}>
-            <Input style={{ width: "100%" }} placeholder="ID" value={searchId} onChange={setSearchId}/>
-            <Input style={{ width: "100%" }} placeholder="Image" value={searchImage} onChange={setSearchImage}/>
-            <Input style={{ width: "100%" }} placeholder="Name" value={searchName} onChange={setSearchName}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("badge.id")} value={searchId} onChange={setSearchId}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("badge.image")} value={searchImage} onChange={setSearchImage}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("badge.name")} value={searchName} onChange={setSearchName}/>
         </BrowserDialog>
     );
 }

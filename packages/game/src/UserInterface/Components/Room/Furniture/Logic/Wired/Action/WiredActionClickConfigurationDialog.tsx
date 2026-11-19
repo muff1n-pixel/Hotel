@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import { RoomClickFurnitureConfiguration, RoomClickUserConfiguration } from "@pi
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionClickConfigurationDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [userBehaviour, setUserBehaviour] = useState(data.data.data?.wiredActionClickConfiguration?.userBehaviour ?? RoomClickUserConfiguration.DEFAULT_USER_CLICK_BEHAVIOUR);
@@ -48,20 +50,20 @@ export default function WiredActionClickConfigurationDialog({ data, onClose }: R
             <WiredDivider/>
             
             <WiredSection>
-                <b>When clicking a user:</b>
+                <b>{getTranslation("creator.when_clicking_user")}</b>
 
                 <WiredSelection value={userBehaviour} onChange={setUserBehaviour} items={[
                     {
                         value: RoomClickUserConfiguration.DEFAULT_USER_CLICK_BEHAVIOUR,
-                        label: "Default"
+                        label: getTranslation("creator.default")
                     },
                     {
                         value: RoomClickUserConfiguration.CLICKABLE_USER_BEHAVIOUR,
-                        label: "Click the user, but walk behind the user"
+                        label: getTranslation("creator.click_user_walk_behind")
                     },
                     {
                         value: RoomClickUserConfiguration.UNCLICKABLE_USER_BEHAVIOUR,
-                        label: "Click passes through the user"
+                        label: getTranslation("creator.click_through_user")
                     }
                 ]}/>
             </WiredSection>
@@ -69,16 +71,16 @@ export default function WiredActionClickConfigurationDialog({ data, onClose }: R
             <WiredDivider/>
             
             <WiredSection>
-                <b>When clicking a furni:</b>
+                <b>{getTranslation("creator.when_clicking_furni")}</b>
 
                 <WiredSelection value={furnitureBehaviour} onChange={setFurnitureBehaviour} items={[
                     {
                         value: RoomClickFurnitureConfiguration.DEFAULT_FURNITURE_CLICK_BEHAVIOUR,
-                        label: "Default"
+                        label: getTranslation("creator.default")
                     },
                     {
                         value: RoomClickFurnitureConfiguration.UNCLICKABLE_FURNITURE_CLICK_BEHAVIOUR,
-                        label: "Click passes through the furni"
+                        label: getTranslation("creator.click_through_furni")
                     },
                 ]}/>
             </WiredSection>
@@ -90,8 +92,8 @@ export default function WiredActionClickConfigurationDialog({ data, onClose }: R
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

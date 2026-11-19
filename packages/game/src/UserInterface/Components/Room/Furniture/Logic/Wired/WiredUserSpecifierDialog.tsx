@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../RoomFurnitureLogicDialog";
@@ -19,6 +20,7 @@ export type WiredUserSpecifierDialogData = {
 };
 
 export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [match, setMatch] = useState(data.data.data?.wiredUserSpecifier?.match ?? "all");
@@ -46,27 +48,27 @@ export default function WiredUserSpecifierDialog({ data, onClose }: RoomFurnitur
             <WiredDivider/>
 
             <WiredSection>
-                <b>Select triggering user:</b>
+                <b>{getTranslation("creator.select_triggering_user")}</b>
 
                 <WiredRadio value={match} onChange={setMatch} items={[
                     {
-                        label: "Any user",
+                        label: getTranslation("creator.any_user"),
                         value: "all"
                     },
                     {
-                        label: "Specific user",
+                        label: getTranslation("creator.specific_user"),
                         value: "user"
                     }
                 ]}/>
 
-                <WiredInput placeholder="Enter user name..." readonly={match !== "user"} value={(match === "user")?(matchUser):("")} onChange={setMatchUser}/>
+                <WiredInput placeholder={getTranslation("creator.enter_user_name")} readonly={match !== "user"} value={(match === "user")?(matchUser):("")} onChange={setMatchUser}/>
             </WiredSection>
 
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

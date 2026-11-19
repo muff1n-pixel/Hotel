@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import WiredSlider from "@UserInterface/Common/Dialog/Layouts/Wired/Slider/Wired
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 
 export default function WiredTriggerScoreAchievedDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [team, setTeam] = useState(data.data.data?.wiredTriggerScoreAchieved?.team ?? "any");
@@ -43,12 +45,12 @@ export default function WiredTriggerScoreAchievedDialog({ data, onClose }: RoomF
             <WiredDivider/>
 
             <WiredSection>
-                <b>Pick team</b>
+                <b>{getTranslation("creator.pick_team")}</b>
 
                 <WiredRadio value={team} onChange={setTeam} items={[
                     {
                         value: "any",
-                        label: "Any team"
+                        label: getTranslation("creator.any_team")
                     }
                 ]}/>
 
@@ -60,19 +62,19 @@ export default function WiredTriggerScoreAchievedDialog({ data, onClose }: RoomF
                     <WiredRadio value={team} onChange={setTeam} items={[
                         {
                             value: "red",
-                            label: "Red"
+                            label: getTranslation("creator.team.red")
                         },
                         {
                             value: "green",
-                            label: "Green"
+                            label: getTranslation("creator.team.green")
                         },
                         {
                             value: "blue",
-                            label: "Blue"
+                            label: getTranslation("creator.team.blue")
                         },
                         {
                             value: "yellow",
-                            label: "Yellow"
+                            label: getTranslation("creator.team.yellow")
                         }
                     ]}/>
                 </div>
@@ -81,7 +83,7 @@ export default function WiredTriggerScoreAchievedDialog({ data, onClose }: RoomF
             <WiredDivider/>
 
             <WiredSection>
-                <b>Team has to score: {score}</b>
+                <b>{getTranslation("creator.team_has_to_score", { score })}</b>
 
                 <WiredSlider value={score} onChange={setScore} min={1} max={1000} />
             </WiredSection>
@@ -89,8 +91,8 @@ export default function WiredTriggerScoreAchievedDialog({ data, onClose }: RoomF
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

@@ -8,6 +8,7 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import Selection from "../../../Common/Form/Components/Selection";
 import { ShopPageData, UpdateShopPageData } from "@pixel63/events";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type EditShopPageDialogProps = {
     data: ShopPageData & { shopPages?: ShopPageData[]; } | null;
@@ -18,6 +19,7 @@ export type EditShopPageDialogProps = {
 export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPageDialogProps) {
     const room = useRoomInstance();
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const [icon, setIcon] = useState(data?.icon ?? "");
     const [title, setTitle] = useState(data?.title ?? "");
@@ -72,7 +74,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     }, [dialogs, data, icon, parentId, type, title, description, header, teaser, index, credits, duckets, diamonds, roomId, badgeId]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop page"):("Create shop page")} editMode hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
+        <Dialog title={(data?.id)?(getTranslation("edit.page.edit")):(getTranslation("edit.page.create"))} editMode hidden={hidden} onClose={onClose} width={320} height={680} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",
@@ -83,7 +85,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <b>Page icon</b>
+                    <b>{getTranslation("edit.page.icon")}</b>
 
                     <div style={{
                         display: "flex",
@@ -106,17 +108,17 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                         </div>
                     </div>
 
-                    <b>Page title</b>
+                    <b>{getTranslation("edit.page.title")}</b>
     
-                    <Input placeholder="Title..." value={title} onChange={setTitle}/>
+                    <Input placeholder={getTranslation("edit.page.title_placeholder")} value={title} onChange={setTitle}/>
 
-                    <b>Page description</b>
+                    <b>{getTranslation("edit.page.description")}</b>
     
-                    <Input placeholder="Description..." value={description} onChange={setDescription}/>
+                    <Input placeholder={getTranslation("edit.page.description_placeholder")} value={description} onChange={setDescription}/>
 
-                    <b>Parent page</b>
+                    <b>{getTranslation("edit.page.parent")}</b>
 
-                    <Selection value={parentId} items={([{value: null, label: "None"}] as any).concat(...(data?.shopPages?.map((shopPage) => {
+                    <Selection value={parentId} items={([{value: null, label: getTranslation("edit.none")}] as any).concat(...(data?.shopPages?.map((shopPage) => {
                         return {
                             value: shopPage.id,
                             label: (
@@ -134,13 +136,13 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                         }
                     }) ?? [])).filter((item: any) => item.value !== data?.id)} onChange={(value: string) => setParentId(value)}/>
 
-                    <b>Page type</b>
+                    <b>{getTranslation("edit.page.type")}</b>
     
                     <Input placeholder="default" value={type} onChange={setType}/>
 
                     {(type === "bundle") && (
                         <Fragment>
-                            <b>Bundle price</b>
+                            <b>{getTranslation("edit.page.bundle_price")}</b>
 
                             <div style={{
                                 display: "flex",
@@ -199,7 +201,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                                 </div>
                             </div>
 
-                            <b>Badge ID</b>
+                            <b>{getTranslation("edit.page.badge_id")}</b>
 
                             <div style={{
                                 display: "flex",
@@ -209,7 +211,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                                 <Input value={badgeId} onChange={(value) => setBadgeId(value)}/>
                             </div>
 
-                            <b>Room ID</b>
+                            <b>{getTranslation("edit.page.room_id")}</b>
 
                             <div style={{
                                 display: "flex",
@@ -218,14 +220,14 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                             }}>
                                 <Input value={roomId} onChange={(value) => setRoomId(value)}/>
 
-                                <DialogButton disabled={!room || room.information?.type !== "bundle"} onClick={() => room && setRoomId(room.id)}>Use current room</DialogButton>
+                                <DialogButton disabled={!room || room.information?.type !== "bundle"} onClick={() => room && setRoomId(room.id)}>{getTranslation("edit.page.use_current_room")}</DialogButton>
                             </div>
             
-                            <div>The selected room must have 'bundle' set as it's room type.</div>
+                            <div>{getTranslation("edit.page.bundle_room_requirement")}</div>
                         </Fragment>
                     )}
                     
-                    <b>Page header</b>
+                    <b>{getTranslation("edit.page.header")}</b>
 
                     {(header) && (
                         <div>
@@ -235,7 +237,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     
                     <Input placeholder="x_header.gif" value={header} onChange={setHeader}/>
 
-                    <b>Page teaser</b>
+                    <b>{getTranslation("edit.page.teaser")}</b>
 
                     {(teaser) && (
                         <div style={{
@@ -248,7 +250,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
     
                     <Input placeholder="x_teaser.gif" value={teaser} onChange={setTeaser}/>
 
-                    <b>Page index</b>
+                    <b>{getTranslation("edit.page.index")}</b>
     
                     <Input type={"number"} placeholder="0" value={index.toString()} onChange={(value) => setIndex(parseInt(value))}/>
 
@@ -263,7 +265,7 @@ export default function EditShopPageDialog({ hidden, data, onClose }: EditShopPa
                         justifyContent: "flex-end"
                     }}>
                         <DialogButton onClick={handleUpdate}>
-                            {(data?.id)?("Update page"):("Create page")}
+                            {(data?.id)?(getTranslation("edit.update")):(getTranslation("edit.create"))}
                         </DialogButton>
                     </div>
                 </div>

@@ -294,26 +294,26 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                 <Selection style={{ flex: 1 }} value={type} items={[
                     {
                         value: null,
-                        label: "Any type"
+                        label: getTranslation("furniture_filter.any_type")
                     },
                     {
                         value: "floor",
-                        label: "Floor items"
+                        label: getTranslation("furniture_filter.floor_items")
                     },
                     {
                         value: "wall",
-                        label: "Wall items"
+                        label: getTranslation("furniture_filter.wall_items")
                     }
                 ]} onChange={setType}/>
 
                 <Selection disabled style={{ flex: 1 }} value={location} items={[
                     {
                         value: "inventory",
-                        label: "In inventory"
+                        label: getTranslation("furniture_filter.inventory")
                     },
                     {
                         value: "rooms",
-                        label: "In rooms"
+                        label: getTranslation("furniture_filter.rooms")
                     }
                 ]} onChange={setLocation}/>
             </FlexLayout>

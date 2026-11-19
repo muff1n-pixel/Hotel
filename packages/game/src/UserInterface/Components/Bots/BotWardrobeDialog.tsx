@@ -6,6 +6,7 @@ import { FigureConfigurationData, RoomBotsData, UpdateRoomBotData, UserBotData }
 import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type BotWardrobeDialogProps = {
     data: UserBotData;
@@ -14,6 +15,7 @@ export type BotWardrobeDialogProps = {
 }
 
 export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
+    const [getTranslation] = useTranslation("bots");
     const dialogs = useDialogs();
     const room = useRoomInstance();
 
@@ -61,7 +63,7 @@ export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
     }
 
     return (
-        <FigureWardrobeDialog title={"Bot Wardrobe"} header={props.data.name ?? "Bot"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
+        <FigureWardrobeDialog title={getTranslation("wardrobe.title")} header={props.data.name ?? getTranslation("wardrobe.fallback_name")} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
             <div style={{
                 flex: 1,
 
@@ -77,7 +79,7 @@ export default function BotWardrobeDialog(props: BotWardrobeDialogProps) {
                 </div>
 
                 <div style={{ width: "100%" }}>
-                    <DialogButton onClick={handleApply}>Save my looks</DialogButton>
+                    <DialogButton onClick={handleApply}>{getTranslation("wardrobe.save_looks")}</DialogButton>
                 </div>
             </div>
         </FigureWardrobeDialog>

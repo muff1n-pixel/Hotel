@@ -9,6 +9,7 @@ import { EnterRandomRoomData, EnterRoomData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import NavigatorSearch from "./NavigatorSearch";
 import useShopPageLink from "../Shop/Hooks/useShopPageLink";
+import { useTranslation } from "react-i18next";
 
 export type NavigatorDialogProps = {
     hidden?: boolean;
@@ -20,6 +21,7 @@ export type NavigatorDialogProps = {
 }
 
 export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDialogProps) {
+    const [getTranslation] = useTranslation("navigator");
     const elementRef = useRef<HTMLDivElement>(null);
 
     const { addUniqueDialog, closeDialog } = useDialogs();
@@ -32,7 +34,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
     const { openShopPage } = useShopPageLink("roomevent");
 
     return (
-        <Dialog title="Navigator" hidden={hidden} onClose={onClose} width={430} height={530} style={{
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={430} height={530} style={{
             overflow: "visible"
         }}>
             <DialogTabs initialActiveIndex={1} withoutHeader onChange={(index) => {
@@ -41,7 +43,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                 setFilter(undefined);
             }} tabs={[
                 {
-                    icon: "Public",
+                    icon: getTranslation("tabs.public"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -68,7 +70,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                     ),
                 },
                 {
-                    icon: "All Rooms",
+                    icon: getTranslation("tabs.all"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -95,7 +97,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                     ),
                 },
                 {
-                    icon: "Events",
+                    icon: getTranslation("tabs.events"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -122,7 +124,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
                     ),
                 },
                 {
-                    icon: "My Rooms",
+                    icon: getTranslation("tabs.mine"),
                     element: (
                         <div style={{
                             flex: 1,
@@ -183,7 +185,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
 
                             color: "#FFFFFF"
                         }}>
-                            <b>Create a room</b>
+                            <b>{getTranslation("banners.create_room")}</b>
                         </div>
                     </div>
 
@@ -220,7 +222,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
 
                                 color: "#FFFFFF"
                             }}>
-                                <b>Somewhere new</b>
+                                <b>{getTranslation("banners.somewhere_new")}</b>
                             </div>
                         </div>
                     ):(
@@ -256,7 +258,7 @@ export default function NavigatorDialog({ hidden, data, onClose }: NavigatorDial
 
                                 color: "#FFFFFF"
                             }}>
-                                <b>Promote event</b>
+                                <b>{getTranslation("banners.promote_event")}</b>
                             </div>
                         </div>
                     )}

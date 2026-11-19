@@ -1,5 +1,6 @@
 import { CSSProperties, PropsWithChildren } from "react";
 import useDialogMovement from "../../Hooks/useDialogMovement";
+import { useTranslation } from "react-i18next";
 
 export type WiredDialogProps = PropsWithChildren & {
     hidden?: boolean;
@@ -10,6 +11,7 @@ export type WiredDialogProps = PropsWithChildren & {
 };
 
 export default function WiredDialog({ children, initialPosition, hidden, onClose }: WiredDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const { elementRef, onDialogFocus, onMouseDown } = useDialogMovement((initialPosition === "corner")?(
         {
             left: 200,
@@ -82,7 +84,7 @@ export default function WiredDialog({ children, initialPosition, hidden, onClose
 
                         position: "relative"
                     }} onMouseDown={onMouseDown}>
-                        Wired Furni
+                        {getTranslation("creator.wired_furni")}
 
                         <div className="sprite_dialog_wired_close" style={{
                             position: "absolute",

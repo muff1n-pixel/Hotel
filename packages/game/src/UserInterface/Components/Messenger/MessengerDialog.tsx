@@ -15,6 +15,7 @@ import { useMessenger } from "@UserInterface/Hooks/useMessenger";
 import { useMessengerUnread } from "@UserInterface/Hooks/useMessengerUnread";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useTranslation } from "react-i18next";
 
 export type MessengerDialogProps = {
     hidden?: boolean;
@@ -25,6 +26,7 @@ export type MessengerDialogProps = {
 }
 
 export default function MessengerDialog({ hidden, data, onClose }: MessengerDialogProps) {
+    const [getTranslation] = useTranslation("messenger");
     const user = useUser();
     const messenger = useMessenger();
     const messengerUnread = useMessengerUnread();
@@ -103,7 +105,7 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
     }
 
     return (
-        <Dialog title={`Your open chats (${messenger.length})`} hidden={hidden} initialPosition="center" onClose={onClose} width={300} height={380} style={{
+        <Dialog title={getTranslation("open_chats", { count: messenger.length })} hidden={hidden} initialPosition="center" onClose={onClose} width={300} height={380} style={{
             overflow: "visible"
         }}>
             <DialogContent style={{
@@ -145,7 +147,7 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
                     <FlexLayout direction="row" gap={3} style={{
                         marginBottom: -13
                     }}>
-                        <p style={{ background: "#ECEAE0", padding: "0px 4px" }}>You + {activeTab.friend.name}</p>
+                        <p style={{ background: "#ECEAE0", padding: "0px 4px" }}>{getTranslation("you_plus_friend", { name: activeTab.friend.name })}</p>
                     </FlexLayout>
                 </div>
 
@@ -184,10 +186,10 @@ export default function MessengerDialog({ hidden, data, onClose }: MessengerDial
                             return null;
                         })}
 
-                        <MessengerStatus>This is the start of your conversation</MessengerStatus>
+                        <MessengerStatus>{getTranslation("start")}</MessengerStatus>
                     </DialogScrollArea>
 
-                    <Input readonly={!activeTab.friend.online} placeholder="Type your message..." value={message} onChange={setMessage} onSubmit={handleSubmit}/>
+                    <Input readonly={!activeTab.friend.online} placeholder={getTranslation("message_placeholder")} value={message} onChange={setMessage} onSubmit={handleSubmit}/>
                 </div>
             </DialogContent>
         </Dialog>

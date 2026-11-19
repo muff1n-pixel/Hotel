@@ -10,6 +10,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type TraxPlaylistsSongDialogProps = {
     hidden?: boolean;
@@ -20,6 +21,7 @@ export type TraxPlaylistsSongDialogProps = {
 }
 
 export default function TraxPlaylistsSongDialog({ hidden, data, onClose }: TraxPlaylistsSongDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
     const room = useRoomInstance();
 
@@ -55,12 +57,12 @@ export default function TraxPlaylistsSongDialog({ hidden, data, onClose }: TraxP
     }, [activeSong, data, dialogs, onClose, room]);
 
     return (
-        <TraxDialog title="Insert a song disk" hidden={hidden} onClose={onClose} width={260} height={220} initialPosition="center" style={{
+        <TraxDialog title={getTranslation("trax.insert_title")} hidden={hidden} onClose={onClose} width={260} height={220} initialPosition="center" style={{
             display: "flex",
             flexDirection: "column",
             gap: 10
         }}>
-            <div><b>Your song disks:</b></div>
+            <div><b>{getTranslation("trax.your_song_disks")}</b></div>
 
             <TraxDialogListPanel style={{
                 flex: "1 1 0",
@@ -80,18 +82,18 @@ export default function TraxPlaylistsSongDialog({ hidden, data, onClose }: TraxP
                                     <div className="sprite_dialog_trax_cd"/>
 
                                     <div>
-                                        {song.name ?? "Untitled Song"}
+                                        {song.name ?? getTranslation("trax.untitled_song")}
                                     </div>
                                 </FlexLayout>
                             </TraxDialogListPanelItem>
                         ))
                     ):(
-                        <div style={{ color: "#97D5CE", textAlign: "center" }}><i>You have no song disks in your inventory</i></div>
+                        <div style={{ color: "#97D5CE", textAlign: "center" }}><i>{getTranslation("trax.no_song_disks")}</i></div>
                     )}
                 </DialogScrollArea>
             </TraxDialogListPanel>
 
-            <TraxButton containerStyle={{ alignSelf: "flex-end" }} onClick={handleInsert}>Insert</TraxButton>
+            <TraxButton containerStyle={{ alignSelf: "flex-end" }} onClick={handleInsert}>{getTranslation("trax.insert")}</TraxButton>
         </TraxDialog>
     );
 }

@@ -2,6 +2,7 @@ import { FurnitureData } from "@pixel63/events";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment } from "react/jsx-runtime";
+import { useTranslation } from "react-i18next";
 
 export type FurnitureBrowserSelectionProps = {
     furniture?: FurnitureData[];
@@ -11,6 +12,7 @@ export type FurnitureBrowserSelectionProps = {
 
 export default function FurnitureBrowserSelection({ allowMultiple, furniture, onChange }: FurnitureBrowserSelectionProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("furniture");
 
     return (
         <Fragment>
@@ -18,18 +20,18 @@ export default function FurnitureBrowserSelection({ allowMultiple, furniture, on
                 display: "flex",
                 justifyContent: "space-between"
             }}>
-                <b>Furniture</b>
+                <b>{getTranslation("selection.title")}</b>
 
                 {(furniture?.length === 1) && (
                     <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                         dialogs.addUniqueDialog("edit-furniture", { ...furniture[0], onClose: onChange });
                     }}>
-                        Edit furniture
+                        {getTranslation("selection.edit")}
                     </div>
                 )}
             </div>
 
-            <Input readonly placeholder="Furniture" value={(furniture?.length === 1)?(`${furniture[0].type}${(furniture[0].color)?(`*${furniture[0].color}`):("")}`):(`${furniture?.length} items`)}/>
+            <Input readonly placeholder={getTranslation("selection.placeholder")} value={(furniture?.length === 1)?(`${furniture[0].type}${(furniture[0].color)?(`*${furniture[0].color}`):("")}`):(getTranslation("selection.items", { count: furniture?.length ?? 0 }))}/>
                 
             <div style={{
                 display: "flex",
@@ -42,7 +44,7 @@ export default function FurnitureBrowserSelection({ allowMultiple, furniture, on
                         onSelect: onChange
                     });
                 }}>
-                    Open furniture browser
+                    {getTranslation("selection.open_browser")}
                 </div>
             </div>
         </Fragment>

@@ -5,6 +5,7 @@ import RoomThumbnail from "../Thumbnail/RoomThumbnail";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export type RoomLinkDialogProps = {
     hidden?: boolean;
@@ -12,6 +13,7 @@ export type RoomLinkDialogProps = {
 }
 
 export default function RoomLinkDialog({ hidden, onClose }: RoomLinkDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const url = useMemo(() => {
@@ -31,7 +33,7 @@ export default function RoomLinkDialog({ hidden, onClose }: RoomLinkDialogProps)
     }
 
     return (
-        <Dialog title="Room link" hidden={hidden} onClose={onClose} initialPosition="center" width={450} height={"auto"} assumedHeight={170}>
+        <Dialog title={getTranslation("link.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={450} height={"auto"} assumedHeight={170}>
             <DialogContent>
                 <FlexLayout direction="row">
                     <div style={{
@@ -43,9 +45,9 @@ export default function RoomLinkDialog({ hidden, onClose }: RoomLinkDialogProps)
                     </div>
 
                     <FlexLayout>
-                        <b>Share your room!</b>
+                        <b>{getTranslation("link.share")}</b>
 
-                        <p>Copy this link to a forum or your friends chat! Anyone who follows the link will enter this room directly.</p>
+                        <p>{getTranslation("link.description")}</p>
 
                         <Input readonly value={url}/>
                     </FlexLayout>

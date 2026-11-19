@@ -9,6 +9,7 @@ import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import DialogTable from "../../Common/Dialog/Components/Table/DialogTable";
 import PetPaletteSelection from "./PetPaletteSelection";
+import { useTranslation } from "react-i18next";
 
 export type EditPetDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type EditPetDialogProps = {
 }
 
 export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogProps) {
+    const [getTranslation] = useTranslation("pets");
     const [type, setType] = useState<string>(data?.type ?? "");
 
     const [name, setName] = useState<string>(data?.name ?? "");
@@ -89,7 +91,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
     }, [ data, onClose, type, name, breed, breedIndex, palettes ]);
 
     return (
-        <Dialog title="Pet Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={820} height={340} style={{
+        <Dialog title={getTranslation("editor.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={820} height={340} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -124,11 +126,11 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Pet type</b>
+                        <b>{getTranslation("editor.type")}</b>
 
                         <Input value={type} onChange={setType}/>
 
-                        <b>Pet name</b>
+                        <b>{getTranslation("editor.name")}</b>
 
                         <Input value={name} onChange={setName}/>
                         
@@ -138,10 +140,10 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                             justifyContent: "space-between",
                             alignItems: "center"
                         }}>
-                            <b>Pet breed name</b>
+                            <b>{getTranslation("editor.breed_name")}</b>
 
                             {(breeds.length > 0) && (
-                                <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => setNewBreed(!newBreed)}>{(newBreed)?("Show list"):("New breed")}</div>
+                                <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => setNewBreed(!newBreed)}>{(newBreed)?(getTranslation("editor.show_list")):(getTranslation("editor.new_breed"))}</div>
                             )}
                         </div>
 
@@ -161,7 +163,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
 
                         {(!breeds.length || newBreed) && (
                             <Fragment>
-                                <b>Pet breed index</b>
+                                <b>{getTranslation("editor.breed_index")}</b>
 
                                 <Input type="number" value={breedIndex?.toString()} onChange={(value) => setBreedIndex(parseInt(value))}/>
                             </Fragment>
@@ -175,11 +177,11 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Pet palette</b>
+                        <b>{getTranslation("editor.palette")}</b>
 
                         <DialogTable
                             activeId={paletteIndex}
-                            columns={["Tags", "Palette ID"]}
+                            columns={[getTranslation("editor.tags"), getTranslation("editor.palette_id")]}
                             flex={[3, 2]}
                             items={palettes.map((palette, index) => {
                                 return {
@@ -217,7 +219,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                                     gap: 5
                                 }}>
                                     <div style={{ flex: 1 }}>
-                                        <i>Tags</i>
+                                        <i>{getTranslation("editor.tags")}</i>
 
                                         <Input value={paletteTags} onChange={(tags) => {
                                             const mutatedPalettes = [...palettes];
@@ -230,7 +232,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                                     </div>
 
                                     <div style={{ flex: 1}}>
-                                        <i>Palette</i>
+                                        <i>{getTranslation("editor.palette")}</i>
 
                                         <PetPaletteSelection type={type} breed={breedIndex} tags={palettes[paletteIndex].tags} value={palettes[paletteIndex].paletteId} onChange={(paletteId) => {
                                             const mutatedPalettes = [...palettes];
@@ -246,7 +248,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                                     fontSize: 12,
                                     lineHeight: 1.5
                                 }}>
-                                    <i>Palette color</i>
+                                    <i>{getTranslation("editor.palette_color")}</i>
                                     
                                     <Input value={palettes[paletteIndex].color} onChange={(value) => {
                                         const mutatedPalettes = [...palettes];
@@ -260,7 +262,7 @@ export default function EditPetDialog({ hidden, data, onClose }: EditPetDialogPr
                         )}
 
                         <div>
-                            <DialogButton onClick={handleApply}>{(data?.id)?("Update"):("Create")}</DialogButton>
+                            <DialogButton onClick={handleApply}>{getTranslation((data?.id)?"editor.update":"editor.create")}</DialogButton>
                         </div>
                     </div>
                 </div>

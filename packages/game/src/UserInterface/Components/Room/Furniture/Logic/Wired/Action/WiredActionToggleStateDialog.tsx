@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionToggleStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [toggleType, setToggleType] = useState(data.data.data?.wiredActionToggleState?.toggleType ?? "next");
@@ -49,16 +51,16 @@ export default function WiredActionToggleStateDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection>
-                <b>Choose toggle type:</b>
+                <b>{getTranslation("creator.choose_toggle_type")}</b>
 
                 <WiredRadio value={toggleType} onChange={setToggleType} items={[
                     {
                         value: "next",
-                        label: "Toggle to the next state"
+                        label: getTranslation("creator.toggle_next_state")
                     },
                     {
                         value: "previous",
-                        label: "Toggle to the previous state"
+                        label: getTranslation("creator.toggle_previous_state")
                     }
                 ]}/>
             </WiredSection>
@@ -74,8 +76,8 @@ export default function WiredActionToggleStateDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

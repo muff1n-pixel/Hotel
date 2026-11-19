@@ -1,5 +1,6 @@
 import { FigureConfigurationData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useTranslation } from "react-i18next";
 
 export type FurnitureGiftProps = {
     name: string;
@@ -10,6 +11,8 @@ export type FurnitureGiftProps = {
 };
 
 export default function FurnitureGift({ name, message, figureConfiguration, onChange }: FurnitureGiftProps) {
+    const [getTranslation] = useTranslation("furniture");
+
     return (
         <div className="sprite_users_gift" style={{
             position: "relative"
@@ -47,7 +50,7 @@ export default function FurnitureGift({ name, message, figureConfiguration, onCh
                 padding: 5,
                 boxSizing: "border-box"
             }}>
-                <textarea readOnly={!onChange} placeholder={(onChange)?("Write your best wishes here!"):("No message left.")} value={message} onChange={(event) => onChange?.((event.currentTarget as HTMLTextAreaElement).value)} style={{
+                <textarea readOnly={!onChange} placeholder={getTranslation((onChange)?("gift.write_wishes"):("gift.no_message"))} value={message} onChange={(event) => onChange?.((event.currentTarget as HTMLTextAreaElement).value)} style={{
                     flex: 1,
 
                     outline: "none",

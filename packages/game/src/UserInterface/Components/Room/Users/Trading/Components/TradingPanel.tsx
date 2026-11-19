@@ -2,6 +2,7 @@ import { RoomUserData, UserInventoryFurnitureData } from "@pixel63/events";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import { Fragment } from "react/jsx-runtime";
+import { useTranslation } from "react-i18next";
 
 export type TradingPanelProps = {
     user?: RoomUserData;
@@ -11,12 +12,13 @@ export type TradingPanelProps = {
 };
 
 export default function TradingPanel({ user, locked, userFurniture, onDelete }: TradingPanelProps) {
+    const [getTranslation] = useTranslation("room");
     return (
         <FlexLayout direction="column">
             {(user)?(
-                <div><b>{user.name}</b> is offering</div>
+                <div><b>{user.name}</b> {getTranslation("trading.offering")}</div>
             ):(
-                <div><b>You</b> are offering</div>
+                <div><b>{getTranslation("trading.you")}</b> {getTranslation("trading.offering")}</div>
             )}
 
             <FlexLayout direction="row" align="flex-end">

@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import RoomCameraEditorRenderer from "@UserInterface/Components/Room/Camera/RoomCameraEditorRenderer";
 import DialogSlider from "@UserInterface/Common/Dialog/Components/Slider/DialogSlider";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type RoomCameraOptions = {
     zoomed: boolean;
@@ -141,6 +142,7 @@ const ROOM_CAMERA_FRAMES = [
 ]
 
 export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCameraEditorDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const [options, setOptions] = useState<RoomCameraOptions>({
         zoomed: false
     });
@@ -157,7 +159,7 @@ export default function RoomCameraEditorDialog({ data, hidden, onClose }: RoomCa
     );
 
     return (
-        <Dialog title="Room Camera Editor" hidden={hidden} onClose={onClose} width={580} height={460}>
+        <Dialog title={getTranslation("camera.editor.title")} hidden={hidden} onClose={onClose} width={580} height={460}>
             <DialogTabs
                 style={{
                     marginLeft: 8
@@ -486,7 +488,7 @@ export function RoomCameraEditorPreview({ activeFilter, activeFrame, image, opti
                 }}>
                     <div className="sprite_room_camera_save"/>
 
-                    Save to computer
+                    {getTranslation("camera.editor.save")}
                 </FlexLayout>
 
                 <FlexLayout direction="row" align="center" style={{
@@ -494,7 +496,7 @@ export function RoomCameraEditorPreview({ activeFilter, activeFrame, image, opti
                 }} onClick={() => onOptionsChanged({ ...options, zoomed: !options.zoomed })}>
                     <div className="sprite_room_camera_zoom"/>
 
-                    Zoom {(options.zoomed)?("out"):("in")}
+                    {getTranslation("camera.editor.zoom")} {(options.zoomed)?(getTranslation("camera.editor.zoom_out")):(getTranslation("camera.editor.zoom_in"))}
                 </FlexLayout>
 
             </FlexLayout>
@@ -502,7 +504,7 @@ export function RoomCameraEditorPreview({ activeFilter, activeFrame, image, opti
             <div style={{ height: 6 }}/>
 
             <FlexLayout direction="row">
-                <DialogButton style={{ flex: 1 }} onClick={onClose}>Cancel</DialogButton>
+                <DialogButton style={{ flex: 1 }} onClick={onClose}>{getTranslation("camera.editor.cancel")}</DialogButton>
 
                 <DialogButton style={{ flex: 1 }} color="green" onClick={() => {
                     onClose?.();

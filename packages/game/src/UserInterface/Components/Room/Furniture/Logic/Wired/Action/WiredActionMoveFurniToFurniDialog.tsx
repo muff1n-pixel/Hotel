@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import { UpdateRoomFurnitureData } from "@pixel63/events";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionMoveFurniToFurniDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [currentFurniPicker, setCurrentFurniPicker] = useState("primary");
@@ -48,7 +50,7 @@ export default function WiredActionMoveFurniToFurniDialog({ data, onClose }: Roo
 
             <WiredDivider/>
 
-            <WiredFurniturePicker label="The moving furni" enabled={currentFurniPicker === "primary"} value={furnitureIds} onChange={setFurnitureIds} maxFurniture={20} grayscale={{
+            <WiredFurniturePicker label={getTranslation("creator.moving_furni")} enabled={currentFurniPicker === "primary"} value={furnitureIds} onChange={setFurnitureIds} maxFurniture={20} grayscale={{
                 background: "#FFFFFF",
                 foreground: "#82A7F6",
                 alpha: 0.8
@@ -65,13 +67,13 @@ export default function WiredActionMoveFurniToFurniDialog({ data, onClose }: Roo
                     marginTop: "0.5em",
                     padding: "0.15em"
                 }}>
-                    {(currentFurniPicker === "primary")?("Currently selecting"):("Select")} moving furni
+                    {getTranslation(currentFurniPicker === "primary" ? "creator.currently_selecting_moving_furni" : "creator.select_moving_furni")}
                 </WiredButton>
             </WiredFurniturePicker>
 
             <WiredDivider/>
 
-            <WiredFurniturePicker label="The target furni" enabled={currentFurniPicker === "secondary"} value={targetFurnitureIds} onChange={setTargetFurnitureIds} maxFurniture={20} grayscale={{
+            <WiredFurniturePicker label={getTranslation("creator.target_furni")} enabled={currentFurniPicker === "secondary"} value={targetFurnitureIds} onChange={setTargetFurnitureIds} maxFurniture={20} grayscale={{
                 background: "#FFFFFF",
                 foreground: "#B4D19A",
                 alpha: 0.8
@@ -88,7 +90,7 @@ export default function WiredActionMoveFurniToFurniDialog({ data, onClose }: Roo
                     marginTop: "0.5em",
                     padding: "0.15em"
                 }}>
-                    {(currentFurniPicker === "secondary")?("Currently selecting"):("Select")} target furni
+                    {getTranslation(currentFurniPicker === "secondary" ? "creator.currently_selecting_target_furni" : "creator.select_target_furni")}
                 </WiredButton>
             </WiredFurniturePicker>
 
@@ -99,8 +101,8 @@ export default function WiredActionMoveFurniToFurniDialog({ data, onClose }: Roo
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

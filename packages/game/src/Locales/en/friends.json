@@ -1,3 +1,31 @@
 {
-    "no_friends": "No friends in this category"
+    "no_friends": "No friends in this category",
+    "title": "Friends",
+    "tabs": {
+        "my_friends": "My friends"
+    },
+    "search": {
+        "placeholder": "Search users...",
+        "no_results": "No users found."
+    },
+    "list": {
+        "all": "All friends ({{count}})",
+        "none_online": "You have no friends online!",
+        "remove": "Remove friend",
+        "offline": "Offline friends ({{count}})",
+        "incoming": "Incoming friend requests ({{count}})",
+        "outgoing": "Outgoing friend requests ({{count}})",
+        "last_seen": "Last seen",
+        "never": "never"
+    },
+    "user": {
+        "online": "Online right now",
+        "last_seen": "Last seen",
+        "never": "never"
+    },
+    "relationship": {
+        "add_friends": "Add friends",
+        "with_others_one": "{{name}} and {{count}} other",
+        "with_others_other": "{{name}} and {{count}} others"
+    }
 }

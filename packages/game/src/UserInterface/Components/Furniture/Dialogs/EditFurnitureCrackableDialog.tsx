@@ -10,6 +10,7 @@ import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { webSocketClient } from "@Game/index";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type EditFurnitureCrackableDialogProps = {
     hidden?: boolean;
@@ -21,6 +22,7 @@ export type EditFurnitureCrackableDialogProps = {
 
 export default function EditFurnitureCrackableDialog({ hidden, data, onClose }: EditFurnitureCrackableDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("furniture");
 
     const [requiredClicks, setRequiredClicks] = useState<number>(0);
     const [rewards, setRewards] = useState<FurnitureCrackableRewardData[]>([]);
@@ -67,7 +69,7 @@ export default function EditFurnitureCrackableDialog({ hidden, data, onClose }: 
     }, [requiredClicks, rewards]);
 
     return (
-        <Dialog title="Furniture Crackable Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={420} style={{
+        <Dialog title={getTranslation("crackable.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={420} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -118,14 +120,14 @@ export default function EditFurnitureCrackableDialog({ hidden, data, onClose }: 
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Required clicks</b>
+                        <b>{getTranslation("crackable.required_clicks")}</b>
 
                         <Input type="number" value={requiredClicks.toString()} onChange={(value) => setRequiredClicks(parseInt(value))}/>
 
-                        <b>Furniture rewards</b>
+                        <b>{getTranslation("crackable.rewards")}</b>
 
                         <DialogTable
-                            columns={["Furniture", "Chance"]}
+                            columns={[getTranslation("crackable.furniture"), getTranslation("crackable.chance")]}
                             items={rewards.map((reward, index) => {
                                 return {
                                     id: reward.id,
@@ -191,7 +193,7 @@ export default function EditFurnitureCrackableDialog({ hidden, data, onClose }: 
                             )}/>
 
                         <div style={{ alignSelf: "flex-end"}}>
-                            <DialogButton onClick={handleSubmit}>Update clickable data</DialogButton>
+                            <DialogButton onClick={handleSubmit}>{getTranslation("crackable.update")}</DialogButton>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import GroupBadgeSymbolEditor, { groupBadgeSymbols } from "@UserInterface/Components/Groups/Editor/GroupBadgeSymbolEditor";
 import { useEffect, useState } from "react";
 import GroupBadgeBaseEditor, { groupBadgeBases } from "@UserInterface/Components/Groups/Editor/GroupBadgeBaseEditor";
+import { useTranslation } from "react-i18next";
 
 export type GroupBadgeEditorProps = {
     data?: GroupBadgeData;
@@ -13,6 +14,7 @@ export type GroupBadgeEditorProps = {
 };
 
 export default function GroupBadgeEditor({ data, onChange }: GroupBadgeEditorProps) {
+    const [getTranslation] = useTranslation("groups");
     const [symbolPicking, setSymbolPicking] = useState<1 | 2 | 3 | 4>();
     const [basePicking, setBasePicking] = useState<boolean>();
 
@@ -30,7 +32,7 @@ export default function GroupBadgeEditor({ data, onChange }: GroupBadgeEditorPro
     return (
         <FlexLayout flex={1} direction="row">
             <FlexLayout direction="column">
-                <b>Group badge</b>
+                <b>{getTranslation("badge_editor.title")}</b>
 
                 <DialogPanel color="silver" style={{
                     aspectRatio: 1
@@ -44,9 +46,9 @@ export default function GroupBadgeEditor({ data, onChange }: GroupBadgeEditorPro
             {(!symbolPicking && !basePicking)?(
                 <FlexLayout flex={1} direction="column">
                     <FlexLayout direction="row" justify="space-between">
-                        <b style={{ flex: 1 }}>Symbol</b>
-                        <b style={{ flex: 1 }}>Position</b>
-                        <b style={{ flex: 2 }}>Color</b>
+                        <b style={{ flex: 1 }}>{getTranslation("badge_editor.symbol")}</b>
+                        <b style={{ flex: 1 }}>{getTranslation("badge_editor.position")}</b>
+                        <b style={{ flex: 2 }}>{getTranslation("badge_editor.color")}</b>
                     </FlexLayout>
 
                     <FlexLayout gap={2} direction="column">

@@ -1,6 +1,7 @@
 import Dialog from "../../../../Common/Dialog/Dialog";
 import DialogContent from "../../../../Common/Dialog/Components/DialogContent";
 import DialogTable from "../../../../Common/Dialog/Components/Table/DialogTable";
+import { useTranslation } from "react-i18next";
 
 export type RoomChatCommandsDialogProps = {
     hidden?: boolean;
@@ -8,8 +9,9 @@ export type RoomChatCommandsDialogProps = {
 }
 
 export default function RoomChatCommandsDialog({ hidden, onClose }: RoomChatCommandsDialogProps) {
+    const [getTranslation] = useTranslation("room");
     return (
-        <Dialog title="Chat commands" hidden={hidden} onClose={onClose} width={420} height={280} initialPosition="center">
+        <Dialog title={getTranslation("chat.commands.title")} hidden={hidden} onClose={onClose} width={420} height={280} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -17,58 +19,58 @@ export default function RoomChatCommandsDialog({ hidden, onClose }: RoomChatComm
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <DialogTable flex={[1, 3]} columns={["Command", "Description"]} items={[
+                    <DialogTable flex={[1, 3]} columns={[getTranslation("chat.commands.command"), getTranslation("chat.commands.description")]} items={[
                         {
                             id: ":commands",
-                            values: [":commands", "Shows you this dialog!"]
+                            values: [":commands", getTranslation("chat.commands.commands")]
                         },
                         {
                             id: ":furni",
-                            values: [":furni", "Opens a dialog with a list of all furniture in the room."]
+                            values: [":furni", getTranslation("chat.commands.furni")]
                         },
                         {
                             id: ":dance",
-                            values: [":dance [0-4]", "Starts dancing or stop dancing if no dance provided."]
+                            values: [":dance [0-4]", getTranslation("chat.commands.dance")]
                         },
                         {
                             id: ":enable",
-                            values: [":enable [id]", "Equips the enable id, if no provided, opens a dialog with all enables."]
+                            values: [":enable [id]", getTranslation("chat.commands.enable")]
                         },
                         {
                             id: ":carry",
-                            values: [":carry [id]", "Equips the carry item, if no provided, opens a dialog with all items."]
+                            values: [":carry [id]", getTranslation("chat.commands.carry")]
                         },
                         {
                             id: ":sign",
-                            values: [":sign [id]", "Equips the sign (1-17)."]
+                            values: [":sign [id]", getTranslation("chat.commands.sign")]
                         },
                         {
                             id: ":floor",
-                            values: [":floor", "Opens the floorplan editor."]
+                            values: [":floor", getTranslation("chat.commands.floor")]
                         },
                         {
                             id: ":sit",
-                            values: [":sit", "Sits your Habbo down!"]
+                            values: [":sit", getTranslation("chat.commands.sit")]
                         },
                         {
                             id: ":stand",
-                            values: [":stand", "Stands your Habbo up!"]
+                            values: [":stand", getTranslation("chat.commands.stand")]
                         },
                         {
                             id: ":wave",
-                            values: [":wave", "Waves to everyone in the room!"]
+                            values: [":wave", getTranslation("chat.commands.wave")]
                         },
                         {
                             id: ":speed",
-                            values: [":speed [0-2]", "Sets the room's roller speed, 0 is never moving and 2 is moving instantly."]
+                            values: [":speed [0-2]", getTranslation("chat.commands.speed")]
                         },
                         {
                             id: ":teleport",
-                            values: [":teleport", "Enables teleportation for yourself."]
+                            values: [":teleport", getTranslation("chat.commands.teleport")]
                         },
                         {
                             id: ":pickall",
-                            values: [":pickall", "(Dangerous) Picks up all furniture from the room."]
+                            values: [":pickall", getTranslation("chat.commands.pickall")]
                         }
                     ]}/>
                 </div>

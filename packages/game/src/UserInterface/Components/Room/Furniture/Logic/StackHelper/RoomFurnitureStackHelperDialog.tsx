@@ -13,6 +13,7 @@ import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink"
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import RoomItem from "@Client/Room/Items/RoomItem";
 import RoomFurnitureItem from "@Client/Room/Items/Furniture/RoomFurnitureItem";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureStackHelperDialogData = {
     furniture: RoomInstanceFurniture;
@@ -20,6 +21,7 @@ export type RoomFurnitureStackHelperDialogData = {
 };
 
 export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [height, setHeight] = useState(data.data.data?.stackHelper?.height ?? data.item.position?.depth ?? 0);
@@ -131,7 +133,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
     }
 
     return (
-        <Dialog title="Stacking Helper" hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center" onClick={() => {
+        <Dialog title={getTranslation("furniture.stack.title")} hidden={hidden} onClose={onClose} width={360} assumedHeight={180} height="auto" initialPosition="center" onClick={() => {
             if(clientInstance.roomInstance.value) {
                 clientInstance.roomInstance.value.roomRenderer.focusedItem.value = data.item;
             }
@@ -153,7 +155,7 @@ export default function RoomFurnitureStackHelperDialog({ data, hidden, onClose }
                         </FlexLayout>
 
                         <FlexLayout flex={1} direction="row" align="center" justify="center">
-                            <div style={{ color: "#6A6A69" }}>Height:</div>
+                            <div style={{ color: "#6A6A69" }}>{getTranslation("furniture.stack.height")}</div>
 
                             <Input style={{ width: 40 }} type="number" value={height.toString()} onChange={(value) => setHeight(window.isNaN(parseFloat(value))?(0):(parseFloat(value)))}/>
                         </FlexLayout>

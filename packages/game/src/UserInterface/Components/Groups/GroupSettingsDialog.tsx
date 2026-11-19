@@ -15,6 +15,7 @@ import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useGroup from "@UserInterface/Hooks/useGroup";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type GroupSettingsDialogProps = {
     data?: string;
@@ -25,6 +26,7 @@ export type GroupSettingsDialogProps = {
 export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSettingsDialogProps) {
     const group = useGroup(data);
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("groups");
 
     const [name, setName] = useState<string>();
     const [description, setDescription] = useState<string>();
@@ -83,20 +85,20 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
     }
 
     return (
-        <Dialog title="Habbo Group" hidden={hidden} onClose={onClose} initialPosition="center" width={400} height={520}>
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} initialPosition="center" width={400} height={520}>
             <DialogTabs
                 tabs={[
                     {
-                        icon: "Identity",
+                        icon: getTranslation("settings.identity"),
                         header: {
-                            title: "Group identity",
-                            description: "Change your group identity",
+                            title: getTranslation("settings.identity_title"),
+                            description: getTranslation("settings.identity_description"),
                             icon: (<div className="sprite_room_groups_step_1"/>),
                         },
                         element: (
                             <FlexLayout flex={1} direction="row">
                                 <FlexLayout direction="column">
-                                    <b>Group badge</b>
+                                    <b>{getTranslation("settings.badge_label")}</b>
                     
                                     <DialogPanel color="silver" style={{
                                         aspectRatio: 1
@@ -107,16 +109,16 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                     </DialogPanel>
 
                                     <b>
-                                        <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", group.id)}>Members: {group.membersCount}</DialogLink>
+                                        <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", group.id)}>{getTranslation("settings.members", { count: group.membersCount })}</DialogLink>
                                     </b>
                                 </FlexLayout>
                                 
                                 <FlexLayout flex={1}>
-                                    <b>Name of your group:</b>
+                                    <b>{getTranslation("settings.name")}</b>
                         
                                     <Input value={name} onChange={setName}/>
                                     
-                                    <b>Description of your group:</b>
+                                    <b>{getTranslation("settings.description")}</b>
                         
                                     <TextArea value={description} onChange={setDescription} style={{ height: 60 }}/>
                                 </FlexLayout>
@@ -124,10 +126,10 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                         )
                     },
                     {
-                        icon: "Badge",
+                        icon: getTranslation("settings.badge"),
                         header: {
-                            title: "Group badge",
-                            description: "Change your group badge",
+                            title: getTranslation("settings.badge_title"),
+                            description: getTranslation("settings.badge_description"),
                             icon: (<div className="sprite_room_groups_step_2"/>),
                         },
                         element: (
@@ -135,10 +137,10 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                         )
                     },
                     {
-                        icon: "Colors",
+                        icon: getTranslation("settings.colors"),
                         header: {
-                            title: "Group colors",
-                            description: "Change your group colors",
+                            title: getTranslation("settings.colors_title"),
+                            description: getTranslation("settings.colors_description"),
                             icon: (<div className="sprite_room_groups_step_3"/>),
                         },
                         element: (
@@ -146,17 +148,17 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                         )
                     },
                     {
-                        icon: "Settings",
+                        icon: getTranslation("settings.preferences"),
                         header: {
-                            title: "Group settings",
-                            description: "Change your group settings",
+                            title: getTranslation("settings.settings_title"),
+                            description: getTranslation("settings.settings_description"),
                             icon: (<div className="sprite_room_groups_step_4"/>),
                         },
                         element: (
                             <FlexLayout flex={1} direction="column">
                                 <FlexLayout direction="row">
-                                    <b style={{ flex: 1, textAlign: "center" }}>Group type</b>
-                                    <b style={{ flex: 1, textAlign: "center" }}>Group rights</b>
+                                    <b style={{ flex: 1, textAlign: "center" }}>{getTranslation("settings.type")}</b>
+                                    <b style={{ flex: 1, textAlign: "center" }}>{getTranslation("settings.rights")}</b>
                                 </FlexLayout>
                                 
                                 <FlexLayout direction="row">
@@ -168,8 +170,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Public</b>
-                                                        <div>Any one can join the group.</div>
+                                                        <b>{getTranslation("settings.public")}</b>
+                                                        <div>{getTranslation("settings.public_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "public"
@@ -177,8 +179,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Exclusive</b>
-                                                        <div>Users can request to join the group.</div>
+                                                        <b>{getTranslation("settings.exclusive")}</b>
+                                                        <div>{getTranslation("settings.exclusive_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "exclusive"
@@ -186,8 +188,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Private</b>
-                                                        <div>No one can join the group.</div>
+                                                        <b>{getTranslation("settings.private")}</b>
+                                                        <div>{getTranslation("settings.private_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "private"
@@ -203,8 +205,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Owner only</b>
-                                                        <div>No one are given rights to the homeroom.</div>
+                                                        <b>{getTranslation("settings.owner_only")}</b>
+                                                        <div>{getTranslation("settings.owner_only_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "owner"
@@ -212,8 +214,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Members</b>
-                                                        <div>All members are given rights to the homeroom.</div>
+                                                        <b>{getTranslation("settings.all_members")}</b>
+                                                        <div>{getTranslation("settings.all_members_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "members"
@@ -221,8 +223,8 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                                             {
                                                 label: (
                                                     <FlexLayout direction="column" gap={2}>
-                                                        <b>Admins</b>
-                                                        <div>Admins are given rights to the homeroom.</div>
+                                                        <b>{getTranslation("settings.admins")}</b>
+                                                        <div>{getTranslation("settings.admins_description")}</div>
                                                     </FlexLayout>
                                                 ),
                                                 value: "admins"
@@ -236,7 +238,7 @@ export default function GroupSettingsDialog({ data, hidden, onClose }: GroupSett
                 ]}
                 children={(
                     <FlexLayout align="flex-end">
-                        <DialogButton onClick={handleUpdate}>Update group</DialogButton>
+                        <DialogButton onClick={handleUpdate}>{getTranslation("settings.update")}</DialogButton>
                     </FlexLayout>
                 )}/>
         </Dialog>

@@ -8,6 +8,10 @@
         "friends": "Friends",
         "relationships": "Relationships",
         "groups": "Groups",
-        "achievement_score": "Achievement score"
+        "achievement_score": "Achievement score",
+        "achievement_score_value": "Achievement score: {{score}}",
+        "relationships_with_others_one": "{{name}} and {{count}} other",
+        "relationships_with_others_other": "{{name}} and {{count}} others",
+        "never": "Never"
     }
 }

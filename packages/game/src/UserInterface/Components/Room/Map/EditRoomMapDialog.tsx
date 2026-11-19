@@ -10,6 +10,7 @@ import Input from "@UserInterface/Common/Form/Components/Input";
 import { webSocketClient } from "@Game/index";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type EditRoomMapDialogProps = {
     data?: {
@@ -20,6 +21,7 @@ export type EditRoomMapDialogProps = {
 }
 
 export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMapDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const { openUniqueDialog, closeDialog } = useDialogs();
 
     const room = useRoomInstance();
@@ -98,7 +100,7 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
     }, [confirmDelete, data, onClose, room]);
 
     return (
-        <Dialog title="Room Map Editor" editMode hidden={hidden} onClose={onClose} initialPosition="center" width={320} assumedHeight={500} height={"auto"}>
+        <Dialog title={getTranslation("map.title")} editMode hidden={hidden} onClose={onClose} initialPosition="center" width={320} assumedHeight={500} height={"auto"}>
             <DialogContent style={{
                 gap: 10
             }}>
@@ -120,24 +122,24 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
                         }
                     });
                 }}>
-                    Open floorplan editor
+                    {getTranslation("map.open_floorplan")}
                 </DialogButton>
 
-                <b>Index</b>
-                <p>This is used to sort the map in the room creation dialog.</p>
+                <b>{getTranslation("map.index")}</b>
+                <p>{getTranslation("map.index_description")}</p>
 
                 <Input type="number" value={index.toString()} onChange={(value) => setIndex(parseInt(value))}/>
                 
-                <b>Membership required</b>
+                <b>{getTranslation("map.membership_required")}</b>
 
                 <Selection value={membership} onChange={setMembership} items={[
                     {
                         value: undefined,
-                        label: "None"
+                        label: getTranslation("map.membership_none")
                     },
                     {
                         value: "habboclub",
-                        label: "Habbo Club"
+                        label: getTranslation("map.membership_hc")
                     }
                 ]}/>
 
@@ -147,14 +149,14 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
                 }}>
                     {(data?.map?.id)?(
                         <DialogButton style={{ flex: 1 }} color="red" onClick={handleDelete}>
-                            {(!confirmDelete)?("Delete map"):("Confirm deletion")}
+                            {(!confirmDelete)?(getTranslation("map.delete")):(getTranslation("map.confirm_delete"))}
                         </DialogButton>
                     ):(
                         <div style={{ flex: 1 }}/>
                     )}
 
                     <DialogButton style={{ flex: 1 }} onClick={handleUpdate}>
-                        {(data?.map?.id)?("Update map"):("Create map")}
+                        {(data?.map?.id)?(getTranslation("map.update")):(getTranslation("map.create"))}
                     </DialogButton>
                 </div>
             </DialogContent>

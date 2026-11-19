@@ -9,6 +9,18 @@
     },
 
     "place_in_room": "Placera i rummet",
+    "achievement_score": "Prestationspoäng: {{score}}",
+    "badge": {
+        "clear": "Ta bort märke",
+        "wear": "Bär märke"
+    },
+    "furniture_filter": {
+        "any_type": "Alla typer",
+        "floor_items": "Golvföremål",
+        "wall_items": "Väggföremål",
+        "inventory": "I förrådet",
+        "rooms": "I rum"
+    },
 
     "empty": {
         "category_is_empty": "Den här kategorin verkar vara tom!",

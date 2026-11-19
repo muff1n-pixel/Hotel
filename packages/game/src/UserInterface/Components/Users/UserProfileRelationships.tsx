@@ -31,12 +31,12 @@ export default function UserProfileRelationships({ relationships }: UserProfileR
                 cursor: "pointer"
             }} onClick={() => dialogs.addUniqueDialog("user-profile", relationships[0].userId, relationships[0].userId)}>
                 {(!relationships.length)?(
-                    "Add friends"
+                    getFriendTranslation("relationship.add_friends")
                 ):(
                     (relationships.length === 1)?(
                         relationships[0].name
                     ):(
-                        relationships[0].name + " and " + (relationships.length - 1) + "others"
+                        getFriendTranslation("relationship.with_others", { name: relationships[0].name, count: relationships.length - 1 })
                     )
                 )}
 

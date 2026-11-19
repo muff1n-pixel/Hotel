@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [getCarryItemTranslation] = useTranslation("carryitems");
@@ -56,9 +57,9 @@ export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection>
-                <b>Bot Name</b>
+                <b>{getTranslation("creator.bot_name")}</b>
 
-                <WiredCheckbox value={giveHanditemUsingBot} onChange={setGiveHanditemUsingBot} label="Give hand item using bot"/>
+                <WiredCheckbox value={giveHanditemUsingBot} onChange={setGiveHanditemUsingBot} label={getTranslation("creator.give_hand_item_using_bot")}/>
 
                 {(giveHanditemUsingBot) && (
                     <WiredInput value={botName} onChange={setBotName}/>
@@ -68,7 +69,7 @@ export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection>
-                <b>Hand Item</b>
+                <b>{getTranslation("creator.hand_item")}</b>
 
                 <WiredSelection value={handitem} onChange={setHanditem} items={
                     [0, 2, 5, 7, 8, 9, 10, 27 ].map((handitem) => ({
@@ -85,8 +86,8 @@ export default function WiredActionGiveHanditemDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

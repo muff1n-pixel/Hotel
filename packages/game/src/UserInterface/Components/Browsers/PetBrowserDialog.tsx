@@ -7,6 +7,7 @@ import { usePermissionAction } from "../../Hooks/usePermissionAction";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import PetImage from "@UserInterface/Components/Pets/PetImage";
 import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
+import { useTranslation } from "react-i18next";
 
 export type PetBrowserDialogProps = {
     hidden?: boolean;
@@ -18,6 +19,7 @@ export type PetBrowserDialogProps = {
 }
 
 export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDialogProps) {
+    const [getTranslation] = useTranslation("browsers");
     const dialogs = useDialogs();
     const hasEditPetsPermissions = usePermissionAction("pets:edit");
     
@@ -67,7 +69,7 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
 
             table={{
                 flex: [1, 1, 1, 2],
-                columns: ["Image", "Type", "Breed", "Palettes"],
+                columns: ["image", "type", "breed", "palettes"].map((key) => getTranslation(`pet.columns.${key}`)),
                 items: pets.map((pet) => {
                     return {
                         id: pet.id,
@@ -126,9 +128,9 @@ export default function PetBrowserDialog({ data, hidden, onClose }: PetBrowserDi
 
             hidden={hidden}
             onClose={onClose}>
-            <Input style={{ width: "100%" }} placeholder="ID" value={searchId} onChange={setSearchId}/>
-            <Input style={{ width: "100%" }} placeholder="Type" value={searchType} onChange={setSearchType}/>
-            <Input style={{ width: "100%" }} placeholder="Breed" value={searchBreed} onChange={setSearchBreed}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("pet.id")} value={searchId} onChange={setSearchId}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("pet.type")} value={searchType} onChange={setSearchType}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("pet.breed")} value={searchBreed} onChange={setSearchBreed}/>
         </BrowserDialog>
     );
 }

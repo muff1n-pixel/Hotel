@@ -5,6 +5,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import "./TraxDialogSet.css";
 import { useCallback } from "react";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import { useTranslation } from "react-i18next";
 
 export type TraxDialogSetProps = {
     audioContext: React.RefObject<AudioContext>;
@@ -17,6 +18,7 @@ export type TraxDialogSetProps = {
 }
 
 export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, onDragSlot }: TraxDialogSetProps) {
+    const [getTranslation] = useTranslation("room");
     const handlePlayback = useCallback((set: FurnitureTraxSetData, index: number) => {
         if(!set.furniture) {
             return;
@@ -72,7 +74,7 @@ export default function TraxDialogSet({ audioContext, slot, set, onEjectClick, o
                 {(set) && (
                     <div>
                         <div className="trax-dialog-set-name">{set.furniture?.name}</div>
-                        <div className="trax-dialog-set-eject">Eject</div>
+                        <div className="trax-dialog-set-eject">{getTranslation("trax.eject")}</div>
                     </div>
                 )}
             </FlexLayout>

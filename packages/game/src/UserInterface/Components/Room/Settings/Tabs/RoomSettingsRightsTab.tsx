@@ -6,8 +6,10 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import { webSocketClient } from "@Game/index";
 import { ClearRoomRightsData, SetRoomUserRightsData } from "@pixel63/events";
 import useRoomRights from "@UserInterface/Hooks/useRoomRights";
+import { useTranslation } from "react-i18next";
 
 export default function RoomSettingsRightsTab() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const users = useRoomRights(room?.information?.id);
 
@@ -17,7 +19,7 @@ export default function RoomSettingsRightsTab() {
 
     return (
         <FlexLayout flex={1}>
-            <b>Users with rights</b>
+            <b>{getTranslation("settings.rights.title")}</b>
             
             <DialogTable style={{ flex: 1 }} items={users.map((user) => ({
                 id: user.id,

@@ -12,6 +12,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import FigureConfigurationHelper from "@pixel63/shared/Figure/FigureConfigurationHelper";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureMannequinDialogData = {
     furniture: RoomInstanceFurniture;
@@ -19,6 +20,7 @@ export type RoomFurnitureMannequinDialogData = {
 };
 
 export default function RoomFurnitureMannequinDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
 
     const figureConfiguration = useMemo(() => {
@@ -66,7 +68,7 @@ export default function RoomFurnitureMannequinDialog({ data, hidden, onClose }: 
                             <p>{data.furnitureData.description}</p>
                         )}
 
-                        <p style={{ marginTop: 20 }}><i>This is a permanent action. Once you equip it, your existing looks will be changed.</i></p>
+                        <p style={{ marginTop: 20 }}><i>{getTranslation("furniture.mannequin.warning")}</i></p>
                     </div>
                 )
             }}/>
@@ -77,11 +79,11 @@ export default function RoomFurnitureMannequinDialog({ data, hidden, onClose }: 
                 alignItems: "center"
             }}>
                 <DialogLink onClick={onClose}>
-                    Cancel
+                    {getTranslation("furniture.mannequin.cancel")}
                 </DialogLink>
 
                 <DialogButton onClick={handleBind}>
-                    Equip clothing
+                    {getTranslation("furniture.mannequin.equip")}
                 </DialogButton>
             </DialogContent>
         </Dialog>

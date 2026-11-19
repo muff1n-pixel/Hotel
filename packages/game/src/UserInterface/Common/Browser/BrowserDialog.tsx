@@ -3,6 +3,7 @@ import Dialog from "../Dialog/Dialog";
 import DialogContent from "../Dialog/Components/DialogContent";
 import DialogTable, { DialogTableProps } from "../Dialog/Components/Table/DialogTable";
 import DialogButton from "../Dialog/Components/Button/DialogButton";
+import { useTranslation } from "react-i18next";
 
 export type BrowserDialogProps = {
     activeId: string | string[] | null;
@@ -22,8 +23,10 @@ export type BrowserDialogProps = {
 }
 
 export default function BrowserDialog({ preview, count, table, page, activeId, hidden, children, onSelect, onPageChange, onClose }: BrowserDialogProps) {
+    const [getTranslation] = useTranslation("common");
+
     return (
-        <Dialog title="Browser" hidden={hidden} onClose={onClose} width={780} height={440} initialPosition="center">
+        <Dialog title={getTranslation("browser")} hidden={hidden} onClose={onClose} width={780} height={440} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -72,7 +75,7 @@ export default function BrowserDialog({ preview, count, table, page, activeId, h
                                 <div style={{ cursor: "pointer" }} onClick={() => onPageChange?.(Math.max(page - 1, 0))}><b>{"<"}</b></div>
                             )}
 
-                            <div>Page {page + 1} / {Math.floor((count) / 20) + 1}</div>
+                            <div>{getTranslation("page_count", { current: page + 1, total: Math.floor((count) / 20) + 1 })}</div>
 
                             {(count > 20) && (
                                 <div style={{ cursor: "pointer" }} onClick={() => onPageChange?.(Math.min(page + 1, Math.floor((count) / 20)))}><b>{">"}</b></div>
@@ -89,7 +92,7 @@ export default function BrowserDialog({ preview, count, table, page, activeId, h
                                         onSelect?.(activeId);
                                         onClose?.();
                                     }
-                                }}>Select</DialogButton>
+                                }}>{getTranslation("select")}</DialogButton>
                             </div>
                         )}
                     </div>

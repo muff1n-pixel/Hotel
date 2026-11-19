@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { CSSProperties, ReactNode, useEffect, useRef } from "react";
 import WiredSection from "./WiredSection";
 import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
@@ -23,6 +24,7 @@ export type WiredFurniturePickerProps = {
 };
 
 export default function WiredFurniturePicker({ label, restrictedToFurnitureTypes, maxFurniture, value, onChange, enabled = true, grayscale = { foreground: "#999999", background: "#FFFFFF" }, children, style }: WiredFurniturePickerProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const furnitureIds = useRef<string[]>(value);
@@ -97,9 +99,9 @@ export default function WiredFurniturePicker({ label, restrictedToFurnitureTypes
 
     return (
         <WiredSection style={style}>
-            <b>{label ?? "Pick furnis"} [{value.length}/{maxFurniture}]</b>
+            <b>{label ?? getTranslation("creator.pick_furnis")} [{value.length}/{maxFurniture}]</b>
 
-            <div>You must pick one or more furnis for this entry. You can select or deselect a furni in your room by clicking / tapping it.</div>
+            <div>{getTranslation("creator.furniture_picker_help")}</div>
 
             {children}
         </WiredSection>

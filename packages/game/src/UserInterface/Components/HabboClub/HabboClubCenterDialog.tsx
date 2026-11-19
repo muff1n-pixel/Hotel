@@ -10,6 +10,7 @@ import { Fragment } from "react/jsx-runtime";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
+import { useTranslation } from "react-i18next";
 
 export type HabboClubCenterDialogProps = {
     hidden?: boolean;
@@ -17,6 +18,7 @@ export type HabboClubCenterDialogProps = {
 }
 
 export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCenterDialogProps) {
+    const [getTranslation] = useTranslation("habboclub");
     const user = useUser();
     const userHabboClub = useUserHabboClub(true);
 
@@ -24,7 +26,7 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
     const { openShopPage: openGiftShopPage } = useShopPageLink("habbogift");
 
     return (
-        <Dialog title="Habbo Club Center" hidden={hidden} onClose={onClose} width={459} height={600} initialPosition="center">
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={459} height={600} initialPosition="center">
             <div style={{
                 position: "relative"
             }}>
@@ -70,7 +72,7 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                 }}>
                     <div className="sprite_habboclub_logo"/>
 
-                    <DialogButton color="green" onClick={openShopPage} style={{ width: "max-content" }}>{((userHabboClub?.active))?("Buy more Habbo Club"):("Buy Habbo Club")}</DialogButton>
+                    <DialogButton color="green" onClick={openShopPage} style={{ width: "max-content" }}>{getTranslation((userHabboClub?.active)?"purchase.buy_more":"purchase.buy")}</DialogButton>
                 </div>
             </div>
 
@@ -100,18 +102,18 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                     )}
                     
                     <FlexLayout gap={2} direction="column">
-                        <b>Status: {(userHabboClub?.active)?("Active"):("Inactive")}</b>
+                        <b>{getTranslation("status.label")}: {(userHabboClub?.active)?(getTranslation("status.active")):(getTranslation("status.inactive"))}</b>
 
                         {(userHabboClub?.active)?(
                             <FlexLayout direction="column" gap={0}>
-                                <p>Time left: <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
+                                <p>{getTranslation("status.time_left")} <b>{DateHelper.getFormattedTimeUntilDate(userHabboClub.expiresAt)}</b></p>
 
-                                <p>First joined: <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
+                                <p>{getTranslation("status.first_joined")} <b>{DateHelper.getFormattedDate(userHabboClub.memberSince)}</b></p>
                                 
-                                <p>Current streak: <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
+                                <p>{getTranslation("status.current_streak")} <b>{DateHelper.getFormattedTimeFromDays(userHabboClub.membershipStreak)}</b></p>
                             </FlexLayout>
                         ):(
-                            <p>You are not a current Habbo Club member. Check out what you're missing...</p>
+                            <p>{getTranslation("status.not_member")}</p>
                         )}
                     </FlexLayout>
                 </div>
@@ -130,9 +132,9 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                     <FlexLayout flex={1} style={{
                         padding: 20
                     }}>
-                        <b style={{ fontSize: 17 }}>HC Payday</b>
+                        <b style={{ fontSize: 17 }}>{getTranslation("payday.title")}</b>
 
-                        <p>HC members get credits back from catalog purchases each month.</p>
+                        <p>{getTranslation("payday.description")}</p>
                     </FlexLayout>
 
                     <div className="sprite_habboclub_sticker" style={{
@@ -156,12 +158,12 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                             padding: 15,
                             paddingBottom: 0
                         }}>
-                            <b style={{ fontSize: 17 }}>HC Payday is in:</b>
+                            <b style={{ fontSize: 17 }}>{getTranslation("payday.in")}</b>
 
                             <FlexLayout direction="row" align="center">
                                 <div className="sprite_habboclub_payday_time"/>
 
-                                <p style={{ fontSize: 14 }}>13 d.</p>
+                                <p style={{ fontSize: 14 }}>{getTranslation("payday.days", { days: 13 })}</p>
                             </FlexLayout>
                         </FlexLayout>
 
@@ -169,7 +171,7 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                             paddingLeft: 15,
                             paddingBottom: 12
                         }}>
-                            <b style={{ fontSize: 14 }}>You'll be getting:</b>
+                            <b style={{ fontSize: 14 }}>{getTranslation("payday.getting")}</b>
 
                             <CurrencyPanel credits={userHabboClub?.cashback}/>
                         </FlexLayout>
@@ -190,13 +192,13 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                     padding: 20
                 }}>
                     <FlexLayout flex={1} gap={5}>
-                        <b style={{ fontSize: 17 }}>Monthly HC gift</b>
+                        <b style={{ fontSize: 17 }}>{getTranslation("gift.title")}</b>
 
-                        <p>HC members get a free gift every month!</p>
+                        <p>{getTranslation("gift.description")}</p>
                     </FlexLayout>
 
                     <FlexLayout align="center" justify="center">
-                        <DialogButton color="blue" onClick={openGiftShopPage}>View gifts</DialogButton>
+                        <DialogButton color="blue" onClick={openGiftShopPage}>{getTranslation("gift.view")}</DialogButton>
                     </FlexLayout>
                 </div>
 
@@ -209,12 +211,12 @@ export default function HabboClubCenterDialog({ hidden, onClose }: HabboClubCent
                     padding: "10px 20px"
                 }}>
                     <FlexLayout flex={1} gap={5}>
-                        <b style={{ fontSize: 17, color: "#4A8EB1" }}>More HC benefits:</b>
+                        <b style={{ fontSize: 17, color: "#4A8EB1" }}>{getTranslation("benefits.title")}</b>
 
-                        <p>- Massive clothing & colors selection</p>
-                        <p>- Extra dances & chat styles</p>
-                        <p>- Earn double duckets</p>
-                        <p>- Plus loads more...</p>
+                        <p>{getTranslation("benefits.clothing")}</p>
+                        <p>{getTranslation("benefits.dances")}</p>
+                        <p>{getTranslation("benefits.duckets")}</p>
+                        <p>{getTranslation("benefits.more")}</p>
                     </FlexLayout>
                 </div>
 

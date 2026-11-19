@@ -12,6 +12,7 @@ import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData } from "@pi
 import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 import RoomCreationMap from "@UserInterface/Components/Navigator/Rooms/RoomCreationMap";
+import { useTranslation } from "react-i18next";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type RoomCreationDialogProps = {
 }
 
 export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDialogProps) {
+    const [getTranslation] = useTranslation("navigator");
     const { addUniqueDialog, closeDialog } = useDialogs();
 
     const roomMaps = useRoomMaps();
@@ -74,7 +76,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
-        <Dialog title="Room Creation" editMode={editMode} onEditClick={hasRoomMapsPermission && (() => setEditMode(!editMode))} hidden={hidden} onClose={onClose} width={600} height={360} style={{
+        <Dialog title={getTranslation("creation.title")} editMode={editMode} onEditClick={hasRoomMapsPermission && (() => setEditMode(!editMode))} hidden={hidden} onClose={onClose} width={600} height={360} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -99,15 +101,15 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                             flexDirection: "column",
                             gap: 10
                         }}>
-                            <b>Room name</b>
+                            <b>{getTranslation("creation.name")}</b>
 
-                            <Input placeholder="My room name" value={name} onChange={setName}/>
+                            <Input placeholder={getTranslation("creation.name_placeholder")} value={name} onChange={setName}/>
                             
-                            <b>Room description</b>
+                            <b>{getTranslation("creation.description")}</b>
 
-                            <Input placeholder="My room description" value={description} onChange={setDescription}/>
+                            <Input placeholder={getTranslation("creation.description_placeholder")} value={description} onChange={setDescription}/>
 
-                            <b>Room category</b>
+                            <b>{getTranslation("creation.category")}</b>
 
                             <Selection value={category} items={roomCategories?.map((category) => {
                                 return {
@@ -116,7 +118,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                 };
                             }) ?? []} onChange={(value) => setCategory(value as string)}/>
                             
-                            <b>Maximum amount of visitors</b>
+                            <b>{getTranslation("creation.maximum_visitors")}</b>
             
                             <Selection value={maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
                                 return {
@@ -126,7 +128,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                             }) ?? []} onChange={(value) => setMaxUsers(value as number)}/>
                         </div>
 
-                        <DialogButton onClick={onCreateRoom}>Create room</DialogButton>
+                        <DialogButton onClick={onCreateRoom}>{getTranslation("creation.create")}</DialogButton>
                     </div>
 
                     <div style={{
@@ -137,7 +139,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                         gap: 10
                     }}>
                         <div>
-                            <b>Choose room layout</b>
+                            <b>{getTranslation("creation.choose_layout")}</b>
                         </div>
 
                         <DialogScrollArea>

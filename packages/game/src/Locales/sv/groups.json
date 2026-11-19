@@ -1,0 +1,71 @@
+{
+    "title": "Habbo-grupp",
+    "card": {
+        "created": "Skapad",
+        "by": "av",
+        "members": "Medlemmar: {{count}}",
+        "go_to_homeroom": "Gå till gruppens rum",
+        "buy_furniture": "Köp gruppmöbler",
+        "join": "Gå med i grupp",
+        "leave": "Lämna grupp",
+        "edit": "Redigera grupp"
+    },
+    "settings": {
+        "identity": "Identitet",
+        "badge": "Märke",
+        "colors": "Färger",
+        "preferences": "Inställningar",
+        "identity_title": "Gruppidentitet",
+        "identity_description": "Ändra gruppens identitet",
+        "badge_title": "Gruppmärke",
+        "badge_description": "Ändra gruppens märke",
+        "colors_title": "Gruppfärger",
+        "colors_description": "Ändra gruppens färger",
+        "settings_title": "Gruppinställningar",
+        "settings_description": "Ändra gruppens inställningar",
+        "badge_label": "Gruppmärke",
+        "members": "Medlemmar: {{count}}",
+        "name": "Gruppens namn:",
+        "description": "Gruppens beskrivning:",
+        "type": "Grupptyp",
+        "rights": "Grupprättigheter",
+        "public": "Offentlig",
+        "public_description": "Alla kan gå med i gruppen.",
+        "exclusive": "Exklusiv",
+        "exclusive_description": "Användare kan begära att gå med i gruppen.",
+        "private": "Privat",
+        "private_description": "Ingen kan gå med i gruppen.",
+        "owner_only": "Endast ägaren",
+        "owner_only_description": "Ingen får rättigheter till grupprummet.",
+        "all_members": "Medlemmar",
+        "all_members_description": "Alla medlemmar får rättigheter till grupprummet.",
+        "admins": "Administratörer",
+        "admins_description": "Administratörer får rättigheter till grupprummet.",
+        "update": "Uppdatera grupp"
+    },
+    "members": {
+        "title": "{{name}}s medlemmar",
+        "search": "Sök efter användare...",
+        "show_all": "Visa alla medlemmar",
+        "show_admins": "Visa endast administratörer",
+        "joined": "Gick med",
+        "decline": "Avböj",
+        "accept": "Acceptera",
+        "page": "Sida {{current}} / {{total}}"
+    },
+    "badge_editor": {
+        "title": "Gruppmärke",
+        "symbol": "Symbol",
+        "position": "Position",
+        "color": "Färg"
+    },
+    "color_editor": {
+        "title": "Gruppfärger",
+        "primary": "Primär",
+        "secondary": "Sekundär"
+    },
+    "discovery": {
+        "description": "Habbo-grupper är ett bra sätt att bli känd på internet!",
+        "button": "Kolla in de hetaste grupperna"
+    }
+}

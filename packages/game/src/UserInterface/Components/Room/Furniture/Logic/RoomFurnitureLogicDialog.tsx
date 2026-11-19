@@ -62,6 +62,7 @@ import WiredConditionFurniHasUsersDialog from "@UserInterface/Components/Room/Fu
 import RoomFurnitureExternalImageDialog from "@UserInterface/Components/Room/Furniture/Logic/ExternalImage/RoomFurnitureExternalImageDialog";
 import WiredActionLogDialog from "@UserInterface/Components/Room/Furniture/Logic/Wired/Action/WiredActionLogDialog";
 import RoomFurnitureGiftDialog from "./Gift/RoomFurnitureGiftDialog";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureLogicDialogProps = {
     data: RoomFurniture;
@@ -74,6 +75,8 @@ export type RoomFurnitureLogicDialogData = {
 };
 
 export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
+
     switch(props.data.furnitureData.interactionType) {
         case "dimmer":
             return (<RoomFurnitureDimmerDialog {...props}/>);
@@ -280,7 +283,7 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
                 <WiredSection style={{ flexDirection: "row" }}>
                     <div style={{ flex: 1 }} />
 
-                    <WiredButton onClick={props.onClose}>Cancel</WiredButton>
+                    <WiredButton onClick={props.onClose}>{getTranslation("creator.cancel")}</WiredButton>
                 </WiredSection>
             </WiredDialog>
         );

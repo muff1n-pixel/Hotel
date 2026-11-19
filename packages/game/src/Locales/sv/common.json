@@ -1,5 +1,12 @@
 {
     "yes": "Ja",
     "no": "Nej",
-    "page": "Sida"
+    "page": "Sida",
+    "page_count": "Sida {{current}} / {{total}}",
+    "browser": "Bläddra",
+    "select": "Välj",
+    "hue": "Nyans",
+    "saturation": "Mättnad",
+    "brightness": "Ljusstyrka",
+    "empty": "Tom"
 }

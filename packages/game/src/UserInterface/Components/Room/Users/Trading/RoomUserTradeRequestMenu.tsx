@@ -6,6 +6,7 @@ import { RequestRoomUserTradingData } from "@pixel63/events";
 import { useState } from "react";
 import "./RoomUserTradeRequestMenu.css";
 import RoomUser from "@Client/Room/Users/RoomUser";
+import { useTranslation } from "react-i18next";
 
 export type RoomUserTradeRequestMenuProps = {
     user: RoomUser;
@@ -13,6 +14,7 @@ export type RoomUserTradeRequestMenuProps = {
 }
 
 export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTradeRequestMenuProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const position = useRoomItemScreenPosition(user.item);
 
@@ -73,7 +75,7 @@ export default function RoomUserTradeRequestMenu({ user, onClose }: RoomUserTrad
                         <div style={{
                             fontFamily: "Ubuntu Medium"
                         }}>
-                            <div>Trade request from</div>
+                            <div>{getTranslation("trading.request_from")}</div>
                             
                             <UserLink id={user.data.id} name={user.data.name}/>
                         </div>

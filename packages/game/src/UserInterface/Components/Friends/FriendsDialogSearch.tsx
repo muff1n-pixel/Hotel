@@ -4,8 +4,10 @@ import { webSocketClient } from "@Game/index";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import FriendUser from "@UserInterface/Components/Friends/Component/FriendUser";
+import { useTranslation } from "react-i18next";
 
 export default function FriendsDialogSearch() {
+    const [getTranslation] = useTranslation("friends");
     const [search, setSearch] = useState("");
     const [result, setResult] = useState<UserFriendData[]>([]);
 
@@ -35,14 +37,14 @@ export default function FriendsDialogSearch() {
             flexDirection: "column",
             gap: 5
         }}>
-            <Input placeholder="Search users..." value={search} onChange={setSearch} onSubmit={handleSubmit}>
+            <Input placeholder={getTranslation("search.placeholder")} value={search} onChange={setSearch} onSubmit={handleSubmit}>
                 <div className="sprite_room_user_motto_pen"/>
             </Input>
 
             <div/>
 
             {(!result.length)?(
-                <div>No users found.</div>
+                <div>{getTranslation("search.no_results")}</div>
             ):(
                 <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
                     {result.map((friend) => (

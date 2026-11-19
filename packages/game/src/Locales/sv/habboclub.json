@@ -1,0 +1,35 @@
+{
+    "title": "Habbo Club-center",
+    "purchase": {
+        "buy_more": "Köp mer Habbo Club",
+        "buy": "Köp Habbo Club"
+    },
+    "status": {
+        "label": "Status",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "time_left": "Tid kvar:",
+        "first_joined": "Gick med:",
+        "current_streak": "Nuvarande svit:",
+        "not_member": "Du är inte medlem i Habbo Club just nu. Se vad du går miste om..."
+    },
+    "payday": {
+        "title": "HC-utbetalning",
+        "description": "HC-medlemmar får tillbaka krediter från katalogköp varje månad.",
+        "in": "Nästa HC-utbetalning om:",
+        "days": "{{days}} d",
+        "getting": "Du får:"
+    },
+    "gift": {
+        "title": "Månadens HC-present",
+        "description": "HC-medlemmar får en gratis present varje månad!",
+        "view": "Visa presenter"
+    },
+    "benefits": {
+        "title": "Fler HC-förmåner:",
+        "clothing": "- Stort utbud av kläder och färger",
+        "dances": "- Extra danser och chattstilar",
+        "duckets": "- Tjäna dubbla duckets",
+        "more": "- Och mycket mer..."
+    }
+}

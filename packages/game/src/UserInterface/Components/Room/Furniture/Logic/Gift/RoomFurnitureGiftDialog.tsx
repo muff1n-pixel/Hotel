@@ -10,8 +10,10 @@ import { useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 import { UseRoomFurnitureData } from "@pixel63/events";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export default function RoomFurnitureGiftDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const userProfile = useUserProfile(data.data.data?.gift?.senderUserId);
     const room = useRoomInstance();
@@ -29,7 +31,7 @@ export default function RoomFurnitureGiftDialog({ data, hidden, onClose }: RoomF
     }
 
     return (
-        <Dialog title={`Gift from ${userProfile.name}`} hidden={hidden} onClose={onClose} width={340} assumedHeight={220} height={"auto"} initialPosition="center">
+        <Dialog title={getTranslation("furniture.gift.title", { name: userProfile.name })} hidden={hidden} onClose={onClose} width={340} assumedHeight={220} height={"auto"} initialPosition="center">
             <DialogContent style={{ gap: 10 }}>
                 <FlexLayout flex={1} align="center" justify="center">
                     <FurnitureGift name={userProfile.name} figureConfiguration={userProfile.figureConfiguration} message={data.data.data?.gift?.message}/>
@@ -39,7 +41,7 @@ export default function RoomFurnitureGiftDialog({ data, hidden, onClose }: RoomF
                     <FlexLayout direction="row">
                         <div style={{ flex: 1 }}/>
 
-                        <DialogButton color="green" onClick={handleOpen}>Open gift</DialogButton>
+                        <DialogButton color="green" onClick={handleOpen}>{getTranslation("furniture.gift.open")}</DialogButton>
                     </FlexLayout>
                 )}
             </DialogContent>

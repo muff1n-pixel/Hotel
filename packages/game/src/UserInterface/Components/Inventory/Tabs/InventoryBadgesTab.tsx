@@ -6,8 +6,10 @@ import BadgeImage from "../../../Common/Badges/BadgeImage";
 import { GetUserInventoryBadgesData, UpdateUserBadgeData, UserBadgeData, UserInventoryBadgesData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import { useUserBadgeNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBadgeNotifications";
+import { useTranslation } from "react-i18next";
 
 export default function InventoryBadgesTab() {
+    const [getTranslation] = useTranslation("inventory");
     const userBadgeNotifications = useUserBadgeNotifications();
 
     const [activeBadge, setActiveBadge] = useState<UserBadgeData>();
@@ -269,7 +271,7 @@ export default function InventoryBadgesTab() {
                         <div style={{
                         }}>
                             <DialogButton onClick={handleToggleEquip} disabled={(!activeBadge.equipped && userBadges.filter((userBadge) => userBadge.equipped).length >= 5)}>
-                                {(activeBadge.equipped)?("Clear badge"):("Wear badge")}
+                                {getTranslation((activeBadge.equipped)?"badge.clear":"badge.wear")}
                             </DialogButton>
                         </div>
                     </div>
@@ -283,7 +285,7 @@ export default function InventoryBadgesTab() {
                 color: "#FFFFFF",
                 padding: 2
             }}>
-                <b>Achievement score: {achievementScore.toLocaleString('en-US')}</b>
+                <b>{getTranslation("achievement_score", { score: achievementScore.toLocaleString('en-US') })}</b>
             </div>
         </div>
     );

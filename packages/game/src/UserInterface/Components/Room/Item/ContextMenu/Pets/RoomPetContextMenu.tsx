@@ -8,6 +8,7 @@ import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 import { PickupRoomPetData, ScratchRoomPetData } from "@pixel63/events";
 import { webSocketClient } from "../../../../../..";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type RoomPetContextMenuProps = {
     item: RoomPetItem;
@@ -17,6 +18,7 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
     const room = useRoomInstance();
     const user = useUser();
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("room");
 
     const [pet, setPet] = useState(room?.pets.find((pet) => pet.item.id === item.id));
 
@@ -35,28 +37,28 @@ export default function RoomPetContextMenu({ item }: RoomPetContextMenuProps) {
             </UserContextMenuElement>
 
             {(user.scratches > 0) && (
-                <UserContextMenuButton text={`Scratch (${user.scratches})`} onClick={() => {
+                <UserContextMenuButton text={getTranslation("item.profile.scratch", { scratches: user.scratches })} onClick={() => {
                     room?.websocket.sendProtobuff(ScratchRoomPetData, ScratchRoomPetData.create({
                         petId: pet.data.id
                     }));
                 }}/>
             )}
 
-            <UserContextMenuButton text={"Train"} onClick={() => {
+            <UserContextMenuButton text={getTranslation("item.context_menu.train")} onClick={() => {
                 dialogs.openUniqueDialog("room-pet-train", {
                     pet
                 });
             }}/>
 
             {(pet.data.userId === user.id)?(
-                <UserContextMenuButton text={"Pick up"} onClick={() => {
+                <UserContextMenuButton text={getTranslation("item.profile.pick_up")} onClick={() => {
                     room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                         id: pet.data.id
                     }));
                 }}/>
             ):(
                 (room?.hasRights) && (
-                    <UserContextMenuButton text={"Kick"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.kick")} onClick={() => {
                         room?.websocket.sendProtobuff(PickupRoomPetData, PickupRoomPetData.create({
                             id: pet.data.id
                         }));

@@ -1,0 +1,37 @@
+{
+    "furniture": {
+        "animation": "Animation:",
+        "frame": "Bildruta:",
+        "type": "Typ",
+        "name": "Namn",
+        "custom_params": "Egna parametrar",
+        "columns": {
+            "type": "Typ",
+            "name": "Namn",
+            "color": "Färg"
+        }
+    },
+    "badge": {
+        "id": "ID",
+        "image": "Bild",
+        "name": "Namn",
+        "columns": {
+            "badge": "Märke",
+            "id": "ID",
+            "image": "Bild",
+            "name": "Namn",
+            "description": "Beskrivning"
+        }
+    },
+    "pet": {
+        "id": "ID",
+        "type": "Typ",
+        "breed": "Ras",
+        "columns": {
+            "image": "Bild",
+            "type": "Typ",
+            "breed": "Ras",
+            "palettes": "Paletter"
+        }
+    }
+}

@@ -1,5 +1,6 @@
 {
     "title": "Shop",
+    "confirm_purchase": "Confirm purchase",
 
     "price": "Price",
     "cancel": "Cancel",
@@ -16,6 +17,7 @@
     },
 
     "search": {
+        "placeholder": "Search here...",
         "title": "Search for '{{search}}'"
     },
 
@@ -44,6 +46,7 @@
     },
 
     "group": {
+        "name": "Habbo Group",
         "paragraph":"Habbo Groups are a great way to stay in touch with your friends and share your interests. Each Group has a homeroom that can be decorated by other Group members\nMembers can also purchase exclusive Group Furni that can be customized with your Group colors!",
         "title": "What's so great about Habbo Groups?",
         "items": "Get together with people you get together with!\nCo-op room decorating for group members\nShow off your group badge!\nGet some neat Furni in your group's colors!",
@@ -52,6 +55,7 @@
     },
 
     "club": {
+        "name": "Habbo Club",
         "title": "Join the Habbo Club!",
         "description": "Get exclusive clothes, hair styles, furniture, and so much more!",
         "remainder": "You have {{days}} days left on your membership."
@@ -65,5 +69,109 @@
     "gift": {
         "title": "Customize your gift",
         "recipient.placeholder": "Enter recipients name..."
+    },
+
+    "edit": {
+        "none": "None",
+        "update": "Update",
+        "create": "Create",
+        "delete": "Delete",
+        "confirm_deletion": "Confirm deletion",
+
+        "bot": {
+            "edit": "Edit shop bot",
+            "create": "Create shop bot",
+            "location_existing": "This bot is in the {{page}} page",
+            "location_new": "This bot will be in the {{page}} page",
+            "change_figure": "Change figure",
+            "type": "Bot type",
+            "name": "Bot name",
+            "motto": "Bot motto",
+            "price": "Bot price"
+        },
+
+        "bot_figure": {
+            "title": "Bot Wardrobe",
+            "default_name": "Bot",
+            "save": "Save my looks"
+        },
+
+        "pet": {
+            "edit": "Edit shop pet",
+            "create": "Create shop pet",
+            "location_existing": "This pet is in the {{page}} page",
+            "location_new": "This pet will be in the {{page}} page",
+            "pet": "Pet",
+            "edit_pet": "Edit pet",
+            "open_browser": "Open pet browser",
+            "pet_id": "Pet ID",
+            "price": "Pet price"
+        },
+
+        "furniture": {
+            "edit": "Edit shop furniture",
+            "create": "Create shop furniture",
+            "location_existing": "This furniture is in the {{page}} page",
+            "location_new": "This furniture will be in the {{page}} page",
+            "price": "Furniture price",
+            "membership_required": "Membership required",
+            "delete": "Delete furniture"
+        },
+
+        "membership": {
+            "edit": "Edit shop membership",
+            "create": "Create shop membership",
+            "location_existing": "This membership is in the {{page}} page",
+            "location_new": "This membership will be in the {{page}} page",
+            "days": "Membership days",
+            "price": "Membership price"
+        },
+
+        "page": {
+            "edit": "Edit shop page",
+            "create": "Create shop page",
+            "icon": "Page icon",
+            "title": "Page title",
+            "title_placeholder": "Title...",
+            "description": "Page description",
+            "description_placeholder": "Description...",
+            "parent": "Parent page",
+            "type": "Page type",
+            "bundle_price": "Bundle price",
+            "badge_id": "Badge ID",
+            "room_id": "Room ID",
+            "use_current_room": "Use current room",
+            "bundle_room_requirement": "The selected room must have 'bundle' set as its room type.",
+            "header": "Page header",
+            "teaser": "Page teaser",
+            "index": "Page index"
+        },
+
+        "feature": {
+            "edit": "Edit Shop Feature",
+            "create": "Create Shop Feature",
+            "preview": "Preview",
+            "background": "Background",
+            "use_background": "Use background?",
+            "primary_color": "Primary Color",
+            "secondary_color": "Secondary Color",
+            "background_stripes": "Background Stripes",
+            "use_background_stripes": "Use background stripes?",
+            "feature_sprite": "Feature Sprite",
+            "use_feature_sprite": "Use feature sprite?",
+            "sprite_color": "Sprite Color",
+            "feature_furniture": "Feature Furniture",
+            "use_feature_furniture": "Use feature furniture?",
+            "room_furniture": "Room Furniture",
+            "use_room_furniture": "Use room furniture?",
+            "capture_room": "Capture room items",
+            "title": "Title",
+            "featured_page": "Featured Page"
+        },
+
+        "feature_camera": {
+            "title": "Shop Feature Room Camera",
+            "capture": "Capture"
+        }
     }
 }

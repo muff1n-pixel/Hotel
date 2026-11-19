@@ -1,0 +1,18 @@
+{
+    "speech": {
+        "title": "Ställ in bottens tal",
+        "add_or_select": "Lägg till eller välj ett meddelande",
+        "message": "Meddelande...",
+        "new_message": "Nytt meddelande",
+        "messages": "Meddelande",
+        "automatic": "Botten pratar automatiskt",
+        "randomize": "Meddelanden slumpas",
+        "delay": "Fördröjning för automatisk chatt (sekunder)",
+        "apply": "Spara ändringar"
+    },
+    "wardrobe": {
+        "title": "Bottens garderob",
+        "fallback_name": "Bot",
+        "save_looks": "Spara mina utseenden"
+    }
+}

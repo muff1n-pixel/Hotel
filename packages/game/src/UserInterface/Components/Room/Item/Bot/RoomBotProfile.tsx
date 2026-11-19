@@ -8,12 +8,14 @@ import { webSocketClient } from "../../../../..";
 import { UpdateRoomBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type RoomBotProfileProps = {
     bot: RoomBot;
 }
 
 export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const room = useRoomInstance();
 
@@ -102,8 +104,8 @@ export default function RoomBotProfile({ bot }: RoomBotProfileProps) {
                             $type: "BadgeData",
                             id: "bot",
                             image: "BOT.gif",
-                            name: "Bot",
-                            description: "Bot"
+                            name: getTranslation("item.profile.bot"),
+                            description: getTranslation("item.profile.bot")
                         }}/>
                     </div>
                 </div>

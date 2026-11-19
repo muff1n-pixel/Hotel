@@ -6,6 +6,7 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { SendHotelFeedbackData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type ReportIssueDialogProps = {
     hidden?: boolean;
@@ -14,13 +15,14 @@ export type ReportIssueDialogProps = {
 
 export default function ReportIssueDialog({ hidden, onClose }: ReportIssueDialogProps) {
     const { addDialog } = useDialogs();
+    const [getTranslation] = useTranslation("debug");
 
     const [area, setArea] = useState("");
     const [description, setDescription] = useState("");
 
     const handleSubmit = useCallback(() => {
         addDialog("alert", {
-            message: "Thank you for your feedback!"
+            message: getTranslation("report_issue.thanks")
         });
 
         onClose?.();
@@ -32,7 +34,7 @@ export default function ReportIssueDialog({ hidden, onClose }: ReportIssueDialog
     }, [area, description, addDialog, onClose]);
 
     return (
-        <Dialog title="Report an issue" hidden={hidden} onClose={onClose} width={320} height={390} initialPosition="center">
+        <Dialog title={getTranslation("report_issue.title")} hidden={hidden} onClose={onClose} width={320} height={390} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -41,18 +43,18 @@ export default function ReportIssueDialog({ hidden, onClose }: ReportIssueDialog
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <b>What area is the issue regarding?</b>
-                    <div>E.g. room rendering, furniture rendering, navigator dialog, etc.</div>
+                    <b>{getTranslation("report_issue.area_question")}</b>
+                    <div>{getTranslation("report_issue.area_example")}</div>
     
-                    <Input placeholder="Issue area (optional)" value={area} onChange={setArea}/>
+                    <Input placeholder={getTranslation("report_issue.area_placeholder")} value={area} onChange={setArea}/>
                     
-                    <b>What is the issue?</b>
-                    <div>Write as much or as little as you wish, describing the issue.</div>
+                    <b>{getTranslation("report_issue.issue_question")}</b>
+                    <div>{getTranslation("report_issue.issue_description")}</div>
     
-                    <Input placeholder="Issue description" value={description} onChange={setDescription}/>
+                    <Input placeholder={getTranslation("report_issue.issue_placeholder")} value={description} onChange={setDescription}/>
 
                     <div style={{ padding: "12px 0" }}>
-                        <p>You can also use this form to suggest improvements, new functionality, or general feedback.</p>
+                        <p>{getTranslation("report_issue.feedback_suggestions")}</p>
                     </div>
 
                     <div style={{
@@ -66,7 +68,7 @@ export default function ReportIssueDialog({ hidden, onClose }: ReportIssueDialog
                         justifyContent: "flex-end"
                     }}>
                         <DialogButton disabled={!description.length} onClick={handleSubmit}>
-                            Submit feedback
+                            {getTranslation("report_issue.submit")}
                         </DialogButton>
                     </div>
                 </div>

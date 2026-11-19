@@ -9,6 +9,7 @@ import FurnitureImage from "../../Furniture/FurnitureImage";
 import { DeleteShopFurnitureData, ShopFurnitureData, ShopPageData, UpdateShopFurnitureData } from "@pixel63/events";
 import FurnitureBrowserSelection from "@UserInterface/Components/Browsers/FurnitureBrowserSelection";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
+import { useTranslation } from "react-i18next";
 
 export type EditShopFurnitureDialogProps = {
     data: Partial<ShopFurnitureData> & {
@@ -20,6 +21,7 @@ export type EditShopFurnitureDialogProps = {
 
 export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditShopFurnitureDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const [furniture, setFurniture] = useState((data.furniture)?([data.furniture]):([]));
 
@@ -64,7 +66,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
     }, [data, confirmDelete]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop furniture"):("Create shop furniture")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?(getTranslation("edit.furniture.edit")):(getTranslation("edit.furniture.create"))} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",
@@ -81,7 +83,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                         gap: 4,
                         alignItems: "center"
                     }}>
-                        This furniture {(data?.id)?("is"):("will be")} in the {(data.page.icon) && (<img src={`./assets/shop/icons/${data.page.icon}`}/>)} <b>{data.page.title}</b> page
+                        {(data?.id)?(getTranslation("edit.furniture.location_existing", { page: data.page.title })):(getTranslation("edit.furniture.location_new", { page: data.page.title }))}
                     </p>
 
                     <div style={{
@@ -97,7 +99,7 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
 
                     <FurnitureBrowserSelection allowMultiple={!data.id} furniture={furniture} onChange={setFurniture}/>
 
-                    <b>Furniture price</b>
+                    <b>{getTranslation("edit.furniture.price")}</b>
 
                     <div style={{
                         display: "flex",
@@ -156,20 +158,20 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                         </div>
                     </div>
 
-                    <b>Membership required</b>
+                    <b>{getTranslation("edit.furniture.membership_required")}</b>
 
                     <Selection value={membership} onChange={setMembership} items={[
                         {
                             value: undefined,
-                            label: "None"
+                            label: getTranslation("edit.none")
                         },
                         {
                             value: "habboclub",
-                            label: "Habbo Club"
+                            label: getTranslation("club.name")
                         },
                         {
                             value: "habbogroup",
-                            label: "Habbo Group"
+                            label: getTranslation("group.name")
                         }
                     ]}/>
 
@@ -185,14 +187,14 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                     }}>
                         {(data.id)?(
                             <DialogButton style={{ flex: 1 }} color="red" onClick={handleDelete}>
-                               {(!confirmDelete)?("Delete furniture"):("Confirm deletion")}
+                               {(!confirmDelete)?(getTranslation("edit.furniture.delete")):(getTranslation("edit.confirm_deletion"))}
                             </DialogButton>
                         ):(
                             <div style={{ flex: 1 }}/>
                         )}
 
                         <DialogButton style={{ flex: 1 }} onClick={handleUpdate}>
-                            {(data?.id)?("Update furniture"):("Create furniture")}
+                            {(data?.id)?(getTranslation("edit.update")):(getTranslation("edit.create"))}
                         </DialogButton>
                     </div>
                 </div>

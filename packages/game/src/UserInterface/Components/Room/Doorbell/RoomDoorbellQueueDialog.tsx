@@ -6,6 +6,7 @@ import { Fragment, useCallback } from "react";
 import { webSocketClient } from "@Game/index";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type RoomDoorbellQueueDialogProps = {
     data?: RoomBellQueueUserData[];
@@ -14,6 +15,7 @@ export type RoomDoorbellQueueDialogProps = {
 }
 
 export default function RoomDoorbellQueueDialog({ data, hidden, onClose }: RoomDoorbellQueueDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     if(!data) {
@@ -39,7 +41,7 @@ export default function RoomDoorbellQueueDialog({ data, hidden, onClose }: RoomD
     }, [data, room]);
 
     return (
-        <Dialog title="Room Doorbell Queue" hidden={hidden} onClose={onClose} width={265} height={180}>
+        <Dialog title={getTranslation("doorbell.queue_title")} hidden={hidden} onClose={onClose} width={265} height={180}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -47,7 +49,7 @@ export default function RoomDoorbellQueueDialog({ data, hidden, onClose }: RoomD
                     flexDirection: "column",
                     gap: 8,
                 }}>
-                    <div>Some users are ringing the doorbell!</div>
+                    <div>{getTranslation("doorbell.queue_description")}</div>
 
                     <DialogTable items={data.map((user) => ({
                         id: user.id,
@@ -87,10 +89,10 @@ export default function RoomDoorbellQueueDialog({ data, hidden, onClose }: RoomD
                             cursor: "pointer",
                             textDecoration: "underline",
                         }} onClick={handleDenyAll}>
-                            Deny all
+                            {getTranslation("doorbell.deny_all")}
                         </div>
 
-                        <DialogButton onClick={handleAcceptAll}>Accept all</DialogButton>
+                        <DialogButton onClick={handleAcceptAll}>{getTranslation("doorbell.accept_all")}</DialogButton>
                     </div>
                 </div>
             </DialogContent>

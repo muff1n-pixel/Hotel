@@ -1,0 +1,49 @@
+{
+    "selection": {
+        "title": "Furniture",
+        "edit": "Edit furniture",
+        "placeholder": "Furniture",
+        "items_one": "{{count}} item",
+        "items_other": "{{count}} items",
+        "open_browser": "Open furniture browser"
+    },
+    "editor": {
+        "title": "Furniture Editor",
+        "unique": "There can only be one furniture entity with a unique type and color.",
+        "type": "Furniture type",
+        "color": "Furniture color",
+        "edit_crackable": "Edit crackable data",
+        "must_create": "Furniture must be created before crackable data can be changed.",
+        "name": "Furniture name",
+        "description": "Furniture description",
+        "category": "Category (logic)",
+        "interaction_type": "Interaction type (logic)",
+        "depth": "Depth",
+        "sit_depth": "(sit depth {{depth}})",
+        "placement": "Furniture placement",
+        "flags": "Furniture flags",
+        "stackable": "Is stackable with other furniture?",
+        "sitable": "Is sitable by users?",
+        "layable": "Is layable by users?",
+        "walkable": "Is walkable by users?",
+        "giftable": "Is giftable by users?",
+        "tradable": "Is tradable by users?",
+        "recyclable": "Is recyclable by users?",
+        "sellable": "Is sellable by users?",
+        "inventory_stackable": "Stacks in user inventory?",
+        "update": "Update furniture",
+        "create": "Create new furniture"
+    },
+    "crackable": {
+        "title": "Furniture Crackable Editor",
+        "required_clicks": "Required clicks",
+        "rewards": "Furniture rewards",
+        "furniture": "Furniture",
+        "chance": "Chance",
+        "update": "Update clickable data"
+    },
+    "gift": {
+        "write_wishes": "Write your best wishes here!",
+        "no_message": "No message left."
+    }
+}

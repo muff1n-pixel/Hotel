@@ -8,6 +8,7 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { FigureConfigurationData, ShopBotData, ShopPageData, UpdateShopBotData } from "@pixel63/events";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useTranslation } from "react-i18next";
 
 export type EditShopBotDialogProps = {
     data: Partial<ShopBotData> & {
@@ -20,6 +21,7 @@ export type EditShopBotDialogProps = {
 export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBotDialogProps) {
     const dialogs = useDialogs();
     const user = useUser();
+    const [getTranslation] = useTranslation("shop");
 
     const [name, setName] = useState(data?.name ?? "");
     const [motto, setMotto] = useState(data?.motto ?? "");
@@ -54,7 +56,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
     }, [dialogs, data, type, name, motto, figureConfiguration, credits, duckets, diamonds]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop bot"):("Create shop bot")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?(getTranslation("edit.bot.edit")):(getTranslation("edit.bot.create"))} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",
@@ -71,7 +73,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
                         gap: 4,
                         alignItems: "center"
                     }}>
-                        This bot {(data?.id)?("is"):("will be")} in the {(data.page.icon) && (<img src={`./assets/shop/icons/${data.page.icon}`}/>)} <b>{data.page.title}</b> page
+                        {(data?.id)?(getTranslation("edit.bot.location_existing", { page: data.page.title })):(getTranslation("edit.bot.location_new", { page: data.page.title }))}
                     </p>
 
                     <div style={{
@@ -85,21 +87,21 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
                     <DialogButton onClick={() => dialogs.addUniqueDialog("edit-shop-bot-figure", {
                         ...data,
                         onChange: (figureConfiguration: FigureConfigurationData) => setFigureConfiguration(figureConfiguration)
-                    })}>Change figure</DialogButton>
+                    })}>{getTranslation("edit.bot.change_figure")}</DialogButton>
 
-                    <b>Bot type</b>
+                    <b>{getTranslation("edit.bot.type")}</b>
 
-                    <Input placeholder="Bot type" value={type} onChange={(type) => setType(type)}/>
+                    <Input placeholder={getTranslation("edit.bot.type")} value={type} onChange={(type) => setType(type)}/>
 
-                    <b>Bot name</b>
+                    <b>{getTranslation("edit.bot.name")}</b>
 
-                    <Input placeholder="Bot name" value={name} onChange={setName}/>
+                    <Input placeholder={getTranslation("edit.bot.name")} value={name} onChange={setName}/>
                     
-                    <b>Bot motto</b>
+                    <b>{getTranslation("edit.bot.motto")}</b>
 
-                    <Input placeholder="Bot motto" value={motto} onChange={setMotto}/>
+                    <Input placeholder={getTranslation("edit.bot.motto")} value={motto} onChange={setMotto}/>
 
-                    <b>Bot price</b>
+                    <b>{getTranslation("edit.bot.price")}</b>
 
                     <div style={{
                         display: "flex",
@@ -169,7 +171,7 @@ export default function EditShopBotDialog({ hidden, data, onClose }: EditShopBot
                         justifyContent: "flex-end"
                     }}>
                         <DialogButton onClick={handleUpdate}>
-                            {(data?.id)?("Update bot"):("Create bot")}
+                            {(data?.id)?(getTranslation("edit.update")):(getTranslation("edit.create"))}
                         </DialogButton>
                     </div>
                 </div>

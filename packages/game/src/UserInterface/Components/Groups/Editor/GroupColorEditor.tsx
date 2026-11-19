@@ -3,6 +3,7 @@ import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem"
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const palette = [
   ["#ffffff","#eaeaea","#d3d3d3","#bcbcbc","#a5a5a5","#8e8e8e","#777777","#606060","#4b4b4b"],
@@ -27,6 +28,7 @@ export type GroupColorEditorProps = {
 };
 
 export default function GroupColorEditor({ data, onChange }: GroupColorEditorProps) {
+    const [getTranslation] = useTranslation("groups");
     useEffect(() => {
         if(!data) {
             onChange(GroupColorsData.create({
@@ -39,7 +41,7 @@ export default function GroupColorEditor({ data, onChange }: GroupColorEditorPro
     return (
         <FlexLayout flex={1} direction="row">
             <FlexLayout direction="column">
-                <b>Group colors</b>
+                <b>{getTranslation("color_editor.title")}</b>
 
                 <DialogPanel color="silver" contentStyle={{ display: "flex" }}>
                     <FlexLayout flex={1} gap={4} direction="row" align="center" justify="center" style={{
@@ -58,8 +60,8 @@ export default function GroupColorEditor({ data, onChange }: GroupColorEditorPro
 
             <FlexLayout flex={1} direction="column">
                 <FlexLayout direction="row" justify="space-between">
-                    <b style={{ flex: 3, textAlign: "center" }}>Primary</b>
-                    <b style={{ flex: 2, textAlign: "center" }}>Secondary</b>
+                    <b style={{ flex: 3, textAlign: "center" }}>{getTranslation("color_editor.primary")}</b>
+                    <b style={{ flex: 2, textAlign: "center" }}>{getTranslation("color_editor.secondary")}</b>
                 </FlexLayout>
 
                 <FlexLayout direction="row" justify="space-between">

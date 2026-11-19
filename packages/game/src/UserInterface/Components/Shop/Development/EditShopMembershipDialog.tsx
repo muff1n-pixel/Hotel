@@ -7,6 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { DeleteShopMembershipData, ShopMembershipData, ShopPageData, UpdateShopMembershipData } from "@pixel63/events";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
+import { useTranslation } from "react-i18next";
 
 export type EditShopMembershipDialogProps = {
     data: {
@@ -19,6 +20,7 @@ export type EditShopMembershipDialogProps = {
 
 export default function EditShopMembershipDialog({ hidden, data, onClose }: EditShopMembershipDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const [membership, setMembership] = useState(data.membership?.membership ?? "habboclub");
     const [days, setDays] = useState(data.membership?.days ?? 0);
@@ -61,7 +63,7 @@ export default function EditShopMembershipDialog({ hidden, data, onClose }: Edit
     }, [data, confirmDelete]);
 
     return (
-        <Dialog title={(data.membership?.id)?("Edit shop membership"):("Create shop membership")} editMode hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={580} initialPosition="center">
+        <Dialog title={(data.membership?.id)?(getTranslation("edit.membership.edit")):(getTranslation("edit.membership.create"))} editMode hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={580} initialPosition="center">
             <DialogContent style={{
                 display: "flex",
                 flexDirection: "column",
@@ -73,29 +75,29 @@ export default function EditShopMembershipDialog({ hidden, data, onClose }: Edit
                     gap: 4,
                     alignItems: "center"
                 }}>
-                    This membership {(data.membership?.id)?("is"):("will be")} in the {(data.page.icon) && (<img src={`./assets/shop/icons/${data.page.icon}`}/>)} <b>{data.page.title}</b> page
+                    {(data.membership?.id)?(getTranslation("edit.membership.location_existing", { page: data.page.title })):(getTranslation("edit.membership.location_new", { page: data.page.title }))}
                 </p>
 
                 <Selection value={membership} onChange={setMembership} items={[
                     {
                         value: "habboclub",
-                        label: "Habbo Club"
+                        label: getTranslation("club.name")
                     },
                     {
                         value: "habbogroup",
-                        label: "Habbo Group"
+                        label: getTranslation("group.name")
                     },
                     {
                         value: "roomevent",
-                        label: "Room Event"
+                        label: getTranslation("promote.membership")
                     }
                 ]}/>
 
-                <b>Membership days</b>
+                <b>{getTranslation("edit.membership.days")}</b>
 
                 <Input type="number" value={days.toString()} onChange={(value) => setDays(parseInt(value))}/>
 
-                <b>Membership price</b>
+                <b>{getTranslation("edit.membership.price")}</b>
 
                 <div style={{
                     display: "flex",
@@ -166,14 +168,14 @@ export default function EditShopMembershipDialog({ hidden, data, onClose }: Edit
                 }}>
                     {(data.membership?.id)?(
                         <DialogButton style={{ flex: 1 }} color="red" onClick={handleDelete}>
-                            {(!confirmDelete)?("Delete"):("Confirm deletion")}
+                            {(!confirmDelete)?(getTranslation("edit.delete")):(getTranslation("edit.confirm_deletion"))}
                         </DialogButton>
                     ):(
                         <div style={{ flex: 1 }}/>
                     )}
 
                     <DialogButton style={{ flex: 1 }} onClick={handleUpdate}>
-                        {(data.membership?.id)?("Update"):("Create")}
+                        {(data.membership?.id)?(getTranslation("edit.update")):(getTranslation("edit.create"))}
                     </DialogButton>
                 </div>
             </DialogContent>

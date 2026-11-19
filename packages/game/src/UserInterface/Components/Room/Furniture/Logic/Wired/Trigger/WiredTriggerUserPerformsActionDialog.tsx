@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
@@ -18,6 +19,7 @@ export type WiredTriggerUserPerformsActionDialog = {
 };
 
 export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [action, setAction] = useState(data.data.data?.wiredTriggerUserPerformsAction?.action ?? "Wave");
@@ -47,12 +49,12 @@ export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: 
             <WiredDivider/>
 
             <WiredSection>
-                <b>Action:</b>
+                <b>{getTranslation("creator.action")}</b>
 
                 <WiredSelection value={action} onChange={setAction} items={["Wave", "Blow", "Laugh", "Thumbs up", "Awake", "Idle", "Sit", "Stand", "Lay", "Sign", "Dance"].map((action) => {
                     return {
                         value: action,
-                        label: action
+                        label: getTranslation(`creator.actions.${action.toLowerCase().replace(/ /g, "_")}`)
                     };
                 })}/>
             </WiredSection>
@@ -63,25 +65,25 @@ export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: 
 
             {(action === "Dance") && (
                 <WiredSection>
-                    <WiredCheckbox value={filter} onChange={setFilter} label="Filter by dance"/>
+                    <WiredCheckbox value={filter} onChange={setFilter} label={getTranslation("creator.filter_by_dance")}/>
 
                     {(filter) && (
                         <WiredSelection value={filterId} onChange={setFilterId} items={[
                             {
                                 value: 1,
-                                label: "Dance"
+                                label: getTranslation("creator.dance")
                             },
                             {
                                 value: 2,
-                                label: "Pogo Mogo"
+                                label: getTranslation("creator.pogo_mogo")
                             },
                             {
                                 value: 3,
-                                label: "Duck Funk"
+                                label: getTranslation("creator.duck_funk")
                             },
                             {
                                 value: 4,
-                                label: "The Rollie"
+                                label: getTranslation("creator.the_rollie")
                             }
                         ]}/>
                     )}
@@ -90,13 +92,13 @@ export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: 
 
             {(action === "Sign") && (
                 <WiredSection>
-                    <WiredCheckbox value={filter} onChange={setFilter} label="Filter by sign"/>
+                    <WiredCheckbox value={filter} onChange={setFilter} label={getTranslation("creator.filter_by_sign")}/>
 
                     {(filter) && (
                         <WiredSelection value={filterId} onChange={setFilterId} items={Array(10).fill(null).map((_, number) => {
                             return {
                                 value: number + 1,
-                                label: "Number " + (number + 1)
+                                label: getTranslation("creator.number", { number: number + 1 })
                             };
                         })}/>
                     )}
@@ -106,8 +108,8 @@ export default function WiredTriggerUserPerformsActionDialog({ data, onClose }: 
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import WiredSelection from "@UserInterface/Common/Dialog/Layouts/Wired/Selection
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionLogDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [level, setLevel] = useState(data.data.data?.wiredActionLog?.level ?? "INFO");
@@ -48,7 +50,7 @@ export default function WiredActionLogDialog({ data, onClose }: RoomFurnitureLog
             <WiredDivider/>
 
             <WiredSection>
-                <b>Log level</b>
+                <b>{getTranslation("creator.log_level")}</b>
 
                 <WiredSelection
                     value={level}
@@ -56,15 +58,15 @@ export default function WiredActionLogDialog({ data, onClose }: RoomFurnitureLog
                     items={[
                         {
                             value: "INFO",
-                            label: "INFO"
+                            label: getTranslation("monitor.levels.info")
                         },
                         {
                             value: "WARNING",
-                            label: "WARNING"
+                            label: getTranslation("monitor.levels.warning")
                         },
                         {
                             value: "ERROR",
-                            label: "ERROR"
+                            label: getTranslation("monitor.levels.error")
                         }
                     ]}/>
             </WiredSection>
@@ -72,7 +74,7 @@ export default function WiredActionLogDialog({ data, onClose }: RoomFurnitureLog
             <WiredDivider/>
 
             <WiredSection>
-                <b>Message</b>
+                <b>{getTranslation("creator.message")}</b>
 
                 <WiredInput value={message} onChange={setMessage}/>
             </WiredSection>
@@ -84,8 +86,8 @@ export default function WiredActionLogDialog({ data, onClose }: RoomFurnitureLog
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

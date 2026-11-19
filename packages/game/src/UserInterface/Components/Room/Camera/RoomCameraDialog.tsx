@@ -5,6 +5,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import RoomCameraRenderer from "@UserInterface/Components/Room/Camera/RoomCameraRenderer";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type RoomCameraDialogProps = {
     hidden?: boolean;
@@ -12,6 +13,7 @@ export type RoomCameraDialogProps = {
 }
 
 export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,7 +60,7 @@ export default function RoomCameraDialog({ hidden, onClose }: RoomCameraDialogPr
     }
 
     return (
-        <CameraDialog title="Room Camera" onClose={onClose}>
+        <CameraDialog title={getTranslation("camera.title")} onClose={onClose}>
             <div style={{
                 width: 320,
                 height: 320,

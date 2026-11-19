@@ -1,0 +1,11 @@
+{
+    "figure": {
+        "title": "Figure Catalog",
+        "enables": "Enables",
+        "carry_items": "Carry items",
+        "id": "ID",
+        "library": "Library",
+        "item_id": "Item ID",
+        "name": "Name"
+    }
+}

@@ -7,6 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { PetData, ShopPageData, ShopPetData, UpdateShopPetData } from "@pixel63/events";
 import PetImage from "../../Pets/PetImage";
+import { useTranslation } from "react-i18next";
 
 export type EditShopPetDialogProps = {
     data: Partial<ShopPetData> & {
@@ -18,6 +19,7 @@ export type EditShopPetDialogProps = {
 
 export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPetDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const [pet, setPet] = useState(data.pet);
 
@@ -42,7 +44,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
     }, [dialogs, data, pet, credits, duckets, diamonds]);
 
     return (
-        <Dialog title={(data?.id)?("Edit shop pet"):("Create shop pet")} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
+        <Dialog title={(data?.id)?(getTranslation("edit.pet.edit")):(getTranslation("edit.pet.create"))} editMode hidden={hidden} onClose={onClose} width={320} height={580} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: "1 1 0",
@@ -59,7 +61,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
                         gap: 4,
                         alignItems: "center"
                     }}>
-                        This pet {(data?.id)?("is"):("will be")} in the {(data.page.icon) && (<img src={`./assets/shop/icons/${data.page.icon}`}/>)} <b>{data.page.title}</b> page
+                        {(data?.id)?(getTranslation("edit.pet.location_existing", { page: data.page.title })):(getTranslation("edit.pet.location_new", { page: data.page.title }))}
                     </p>
 
                     <div style={{
@@ -74,18 +76,18 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
                         display: "flex",
                         justifyContent: "space-between"
                     }}>
-                        <b>Pet</b>
+                        <b>{getTranslation("edit.pet.pet")}</b>
 
                         {(pet) && (
                             <div style={{ fontSize: 12, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                                 dialogs.addUniqueDialog("edit-pet", { ...pet, onClose: () => setPet(pet) });
                             }}>
-                                Edit pet
+                                {getTranslation("edit.pet.edit_pet")}
                             </div>
                         )}
                     </div>
 
-                    <Input readonly placeholder="Pet ID" value={pet?.id ?? ""}/>
+                    <Input readonly placeholder={getTranslation("edit.pet.pet_id")} value={pet?.id ?? ""}/>
     
                     <div style={{
                         display: "flex",
@@ -97,11 +99,11 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
                                 onSelect: (pet: PetData) => setPet(pet)
                             });
                         }}>
-                            Open pet browser
+                            {getTranslation("edit.pet.open_browser")}
                         </div>
                     </div>
 
-                    <b>Pet price</b>
+                    <b>{getTranslation("edit.pet.price")}</b>
 
                     <div style={{
                         display: "flex",
@@ -171,7 +173,7 @@ export default function EditShopPetDialog({ hidden, data, onClose }: EditShopPet
                         justifyContent: "flex-end"
                     }}>
                         <DialogButton onClick={handleUpdate}>
-                            {(data?.id)?("Update pet"):("Create pet")}
+                            {(data?.id)?(getTranslation("edit.update")):(getTranslation("edit.create"))}
                         </DialogButton>
                     </div>
                 </div>

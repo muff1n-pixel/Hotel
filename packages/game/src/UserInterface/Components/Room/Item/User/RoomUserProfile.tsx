@@ -26,6 +26,8 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
     const user = useUser();
     
     const [getCarryItemTranslation] = useTranslation("carryitems");
+    const [getRoomTranslation] = useTranslation("room");
+    const [getUserTranslation] = useTranslation("user");
 
     const carryItemId = useMemo(() => {
         const roomUser = room?.users.find((roomUser) => roomUser.data.id === user.id);
@@ -171,7 +173,10 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                         {(relationships.loveRelationships.length === 1)?(
                             relationships.loveRelationships[0].name
                         ):(
-                            relationships.loveRelationships[0].name + " and " + (relationships.loveRelationships.length - 1) + "others"
+                            getUserTranslation("profile.relationships_with_others", {
+                                name: relationships.loveRelationships[0].name,
+                                count: relationships.loveRelationships.length - 1
+                            })
                         )}
                     </div>
                 </FlexLayout>
@@ -185,7 +190,10 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                         {(relationships.smileRelationships.length === 1)?(
                             relationships.smileRelationships[0].name
                         ):(
-                            relationships.smileRelationships[0].name + " and " + (relationships.smileRelationships.length - 1) + "others"
+                            getUserTranslation("profile.relationships_with_others", {
+                                name: relationships.smileRelationships[0].name,
+                                count: relationships.smileRelationships.length - 1
+                            })
                         )}
                     </div>
                 </FlexLayout>
@@ -199,7 +207,10 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
                         {(relationships.bobbaRelationships.length === 1)?(
                             relationships.bobbaRelationships[0].name
                         ):(
-                            relationships.bobbaRelationships[0].name + " and " + (relationships.bobbaRelationships.length - 1) + "others"
+                            getUserTranslation("profile.relationships_with_others", {
+                                name: relationships.bobbaRelationships[0].name,
+                                count: relationships.bobbaRelationships.length - 1
+                            })
                         )}
                     </div>
                 </FlexLayout>
@@ -214,11 +225,11 @@ export default function RoomUserProfile({ user: targetUser }: RoomUserProfilePro
             )}
 
             {(achievementScore > 0) && (
-                <div>Achievement score: {achievementScore.toLocaleString("en-US")}</div>
+                <div>{getUserTranslation("profile.achievement_score_value", { score: achievementScore.toLocaleString("en-US") })}</div>
             )}
 
             {(carryItemId) && (
-                <div>Carrying: {getCarryItemTranslation(`handitem_${carryItemId}`)}</div>
+                <div>{getRoomTranslation("item.profile.carrying", { item: getCarryItemTranslation(`handitem_${carryItemId}`) })}</div>
             )}
         </div>
     );

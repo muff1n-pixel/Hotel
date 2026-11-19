@@ -1,0 +1,7 @@
+{
+    "title": "Achievements",
+    "total": "Total Achievement: {{unlocked}}/{{total}}",
+    "score": "Achievement score: {{score}}",
+    "badges_collected": "{{unlocked}}/{{total}} badges collected",
+    "level": "Level {{current}}/{{total}}"
+}

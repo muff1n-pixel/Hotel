@@ -10,8 +10,10 @@ import Colors from "@UserInterface/Utils/Colors";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import useRoomMoodlightPreview from "@UserInterface/Hooks/Room/useRoomMoodlightPreview";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [enabled, setEnabled] = useState(data.data.data?.moodlight?.enabled ?? false);
@@ -57,20 +59,20 @@ export default function RoomFurnitureDimmerDialog({ data, hidden, onClose }: Roo
     }
 
     return (
-        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} assumedHeight={350} height={"auto"} initialPosition="center">
+        <Dialog title={getTranslation("furniture.dimmer.title")} hidden={hidden} onClose={onClose} width={300} assumedHeight={350} height={"auto"} initialPosition="center">
             <DialogContent style={{
                 gap: 10
             }}>
                 <DialogHSLPicker value={color} onChange={setColor}/>
 
-                <Checkbox value={backgroundOnly} onChange={setBackgroundOnly} label="Background only"/>
+                <Checkbox value={backgroundOnly} onChange={setBackgroundOnly} label={getTranslation("furniture.dimmer.background_only")}/>
 
                 <div style={{
                     display: "flex",
                     gap: 10
                 }}>
-                    <DialogButton style={{ flex: 1 }} onClick={handleToggle}>{(enabled)?("Turn off"):("Turn on")}</DialogButton>
-                    <DialogButton style={{ flex: 1 }} onClick={handleApply}>Apply</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleToggle}>{(enabled)?(getTranslation("furniture.dimmer.turn_off")):(getTranslation("furniture.dimmer.turn_on"))}</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleApply}>{getTranslation("furniture.dimmer.apply")}</DialogButton>
                 </div>
             </DialogContent>
         </Dialog>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
@@ -17,6 +18,7 @@ export type WiredTriggerPeriodicallyLongDialog = {
 };
 
 export default function WiredTriggerPeriodicallyLongDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [seconds, setSeconds] = useState(data.data.data?.wiredTriggerPeriodically?.seconds ?? 5);
@@ -42,7 +44,7 @@ export default function WiredTriggerPeriodicallyLongDialog({ data, onClose }: Ro
             <WiredDivider/>
 
             <WiredSection>
-                <b>Set the time: {seconds} seconds</b>
+                <b>{getTranslation("creator.set_the_time", { count: seconds })}</b>
 
                 <WiredSlider value={seconds} onChange={setSeconds} min={5} max={600}/>
             </WiredSection>
@@ -50,8 +52,8 @@ export default function WiredTriggerPeriodicallyLongDialog({ data, onClose }: Ro
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

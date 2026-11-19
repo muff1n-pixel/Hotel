@@ -12,6 +12,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { webSocketClient } from "@Game/index";
 import Selection from "@UserInterface/Common/Form/Components/Selection";
 import Input from "@UserInterface/Common/Form/Components/Input";
+import { useTranslation } from "react-i18next";
 
 export type EditShopFeatureDialogProps = {
     id: string;
@@ -26,6 +27,7 @@ export type EditShopFeatureDialogProps = {
 
 export default function EditShopFeatureDialog({ id, hidden, data, onClose }: EditShopFeatureDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
 
     const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -114,7 +116,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
     }, [ state, data, featuredPageId, title, onClose ]);
 
     return (
-        <Dialog title={(data?.feature)?("Edit Shop Feature"):("Create Shop Feature")} editMode hidden={hidden} onClose={onClose} initialPosition="center" width={1280} height={600} style={{
+        <Dialog title={(data?.feature)?(getTranslation("edit.feature.edit")):(getTranslation("edit.feature.create"))} editMode hidden={hidden} onClose={onClose} initialPosition="center" width={1280} height={600} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -132,7 +134,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                         alignItems: "center"
                     }}>
                         <FlexLayout>
-                            <b>Preview</b>
+                            <b>{getTranslation("edit.feature.preview")}</b>
 
                             <div style={{
                                 background: "#CCCCCC"
@@ -150,7 +152,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                         gap: 10
                     }}>
                         <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("backgroundColors")}>
-                           <b>Background</b>
+                           <b>{getTranslation("edit.feature.background")}</b>
                             
                             <div className="sprite_forms_arrow" style={{
                                 transform: (tab !== "backgroundColors")?("rotateZ(-90deg)"):(undefined)
@@ -159,17 +161,17 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         {(tab === "backgroundColors") && (
                             <FlexLayout>
-                                <Checkbox label="Use background?" value={configuration?.backgroundUsed} onChange={() => shopFeatureImage.toggleBackgroundUsed()}/>
+                                <Checkbox label={getTranslation("edit.feature.use_background")} value={configuration?.backgroundUsed} onChange={() => shopFeatureImage.toggleBackgroundUsed()}/>
 
                                 <FlexLayout direction="row">
                                     <FlexLayout flex={1} direction="column">
-                                        <b>Primary Color</b>
+                                        <b>{getTranslation("edit.feature.primary_color")}</b>
                                         
                                         <DialogColorPicker value={configuration?.primaryBackgroundColor} onChange={(color) => shopFeatureImage.setPrimaryBackgroundColor(color)}/>
                                     </FlexLayout>
 
                                     <FlexLayout flex={1} direction="column">
-                                        <b>Secondary Color</b>
+                                        <b>{getTranslation("edit.feature.secondary_color")}</b>
                                         
                                         <DialogColorPicker value={configuration?.secondaryBackgroundColor} onChange={(color) => shopFeatureImage.setSecondaryBackgroundColor(color)}/>
                                     </FlexLayout>
@@ -178,7 +180,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                         )}
                         
                         <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("backgroundStripes")}>
-                           <b>Background Stripes</b>
+                           <b>{getTranslation("edit.feature.background_stripes")}</b>
                             
                             <div className="sprite_forms_arrow" style={{
                                 transform: (tab !== "backgroundStripes")?("rotateZ(-90deg)"):(undefined)
@@ -187,12 +189,12 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         {(tab === "backgroundStripes") && (
                             <FlexLayout>
-                                <Checkbox label="Use background stripes?" value={configuration?.backgroundStripesUsed} onChange={() => shopFeatureImage.toggleBackgroundStripesUsed()}/>
+                                <Checkbox label={getTranslation("edit.feature.use_background_stripes")} value={configuration?.backgroundStripesUsed} onChange={() => shopFeatureImage.toggleBackgroundStripesUsed()}/>
                             </FlexLayout>
                         )}
 
                         <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("featureSprite")}>
-                           <b>Feature Sprite</b>
+                           <b>{getTranslation("edit.feature.feature_sprite")}</b>
                             
                             <div className="sprite_forms_arrow" style={{
                                 transform: (tab !== "featureSprite")?("rotateZ(-90deg)"):(undefined)
@@ -201,10 +203,10 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         {(tab === "featureSprite") && (
                             <FlexLayout>
-                                <Checkbox label="Use feature sprite?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureSpriteUsed()}/>
+                                <Checkbox label={getTranslation("edit.feature.use_feature_sprite")} value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureSpriteUsed()}/>
                                 
                                 <FlexLayout flex={1} direction="column">
-                                    <b>Sprite Color</b>
+                                    <b>{getTranslation("edit.feature.sprite_color")}</b>
                                     
                                     <DialogColorPicker value={configuration?.featureSpriteColor} onChange={(color) => shopFeatureImage.setFeatureSpriteColor(color)}/>
                                 </FlexLayout>
@@ -212,7 +214,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                         )}
 
                         <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("featureFurniture")}>
-                           <b>Feature Furniture</b>
+                           <b>{getTranslation("edit.feature.feature_furniture")}</b>
                             
                             <div className="sprite_forms_arrow" style={{
                                 transform: (tab !== "featureFurniture")?("rotateZ(-90deg)"):(undefined)
@@ -221,14 +223,14 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         {(tab === "featureFurniture") && (
                             <FlexLayout>
-                                <Checkbox label="Use feature furniture?" value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureFurnitureUsed()}/>
+                                <Checkbox label={getTranslation("edit.feature.use_feature_furniture")} value={configuration?.useFeatureSprite} onChange={() => shopFeatureImage.toggleFeatureFurnitureUsed()}/>
                                 
                                 <FurnitureBrowserSelection furniture={(configuration?.featureFurniture)?([configuration.featureFurniture]):([])} onChange={(furniture) => shopFeatureImage.setFeatureFurniture(furniture[0])}/>
                             </FlexLayout>
                         )}
 
                         <FlexLayout direction="row" justify="space-between" align="center" style={{ cursor: "pointer" }} onClick={() => setTab("room")}>
-                           <b>Room Furniture</b>
+                           <b>{getTranslation("edit.feature.room_furniture")}</b>
                             
                             <div className="sprite_forms_arrow" style={{
                                 transform: (tab !== "room")?("rotateZ(-90deg)"):(undefined)
@@ -237,9 +239,9 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         {(tab === "room") && (
                             <FlexLayout>
-                                <Checkbox label="Use room furniture?" value={configuration?.roomUsed} onChange={() => shopFeatureImage.toggleRoomUsed()}/>
+                                <Checkbox label={getTranslation("edit.feature.use_room_furniture")} value={configuration?.roomUsed} onChange={() => shopFeatureImage.toggleRoomUsed()}/>
                                 
-                                <DialogButton onClick={handleRoomCapture}>Capture room items</DialogButton>
+                                <DialogButton onClick={handleRoomCapture}>{getTranslation("edit.feature.capture_room")}</DialogButton>
                             </FlexLayout>
                         )}
                     </div>
@@ -251,13 +253,13 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Title</b>
+                        <b>{getTranslation("edit.feature.title")}</b>
 
                         <Input value={title} onChange={setTitle}/>
 
-                        <b>Featured Page</b>
+                        <b>{getTranslation("edit.feature.featured_page")}</b>
 
-                        <Selection value={featuredPageId} items={([{value: undefined, label: "None"}] as any).concat(...(pages.map((shopPage) => {
+                        <Selection value={featuredPageId} items={([{value: undefined, label: getTranslation("edit.none")}] as any).concat(...(pages.map((shopPage) => {
                             return {
                                 value: shopPage.id,
                                 label: (
@@ -277,7 +279,7 @@ export default function EditShopFeatureDialog({ id, hidden, data, onClose }: Edi
 
                         <div style={{ flex: 1 }}/>
 
-                        <DialogButton onClick={handleApply}>{(data.feature)?("Update feature"):("Create feature")}</DialogButton>
+                        <DialogButton onClick={handleApply}>{(data.feature)?(getTranslation("edit.update")):(getTranslation("edit.create"))}</DialogButton>
                     </div>
                 </div>
             </DialogContent>

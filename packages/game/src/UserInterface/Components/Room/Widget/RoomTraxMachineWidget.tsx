@@ -3,8 +3,10 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import useTraxPlayer from "@UserInterface/Components/Room/Widget/Hooks/useTraxPlayer";
 import { useRoomTraxmachine } from "@UserInterface/Hooks/useRoomTraxmachine";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function RoomTraxMachineWidget() {
+    const [getTranslation] = useTranslation("room");
     const traxmachine = useRoomTraxmachine();
     const traxPlayer = useTraxPlayer();
 
@@ -160,7 +162,7 @@ export default function RoomTraxMachineWidget() {
                     padding: "2px 0"
                 }}>
                     <div>
-                        <div><b>Now playing:</b></div>
+                        <div><b>{getTranslation("trax.now_playing")}</b></div>
                         <div>{currentSong?.name}</div>
                     </div>
 

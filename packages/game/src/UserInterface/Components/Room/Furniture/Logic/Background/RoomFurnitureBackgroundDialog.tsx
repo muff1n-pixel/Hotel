@@ -9,6 +9,7 @@ import Input from "../../../../../Common/Form/Components/Input";
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureBackgroundDialogData = {
     furniture: RoomInstanceFurniture;
@@ -16,6 +17,7 @@ export type RoomFurnitureBackgroundDialogData = {
 };
 
 export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [imageUrl, setImageUrl] = useState(data.data.data?.background?.imageUrl ?? "");
@@ -52,7 +54,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
     }
 
     return (
-        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} assumedHeight={400} height={"auto"} initialPosition="center">
+        <Dialog title={getTranslation("furniture.background.title")} hidden={hidden} onClose={onClose} width={300} assumedHeight={400} height={"auto"} initialPosition="center">
             <DialogContent style={{
                 gap: 10
             }}>
@@ -79,7 +81,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                         </div>
                     )}
 
-                    <b>Image url</b>
+                    <b>{getTranslation("furniture.background.image_url")}</b>
 
                     <Input placeholder="/room/backgrounds/..." value={imageUrl} onChange={setImageUrl}/>
 
@@ -95,7 +97,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                             flexDirection: "column",
                             gap: 8
                         }}>
-                            <b>Offset X</b>
+                            <b>{getTranslation("furniture.background.offset_x")}</b>
 
                             <Input type="number" placeholder="0" value={offsetX.toString()} onChange={(value) => setOffsetX(parseInt(value))} style={{ width: 0 }}/>
                         </div>
@@ -107,7 +109,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                             flexDirection: "column",
                             gap: 8
                         }}>
-                            <b>Offset Y</b>
+                            <b>{getTranslation("furniture.background.offset_y")}</b>
 
                             <Input type="number" placeholder="0" value={offsetY.toString()} onChange={(value) => setOffsetY(parseInt(value))} style={{ width: 0 }}/>
                         </div>
@@ -119,19 +121,19 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                             flexDirection: "column",
                             gap: 8
                         }}>
-                            <b>Offset Z</b>
+                            <b>{getTranslation("furniture.background.offset_z")}</b>
 
                             <Input type="number" placeholder="0" value={offsetZ.toString()} onChange={(value) => setOffsetZ(parseInt(value))} style={{ width: 0 }}/>
                         </div>
                     </div>
 
-                    <Checkbox value={relativePosition} onChange={setRelativePosition} label="Put image relative to furniture sprite"/>
+                    <Checkbox value={relativePosition} onChange={setRelativePosition} label={getTranslation("furniture.background.relative")}/>
 
                     <div/>
 
-                    <b>Link url</b>
+                    <b>{getTranslation("furniture.background.link_url")}</b>
                     
-                    <p>This is only available for background furniture that has clickable sprites.</p>
+                    <p>{getTranslation("furniture.background.link_hint")}</p>
 
                     <Input placeholder="https://..." value={linkUrl} onChange={setLinkUrl}/>
                 </div>
@@ -140,7 +142,7 @@ export default function RoomFurnitureBackgroundDialog({ data, hidden, onClose }:
                     display: "flex",
                     justifyContent: "flex-end"
                 }}>
-                    <DialogButton onClick={handleApply}>Apply</DialogButton>
+                    <DialogButton onClick={handleApply}>{getTranslation("furniture.background.apply")}</DialogButton>
                 </div>
             </DialogContent>
         </Dialog>

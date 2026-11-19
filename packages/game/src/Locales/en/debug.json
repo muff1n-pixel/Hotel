@@ -1,0 +1,14 @@
+{
+    "report_issue": {
+        "title": "Report an issue",
+        "area_question": "What area is the issue regarding?",
+        "area_example": "E.g. room rendering, furniture rendering, navigator dialog, etc.",
+        "area_placeholder": "Issue area (optional)",
+        "issue_question": "What is the issue?",
+        "issue_description": "Write as much or as little as you wish, describing the issue.",
+        "issue_placeholder": "Issue description",
+        "feedback_suggestions": "You can also use this form to suggest improvements, new functionality, or general feedback.",
+        "submit": "Submit feedback",
+        "thanks": "Thank you for your feedback!"
+    }
+}

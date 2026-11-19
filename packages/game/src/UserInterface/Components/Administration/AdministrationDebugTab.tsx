@@ -2,8 +2,10 @@ import DataStats from "@Client/DataStats";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import useAnimationFrame from "@UserInterface/Hooks/useAnimationFrame";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function AdministrationDebugTab() {
+    const [getTranslation] = useTranslation("administration");
     const [landscapeImageBitmapsOpened, setLandscapeImageBitmapsOpened] = useState(0);
     const [landscapeImageBitmapsClosed, setLandscapeImageBitmapsClosed] = useState(0);
 
@@ -20,15 +22,15 @@ export default function AdministrationDebugTab() {
             flexDirection: "column",
             gap: 8,
         }}>
-            <b>ImageBitmaps</b>
+            <b>{getTranslation("debug.image_bitmaps")}</b>
 
             <DialogTable
-                columns={["Asset", "Opened", "Closed", "Active"]}
+                columns={["asset", "opened", "closed", "active"].map((key) => getTranslation(`debug.${key}`))}
                 items={[
                     {
                         id: "landscape",
                         values: [
-                            "Landscape",
+                            getTranslation("debug.landscape"),
                             landscapeImageBitmapsOpened,
                             landscapeImageBitmapsClosed,
                             (landscapeImageBitmapsOpened - landscapeImageBitmapsClosed)
@@ -38,7 +40,7 @@ export default function AdministrationDebugTab() {
                     {
                         id: "furniture",
                         values: [
-                            "Furniture",
+                            getTranslation("debug.furniture"),
                             DataStats.furnitureImageBitmapsOpened,
                             DataStats.furnitureImageBitmapsClosed,
                             (DataStats.furnitureImageBitmapsOpened - DataStats.furnitureImageBitmapsClosed)
@@ -48,7 +50,7 @@ export default function AdministrationDebugTab() {
                     {
                         id: "figure",
                         values: [
-                            "Figure",
+                            getTranslation("debug.figure"),
                             DataStats.figureImageBitmapsOpened,
                             DataStats.figureImageBitmapsClosed,
                             (DataStats.figureImageBitmapsOpened - DataStats.figureImageBitmapsClosed)

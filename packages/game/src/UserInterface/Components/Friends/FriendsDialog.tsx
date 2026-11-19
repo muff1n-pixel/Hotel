@@ -2,6 +2,7 @@ import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs"
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import FriendsDialogList from "@UserInterface/Components/Friends/FriendsDialogList";
 import FriendsDialogSearch from "@UserInterface/Components/Friends/FriendsDialogSearch";
+import { useTranslation } from "react-i18next";
 
 export type FriendsDialogProps = {
     hidden?: boolean;
@@ -12,8 +13,10 @@ export type FriendsDialogProps = {
 }
 
 export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogProps) {
+    const [getTranslation] = useTranslation("friends");
+
     return (
-        <Dialog title="Friends" hidden={hidden} onClose={onClose} width={280} height={380} style={{
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={280} height={380} style={{
             overflow: "visible"
         }}>
             <DialogTabs
@@ -25,7 +28,7 @@ export default function FriendsDialog({ hidden, data, onClose }: FriendsDialogPr
                 }}
                 tabs={[
                     {
-                        icon: "My friends",
+                        icon: getTranslation("tabs.my_friends"),
                         element: (<FriendsDialogList/>),
                     },
                     {

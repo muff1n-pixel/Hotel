@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -15,6 +16,7 @@ import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [score, setScore] = useState(data.data.data?.wiredActionGiveScore?.score ?? 0);
@@ -51,7 +53,7 @@ export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnit
 
             <WiredSection>
                 <FlexLayout direction="row" align="center">
-                    <b>Set the points:</b>
+                    <b>{getTranslation("creator.set_points")}</b>
 
                     <WiredInput value={score.toString()} onChange={(value) => setScore(parseInt(value))} style={{
                         width: 40
@@ -64,16 +66,16 @@ export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnit
             <WiredDivider/>
 
             <WiredSection>
-                <b>Type of effect:</b>
+                <b>{getTranslation("creator.type_of_effect")}</b>
 
                 <WiredRadio value={action} onChange={setAction} items={[
                     {
                         value: "add",
-                        label: "Add points"
+                        label: getTranslation("creator.add_points")
                     },
                     {
                         value: "remove",
-                        label: "Remove points"
+                        label: getTranslation("creator.remove_points")
                     }
                 ]}/>
             </WiredSection>
@@ -85,8 +87,8 @@ export default function WiredActionGiveScoreDialog({ data, onClose }: RoomFurnit
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

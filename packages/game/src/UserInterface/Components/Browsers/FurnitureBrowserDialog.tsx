@@ -8,6 +8,7 @@ import BrowserDialog from "@UserInterface/Common/Browser/BrowserDialog";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import FurnitureIcon from "@UserInterface/Components/Furniture/FurnitureIcon";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { useTranslation } from "react-i18next";
 
 export type FurnitureBrowserDialogProps = {
     hidden?: boolean;
@@ -22,6 +23,7 @@ export type FurnitureBrowserDialogProps = {
 }
 
 export default function FurnitureBrowserDialog({ data, hidden, onClose }: FurnitureBrowserDialogProps) {
+    const [getTranslation] = useTranslation("browsers");
     const dialogs = useDialogs();
     const hasEditPermissions = usePermissionAction("furniture:edit");
     
@@ -94,12 +96,12 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
                     <div style={{ flex: 2 }}>
                         <div>
-                            <b>Animation:</b>
+                            <b>{getTranslation("furniture.animation")}</b>
                             <Input style={{ width: "100%" }} type="number" value={animationId.toString()} onChange={(value) => setAnimationId(parseInt(value))}/>
                         </div>
                         
                         <div>
-                            <b>Frame:</b>
+                            <b>{getTranslation("furniture.frame")}</b>
                             <Input style={{ width: "100%" }} type="number" value={frame.toString()} onChange={(value) => setFrame(parseInt(value))}/>
                         </div>
                     </div>
@@ -108,7 +110,7 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
             table={{
                 flex: [1, 1, 2],
-                columns: ["Type", "Name", "Color"],
+                columns: ["type", "name", "color"].map((key) => getTranslation(`furniture.columns.${key}`)),
                 items: items.map((item) => {
                     return {
                         id: item.id,
@@ -168,9 +170,9 @@ export default function FurnitureBrowserDialog({ data, hidden, onClose }: Furnit
 
             hidden={hidden}
             onClose={onClose}>
-            <Input style={{ width: "100%" }} placeholder="Type" value={searchType} onChange={setSearchType}/>
-            <Input style={{ width: "100%" }} placeholder="Name" value={searchName} onChange={setSearchName}/>
-            <Input style={{ width: "100%" }} placeholder="Custom params" value={searchCustomParams} onChange={setSearchCustomParams}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("furniture.type")} value={searchType} onChange={setSearchType}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("furniture.name")} value={searchName} onChange={setSearchName}/>
+            <Input style={{ width: "100%" }} placeholder={getTranslation("furniture.custom_params")} value={searchCustomParams} onChange={setSearchCustomParams}/>
         </BrowserDialog>
     );
 }

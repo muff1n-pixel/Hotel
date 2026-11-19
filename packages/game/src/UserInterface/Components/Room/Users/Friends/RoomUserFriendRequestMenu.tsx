@@ -6,12 +6,14 @@ import { webSocketClient } from "@Game/index";
 import { UpdateUserFriendRequestData } from "@pixel63/events";
 import { useState } from "react";
 import RoomUser from "@Client/Room/Users/RoomUser";
+import { useTranslation } from "react-i18next";
 
 export type RoomUserFriendRequestMenuProps = {
     user: RoomUser;
 }
 
 export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendRequestMenuProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const position = useRoomItemScreenPosition(user.item);
 
@@ -72,7 +74,7 @@ export default function RoomUserFriendRequestMenu({ user }: RoomUserFriendReques
                         <div style={{
                             fontFamily: "Ubuntu Medium"
                         }}>
-                            <div>Friend request from</div>
+                            <div>{getTranslation("friends.request_from")}</div>
                             
                             <UserLink id={user.data.id} name={user.data.name}/>
                         </div>

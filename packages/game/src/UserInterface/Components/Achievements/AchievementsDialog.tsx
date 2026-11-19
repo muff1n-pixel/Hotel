@@ -4,6 +4,7 @@ import { useAchievementCategories } from "@UserInterface/Components/Achievements
 import AchievementCategoriesTab from "@UserInterface/Components/Achievements/Tabs/AchievementCategoriesTab";
 import AchievementCategoryTab from "@UserInterface/Components/Achievements/Tabs/AchievementCategoryTab";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type AchievementsDialogProps = {
     hidden?: boolean;
@@ -11,6 +12,7 @@ export type AchievementsDialogProps = {
 }
 
 export default function AchievementsDialog({ hidden, onClose }: AchievementsDialogProps) {
+    const [getTranslation] = useTranslation("achievements");
     const [activeCategory, setActiveCategory] = useState<AchievementsCategoryData>();
 
     const categories = useAchievementCategories();
@@ -21,14 +23,14 @@ export default function AchievementsDialog({ hidden, onClose }: AchievementsDial
 
     if(activeCategory) {
         return (
-            <Dialog title="Achievements" hidden={hidden} onClose={onClose} width={400} height="auto" assumedHeight={350} initialPosition="center">
+            <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={400} height="auto" assumedHeight={350} initialPosition="center">
                 <AchievementCategoryTab category={activeCategory} onClose={() => setActiveCategory(undefined)}/>
             </Dialog>
         );
     }
     
     return (
-        <Dialog title="Achievements" hidden={hidden} onClose={onClose} width={400} height="auto" assumedHeight={350} initialPosition="center">
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={400} height="auto" assumedHeight={350} initialPosition="center">
             <AchievementCategoriesTab categories={categories} onChange={setActiveCategory}/>
         </Dialog>
     );

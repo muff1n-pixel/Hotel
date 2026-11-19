@@ -5,8 +5,10 @@ import Radio from "@UserInterface/Common/Form/Components/Radio";
 import { webSocketClient } from "@Game/index";
 import { UpdateRoomInformationData } from "@pixel63/events";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
+import { useTranslation } from "react-i18next";
 
 export default function RoomSettingsAccessTab() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [password, setPassword] = useState("");
@@ -63,9 +65,9 @@ export default function RoomSettingsAccessTab() {
                     flexDirection: "column",
                     gap: 8
                 }}>
-                    <b>Room Access</b>
+                    <b>{getTranslation("settings.access.title")}</b>
 
-                    <p>Select access rights for the room. Open means everyone can enter; Locked restricts access to Habbos with a password; Private means Habbos have to ring your doorbell and wait to be let in.</p>
+                    <p>{getTranslation("settings.access.description")}</p>
                 </div>
 
                 <div style={{
@@ -73,23 +75,23 @@ export default function RoomSettingsAccessTab() {
                     flexDirection: "column",
                     gap: 8
                 }}>
-                    <b>Access to this room:</b>
+                    <b>{getTranslation("settings.access.label")}</b>
 
                     <Radio value={room.information?.lock ?? "open"} onChange={handleLockChanged} items={[
                         {
-                            label: "Open - anyone can enter",
+                            label: getTranslation("settings.access.open"),
                             value: "open"
                         },
                         {
-                            label: "Visitors have to ring the doorbell",
+                            label: getTranslation("settings.access.bell"),
                             value: "bell"
                         },
                         {
-                            label: "Invisible in navigator to users without rights",
+                            label: getTranslation("settings.access.invisible"),
                             value: "invisible"
                         },
                         {
-                            label: "Password is required to enter this room",
+                            label: getTranslation("settings.access.password"),
                             value: "password"
                         }
                     ]}/>
@@ -101,11 +103,11 @@ export default function RoomSettingsAccessTab() {
                         flexDirection: "column",
                         gap: 8
                     }}>
-                        <b>Room Password</b>
+                        <b>{getTranslation("settings.access.password_title")}</b>
 
                         <Input type="password" value={password} onChange={setPassword} onSubmit={handlePasswordChanged}/>
 
-                        <p style={{ fontSize: 11 }}><i>If you already have a password set, it will not be shown here.</i></p>
+                        <p style={{ fontSize: 11 }}><i>{getTranslation("settings.access.password_hint")}</i></p>
                     </div>
                 )}
 
@@ -114,11 +116,11 @@ export default function RoomSettingsAccessTab() {
                     flexDirection: "column",
                     gap: 8
                 }}>
-                    <b>Pet settings</b>
+                    <b>{getTranslation("settings.access.pet_settings")}</b>
 
-                    <Checkbox value={room.information?.allowPets} label="Allow pets" onChange={handleAllowPetsChange}/>
-                    <Checkbox value={room.information?.allowPetsToEatFood} label="Allow other pets to eat food" onChange={handleAllowPetsToEatFoodChange}/>
-                    <Checkbox value={room.information?.muteAllPets} label="Mute all pets" onChange={handleMuteAllPetsChange}/>
+                    <Checkbox value={room.information?.allowPets} label={getTranslation("settings.access.allow_pets")} onChange={handleAllowPetsChange}/>
+                    <Checkbox value={room.information?.allowPetsToEatFood} label={getTranslation("settings.access.allow_pets_eat")} onChange={handleAllowPetsToEatFoodChange}/>
+                    <Checkbox value={room.information?.muteAllPets} label={getTranslation("settings.access.mute_pets")} onChange={handleMuteAllPetsChange}/>
                 </div>
             </div>
         </div>

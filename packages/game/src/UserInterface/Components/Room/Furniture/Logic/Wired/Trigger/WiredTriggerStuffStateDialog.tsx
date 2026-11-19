@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomInstanceFurniture } from "@Client/Room/RoomInstance";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
@@ -19,6 +20,7 @@ export type WiredTriggerStuffStateDialog = {
 };
 
 export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [trigger, setTrigger] = useState(data.data.data?.wiredTriggerStuffState?.trigger ?? "all");
@@ -63,16 +65,16 @@ export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection>
-                <b>Select options:</b>
+                <b>{getTranslation("creator.select_options")}</b>
                 
                 <WiredRadio value={trigger} onChange={setTrigger} items={[
                     {
                         value: "all",
-                        label: "Trigger for all states"
+                        label: getTranslation("creator.trigger_all_states")
                     },
                     {
                         value: "state",
-                        label: "Trigger for the current state"
+                        label: getTranslation("creator.trigger_current_state")
                     }
                 ]}/>
             </WiredSection>
@@ -88,8 +90,8 @@ export default function WiredTriggerStuffStateDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

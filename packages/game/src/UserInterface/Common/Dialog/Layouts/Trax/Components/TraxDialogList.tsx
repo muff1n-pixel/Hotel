@@ -5,6 +5,7 @@ import "./TraxDialogList.css";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import TraxDialogPanel from "@UserInterface/Common/Dialog/Layouts/Trax/Components/TraxDialogPanel";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type TraxDialogListProps = {
     sets: FurnitureData[];
@@ -13,6 +14,7 @@ export type TraxDialogListProps = {
 }
 
 export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
+    const [getTranslation] = useTranslation("room");
     const [page, setPage] = useState(0);
     const maxPages = useMemo(() => Math.ceil(sets.length / 3), [sets]);
 
@@ -58,7 +60,7 @@ export default function TraxDialogList({ sets, onClick }: TraxDialogListProps) {
                                         <FlexLayout flex={1} direction="column" justify="center" gap={0}>
                                             <div><b>{set.name}</b></div>
 
-                                            <div className="trax-dialog-list-item-use">Use</div>
+                                            <div className="trax-dialog-list-item-use">{getTranslation("trax.use")}</div>
                                         </FlexLayout>
                                     </FlexLayout>
                                 )}

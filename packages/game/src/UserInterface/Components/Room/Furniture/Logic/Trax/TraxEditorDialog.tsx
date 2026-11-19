@@ -10,6 +10,7 @@ import useTraxSlider from "@UserInterface/Components/Room/Furniture/Logic/Trax/H
 import useTraxSlot from "@UserInterface/Components/Room/Furniture/Logic/Trax/Hooks/useTraxSlot";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type TraxEditorDialogProps = {
     hidden?: boolean;
@@ -21,6 +22,7 @@ export type TraxEditorDialogProps = {
 }
 
 export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -134,7 +136,7 @@ export default function TraxEditorDialog({ hidden, data, onClose }: TraxEditorDi
 
     return (
         <Fragment>
-            <TraxDialog title={data.song?.name ?? "Trax Editor"} hidden={hidden} onClose={handleClose} width={590} height={340} initialPosition="center" style={{
+            <TraxDialog title={data.song?.name ?? getTranslation("trax.editor")} hidden={hidden} onClose={handleClose} width={590} height={340} initialPosition="center" style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10

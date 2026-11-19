@@ -8,8 +8,10 @@ import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/Dia
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FriendUser from "@UserInterface/Components/Friends/Component/FriendUser";
 import useFriends from "@UserInterface/Hooks/useFriends";
+import { useTranslation } from "react-i18next";
 
 export default function FriendsDialogList() {
+    const [getTranslation] = useTranslation("friends");
     const { friends, offlineFriends, incomingRequests, outgoingRequests } = useFriends();
 
     const [activeFriend, setActiveFriend] = useState<UserFriendData | null>(null);
@@ -43,7 +45,7 @@ export default function FriendsDialogList() {
                 cursor: "pointer"
             }} onClick={() => setTab(undefined)}>
                 <div>
-                    All friends ({friends?.length})
+                    {getTranslation("list.all", { count: friends?.length ?? 0 })}
                 </div>
                 
                 <div className="sprite_forms_arrow" style={{
@@ -58,7 +60,7 @@ export default function FriendsDialogList() {
                 }}>
                     {(!friends?.length)?(
                         <div>
-                            You have no friends online!
+                            {getTranslation("list.none_online")}
                         </div>
                     ):(
                         <DialogScrollArea style={{ gap: 10, margin: "-10px" }} hideInactive>
@@ -86,7 +88,7 @@ export default function FriendsDialogList() {
                                 userId: activeFriend.id
                             }));
                         }}>
-                        Remove friend
+                        {getTranslation("list.remove")}
                     </DialogButton>
                 </div>
             )}
@@ -102,7 +104,7 @@ export default function FriendsDialogList() {
                         cursor: "pointer"
                     }} onClick={() => setTab((tab === "offline")?(undefined):("offline"))}>
                         <div>
-                            Offline friends ({offlineFriends.length})
+                            {getTranslation("list.offline", { count: offlineFriends.length })}
                         </div>
                         
                         <div className="sprite_forms_arrow" style={{
@@ -140,7 +142,7 @@ export default function FriendsDialogList() {
                                     }}>
                                         <b><UserLink id={friend.id} name={friend.name}/></b>
                                         
-                                        <div style={{ fontSize: 12 }}>Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}</div>
+                                        <div style={{ fontSize: 12 }}>{getTranslation("list.last_seen")} {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):(getTranslation("list.never"))}</div>
                                     </div>
                                 </div>
                             ))}
@@ -160,7 +162,7 @@ export default function FriendsDialogList() {
                         cursor: "pointer"
                     }} onClick={() => setTab((tab === "incoming")?(undefined):("incoming"))}>
                         <div>
-                            Incoming friend requests ({incomingRequests.length})
+                            {getTranslation("list.incoming", { count: incomingRequests.length })}
                         </div>
                         
                         <div className="sprite_forms_arrow" style={{
@@ -189,7 +191,7 @@ export default function FriendsDialogList() {
                         cursor: "pointer"
                     }} onClick={() => setTab((tab === "outgoing")?(undefined):("outgoing"))}>
                         <div>
-                            Outgoing friend requests ({outgoingRequests.length})
+                            {getTranslation("list.outgoing", { count: outgoingRequests.length })}
                         </div>
                         
                         <div className="sprite_forms_arrow" style={{

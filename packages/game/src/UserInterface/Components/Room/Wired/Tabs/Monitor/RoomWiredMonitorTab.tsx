@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) {
     const [getCommonTranslation] = useTranslation("common");
-    const [getWiredTranslation] = useTranslation("wired");
+    const [getTranslation] = useTranslation("wired");
 
     const {monitor, handleRefresh} = useRoomWiredMonitor();
 
@@ -21,7 +21,7 @@ export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) 
             <FlexLayout direction="row" align="center">
                 <FlexLayout flex={1} direction="column" gap={5}>
                     <FlexLayout direction="row" align="center" justify="space-between">
-                        <div><b>{getWiredTranslation("monitor.statistics")}</b></div>
+                        <div><b>{getTranslation("monitor.statistics")}</b></div>
 
                         <div className="sprite_refresh" onClick={handleRefresh} style={{
                             filter: "invert(1)",
@@ -39,11 +39,11 @@ export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) 
                     }}>
                         <FlexLayout direction="column" gap={6}>
                             {(monitor) && (
-                                <div>{getWiredTranslation("monitor.variables.is_heavy")}: <span style={{ color: "#2B8B2A" }}>{(monitor.statistics?.heavy)?(getCommonTranslation("yes")):(getCommonTranslation("no"))}</span></div>
+                                <div>{getTranslation("monitor.variables.is_heavy")}: <span style={{ color: "#2B8B2A" }}>{(monitor.statistics?.heavy)?(getCommonTranslation("yes")):(getCommonTranslation("no"))}</span></div>
                             )}
 
                             {monitor?.statistics?.variables.map((variable) => (
-                                <div key={variable.type}>{getWiredTranslation(`monitor.variables.${variable.type}`)}: <span style={{ color: "#2B8B2A" }}>{variable.value}/{variable.maxValue}</span></div>
+                                <div key={variable.type}>{getTranslation(`monitor.variables.${variable.type}`)}: <span style={{ color: "#2B8B2A" }}>{variable.value}/{variable.maxValue}</span></div>
                             ))}
                         </FlexLayout>
                     </div>
@@ -55,11 +55,11 @@ export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) 
             </FlexLayout>
 
             <FlexLayout flex={1} direction="column" gap={5}>
-                <div><b>{getWiredTranslation("monitor.logs")}</b></div>
+                <div><b>{getTranslation("monitor.logs")}</b></div>
 
                 <DialogTable
                     flex={[2, 1, 1, 2]}
-                    columns={[getWiredTranslation("monitor.category"), getWiredTranslation("monitor.level"), getWiredTranslation("monitor.amount"), getWiredTranslation("monitor.latest_occurrence")]}
+                    columns={[getTranslation("monitor.category"), getTranslation("monitor.level"), getTranslation("monitor.amount"), getTranslation("monitor.latest_occurrence")]}
                     items={monitor?.logs.map((log) => ({
                         id: log.category,
                         values: [
@@ -69,12 +69,12 @@ export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) 
                             (log.latestOccurrence)?(new Date(log.latestOccurrence).toLocaleTimeString()):('-')
                         ]
                     }))}
-                    empty={getWiredTranslation("monitor.no_logs")}
+                    empty={getTranslation("monitor.no_logs")}
                     />
             </FlexLayout>
 
             <FlexLayout direction="row" justify="flex-end">
-                <DialogButton onClick={handleShowAllLogs}>Show all logs</DialogButton>
+                <DialogButton onClick={handleShowAllLogs}>{getTranslation("creator.show_all_logs")}</DialogButton>
             </FlexLayout>
         </FlexLayout>
     );

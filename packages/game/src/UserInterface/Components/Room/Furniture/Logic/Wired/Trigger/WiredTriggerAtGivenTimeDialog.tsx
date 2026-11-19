@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -11,6 +12,7 @@ import { UpdateRoomFurnitureData } from "@pixel63/events";
 import WiredSlider from "@UserInterface/Common/Dialog/Layouts/Wired/Slider/WiredSlider";
 
 export default function WiredTriggerAtGivenTimeDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [seconds, setSeconds] = useState(data.data.data?.wiredTriggerAtSetTime?.seconds ?? 1);
@@ -40,7 +42,7 @@ export default function WiredTriggerAtGivenTimeDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection>
-                <b>Set time: {seconds} {((seconds === 1)?("second"):("seconds"))}</b>
+                <b>{getTranslation("creator.set_time", { count: seconds })}</b>
 
                 <WiredSlider value={seconds} onChange={setSeconds} min={1} max={600} />
             </WiredSection>
@@ -48,8 +50,8 @@ export default function WiredTriggerAtGivenTimeDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

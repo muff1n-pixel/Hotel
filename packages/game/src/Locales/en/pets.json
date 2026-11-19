@@ -1,5 +1,20 @@
 {
     "experience": "Experience",
     "happiness": "Happiness",
-    "energy": "Energy"
+    "energy": "Energy",
+    "editor": {
+        "title": "Pet Editor",
+        "type": "Pet type",
+        "name": "Pet name",
+        "breed_name": "Pet breed name",
+        "show_list": "Show list",
+        "new_breed": "New breed",
+        "breed_index": "Pet breed index",
+        "palette": "Pet palette",
+        "tags": "Tags",
+        "palette_id": "Palette ID",
+        "palette_color": "Palette color",
+        "update": "Update",
+        "create": "Create"
+    }
 }

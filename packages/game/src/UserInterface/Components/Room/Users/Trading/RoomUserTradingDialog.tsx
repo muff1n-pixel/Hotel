@@ -10,6 +10,7 @@ import TradingPanel from "@UserInterface/Components/Room/Users/Trading/Component
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { useRoomUserTrading } from "@UserInterface/Hooks/useRoomUserTrading";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type RoomUserTradingDialogProps = {
     hidden?: boolean;
@@ -17,6 +18,7 @@ export type RoomUserTradingDialogProps = {
 };
 
 export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradingDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const trading = useRoomUserTrading();
 
@@ -94,10 +96,10 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
     }
 
     return (
-        <Dialog title={`Trading with ${tradingUser.data.name}`} width={500} height={590} hidden={hidden} onClose={handleClose}>
+        <Dialog title={getTranslation("trading.title", { name: tradingUser.data.name })} width={500} height={590} hidden={hidden} onClose={handleClose}>
             <DialogTabs withoutHeader tabs={[
                 {
-                    icon: "Furniture",
+                    icon: getTranslation("trading.furniture"),
                     element: (
                         <InventoryFurnitureTab trading={true} allowPlacingInRoom={false} button={(activeFurniture) => (
                             <FlexLayout direction="row">
@@ -119,7 +121,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
                                         addUserFurnitureQuantity: Math.min(quantity, activeFurniture?.quantity ?? 1)
                                     }));
                                 }}>
-                                    Offer
+                                    {getTranslation("trading.offer")}
                                 </DialogButton>
                             </FlexLayout>
                         )}/>
@@ -151,7 +153,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
 
                     position: "relative"
                 }}>
-                    Add the items you would like to trade in the box below.
+                    {getTranslation("trading.add_items")}
 
                     <FlexLayout direction="row">
                         <FlexLayout direction="column" align="center" style={{ flex: 1 }}>
@@ -197,7 +199,7 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
                             fontFamily: "Ubuntu Bold",
                             fontSize: 14
                         }}>
-                            {Math.round(Math.max(secondsUntilCompletion ?? 5, 0) * 10) / 10} seconds until completion
+                            {getTranslation("trading.seconds_until_completion", { seconds: Math.round(Math.max(secondsUntilCompletion ?? 5, 0) * 10) / 10 })}
                         </div>
                     )}
                 </div>
@@ -210,10 +212,10 @@ export default function RoomUserTradingDialog({ hidden, onClose }: RoomUserTradi
                             lock: true
                         }));
                     }}>
-                        Lock trade
+                        {getTranslation("trading.lock")}
                     </DialogButton>
 
-                    <DialogButton onClick={handleClose}>Cancel</DialogButton>
+                    <DialogButton onClick={handleClose}>{getTranslation("trading.cancel")}</DialogButton>
                 </FlexLayout>
             </div>
         </Dialog>

@@ -11,8 +11,10 @@ import { GetUserInventoryBotsData, PlaceRoomBotData, UserBotData, UserInventoryB
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useUserBotNotifications } from "@UserInterface/Hooks/User/Notifications/useUserBotNotifications";
+import { useTranslation } from "react-i18next";
 
 export default function InventoryBotsTab() {
+    const [getTranslation] = useTranslation("inventory");
     const user = useUser();
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
@@ -231,7 +233,7 @@ export default function InventoryBotsTab() {
                             <p>{activeBot?.motto}</p>
                         </div>
 
-                        <DialogButton disabled={!room || room.information?.owner?.id !== user.id} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton disabled={!room || room.information?.owner?.id !== user.id} onClick={onPlaceInRoomClick}>{getTranslation("place_in_room")}</DialogButton>
                     </Fragment>
                 )}
             </div>

@@ -1,0 +1,37 @@
+{
+    "furniture": {
+        "animation": "Animation:",
+        "frame": "Frame:",
+        "type": "Type",
+        "name": "Name",
+        "custom_params": "Custom params",
+        "columns": {
+            "type": "Type",
+            "name": "Name",
+            "color": "Color"
+        }
+    },
+    "badge": {
+        "id": "ID",
+        "image": "Image",
+        "name": "Name",
+        "columns": {
+            "badge": "Badge",
+            "id": "ID",
+            "image": "Image",
+            "name": "Name",
+            "description": "Description"
+        }
+    },
+    "pet": {
+        "id": "ID",
+        "type": "Type",
+        "breed": "Breed",
+        "columns": {
+            "image": "Image",
+            "type": "Type",
+            "breed": "Breed",
+            "palettes": "Palettes"
+        }
+    }
+}

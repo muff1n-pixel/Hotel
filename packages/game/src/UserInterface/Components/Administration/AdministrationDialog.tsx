@@ -5,6 +5,7 @@ import AdministrationOverviewTab from "@UserInterface/Components/Administration/
 import AdministrationSettingsTab from "@UserInterface/Components/Administration/AdministrationSettingsTab";
 import AdministrationDebugTab from "./AdministrationDebugTab";
 import AdministrationActivityRewardsTab from "./AdministrationActivityRewardsTab";
+import { useTranslation } from "react-i18next";
 
 export type AdministrationDialogProps = {
     hidden?: boolean;
@@ -12,29 +13,31 @@ export type AdministrationDialogProps = {
 }
 
 export default function AdministrationDialog({ hidden, onClose }: AdministrationDialogProps) {
+    const [getTranslation] = useTranslation("administration");
+
     return (
-        <Dialog title="Administration" hidden={hidden} onClose={onClose} width={500} height={320} editMode>
+        <Dialog title={getTranslation("title")} hidden={hidden} onClose={onClose} width={500} height={320} editMode>
             <DialogTabs
                 withoutHeader
                 tabs={[
                     {
-                        icon: "Overview",
+                        icon: getTranslation("tabs.overview"),
                         element: (<AdministrationOverviewTab/>)
                     },
                     {
-                        icon: "Settings",
+                        icon: getTranslation("tabs.settings"),
                         element: (<AdministrationSettingsTab/>)
                     },
                     {
-                        icon: "Activity Rewards",
+                        icon: getTranslation("tabs.activity_rewards"),
                         element: (<AdministrationActivityRewardsTab/>)
                     },
                     {
-                        icon: "Feedback",
+                        icon: getTranslation("tabs.feedback"),
                         element: (<AdministrationFeedbackTab/>)
                     },
                     {
-                        icon: "Debug",
+                        icon: getTranslation("tabs.debug"),
                         element: (<AdministrationDebugTab/>)
                     }
                 ]}

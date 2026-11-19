@@ -6,6 +6,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import AchievementItem from "@UserInterface/Components/Achievements/Components/AchievementItem";
 import { useAchievements } from "@UserInterface/Components/Achievements/Hooks/useAchievements";
 import { Fragment, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type AchievementCategoryTabProps = {
     category: AchievementsCategoryData;
@@ -13,6 +14,7 @@ export type AchievementCategoryTabProps = {
 }
 
 export default function AchievementCategoryTab({ category, onClose }: AchievementCategoryTabProps) {
+    const [getTranslation] = useTranslation("achievements");
     const achievements = useAchievements(category.id);
 
     const [activeAchievement, setActiveAchievement] = useState<AchievementData>();
@@ -41,7 +43,7 @@ export default function AchievementCategoryTab({ category, onClose }: Achievemen
                 }}>
                     <div style={{ fontSize: 20 }}>{category.name}</div>
 
-                    <div style={{ fontSize: 13 }}>{category.userUnlockedLevels}/{category.totalLevels} badges collected</div>
+                    <div style={{ fontSize: 13 }}>{getTranslation("badges_collected", { unlocked: category.userUnlockedLevels, total: category.totalLevels })}</div>
                 </FlexLayout>
 
                 <img src={`/assets/achievements/icons/${category.iconImage}`}/>
@@ -96,7 +98,7 @@ export default function AchievementCategoryTab({ category, onClose }: Achievemen
                                 fontFamily: "Ubuntu Bold",
                                 fontSize: 12
                             }}>
-                                Level {(activeAchievement.currentBadge)?(activeAchievement.userLevel):("??")}/{(activeAchievement.currentBadge)?(activeAchievement.levels):("??")}
+                                {getTranslation("level", { current: (activeAchievement.currentBadge)?(activeAchievement.userLevel):("??"), total: (activeAchievement.currentBadge)?(activeAchievement.levels):("??") })}
                             </div>
                         </FlexLayout>
 

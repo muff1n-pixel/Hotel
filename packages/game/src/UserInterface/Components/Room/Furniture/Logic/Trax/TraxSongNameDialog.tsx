@@ -7,6 +7,7 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type TraxSongNameDialogProps = {
     hidden?: boolean;
@@ -22,10 +23,11 @@ export type TraxSongNameDialogProps = {
 }
 
 export default function TraxSongNameDialog({ hidden, data, onClose }: TraxSongNameDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
     const room = useRoomInstance();
 
-    const [name, setName] = useState(data.song?.name ?? "Untitled Trax");
+    const [name, setName] = useState(data.song?.name ?? getTranslation("trax.untitled_trax"));
 
     const handleSave = useCallback(() => {
         dialogs.closeDialog("trax-song-name");
@@ -46,16 +48,16 @@ export default function TraxSongNameDialog({ hidden, data, onClose }: TraxSongNa
     }, [ dialogs, data, name, room ]);
 
     return (
-        <TraxDialog title="Save your song" hidden={hidden} onClose={onClose} width={260} height={120} initialPosition="center" style={{
+        <TraxDialog title={getTranslation("trax.save_title")} hidden={hidden} onClose={onClose} width={260} height={120} initialPosition="center" style={{
             display: "flex",
             flexDirection: "column",
             gap: 10
         }}>
-            <div><b>Trax name:</b></div>
+            <div><b>{getTranslation("trax.name")}</b></div>
 
             <Input value={name} onChange={setName}/>
 
-            <TraxButton containerStyle={{ alignSelf: "flex-end" }} onClick={handleSave}>Save</TraxButton>
+            <TraxButton containerStyle={{ alignSelf: "flex-end" }} onClick={handleSave}>{getTranslation("trax.save")}</TraxButton>
         </TraxDialog>
     );
 }

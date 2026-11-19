@@ -3,6 +3,7 @@ import FigureWardrobeDialog from "../../Wardrobe/FigureWardrobeDialog";
 import { FigureConfigurationData, ShopBotData, ShopPageData } from "@pixel63/events";
 import WardrobeAvatar from "@UserInterface/Components/Wardrobe/WardrobeAvatar";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { useTranslation } from "react-i18next";
 
 export type EditShopBotFigureDialogProps = {
     data: Partial<ShopBotData> & {
@@ -15,6 +16,7 @@ export type EditShopBotFigureDialogProps = {
 }
 
 export default function EditShopBotFigureDialog(props: EditShopBotFigureDialogProps) {
+    const [getTranslation] = useTranslation("shop");
     const [figureConfiguration, setFigureConfiguration] = useState(props.data.figureConfiguration);
 
     const handleApply = useCallback(() => {
@@ -22,7 +24,7 @@ export default function EditShopBotFigureDialog(props: EditShopBotFigureDialogPr
     }, [props.data.onChange, figureConfiguration]);
 
     return (
-        <FigureWardrobeDialog title="Bot Wardrobe" header={props.data.name ?? "Bot"} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
+        <FigureWardrobeDialog title={getTranslation("edit.bot_figure.title")} header={props.data.name ?? getTranslation("edit.bot_figure.default_name")} figureConfiguration={figureConfiguration} onFigureConfigurationChange={setFigureConfiguration} {...props}>
             <div style={{
                 flex: 1,
 
@@ -38,7 +40,7 @@ export default function EditShopBotFigureDialog(props: EditShopBotFigureDialogPr
                 </div>
 
                 <div style={{ width: "100%" }}>
-                    <DialogButton onClick={handleApply}>Save my looks</DialogButton>
+                    <DialogButton onClick={handleApply}>{getTranslation("edit.bot_figure.save")}</DialogButton>
                 </div>
             </div>
         </FigureWardrobeDialog>

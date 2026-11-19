@@ -1,0 +1,35 @@
+{
+    "title": "Navigator",
+    "tabs": {
+        "public": "Public",
+        "all": "All Rooms",
+        "events": "Events",
+        "mine": "My Rooms"
+    },
+    "search": {
+        "anything": "Anything",
+        "room_name": "Room name",
+        "owner": "Owner",
+        "group": "Group",
+        "placeholder": "Search for a room name..."
+    },
+    "banners": {
+        "create_room": "Create a room",
+        "somewhere_new": "Somewhere new",
+        "promote_event": "Promote event"
+    },
+    "creation": {
+        "title": "Room Creation",
+        "name": "Room name",
+        "name_placeholder": "My room name",
+        "description": "Room description",
+        "description_placeholder": "My room description",
+        "category": "Room category",
+        "maximum_visitors": "Maximum amount of visitors",
+        "create": "Create room",
+        "choose_layout": "Choose room layout"
+    },
+    "profile": {
+        "max_users": "Max users:"
+    }
+}

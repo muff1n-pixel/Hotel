@@ -6,6 +6,7 @@ import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useFriends from "@UserInterface/Hooks/useFriends";
+import { useTranslation } from "react-i18next";
 
 export type FriendUserProps = {
     friend: UserFriendData;
@@ -16,6 +17,7 @@ export type FriendUserProps = {
 
 export default function FriendUser({ active, onClick, friend }: FriendUserProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("friends");
 
     const { friends, offlineFriends, incomingRequests, outgoingRequests } = useFriends();
 
@@ -58,9 +60,9 @@ export default function FriendUser({ active, onClick, friend }: FriendUserProps)
                     <b><UserLink id={friend.id} name={friend.name}/></b>
                     
                     <div style={{ fontSize: 12 }}>
-                        {(friend.online)?("Online right now"):(
+                        {(friend.online)?(getTranslation("user.online")):(
                             <div>
-                                Last seen {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):("never")}
+                                {getTranslation("user.last_seen")} {(friend.lastOnline)?(<TimeSinceDate date={new Date(friend.lastOnline)}/>):(getTranslation("user.never"))}
                             </div>
                         )}
                     </div>

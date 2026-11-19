@@ -1,0 +1,18 @@
+{
+    "audio": {
+        "title": "Ljudinställningar",
+        "trax_volume": "Trax-volym",
+        "furniture_volume": "Möbelljudvolym",
+        "system_volume": "Systemljudvolym",
+        "close": "Stäng"
+    },
+    "game": {
+        "title": "Spelinställningar",
+        "limit_frame_rate": "Begränsa bildfrekvensen till 60 fps",
+        "auto_scale_rooms": "Skala rum automatiskt",
+        "hide_tooltips": "Dölj verktygstips",
+        "disable_purchase_confirmations": "Inaktivera köpbekräftelser",
+        "debug_room_rendering": "Felsök rumsrendering",
+        "debug_room_landscape": "Felsök rumsmiljö"
+    }
+}

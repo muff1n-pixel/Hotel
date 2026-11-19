@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 const wiredWidgetBackground = new URL('../../../Images/widget/wired_background.png', import.meta.url).toString();
 
@@ -8,7 +9,10 @@ export type WiredWidgetProps = {
     children?: ReactNode;
 }
 
-export default function WiredWidget({ title = "Wired", children }: WiredWidgetProps) {
+export default function WiredWidget({ title, children }: WiredWidgetProps) {
+    const [getTranslation] = useTranslation("wired");
+    const widgetTitle = title ?? getTranslation("creator.widget_title");
+
     return (
         <div style={{
             borderRadius: 6,
@@ -40,7 +44,7 @@ export default function WiredWidget({ title = "Wired", children }: WiredWidgetPr
 
                 position: "relative"
             }}>
-                <b>{title}</b>
+                <b>{widgetTitle}</b>
             </div>
 
             {children}

@@ -6,6 +6,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { ShopFeatureRoomConfigurationData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type EditShopFeatureDialogProps = {
     id: string;
@@ -20,6 +21,7 @@ export type EditShopFeatureDialogProps = {
 
 export default function EditShopFeatureCameraDialog({ hidden, data, onClose }: EditShopFeatureDialogProps) {
     const room = useRoomInstance();
+    const [getTranslation] = useTranslation("shop");
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -51,7 +53,7 @@ export default function EditShopFeatureCameraDialog({ hidden, data, onClose }: E
     }, [room, data, canvasRef, onClose]);
 
     return (
-        <Dialog title={"Shop Feature Room Camera"} editMode hidden={hidden} onClose={() => {
+        <Dialog title={getTranslation("edit.feature_camera.title")} editMode hidden={hidden} onClose={() => {
             data.onCancel();
             onClose?.();
         }} initialPosition="center" width={(data.alignment === "vertical")?(200):(380)} height="auto" assumedHeight={420}>
@@ -60,7 +62,7 @@ export default function EditShopFeatureCameraDialog({ hidden, data, onClose }: E
                     <RoomItemsCameraRenderer canvasRef={canvasRef} width={(data.alignment === "vertical")?(184):(365)} height={(data.alignment === "vertical")?(497):(126)}/>
 
                     <div style={{ alignSelf: "flex-end" }}>
-                        <DialogButton onClick={handleClick}>Capture</DialogButton>
+                        <DialogButton onClick={handleClick}>{getTranslation("edit.feature_camera.capture")}</DialogButton>
                     </div>
                 </FlexLayout>
             </DialogContent>

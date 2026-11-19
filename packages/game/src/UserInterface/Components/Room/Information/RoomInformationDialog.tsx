@@ -12,6 +12,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
+import { useTranslation } from "react-i18next";
 
 export type RoomInformationDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type RoomInformationDialogProps = {
 }
 
 export default function RoomInformationDialog({ hidden, onClose }: RoomInformationDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const room = useRoomInstance();
     const dialogs = useDialogs();
@@ -43,7 +45,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
     }
 
     return (
-        <Dialog title="Room information" hidden={hidden} onClose={onClose} width={230} height={"auto"} assumedHeight={280}>
+        <Dialog title={getTranslation("information.title")} hidden={hidden} onClose={onClose} width={230} height={"auto"} assumedHeight={280}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -67,7 +69,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                         </div>
                     </div>
 
-                    <div><b style={{ color: "#7A7A7A" }}>Owner:</b> {room.information?.owner?.name}</div>
+                    <div><b style={{ color: "#7A7A7A" }}>{getTranslation("information.owner")}</b> {room.information?.owner?.name}</div>
 
                     {(room.information?.description) && (
                         <div>
@@ -94,17 +96,17 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                             </FlexLayout>
 
                             <DialogLink>
-                                This room is the homeroom for {roomGroup.group.name}
+                                {getTranslation("information.homeroom", { name: roomGroup.group.name })}
                             </DialogLink>
                         </FlexLayout>
                     )}
 
                     {(room.hasRights) && (
-                        <DialogButton onClick={() => dialogs.addUniqueDialog("room-settings")}>Room settings</DialogButton>
+                        <DialogButton onClick={() => dialogs.addUniqueDialog("room-settings")}>{getTranslation("information.settings")}</DialogButton>
                     )}
 
                     {(room.hasRights) && (
-                        <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>Edit room floorplan</DialogButton>
+                        <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>{getTranslation("information.floorplan")}</DialogButton>
                     )}
                 </div>
             </DialogContent>

@@ -13,6 +13,7 @@ import useGroup from "@UserInterface/Hooks/useGroup";
 import useGroupMembers from "@UserInterface/Hooks/useGroupMembers";
 import useUserGroup from "@UserInterface/Hooks/useUserGroup";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type GroupMembersDialogProps = {
     data?: string;
@@ -23,6 +24,7 @@ export type GroupMembersDialogProps = {
 export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembersDialogProps) {
     const group = useGroup(data);
     const userGroup = useUserGroup(data);
+    const [getTranslation] = useTranslation("groups");
 
     const [name, setName] = useState<string>();
     const [filter, setFilter] = useState<string>();
@@ -50,7 +52,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
     }
 
     return (
-        <Dialog title={`${group.name} members`} hidden={hidden} onClose={onClose} initialPosition="center" width={350} height={440}>
+        <Dialog title={getTranslation("members.title", { name: group.name })} hidden={hidden} onClose={onClose} initialPosition="center" width={350} height={440}>
             <DialogContent style={{
                 gap: 5
             }}>
@@ -65,16 +67,16 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                     </div>
                     
                     <FlexLayout flex={1} direction="column">
-                        <Input placeholder="Search for user..." value={name} onChange={setName}/>
+                        <Input placeholder={getTranslation("members.search")} value={name} onChange={setName}/>
 
                         <Selection value={filter} onChange={setFilter} items={[
                             {
                                 value: undefined,
-                                label: "Show all members"
+                                label: getTranslation("members.show_all")
                             },
                             {
                                 value: "admins",
-                                label: "Show only admins"
+                                label: getTranslation("members.show_admins")
                             }
                         ]}/>
                     </FlexLayout>
@@ -118,7 +120,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                                                 <div className="sprite_groups_admin"/>
                                             )
                                         )}
-                                        <i style={{ fontSize: 10 }}>Joined <TimeSinceDate date={new Date(member.createdAt)}/></i>
+                                        <i style={{ fontSize: 10 }}>{getTranslation("members.joined")} <TimeSinceDate date={new Date(member.createdAt)}/></i>
                                     </FlexLayout>
 
                                     {(member.pending && userGroup?.admin) && (
@@ -143,7 +145,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                                                     accept: false
                                                 }));
                                             }}>
-                                                Decline
+                                                {getTranslation("members.decline")}
                                             </div>
                                             
                                             <div style={{
@@ -160,7 +162,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                                                     accept: true
                                                 }));
                                             }}>
-                                                Accept
+                                                {getTranslation("members.accept")}
                                             </div>
                                         </div>
                                     )}
@@ -180,7 +182,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                             <div style={{ cursor: "pointer" }} onClick={() => setPage?.(Math.max(page - 1, 0))}><b>{"<"}</b></div>
                         )}
 
-                        <div>Page {page + 1} / {Math.floor((members.length) / 12) + 1}</div>
+                        <div>{getTranslation("members.page", { current: page + 1, total: Math.floor((members.length) / 12) + 1 })}</div>
 
                         {(members.length > 12) && (
                             <div style={{ cursor: "pointer" }} onClick={() => setPage?.(Math.min(page + 1, Math.floor((members.length) / 12)))}><b>{">"}</b></div>

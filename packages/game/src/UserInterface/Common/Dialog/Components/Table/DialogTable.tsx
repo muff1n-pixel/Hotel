@@ -1,6 +1,7 @@
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { CSSProperties, Fragment, ReactNode, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type DialogTableProps = {
     activeId?: any;
@@ -21,6 +22,7 @@ export type DialogTableProps = {
 };
 
 export default function DialogTable({ empty, style, activeId, flex, columns, items, tools }: DialogTableProps) {
+    const [getTranslation] = useTranslation("common");
     const [_activeId, setActiveId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -151,7 +153,7 @@ export default function DialogTable({ empty, style, activeId, flex, columns, ite
                                             color: "#000",
                                             fontSize: 12
                                         }}>
-                                            {(value?.toString().length)?(value):(<i>Empty</i>)}
+                                            {(value?.toString().length)?(value):(<i>{getTranslation("empty")}</i>)}
                                         </div>
                                     </div>
                                 ))}

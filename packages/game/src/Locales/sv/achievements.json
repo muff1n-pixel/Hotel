@@ -1,0 +1,7 @@
+{
+    "title": "Prestationer",
+    "total": "Totala prestationer: {{unlocked}}/{{total}}",
+    "score": "Prestationspoäng: {{score}}",
+    "badges_collected": "{{unlocked}}/{{total}} märken samlade",
+    "level": "Nivå {{current}}/{{total}}"
+}

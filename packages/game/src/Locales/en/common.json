@@ -1,5 +1,12 @@
 {
     "yes": "Yes",
     "no": "No",
-    "page": "Page"
+    "page": "Page",
+    "page_count": "Page {{current}} / {{total}}",
+    "browser": "Browser",
+    "select": "Select",
+    "hue": "Hue",
+    "saturation": "Saturation",
+    "brightness": "Brightness",
+    "empty": "Empty"
 }

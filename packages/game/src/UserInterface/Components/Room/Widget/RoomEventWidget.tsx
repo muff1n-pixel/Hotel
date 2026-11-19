@@ -4,8 +4,10 @@ import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
 import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 import { useRoomEvent } from "@UserInterface/Hooks/useRoomEvent";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export default function RoomEventWidget() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const roomEvent = useRoomEvent();
 
@@ -24,7 +26,7 @@ export default function RoomEventWidget() {
                     <div>{roomEvent.name}</div>
                 ):(
                     <DialogLink onClick={openShopPage}>
-                        <b>Promote room</b>
+                        <b>{getTranslation("widget.event.promote")}</b>
                     </DialogLink>
                 )}
             </FlexLayout>

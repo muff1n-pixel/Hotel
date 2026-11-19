@@ -7,6 +7,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useUserRooms } from "@UserInterface/Hooks/useUserRooms";
+import { useTranslation } from "react-i18next";
 
 export type RoomGroupCreationIdentityStepProps = {
     data?: GroupIdentityData;
@@ -14,23 +15,24 @@ export type RoomGroupCreationIdentityStepProps = {
 }
 
 export default function RoomGroupCreationIdentityStep({ data, onChange }: RoomGroupCreationIdentityStepProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const dialogs = useDialogs();
     const userRooms = useUserRooms();
 
     return (
         <FlexLayout flex={1}>
-            <b>Name of your group:</b>
+            <b>{getTranslation("groups.creation.identity.name")}</b>
 
-            <Input placeholder={`${user.name}'s group`} value={data?.name} onChange={(name) => onChange(GroupIdentityData.create({ ...data, name}))}/>
+            <Input placeholder={getTranslation("groups.creation.identity.name_placeholder", { name: user.name })} value={data?.name} onChange={(name) => onChange(GroupIdentityData.create({ ...data, name}))}/>
             
-            <b>Description of your group:</b>
+            <b>{getTranslation("groups.creation.identity.description_label")}</b>
 
-            <TextArea placeholder={'Where all the cool kids hang!'} value={data?.description ?? ''} onChange={(description) => onChange(GroupIdentityData.create({ ...data, description}))} style={{ height: 60 }}/>
+            <TextArea placeholder={getTranslation("groups.creation.identity.description_placeholder")} value={data?.description ?? ''} onChange={(description) => onChange(GroupIdentityData.create({ ...data, description}))} style={{ height: 60 }}/>
 
-            <b>Choose a homeroom for your Group:</b>
+            <b>{getTranslation("groups.creation.identity.homeroom")}</b>
 
-            <i>Choose your Groups homeroom carefully, the homeroom cannot be changed later.</i>
+            <i>{getTranslation("groups.creation.identity.homeroom_hint")}</i>
 
             <Selection value={data?.homeroomId} items={userRooms.map((room) => {
                 return {
@@ -48,7 +50,7 @@ export default function RoomGroupCreationIdentityStep({ data, onChange }: RoomGr
                 }
             })} onChange={(homeroomId) => onChange(GroupIdentityData.create({ ...data, homeroomId }))}/>
 
-            <DialogLink onClick={() => dialogs.addUniqueDialog("room-creation")}>No suitable room found? Click here to create a new one!</DialogLink>
+            <DialogLink onClick={() => dialogs.addUniqueDialog("room-creation")}>{getTranslation("groups.creation.identity.create_room")}</DialogLink>
         </FlexLayout>
     );
 }

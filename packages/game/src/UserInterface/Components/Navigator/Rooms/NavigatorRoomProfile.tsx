@@ -4,6 +4,7 @@ import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPa
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import RoomThumbnail from "@UserInterface/Components/Room/Thumbnail/RoomThumbnail";
 import GroupLink from "@UserInterface/Common/Groups/GroupLink";
+import { useTranslation } from "react-i18next";
 
 export type NavigatorRoomProfileProps = {
     elementRef: RefObject<HTMLDivElement | null>;
@@ -13,6 +14,7 @@ export type NavigatorRoomProfileProps = {
 };
 
 export default function NavigatorRoomProfile({ elementRef, parentRef, room }: NavigatorRoomProfileProps) {
+    const [getTranslation] = useTranslation("navigator");
     const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -93,7 +95,7 @@ export default function NavigatorRoomProfile({ elementRef, parentRef, room }: Na
                     
                     <div/>
 
-                    <div><b>Max users:</b> {room.maxUsers}</div>
+                    <div><b>{getTranslation("profile.max_users")}</b> {room.maxUsers}</div>
                 </div>
                 
                 <div style={{

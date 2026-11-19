@@ -9,6 +9,18 @@
     },
 
     "place_in_room": "Place in room",
+    "achievement_score": "Achievement score: {{score}}",
+    "badge": {
+        "clear": "Clear badge",
+        "wear": "Wear badge"
+    },
+    "furniture_filter": {
+        "any_type": "Any type",
+        "floor_items": "Floor items",
+        "wall_items": "Wall items",
+        "inventory": "In inventory",
+        "rooms": "In rooms"
+    },
 
     "empty": {
         "category_is_empty": "This category seems to be empty!",

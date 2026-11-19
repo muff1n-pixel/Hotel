@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 
 export default function WiredConditionFurniHasUsersDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [requireAllFurni, setRequireAllFurni] = useState(data.data.data?.wiredConditionFurniHasUsers?.requireAllFurni ?? false);
@@ -48,17 +50,17 @@ export default function WiredConditionFurniHasUsersDialog({ data, onClose }: Roo
             <WiredDivider/>
 
             <WiredSection>
-                <b>Allow trigger if:</b>
+                <b>{getTranslation("creator.allow_trigger_if")}</b>
 
                 <WiredRadio value={requireAllFurni} onChange={setRequireAllFurni} items={[
                     {
                         value: false,
-                        label: "If one of the selected furni has an avatar on it"
+                        label: getTranslation("creator.if_one_has_avatar")
                     },
 
                     {
                         value: true,
-                        label: "If all of the selected furni have avatars on them"
+                        label: getTranslation("creator.if_all_have_avatars")
                     }
                 ]}/>
             </WiredSection>
@@ -70,8 +72,8 @@ export default function WiredConditionFurniHasUsersDialog({ data, onClose }: Roo
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

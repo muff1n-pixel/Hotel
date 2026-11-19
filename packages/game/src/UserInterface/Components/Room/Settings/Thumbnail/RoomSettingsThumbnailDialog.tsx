@@ -7,6 +7,7 @@ import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
 import { useDialogs } from "../../../../Hooks/useDialogs";
 import { UpdateRoomInformationData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type RoomSettingsThumbnailDialogProps = {
     hidden?: boolean;
@@ -14,6 +15,7 @@ export type RoomSettingsThumbnailDialogProps = {
 }
 
 export default function RoomSettingsThumbnailDialog({ hidden, onClose }: RoomSettingsThumbnailDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
     const room = useRoomInstance();
 
@@ -38,7 +40,7 @@ export default function RoomSettingsThumbnailDialog({ hidden, onClose }: RoomSet
     }, [room, dialogs, canvasRef]);
 
     return (
-        <Dialog title="Camera" hidden={hidden} onClose={onClose} width={150} height={210}>
+        <Dialog title={getTranslation("thumbnail.title")} hidden={hidden} onClose={onClose} width={150} height={210}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -64,7 +66,7 @@ export default function RoomSettingsThumbnailDialog({ hidden, onClose }: RoomSet
                     </div>
 
                     <div>
-                        <DialogButton onClick={handleCapture}>Capture</DialogButton>
+                        <DialogButton onClick={handleCapture}>{getTranslation("thumbnail.capture")}</DialogButton>
                     </div>
                 </div>
             </DialogContent>

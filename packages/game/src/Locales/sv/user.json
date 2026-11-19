@@ -8,6 +8,10 @@
         "friends": "Vänner",
         "relationships": "Förhållanden",
         "groups": "Grupper",
-        "achievement_score": "Prestationspoäng"
+        "achievement_score": "Prestationspoäng",
+        "achievement_score_value": "Prestationspoäng: {{score}}",
+        "relationships_with_others_one": "{{name}} och {{count}} annan",
+        "relationships_with_others_other": "{{name}} och {{count}} andra",
+        "never": "Aldrig"
     }
 }

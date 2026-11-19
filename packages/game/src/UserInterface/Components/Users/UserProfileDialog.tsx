@@ -30,6 +30,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
     const dialogs = useDialogs();
     const profile = useUserProfile(data);
     const [getUserTranslation] = useTranslation("user");
+    const [getGroupTranslation] = useTranslation("groups");
     
     const [currentGroup, setCurrentGroup] = useState<UserGroupMemberData>();
 
@@ -68,7 +69,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                 <div style={{ flex: 1 }}/>
 
                                 <div><b>{getUserTranslation("profile.created")}:</b> <TimeSinceDate date={new Date(profile.createdAt)}/></div>
-                                <div><b>{getUserTranslation("profile.last_login")}:</b> {(profile.lastOnlineAt)?(<TimeSinceDate date={new Date(profile.lastOnlineAt)}/>):("Never")}</div>
+                                <div><b>{getUserTranslation("profile.last_login")}:</b> {(profile.lastOnlineAt)?(<TimeSinceDate date={new Date(profile.lastOnlineAt)}/>):(getUserTranslation("profile.never"))}</div>
                                 <div><b>{getUserTranslation("profile.achievement_score")}:</b> {profile.achievementScore.toLocaleString("en-US")}</div>
 
                                 <FlexLayout direction="row" align="center">
@@ -203,7 +204,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                     <div className="sprite_groups_banner_3"/>
                                 </FlexLayout>
 
-                                <p>Habbo Groups are a great way to get some internet fame!</p>
+                                <p>{getGroupTranslation("discovery.description")}</p>
 
                                 <DialogButton onClick={() => {
                                     dialogs.openUniqueDialog("navigator", {
@@ -214,7 +215,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                 }}>
                                     <div className="sprite_groups_icon"/>
 
-                                    Check out the hottest groups
+                                    {getGroupTranslation("discovery.button")}
                                 </DialogButton>
                             </FlexLayout>
                         )}

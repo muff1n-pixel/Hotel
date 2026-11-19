@@ -6,6 +6,7 @@ import Input from "../../../../Common/Form/Components/Input";
 import { useState } from "react";
 import Selection from "../../../../Common/Form/Components/Selection";
 import { clientInstance } from "@Game/index";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureDialogProps = {
     hidden?: boolean;
@@ -13,6 +14,7 @@ export type RoomFurnitureDialogProps = {
 }
 
 export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [placement, setPlacement] = useState("all");
@@ -23,7 +25,7 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
     const [depth, setDepth] = useState("");
 
     return (
-        <Dialog title="Room Furniture" hidden={hidden} onClose={onClose} width={410} height={350} initialPosition="center">
+        <Dialog title={getTranslation("furniture.dialog.title")} hidden={hidden} onClose={onClose} width={410} height={350} initialPosition="center">
             <DialogContent style={{
                 gap: 10
             }}>
@@ -33,28 +35,28 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                     gap: 10
                 }}>
                     <div style={{ flex: 2 }}>
-                        <Input placeholder="Search" value={search} onChange={setSearch}/>
+                        <Input placeholder={getTranslation("furniture.dialog.search")} value={search} onChange={setSearch}/>
                     </div>
 
                     <div style={{ flex: 1 }}>
                         <Selection value={placement} items={[
                             {
                                 value: "all",
-                                label: "All furniture"
+                                label: getTranslation("furniture.dialog.all")
                             },
                             {
                                 value: "floor",
-                                label: "Floor furniture"
+                                label: getTranslation("furniture.dialog.floor")
                             },
                             {
                                 value: "wall",
-                                label: "Wall furniture"
+                                label: getTranslation("furniture.dialog.wall")
                             }
                         ]} onChange={(value) => setPlacement(value as string)}/>
                     </div>
                 </div>
 
-                <DialogTable columns={["Furniture", "Position"]} items={
+                <DialogTable columns={[getTranslation("furniture.dialog.furniture"), getTranslation("furniture.dialog.position")]} items={
                     room?.furnitures.filter((furniture) => {
                         if(search) {
                             if(!furniture.furnitureData.name.toLowerCase().includes(search.toLowerCase()) && (!furniture.furnitureData.description || !furniture.furnitureData.description?.toLowerCase().includes(search.toLowerCase()))) {
@@ -116,7 +118,7 @@ export default function RoomFurnitureDialog({ hidden, onClose }: RoomFurnitureDi
                     fontSize: 13,
                     gap: 10
                 }}>
-                    <div>Position</div>
+                    <div>{getTranslation("furniture.dialog.position")}</div>
 
                     <Input style={{ width: 40 }} placeholder="0" value={row} onChange={setRow}/>
                     <Input style={{ width: 40 }} placeholder="0" value={column} onChange={setColumn}/>

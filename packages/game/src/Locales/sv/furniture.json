@@ -1,0 +1,49 @@
+{
+    "selection": {
+        "title": "Möbler",
+        "edit": "Redigera möbel",
+        "placeholder": "Möbler",
+        "items_one": "{{count}} föremål",
+        "items_other": "{{count}} föremål",
+        "open_browser": "Öppna möbelbläddraren"
+    },
+    "editor": {
+        "title": "Möbelredigerare",
+        "unique": "Det kan bara finnas en möbel med en unik typ och färg.",
+        "type": "Möbeltyp",
+        "color": "Möbelfärg",
+        "edit_crackable": "Redigera sprickbar data",
+        "must_create": "Möbeln måste skapas innan sprickbar data kan ändras.",
+        "name": "Möbelnamn",
+        "description": "Möbelbeskrivning",
+        "category": "Kategori (logik)",
+        "interaction_type": "Interaktionstyp (logik)",
+        "depth": "Djup",
+        "sit_depth": "(sittdjup {{depth}})",
+        "placement": "Möbelplacering",
+        "flags": "Möbelegenskaper",
+        "stackable": "Kan staplas med andra möbler?",
+        "sitable": "Kan användare sitta på den?",
+        "layable": "Kan användare ligga på den?",
+        "walkable": "Kan användare gå på den?",
+        "giftable": "Kan ges bort av användare?",
+        "tradable": "Kan bytas av användare?",
+        "recyclable": "Kan återvinnas av användare?",
+        "sellable": "Kan säljas av användare?",
+        "inventory_stackable": "Staplas i användarens förråd?",
+        "update": "Uppdatera möbel",
+        "create": "Skapa ny möbel"
+    },
+    "crackable": {
+        "title": "Redigerare för sprickbara möbler",
+        "required_clicks": "Nödvändiga klick",
+        "rewards": "Möbelbelöningar",
+        "furniture": "Möbel",
+        "chance": "Chans",
+        "update": "Uppdatera klickdata"
+    },
+    "gift": {
+        "write_wishes": "Skriv dina lyckönskningar här!",
+        "no_message": "Inget meddelande kvar."
+    }
+}

@@ -9,6 +9,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export type ClothingUnlockedDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type ClothingUnlockedDialogProps = {
 }
 
 export default function ClothingUnlockedDialog({ hidden, data, onClose }: ClothingUnlockedDialogProps) {
+    const [getTranslation] = useTranslation("wardrobe");
     const user = useUser();
     const dialogs = useDialogs();
 
@@ -41,12 +43,12 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
                     </DialogUnlocked>
                 ),
 
-                title: "New wardrobe addition!",
+                title: getTranslation("new_wardrobe_addition"),
                 description: (
                     <FlexLayout direction="column">
-                        <p>You have received the '{data.furniture.name}' clothing item!</p>
+                        <p>{getTranslation("clothing_item_received", { item: data.furniture.name })}</p>
 
-                        <p>Explore new looks with this item in your wardrobe.</p>
+                        <p>{getTranslation("explore_new_looks")}</p>
                     </FlexLayout>
                 )
             }}/>
@@ -57,7 +59,7 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
                 alignItems: "center"
             }}>
                 <DialogLink onClick={onClose}>
-                    Cancel
+                    {getTranslation("cancel")}
                 </DialogLink>
 
                 <DialogButton onClick={() => {
@@ -65,7 +67,7 @@ export default function ClothingUnlockedDialog({ hidden, data, onClose }: Clothi
 
                     dialogs.openUniqueDialog("wardrobe");
                 }}>
-                    Open wardrobe
+                    {getTranslation("open_wardrobe")}
                 </DialogButton>
             </DialogContent>
         </Dialog>

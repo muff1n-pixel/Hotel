@@ -7,6 +7,11 @@
     "avatar_effects": "Avatar effects",
     "no_content": "No content!",
     "no_effects": "Sorry! You do not own any effects!",
+    "new_wardrobe_addition": "New wardrobe addition!",
+    "clothing_item_received": "You have received the '{{item}}' clothing item!",
+    "explore_new_looks": "Explore new looks with this item in your wardrobe.",
+    "cancel": "Cancel",
+    "open_wardrobe": "Open wardrobe",
 
     "hot_looks": {
         "title": "Hot looks from the Hotel!",

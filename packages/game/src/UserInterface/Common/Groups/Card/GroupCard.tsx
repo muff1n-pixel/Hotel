@@ -9,6 +9,7 @@ import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import useUserGroup from "@UserInterface/Hooks/useUserGroup";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export type GroupCardProps = {
     data?: GroupData;
@@ -16,6 +17,7 @@ export type GroupCardProps = {
 
 export default function GroupCard({ data }: GroupCardProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("groups");
 
     const userGroup = useUserGroup(data?.id);
 
@@ -61,7 +63,7 @@ export default function GroupCard({ data }: GroupCardProps) {
                 <FlexLayout flex={2} gap={2} direction="column">
                     <b>{data?.name}</b>
 
-                    <div>Created <TimeSinceDate date={new Date(data.createdAt)}/> by <UserLink id={data.owner?.id} name={data.owner?.name} reversed/></div>
+                    <div>{getTranslation("card.created")} <TimeSinceDate date={new Date(data.createdAt)}/> {getTranslation("card.by")} <UserLink id={data.owner?.id} name={data.owner?.name} reversed/></div>
 
                     {(data.description) && (
                         <p>{data.description}</p>
@@ -72,27 +74,27 @@ export default function GroupCard({ data }: GroupCardProps) {
             <FlexLayout direction="row" flex={1}>
                 <FlexLayout flex={1} direction="column" align="center">
                     {(data.membersCount > 0) && (
-                        <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", data.id)}>Members: {data.membersCount}</DialogLink>
+                        <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", data.id)}>{getTranslation("card.members", { count: data.membersCount })}</DialogLink>
                     )}
                 </FlexLayout>
                 
                 <FlexLayout flex={2} gap={2} direction="column">
-                    <DialogLink>Go to Group homeroom</DialogLink>
-                    <DialogLink>Buy Group Furni</DialogLink>
+                    <DialogLink>{getTranslation("card.go_to_homeroom")}</DialogLink>
+                    <DialogLink>{getTranslation("card.buy_furniture")}</DialogLink>
                 </FlexLayout>
             </FlexLayout>
 
             <div>
                 {(!userGroup)?(
-                    <DialogButton onClick={handleJoin}>Join Group</DialogButton>
+                    <DialogButton onClick={handleJoin}>{getTranslation("card.join")}</DialogButton>
                 ):(
                     (!userGroup.owner) && (
-                        <DialogButton onClick={handleLeaveGroup}>Leave Group</DialogButton>
+                        <DialogButton onClick={handleLeaveGroup}>{getTranslation("card.leave")}</DialogButton>
                     )
                 )}
 
                 {(userGroup?.owner) && (
-                    <DialogButton onClick={() => dialogs.openUniqueDialog("group-settings", data.id)}>Edit Group</DialogButton>
+                    <DialogButton onClick={() => dialogs.openUniqueDialog("group-settings", data.id)}>{getTranslation("card.edit")}</DialogButton>
                 )}
             </div>
         </div>

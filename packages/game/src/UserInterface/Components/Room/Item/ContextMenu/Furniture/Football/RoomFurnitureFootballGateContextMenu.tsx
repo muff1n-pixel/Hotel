@@ -3,6 +3,7 @@ import RoomItemContextMenuWrapper from "@UserInterface/Components/Room/Item/Cont
 import UserContextMenuButton from "@UserInterface/Components/Room/Users/UserContextMenuButton";
 import UserContextMenuElement from "@UserInterface/Components/Room/Users/UserContextMenuElement";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureFootballGateContextMenuProps = {
     roomFurniture: RoomFurniture;
@@ -10,6 +11,7 @@ export type RoomFurnitureFootballGateContextMenuProps = {
 
 export default function RoomFurnitureFootballGateContextMenu({ roomFurniture }: RoomFurnitureFootballGateContextMenuProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("room");
 
     return (
         <RoomItemContextMenuWrapper item={roomFurniture.item}>
@@ -17,14 +19,14 @@ export default function RoomFurnitureFootballGateContextMenu({ roomFurniture }: 
                 {roomFurniture.furnitureData.name}
             </UserContextMenuElement>
 
-            <UserContextMenuButton text={"Male clothes"} onClick={() => {
+            <UserContextMenuButton text={getTranslation("item.context_menu.male_clothes")} onClick={() => {
                 dialogs.addUniqueDialog("wardrobe-football", {
                     roomFurniture,
                     gender: "male"
                 });
             }}/>
 
-            <UserContextMenuButton text={"Female clothes"} onClick={() => {
+            <UserContextMenuButton text={getTranslation("item.context_menu.female_clothes")} onClick={() => {
                 dialogs.addUniqueDialog("wardrobe-football", {
                     roomFurniture,
                     gender: "female"

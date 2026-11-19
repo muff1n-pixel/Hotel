@@ -7,6 +7,7 @@ import { webSocketClient } from "@Game/index";
 import { PickupAllRoomFurnitureData } from "@pixel63/events";
 import { useRoom } from "@UserInterface/Hooks/useRoom";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 const backgroundImage = new URL('../../../Images/dialog/background-red.png', import.meta.url).toString();
 
@@ -16,6 +17,7 @@ export type RoomPickallDialogProps = {
 }
 
 export default function RoomPickallDialog({ hidden, onClose }: RoomPickallDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const onPickall = useCallback(() => {
@@ -25,17 +27,17 @@ export default function RoomPickallDialog({ hidden, onClose }: RoomPickallDialog
     }, [onClose, room]);
 
     return (
-        <Dialog title="Warning!" hidden={hidden} onClose={onClose} width={360} assumedHeight={190} height={"auto"}>
+        <Dialog title={getTranslation("commands.pickall.warning")} hidden={hidden} onClose={onClose} width={360} assumedHeight={190} height={"auto"}>
             <DialogHeaderContent header={{
                 backgroundImage,
 
                 description: (
                     <div>
-                        <div><b>This is a destructive command!</b></div>
+                        <div><b>{getTranslation("commands.pickall.destructive")}</b></div>
 
                         <br/>
 
-                        <div>Are you sure you want to pick up all furniture from the room?</div>
+                        <div>{getTranslation("commands.pickall.confirm")}</div>
                     </div>
                 )
             }}/>
@@ -44,8 +46,8 @@ export default function RoomPickallDialog({ hidden, onClose }: RoomPickallDialog
                 flexDirection: "row",
                 justifyContent: "space-between"
             }}>
-                <DialogButton color="red" onClick={onPickall}>Pick up all furniture</DialogButton>
-                <DialogButton onClick={onClose}>Cancel</DialogButton>
+                <DialogButton color="red" onClick={onPickall}>{getTranslation("commands.pickall.pick_up")}</DialogButton>
+                <DialogButton onClick={onClose}>{getTranslation("commands.pickall.cancel")}</DialogButton>
             </DialogContent>
         </Dialog>
     );

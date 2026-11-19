@@ -1,0 +1,11 @@
+{
+    "figure": {
+        "title": "Figurkatalog",
+        "enables": "Effekter",
+        "carry_items": "Handhållna föremål",
+        "id": "ID",
+        "library": "Bibliotek",
+        "item_id": "Föremåls-ID",
+        "name": "Namn"
+    }
+}

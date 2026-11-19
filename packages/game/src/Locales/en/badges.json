@@ -1,0 +1,12 @@
+{
+    "editor": {
+        "title": "Badge Editor",
+        "id": "Badge ID",
+        "image": "Badge Image",
+        "image_placeholder": "ACH_[..].gif",
+        "name": "Badge name",
+        "description": "Badge description",
+        "update": "Update",
+        "create": "Create"
+    }
+}

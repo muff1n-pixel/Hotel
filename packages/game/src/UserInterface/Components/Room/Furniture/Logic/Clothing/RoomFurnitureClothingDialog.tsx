@@ -11,6 +11,7 @@ import FurnitureImage from "@UserInterface/Components/Furniture/FurnitureImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureClothingDialogData = {
     furniture: RoomInstanceFurniture;
@@ -18,6 +19,7 @@ export type RoomFurnitureClothingDialogData = {
 };
 
 export default function RoomFurnitureClothingDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const handleBind = useCallback(() => {
@@ -53,7 +55,7 @@ export default function RoomFurnitureClothingDialog({ data, hidden, onClose }: R
                             <p>{data.furnitureData.description}</p>
                         )}
 
-                        <p style={{ marginTop: 20 }}><i>This is a permanent action. Once you add it to wardrobe, the furniture will disappear forever.</i></p>
+                        <p style={{ marginTop: 20 }}><i>{getTranslation("furniture.clothing.warning")}</i></p>
                     </div>
                 )
             }}/>
@@ -64,11 +66,11 @@ export default function RoomFurnitureClothingDialog({ data, hidden, onClose }: R
                 alignItems: "center"
             }}>
                 <DialogLink onClick={onClose}>
-                    Cancel
+                    {getTranslation("furniture.clothing.cancel")}
                 </DialogLink>
 
                 <DialogButton onClick={handleBind}>
-                    Add to wardrobe
+                    {getTranslation("furniture.clothing.add")}
                 </DialogButton>
             </DialogContent>
         </Dialog>

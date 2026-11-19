@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { GetHotelFeedbackData, HotelFeedbackData } from "@pixel63/events";
 import { webSocketClient } from "@Game/index";
 import { HotelFeedbackCollectionData } from "@pixel63/events/build/Client/Hotel/Feedback/HotelFeedbackData";
+import { useTranslation } from "react-i18next";
 
 export default function AdministrationFeedbackTab() {
+    const [getTranslation] = useTranslation("administration");
     const [issues, setIssues] = useState<HotelFeedbackData[]>([]);
 
     useEffect(() => {
@@ -45,20 +47,20 @@ export default function AdministrationFeedbackTab() {
                     }}>
                         {(issue.area) && (
                             <div>
-                                <div><b>Area:</b></div>
+                                <div><b>{getTranslation("feedback.area")}</b></div>
 
                                 <p>{issue.area}</p>
                             </div>
                         )}
                         
                         <div>
-                            <div><b>Description:</b></div>
+                            <div><b>{getTranslation("feedback.description")}</b></div>
 
                             <p>{issue.description}</p>
                         </div>
 
                         <div>
-                            <b>Reported by {issue.user?.name}</b>
+                            <b>{getTranslation("feedback.reported_by", { name: issue.user?.name })}</b>
                         </div>
                     </div>
                 ))}

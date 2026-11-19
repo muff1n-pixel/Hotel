@@ -4,6 +4,7 @@ import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton"
 import { EnterRoomBellQueueData, ExitRoomBellQueueData, RoomInformationData, RoomLockData, UpdateRoomBellQueueData } from "@pixel63/events";
 import { useCallback, useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
+import { useTranslation } from "react-i18next";
 
 export type RoomDoorbellDialogProps = {
     data?: RoomLockData;
@@ -12,6 +13,7 @@ export type RoomDoorbellDialogProps = {
 }
 
 export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbellDialogProps) {
+    const [getTranslation] = useTranslation("room");
     if(!data) {
         return null;
     }
@@ -60,7 +62,7 @@ export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbe
     }, [data, setRinging]);
 
     return (
-        <Dialog title="Room Doorbell" hidden={hidden} onClose={onClose} width={265} height={180}>
+        <Dialog title={getTranslation("doorbell.title")} hidden={hidden} onClose={onClose} width={265} height={180}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -72,12 +74,12 @@ export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbe
 
                     <div>
                         {(denied)?(
-                            <p>Sorry, you were not allowed into the room. Try another door!</p>
+                            <p>{getTranslation("doorbell.denied")}</p>
                         ):(
                             (ringing)?(
-                                <p>The doorbell is ringing, waiting for someone to open the door...</p>
+                                <p>{getTranslation("doorbell.ringing")}</p>
                             ):(
-                                <p>This room is locked. You need to ring the doorbell to enter.</p>
+                                <p>{getTranslation("doorbell.locked")}</p>
                             )
                         )}
                     </div>
@@ -97,11 +99,11 @@ export default function RoomDoorbellDialog({ data, hidden, onClose }: RoomDoorbe
                                 cursor: "pointer",
                                 textDecoration: "underline",
                             }} onClick={onClose}>
-                                {(ringing)?("Cancel entering the room"):("Cancel")}
+                                {(ringing)?(getTranslation("doorbell.cancel_entering")):(getTranslation("doorbell.cancel"))}
                             </div>
 
                             {(!ringing) && (
-                                <DialogButton onClick={handleRingBell}>Ring doorbell</DialogButton>
+                                <DialogButton onClick={handleRingBell}>{getTranslation("doorbell.ring")}</DialogButton>
                             )}
                         </div>
                     )}

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionJoinTeamDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [team, setTeam] = useState(data.data.data?.wiredActionJoinTeam?.team ?? "red");
@@ -47,7 +49,7 @@ export default function WiredActionJoinTeamDialog({ data, onClose }: RoomFurnitu
             <WiredDivider/>
 
             <WiredSection>
-                <b>Pick team</b>
+                <b>{getTranslation("creator.pick_team")}</b>
 
                 <div style={{
                     display: "grid",
@@ -57,19 +59,19 @@ export default function WiredActionJoinTeamDialog({ data, onClose }: RoomFurnitu
                     <WiredRadio value={team} onChange={setTeam} items={[
                         {
                             value: "red",
-                            label: "Red"
+                            label: getTranslation("creator.team.red")
                         },
                         {
                             value: "green",
-                            label: "Green"
+                            label: getTranslation("creator.team.green")
                         },
                         {
                             value: "blue",
-                            label: "Blue"
+                            label: getTranslation("creator.team.blue")
                         },
                         {
                             value: "yellow",
-                            label: "Yellow"
+                            label: getTranslation("creator.team.yellow")
                         }
                     ]}/>
                 </div>
@@ -78,20 +80,20 @@ export default function WiredActionJoinTeamDialog({ data, onClose }: RoomFurnitu
             <WiredDivider/>
 
             <WiredSection>
-                <b>Choose game</b>
+                <b>{getTranslation("creator.choose_game")}</b>
 
                 <WiredRadio value={game} onChange={setGame} items={[
                     {
                         value: "wired",
-                        label: "Wired"
+                        label: getTranslation("creator.games.wired")
                     },
                     {
                         value: "battle_banzai",
-                        label: "Battle Banzai"
+                        label: getTranslation("creator.games.battle_banzai")
                     },
                     {
                         value: "freeze",
-                        label: "Freeze"
+                        label: getTranslation("creator.games.freeze")
                     }
                 ]}/>
             </WiredSection>
@@ -103,8 +105,8 @@ export default function WiredActionJoinTeamDialog({ data, onClose }: RoomFurnitu
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

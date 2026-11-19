@@ -6,8 +6,10 @@ import Checkbox from "../../../../Common/Form/Components/Checkbox";
 import { UpdateRoomStructureData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export default function RoomSettingsCustomizeTab() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const dialogs = useDialogs();
 
@@ -46,9 +48,9 @@ export default function RoomSettingsCustomizeTab() {
                 flexDirection: "column",
                 gap: 8
             }}>
-                <b>Room customization</b>
+                <b>{getTranslation("settings.customize.title")}</b>
 
-                <p>Customize your walls and floors! You can choose whether or not the walls of your room are visible, and how thick the walls and floors are.</p>
+                <p>{getTranslation("settings.customize.description")}</p>
             </div>
 
             <div style={{
@@ -56,58 +58,58 @@ export default function RoomSettingsCustomizeTab() {
                 flexDirection: "column",
                 gap: 8
             }}>
-                <b>Floor and walls</b>
+                <b>{getTranslation("settings.customize.floor_walls")}</b>
 
                 <Selection value={room.roomRenderer.structure.data.floor?.thickness} items={[
                     {
                         value: 0,
-                        label: "Thinnest floor"
+                        label: getTranslation("floorplan.thinnest_floor")
                     },
                     {
                         value: 4,
-                        label: "Thin floor"
+                        label: getTranslation("floorplan.thin_floor")
                     },
                     {
                         value: 8,
-                        label: "Normal floor"
+                        label: getTranslation("floorplan.normal_floor")
                     },
                     {
                         value: 12,
-                        label: "Thick floor"
+                        label: getTranslation("floorplan.thick_floor")
                     },
                     {
                         value: 16,
-                        label: "Thickest floor"
+                        label: getTranslation("floorplan.thickest_floor")
                     }
                 ]} onChange={(value) => handleFloorThickness(value as number)}/>
                 
                 <Selection value={room.roomRenderer.structure.data.wall?.thickness} items={[
                     {
                         value: 0,
-                        label: "Thinnest walls"
+                        label: getTranslation("floorplan.thinnest_walls")
                     },
                     {
                         value: 4,
-                        label: "Thin walls"
+                        label: getTranslation("floorplan.thin_walls")
                     },
                     {
                         value: 8,
-                        label: "Normal walls"
+                        label: getTranslation("floorplan.normal_walls")
                     },
                     {
                         value: 12,
-                        label: "Thick walls"
+                        label: getTranslation("floorplan.thick_walls")
                     },
                     {
                         value: 16,
-                        label: "Thickest walls"
+                        label: getTranslation("floorplan.thickest_walls")
                     }
                 ]} onChange={(value) => handleWallThickness(value as number)}/>
 
-                <Checkbox label="Hide room walls" value={room.roomRenderer.structure.data.wall?.hidden ?? false} onChange={handleWallHidden}/>
+                <Checkbox label={getTranslation("floorplan.hide_walls")} value={room.roomRenderer.structure.data.wall?.hidden ?? false} onChange={handleWallHidden}/>
             </div>
             
-            <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>Edit room floorplan</DialogButton>
+            <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>{getTranslation("settings.customize.edit_floorplan")}</DialogButton>
         </div>
     );
 }

@@ -1,0 +1,18 @@
+{
+    "audio": {
+        "title": "Audio Settings",
+        "trax_volume": "Trax Audio Volume",
+        "furniture_volume": "Furniture Audio Volume",
+        "system_volume": "System Audio Volume",
+        "close": "Close"
+    },
+    "game": {
+        "title": "Game Settings",
+        "limit_frame_rate": "Limit frame rate to 60 fps",
+        "auto_scale_rooms": "Automatically scale rooms",
+        "hide_tooltips": "Hide tooltips",
+        "disable_purchase_confirmations": "Disable purchase confirmations",
+        "debug_room_rendering": "Debug room rendering",
+        "debug_room_landscape": "Debug room landscape"
+    }
+}

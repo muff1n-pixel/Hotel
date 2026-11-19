@@ -8,6 +8,7 @@ import UserContextMenuButton from "../../../Users/UserContextMenuButton";
 import { useDialogs } from "../../../../../Hooks/useDialogs";
 import { webSocketClient } from "../../../../../..";
 import { PickupRoomBotData, UpdateRoomBotData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type RoomBotContextMenuProps = {
     item: RoomFigureItem;
@@ -17,6 +18,7 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
     const dialogs = useDialogs();
     const room = useRoomInstance();
     const user = useUser();
+    const [getTranslation] = useTranslation("room");
 
     const [bot, setBot] = useState(room?.bots.find((bot) => bot.item.id === item.id));
 
@@ -36,11 +38,11 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
 
             {(bot.data.userId === user.id) && (
                 <Fragment>
-                    <UserContextMenuButton text={"Wardrobe"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.wardrobe")} onClick={() => {
                         dialogs.addUniqueDialog("bot-wardrobe", bot.data);
                     }}/>
 
-                    <UserContextMenuButton text={(bot.data.relaxed)?("Stiffen"):("Relax")} onClick={() => {
+                    <UserContextMenuButton text={(bot.data.relaxed)?(getTranslation("item.context_menu.stiffen")):(getTranslation("item.context_menu.relax"))} onClick={() => {
                         room?.websocket.sendProtobuff(UpdateRoomBotData, UpdateRoomBotData.create({
                             id: bot.data.id,
 
@@ -48,11 +50,11 @@ export default function RoomBotContextMenu({ item }: RoomBotContextMenuProps) {
                         }));
                     }}/>
 
-                    <UserContextMenuButton text={"Setup speech"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.context_menu.setup_speech")} onClick={() => {
                         dialogs.addUniqueDialog("bot-speech", bot.data);
                     }}/>
 
-                    <UserContextMenuButton text={"Pick up"} onClick={() => {
+                    <UserContextMenuButton text={getTranslation("item.profile.pick_up")} onClick={() => {
                         room?.websocket.sendProtobuff(PickupRoomBotData, PickupRoomBotData.create({
                             id: bot.data.id
                         }));

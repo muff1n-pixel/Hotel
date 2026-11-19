@@ -1,0 +1,18 @@
+{
+    "speech": {
+        "title": "Setup bot speech",
+        "add_or_select": "Add or select a message",
+        "message": "Message...",
+        "new_message": "New message",
+        "messages": "Message",
+        "automatic": "Bot talks automatically",
+        "randomize": "Messages are randomized",
+        "delay": "Automatic chat delay (seconds)",
+        "apply": "Apply changes"
+    },
+    "wardrobe": {
+        "title": "Bot Wardrobe",
+        "fallback_name": "Bot",
+        "save_looks": "Save my looks"
+    }
+}

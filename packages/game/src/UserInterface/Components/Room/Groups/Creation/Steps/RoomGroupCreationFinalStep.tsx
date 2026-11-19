@@ -11,6 +11,7 @@ import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import useShopPageMemberships from "@UserInterface/Components/Shop/Pages/Hooks/useShopPageMemberships";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export type RoomGroupCreationFinalStepProps = {
     identityData?: GroupIdentityData;
@@ -22,6 +23,7 @@ export type RoomGroupCreationFinalStepProps = {
 }
 
 export default function RoomGroupCreationFinalStep({ page, editMode, identityData, badgeData, colorsData, goBack }: RoomGroupCreationFinalStepProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const dialogs = useDialogs();
     const memberships = useShopPageMemberships(page.id);
@@ -29,7 +31,7 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
     return (
         <FlexLayout flex={1} direction="row">
             <FlexLayout direction="column">
-                <b>Group badge</b>
+                <b>{getTranslation("groups.creation.final.badge")}</b>
 
                 <DialogPanel color="silver" style={{
                     aspectRatio: 1
@@ -39,7 +41,7 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
                     </FlexLayout>
                 </DialogPanel>
 
-                <b>Group colors</b>
+                <b>{getTranslation("groups.creation.final.colors")}</b>
 
                 <DialogPanel color="silver" contentStyle={{ display: "flex" }}>
                     <FlexLayout flex={1} gap={4} direction="row" align="center" justify="center" style={{
@@ -57,13 +59,13 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
 
                 <div style={{ flex: 1 }}/>
 
-                <DialogLink onClick={goBack}>Go back</DialogLink>
+                <DialogLink onClick={goBack}>{getTranslation("groups.creation.back")}</DialogLink>
             </FlexLayout>
 
             <FlexLayout flex={1} direction="column">
                 <b style={{ fontSize: 20 }}>{identityData?.name ?? `${user.name}'s group`}</b>
 
-                <p>Your Group is now set up and ready to go. When you have purchased your Group, you can start inviting users and giving rights to members.</p>
+                <p>{getTranslation("groups.creation.final.description")}</p>
 
                 <div style={{ flex: 1 }}/>
 
@@ -84,7 +86,7 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
                         }}>
                             <MembershipIcon membership={membership.membership}/>
                             
-                            <b style={{ paddingBottom: 1, flex: 1 }}>Habbo Group</b>
+                            <b style={{ paddingBottom: 1, flex: 1 }}>{getTranslation("groups.creation.final.habbo_group")}</b>
 
                             {(editMode) && (
                                 <div style={{

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionKickUserDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [message, setMessage] = useState(data.data.data?.wiredActionKickUser?.message ?? "");
@@ -45,7 +47,7 @@ export default function WiredActionKickUserDialog({ data, onClose }: RoomFurnitu
             <WiredDivider/>
 
             <WiredSection>
-                <b>Message:</b>
+                <b>{getTranslation("creator.message_colon")}</b>
 
                 <WiredInput value={message} onChange={setMessage}/>
             </WiredSection>
@@ -57,8 +59,8 @@ export default function WiredActionKickUserDialog({ data, onClose }: RoomFurnitu
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

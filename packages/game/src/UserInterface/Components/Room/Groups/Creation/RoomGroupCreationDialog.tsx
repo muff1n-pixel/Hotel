@@ -13,6 +13,7 @@ import RoomGroupCreationColorsStep from "@UserInterface/Components/Room/Groups/C
 import RoomGroupCreationFinalStep from "@UserInterface/Components/Room/Groups/Creation/Steps/RoomGroupCreationFinalStep";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export type RoomGroupCreationDialogProps = {
     data?: {
@@ -24,6 +25,7 @@ export type RoomGroupCreationDialogProps = {
 }
 
 export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomGroupCreationDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
     const hasEditShopPermission = usePermissionAction("shop:edit");
     const roomInstance = useRoomInstance();
@@ -49,7 +51,7 @@ export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomG
     }
 
     return (
-        <Dialog title="Room Group Creation" editMode={editMode} onEditClick={hasEditShopPermission && onEditClick} hidden={hidden} onClose={onClose} initialPosition="center" width={400} height={520} style={{
+        <Dialog title={getTranslation("groups.creation.title")} editMode={editMode} onEditClick={hasEditShopPermission && onEditClick} hidden={hidden} onClose={onClose} initialPosition="center" width={400} height={520} style={{
             overflow: "visible"
         }}>
             <DialogStepsContent
@@ -57,38 +59,38 @@ export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomG
                 steps={[
                     {
                         label: (
-                            <b>Step 1</b>
+                            <b>{getTranslation("groups.creation.step")} 1</b>
                         ),
-                        title: "Group identity",
-                        description: "Describe your group here",
+                        title: getTranslation("groups.creation.identity.title"),
+                        description: getTranslation("groups.creation.identity.description"),
                         image: <div className="sprite_room_groups_step_1"/>
                     },
                     {
                         label: (
-                            <b>Step 2</b>
+                            <b>{getTranslation("groups.creation.step")} 2</b>
                         ),
-                        title: "Group badge",
-                        description: "Wear it with pride! :)",
+                        title: getTranslation("groups.creation.badge.title"),
+                        description: getTranslation("groups.creation.badge.description"),
                         image: <div className="sprite_room_groups_step_2"/>
                     },
                     {
                         label: (
-                            <b>Step 3</b>
+                            <b>{getTranslation("groups.creation.step")} 3</b>
                         ),
-                        title: "Group colors",
-                        description: "You can personalize your group furniture with these colors",
+                        title: getTranslation("groups.creation.colors.title"),
+                        description: getTranslation("groups.creation.colors.description"),
                         image: <div className="sprite_room_groups_step_3"/>
                     },
                     {
                         label: (
                             <Fragment>
-                                <b>Buy group</b>
+                                <b>{getTranslation("groups.creation.buy")}</b>
 
                                 <div className="sprite_currencies_credits"/>
                             </Fragment>
                         ),
-                        title: "Ready to go",
-                        description: "All set! You can now purchase your group",
+                        title: getTranslation("groups.creation.ready.title"),
+                        description: getTranslation("groups.creation.ready.description"),
                         image: <div className="sprite_room_groups_step_4"/>
                     }
                 ]}
@@ -119,9 +121,9 @@ export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomG
 
                 {(currentStep !== 3) && (
                     <FlexLayout direction="row" align="center" justify="space-between">
-                        <DialogLink onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}>Go back</DialogLink>
+                        <DialogLink onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}>{getTranslation("groups.creation.back")}</DialogLink>
 
-                        <DialogButton onClick={() => setCurrentStep(Math.min(currentStep + 1, 3))}>Next step</DialogButton>
+                        <DialogButton onClick={() => setCurrentStep(Math.min(currentStep + 1, 3))}>{getTranslation("groups.creation.next")}</DialogButton>
                     </FlexLayout>
                 )}
             </DialogContent>

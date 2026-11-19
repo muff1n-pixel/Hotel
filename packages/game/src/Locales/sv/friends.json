@@ -1,3 +1,31 @@
 {
-    "no_friends": "Det finns inga vänner i den här kategorin"
+    "no_friends": "Det finns inga vänner i den här kategorin",
+    "title": "Vänner",
+    "tabs": {
+        "my_friends": "Mina vänner"
+    },
+    "search": {
+        "placeholder": "Sök användare...",
+        "no_results": "Inga användare hittades."
+    },
+    "list": {
+        "all": "Alla vänner ({{count}})",
+        "none_online": "Du har inga vänner online!",
+        "remove": "Ta bort vän",
+        "offline": "Offlinevänner ({{count}})",
+        "incoming": "Inkommande vänförfrågningar ({{count}})",
+        "outgoing": "Utgående vänförfrågningar ({{count}})",
+        "last_seen": "Sågs senast",
+        "never": "aldrig"
+    },
+    "user": {
+        "online": "Online just nu",
+        "last_seen": "Sågs senast",
+        "never": "aldrig"
+    },
+    "relationship": {
+        "add_friends": "Lägg till vänner",
+        "with_others_one": "{{name}} och {{count}} annan",
+        "with_others_other": "{{name}} och {{count}} andra"
+    }
 }

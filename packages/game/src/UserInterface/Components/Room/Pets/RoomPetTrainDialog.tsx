@@ -11,6 +11,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useCallback } from "react";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 import { SendRoomChatMessageData } from "@pixel63/events";
+import { useTranslation } from "react-i18next";
 
 export type RoomPetTrainDialogProps = {
     data: {
@@ -21,6 +22,7 @@ export type RoomPetTrainDialogProps = {
 }
 
 export default function RoomPetTrainDialog({ data, hidden, onClose }: RoomPetTrainDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const { pet } = data;
 
     const roomInstance = useRoomInstance();
@@ -67,7 +69,7 @@ export default function RoomPetTrainDialog({ data, hidden, onClose }: RoomPetTra
                 }}>
                     <PetImage data={pet.data.pet}/>
 
-                    <div>Level {pet.data.level}/20</div>
+                    <div>{getTranslation("pet_training.level", { level: pet.data.level })}/20</div>
                 </div>
 
                 <div style={{
@@ -88,45 +90,74 @@ export default function RoomPetTrainDialog({ data, hidden, onClose }: RoomPetTra
                 {[
                     {
                         level: 1,
-                        commands: ["Sit", "Nest", "Eat", "Drink"]
+                        commands: [
+                            { value: "Sit", key: "sit" },
+                            { value: "Nest", key: "nest" },
+                            { value: "Eat", key: "eat" },
+                            { value: "Drink", key: "drink" }
+                        ]
                     },
                     
                     {
                         level: 2,
-                        commands: ["Free", "Stay", "Stand"]
+                        commands: [
+                            { value: "Free", key: "free" },
+                            { value: "Stay", key: "stay" },
+                            { value: "Stand", key: "stand" }
+                        ]
                     },
                     
                     {
                         level: 3,
-                        commands: ["Jump", "Beg", "Lay"]
+                        commands: [
+                            { value: "Jump", key: "jump" },
+                            { value: "Beg", key: "beg" },
+                            { value: "Lay", key: "lay" }
+                        ]
                     },
                     
                     {
                         level: 5,
-                        commands: ["Play", "Play dead", "Play football"]
+                        commands: [
+                            { value: "Play", key: "play" },
+                            { value: "Play dead", key: "play_dead" },
+                            { value: "Play football", key: "play_football" }
+                        ]
                     },
                     
                     {
                         level: 10,
-                        commands: ["Move left", "Move right", "Move forward"]
+                        commands: [
+                            { value: "Move left", key: "move_left" },
+                            { value: "Move right", key: "move_right" },
+                            { value: "Move forward", key: "move_forward" }
+                        ]
                     },
                     
                     {
                         level: 15,
-                        commands: ["Turn left", "Turn right", "Come here"]
+                        commands: [
+                            { value: "Turn left", key: "turn_left" },
+                            { value: "Turn right", key: "turn_right" },
+                            { value: "Come here", key: "come_here" }
+                        ]
                     },
                     
                     {
                         level: 20,
-                        commands: ["Follow", "Follow left", "Follow right"]
+                        commands: [
+                            { value: "Follow", key: "follow" },
+                            { value: "Follow left", key: "follow_left" },
+                            { value: "Follow right", key: "follow_right" }
+                        ]
                     },
                 ].map((item) => (
                     <FlexLayout key={item.level} direction="column" gap={5}>
-                        <b>Level {item.level}</b>
+                        <b>{getTranslation("pet_training.level", { level: item.level })}</b>
 
                         <FlexLayout direction="row" gap={5}>
                             {item.commands.map((command) => (
-                                <DialogButton key={command} disabled={pet.data.level < item.level} style={{ flex: 1 }} onClick={() => handleTrainCommand(command.toLowerCase())}>{command}</DialogButton>
+                                <DialogButton key={command.value} disabled={pet.data.level < item.level} style={{ flex: 1 }} onClick={() => handleTrainCommand(command.value.toLowerCase())}>{getTranslation(`pet_training.commands.${command.key}`)}</DialogButton>
                             ))}
                         </FlexLayout>
                     </FlexLayout>

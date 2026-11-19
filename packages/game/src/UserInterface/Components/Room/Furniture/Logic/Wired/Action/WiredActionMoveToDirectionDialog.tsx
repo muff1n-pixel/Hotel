@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -14,6 +15,7 @@ import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheck
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionMoveToDirectionDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [startDirection, setStartDirection] = useState(data.data.data?.wiredActionMoveToDirection?.startDirection ?? 0);
@@ -55,7 +57,7 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
             <WiredDivider/>
 
             <WiredSection>
-                <b>Start direction</b>
+                <b>{getTranslation("creator.start_direction")}</b>
 
                 <div style={{
                     display: "grid",
@@ -72,36 +74,36 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
             <WiredDivider/>
 
             <WiredSection>
-                <b>When move is blocked</b>
+                <b>{getTranslation("creator.when_move_blocked")}</b>
 
                 <WiredRadio value={blockedDirectionAction} onChange={setBlockedDirectionAction} items={[
                     {
                         value: "wait",
-                        label: "Wait"
+                        label: getTranslation("creator.wait")
                     },
                     {
                         value: "right_45_degrees",
-                        label: "Turn right 45 degrees"
+                        label: getTranslation("creator.turn_right_45")
                     },
                     {
                         value: "right_90_degrees",
-                        label: "Turn right 90 degrees"
+                        label: getTranslation("creator.turn_right_90")
                     },
                     {
                         value: "left_45_degrees",
-                        label: "Turn left 45 degrees"
+                        label: getTranslation("creator.turn_left_45")
                     },
                     {
                         value: "left_90_degrees",
-                        label: "Turn left 90 degrees"
+                        label: getTranslation("creator.turn_left_90")
                     },
                     {
                         value: "back",
-                        label: "Turn back"
+                        label: getTranslation("creator.turn_back")
                     },
                     {
                         value: "random",
-                        label: "Turn to a random direction"
+                        label: getTranslation("creator.turn_random")
                     },
                 ]}/>
             </WiredSection>
@@ -109,9 +111,9 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
             <WiredDivider/>
 
             <WiredSection>
-                <b>When colliding with user</b>
+                <b>{getTranslation("creator.when_colliding_with_user")}</b>
 
-                <WiredCheckbox value={blockCollidingWithUsers} onChange={setBlockCollidingWithUsers} label="Block furni movements"/>
+                <WiredCheckbox value={blockCollidingWithUsers} onChange={setBlockCollidingWithUsers} label={getTranslation("creator.block_furni_movements")}/>
             </WiredSection>
 
             <WiredDivider/>
@@ -125,8 +127,8 @@ export default function WiredActionMoveToDirectionDialog({ data, onClose }: Room
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

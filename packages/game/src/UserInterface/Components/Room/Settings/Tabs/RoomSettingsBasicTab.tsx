@@ -7,8 +7,10 @@ import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { UpdateRoomInformationData } from "@pixel63/events";
 import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
+import { useTranslation } from "react-i18next";
 
 export default function RoomSettingsBasicTab() {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
     const roomCategories = useRoomCategories();
     
@@ -88,15 +90,15 @@ export default function RoomSettingsBasicTab() {
                 flexDirection: "column",
                 gap: 8
             }}>
-                <b>Room name</b>
+                <b>{getTranslation("settings.basic.name")}</b>
 
-                <Input placeholder="My room name" value={name} onChange={setName}/>
+                <Input placeholder={getTranslation("settings.basic.name_placeholder")} value={name} onChange={setName}/>
                 
-                <b>Room description</b>
+                <b>{getTranslation("settings.basic.description")}</b>
 
-                <Input placeholder="My room description" value={description} onChange={setDescription}/>
+                <Input placeholder={getTranslation("settings.basic.description_placeholder")} value={description} onChange={setDescription}/>
 
-                <b>Room category</b>
+                <b>{getTranslation("settings.basic.category")}</b>
 
                 <Selection value={room.information?.category} items={roomCategories?.map((category) => {
                     return {
@@ -107,26 +109,26 @@ export default function RoomSettingsBasicTab() {
 
                 {(hasRoomTypePermissions) && (
                     <Fragment>
-                        <b>Room type</b>
+                        <b>{getTranslation("settings.basic.type")}</b>
 
                         <Selection value={room.information?.type} items={[
                             {
                                 value: "private",
-                                label: "Private"
+                                label: getTranslation("settings.basic.type_private")
                             },
                             {
                                 value: "public",
-                                label: "Public"
+                                label: getTranslation("settings.basic.type_public")
                             },
                             {
                                 value: "bundle",
-                                label: "Bundle"
+                                label: getTranslation("settings.basic.type_bundle")
                             }
                         ]} onChange={(value) => handleTypeChange(value as string)}/>
                     </Fragment>
                 )}
 
-                <b>Maximum amount of visitors</b>
+                <b>{getTranslation("settings.basic.max_users")}</b>
 
                 <Selection value={room.information?.maxUsers} items={Array.from({ length: 10 }, (_, index) => (index + 1) * 5).map((maxUsers) => {
                     return {
@@ -135,26 +137,26 @@ export default function RoomSettingsBasicTab() {
                     };
                 }) ?? []} onChange={(value) => handleMaxUsersChange(value as number)}/>
 
-                <b>Trade settings</b>
+                <b>{getTranslation("settings.basic.trade")}</b>
 
                 <Selection value={room.information?.trading} items={[
                     {
                         value: "everyone",
-                        label: "Everyone is allowed to trade"
+                        label: getTranslation("settings.basic.trade_everyone")
                     },
                     {
                         value: "rights",
-                        label: "Users with rights are allowed to trade"
+                        label: getTranslation("settings.basic.trade_rights")
                     },
                     {
                         value: "disabled",
-                        label: "No one is allowed to trade"
+                        label: getTranslation("settings.basic.trade_disabled")
                     }
                 ]} onChange={(value) => handleTradingChange(value as string)}/>
 
                 <div/>
 
-                <Checkbox value={room.information?.allowWalkingThroughUsers} label="Allow walking through users" onChange={handleAllowWalkingThroughUsersChange}/>
+                <Checkbox value={room.information?.allowWalkingThroughUsers} label={getTranslation("settings.basic.allow_walking")} onChange={handleAllowWalkingThroughUsersChange}/>
             </div>
         </div>
     );

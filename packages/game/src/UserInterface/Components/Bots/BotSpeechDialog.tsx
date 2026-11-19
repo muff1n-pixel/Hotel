@@ -11,6 +11,7 @@ import { useDialogs } from "../../Hooks/useDialogs";
 import { RoomBotsData, UpdateRoomBotData, UserBotData } from "@pixel63/events";
 import { useRoom } from "@UserInterface/Hooks/useRoom";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type BotSpeechDialogProps = {
     data: UserBotData;
@@ -19,6 +20,7 @@ export type BotSpeechDialogProps = {
 }
 
 export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDialogProps) {
+    const [getTranslation] = useTranslation("bots");
     const dialogs = useDialogs();
     const botSpeech = useBotSpeech(data.id);
     const room = useRoomInstance();
@@ -93,13 +95,13 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
     }
 
     return (
-        <Dialog title="Setup bot speech" hidden={hidden} onClose={onClose} width={430} height={380} initialPosition="center">
+        <Dialog title={getTranslation("speech.title")} hidden={hidden} onClose={onClose} width={430} height={380} initialPosition="center">
             <DialogContent style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10
             }}>
-                <Input readonly={activeMessageIndex === null} placeholder={(activeMessageIndex === null)?("Add or select a message"):("Message...")} maxLength={128} value={message} onChange={(value) => {
+                <Input readonly={activeMessageIndex === null} placeholder={getTranslation((activeMessageIndex === null)?"speech.add_or_select":"speech.message")} maxLength={128} value={message} onChange={(value) => {
                     if(activeMessageIndex === null) {
                         return;
                     }
@@ -111,11 +113,11 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
                     setMessages(mutatedMessages);
                 }}/>
 
-                <DialogTable activeId={activeMessageIndex?.toString()} columns={["Message"]} items={messages.map((message, index) => {
+                <DialogTable activeId={activeMessageIndex?.toString()} columns={[getTranslation("speech.messages")]} items={messages.map((message, index) => {
                     return {
                         id: index.toString(),
                         values: [
-                            (message.length)?(message):(<i style={{ opacity: 0.5 }}>New message</i>)
+                            (message.length)?(message):(<i style={{ opacity: 0.5 }}>{getTranslation("speech.new_message")}</i>)
                         ],
                         tools: (
                             <div>
@@ -144,11 +146,11 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
                     }} onClick={handleAddMessage}/>
                 )}/>
 
-                <Checkbox value={automaticChat} onChange={setAutomaticChat} label="Bot talks automatically"/>
+                <Checkbox value={automaticChat} onChange={setAutomaticChat} label={getTranslation("speech.automatic")}/>
 
-                <Checkbox value={randomizeMessages} onChange={setRandomizeMessages} label="Messages are randomized"/>
+                <Checkbox value={randomizeMessages} onChange={setRandomizeMessages} label={getTranslation("speech.randomize")}/>
 
-                <b>Automatic chat delay (seconds)</b>
+                <b>{getTranslation("speech.delay")}</b>
 
                 <Input type="number" min={10} max={60 * 5} value={automaticChatDelay.toString()} onChange={(value) => setAutomaticChatDelay(parseInt(value))}/>
 
@@ -156,7 +158,7 @@ export default function BotSpeechDialog({ data, hidden, onClose }: BotSpeechDial
                     display: "flex",
                     justifyContent: "flex-end"
                 }}>
-                    <DialogButton onClick={handleApply}>Apply changes</DialogButton>
+                    <DialogButton onClick={handleApply}>{getTranslation("speech.apply")}</DialogButton>
                 </div>
             </DialogContent>
         </Dialog>

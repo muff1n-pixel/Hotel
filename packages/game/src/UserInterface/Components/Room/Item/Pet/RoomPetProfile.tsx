@@ -75,8 +75,8 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                     gap: 6,
                     fontSize: 10
                 }}>
-                    <div>Level: {pet.data.level}/20</div>
-                    <div>Age: {pet.data.days.toLocaleString('en-US')} days</div>
+                    <div>{getTranslation("pet_profile.level", { level: pet.data.level })}</div>
+                    <div>{getTranslation("pet_profile.age", { count: pet.data.days, days: pet.data.days.toLocaleString("en-US") })}</div>
                 </div>
 
                 <div style={{
@@ -106,7 +106,7 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                         gap: 2,
                         height: 10
                     }}>
-                        Been scratched: {pet.data.scratches.toLocaleString("en-US")} <div className="sprite_room_pet_scratches"/>    
+                        {getTranslation("pet_profile.scratches", { scratches: pet.data.scratches.toLocaleString("en-US") })} <div className="sprite_room_pet_scratches"/>    
                     </div>
 
                     <div style={{
@@ -116,7 +116,7 @@ export default function RoomPetProfile({ pet }: RoomPetProfileProps) {
                         gap: 2,
                         height: 10
                     }}>
-                        Owner: {pet.data.userName}
+                        {getTranslation("information.owner")} {pet.data.userName}
                     </div>
                 </div>
 

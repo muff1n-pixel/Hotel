@@ -1,0 +1,6 @@
+{
+    "open_chats": "Your open chats ({{count}})",
+    "you_plus_friend": "You + {{name}}",
+    "start": "This is the start of your conversation",
+    "message_placeholder": "Type your message..."
+}

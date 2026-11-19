@@ -1,6 +1,7 @@
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import Dialog from "../../../Common/Dialog/Dialog";
 import DialogContent from "../../../Common/Dialog/Components/DialogContent";
+import { useTranslation } from "react-i18next";
 
 export type HotelAlertDialogProps = {
     data?: any;
@@ -9,8 +10,10 @@ export type HotelAlertDialogProps = {
 }
 
 export default function HotelAlertDialog({ hidden, data, onClose }: HotelAlertDialogProps) {
+    const [getTranslation] = useTranslation("hotel");
+
     return (
-        <Dialog title="Notice!" hidden={hidden} onClose={onClose} width={276} height={138} initialPosition="center">
+        <Dialog title={getTranslation("alert.title")} hidden={hidden} onClose={onClose} width={276} height={138} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -24,7 +27,7 @@ export default function HotelAlertDialog({ hidden, data, onClose }: HotelAlertDi
                     justifyContent: "center"
                 }}>
                     <DialogButton onClick={onClose}>
-                        Close
+                        {getTranslation("alert.close")}
                     </DialogButton>
                 </div>
             </DialogContent>

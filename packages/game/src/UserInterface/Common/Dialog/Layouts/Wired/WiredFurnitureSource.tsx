@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredSection from "./WiredSection";
 
 export type WiredFurnitureSourceProps = {
@@ -8,6 +9,7 @@ export type WiredFurnitureSourceProps = {
 };
 
 export default function WiredFurnitureSource({ value, furnitureIds, maxFurniture, onChange }: WiredFurnitureSourceProps) {
+    const [getTranslation] = useTranslation("wired");
     return (
         <WiredSection style={{
             background: "rgba(0, 0, 0, .15)",
@@ -18,7 +20,7 @@ export default function WiredFurnitureSource({ value, furnitureIds, maxFurniture
             paddingTop: 10,
             paddingBottom: 10
         }}>
-            <b>Select furni source:</b>
+            <b>{getTranslation("creator.select_furni_source")}</b>
 
             <div style={{
                 display: "flex",
@@ -35,9 +37,9 @@ export default function WiredFurnitureSource({ value, furnitureIds, maxFurniture
 
                 <div>
                     {(value === "list")?(
-                        `Use picked furnis [${furnitureIds.length}/${maxFurniture}]`
+                        getTranslation("creator.use_picked_furnis", { count: furnitureIds.length, max: maxFurniture })
                     ):(
-                        "Use furni from Selector"
+                        getTranslation("creator.use_furni_from_selector")
                     )}
                 </div>
 

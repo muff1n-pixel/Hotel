@@ -1,0 +1,14 @@
+{
+    "report_issue": {
+        "title": "Rapportera ett problem",
+        "area_question": "Vilket område gäller problemet?",
+        "area_example": "T.ex. rumsrendering, möbelrendering, navigatorn eller liknande.",
+        "area_placeholder": "Problemområde (valfritt)",
+        "issue_question": "Vad är problemet?",
+        "issue_description": "Beskriv problemet så kortfattat eller utförligt du vill.",
+        "issue_placeholder": "Problembeskrivning",
+        "feedback_suggestions": "Du kan också använda formuläret för att föreslå förbättringar, ny funktionalitet eller lämna allmän feedback.",
+        "submit": "Skicka feedback",
+        "thanks": "Tack för din feedback!"
+    }
+}

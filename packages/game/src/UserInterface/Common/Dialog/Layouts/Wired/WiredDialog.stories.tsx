@@ -12,6 +12,70 @@ import WiredButton from "@UserInterface/Common/Dialog/Layouts/Wired/WiredButton"
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 import WiredFurniturePicker from "@UserInterface/Common/Dialog/Layouts/Wired/WiredFurniturePicker";
 import WiredFurnitureSource from "@UserInterface/Common/Dialog/Layouts/Wired/WiredFurnitureSource";
+import { useTranslation } from "react-i18next";
+
+function WiredDialogStoryContent() {
+    const [getTranslation] = useTranslation("wired");
+
+    return (
+        <Fragment>
+            <WiredFurniture furniture={FurnitureData.create({
+                type: "wf_trg",
+                name: "Wired Trigger: Lorem ipsum"
+            })}/>
+
+            <WiredDivider/>
+
+            <WiredSection>
+                <b>{getTranslation("creator.story_input")}</b>
+
+                <WiredInput value="" onChange={() => {}}/>
+            </WiredSection>
+
+            <WiredDivider/>
+
+            <WiredSection>
+                <b>{getTranslation("creator.story_checkboxes")}</b>
+
+                <WiredCheckbox label={getTranslation("creator.story_checkbox")} value={false} onChange={() => {}}/>
+            </WiredSection>
+
+            <WiredDivider/>
+
+            <WiredSection>
+                <b>{getTranslation("creator.story_radio")}</b>
+
+                <WiredRadio value={1} items={[
+                    {
+                        value: 1,
+                        label: getTranslation("creator.story_item_one")
+                    },
+                    {
+                        value: 2,
+                        label: getTranslation("creator.story_item_two")
+                    }
+                ]} onChange={() => {}}/>
+            </WiredSection>
+
+            <WiredDivider/>
+
+            <WiredDelay value={0} onChange={() => {}}/>
+
+            <WiredDivider/>
+
+            <WiredFurniturePicker maxFurniture={5} value={[]} onChange={() => {}}/>
+
+            <WiredFurnitureSource value="list" onChange={() => {}} furnitureIds={[]} maxFurniture={5}/>
+
+            <WiredDivider/>
+
+            <WiredSection style={{ flexDirection: "row" }}>
+                <WiredButton onClick={() => {}}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={() => {}}>{getTranslation("creator.cancel")}</WiredButton>
+            </WiredSection>
+        </Fragment>
+    );
+}
 
 export default {
     component: WiredDialog
@@ -19,64 +83,7 @@ export default {
 
 export const Default = {
     args: {
-        children: (
-            <Fragment>
-                <WiredFurniture furniture={FurnitureData.create({
-                    type: "wf_trg",
-                    name: "Wired Trigger: Lorem ipsum"
-                })}/>
-
-                <WiredDivider/>
-
-                <WiredSection>
-                    <b>Input</b>
-
-                    <WiredInput value="" onChange={() => {}}/>
-                </WiredSection>
-
-                <WiredDivider/>
-
-                <WiredSection>
-                    <b>Checkboxes</b>
-
-                    <WiredCheckbox label="Checkbox" value={false} onChange={() => {}}/>
-                </WiredSection>
-
-                <WiredDivider/>
-
-                <WiredSection>
-                    <b>Radio</b>
-
-                    <WiredRadio value={1} items={[
-                        {
-                            value: 1,
-                            label: "Item 1"
-                        },
-                        {
-                            value: 2,
-                            label: "Item 2"
-                        }
-                    ]} onChange={() => {}}/>
-                </WiredSection>
-
-                <WiredDivider/>
-
-                <WiredDelay value={0} onChange={() => {}}/>
-                
-                <WiredDivider/>
-
-                <WiredFurniturePicker maxFurniture={5} value={[]} onChange={() => {}}/>
-
-                <WiredFurnitureSource value="list" onChange={() => {}} furnitureIds={[]} maxFurniture={5}/>
-                
-                <WiredDivider/>
-
-                <WiredSection style={{ flexDirection: "row" }}>
-                    <WiredButton onClick={() => {}}>Apply</WiredButton>
-                    <WiredButton onClick={() => {}}>Cancel</WiredButton>
-                </WiredSection>
-            </Fragment>
-        ),
+        children: <WiredDialogStoryContent />,
         initialPosition: "center"
     } satisfies WiredDialogProps,
 } satisfies StoryObj;

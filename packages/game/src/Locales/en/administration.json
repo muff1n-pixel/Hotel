@@ -1,0 +1,62 @@
+{
+    "title": "Administration",
+    "tabs": {
+        "overview": "Overview",
+        "settings": "Settings",
+        "activity_rewards": "Activity Rewards",
+        "feedback": "Feedback",
+        "debug": "Debug"
+    },
+    "overview": {
+        "users_one": "{{count}} user online",
+        "users_other": "{{count}} users online",
+        "furniture_browser": "Furniture Browser",
+        "pet_browser": "Pet Browser",
+        "badge_browser": "Badge Browser"
+    },
+    "settings": {
+        "variable": "Variable",
+        "value": "Value",
+        "changing": "Changing",
+        "update": "Update"
+    },
+    "activity_rewards": {
+        "title": "Activity rewards",
+        "description": "Users are rewarded for their activity by being online for the amount of seconds defined in each reward.",
+        "interval": "Interval",
+        "credits": "Credits",
+        "duckets": "Duckets",
+        "diamonds": "Diamonds",
+        "minutes": "minutes",
+        "seconds": "seconds",
+        "awards_every": "Awards every {{duration}}",
+        "create": "Create a new reward"
+    },
+    "feedback": {
+        "area": "Area:",
+        "description": "Description:",
+        "reported_by": "Reported by {{name}}"
+    },
+    "debug": {
+        "image_bitmaps": "ImageBitmaps",
+        "asset": "Asset",
+        "opened": "Opened",
+        "closed": "Closed",
+        "active": "Active",
+        "landscape": "Landscape",
+        "furniture": "Furniture",
+        "figure": "Figure"
+    },
+    "activity_reward_editor": {
+        "edit_title": "Edit activity reward",
+        "create_title": "Create activity reward",
+        "interval": "Interval (in seconds)",
+        "description": "The interval is counted by how long each user has been online and will reward the user for each interval span.",
+        "interval_summary": "Interval of {{interval}} seconds occurs every {{minutes}} minutes.",
+        "reward": "Reward",
+        "delete": "Delete furniture",
+        "confirm_delete": "Confirm deletion",
+        "update": "Update reward",
+        "create": "Create reward"
+    }
+}

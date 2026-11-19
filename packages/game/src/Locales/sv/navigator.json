@@ -1,0 +1,35 @@
+{
+    "title": "Navigator",
+    "tabs": {
+        "public": "Offentliga",
+        "all": "Alla rum",
+        "events": "Evenemang",
+        "mine": "Mina rum"
+    },
+    "search": {
+        "anything": "Allt",
+        "room_name": "Rumsnamn",
+        "owner": "Ägare",
+        "group": "Grupp",
+        "placeholder": "Sök efter ett rumsnamn..."
+    },
+    "banners": {
+        "create_room": "Skapa ett rum",
+        "somewhere_new": "Någon annanstans",
+        "promote_event": "Marknadsför evenemang"
+    },
+    "creation": {
+        "title": "Skapa rum",
+        "name": "Rumsnamn",
+        "name_placeholder": "Mitt rumsnamn",
+        "description": "Rumsbeskrivning",
+        "description_placeholder": "Min rumsbeskrivning",
+        "category": "Rumskategori",
+        "maximum_visitors": "Maximalt antal besökare",
+        "create": "Skapa rum",
+        "choose_layout": "Välj rumslayout"
+    },
+    "profile": {
+        "max_users": "Max användare:"
+    }
+}

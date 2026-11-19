@@ -15,11 +15,11 @@ export type RoomWiredTabProps = {
 };
 
 export default function RoomWiredDialog({ hidden, onClose }: RoomWiredDialogProps) {
-    const [getWiredTranslation] = useTranslation("wired");
+    const [getTranslation] = useTranslation("wired");
     const [tab, setTab] = useState(0);
 
     return (
-        <Dialog title={getWiredTranslation("creator_tools")} hidden={hidden} onClose={onClose} width={500} height={500}>
+        <Dialog title={getTranslation("creator_tools")} hidden={hidden} onClose={onClose} width={500} height={500}>
             <DialogTabs
                 index={tab}
                 onChange={setTab}
@@ -30,12 +30,12 @@ export default function RoomWiredDialog({ hidden, onClose }: RoomWiredDialogProp
                 }}
                 tabs={[
                     {
-                        icon: getWiredTranslation("monitor.monitor"),
+                        icon: getTranslation("monitor.monitor"),
                         element: (<RoomWiredMonitorTab onTabChange={setTab}/>)
                     },
                     
                     {
-                        icon: getWiredTranslation("monitor.logs"),
+                        icon: getTranslation("monitor.logs"),
                         element: (<RoomWiredLogsTab/>)
                     }
                 ]}/>

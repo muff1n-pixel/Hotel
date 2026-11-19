@@ -7,6 +7,7 @@ import { webSocketClient } from "../../../..";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { DeleteHotelActivityRewardData, UpdateHotelActivityRewardData } from "@pixel63/events";
 import { HotelActivityRewardData } from "@pixel63/events/build/Client/Hotel/ActivityRewards/HotelActivityRewardsData";
+import { useTranslation } from "react-i18next";
 
 export type EditHotelActivityRewardDialogProps = {
     data: {
@@ -18,6 +19,7 @@ export type EditHotelActivityRewardDialogProps = {
 
 export default function EditHotelActivityRewardDialog({ hidden, data, onClose }: EditHotelActivityRewardDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("administration");
 
     const [interval, setInterval] = useState(data?.activityReward?.interval ?? (60 * 5));
 
@@ -56,21 +58,21 @@ export default function EditHotelActivityRewardDialog({ hidden, data, onClose }:
     }, [data, confirmDelete, onClose]);
 
     return (
-        <Dialog title={(data?.activityReward?.id)?("Edit activity reward"):("Create activity reward")} editMode hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={380} initialPosition="center">
+        <Dialog title={getTranslation((data?.activityReward?.id)?"activity_reward_editor.edit_title":"activity_reward_editor.create_title")} editMode hidden={hidden} onClose={onClose} width={320} height={"auto"} assumedHeight={380} initialPosition="center">
             <DialogContent style={{
                 gap: 8
             }}>
-                <b>Interval (in seconds)</b>
+                <b>{getTranslation("activity_reward_editor.interval")}</b>
                 
-                <p>The interval is counted by how long each user has been online and will reward the user for each interval span.</p>
+                <p>{getTranslation("activity_reward_editor.description")}</p>
 
                 <Input type={"number"} placeholder="0" value={interval.toString()} onChange={(value) => setInterval(parseInt(value))}/>
 
-                <p><i>Interval of {interval} seconds occurrs every {Math.round(interval / 60 * 100) / 100} minutes.</i></p>
+                <p><i>{getTranslation("activity_reward_editor.interval_summary", { interval, minutes: Math.round(interval / 60 * 100) / 100 })}</i></p>
 
                 <div/>
 
-                <b>Reward</b>
+                <b>{getTranslation("activity_reward_editor.reward")}</b>
 
                 <div style={{
                     display: "flex",
@@ -137,14 +139,14 @@ export default function EditHotelActivityRewardDialog({ hidden, data, onClose }:
                 }}>
                     {(data.activityReward?.id)?(
                         <DialogButton style={{ flex: 1 }} color="red" onClick={handleDelete}>
-                            {(!confirmDelete)?("Delete furniture"):("Confirm deletion")}
+                            {(!confirmDelete)?(getTranslation("activity_reward_editor.delete")):(getTranslation("activity_reward_editor.confirm_delete"))}
                         </DialogButton>
                     ):(
                         <div style={{ flex: 1 }}/>
                     )}
 
                     <DialogButton style={{ flex: 1 }} onClick={handleUpdate}>
-                        {(data?.activityReward?.id)?("Update reward"):("Create reward")}
+                        {(data?.activityReward?.id)?(getTranslation("activity_reward_editor.update")):(getTranslation("activity_reward_editor.create"))}
                     </DialogButton>
                 </div>
             </DialogContent>

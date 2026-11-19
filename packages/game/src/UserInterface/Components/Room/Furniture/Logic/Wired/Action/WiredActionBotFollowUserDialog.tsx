@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionBotFollowUserDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [botName, setBotName] = useState(data.data.data?.wiredActionBotFollowUser?.botName ?? "");
@@ -48,18 +50,18 @@ export default function WiredActionBotFollowUserDialog({ data, onClose }: RoomFu
             <WiredDivider/>
 
             <WiredSection>
-                <b>Bot Name</b>
+                <b>{getTranslation("creator.bot_name")}</b>
 
                 <WiredInput value={botName} onChange={setBotName}/>
 
                 <WiredRadio value={stopFollowing} onChange={setStopFollowing} items={[
                     {
                         value: false,
-                        label: "Start Following"
+                        label: getTranslation("creator.start_following")
                     },
                     {
                         value: true,
-                        label: "Stop Following"
+                        label: getTranslation("creator.stop_following")
                     }
                 ]}/>
             </WiredSection>
@@ -71,8 +73,8 @@ export default function WiredActionBotFollowUserDialog({ data, onClose }: RoomFu
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

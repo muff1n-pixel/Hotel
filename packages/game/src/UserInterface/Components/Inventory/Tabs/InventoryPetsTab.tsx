@@ -10,8 +10,10 @@ import { GetUserInventoryPetsData, PlaceRoomPetData, UserInventoryPetsData, User
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import PetImage from "../../Pets/PetImage";
 import { useUserPetNotifications } from "@UserInterface/Hooks/User/Notifications/useUserPetNotifications";
+import { useTranslation } from "react-i18next";
 
 export default function InventoryPetsTab() {
+    const [getTranslation] = useTranslation("inventory");
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 
@@ -211,7 +213,7 @@ export default function InventoryPetsTab() {
                             <b>{activePet?.name}</b>
                         </div>
 
-                        <DialogButton disabled={!room || (!room.hasRights || !room.information?.allowPets)} onClick={onPlaceInRoomClick}>Place in room</DialogButton>
+                        <DialogButton disabled={!room || (!room.hasRights || !room.information?.allowPets)} onClick={onPlaceInRoomClick}>{getTranslation("place_in_room")}</DialogButton>
                     </Fragment>
                 )}
             </div>

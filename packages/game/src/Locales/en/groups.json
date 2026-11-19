@@ -1,0 +1,71 @@
+{
+    "title": "Habbo Group",
+    "card": {
+        "created": "Created",
+        "by": "by",
+        "members": "Members: {{count}}",
+        "go_to_homeroom": "Go to Group homeroom",
+        "buy_furniture": "Buy Group Furni",
+        "join": "Join Group",
+        "leave": "Leave Group",
+        "edit": "Edit Group"
+    },
+    "settings": {
+        "identity": "Identity",
+        "badge": "Badge",
+        "colors": "Colors",
+        "preferences": "Settings",
+        "identity_title": "Group identity",
+        "identity_description": "Change your group identity",
+        "badge_title": "Group badge",
+        "badge_description": "Change your group badge",
+        "colors_title": "Group colors",
+        "colors_description": "Change your group colors",
+        "settings_title": "Group settings",
+        "settings_description": "Change your group settings",
+        "badge_label": "Group badge",
+        "members": "Members: {{count}}",
+        "name": "Name of your group:",
+        "description": "Description of your group:",
+        "type": "Group type",
+        "rights": "Group rights",
+        "public": "Public",
+        "public_description": "Anyone can join the group.",
+        "exclusive": "Exclusive",
+        "exclusive_description": "Users can request to join the group.",
+        "private": "Private",
+        "private_description": "No one can join the group.",
+        "owner_only": "Owner only",
+        "owner_only_description": "No one is given rights to the homeroom.",
+        "all_members": "Members",
+        "all_members_description": "All members are given rights to the homeroom.",
+        "admins": "Admins",
+        "admins_description": "Admins are given rights to the homeroom.",
+        "update": "Update group"
+    },
+    "members": {
+        "title": "{{name}} members",
+        "search": "Search for user...",
+        "show_all": "Show all members",
+        "show_admins": "Show only admins",
+        "joined": "Joined",
+        "decline": "Decline",
+        "accept": "Accept",
+        "page": "Page {{current}} / {{total}}"
+    },
+    "badge_editor": {
+        "title": "Group badge",
+        "symbol": "Symbol",
+        "position": "Position",
+        "color": "Color"
+    },
+    "color_editor": {
+        "title": "Group colors",
+        "primary": "Primary",
+        "secondary": "Secondary"
+    },
+    "discovery": {
+        "description": "Habbo Groups are a great way to get some internet fame!",
+        "button": "Check out the hottest groups"
+    }
+}

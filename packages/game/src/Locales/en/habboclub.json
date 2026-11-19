@@ -1,0 +1,35 @@
+{
+    "title": "Habbo Club Center",
+    "purchase": {
+        "buy_more": "Buy more Habbo Club",
+        "buy": "Buy Habbo Club"
+    },
+    "status": {
+        "label": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "time_left": "Time left:",
+        "first_joined": "First joined:",
+        "current_streak": "Current streak:",
+        "not_member": "You are not a current Habbo Club member. Check out what you're missing..."
+    },
+    "payday": {
+        "title": "HC Payday",
+        "description": "HC members get credits back from catalog purchases each month.",
+        "in": "HC Payday is in:",
+        "days": "{{days}} d.",
+        "getting": "You'll be getting:"
+    },
+    "gift": {
+        "title": "Monthly HC gift",
+        "description": "HC members get a free gift every month!",
+        "view": "View gifts"
+    },
+    "benefits": {
+        "title": "More HC benefits:",
+        "clothing": "- Massive clothing & colors selection",
+        "dances": "- Extra dances & chat styles",
+        "duckets": "- Earn double duckets",
+        "more": "- Plus loads more..."
+    }
+}

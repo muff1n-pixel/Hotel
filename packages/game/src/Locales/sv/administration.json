@@ -1,0 +1,62 @@
+{
+    "title": "Administration",
+    "tabs": {
+        "overview": "Översikt",
+        "settings": "Inställningar",
+        "activity_rewards": "Aktivitetsbelöningar",
+        "feedback": "Feedback",
+        "debug": "Felsökning"
+    },
+    "overview": {
+        "users_one": "{{count}} användare online",
+        "users_other": "{{count}} användare online",
+        "furniture_browser": "Möbelbläddrare",
+        "pet_browser": "Husdjursbläddrare",
+        "badge_browser": "Märkesbläddrare"
+    },
+    "settings": {
+        "variable": "Variabel",
+        "value": "Värde",
+        "changing": "Ändrar",
+        "update": "Uppdatera"
+    },
+    "activity_rewards": {
+        "title": "Aktivitetsbelöningar",
+        "description": "Användare belönas för sin aktivitet när de är online det antal sekunder som anges för varje belöning.",
+        "interval": "Intervall",
+        "credits": "Krediter",
+        "duckets": "Duckets",
+        "diamonds": "Diamanter",
+        "minutes": "minuter",
+        "seconds": "sekunder",
+        "awards_every": "Belönas var {{duration}}",
+        "create": "Skapa en ny belöning"
+    },
+    "feedback": {
+        "area": "Område:",
+        "description": "Beskrivning:",
+        "reported_by": "Rapporterat av {{name}}"
+    },
+    "debug": {
+        "image_bitmaps": "ImageBitmaps",
+        "asset": "Tillgång",
+        "opened": "Öppnade",
+        "closed": "Stängda",
+        "active": "Aktiva",
+        "landscape": "Landskap",
+        "furniture": "Möbler",
+        "figure": "Figur"
+    },
+    "activity_reward_editor": {
+        "edit_title": "Redigera aktivitetsbelöning",
+        "create_title": "Skapa aktivitetsbelöning",
+        "interval": "Intervall (i sekunder)",
+        "description": "Intervallet räknas utifrån hur länge varje användare har varit online och belönar användaren för varje intervall.",
+        "interval_summary": "Intervall på {{interval}} sekunder inträffar var {{minutes}} minut.",
+        "reward": "Belöning",
+        "delete": "Ta bort möbel",
+        "confirm_delete": "Bekräfta borttagning",
+        "update": "Uppdatera belöning",
+        "create": "Skapa belöning"
+    }
+}

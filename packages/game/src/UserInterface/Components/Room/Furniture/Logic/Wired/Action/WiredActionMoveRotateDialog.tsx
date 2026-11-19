@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -14,6 +15,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionMoveRotateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [movement, setMovement] = useState(data.data.data?.wiredActionMoveRotate?.movement ?? "none");
@@ -52,12 +54,12 @@ export default function WiredActionMoveRotateDialog({ data, onClose }: RoomFurni
             <WiredDivider/>
 
             <WiredSection>
-                <b>Move furni:</b>
+                <b>{getTranslation("creator.move_furni")}</b>
 
                 <WiredRadio value={movement} onChange={setMovement} items={[
                     {
                         value: "none",
-                        label: "No movement"
+                        label: getTranslation("creator.no_movement")
                     }
                 ]}/>
 
@@ -89,24 +91,24 @@ export default function WiredActionMoveRotateDialog({ data, onClose }: RoomFurni
             <WiredDivider/>
 
             <WiredSection>
-                <b>Rotate furni:</b>
+                <b>{getTranslation("creator.rotate_furni")}</b>
 
                 <WiredRadio value={rotation} onChange={setRotation} items={[
                     {
                         value: "none",
-                        label: "No rotation"
+                        label: getTranslation("creator.no_rotation")
                     },
                     {
                         value: "clockwise",
-                        label: (<FlexLayout direction="row"><div className="sprite_dialog_wired_rotations_rotate_cw"/> Rotate clockwise</FlexLayout>)
+                        label: (<FlexLayout direction="row"><div className="sprite_dialog_wired_rotations_rotate_cw"/> {getTranslation("creator.rotate_clockwise")}</FlexLayout>)
                     },
                     {
                         value: "counter-clockwise",
-                        label: (<FlexLayout direction="row"><div className="sprite_dialog_wired_rotations_rotate_ccw"/> Rotate counter clockwise</FlexLayout>)
+                        label: (<FlexLayout direction="row"><div className="sprite_dialog_wired_rotations_rotate_ccw"/> {getTranslation("creator.rotate_counter_clockwise")}</FlexLayout>)
                     },
                     {
                         value: "random",
-                        label: "To random direction"
+                        label: getTranslation("creator.random_direction")
                     },
                 ]}/>
             </WiredSection>
@@ -122,8 +124,8 @@ export default function WiredActionMoveRotateDialog({ data, onClose }: RoomFurni
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

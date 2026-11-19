@@ -7,6 +7,7 @@ import ShopPagesList from "./ShopPagesList";
 import { ShopPageData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import Input from "@UserInterface/Common/Form/Components/Input";
+import { useTranslation } from "react-i18next";
 
 export type ShopDialogCategoryProps = {
     category: string;
@@ -27,6 +28,7 @@ export type ShopDialogCategoryProps = {
 
 export default function ShopDialogCategory({ category, editMode, onHeaderChange, shopPages, activeShopPage, setActiveShopPage, search, onSearchChange, requestedFurnitureId }: ShopDialogCategoryProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("shop");
     const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
@@ -79,7 +81,7 @@ export default function ShopDialogCategory({ category, editMode, onHeaderChange,
         }}>
             {(activeShopPage?.type !== "features") && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 5, width: 190 }}>
-                    <Input placeholder="Search here..." value={searchText} onChange={setSearchText} onSubmit={onSearchChange}>
+                    <Input placeholder={getTranslation("search.placeholder")} value={searchText} onChange={setSearchText} onSubmit={onSearchChange}>
                         <div className="sprite_room_user_motto_pen"/>
                     </Input>
 

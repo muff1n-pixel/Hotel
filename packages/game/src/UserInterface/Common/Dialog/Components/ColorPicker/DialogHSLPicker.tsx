@@ -2,6 +2,7 @@ import Colors, { HSL } from "@UserInterface/Utils/Colors";
 import HueSaturationLightnessSlider from "./HueSaturationLightnessSlider";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export type DialogHSLPickerProps = {
     value: HSL;
@@ -10,6 +11,7 @@ export type DialogHSLPickerProps = {
 
 export default function DialogHSLPicker({ value, onChange }: DialogHSLPickerProps) {
     const [hex, setHex] = useState(Colors.hslToHex(value));
+    const [getTranslation] = useTranslation("common");
 
     return (
         <div style={{
@@ -17,7 +19,7 @@ export default function DialogHSLPicker({ value, onChange }: DialogHSLPickerProp
             flexDirection: "column",
             gap: 10
         }}>
-            <b>Hue</b>
+            <b>{getTranslation("hue")}</b>
 
             <HueSaturationLightnessSlider hsl={value} property="hue" value={value.h / 360} onChange={(hue) => {
                 onChange({
@@ -26,7 +28,7 @@ export default function DialogHSLPicker({ value, onChange }: DialogHSLPickerProp
                 });
             }}/>
             
-            <b>Saturation</b>
+            <b>{getTranslation("saturation")}</b>
 
             <HueSaturationLightnessSlider hsl={value} property="saturation" value={value.s / 100} onChange={(saturation) => {
                 onChange({
@@ -35,7 +37,7 @@ export default function DialogHSLPicker({ value, onChange }: DialogHSLPickerProp
                 });
             }}/>
             
-            <b>Brightness</b>
+            <b>{getTranslation("brightness")}</b>
 
             <HueSaturationLightnessSlider hsl={value} property="lightness" value={value.l / 100} onChange={(lightness) => {
                 onChange({

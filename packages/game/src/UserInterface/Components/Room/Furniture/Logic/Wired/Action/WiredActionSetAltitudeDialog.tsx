@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -16,6 +17,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import WiredInput from "@UserInterface/Common/Dialog/Layouts/Wired/WiredInput";
 
 export default function WiredActionSetAltitudeDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [action, setAction] = useState(data.data.data?.wiredActionSetAltitude?.action ?? "increase");
@@ -59,20 +61,20 @@ export default function WiredActionSetAltitudeDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection>
-                <b>Select option</b>
+                <b>{getTranslation("creator.select_option")}</b>
 
                 <WiredRadio value={action} onChange={setAction} items={[
                     {
                         value: "increase",
-                        label: "Increase"
+                        label: getTranslation("creator.increase")
                     },
                     {
                         value: "decrease",
-                        label: "Decrease"
+                        label: getTranslation("creator.decrease")
                     },
                     {
                         value: "value",
-                        label: "Set value"
+                        label: getTranslation("creator.set_value")
                     }
                 ]}/>
             </WiredSection>
@@ -81,7 +83,7 @@ export default function WiredActionSetAltitudeDialog({ data, onClose }: RoomFurn
 
             <WiredSection>
                 <FlexLayout direction="row" align="center">
-                    <b>Select altitude:</b>
+                    <b>{getTranslation("creator.select_altitude")}</b>
 
                     <WiredInput value={depth.toString()} onChange={(value) => setDepth(parseFloat(value))} style={{
                         width: 40
@@ -102,8 +104,8 @@ export default function WiredActionSetAltitudeDialog({ data, onClose }: RoomFurn
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

@@ -1,0 +1,12 @@
+{
+    "editor": {
+        "title": "Märkesredigerare",
+        "id": "Märkes-ID",
+        "image": "Märkesbild",
+        "image_placeholder": "ACH_[..].gif",
+        "name": "Märkets namn",
+        "description": "Märkets beskrivning",
+        "update": "Uppdatera",
+        "create": "Skapa"
+    }
+}

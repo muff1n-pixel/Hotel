@@ -9,6 +9,7 @@ import DialogColorPicker from "../../../../../Common/Dialog/Components/ColorPick
 import { UpdateRoomFurnitureData } from "@pixel63/events";
 import useRoomTonerPreview from "@UserInterface/Hooks/Room/useRoomTonerPreview";
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
+import { useTranslation } from "react-i18next";
 
 export type RoomFurnitureBackgroundTonerDialogData = {
     furniture: RoomInstanceFurniture;
@@ -16,6 +17,7 @@ export type RoomFurnitureBackgroundTonerDialogData = {
 };
 
 export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const room = useRoomInstance();
 
     const [enabled, setEnabled] = useState(data.data.data?.toner?.enabled ?? false);
@@ -54,7 +56,7 @@ export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClo
     }
 
     return (
-        <Dialog title="Room Furniture Background" hidden={hidden} onClose={onClose} width={300} height={390} initialPosition="center">
+        <Dialog title={getTranslation("furniture.toner.title")} hidden={hidden} onClose={onClose} width={300} height={390} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -70,8 +72,8 @@ export default function RoomFurnitureBackgroundTonerDialog({ data, hidden, onClo
                     display: "flex",
                     gap: 10
                 }}>
-                    <DialogButton style={{ flex: 1 }} onClick={handleToggle}>{(enabled)?("Turn off"):("Turn on")}</DialogButton>
-                    <DialogButton style={{ flex: 1 }} onClick={handleApply}>Apply</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleToggle}>{(enabled)?(getTranslation("furniture.toner.turn_off")):(getTranslation("furniture.toner.turn_on"))}</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleApply}>{getTranslation("furniture.toner.apply")}</DialogButton>
                 </div>
             </DialogContent>
         </Dialog>

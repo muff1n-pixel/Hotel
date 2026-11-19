@@ -5,6 +5,7 @@ import { EnterRoomData, RoomInformationData, RoomLockData } from "@pixel63/event
 import { useCallback, useState } from "react";
 import { webSocketClient } from "@Game/index";
 import Input from "@UserInterface/Common/Form/Components/Input";
+import { useTranslation } from "react-i18next";
 
 export type RoomPasswordDialogProps = {
     data?: RoomLockData;
@@ -13,6 +14,7 @@ export type RoomPasswordDialogProps = {
 }
 
 export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswordDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const [password, setPassword] = useState("");
 
     const handleSubmit = useCallback(() => {
@@ -33,7 +35,7 @@ export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswo
     }
 
     return (
-        <Dialog title="Room Doorbell" hidden={hidden} onClose={onClose} width={265} height={180}>
+        <Dialog title={getTranslation("doorbell.title")} hidden={hidden} onClose={onClose} width={265} height={180}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -43,7 +45,7 @@ export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswo
                 }}>
                     <div><b>{data.roomName}</b></div>
 
-                    <div><p>This room is protected by a password.</p></div>
+                    <div><p>{getTranslation("doorbell.password_description")}</p></div>
 
                     <Input type="password" value={password} onChange={setPassword} onSubmit={handleSubmit}/>
 
@@ -61,10 +63,10 @@ export default function RoomPasswordDialog({ data, hidden, onClose }: RoomPasswo
                             cursor: "pointer",
                             textDecoration: "underline",
                         }} onClick={onClose}>
-                            Cancel
+                            {getTranslation("doorbell.cancel")}
                         </div>
 
-                        <DialogButton disabled={!password.length} onClick={handleSubmit}>Enter room</DialogButton>
+                        <DialogButton disabled={!password.length} onClick={handleSubmit}>{getTranslation("doorbell.enter")}</DialogButton>
                     </div>
                 </div>
             </DialogContent>

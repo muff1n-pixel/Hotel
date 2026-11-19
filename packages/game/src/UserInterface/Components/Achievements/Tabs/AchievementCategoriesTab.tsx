@@ -3,6 +3,7 @@ import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent
 import ProgressBar from "@UserInterface/Common/Dialog/Components/ProgressBar/ProgressBar";
 import AchievementCategoryItem from "@UserInterface/Components/Achievements/Components/AchievementCategoryItem";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export type AchievementCategoriesTabProps = {
     categories: AchievementsCategoryData[];
@@ -10,6 +11,7 @@ export type AchievementCategoriesTabProps = {
 }
 
 export default function AchievementCategoriesTab({ categories, onChange }: AchievementCategoriesTabProps) {
+    const [getTranslation] = useTranslation("achievements");
     const totalUnlockedAchievementLevels = useMemo(() => categories.reduce((total, category) => category.userUnlockedLevels + total, 0), [categories]);
     const totalAchievementLevels = useMemo(() => categories.reduce((total, category) => category.totalLevels + total, 0), [categories]);
 
@@ -45,10 +47,10 @@ export default function AchievementCategoriesTab({ categories, onChange }: Achie
                 alignItems: "center"
             }}>
                 <div>
-                    <ProgressBar value={totalUnlockedAchievementLevels ?? 0} maxValue={totalAchievementLevels ?? 0} label={`Total Achievement: ${totalUnlockedAchievementLevels ?? 0}/${totalAchievementLevels ?? 0}`}/>
+                    <ProgressBar value={totalUnlockedAchievementLevels ?? 0} maxValue={totalAchievementLevels ?? 0} label={getTranslation("total", { unlocked: totalUnlockedAchievementLevels ?? 0, total: totalAchievementLevels ?? 0 })}/>
                 </div>
 
-                <b>Achievement score: {totalAchievementScore ?? 0}</b>
+                <b>{getTranslation("score", { score: totalAchievementScore ?? 0 })}</b>
             </div>
         </DialogContent>
     );

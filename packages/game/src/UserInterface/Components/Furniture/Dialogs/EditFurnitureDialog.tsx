@@ -10,6 +10,7 @@ import Selection from "../../../Common/Form/Components/Selection";
 import { webSocketClient } from "../../../..";
 import { FurnitureData, FurnitureFlagsData, UpdateFurnitureData } from "@pixel63/events";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type EditFurnitureDialogProps = {
     hidden?: boolean;
@@ -19,6 +20,7 @@ export type EditFurnitureDialogProps = {
 
 export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurnitureDialogProps) {
     const dialogs = useDialogs();
+    const [getTranslation] = useTranslation("furniture");
 
     const { categories } = useFurnitureTypes();
 
@@ -56,7 +58,7 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
     }, [ data, type, color, placement, name, description, category, interactionType, depth, flags ]);
 
     return (
-        <Dialog title="Furniture Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={420} style={{
+        <Dialog title={getTranslation("editor.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={720} height={420} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -95,13 +97,13 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                             
                             width: "100%"
                         }}>
-                            <div style={{ fontSize: 12 }}><i>There can only be one furniture entity with a unique type and color.</i></div>
+                            <div style={{ fontSize: 12 }}><i>{getTranslation("editor.unique")}</i></div>
 
-                            <b>Furniture type</b>
+                            <b>{getTranslation("editor.type")}</b>
 
                             <Input value={type} onChange={setType}/>
                             
-                            <b>Furniture color</b>
+                            <b>{getTranslation("editor.color")}</b>
 
                             <Input value={color} onChange={(value) => setColor((value.length)?(value):(undefined))}/>
 
@@ -121,10 +123,10 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                                                 })
                                             });
                                         }}>
-                                            Edit crackable data
+                                            {getTranslation("editor.edit_crackable")}
                                         </DialogButton>
                                     ):(
-                                        <p><i>Furniture must be created before crackable data can be changed.</i></p>
+                                        <p><i>{getTranslation("editor.must_create")}</i></p>
                                     )}
                                 </div>
                             )}
@@ -139,15 +141,15 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                         gap: 10
                     }}>
 
-                        <b>Furniture name</b>
+                        <b>{getTranslation("editor.name")}</b>
 
                         <Input value={name} onChange={setName}/>
 
-                        <b>Furniture description</b>
+                        <b>{getTranslation("editor.description")}</b>
 
                         <Input value={description} onChange={setDescription}/>
 
-                        <b>Category (logic)</b>
+                        <b>{getTranslation("editor.category")}</b>
 
                         <Selection value={category} items={categories.map((category) => {
                             return {
@@ -156,15 +158,15 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                             };
                         })} onChange={(category) => setCategory(category as string)}/>
 
-                        <b>Interaction type (logic)</b>
+                        <b>{getTranslation("editor.interaction_type")}</b>
 
                         <Input value={interactionType} onChange={setInteractionType}/>
 
-                        <b>Depth {(flags.sitable)?(`(sit depth ${(depth - 0.5).toPrecision(3)})`):(null)}</b>
+                        <b>{getTranslation("editor.depth")} {(flags.sitable)?(getTranslation("editor.sit_depth", { depth: (depth - 0.5).toPrecision(3) })):(null)}</b>
 
                         <Input type="number" step={0.1} value={depth.toString()} onChange={(value) => setDepth(parseFloat(value))}/>
 
-                        <b>Furniture placement</b>
+                        <b>{getTranslation("editor.placement")}</b>
 
                         <Input value={placement} onChange={setPlacement}/>
                     </div>
@@ -176,30 +178,30 @@ export default function EditFurnitureDialog({ hidden, data, onClose }: EditFurni
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Furniture flags</b>
+                        <b>{getTranslation("editor.flags")}</b>
 
-                        <Checkbox value={flags.stackable} onChange={(value) => setFlags({ ...flags, stackable: value })} label="Is stackable with other furniture?"/>
+                        <Checkbox value={flags.stackable} onChange={(value) => setFlags({ ...flags, stackable: value })} label={getTranslation("editor.stackable")}/>
                         
-                        <Checkbox value={flags.sitable} onChange={(value) => setFlags({ ...flags, sitable: value })} label="Is sitable by users?"/>
+                        <Checkbox value={flags.sitable} onChange={(value) => setFlags({ ...flags, sitable: value })} label={getTranslation("editor.sitable")}/>
                             
-                        <Checkbox value={flags.layable} onChange={(value) => setFlags({ ...flags, layable: value })} label="Is layable by users?"/>
+                        <Checkbox value={flags.layable} onChange={(value) => setFlags({ ...flags, layable: value })} label={getTranslation("editor.layable")}/>
 
-                        <Checkbox value={flags.walkable} onChange={(value) => setFlags({ ...flags, walkable: value })} label="Is walkable by users?"/>
+                        <Checkbox value={flags.walkable} onChange={(value) => setFlags({ ...flags, walkable: value })} label={getTranslation("editor.walkable")}/>
 
-                        <Checkbox value={flags.giftable} onChange={(value) => setFlags({ ...flags, giftable: value })} label="Is giftable by users?"/>
+                        <Checkbox value={flags.giftable} onChange={(value) => setFlags({ ...flags, giftable: value })} label={getTranslation("editor.giftable")}/>
 
-                        <Checkbox value={flags.tradable} onChange={(value) => setFlags({ ...flags, tradable: value })} label="Is tradable by users?"/>
+                        <Checkbox value={flags.tradable} onChange={(value) => setFlags({ ...flags, tradable: value })} label={getTranslation("editor.tradable")}/>
 
-                        <Checkbox value={flags.recyclable} onChange={(value) => setFlags({ ...flags, recyclable: value })} label="Is recycable by users?"/>
+                        <Checkbox value={flags.recyclable} onChange={(value) => setFlags({ ...flags, recyclable: value })} label={getTranslation("editor.recyclable")}/>
                         
-                        <Checkbox value={flags.sellable} onChange={(value) => setFlags({ ...flags, sellable: value })} label="Is sellable by users?"/>
+                        <Checkbox value={flags.sellable} onChange={(value) => setFlags({ ...flags, sellable: value })} label={getTranslation("editor.sellable")}/>
 
-                        <Checkbox value={flags.inventoryStackable} onChange={(value) => setFlags({ ...flags, inventoryStackable: value })} label="Stacks in user inventory?"/>
+                        <Checkbox value={flags.inventoryStackable} onChange={(value) => setFlags({ ...flags, inventoryStackable: value })} label={getTranslation("editor.inventory_stackable")}/>
 
                         <div style={{ flex: 1 }}/>
 
                         <div>
-                            <DialogButton onClick={handleApply}>{(data?.id)?("Update furniture"):("Create new furniture")}</DialogButton>
+                            <DialogButton onClick={handleApply}>{getTranslation((data?.id)?"editor.update":"editor.create")}</DialogButton>
                         </div>
                     </div>
                 </div>

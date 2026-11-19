@@ -38,7 +38,7 @@ export default function ShopPurchaseFurnitureDialog({ data, hidden, onClose }: S
     }, [dialogs, onClose]);
 
     return (
-        <Dialog title="Confirm purchase" hidden={hidden} onClose={handleClose} initialPosition="center" width={360} height={235}>
+        <Dialog title={getTranslation("confirm_purchase")} hidden={hidden} onClose={handleClose} initialPosition="center" width={360} height={235}>
             <DialogContent style={{ flex: 1, gap: 10 }}>
                 <FlexLayout flex={1} direction="row" gap={20}>
                     <FlexLayout align="center" justify="center" style={{

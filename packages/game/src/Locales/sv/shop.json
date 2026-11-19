@@ -1,0 +1,173 @@
+{
+    "title": "Butik",
+    "confirm_purchase": "Bekräfta köp",
+
+    "price": "Pris",
+    "cancel": "Avbryt",
+    "purchase": "Köp",
+    "purchase_gift": "Köp present",
+    "buy_gift": "Köp som present",
+    "quantity": "Antal",
+
+    "tabs": {
+        "frontpage": "Förstasidan",
+        "furniture": "Möbler",
+        "pets": "Djur",
+        "clothing": "Kläder"
+    },
+
+    "search": {
+        "placeholder": "Sök här...",
+        "title": "Sök efter '{{search}}'"
+    },
+
+    "trophies": {
+        "engraving": "Lägg till din egen graveringstext nedan, men var försiktig - den är permanent!"
+    },
+
+    "promote": {
+        "membership": "Rumsaktivitet",
+        "title": "Marknadsför ditt rum i 2 timmar!",
+        "category.placeholder": "Välj aktivitetstyp...",
+        "name": "Namnge din marknadsföring",
+        "name.placeholder": "Ange ett namn...",
+        "description": "Beskriv din marknadsföring",
+        "description.placeholder": "Ange en beskrivning...",
+        "room": "Välj rum",
+        "room.placeholder": "Välj rum..."
+    },
+
+    "pet": {
+        "name": "Namnge ditt djur"
+    },
+
+    "group": {
+        "name": "Habbo-grupp",
+        "paragraph": "Habbo-grupper är ett bra sätt att hålla kontakten med dina vänner och dela dina intressen. Varje grupp har ett hemma-rum som kan dekoreras av andra gruppmedlemmar\nMedlemmar kan också köpa exklusiva gruppmöbler som kan anpassas med dina gruppfärger!",
+        "title": "Vad är så bra med Habbo-grupper?",
+        "items": "Samla människor som du umgås med!\nSamarbeta med rumdekorering för gruppmedlemmar\nVisa upp ditt gruppmärke!\nHämta fina möbler i din grupps färger!",
+        "create": "Skapa Habbo-grupp",
+        "select": "Välj en grupp..."
+    },
+
+    "club": {
+        "name": "Habbo Club",
+        "title": "Gå med i Habbo Club!",
+        "description": "Få exklusiva kläder, frisyrer, möbler och mycket mer!",
+        "remainder": "Du har {{days}} dagar kvar av ditt medlemskap."
+    },
+
+    "bundle": {
+        "included": "Det här ingår:",
+        "view": "Visa rums-paket"
+    },
+
+    "gift": {
+        "title": "Anpassa din present",
+        "recipient.placeholder": "Ange mottagarens namn..."
+    },
+
+    "edit": {
+        "none": "Ingen",
+        "update": "Uppdatera",
+        "create": "Skapa",
+        "delete": "Ta bort",
+        "confirm_deletion": "Bekräfta borttagning",
+
+        "bot": {
+            "edit": "Redigera butiksbot",
+            "create": "Skapa butiksbot",
+            "location_existing": "Den här boten finns på sidan {{page}}",
+            "location_new": "Den här boten kommer att finnas på sidan {{page}}",
+            "change_figure": "Byt figur",
+            "type": "Bottyp",
+            "name": "Botnamn",
+            "motto": "Botmotto",
+            "price": "Botpris"
+        },
+
+        "bot_figure": {
+            "title": "Botgarderob",
+            "default_name": "Bot",
+            "save": "Spara mitt utseende"
+        },
+
+        "pet": {
+            "edit": "Redigera butiksdjur",
+            "create": "Skapa butiksdjur",
+            "location_existing": "Det här djuret finns på sidan {{page}}",
+            "location_new": "Det här djuret kommer att finnas på sidan {{page}}",
+            "pet": "Djur",
+            "edit_pet": "Redigera djur",
+            "open_browser": "Öppna djurbläddrare",
+            "pet_id": "Djur-ID",
+            "price": "Djurs pris"
+        },
+
+        "furniture": {
+            "edit": "Redigera butiksmöbel",
+            "create": "Skapa butiksmöbel",
+            "location_existing": "Den här möbeln finns på sidan {{page}}",
+            "location_new": "Den här möbeln kommer att finnas på sidan {{page}}",
+            "price": "Möbelpris",
+            "membership_required": "Medlemskap krävs",
+            "delete": "Ta bort möbel"
+        },
+
+        "membership": {
+            "edit": "Redigera butiksmedlemskap",
+            "create": "Skapa butiksmedlemskap",
+            "location_existing": "Det här medlemskapet finns på sidan {{page}}",
+            "location_new": "Det här medlemskapet kommer att finnas på sidan {{page}}",
+            "days": "Medlemskap i dagar",
+            "price": "Medlemskapspris"
+        },
+
+        "page": {
+            "edit": "Redigera butikssida",
+            "create": "Skapa butikssida",
+            "icon": "Sidikon",
+            "title": "Sidtitel",
+            "title_placeholder": "Titel...",
+            "description": "Sidbeskrivning",
+            "description_placeholder": "Beskrivning...",
+            "parent": "Överordnad sida",
+            "type": "Sidtyp",
+            "bundle_price": "Paketpris",
+            "badge_id": "Märkes-ID",
+            "room_id": "Rum-ID",
+            "use_current_room": "Använd aktuellt rum",
+            "bundle_room_requirement": "Det valda rummet måste ha 'bundle' som rumstyp.",
+            "header": "Sidhuvud",
+            "teaser": "Sidförhandsvisning",
+            "index": "Sidindex"
+        },
+
+        "feature": {
+            "edit": "Redigera butiksfunktion",
+            "create": "Skapa butiksfunktion",
+            "preview": "Förhandsvisning",
+            "background": "Bakgrund",
+            "use_background": "Använd bakgrund?",
+            "primary_color": "Primär färg",
+            "secondary_color": "Sekundär färg",
+            "background_stripes": "Bakgrundsränder",
+            "use_background_stripes": "Använd bakgrundsränder?",
+            "feature_sprite": "Funktionsgrafik",
+            "use_feature_sprite": "Använd funktionsgrafik?",
+            "sprite_color": "Grafikfärg",
+            "feature_furniture": "Funktionens möbler",
+            "use_feature_furniture": "Använd funktionens möbler?",
+            "room_furniture": "Rumsmöbler",
+            "use_room_furniture": "Använd rumsmöbler?",
+            "capture_room": "Fånga rumsobjekt",
+            "title": "Titel",
+            "featured_page": "Utvald sida"
+        },
+
+        "feature_camera": {
+            "title": "Kamera för butiksfunktion",
+            "capture": "Fånga"
+        }
+    }
+}

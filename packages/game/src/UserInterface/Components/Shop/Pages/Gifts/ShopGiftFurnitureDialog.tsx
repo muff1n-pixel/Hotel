@@ -99,7 +99,7 @@ export default function ShopGiftFurnitureDialog({ data, hidden, onClose }: ShopG
                         <p>{data.activeFurniture.furniture?.description}</p>
 
                         <FlexLayout direction="row" align="center" gap={0}>
-                            <div style={{ color: "#0B0B0B" }}>Price:</div>
+                            <div style={{ color: "#0B0B0B" }}>{getTranslation("price")}:</div>
                             <CurrencyPanel credits={data.activeFurniture.credits} duckets={data.activeFurniture.duckets} diamonds={data.activeFurniture.diamonds}/>
                         </FlexLayout>
                     </FlexLayout>

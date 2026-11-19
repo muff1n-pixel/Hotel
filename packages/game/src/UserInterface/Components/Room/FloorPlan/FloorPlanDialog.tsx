@@ -9,6 +9,7 @@ import Selection from "../../../Common/Form/Components/Selection";
 import Input from "../../../Common/Form/Components/Input";
 import { RoomPositionOffsetData, RoomStructureData } from "@pixel63/events";
 import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
+import { useTranslation } from "react-i18next";
 
 export type FloorPlanDialogProps = {
     data: {
@@ -20,6 +21,7 @@ export type FloorPlanDialogProps = {
 }
 
 export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [floorPlanEditor, setFloorPlanEditor] = useState<RoomFloorPlanEditor | null>(null);
@@ -108,7 +110,7 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
     }, [data, floorPlanEditor, floorplanEditData, direction, wallHidden, wallThickness, wallHeight, floorThickness]);
 
     return (
-        <Dialog title="Room Floorplan" hidden={hidden} onClose={onClose} initialPosition="center" width={840} height={440}>
+        <Dialog title={getTranslation("floorplan.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={840} height={440}>
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -243,7 +245,7 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
                                 flexDirection: "column",
                                 gap: 10
                             }}>
-                                <b>Door direction</b>
+                                <b>{getTranslation("floorplan.door_direction")}</b>
 
                                 <div style={{
                                     display: "flex",
@@ -260,55 +262,55 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
                                 flexDirection: "column",
                                 gap: 10
                             }}>
-                                <b>Floor and walls</b>
+                                <b>{getTranslation("floorplan.floor_and_walls")}</b>
                 
                                 <Selection value={floorThickness} items={[
                                     {
                                         value: 0,
-                                        label: "Thinnest floor"
+                                        label: getTranslation("floorplan.thinnest_floor")
                                     },
                                     {
                                         value: 4,
-                                        label: "Thin floor"
+                                        label: getTranslation("floorplan.thin_floor")
                                     },
                                     {
                                         value: 8,
-                                        label: "Normal floor"
+                                        label: getTranslation("floorplan.normal_floor")
                                     },
                                     {
                                         value: 12,
-                                        label: "Thick floor"
+                                        label: getTranslation("floorplan.thick_floor")
                                     },
                                     {
                                         value: 16,
-                                        label: "Thickest floor"
+                                        label: getTranslation("floorplan.thickest_floor")
                                     }
                                 ]} onChange={(value) => setFloorThickness(value as number)}/>
                                 
                                 <Selection value={wallThickness} items={[
                                     {
                                         value: 0,
-                                        label: "Thinnest walls"
+                                        label: getTranslation("floorplan.thinnest_walls")
                                     },
                                     {
                                         value: 4,
-                                        label: "Thin walls"
+                                        label: getTranslation("floorplan.thin_walls")
                                     },
                                     {
                                         value: 8,
-                                        label: "Normal walls"
+                                        label: getTranslation("floorplan.normal_walls")
                                     },
                                     {
                                         value: 12,
-                                        label: "Thick walls"
+                                        label: getTranslation("floorplan.thick_walls")
                                     },
                                     {
                                         value: 16,
-                                        label: "Thickest walls"
+                                        label: getTranslation("floorplan.thickest_walls")
                                     }
                                 ]} onChange={(value) => setWallThickness(value as number)}/>
                 
-                                <Checkbox label="Hide room walls" value={wallHidden} onChange={setWallHidden}/>
+                                <Checkbox label={getTranslation("floorplan.hide_walls")} value={wallHidden} onChange={setWallHidden}/>
                             </div>
 
                             <div style={{
@@ -316,7 +318,7 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
                                 flexDirection: "column",
                                 gap: 10
                             }}>
-                                <b>Wall height</b>
+                                <b>{getTranslation("floorplan.wall_height")}</b>
 
                                 <Input type="number" value={wallHeight.toString()} onChange={(value) => setWallHeight(parseInt(value))} min={0} max={10}/>
                             </div>
@@ -328,7 +330,7 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
                             display: "flex",
                             justifyContent: "flex-end"
                         }}>
-                            <DialogButton onClick={handleApply}>Apply</DialogButton>
+                            <DialogButton onClick={handleApply}>{getTranslation("floorplan.apply")}</DialogButton>
                         </div>
                     </div>
                 </div>

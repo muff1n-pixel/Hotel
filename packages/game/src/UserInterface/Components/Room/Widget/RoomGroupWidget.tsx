@@ -8,8 +8,10 @@ import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
 import useUserGroup from "@UserInterface/Hooks/useUserGroup";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function RoomGroupWidget() {
+    const [getTranslation] = useTranslation("room");
     const dialogs = useDialogs();
     const roomGroup = useRoomGroup();
     const userGroup = useUserGroup(roomGroup?.group?.id);
@@ -29,7 +31,7 @@ export default function RoomGroupWidget() {
             <FlexLayout direction="row" align="center">
                 <div className="sprite_groups_icon"/>
 
-                <b>Group homeroom</b>
+                <b>{getTranslation("groups.homeroom")}</b>
             </FlexLayout>
         )}>
             <FlexLayout direction="row" style={{
@@ -53,7 +55,7 @@ export default function RoomGroupWidget() {
                 <FlexLayout flex={1} direction="row" style={{
                     padding: 8,
                 }}>
-                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>Join group</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>{getTranslation("groups.join")}</DialogButton>
                 </FlexLayout>
             )}
 
@@ -61,7 +63,7 @@ export default function RoomGroupWidget() {
                 <FlexLayout flex={1} direction="row" style={{
                     padding: 8,
                 }}>
-                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>Request to join</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>{getTranslation("groups.request")}</DialogButton>
                 </FlexLayout>
             )}
         </WidgetPanel>

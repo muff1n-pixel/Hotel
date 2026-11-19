@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheck
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredActionFreezeDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [effect, setEffect] = useState(data.data.data?.wiredActionFreeze?.effect ?? "frozen");
@@ -48,28 +50,28 @@ export default function WiredActionFreezeDialog({ data, onClose }: RoomFurniture
             <WiredDivider/>
             
             <WiredSection>
-                <b>Pick an effect:</b>
+                <b>{getTranslation("creator.pick_an_effect")}</b>
 
                 <WiredSelection value={effect} onChange={setEffect} items={[
                     {
                         value: "frozen",
-                        label: "Frozen"
+                        label: getTranslation("creator.frozen")
                     },
                     {
                         value: "x-ray",
-                        label: "X-Ray"
+                        label: getTranslation("creator.x_ray")
                     },
                     {
                         value: "easterchick",
-                        label: "Easter Chick"
+                        label: getTranslation("creator.easter_chick")
                     },
                     {
                         value: "sandtrap",
-                        label: "Sand trap"
+                        label: getTranslation("creator.sand_trap")
                     }
                 ]}/>
 
-                <WiredCheckbox value={unfreezeWhenTeleporting} onChange={setUnfreezeWhenTeleporting} label="Unfreeze when teleporting"/>
+                <WiredCheckbox value={unfreezeWhenTeleporting} onChange={setUnfreezeWhenTeleporting} label={getTranslation("creator.unfreeze_when_teleporting")}/>
             </WiredSection>
 
             <WiredDivider/>
@@ -79,8 +81,8 @@ export default function WiredActionFreezeDialog({ data, onClose }: RoomFurniture
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

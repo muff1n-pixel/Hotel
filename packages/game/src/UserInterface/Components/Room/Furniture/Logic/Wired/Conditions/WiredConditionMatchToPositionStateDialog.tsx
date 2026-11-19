@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -12,6 +13,7 @@ import WiredCheckbox from "@UserInterface/Common/Dialog/Layouts/Wired/WiredCheck
 import { useRoomInstance } from "@UserInterface/Hooks/useRoomInstance";
 
 export default function WiredConditionMatchToPositionStateDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [matchState, setMatchState] = useState(data.data.data?.common?.furnitureState?.matchState ?? false);
@@ -63,12 +65,12 @@ export default function WiredConditionMatchToPositionStateDialog({ data, onClose
             <WiredDivider/>
 
             <WiredSection>
-                <b>Furni states to match:</b>
+                <b>{getTranslation("creator.furni_states_to_match")}</b>
 
-                <WiredCheckbox value={matchState} onChange={setMatchState} label="Current furni state"/>
-                <WiredCheckbox value={matchDirection} onChange={setMatchDirection} label="Current direction"/>
-                <WiredCheckbox value={matchPosition} onChange={setMatchPosition} label="Current position in room"/>
-                <WiredCheckbox value={matchAltitude} onChange={setMatchAltitude} label="Current altitude"/>
+                <WiredCheckbox value={matchState} onChange={setMatchState} label={getTranslation("creator.current_furni_state")}/>
+                <WiredCheckbox value={matchDirection} onChange={setMatchDirection} label={getTranslation("creator.current_direction")}/>
+                <WiredCheckbox value={matchPosition} onChange={setMatchPosition} label={getTranslation("creator.current_position")}/>
+                <WiredCheckbox value={matchAltitude} onChange={setMatchAltitude} label={getTranslation("creator.current_altitude")}/>
             </WiredSection>
 
             <WiredDivider/>
@@ -78,8 +80,8 @@ export default function WiredConditionMatchToPositionStateDialog({ data, onClose
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

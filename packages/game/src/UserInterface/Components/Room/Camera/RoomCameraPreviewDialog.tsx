@@ -9,6 +9,7 @@ import { FurnitureData, PurchaseRoomCameraPhotoData } from "@pixel63/events";
 import { useState } from "react";
 import { clientInstance, webSocketClient } from "@Game/index";
 import { useUser } from "@UserInterface/Hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export type RoomCameraPreviewDialogProps = {
     data: {
@@ -20,6 +21,7 @@ export type RoomCameraPreviewDialogProps = {
 }
 
 export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomCameraPreviewDialogProps) {
+    const [getTranslation] = useTranslation("room");
     const user = useUser();
 
     const [dataUrl, setDataUrl] = useState<string>();
@@ -29,7 +31,7 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
     }
 
     return (
-        <Dialog title="Room Camera Preview" hidden={hidden} onClose={onClose} width={346} height={"auto"} assumedHeight={580}>
+        <Dialog title={getTranslation("camera.preview.title")} hidden={hidden} onClose={onClose} width={346} height={"auto"} assumedHeight={580}>
             <DialogContent style={{
                 gap: 10
             }}>
@@ -53,11 +55,11 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                     </FlexLayout>
 
                     <FlexLayout gap={5} flex={3}>
-                        <b>Buy large photo poster furni</b>
+                        <b>{getTranslation("camera.preview.large_poster")}</b>
                         
-                        <div>Your best shots from the hotel.</div>
+                        <div>{getTranslation("camera.preview.description")}</div>
 
-                        <FlexLayout direction="row" align="center" gap={5}>Price: <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>5</b></FlexLayout></FlexLayout>
+                        <FlexLayout direction="row" align="center" gap={5}>{getTranslation("camera.preview.price")} <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>5</b></FlexLayout></FlexLayout>
                     </FlexLayout>
 
                     <DialogButton disabled={user.credits < 3} color="green" style={{
@@ -80,7 +82,7 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
 
                         clientInstance.flyingFurnitureIcons.update();
                     }}>
-                        Buy
+                        {getTranslation("camera.preview.buy")}
                     </DialogButton>
                 </FlexLayout>
 
@@ -94,11 +96,11 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                     </FlexLayout>
 
                     <FlexLayout gap={5} flex={3}>
-                        <b>Buy photo poster furni</b>
+                        <b>{getTranslation("camera.preview.small_poster")}</b>
                         
-                        <div>Your best shots from the hotel.</div>
+                        <div>{getTranslation("camera.preview.description")}</div>
 
-                        <FlexLayout direction="row" align="center" gap={5}>Price: <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>2</b></FlexLayout></FlexLayout>
+                        <FlexLayout direction="row" align="center" gap={5}>{getTranslation("camera.preview.price")} <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_credits"/><b>2</b></FlexLayout></FlexLayout>
                     </FlexLayout>
 
                     <DialogButton disabled={user.credits < 5} color="green" style={{
@@ -121,7 +123,7 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
 
                         clientInstance.flyingFurnitureIcons.update();
                     }}>
-                        Buy
+                        {getTranslation("camera.preview.buy")}
                     </DialogButton>
                 </FlexLayout>
                 
@@ -132,9 +134,9 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
                     padding: 10
                 }}>
                     <FlexLayout gap={5} flex={5}>
-                        <b>Publish on web</b>
-                        <div>Post the photo on your profile page and the Photos page.</div>
-                        <FlexLayout direction="row" align="center" gap={5}>Price: <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_duckets"/><b>10</b></FlexLayout></FlexLayout>
+                        <b>{getTranslation("camera.preview.publish")}</b>
+                        <div>{getTranslation("camera.preview.publish_description")}</div>
+                        <FlexLayout direction="row" align="center" gap={5}>{getTranslation("camera.preview.price")} <FlexLayout direction="row" align="center" gap={2}><div className="sprite_currencies_duckets"/><b>10</b></FlexLayout></FlexLayout>
                     </FlexLayout>
 
                     <DialogButton color="green" style={{
@@ -143,13 +145,13 @@ export default function RoomCameraPreviewDialog({ data, hidden, onClose }: RoomC
 
                         flex: 2
                     }}>
-                        Publish
+                        {getTranslation("camera.preview.publish")}
                     </DialogButton>
                 </FlexLayout>*/}
 
                 <div style={{ flex: 1 }}/>
 
-                <DialogButton style={{ alignSelf: "flex-start"}} onClick={onClose}>Cancel</DialogButton>
+                <DialogButton style={{ alignSelf: "flex-start"}} onClick={onClose}>{getTranslation("camera.preview.cancel")}</DialogButton>
             </DialogContent>
         </Dialog>
     );

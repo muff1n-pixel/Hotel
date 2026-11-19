@@ -6,6 +6,7 @@ import Input from "../../Common/Form/Components/Input";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import { webSocketClient } from "../../..";
 import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
+import { useTranslation } from "react-i18next";
 
 export type EditBadgeDialogProps = {
     hidden?: boolean;
@@ -16,6 +17,7 @@ export type EditBadgeDialogProps = {
 }
 
 export default function EditBadgeDialog({ hidden, data, onClose }: EditBadgeDialogProps) {
+    const [getTranslation] = useTranslation("badges");
     const [id, setId] = useState<string>(data?.id ?? "");
 
     const [name, setName] = useState<string>(data?.name ?? "");
@@ -46,7 +48,7 @@ export default function EditBadgeDialog({ hidden, data, onClose }: EditBadgeDial
     }, [ data, onClose, id, name, description, image ]);
 
     return (
-        <Dialog title="Badge Editor" hidden={hidden} onClose={onClose} initialPosition="center" width={520} height={340} style={{
+        <Dialog title={getTranslation("editor.title")} hidden={hidden} onClose={onClose} initialPosition="center" width={520} height={340} style={{
             overflow: "visible"
         }}>
             <DialogContent>
@@ -85,24 +87,24 @@ export default function EditBadgeDialog({ hidden, data, onClose }: EditBadgeDial
                         flexDirection: "column",
                         gap: 10
                     }}>
-                        <b>Badge ID</b>
+                        <b>{getTranslation("editor.id")}</b>
 
                         <Input value={id} onChange={setId}/>
                         
-                        <b>Badge Image</b>
+                        <b>{getTranslation("editor.image")}</b>
 
-                        <Input placeholder="ACH_[..].gif" value={image} onChange={setImage}/>
+                        <Input placeholder={getTranslation("editor.image_placeholder")} value={image} onChange={setImage}/>
 
-                        <b>Badge name</b>
+                        <b>{getTranslation("editor.name")}</b>
 
                         <Input value={name} onChange={setName}/>
 
-                        <b>Badge description</b>
+                        <b>{getTranslation("editor.description")}</b>
 
                         <Input value={description} onChange={setDescription}/>
 
                         <div>
-                            <DialogButton onClick={handleApply}>{(data?.id)?("Update"):("Create")}</DialogButton>
+                            <DialogButton onClick={handleApply}>{getTranslation((data?.id)?"editor.update":"editor.create")}</DialogButton>
                         </div>
                     </div>
                 </div>

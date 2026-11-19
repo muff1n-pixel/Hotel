@@ -5,8 +5,10 @@ import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTab
 import Input from "@UserInterface/Common/Form/Components/Input";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function AdministrationSettingsTab() {
+    const [getTranslation] = useTranslation("administration");
     const [activeSetting, setActiveSetting] = useState<HotelSettingData>();
     const [settings, setSettings] = useState<HotelSettingData[]>([]);
 
@@ -37,7 +39,7 @@ export default function AdministrationSettingsTab() {
         <FlexLayout flex={1} direction="column">
             <DialogTable
                 activeId={activeSetting?.id}
-                columns={["Variable", "Value"]}
+                columns={[getTranslation("settings.variable"), getTranslation("settings.value")]}
                 items={settings.map((setting) => ({
                     id: setting.id,
                     values: [setting.id, setting.value],
@@ -48,14 +50,14 @@ export default function AdministrationSettingsTab() {
             {(activeSetting) && (
                 <FlexLayout direction="row">
                     <FlexLayout justify="center" align="center" style={{ fontSize: 12 }}>
-                        Changing <br/> {activeSetting.id}
+                        {getTranslation("settings.changing")} <br/> {activeSetting.id}
                     </FlexLayout>
 
                     <div style={{ flex: 1 }}/>
 
                     <Input style={{ width: 100 }} type="number" value={activeSetting.value.toString()} onChange={(value) => setActiveSetting({ ...activeSetting, value: parseInt(value) })}/>
 
-                    <DialogButton onClick={handleUpdateSetting}>Update</DialogButton>
+                    <DialogButton onClick={handleUpdateSetting}>{getTranslation("settings.update")}</DialogButton>
                 </FlexLayout>
             )}
         </FlexLayout>

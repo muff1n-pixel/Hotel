@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export default function RoomWiredLogsTab() {
     const [getCommonTranslation] = useTranslation("common");
-    const [getWiredTranslation] = useTranslation("wired");
+    const [getTranslation] = useTranslation("wired");
 
     const [page, setPage] = useState(0);
     const [search, setSearch] = useState("");
@@ -20,28 +20,28 @@ export default function RoomWiredLogsTab() {
         <FlexLayout flex={1} direction="column">
             <FlexLayout flex={1} direction="column" gap={5}>
                 <FlexLayout direction="row" align="center">
-                    <b>{getWiredTranslation("logs.filter")}:</b>
+                    <b>{getTranslation("logs.filter")}:</b>
 
-                    <Input style={{ width: "100%" }} placeholder={getWiredTranslation("logs.search")} value={search} onChange={setSearch}/>
+                    <Input style={{ width: "100%" }} placeholder={getTranslation("logs.search")} value={search} onChange={setSearch}/>
                     
-                    <b>{getWiredTranslation("monitor.level")}:</b>
+                    <b>{getTranslation("monitor.level")}:</b>
                     
                     <Selection style={{ width: 100 }} value={level} onChange={setLevel} items={[
                         {
                             value: "",
-                            label: getWiredTranslation("logs.all_levels")
+                            label: getTranslation("logs.all_levels")
                         },
                         {
                             value: "INFO",
-                            label: "INFO"
+                            label: getTranslation("monitor.levels.info")
                         },
                         {
                             value: "WARNING",
-                            label: "WARNING"
+                            label: getTranslation("monitor.levels.warning")
                         },
                         {
                             value: "ERROR",
-                            label: "ERROR"
+                            label: getTranslation("monitor.levels.error")
                         }
                     ]}/>
 
@@ -55,7 +55,7 @@ export default function RoomWiredLogsTab() {
 
                 <DialogTable
                     flex={[1, 1, 4]}
-                    columns={[getWiredTranslation("monitor.timestamp"), getWiredTranslation("monitor.level"), getWiredTranslation("monitor.message")]}
+                    columns={[getTranslation("monitor.timestamp"), getTranslation("monitor.level"), getTranslation("monitor.message")]}
                     items={logs?.logs.map((log, index) => ({
                         id: index,
                         values: [
@@ -64,7 +64,7 @@ export default function RoomWiredLogsTab() {
                             log.message
                         ]
                     }))}
-                    empty={getWiredTranslation("monitor.no_logs")}
+                    empty={getTranslation("monitor.no_logs")}
                     />
 
                 <FlexLayout direction="row" justify="space-between" align="center">

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import WiredDialog from "../../../../../../Common/Dialog/Layouts/Wired/WiredDialog";
 import { RoomFurnitureLogicDialogProps } from "../../RoomFurnitureLogicDialog";
 import WiredFurniture from "../../../../../../Common/Dialog/Layouts/Wired/WiredFurniture";
@@ -13,6 +14,7 @@ import WiredDelay from "@UserInterface/Common/Dialog/Layouts/Wired/WiredDelay";
 import WiredRadio from "@UserInterface/Common/Dialog/Layouts/Wired/WiredRadio";
 
 export default function WiredActionControlClockDialog({ data, onClose }: RoomFurnitureLogicDialogProps) {
+    const [getTranslation] = useTranslation("wired");
     const room = useRoomInstance();
 
     const [action, setAction] = useState(data.data.data?.wiredActionControlClock?.action ?? "start");
@@ -53,28 +55,28 @@ export default function WiredActionControlClockDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection>
-                <b>Select option</b>
+                <b>{getTranslation("creator.select_option")}</b>
 
                 <WiredRadio value={action} onChange={setAction} items={[
                     {
                         value: "start",
-                        label: "Start"
+                        label: getTranslation("creator.start")
                     },
                     {
                         value: "stop",
-                        label: "Stop"
+                        label: getTranslation("creator.stop")
                     },
                     {
                         value: "reset",
-                        label: "Reset"
+                        label: getTranslation("creator.reset")
                     },
                     {
                         value: "pause",
-                        label: "Pause"
+                        label: getTranslation("creator.pause")
                     },
                     {
                         value: "resume",
-                        label: "Resume"
+                        label: getTranslation("creator.resume")
                     }
                 ]}/>
             </WiredSection>
@@ -90,8 +92,8 @@ export default function WiredActionControlClockDialog({ data, onClose }: RoomFur
             <WiredDivider/>
 
             <WiredSection style={{ flexDirection: "row" }}>
-                <WiredButton onClick={handleApply}>Apply</WiredButton>
-                <WiredButton onClick={onClose}>Cancel</WiredButton>
+                <WiredButton onClick={handleApply}>{getTranslation("creator.apply")}</WiredButton>
+                <WiredButton onClick={onClose}>{getTranslation("creator.cancel")}</WiredButton>
             </WiredSection>
         </WiredDialog>
     );

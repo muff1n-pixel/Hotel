@@ -1,9 +1,11 @@
 import { useUser } from "../../Hooks/useUser";
 import DialogButton from "../../Common/Dialog/Components/Button/DialogButton";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
+import { useTranslation } from "react-i18next";
 
 export default function Reception() {
     const user = useUser();
+    const [getTranslation] = useTranslation("reception");
 
     return (
         <div style={{
@@ -61,18 +63,18 @@ export default function Reception() {
                             fontFamily: "Ubuntu Medium",
                             fontSize: 16
                         }}>
-                            Connect to the Pixel63 development Discord
+                            {getTranslation("discord.title")}
                         </div>
 
                         <p>
-                            There is a Discord server that follows the development of the Pixel63 client. Join it to participate in discussions!
+                            {getTranslation("discord.description")}
                         </p>
 
                         <div style={{
                             display: "flex",
                             justifyContent: "flex-end"
                         }}>
-                            <DialogButton onClick={() => window.open("/discord", "_blank")?.focus()}>Join the Discord server</DialogButton>
+                            <DialogButton onClick={() => window.open("/discord", "_blank")?.focus()}>{getTranslation("discord.join")}</DialogButton>
                         </div>
                     </div>
                 </div>
