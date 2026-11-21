@@ -1,3 +1,10 @@
+# AI usage disclosure
+Pixel63 is created entirely without any use of AI or other generation means; until now, no AI was ever used, however, given the size of the project - AI can be beneficial when performing large operations, namely such as migrating all hard coded texts to the I18N locale files. All operations that are done with AI are reviewed before committed and must be tagged with `(ai)` following the conventional commit message, e.g. `feat(ai): migrate hard coded texts to locale files`.
+
+The usage of AI in this repository should not lower the quality or output hard to follow or hard to read code or architecture, preferably AI should not be used for actual logic and rather for time-consuming operations.
+
+This is my personal opinion and private restrictions for this repository.
+
 # Infrastructure
 Pixel63 is built from scratch, with no correlation to existing emulator infrastructure or communication structure. Everything is built from scratch up in a manner that cannot be compared to emulators.
 
